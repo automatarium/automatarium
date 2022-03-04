@@ -1,0 +1,26 @@
+{
+  "name": "automatarium",
+  "version": "0.0.1",
+  "description": "A place for your automata",
+  "repository": "git@github.com:GRA0007/automatarium.git",
+  "contributors": [
+    "Maxwell Reid",
+    "Thomas Dib",
+    "Ewan Breakey (https://ewanb.me/)",
+    "Benji Grant (https://bengrant.dev/)",
+    "Tim Tran"
+  ],
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "start": "parcel public/index.html --no-cache",
+    "build": "rm -rf dist && parcel build public/index.html"
+  },
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "parcel": "^2.3.2"
+  }
+}
