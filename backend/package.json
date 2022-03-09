@@ -4,10 +4,9 @@
   "description": "Automatarium backend",
   "main": "index.js",
   "scripts": {
-    "build": "babel src --extensions \"js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
+    "build": "tsc",
     "start": "node dist/app.js",
-    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/app.ts",
-    "build": "tsc"
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/app.ts"
   },
   "repository": {
     "type": "git",
