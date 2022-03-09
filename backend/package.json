@@ -1,6 +1,23 @@
 {
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Stevent graphql backend",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch node_modules --no-notify src/app.ts",
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GRA0007/automatarium.git"
+  },
+  "author": "Automatarium",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/GRA0007/automatarium/issues"
+  },
+  "homepage": "https://github.com/GRA0007/automatarium#readme",
   "dependencies": {
-    "babel": "^6.23.0",
     "config": "^3.3.7",
     "cors": "^2.8.5",
     "express": "^4.17.3",
