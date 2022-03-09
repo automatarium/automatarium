@@ -20,12 +20,38 @@ const sampleInitialData = {
     label: null,
     x: 230,
     y: 70,
-    isFinal: true,
+    isfinal: true,
+  },{
+    id: 'q3',
+    name: 'q3',
+    label: null,
+    x: 50,
+    y: 250,
+    isfinal: true,
+  }, {
+    id: 'q4',
+    name: 'q4',
+    label: null,
+    x: 230,
+    y: 250,
+    isfinal: true,
   }],
   transitions: [{
     from: 'q0',
     to: 'q1',
     read: 'a',
+  }, {
+    from: 'q3',
+    to: 'q4',
+    read: 'a'
+  }, {
+    from: 'q3',
+    to: 'q4',
+    read: 'b'
+  }, {
+    from: 'q3',
+    to: 'q4',
+    read: 'c',
   }]
 }
 
@@ -38,8 +64,8 @@ const GraphView = () => {
   const { states, transitions } = graphState
 
   // Group up transitions by the start&end nodes
-  const locatedTransitions = transitions.map(t => locateTransition(t, states))
-  const groupedTransitions = Object.values(groupBy(locatedTransitions, t => [t.from, t.to]))
+  const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to]))
+  const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
   const handleStateMouseDown = (name, e) => {
     if (e.button === 0)
@@ -56,7 +82,7 @@ const GraphView = () => {
     <MarkerProvider>
       <g>
         {/* Render all sets of edges */}
-        {groupedTransitions.map(transitions => <TransitionSet transitions={transitions} key={transitions} />)}
+        {locatedTransitions.map(transitions => <TransitionSet transitions={transitions} key={transitions} />)}
 
         {/* Render all states */}
         {states.map(s => <StateCircle

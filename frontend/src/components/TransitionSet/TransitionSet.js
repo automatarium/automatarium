@@ -1,16 +1,18 @@
 import { useContext } from 'react'
 
 import { MarkerContext } from '/src/providers'
-import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
+import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 
 import { StyledPath } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({from, to}, i) => <Transition i={i} from={from} to={to} key={[i, from, to]} />) }
+  { transitions.map(({from, to, read}, i) => (
+    <Transition i={i} count={transitions.length} text={read} from={from} to={to} key={[i, from, to]} />)
+  )}
 </>
 
-const Transition = ({ i, from, to }) => {
+const Transition = ({ i, count, from, to, text }) => {
   const { standardArrowHead } = useContext(MarkerContext)
 
   // TODO: for now im gonna use straight lines but eventially we need to
@@ -25,13 +27,36 @@ const Transition = ({ i, from, to }) => {
   const edge1 = movePointTowards(from, to, STATE_CIRCLE_RADIUS)
   const edge2 = movePointTowards(to, from, STATE_CIRCLE_RADIUS)
 
+  // Determine how much to bend this path
+  const middleValue = count % 2 == 0 ? count / 2 : count / 2 + .5
+  const bendValue = 150 * (count > 1 ? middleValue - (i+1) : 0) / 2
+
+  // Determine control position 
+  // -- this is determined by moving along the normal to the difference between the states
+  // -- with the distance moved controled by the `bend` value 
+  const center = lerpPoints(from, to, .5)
+  const tangent = { x: to.x - from.x, y: to.y - from.y }
+  //const normal = { x: -tangent.x, y: -tangent.y}
+  const a = Math.PI/2
+  const orth = { x: tangent.x * Math.cos(a) - tangent.y * Math.sin(a), y: tangent.x * Math.sin(a) + tangent.y * Math.cos(a) }
+  const normal = { x: orth.x / size(orth), y: orth.y / size(orth) }
+  const control = { x: center.x + bendValue * normal.x, y: center.y + bendValue * normal.y }
+
   // Generate the path data
-  const controlPoint = lerpPoints(from, to, .5) // TEMP // TODO
-  const pathData = `M${edge1.x}, ${edge1.y} L${edge2.x}, ${edge2.y}`
+  const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
+
+  const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
   
   return <>
      {/*The edge itself*/}
-     <StyledPath d={pathData} key={pathData} markerEnd={`url(#${standardArrowHead})`} />
+     <StyledPath id={pathID} d={pathData} key={pathData} markerEnd={`url(#${standardArrowHead})`} />
+
+     {/* The label - i.e the accepted symbols*/}
+     <text>
+       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}`}>
+        {text}
+       </textPath>
+     </text>
   </>
 }
 
