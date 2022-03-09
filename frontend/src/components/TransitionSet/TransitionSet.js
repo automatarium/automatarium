@@ -6,13 +6,11 @@ import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 import { StyledPath } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
-  { transitions.map(([p1, p2], i) => <Transition i={i} p1={p1} p2={p2} key={[i, p1, p2]} />) }
+  { transitions.map(({from, to}, i) => <Transition i={i} from={from} to={to} key={[i, from, to]} />) }
 </>
 
-const Transition = ({ i, p1, p2 }) => {
+const Transition = ({ i, from, to }) => {
   const { standardArrowHead } = useContext(MarkerContext)
-
-  console.log(standardArrowHead)
 
   // TODO: for now im gonna use straight lines but eventially we need to
   // compute control points. Thats why this is a transition set,
@@ -23,14 +21,12 @@ const Transition = ({ i, p1, p2 }) => {
   // two states
 
   // We connect the transitions to the closest point on the circle rather than the center
-  const p1Edge = movePointTowards(p1, p2, STATE_CIRCLE_RADIUS)
-  const p2Edge = movePointTowards(p2, p1, STATE_CIRCLE_RADIUS)
-
-  console.log({p1Edge, p2Edge})
+  const edge1 = movePointTowards(from, to, STATE_CIRCLE_RADIUS)
+  const edge2 = movePointTowards(to, from, STATE_CIRCLE_RADIUS)
 
   // Generate the path data
-  const controlPoint = lerpPoints(p1, p2, .5) // TEMP // TODO
-  const pathData = `M${p1Edge.cx}, ${p1Edge.cy} L${p2Edge.cx}, ${p2Edge.cy}`
+  const controlPoint = lerpPoints(from, to, .5) // TEMP // TODO
+  const pathData = `M${edge1.x}, ${edge1.y} L${edge2.x}, ${edge2.y}`
   
   return <>
      {/*The edge itself*/}
@@ -39,19 +35,19 @@ const Transition = ({ i, p1, p2 }) => {
 }
 
 const lerpPoints = (p1, p2, t) => ({
-  cx: p1.cx + t * (p2.cx - p1.cx),
-  cy: p1.cy + t * (p2.cy - p1.cy),
+  x: p1.x + t * (p2.x - p1.x),
+  y: p1.y + t * (p2.y - p1.y),
 })
 
 const movePointTowards = (p, tar, d) => {
-  const l = size({cx: tar.cx - p.cx, cy: tar.cy - p.cy})
+  const l = size({x: tar.x - p.x, y: tar.y - p.y})
   return {
-    cx: p.cx + d * (tar.cx - p.cx) / l,
-    cy: p.cy + d * (tar.cy - p.cy) / l,
+    x: p.x + d * (tar.x - p.x) / l,
+    y: p.y + d * (tar.y - p.y) / l,
   }
 } 
 
 const size = p =>
-  Math.sqrt(Math.pow(p.cx, 2) + Math.pow(p.cy, 2))
+  Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2))
 
 export default TransitionSet

@@ -3,8 +3,8 @@ import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 const FINAL_OUTLINE_OFFSET = 5
 
-const StateCircle = ({ label, isFinal, cx, cy, ...props }) => {
-  return <g transform={`translate(${cx}, ${cy})`}>
+const StateCircle = ({ name, isFinal, cx, cy, onMouseDown, ...props }) => {
+  return <g transform={`translate(${cx}, ${cy})`} onMouseDown={e => onMouseDown(name, e)}>
     {/* Yellow Circle */}
     <StyledCircle r={STATE_CIRCLE_RADIUS} />
 
@@ -13,7 +13,7 @@ const StateCircle = ({ label, isFinal, cx, cy, ...props }) => {
 
     {/* Label */}
     <text textAnchor="middle" alignmentBaseline="central">
-      {label}
+      {name}
     </text>
   </g>
 }

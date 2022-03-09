@@ -13,7 +13,7 @@ const MarkerProvider = ({ children }) => {
         id={standardArrowHead}
         markerWidth="10"
         markerHeight="10"
-        refX="9"
+        refX="8.5"
         refY="3"
         orient="auto"
         markerUnits="strokeWidth">
