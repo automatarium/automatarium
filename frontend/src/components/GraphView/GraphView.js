@@ -51,7 +51,7 @@ const sampleInitialData = {
   }, {
     from: 'q3',
     to: 'q4',
-    read: 'c',
+    read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
   }]
 }
 

@@ -23,28 +23,29 @@ const Transition = ({ i, count, from, to, text }) => {
   // and then slowly pushes the control points outwards along the normal to the line between the
   // two states
 
-  // We connect the transitions to the closest point on the circle rather than the center
-  const edge1 = movePointTowards(from, to, STATE_CIRCLE_RADIUS)
-  const edge2 = movePointTowards(to, from, STATE_CIRCLE_RADIUS)
-
   // Determine how much to bend this path
   const middleValue = count % 2 == 0 ? count / 2 : count / 2 + .5
-  const bendValue = 150 * (count > 1 ? middleValue - (i+1) : 0) / 2
+  const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i+1) : 0) / 2
 
   // Determine control position 
   // -- this is determined by moving along the normal to the difference between the states
   // -- with the distance moved controled by the `bend` value 
   const center = lerpPoints(from, to, .5)
   const tangent = { x: to.x - from.x, y: to.y - from.y }
-  //const normal = { x: -tangent.x, y: -tangent.y}
   const a = Math.PI/2
   const orth = { x: tangent.x * Math.cos(a) - tangent.y * Math.sin(a), y: tangent.x * Math.sin(a) + tangent.y * Math.cos(a) }
   const normal = { x: orth.x / size(orth), y: orth.y / size(orth) }
   const control = { x: center.x + bendValue * normal.x, y: center.y + bendValue * normal.y }
 
+  // We connect the edge to the closest point on each circle from the control point
+  const edge1 = movePointTowards(from, control, STATE_CIRCLE_RADIUS)
+  const edge2 = movePointTowards(to, control, STATE_CIRCLE_RADIUS)
+  
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
 
+  // Generate a unique id for this path
+  // -- used to place the text on the same path
   const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
   
   return <>
