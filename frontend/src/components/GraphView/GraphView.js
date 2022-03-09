@@ -3,6 +3,8 @@ import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet } from '/src/components'
 import { MarkerProvider } from '/src/providers'
+import { useStateDragging } from '/src/hooks'
+import { locateTransition } from '/src/util/states'
 
 const sampleInitialData = {
   states: [{
@@ -30,7 +32,7 @@ const sampleInitialData = {
 
 const GraphView = () => {
   const [graphState, setGraphState] = useState(sampleInitialData)
-  const [draggedState, setDraggedState] = useState(null)
+  const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState })
 
   // Destruct state
   const { states, transitions } = graphState
@@ -39,48 +41,18 @@ const GraphView = () => {
   const locatedTransitions = transitions.map(t => locateTransition(t, states))
   const groupedTransitions = Object.values(groupBy(locatedTransitions, t => [t.from, t.to]))
 
-  // Listen for clicking on states - start dragging states
   const handleStateMouseDown = (name, e) => {
-    // Is this LMB?
-    if (e.button === 0) {
-      console.log(name)
-      setDraggedState(name)
-      e.preventDefault()
-    }
+    if (e.button === 0)
+      startDrag(name, e)
 
     // Is this RMB?
     if (e.button === 2) {
       // TODO: bubble up to a parent for creating a context menu
       console.warn('State RMB event not implemented')
-      e.preventDefault()
     }
   }
 
-  // Listen for mouse up - stop dragging states
-  useEffect(() => {
-    const cb = e => {
-      if (e.button === 0) {
-        setDraggedState(null)
-        e.preventDefault()
-      }
-    }
-    document.addEventListener('mouseup', cb)
-    return () => document.removeEventListener('mouseup', cb)
-  }, [])
-
-  // Listen for mouse move - dragging states
-  const handleMouseMove = e => {
-    if (draggedState !== null) {
-      const x = e.clientX
-      const y = e.clientY
-      setGraphState({
-        ...graphState,
-        states: states.map(s => s.name === draggedState ? { ...s, x, y} : s)
-      })
-    }
-  }
-
-  return <svg onContextMenu={e => e.preventDefault()} onMouseMove={handleMouseMove} style={{ width: '100vw', height: '100vh' }}>
+  return <svg onContextMenu={e => e.preventDefault()} onMouseMove={doDrag} style={{ width: '100vw', height: '100vh' }}>
     <MarkerProvider>
       <g>
         {/* Render all sets of edges */}
@@ -97,16 +69,6 @@ const GraphView = () => {
       </g>
     </MarkerProvider>
   </svg>
-}
-
-const locateTransition = (t, states) => {
-  const fromState = states.find(s => s.id === t.from)
-  const toState = states.find(s => s.id === t.to)
-  return {
-    ...t,
-    from: { x: fromState.x, y: fromState.y },
-    to: { x: toState.x, y: toState.y }
-  }
 }
 
 export default GraphView
