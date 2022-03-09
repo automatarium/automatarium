@@ -1,7 +1,7 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "Stevent graphql backend",
+  "description": "Automatarium backend",
   "main": "index.js",
   "scripts": {
     "build": "babel src --extensions \"js,.ts\" --out-dir dist --copy-files --no-copy-ignored",
