@@ -1,4 +1,4 @@
-const data = require('./tests/dib-nfa2')
+const data = require('./tests/dib-nfa')
 
 const input = 'dib'
 var output = []
@@ -41,36 +41,52 @@ function calculatePossibleTransitions(currState, inputRead = '') {
 }
 
 // function recursiveTransition(output, currState, input, symbol) {
-function recursiveTransition(input, inputIdx, curr) {
-  var currState = curr
+function recursiveTransition(input, inputIdx, curr, currOutput) {
+  console.log()
+  // console.log('CURRENT OUTPUT', currOutput)
+  let currState = curr
+  let output = currOutput
   const nextTransitions = calculatePossibleTransitions(currState, input[inputIdx])
+  // console.log('BLAH', currState.id, input[inputIdx], nextTransitions)
+
+  if (nextTransitions.length == 0) {
+    console.log('MACHINE HALTING!!')
+    output = output.slice(0, -1).concat('|')
+    console.log(output)
+  }
 
   nextTransitions.forEach((nextTransition) => {
-    console.log('\nINPUT IDX', inputIdx, `(${input[inputIdx]})`)
+    console.log()
     console.log('CURRENT STATE\t', curr.id)
     console.log('INPUT SYMBOL\t', input[inputIdx])
     console.log(
       `${currState.id} TRANS'S\t`,
       nextTransitions.map((t) => t.to)
     )
-    console.log('CURRENT TRANS\t', nextTransition)
-    currState = transition(nextTransition.to) // TODO: output specific index of 2d array
+    console.log('SELECTED TRANS\t', nextTransition.to)
+    currState = transition(nextTransition.to, output) // TODO: output specific index of 2d array
 
+    // There is more input to process
     if (inputIdx < input.length - 1) {
-      // inputIdx++
-      recursiveTransition(input, inputIdx + 1, currState)
-    } else {
+      recursiveTransition(input, inputIdx + 1, currState, output.concat(currState.id + ' -> '))
+      // The last character is reached
+    } else if (inputIdx == input.length - 1) {
+      console.log('Last symbol of input reached.')
+      output = output.concat(currState.id)
+      console.log('OUTPUT:', output)
       // Machine halted
-
+    } else {
       console.log('Machine Halted.')
       if (currState.isFinal) {
         console.log('ACCEPTED!')
       }
+      console.log('OUTPUT:', output)
     }
   })
 }
 
-recursiveTransition(input, 0, initial)
+console.log('INPUT:\t', input)
+recursiveTransition(input, 0, initial, initial.id + ' -> ')
 
 // TODO: better iteration of word
 // for (const symbol in input) {
@@ -89,8 +105,6 @@ recursiveTransition(input, 0, initial)
 //   console.log()
 // }
 
-// console.log()
-// console.log('INPUT:\t', input)
 // TODO: regexify / ->$/
 
 // Determine state of output
