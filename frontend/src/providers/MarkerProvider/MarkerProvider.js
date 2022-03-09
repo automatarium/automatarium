@@ -7,6 +7,7 @@ export const MarkerContext = createContext('marker')
 const MarkerProvider = ({ children }) => {
   // Define marker ids
   const standardArrowHead = 'standard-arrow-head'
+  const lineArrowHead = 'line-arrow-head'
 
   // Calculate marker bounding box
   const markerWidth = 30
@@ -31,9 +32,22 @@ const MarkerProvider = ({ children }) => {
         refY={markerRefY}
         orient="auto"
         markerUnits="strokeWidth">
-      <path d={`${arrowStart} ${arrowTopLeft} ${arrowBottomLeft} z`} fill="black" />
+        <path d={`${arrowStart} ${arrowTopLeft} ${arrowBottomLeft} z`} fill="black" />
+      </marker>
+
+      {/*Line Arrowhead Definition*/}
+      <marker
+        id={lineArrowHead}
+        markerWidth={markerWidth}
+        markerHeight={markerHeight}
+        refX={markerRefX}
+        refY={markerRefY}
+        orient="auto"
+        markerUnits="strokeWidth">
+      <path d={`${arrowStart} ${arrowTopLeft} ${arrowStart} ${arrowBottomLeft}`} stroke="black" />
       </marker>
     </defs>
+
 
     {/*Provide context to children*/}
     <MarkerContext.Provider value={{ standardArrowHead }}>
