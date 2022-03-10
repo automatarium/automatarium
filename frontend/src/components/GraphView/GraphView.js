@@ -14,46 +14,50 @@ const sampleInitialData = {
     id: 0, //TODO: can be int?
     name: 'q0',
     label: null,
-    x: 50,
-    y: 50,
+    x: 150,
+    y: 150,
     isFinal: false,
   }, {
     id: 1,
     name: 'q1',
     label: null,
-    x: 230,
-    y: 70,
-    isfinal: true,
+    x: 330,
+    y: 170,
+    isFinal: true,
   },{
+    id: 2,
+    name: 'q2',
+    label: null,
+    x: 150,
+    y: 350,
+    isFinal: true,
+  }, {
     id: 3,
     name: 'q3',
     label: null,
-    x: 50,
-    y: 250,
-    isfinal: true,
-  }, {
-    id: 4,
-    name: 'q4',
-    label: null,
-    x: 230,
-    y: 250,
-    isfinal: true,
+    x: 530,
+    y: 350,
+    isFinal: true,
   }],
   transitions: [{
     from: 0,
     to: 1,
     read: 'a',
   }, {
-    from: 3,
-    to: 4,
+    from: 1,
+    to: 2,
+    read: 'z',
+  },{
+    from: 2,
+    to: 3,
     read: 'a'
   }, {
-    from: 3,
-    to: 4,
+    from: 2,
+    to: 3,
     read: 'b'
   }, {
-    from: 3,
-    to: 4,
+    from: 2,
+    to: 3,
     read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
   }]
 }
