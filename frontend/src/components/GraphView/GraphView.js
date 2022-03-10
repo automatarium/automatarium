@@ -7,29 +7,32 @@ import { useStateDragging } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
 
 const sampleInitialData = {
+  options: {
+    initialState: 0
+  },
   states: [{
-    id: 'q0', //TODO: can be int?
+    id: 0, //TODO: can be int?
     name: 'q0',
     label: null,
     x: 50,
     y: 50,
     isFinal: false,
   }, {
-    id: 'q1',
+    id: 1,
     name: 'q1',
     label: null,
     x: 230,
     y: 70,
     isfinal: true,
   },{
-    id: 'q3',
+    id: 3,
     name: 'q3',
     label: null,
     x: 50,
     y: 250,
     isfinal: true,
   }, {
-    id: 'q4',
+    id: 4,
     name: 'q4',
     label: null,
     x: 230,
@@ -37,20 +40,20 @@ const sampleInitialData = {
     isfinal: true,
   }],
   transitions: [{
-    from: 'q0',
-    to: 'q1',
+    from: 0,
+    to: 1,
     read: 'a',
   }, {
-    from: 'q3',
-    to: 'q4',
+    from: 3,
+    to: 4,
     read: 'a'
   }, {
-    from: 'q3',
-    to: 'q4',
+    from: 3,
+    to: 4,
     read: 'b'
   }, {
-    from: 'q3',
-    to: 'q4',
+    from: 3,
+    to: 4,
     read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
   }]
 }
