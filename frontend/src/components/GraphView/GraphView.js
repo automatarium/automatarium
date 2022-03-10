@@ -37,7 +37,7 @@ const sampleInitialData = {
     label: null,
     x: 530,
     y: 350,
-    isFinal: true,
+    isfinal: true,
   }],
   transitions: [{
     from: 0,
@@ -94,7 +94,7 @@ const GraphView = props => {
           <InitialStateArrow states={states} initialState={initialState}/>
 
           {/* Render all sets of edges */}
-          {locatedTransitions.map(transitions => <TransitionSet transitions={transitions} key={transitions} />)}
+          {locatedTransitions.map((transitions, i) => <TransitionSet transitions={transitions} key={i} />)}
 
           {/* Render all states */}
           {states.map(s => <StateCircle
