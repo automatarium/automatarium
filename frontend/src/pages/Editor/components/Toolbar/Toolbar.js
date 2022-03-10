@@ -26,12 +26,12 @@ const Toolbar = ({
   value,
 }) => {
   return (
-    <Sidebar tools>
+    <Sidebar $tools>
       {tools.map(tool => (
         <Sidebar.Button
           key={tool.label}
           onClick={() => onChange(tool.label)}
-          active={value === tool.label}
+          $active={value === tool.label}
         >
           {tool.icon}
         </Sidebar.Button>

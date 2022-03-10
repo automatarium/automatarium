@@ -8,7 +8,12 @@ import * as Pages from './pages'
 import { GraphView, Main } from '/src/components'
 
 // Set up goober to use React
-setup(createElement)
+setup(
+  createElement,
+  undefined, undefined,
+  // Remove transient props from the DOM
+  props => Object.keys(props).forEach(p => p[0] === '$' && delete props[p])
+)
 
 ReactDOM.render(
   <BrowserRouter>

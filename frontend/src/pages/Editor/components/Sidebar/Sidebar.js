@@ -6,7 +6,7 @@ const Sidebar = styled('nav')`
   display: flex;
   flex-direction: column;
 
-  ${props => props.tools && `
+  ${props => props.$tools && `
     & > button {
       min-width: 4rem;
     }
@@ -30,7 +30,7 @@ Sidebar.Button = styled('button')`
   &:hover {
     background: var(--surface);
   }
-  &:active ${props => props.active && `,&,&:hover`} {
+  &:active ${props => props.$active && `,&,&:hover`} {
     background: var(--primary);
   }
 `
