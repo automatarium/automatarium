@@ -1,10 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useStateDragging } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
+
+import { Svg } from './graphViewStyle'
 
 const sampleInitialData = {
   initialState: 0,
@@ -57,7 +59,7 @@ const sampleInitialData = {
 }
 
 
-const GraphView = () => {
+const GraphView = props => {
   const [graphState, setGraphState] = useState(sampleInitialData)
   const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState })
 
@@ -79,26 +81,28 @@ const GraphView = () => {
     }
   }
 
-  return <svg onContextMenu={e => e.preventDefault()} onMouseMove={doDrag} style={{ width: '100vw', height: '100vh' }}>
-    <MarkerProvider>
-      <g>
-        {/* Render arrow on initial state */}
-        <InitialStateArrow states={states} initialState={initialState}/>
+  return (
+    <Svg onContextMenu={e => e.preventDefault()} onMouseMove={doDrag} {...props}>
+      <MarkerProvider>
+        <g>
+          {/* Render arrow on initial state */}
+          <InitialStateArrow states={states} initialState={initialState}/>
 
-        {/* Render all sets of edges */}
-        {locatedTransitions.map(transitions => <TransitionSet transitions={transitions} key={transitions} />)}
+          {/* Render all sets of edges */}
+          {locatedTransitions.map(transitions => <TransitionSet transitions={transitions} key={transitions} />)}
 
-        {/* Render all states */}
-        {states.map(s => <StateCircle
-          key={s.name}
-          name={s.name}
-          cx={s.x}
-          cy={s.y}
-          isFinal={s.isFinal}
-          onMouseDown={handleStateMouseDown}/>)}
-      </g>
-    </MarkerProvider>
-  </svg>
+          {/* Render all states */}
+          {states.map(s => <StateCircle
+            key={s.name}
+            name={s.name}
+            cx={s.x}
+            cy={s.y}
+            isFinal={s.isFinal}
+            onMouseDown={handleStateMouseDown}/>)}
+        </g>
+      </MarkerProvider>
+    </Svg>
+  )
 }
 
 export default GraphView
