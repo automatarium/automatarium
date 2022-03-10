@@ -1,5 +1,5 @@
 :root {
-  --white: #FFFFFF;
+  --white: #FAFAFA;
   --black: #000000;
   --primary-h: 36;
   --primary-s: 84%;
@@ -17,6 +17,8 @@ body {
   color-scheme: light dark;
   margin: 0;
   font-family: sans-serif;
+  background: var(--toolbar);
+  color: var(--white);
 }
 
 #app {
