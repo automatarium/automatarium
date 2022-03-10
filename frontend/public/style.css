@@ -1,3 +1,18 @@
+:root {
+  --white: #FFFFFF;
+  --black: #000000;
+  --primary-h: 36;
+  --primary-s: 84%;
+  --primary-l: 52%;
+  --primary: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
+  --success: #23AF00;
+  --error: #FC5353;
+  --surface: #2C2C2C;
+  --toolbar: #424242;
+  --disabled-button: #6F6F6F;
+  --input-border: #C4C4C4;
+}
+
 body {
   color-scheme: light dark;
   margin: 0;
