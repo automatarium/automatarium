@@ -1,40 +1,42 @@
-import { Button, Logo } from '/src/components'
+import { MousePointer2, Hand, MessageSquare } from 'lucide-react'
 
-import {
-  Wrapper,
-  Menu,
-  Name,
-  DropdownMenus,
-  Actions,
-  Dropdown,
-} from './toolbarStyle'
+import { Sidebar } from '../../components'
 
-const Toolbar = () => {
+const tools = [
+  {
+    label: 'Cursor',
+    icon: <MousePointer2 />,
+  },
+  {
+    label: 'Hand',
+    icon: <Hand />,
+  },
+  {
+    label: 'Transition',
+    icon: <MousePointer2 />,
+  },
+  {
+    label: 'Comment',
+    icon: <MessageSquare />,
+  },
+]
+
+const Toolbar = ({
+  onChange,
+  value,
+}) => {
   return (
-    <Wrapper>
-      <Menu>
-        <Logo />
-
-        <div>
-          {/* TODO: Make the title editable */}
-          <Name>Example Title</Name>
-
-          <DropdownMenus>
-            {['File', 'Edit', 'View', 'Tools', 'Help'].map(label => (
-              <Dropdown
-                type="button"
-                key={label}
-                onClick={() => console.log('You clicked', label)}
-              >{label}</Dropdown>
-            ))}
-          </DropdownMenus>
-        </div>
-      </Menu>
-
-      <Actions>
-        <Button>Share</Button>
-      </Actions>
-    </Wrapper>
+    <Sidebar tools>
+      {tools.map(tool => (
+        <Sidebar.Button
+          key={tool.label}
+          onClick={() => onChange(tool.label)}
+          active={value === tool.label}
+        >
+          {tool.icon}
+        </Sidebar.Button>
+      ))}
+    </Sidebar>
   )
 }
 

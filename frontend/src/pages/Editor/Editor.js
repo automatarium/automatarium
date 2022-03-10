@@ -1,8 +1,14 @@
-import { Toolbar } from './components'
+import { Menubar, Toolbar } from './components'
+
+import { Content } from './editorStyle'
 
 const Editor = () => (
   <>
-    <Toolbar />
+    <Menubar />
+
+    <Content>
+      <Toolbar value='Cursor' />
+    </Content>
   </>
 )
 

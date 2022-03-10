@@ -11,7 +11,6 @@ export const Wrapper = styled('nav')`
 export const Menu = styled('div')`
   display: flex;
   align-items: center;
-  padding: .4em;
   gap: .5em;
   flex: 1;
 

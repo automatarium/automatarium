@@ -1,5 +1,5 @@
 const Logo = ({
-  size = '3em',
+  size = '4rem',
   primary = 'var(--primary)',
   secondary = 'hsl(var(--primary-h) var(--primary-s) 80%)',
   ...props
