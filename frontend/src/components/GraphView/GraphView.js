@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
@@ -61,7 +61,8 @@ const sampleInitialData = {
 
 const GraphView = props => {
   const [graphState, setGraphState] = useState(sampleInitialData)
-  const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState })
+  const containerRef = useRef()
+  const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState, containerElement: containerRef?.current })
 
   // Destruct state
   const { states, transitions, initialState } = graphState
@@ -82,7 +83,7 @@ const GraphView = props => {
   }
 
   return (
-    <Svg onContextMenu={e => e.preventDefault()} onMouseMove={doDrag} {...props}>
+    <Svg onContextMenu={e => e.preventDefault()} onMouseMove={doDrag} {...props} ref={containerRef}>
       <MarkerProvider>
         <g>
           {/* Render arrow on initial state */}
