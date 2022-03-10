@@ -17,7 +17,6 @@
     "build": "rm -rf dist && parcel build public/index.html"
   },
   "dependencies": {
-    "add": "^2.0.6",
     "goober": "^2.1.8",
     "lodash.groupby": "^4.6.0",
     "lucide-react": "^0.17.9",
