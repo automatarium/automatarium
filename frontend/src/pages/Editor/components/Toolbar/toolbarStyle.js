@@ -11,30 +11,46 @@ export const Wrapper = styled('nav')`
 export const Menu = styled('div')`
   display: flex;
   align-items: center;
-  padding: .2em;
-  gap: .3em;
+  padding: .4em;
+  gap: .5em;
   flex: 1;
 
   & > div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: .3em;
   }
 `
 
 export const Name = styled('span')`
   display: block;
   font-size: 1.2em;
-`
-
-export const DropdownMenus = styled('div')`
-  display: flex;
-  gap: .3em;
+  padding: .2em .5rem;
 `
 
 export const Actions = styled('div')`
   display: flex;
   gap: .5em;
-  padding: .5em;
+  padding: 1em;
+`
+
+export const DropdownMenus = styled('div')`
+  display: flex;
+  gap: .1em;
+`
+
+export const Dropdown = styled('button')`
+  font: inherit;
+  margin: 0;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: .2em .5rem;
+  cursor: pointer;
+  font-size: .95em;
+  border-radius: .2em;
+
+  &:hover {
+    background: var(--surface);
+  }
 `

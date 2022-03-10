@@ -1,7 +1,7 @@
 const Logo = ({
   size = '3em',
   primary = 'var(--primary)',
-  secondary = 'hsl(var(--primary-h) var(--primary-s) 70%)',
+  secondary = 'hsl(var(--primary-h) var(--primary-s) 80%)',
   ...props
 }) => (
   <svg

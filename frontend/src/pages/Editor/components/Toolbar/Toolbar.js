@@ -6,6 +6,7 @@ import {
   Name,
   DropdownMenus,
   Actions,
+  Dropdown,
 } from './toolbarStyle'
 
 const Toolbar = () => {
@@ -16,7 +17,11 @@ const Toolbar = () => {
         <div>
           <Name>Example Title</Name>
           <DropdownMenus>
-            <span>File</span>
+            <Dropdown type="button">File</Dropdown>
+            <Dropdown type="button">Edit</Dropdown>
+            <Dropdown type="button">View</Dropdown>
+            <Dropdown type="button">Tools</Dropdown>
+            <Dropdown type="button">Help</Dropdown>
           </DropdownMenus>
         </div>
       </Menu>
