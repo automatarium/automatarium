@@ -5,7 +5,7 @@ import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 
 import * as Pages from './pages'
 
-import { GraphView } from '/src/components'
+import { GraphView, Main } from '/src/components'
 
 // Set up goober to use React
 setup(createElement)
@@ -13,13 +13,13 @@ setup(createElement)
 ReactDOM.render(
   <BrowserRouter>
     <Routes>
-      <Route path="/" element={<main>
+      <Route path="/" element={<Main>
         <h1>Automatarium</h1>
-        <Link to="/editor">Editor</Link>
-        <Link to="/svg">SVG Demo</Link>
-      </main>} />
+        <Link to="/editor" style={{color: 'inherit'}}>Editor</Link><br />
+        <Link to="/svg" style={{color: 'inherit'}}>SVG Demo</Link>
+      </Main>} />
       <Route path="/editor" element={<Pages.Editor />} />
-      <Route path="/svg" element={<GraphView />} />
+      <Route path="/svg" element={<GraphView style={{ width: '100vw', height: '100vh' }} />} />
       <Route path="*" element={<h1>404</h1>} />
     </Routes>
   </BrowserRouter>,

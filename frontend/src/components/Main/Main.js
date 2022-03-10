@@ -5,6 +5,7 @@ const Main = styled('main')`
   width: 100%;
   padding: 2em;
   box-sizing: border-box;
+  margin: 0 auto;
 `
 
 export default Main

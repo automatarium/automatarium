@@ -1,4 +1,4 @@
-import { MousePointer2, Hand, MessageSquare } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle } from 'lucide-react'
 
 import { Sidebar } from '../../components'
 
@@ -13,7 +13,7 @@ const tools = [
   },
   {
     label: 'Transition',
-    icon: <MousePointer2 />,
+    icon: <Circle />,
   },
   {
     label: 'Comment',
