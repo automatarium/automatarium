@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
 export const StyledPath = styled('path')`
-  stroke: black;
+  stroke: var(--black);
   fill: none;
 `
