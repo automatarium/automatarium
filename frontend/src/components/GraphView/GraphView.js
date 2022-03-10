@@ -1,15 +1,13 @@
 import { useState, useEffect } from 'react'
 import groupBy from 'lodash.groupby'
 
-import { StateCircle, TransitionSet } from '/src/components'
+import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useStateDragging } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
 
 const sampleInitialData = {
-  options: {
-    initialState: 0
-  },
+  initialState: 0,
   states: [{
     id: 0, //TODO: can be int?
     name: 'q0',
@@ -64,7 +62,7 @@ const GraphView = () => {
   const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState })
 
   // Destruct state
-  const { states, transitions } = graphState
+  const { states, transitions, initialState } = graphState
 
   // Group up transitions by the start&end nodes
   const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to]))
@@ -84,6 +82,9 @@ const GraphView = () => {
   return <svg onContextMenu={e => e.preventDefault()} onMouseMove={doDrag} style={{ width: '100vw', height: '100vh' }}>
     <MarkerProvider>
       <g>
+        {/* Render arrow on initial state */}
+        <InitialStateArrow states={states} initialState={initialState}/>
+
         {/* Render all sets of edges */}
         {locatedTransitions.map(transitions => <TransitionSet transitions={transitions} key={transitions} />)}
 
