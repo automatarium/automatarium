@@ -1,3 +1,4 @@
+import { forwardRef } from 'react'
 import { styled } from 'goober'
 
 export const Wrapper = styled('nav')`
@@ -38,7 +39,7 @@ export const DropdownMenus = styled('div')`
   gap: .1em;
 `
 
-export const Dropdown = styled('button')`
+export const DropdownButtonWrapper = styled('button', forwardRef)`
   font: inherit;
   margin: 0;
   color: inherit;
@@ -49,7 +50,7 @@ export const Dropdown = styled('button')`
   font-size: .95em;
   border-radius: .2em;
 
-  &:hover {
+  &:hover ${props => props.$active && `,&`} {
     background: var(--surface);
   }
 `

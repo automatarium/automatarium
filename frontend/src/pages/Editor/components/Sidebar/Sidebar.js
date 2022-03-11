@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { forwardRef } from 'react'
 
 const Sidebar = styled('nav')`
   background-color: var(--toolbar);
@@ -6,14 +7,14 @@ const Sidebar = styled('nav')`
   display: flex;
   flex-direction: column;
 
-  ${props => props.tools && `
+  ${props => props.$tools && `
     & > button {
       min-width: 4rem;
     }
   `}
 `
 
-Sidebar.Button = styled('button')`
+Sidebar.Button = styled('button', forwardRef)`
   background: none;
   font: inherit;
   color: inherit;
@@ -26,11 +27,12 @@ Sidebar.Button = styled('button')`
   padding: 0;
   margin: 0;
   min-width: 3rem;
+  gap: .1em;
 
   &:hover {
     background: var(--surface);
   }
-  &:active ${props => props.active && `,&,&:hover`} {
+  &:active ${props => props.$active && `,&,&:hover`} {
     background: var(--primary);
   }
 `
