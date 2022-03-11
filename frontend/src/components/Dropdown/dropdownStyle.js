@@ -1,6 +1,7 @@
 import { styled } from 'goober'
+import { forwardRef } from 'react'
 
-export const Wrapper = styled('div')`
+export const Wrapper = styled('div', forwardRef)`
   background: var(--surface);
   border-radius: .3em;
   padding: .4em 0;
@@ -50,8 +51,21 @@ export const ItemWrapper = styled('button')`
   gap: 1em;
   width: 100%;
 
-  &:hover ${props => props.$active && `,&`} {
+  &:hover, &:focus ${props => props.$active && `,&`} {
     background: var(--primary);
+  }
+
+  &:disabled, &:disabled:hover {
+    background: none;
+    cursor: default;
+
+    label, svg {
+      opacity: .5;
+    }
+  }
+
+  label {
+    cursor: inherit;
   }
 `
 

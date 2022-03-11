@@ -1,7 +1,12 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronRight } from 'lucide-react'
 
-import { Wrapper, ItemWrapper, Shortcut, Divider } from './dropdownStyle'
+import {
+  Wrapper,
+  ItemWrapper,
+  Shortcut,
+  Divider,
+} from './dropdownStyle'
 
 const ItemWithItems = ({ item }) => {
   const [active, setActive] = useState(false)
@@ -10,8 +15,9 @@ const ItemWithItems = ({ item }) => {
     <div
       onMouseEnter={() => setActive(true)}
       onMouseLeave={() => setActive(false)}
+      onBlur={e => !e.currentTarget.contains(e.relatedTarget) && setActive(false)}
     >
-      <Item active={active} item={item} />
+      <Item active={active} item={item} setActive={() => setActive(true)} />
       <Dropdown
         items={item.items}
         subMenu
@@ -21,14 +27,15 @@ const ItemWithItems = ({ item }) => {
   )
 }
 
-const Item = ({ item, active }) => (
+const Item = ({ item, active, setActive }) => (
   <ItemWrapper
-    onClick={item.onClick}
+    onClick={item.onClick ?? (item.items?.length > 0 ? setActive : undefined)}
+    disabled={(!item.onClick && !item.hasOwnProperty('items')) || item.items?.length === 0}
     type="button"
     $active={active}
   >
-    <span>{item.label}</span>
-    {item.shortcut && <Shortcut>{item.shortcut}</Shortcut>}
+    <label>{item.label}</label>
+    {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
     {item.items && <ChevronRight size="1em" />}
   </ItemWrapper>
 )
@@ -39,25 +46,50 @@ const Dropdown = ({
   items,
   x,
   y,
+  onClose,
   ...props
-}) => (
-  <Wrapper
-    $x={`${x}px`}
-    $y={`${y}px`}
-    $subMenu={subMenu}
-    $visible={visible}
-    {...props}
-  >
-    {items.map((item, i) => item === 'hr' ? (
-        <Divider key={`hr-${i}`} />
-      ) : (
-        item.items ? (
-          <ItemWithItems key={item.label} item={item} />
+}) => {
+  const dropdownRef = useRef()
+
+  // Close dropdown if click outside
+  const handleClick = useCallback(e => !dropdownRef.current?.contains(e.target) && onClose(), [onClose])
+
+  // Close dropdown if escape pressed
+  const handleKey = useCallback(e => e.key === 'Escape' && onClose(), [onClose])
+
+  useEffect(() => {
+    if (!subMenu && visible) {
+      document.addEventListener('click', handleClick)
+      document.addEventListener('keydown', handleKey)
+    }
+    return () => {
+      document.removeEventListener('click', handleClick)
+      document.removeEventListener('keydown', handleKey)
+    }
+  }, [visible, subMenu, onClose, handleClick, handleKey])
+
+  return (
+    <Wrapper
+      $x={`${x}px`}
+      $y={`${y}px`}
+      $subMenu={subMenu}
+      $visible={visible}
+      ref={dropdownRef}
+      // Close dropdown if focus leaves
+      onBlur={e => !subMenu && visible && !e.currentTarget.contains(e.relatedTarget) && onClose()}
+      {...props}
+    >
+      {items.map((item, i) => item === 'hr' ? (
+          <Divider key={`hr-${i}`} />
         ) : (
-          <Item key={item.label} item={item} />
-        )
-    ))}
-  </Wrapper>
-)
+          item.items ? (
+            <ItemWithItems key={item.label} item={item} />
+          ) : (
+            <Item key={item.label} item={item} />
+          )
+      ))}
+    </Wrapper>
+  )
+}
 
 export default Dropdown
