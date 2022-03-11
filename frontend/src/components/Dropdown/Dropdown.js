@@ -44,9 +44,8 @@ const Dropdown = ({
   subMenu,
   visible = true,
   items,
-  x,
-  y,
   onClose,
+  getRef,
   ...props
 }) => {
   const dropdownRef = useRef()
@@ -68,10 +67,10 @@ const Dropdown = ({
     }
   }, [visible, subMenu, onClose, handleClick, handleKey])
 
+  useEffect(() => dropdownRef.current && getRef && getRef(dropdownRef.current), [dropdownRef.current])
+
   return (
     <Wrapper
-      $x={`${x}px`}
-      $y={`${y}px`}
       $subMenu={subMenu}
       $visible={visible}
       ref={dropdownRef}

@@ -18,9 +18,7 @@ export const Wrapper = styled('div', forwardRef)`
   & > div {
     position: relative;
   }
-
-  top: ${props => props.$y};
-  left: ${props => props.$x};
+  
   ${props => props.$subMenu && `
     position: absolute;
     top: -.4em;

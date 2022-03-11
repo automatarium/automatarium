@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { forwardRef } from 'react'
 
 const Sidebar = styled('nav')`
   background-color: var(--toolbar);
@@ -13,7 +14,7 @@ const Sidebar = styled('nav')`
   `}
 `
 
-Sidebar.Button = styled('button')`
+Sidebar.Button = styled('button', forwardRef)`
   background: none;
   font: inherit;
   color: inherit;
@@ -26,6 +27,7 @@ Sidebar.Button = styled('button')`
   padding: 0;
   margin: 0;
   min-width: 3rem;
+  gap: .1em;
 
   &:hover {
     background: var(--surface);

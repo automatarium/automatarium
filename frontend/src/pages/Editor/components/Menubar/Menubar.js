@@ -222,7 +222,10 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
       >{item.label}</DropdownButtonWrapper>
 
       <Dropdown
-        x={rect.x} y={rect.y + rect.height + 10}
+        style={{
+          top: `${rect.y + rect.height + 10}px`,
+          left: `${rect.x}px`,
+        }}
         items={item.items}
         visible={dropdown === item.label}
         onClose={() => setDropdown(undefined)}
