@@ -32,6 +32,8 @@ export const convertJFLAPProject = (jflapProject) => {
   // Convert states
   const automatariumStates = states.map((state) => ({
     id: Number(state._attributes.id),
+    name: state._attributes.name,
+    label: state.label ? state.label._text: '',
     x: Number(state.x._text),
     y: Number(state.y._text),
     isFinal: state.final !== undefined,
@@ -41,7 +43,15 @@ export const convertJFLAPProject = (jflapProject) => {
   const automatariumTransitions = transitions.map((transition) => ({
     from: Number(transition.from._text),
     to: Number(transition.to._text),
-    read: transition.read._text,
+    read: transition.read._text ? transition.read._text: '',
+  }))
+
+  // Convert comments
+  const automatariumComments = notes.map((note, idx) => ({
+    id: idx,
+    text: note.text._text,
+    x: Number(note.x._text),
+    y: Number(note.y._text),
   }))
 
   return {
@@ -49,6 +59,7 @@ export const convertJFLAPProject = (jflapProject) => {
     initialState: initialStateID,
     states: automatariumStates,
     transitions: automatariumTransitions,
+    comments: automatariumComments,
   }
 }
 
