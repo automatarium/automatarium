@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useStateDragging = ({ graphState, setGraphState }) => {
+const useStateDragging = ({ graphState, setGraphState, containerElement }) => {
   const [draggedState, setDraggedState] = useState(null)
 
   const startDrag = (name, e) => {
@@ -12,8 +12,9 @@ const useStateDragging = ({ graphState, setGraphState }) => {
   // Listen for mouse move - dragging states
   const doDrag = e => {
     if (draggedState !== null) {
-      const x = e.clientX
-      const y = e.clientY
+      const b = containerElement.getBoundingClientRect()
+      const x = e.clientX - b.left
+      const y = e.clientY - b.top
       setGraphState({
         ...graphState,
         states: graphState.states.map(s => s.name === draggedState ? { ...s, x, y} : s)

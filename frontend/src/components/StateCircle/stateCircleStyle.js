@@ -1,8 +1,8 @@
 import { styled } from 'goober'
 
 export const StyledCircle = styled('circle')`
-  fill: #fffe93;
-  stroke: black;
+  fill: hsl(var(--primary-h) var(--primary-s) 75%);
+  stroke: var(--black);
 
   + text {
     user-select: none;

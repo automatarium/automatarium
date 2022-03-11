@@ -8,7 +8,7 @@ import { StyledPath } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
   { transitions.map(({from, to, read}, i) => (
-    <Transition i={i} count={transitions.length} text={read} from={from} to={to} key={[i, from, to]} />)
+    <Transition i={i} count={transitions.length} text={read} from={from} to={to} key={`${i} ${from.x} ${to.x} ${from.y} ${to.y}`} />)
   )}
 </>
 
@@ -43,6 +43,10 @@ const Transition = ({ i, count, from, to, text }) => {
   
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
+  const textPathOffset = 5
+  const textPathData = edge1.x < edge2.x
+    ? `M${edge1.x}, ${edge1.y - textPathOffset} Q${control.x}, ${control.y - textPathOffset} ${edge2.x}, ${edge2.y - textPathOffset}`
+    : `M${edge2.x}, ${edge2.y - textPathOffset} Q${control.x}, ${control.y - textPathOffset} ${edge1.x}, ${edge1.y - textPathOffset}`
 
   // Generate a unique id for this path
   // -- used to place the text on the same path
@@ -50,11 +54,12 @@ const Transition = ({ i, count, from, to, text }) => {
   
   return <>
      {/*The edge itself*/}
-     <StyledPath id={pathID} d={pathData} key={pathData} markerEnd={`url(#${standardArrowHead})`} />
+     <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${standardArrowHead})`} />
+     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
      {/* The label - i.e the accepted symbols*/}
      <text>
-       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}`}>
+       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
         {text}
        </textPath>
      </text>
