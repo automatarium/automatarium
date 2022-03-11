@@ -1,6 +1,6 @@
 {
   "meta": {
-    "name": "Accepts dib - Multiple paths for i",
+    "name": "dib or dip with an odd number of p's",
     "dateCreated": "",
     "dateEdited": "",
     "version": "1.0.0",
@@ -40,9 +40,15 @@
     },
     {
       "id": "q4",
-      "x": 100,
-      "y": 150,
+      "x": 200,
+      "y": 200,
       "isFinal": false
+    },
+    {
+      "id": "q5",
+      "x": 200,
+      "y": 200,
+      "isFinal": true
     }
   ],
   "transitions": [
@@ -68,8 +74,13 @@
     },
     {
       "from": "q4",
-      "to": "q3",
-      "read": "b"
+      "to": "q5",
+      "read": "p"
+    },
+    {
+      "from": "q5",
+      "to": "q4",
+      "read": "p"
     }
   ],
   "comments": [
