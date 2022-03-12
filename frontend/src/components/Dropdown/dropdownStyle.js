@@ -34,6 +34,10 @@ export const Wrapper = styled('div', forwardRef)`
   `}
 `
 
+export const Shortcut = styled('span')`
+  opacity: .5;
+`
+
 export const ItemWrapper = styled('button')`
   display: flex;
   justify-content: space-between;
@@ -65,10 +69,6 @@ export const ItemWrapper = styled('button')`
   label {
     cursor: inherit;
   }
-`
-
-export const Shortcut = styled('span')`
-  opacity: .5;
 `
 
 export const Divider = styled('hr')`

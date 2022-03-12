@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronRight } from 'lucide-react'
 
+import { Hotkey } from '/src/components'
+
 import {
   Wrapper,
   ItemWrapper,
@@ -36,6 +38,9 @@ const Item = ({ item, active, setActive }) => (
   >
     <label>{item.label}</label>
     {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
+    {item.action && <Shortcut aria-hidden="true">
+      <Hotkey action={item.action} onAction={item.onClick} renderLabel={true} />
+    </Shortcut>}
     {item.items && <ChevronRight size="1em" />}
   </ItemWrapper>
 )
