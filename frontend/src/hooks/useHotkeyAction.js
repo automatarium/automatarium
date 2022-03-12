@@ -7,7 +7,7 @@ import actions from '/src/config/hotkeys'
 //   letter: a keyboard letter such as A
 //   meta: boolean, is the Command/Ctrl key required?
 //   alt: boolean, is the Option/Alt key required?
-//   shift: boolea, is the Shift key required?
+//   shift: boolean, is the Shift key required?
 // }]
 
 const isWindows = navigator.platform.match(/Win/)
@@ -19,17 +19,19 @@ const useHotkeyAction = (action, callback) => {
   // Get hotkey from action
   const hotkey = actions[action]
   if (!hotkey)
-    throw new Error(`No such action "${action}"`)
+    throw new Error(`No such action with name "${action}"`)
 
   // Add keydown listener
   useEffect(() => {
     const handleKeyDown = e => {
       // Guard against other keys 
-      if (!(
-        e.code === `Key${hotkey.letter.toUpperCase()}` ||
-        e.code === `Digit${hotkey.letter}` ||
-        e.key === hotkey.letter))
+      const keyMatch = e.code === `Key${hotkey.letter.toUpperCase()}`
+      const digitMatch = e.code === `Digit${hotkey.letter}`
+      const letterMatch = e.key === hotkey.letter
+      if (!(keyMatch || digitMatch || letterMatch))
           return
+
+      // Check augmenting keys
       if ((hotkey.meta || false) !== (e.metaKey || e.ctrlKey))
         return
       if ((hotkey.alt || false) !== e.altKey)
