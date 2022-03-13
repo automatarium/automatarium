@@ -66,7 +66,7 @@ const sampleInitialData = {
 const GraphView = props => {
   const [graphState, setGraphState] = useState(sampleInitialData)
   const containerRef = useRef()
-  const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState, containerElement: containerRef?.current })
+  const { startDrag, doDrag } = useStateDragging({ graphState, setGraphState, containerRef })
 
   // Destruct state
   const { states, transitions, initialState } = graphState
@@ -75,9 +75,9 @@ const GraphView = props => {
   const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to]))
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
-  const handleStateMouseDown = (name, e) => {
+  const handleStateMouseDown = (state, e) => {
     if (e.button === 0)
-      startDrag(name, e)
+      startDrag(state, e)
 
     // Is this RMB?
     if (e.button === 2) {
@@ -103,7 +103,7 @@ const GraphView = props => {
             cx={s.x}
             cy={s.y}
             isFinal={s.isFinal}
-            onMouseDown={handleStateMouseDown}/>)}
+            onMouseDown={e => handleStateMouseDown(s, e)}/>)}
         </g>
       </MarkerProvider>
     </Svg>
