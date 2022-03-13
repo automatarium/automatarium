@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 
+import { GRID_SNAP } from '/src/config/interactions'
+
 const useStateDragging = ({ graphState, setGraphState, containerRef }) => {
   const [draggedState, setDraggedState] = useState(null)
   const [dragStartPosition, setDragStartPosition] = useState()
@@ -24,9 +26,12 @@ const useStateDragging = ({ graphState, setGraphState, containerRef }) => {
     if (draggedState !== null) {
       const [x, y] = relativeMousePosition(e.clientX, e.clientY)
       const [dx, dy] = [x - dragStartPosition[0], y - dragStartPosition[1]]
+      const [sx, sy] = e.altKey
+        ? [dx, dy]
+        : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
       setGraphState({
         ...graphState,
-        states: graphState.states.map(s => s.id === draggedState ? { ...s, x: dx, y: dy} : s)
+        states: graphState.states.map(s => s.id === draggedState ? { ...s, x: sx, y: sy} : s)
       })
     }
   }
