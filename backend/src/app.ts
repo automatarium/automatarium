@@ -1,9 +1,17 @@
 import express from 'express'
-
-import config from '../config'
 import mongoose from 'mongoose'
+import bodyParser from 'body-parser'
+
+import config from './config'
+import finiteStateAutomatonRoutes from 'routes/finiteStateAutomaton'
 
 const app = express()
+
+/** Parse the body of the request */
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
+
+app.use('/fsa', finiteStateAutomatonRoutes)
 
 app.listen(config.server.port, async () => {
   console.log('Backend is listening')
