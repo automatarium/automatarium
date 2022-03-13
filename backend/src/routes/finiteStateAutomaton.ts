@@ -5,6 +5,6 @@ import { createFiniteStateAutomaton, getFiniteStateAutomaton } from 'controllers
 const app = express.Router()
 
 app.post('/', createFiniteStateAutomaton)
-app.get('/:faid', getFiniteStateAutomaton)
+app.get('/:fsaid', getFiniteStateAutomaton)
 
 export default app

@@ -4,9 +4,9 @@ import mongoose from 'mongoose'
 import FiniteStateAutomaton from '../models/finiteStateAutomaton'
 
 export const getFiniteStateAutomaton = ( req: Request, res: Response, next: NextFunction ) => {
-  const { faid } = req.params
+  const { fsaid } = req.params
 
-  FiniteStateAutomaton.findById(faid)
+  FiniteStateAutomaton.findById(fsaid)
     .exec()
     .then((result) => {
       return res.status(200).json({
@@ -25,7 +25,7 @@ export const createFiniteStateAutomaton = ( req: Request, res: Response, next: N
   
   const { name, initialState, states, transitions, comments } = req.body
 
-  const finiteAutomaton = new FiniteStateAutomaton({
+  const finiteStateAutomaton = new FiniteStateAutomaton({
     _id: new mongoose.Types.ObjectId(),
     name,
     initialState,
@@ -34,7 +34,7 @@ export const createFiniteStateAutomaton = ( req: Request, res: Response, next: N
     comments
   })
 
-  return finiteAutomaton.save()
+  return finiteStateAutomaton.save()
     .then( (result) => {
       return res.status(201).json({
         automaton: result
