@@ -22,19 +22,23 @@ const useStateDragging = ({ graphState, setGraphState, containerRef }) => {
   }
 
   // Listen for mouse move - dragging states
-  const doDrag = e => {
-    if (draggedState !== null) {
-      const [x, y] = relativeMousePosition(e.clientX, e.clientY)
-      const [dx, dy] = [x - dragStartPosition[0], y - dragStartPosition[1]]
-      const [sx, sy] = e.altKey
-        ? [dx, dy]
-        : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
-      setGraphState({
-        ...graphState,
-        states: graphState.states.map(s => s.id === draggedState ? { ...s, x: sx, y: sy} : s)
-      })
+  useEffect(() => {
+    const doDrag = e => {
+      if (draggedState !== null) {
+        const [x, y] = relativeMousePosition(e.clientX, e.clientY)
+        const [dx, dy] = [x - dragStartPosition[0], y - dragStartPosition[1]]
+        const [sx, sy] = e.altKey
+          ? [dx, dy]
+          : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
+        setGraphState({
+          ...graphState,
+          states: graphState.states.map(s => s.id === draggedState ? { ...s, x: sx, y: sy} : s)
+        })
+      }
     }
-  }
+    containerRef.current.addEventListener('mousemove', doDrag)
+    return () => containerRef.current.removeEventListener('mousemove', doDrag)
+  })
 
   // Listen for mouse up - stop dragging states
   useEffect(() => {
@@ -49,7 +53,7 @@ const useStateDragging = ({ graphState, setGraphState, containerRef }) => {
     return () => document.removeEventListener('mouseup', cb)
   }, [])
 
-  return { startDrag, doDrag }
+  return { startDrag }
 }
 
 export default useStateDragging

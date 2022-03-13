@@ -1,1 +1,1 @@
-export const GRID_SNAP = 10
+export const GRID_SNAP = 15
