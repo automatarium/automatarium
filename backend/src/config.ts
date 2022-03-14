@@ -31,7 +31,7 @@ const db = {
   url: `mongodb+srv://${dbUsername}:${dbPassword}@${dbHostname}`
 }
 
-// Server Config
+// Server config
 const serverHostname = process.env.SERVER_HOSTNAME || 'localhost'
 const serverPort = process.env.PORT || 3001
 

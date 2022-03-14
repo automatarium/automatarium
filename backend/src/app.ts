@@ -7,16 +7,16 @@ import finiteStateAutomatonRoutes from 'routes/finiteStateAutomaton'
 
 const app = express()
 
-/** Parse the body of the request */
+// Parse the body of the request
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
+// Configure routes
 app.use('/fsa', finiteStateAutomatonRoutes)
 
 app.listen(config.server.port, async () => {
-  console.log('Backend is listening')
+  console.log(`Listening on port ${config.server.port}`)
 
-  console.log(config.db)
   // Connect to database
   try {
     await mongoose.connect(config.db.url, config.db.options)

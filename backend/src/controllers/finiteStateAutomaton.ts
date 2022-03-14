@@ -6,6 +6,7 @@ import FiniteStateAutomaton from '../models/finiteStateAutomaton'
 export const getFiniteStateAutomaton = ( req: Request, res: Response, next: NextFunction ) => {
   const { fsaid } = req.params
 
+  // Retrieve finite state automaton by id
   FiniteStateAutomaton.findById(fsaid)
     .exec()
     .then((result) => {
@@ -20,11 +21,10 @@ export const getFiniteStateAutomaton = ( req: Request, res: Response, next: Next
     })
 }
 
-export const createFiniteStateAutomaton = ( req: Request, res: Response, next: NextFunction ) => {
-  console.log(req.body)
-  
+export const createFiniteStateAutomaton = ( req: Request, res: Response, next: NextFunction ) => {  
   const { name, initialState, states, transitions, comments } = req.body
 
+  // Create new finite state automaton
   const finiteStateAutomaton = new FiniteStateAutomaton({
     _id: new mongoose.Types.ObjectId(),
     name,
@@ -34,6 +34,7 @@ export const createFiniteStateAutomaton = ( req: Request, res: Response, next: N
     comments
   })
 
+  // Save finite state automaton
   return finiteStateAutomaton.save()
     .then( (result) => {
       return res.status(201).json({
