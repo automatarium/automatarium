@@ -3,10 +3,17 @@ import mongoose, { Schema } from 'mongoose'
 import IFiniteStateAutomaton from 'interfaces/finiteStateAutomaton'
 
 const FiniteStateAutomatonSchema: Schema = new Schema({
-  name: { type: String, required: true },
-  initialState: { type: Number, required: true },
+  meta: {
+    type: {
+      name: { type: String, required: true },
+      automatariumVersion: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now }
+    },
+    _id: false
+  },
+  initialState: { type: String, required: true },
   states: { type: [{
-    id: { type: Number, required: true },
+    id: { type: String, required: true },
     name: { type: String, required: true },
     label: { type: String, required: true },
     x: { type: Number, required: true },
@@ -14,13 +21,13 @@ const FiniteStateAutomatonSchema: Schema = new Schema({
     isFinal: { type: Boolean, required: true },
   }], _id: false},
   transitions: { type: [{
-    from: { type: Number, required: true },
-    to: { type: Number, required: true },
+    from: { type: String, required: true },
+    to: { type: String, required: true },
     read: { type: String, required: true },
-    bezierControlPoint: { type: [{
+    bezierControlPoint: { type: {
       x: { type: Number, required: true }, 
       y: { type: Number, required: true }
-    }], required: true, _id: false },
+    }, required: true, _id: false },
   }], _id: false},
   comments: { type: [{
     id: { type: String, required: true },
@@ -28,6 +35,10 @@ const FiniteStateAutomatonSchema: Schema = new Schema({
     x: { type: Number, required: true },
     y: { type: Number, required: true },
   }], _id: false},
-}, { timestamps: true })
+  tests: { type: {
+    trace: { type: String, required: true},
+    batch: { type: [String], required: true}
+  }, _id: false}
+}, { versionKey: false })
 
 export default mongoose.model<IFiniteStateAutomaton>('FiniteStateAutomaton', FiniteStateAutomatonSchema)

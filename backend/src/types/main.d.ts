@@ -10,3 +10,14 @@ export type comment = {
   x: number
   y: number
 }
+
+export type tests = {
+  trace: string
+  batch: string[]
+}
+
+export type meta = {
+  name: string
+  automatariumVersion: string
+  createdAt: string
+}

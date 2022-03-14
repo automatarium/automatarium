@@ -22,16 +22,17 @@ export const getFiniteStateAutomaton = ( req: Request, res: Response, next: Next
 }
 
 export const createFiniteStateAutomaton = ( req: Request, res: Response, next: NextFunction ) => {  
-  const { name, initialState, states, transitions, comments } = req.body
-
+  const { meta, initialState, states, transitions, comments, tests } = req.body
+  
   // Create new finite state automaton
   const finiteStateAutomaton = new FiniteStateAutomaton({
     _id: new mongoose.Types.ObjectId(),
-    name,
+    meta,
     initialState,
     states,
     transitions,
-    comments
+    comments,
+    tests
   })
 
   // Save finite state automaton
