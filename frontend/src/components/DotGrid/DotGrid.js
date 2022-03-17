@@ -2,7 +2,7 @@ import { Fragment, useState, useEffect } from 'react'
 import { GRID_SNAP } from '/src/config/interactions'
 import { DOT_GRID_RADIUS } from '/src/config/rendering'
 
-import { DotGridContainer } from './dotGridStyle'
+import { DotGridContainer, DotGridCircle } from './dotGridStyle'
 
 const DotGrid = ({ containerRef }) => {
   const [gridSize, setGridSize] = useState([30, 30])
@@ -39,7 +39,7 @@ const DotGrid = ({ containerRef }) => {
   return <DotGridContainer data-snapping={!isAltKeyPressed}>
     {Array.from({ length: h }).map((_, i) => <Fragment key={i}>
       {Array.from({ length: v }).map((_, j) => <Fragment key={j}>
-        <circle key={`${i},${j}`} cx={i*spacing} cy={j*spacing} r={DOT_GRID_RADIUS} fill='#eee' stroke='none'/>
+        <DotGridCircle key={`${i},${j}`} cx={i*spacing} cy={j*spacing} r={DOT_GRID_RADIUS} />
       </Fragment>)}
     </Fragment>)}
   </DotGridContainer>
