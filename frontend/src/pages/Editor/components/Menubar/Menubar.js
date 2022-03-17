@@ -17,13 +17,13 @@ const menus = [
     items: [
       {
         label: 'New...',
-        shortcut: '⌘ N',
-        onClick: () => console.log('Clicked'),
+        action: 'NEW_FILE',
+        onClick: () => console.log('New File'),
       },
       {
         label: 'Open...',
-        shortcut: '⌘ O',
-        onClick: () => console.log('Clicked'),
+        action: 'OPEN_FILE',
+        onClick: () => console.log('Open File'),
       },
       {
         label: 'Open recent',
@@ -37,12 +37,13 @@ const menus = [
       'hr',
       {
         label: 'Save',
-        shortcut: '⌘ S',
+        action: 'SAVE_FILE',
+        onClick: () => console.log('Save'),
       },
       {
         label: 'Save as...',
-        shortcut: '⇧ ⌘ S',
-        onClick: () => console.log('Clicked'),
+        action: 'SAVE_FILE_AS',
+        onClick: () => console.log('Save File As'),
       },
       'hr',
       {
@@ -50,34 +51,34 @@ const menus = [
         items: [
           {
             label: 'Export as PNG',
-            shortcut: '⇧ ⌘ E',
-            onClick: () => console.log('Clicked'),
+            action: 'EXPORT_AS_PNG',
+            onClick: () => console.log('Export PNG'),
           },
           {
             label: 'Export as SVG',
-            shortcut: '⇧ ⌥ ⌘ E',
-            onClick: () => console.log('Clicked'),
+            action: 'EXPORT_AS_SVG',
+            onClick: () => console.log('Export SVG'),
           },
           {
             label: 'Export as JPG',
-            onClick: () => console.log('Clicked'),
+            onClick: () => console.log('Export JPG'),
           },
           'hr',
           {
             label: 'Export as a JFLAP file',
-            onClick: () => console.log('Clicked'),
+            onClick: () => console.log('Export JFLAP'),
           },
         ],
       },
       {
         label: 'Share...',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('Share'),
       },
       'hr',
       {
         label: 'Preferences',
-        shortcut: '⌘ ,',
-        onClick: () => console.log('Clicked'),
+        action: 'OPEN_PREFERENCES',
+        onClick: () => console.log('Preferences'),
       },
     ]
   },
@@ -86,23 +87,24 @@ const menus = [
     items: [
       {
         label: 'Undo',
-        shortcut: '⌘ Z',
-        onClick: () => console.log('Clicked'),
+        action: 'UNDO',
+        onClick: () => console.log('Undo'),
       },
       {
         label: 'Redo',
-        shortcut: '⌘ Y',
+        action: 'REDO',
+        onClick: () => console.log('Redo')
       },
       'hr',
       {
         label: 'Copy',
-        shortcut: '⌘ C',
-        onClick: () => console.log('Clicked'),
+        action: 'COPY',
+        onClick: () => console.log('Copy'),
       },
       {
         label: 'Paste',
-        shortcut: '⌘ V',
-        onClick: () => console.log('Clicked'),
+        action: 'PASTE',
+        onClick: () => console.log('Paste'),
       },
       'hr',
       {
@@ -116,45 +118,45 @@ const menus = [
     items: [
       {
         label: 'Zoom in',
-        shortcut: '⌘ =',
-        onClick: () => console.log('Clicked'),
+        action: 'ZOOM_IN',
+        onClick: () => console.log('Zoom In'),
       },
       {
         label: 'Zoom out',
-        shortcut: '⌘ -',
-        onClick: () => console.log('Clicked'),
+        action: 'ZOOM_OUT',
+        onClick: () => console.log('Zoom Out'),
       },
       {
         label: 'Zoom to 100%',
-        shortcut: '⌘ 0',
-        onClick: () => console.log('Clicked'),
+        action: 'ZOOM_100',
+        onClick: () => console.log('Zoom to 100%'),
       },
       {
         label: 'Zoom to fit',
-        shortcut: '⇧ 1',
-        onClick: () => console.log('Clicked'),
+        action: 'ZOOM_FIT',
+        onClick: () => console.log('Zoom to fit'),
       },
       'hr',
       {
         label: 'Fullscreen',
         shortcut: 'F11',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('Fullscreen'),
       },
       'hr',
       {
         label: 'Testing lab',
-        shortcut: '⌘ T',
-        onClick: () => console.log('Clicked'),
+        action: 'TESTING_LAB',
+        onClick: () => console.log('Testing Lab'),
       },
       {
         label: 'File info',
-        shortcut: '⌘ I',
-        onClick: () => console.log('Clicked'),
+        action: 'FILE_INFO',
+        onClick: () => console.log('File Info'),
       },
       {
         label: 'File options',
-        shortcut: '⌘ U',
-        onClick: () => console.log('Clicked'),
+        action: 'FILE_OPTIONS',
+        onClick: () => console.log('File Options'),
       },
     ]
   },
@@ -163,15 +165,16 @@ const menus = [
     items: [
       {
         label: 'Convert to DFA',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('Convert to DFA'),
       },
       {
         label: 'Minimize DFA',
+        onClick: () => console.log('Minimize DFA'),
       },
       'hr',
       {
         label: 'Auto layout',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('Auto Layout'),
       },
     ]
   },
@@ -180,21 +183,21 @@ const menus = [
     items: [
       {
         label: 'View documentation',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('View Documentation'),
       },
       {
         label: 'Keyboard shortcuts',
-        shortcut: '⌘ /',
-        onClick: () => console.log('Clicked'),
+        action: 'KEYBOARD_SHORTCUTS',
+        onClick: () => console.log('Keyboard shortcuts'),
       },
       'hr',
       {
         label: 'Privacy policy',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('Privacy Policy'),
       },
       {
         label: 'About Automatarium',
-        onClick: () => console.log('Clicked'),
+        onClick: () => console.log('About Automatarium'),
       },
       'hr',
       {
