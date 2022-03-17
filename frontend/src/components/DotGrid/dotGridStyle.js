@@ -2,5 +2,5 @@ import { styled } from 'goober'
 
 export const DotGridContainer = styled('g')`
   opacity: ${p => p['data-snapping'] ? 1 : 0};
-  transition: opacity .3s;
+  transition: opacity .15s;
 `
