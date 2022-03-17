@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronRight } from 'lucide-react'
 
+import { Hotkey } from '/src/components'
+
 import {
   Wrapper,
   ItemWrapper,
@@ -30,12 +32,15 @@ const ItemWithItems = ({ item }) => {
 const Item = ({ item, active, setActive }) => (
   <ItemWrapper
     onClick={item.onClick ?? (item.items?.length > 0 ? setActive : undefined)}
-    disabled={(!item.onClick && !item.hasOwnProperty('items')) || item.items?.length === 0}
+    disabled={(!item.onClick && !item['items']) || item.items?.length === 0}
     type="button"
     $active={active}
   >
     <label>{item.label}</label>
     {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
+    {item.action && <Shortcut aria-hidden="true">
+      <Hotkey action={item.action} onAction={item.onClick} renderLabel={true} />
+    </Shortcut>}
     {item.items && <ChevronRight size="1em" />}
   </ItemWrapper>
 )

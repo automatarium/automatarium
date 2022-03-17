@@ -31,8 +31,6 @@ const Toolbar = ({
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
 
-  useEffect
-
   return (
     <Sidebar $tools>
       {tools.map(tool => (
