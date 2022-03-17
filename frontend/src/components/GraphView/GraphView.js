@@ -3,10 +3,9 @@ import { useEffect, useRef, useCallback } from 'react'
 import { DotGrid, GraphContent } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
+import { VIEW_MOVE_STEP } from '/src/config/interactions' 
 
 import { Svg } from './graphViewStyle'
-
-const VIEW_MOVE_STEP = 10
 
 const GraphView = props => {
   const containerRef = useRef()
