@@ -4,7 +4,7 @@ const Hotkey = ({ action, onAction, renderLabel=true }) => {
   const { hotkeyLabel } = useHotkeyAction(action, onAction)
 
   return renderLabel
-    ? <>{ hotkeyLabel }</>
+    ? hotkeyLabel
     : null
 }
 
