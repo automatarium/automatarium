@@ -1,4 +1,4 @@
-import { useEffect, useRef, createContext } from 'react'
+import { createContext } from 'react'
 
 import { ARROWHEAD_ANGLE as a, ARROWHEAD_LENGTH as l } from '/src/config/rendering'
 

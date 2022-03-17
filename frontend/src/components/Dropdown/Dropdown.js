@@ -30,7 +30,7 @@ const ItemWithItems = ({ item }) => {
 const Item = ({ item, active, setActive }) => (
   <ItemWrapper
     onClick={item.onClick ?? (item.items?.length > 0 ? setActive : undefined)}
-    disabled={(!item.onClick && !item.hasOwnProperty('items')) || item.items?.length === 0}
+    disabled={(!item.onClick && !item['items']) || item.items?.length === 0}
     type="button"
     $active={active}
   >
