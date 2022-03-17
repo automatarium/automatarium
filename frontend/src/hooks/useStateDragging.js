@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react'
 
+import { useProjectStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 
-const useStateDragging = ({ graphState, setGraphState, containerRef }) => {
+const useStateDragging = ({ containerRef }) => {
+  const updateState = useProjectStore(s => s.updateState)
   const [draggedState, setDraggedState] = useState(null)
   const [dragStartPosition, setDragStartPosition] = useState()
 
@@ -30,10 +32,7 @@ const useStateDragging = ({ graphState, setGraphState, containerRef }) => {
         const [sx, sy] = e.altKey
           ? [dx, dy]
           : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
-        setGraphState({
-          ...graphState,
-          states: graphState.states.map(s => s.id === draggedState ? { ...s, x: sx, y: sy} : s)
-        })
+        updateState({ id: draggedState, x: sx, y: sy })
       }
     }
     containerRef.current.addEventListener('mousemove', doDrag)
