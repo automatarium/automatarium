@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "goober": "^2.1.8",
+    "immer": "^9.0.12",
     "lodash.groupby": "^4.6.0",
     "lucide-react": "^0.17.9",
     "prop-types": "^15.8.1",
@@ -28,7 +29,8 @@
     "react-dom": "^17.0.2",
     "react-router-dom": "^6.2.2",
     "uuid": "^8.3.2",
-    "yarn": "^1.22.17"
+    "yarn": "^1.22.17",
+    "zustand": "^3.7.1"
   },
   "devDependencies": {
     "eslint": "^8.11.0",
