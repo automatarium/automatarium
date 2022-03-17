@@ -5,8 +5,7 @@
   "main": "dist/main.js",
   "source": "src/app.ts",
   "scripts": {
-    "build": "yarn build",
-    "start": "node dist/app.js",
+    "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts --ext .ts,.js --watch src"
   },
   "repository": {
