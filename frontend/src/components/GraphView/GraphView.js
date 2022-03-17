@@ -6,10 +6,11 @@ import { useViewStore } from '/src/stores'
 
 import { Svg } from './graphViewStyle'
 
+const VIEW_MOVE_STEP = 10
 
 const GraphView = props => {
   const containerRef = useRef()
-  const { position, size, scale, setViewSize } = useViewStore()
+  const { position, size, scale, setViewSize, moveViewPosition } = useViewStore()
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
@@ -17,13 +18,31 @@ const GraphView = props => {
     setViewSize({ width: b.width, height: b.height })
   }, [])
 
+  const onKeyDown = useCallback(e => {
+    if (e.code === 'ArrowRight')
+      moveViewPosition({ x: VIEW_MOVE_STEP })
+    if (e.code === 'ArrowLeft')
+      moveViewPosition({ x: -VIEW_MOVE_STEP })
+    if (e.code === 'ArrowDown')
+      moveViewPosition({ y: VIEW_MOVE_STEP })
+    if (e.code === 'ArrowUp')
+      moveViewPosition({ y: -VIEW_MOVE_STEP })
+  })
+
   // Keep track of resizes
+  // TODO: use onResize of container
   useEffect(() => {
     if (containerRef.current) {
       onContainerResize()
       window.addEventListener('resize', onContainerResize) 
       return () => window.removeEventListener('resize', onContainerResize) 
     }    
+  }, [])
+
+  // Keyboard commands for view control
+  useEffect(() => {
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
