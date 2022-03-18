@@ -1,7 +1,7 @@
 import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
-import { useStateDragging } from '/src/hooks'
+import { useStateDragging } from './hooks'
 import { useProjectStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 
