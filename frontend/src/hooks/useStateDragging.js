@@ -1,18 +1,19 @@
 import { useState, useEffect } from 'react'
 
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, useViewStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 
 const useStateDragging = ({ containerRef }) => {
   const updateState = useProjectStore(s => s.updateState)
   const [draggedState, setDraggedState] = useState(null)
   const [dragStartPosition, setDragStartPosition] = useState()
+  const viewScale = useViewStore(s => s.scale)
 
   const relativeMousePosition = (x, y) => {
     const b = containerRef.current.getBoundingClientRect()
     return [
-      x - b.left,
-      y - b.top,
+      (x - b.left) * viewScale,
+      (y - b.top) * viewScale,
     ]
   }
 
