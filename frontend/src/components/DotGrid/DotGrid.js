@@ -13,13 +13,11 @@ const DotGrid = () => {
   const size = useViewStore(s => s.size)
 
   const gridSize = useMemo(() => [
-    Math.floor((scale * size.width) / spacing) + 3,
-    Math.floor((scale * size.height) / spacing) + 3,
+    30, 30
   ], [scale, size])
 
   const gridOffset = useMemo(() => [
-    (Math.floor((position.x * scale) / spacing) * spacing) - spacing,
-    (Math.floor((position.y * scale) / spacing) * spacing) - spacing,
+    0, 0
   ], [position, scale])
 
   useEffect(() => {
