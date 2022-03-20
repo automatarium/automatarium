@@ -1,12 +1,13 @@
 import { useEffect, useCallback, useState } from 'react'
 
-import { useViewStore } from '/src/stores'
+import { useViewStore, useToolStore } from '/src/stores'
 
-const SCROLL_MAX = 3
-const SCROLL_MIN = 0.2
-const SCROLL_SPEED = 0.01
+import { SCROLL_MAX, SCROLL_MIN, SCROLL_SPEED } from '/src/config/interactions'
 
-const useViewDragging = (containerRef, toolActive = false) => {
+const useViewDragging = (containerRef) => {
+  const currentTool = useToolStore(s => s.tool)
+  const toolActive = currentTool === 'hand'
+
   const viewPosition = useViewStore(s => s.position)
   const viewScale = useViewStore(s => s.scale)
   const setViewPosition = useViewStore(s => s.setViewPosition)
@@ -15,6 +16,7 @@ const useViewDragging = (containerRef, toolActive = false) => {
   // Keep track of drag events
   const [dragStartPosition, setDragStartPosition] = useState(null)
   const [dragStartViewPosition, setDragStartViewPosition] = useState(null)
+
 
   const relativeMousePosition = useCallback((x, y) => {
     const b = containerRef.current.getBoundingClientRect()
