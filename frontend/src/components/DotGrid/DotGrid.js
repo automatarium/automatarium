@@ -1,25 +1,19 @@
 import { Fragment, useState, useEffect } from 'react'
 import { GRID_SNAP } from '/src/config/interactions'
 import { DOT_GRID_RADIUS } from '/src/config/rendering'
-import { useViewStore } from '/src/stores'
 
 import { DotGridContainer, DotGridCircle } from './dotGridStyle'
 
 const DotGrid = () => {
-  const spacing = GRID_SNAP * 2
+  const spacing = GRID_SNAP * 4
   const [isAltKeyPressed, setIsAltKeyPressed] = useState(false)
-  const position = useViewStore(s => s.position)
-  const scale = useViewStore(s => s.scale)
-  const size = useViewStore(s => s.size)
 
   const gridSize = [
-    Math.floor((scale * size.width) / spacing) + 3,
-    Math.floor((scale * size.height) / spacing) + 3,
+    30, 30
   ]
 
   const gridOffset = [
-    (Math.floor((position.x * scale) / spacing) * spacing) - spacing,
-    (Math.floor((position.y * scale) / spacing) * spacing) - spacing,
+    0, 0
   ]
 
   useEffect(() => {
