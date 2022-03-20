@@ -60,6 +60,7 @@ const useStateDragging = ({ containerRef }) => {
       if (e.button === 0) {
         setDraggedState(null)
         setDragOffset(null)
+        setDragCenter(null)
         e.preventDefault()
       }
     }
