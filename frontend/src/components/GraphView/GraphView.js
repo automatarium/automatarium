@@ -1,9 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react'
 
-import { DotGrid, GraphContent } from '/src/components'
+import { GraphContent } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
-import { VIEW_MOVE_STEP } from '/src/config/interactions' 
+import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions' 
 
 import { Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
@@ -46,14 +46,24 @@ const GraphView = props => {
     return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
+  // Determine svg background (grid)
+  const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
+  const backgroundSize = `${1 / scale * GRID_SNAP * 2}px ${1 / scale * GRID_SNAP * 2}px`
+  const showGrid = true
+
+  console.log({ backgroundSize, backgroundPosition })
+
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
-    <Svg onContextMenu={e => e.preventDefault()} viewBox={viewBox} {...props} ref={containerRef}>
+    <Svg
+      onContextMenu={e => e.preventDefault()}
+      viewBox={viewBox}
+      ref={containerRef}
+      $showGrid={showGrid}
+      {...props}
+      style={{ backgroundSize, backgroundPosition, ...props.style }}>
       <MarkerProvider>
         <g>
-          {/* Dot Grid */}
-          <DotGrid containerRef={containerRef} />
-
           {/* Graph states and transitions */}
           <GraphContent containerRef={containerRef} />
         </g>
