@@ -5,11 +5,11 @@
   "description": "A place for your automata",
   "repository": "git@github.com:GRA0007/automatarium.git",
   "contributors": [
-    "Maxwell Reid",
-    "Thomas Dib",
+    "Maxwell Reid (https://maxwellreid.tech/)",
+    "Thomas Dib (https://tdib.xyz/)",
     "Ewan Breakey (https://ewanb.me/)",
     "Benji Grant (https://bengrant.dev/)",
-    "Tim Tran"
+    "Timothy Tran"
   ],
   "license": "MIT",
   "private": true,
