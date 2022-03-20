@@ -17,7 +17,6 @@ const useViewDragging = (containerRef) => {
   const [dragStartPosition, setDragStartPosition] = useState(null)
   const [dragStartViewPosition, setDragStartViewPosition] = useState(null)
 
-
   const relativeMousePosition = useCallback((x, y) => {
     const b = containerRef.current.getBoundingClientRect()
     return [
@@ -47,7 +46,7 @@ const useViewDragging = (containerRef) => {
   }
 
   const onMouseDown = useCallback(e => {
-    if (toolActive || e.ctrlKey) {
+    if (toolActive) {
       setDragStartPosition(relativeMousePosition(e.clientX, e.clientY))
       setDragStartViewPosition(viewPosition)
     }
@@ -59,7 +58,7 @@ const useViewDragging = (containerRef) => {
   }, [])
 
   const onMouseMove = useCallback(e => {
-    if (toolActive || e.ctrlKey ) {
+    if (toolActive) {
       if (dragStartPosition !== null && dragStartViewPosition !== null) {
         const [sx, sy] = dragStartPosition
         const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
@@ -79,12 +78,6 @@ const useViewDragging = (containerRef) => {
     document.addEventListener('mouseup', onMouseUp)
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('wheel', onWheel, { passive: false })
-    // document.addEventListener('keydown', e => {
-    //   if (e.code === 'KeyF')
-    //     onWheel({ ...e, deltaY: .05 })
-    //   if (e.code === 'KeyG')
-    //     onWheel({ ...e, deltaY: -.05 })
-    // })
     return () => {
       document.removeEventListener('mousedown', onMouseDown)
       document.removeEventListener('mouseup', onMouseUp)
