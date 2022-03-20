@@ -11,7 +11,7 @@ const useViewStore = create(set => ({
   })),
   setViewPosition: position => set({ position }),
   setViewSize: size => set({ size }),
-  setScale: scale => set({ scale }),
+  setViewScale: scale => set({ scale }),
 }))
 
 export default useViewStore
