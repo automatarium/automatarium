@@ -33,7 +33,7 @@ const useStateDragging = ({ containerRef }) => {
   // Listen for mouse move - dragging states
   useEffect(() => {
     const doDrag = e => {
-      if (draggedState !== null) {
+      if (draggedState !== null && toolActive) {
         const [x, y] = relativeMousePosition(e.clientX, e.clientY)
         const [dx, dy] = [x - dragOffset[0], y - dragOffset[1]]
 
