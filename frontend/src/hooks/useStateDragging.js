@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 
 import { useProjectStore, useViewStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
+import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 const useStateDragging = ({ containerRef }) => {
   const updateState = useProjectStore(s => s.updateState)
@@ -38,8 +39,11 @@ const useStateDragging = ({ containerRef }) => {
         // Aligned Dragging
         const distX = Math.abs(x - dragCenter[0])
         const distY = Math.abs(y - dragCenter[1])
+        const dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2))
         const [ax, ay] = e.shiftKey
-          ? (distX > distY ? [dx, dragCenter[1]] : [dragCenter[0], dy])
+          ? dist > STATE_CIRCLE_RADIUS/2
+            ? (distX > distY ? [sx, dragCenter[1]] : [dragCenter[0], sy])
+            : dragCenter
           : [sx, sy]
 
         // Update state position
