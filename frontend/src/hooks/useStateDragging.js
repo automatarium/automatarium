@@ -19,7 +19,7 @@ const useStateDragging = ({ containerRef }) => {
     const [x, y] = relativeMousePosition(e.clientX, e.clientY)
     setDraggedState(state.id)
     setDragOffset([x - state.x, y - state.y])
-    setDragCenter([x, y])
+    setDragCenter([state.x, state.y])
     e.preventDefault()
   }
 
@@ -29,13 +29,20 @@ const useStateDragging = ({ containerRef }) => {
       if (draggedState !== null) {
         const [x, y] = relativeMousePosition(e.clientX, e.clientY)
         const [dx, dy] = [x - dragOffset[0], y - dragOffset[1]]
+
+        // Snapped dragging
         const [sx, sy] = e.altKey
           ? [dx, dy]
           : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
 
+        // Aligned Ragging
         const distX = Math.abs(x - dragCenter[0])
         const distY = Math.abs(y - dragCenter[1])
-        const [ax, ay] = e.shiftKey ? (distX > distY ? [dx, dragCenter[1]] : [dragCenter[0], dy]) : [sx, sy]
+        const [ax, ay] = e.shiftKey
+          ? (distX > distY ? [dx, dragCenter[1]] : [dragCenter[0], dy])
+          : [sx, sy]
+
+        // Update state position
         updateState({ id: draggedState, x: ax, y: ay })
       }
     }
