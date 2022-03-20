@@ -35,7 +35,7 @@ const useStateDragging = ({ containerRef }) => {
           ? [dx, dy]
           : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
 
-        // Aligned Ragging
+        // Aligned Dragging
         const distX = Math.abs(x - dragCenter[0])
         const distY = Math.abs(y - dragCenter[1])
         const [ax, ay] = e.shiftKey
