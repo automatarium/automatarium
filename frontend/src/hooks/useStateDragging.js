@@ -6,21 +6,20 @@ import { GRID_SNAP } from '/src/config/interactions'
 const useStateDragging = ({ containerRef }) => {
   const updateState = useProjectStore(s => s.updateState)
   const [draggedState, setDraggedState] = useState(null)
-  const [dragStartPosition, setDragStartPosition] = useState()
+  const [dragOffset, setDragOffset] = useState()
+  const [dragCenter, setDragCenter] = useState()
   const viewScale = useViewStore(s => s.scale)
 
   const relativeMousePosition = (x, y) => {
     const b = containerRef.current.getBoundingClientRect()
-    return [
-      (x - b.left) * viewScale,
-      (y - b.top) * viewScale,
-    ]
+    return [(x - b.left) * viewScale, (y - b.top) * viewScale]
   }
 
   const startDrag = (state, e) => {
     const [x, y] = relativeMousePosition(e.clientX, e.clientY)
     setDraggedState(state.id)
-    setDragStartPosition([x - state.x, y - state.y])
+    setDragOffset([x - state.x, y - state.y])
+    setDragCenter([x, y])
     e.preventDefault()
   }
 
@@ -29,11 +28,15 @@ const useStateDragging = ({ containerRef }) => {
     const doDrag = e => {
       if (draggedState !== null) {
         const [x, y] = relativeMousePosition(e.clientX, e.clientY)
-        const [dx, dy] = [x - dragStartPosition[0], y - dragStartPosition[1]]
+        const [dx, dy] = [x - dragOffset[0], y - dragOffset[1]]
         const [sx, sy] = e.altKey
           ? [dx, dy]
           : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
-        updateState({ id: draggedState, x: sx, y: sy })
+
+        const distX = Math.abs(x - dragCenter[0])
+        const distY = Math.abs(y - dragCenter[1])
+        const [ax, ay] = e.shiftKey ? (distX > distY ? [dx, dragCenter[1]] : [dragCenter[0], dy]) : [sx, sy]
+        updateState({ id: draggedState, x: ax, y: ay })
       }
     }
     containerRef.current.addEventListener('mousemove', doDrag)
@@ -45,7 +48,7 @@ const useStateDragging = ({ containerRef }) => {
     const cb = e => {
       if (e.button === 0) {
         setDraggedState(null)
-        setDragStartPosition(null)
+        setDragOffset(null)
         e.preventDefault()
       }
     }
