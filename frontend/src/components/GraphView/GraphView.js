@@ -6,27 +6,18 @@ import { useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP } from '/src/config/interactions' 
 
 import { Svg } from './graphViewStyle'
+import { useViewDragging } from './hooks'
 
 const GraphView = props => {
   const containerRef = useRef()
   const { position, size, scale, setViewSize, moveViewPosition } = useViewStore()
+  useViewDragging(containerRef, false) /* pass along tool status */
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
     const b = containerRef.current.getBoundingClientRect()
     setViewSize({ width: b.width, height: b.height })
   }, [])
-
-  const onKeyDown = useCallback(e => {
-    if (e.code === 'ArrowRight')
-      moveViewPosition({ x: VIEW_MOVE_STEP })
-    if (e.code === 'ArrowLeft')
-      moveViewPosition({ x: -VIEW_MOVE_STEP })
-    if (e.code === 'ArrowDown')
-      moveViewPosition({ y: VIEW_MOVE_STEP })
-    if (e.code === 'ArrowUp')
-      moveViewPosition({ y: -VIEW_MOVE_STEP })
-  })
 
   // Keep track of resizes
   // TODO: use onResize of container
@@ -39,6 +30,17 @@ const GraphView = props => {
   }, [])
 
   // Keyboard commands for view control
+  const onKeyDown = useCallback(e => {
+    if (e.code === 'ArrowRight')
+      moveViewPosition({ x: VIEW_MOVE_STEP })
+    if (e.code === 'ArrowLeft')
+      moveViewPosition({ x: -VIEW_MOVE_STEP })
+    if (e.code === 'ArrowDown')
+      moveViewPosition({ y: VIEW_MOVE_STEP })
+    if (e.code === 'ArrowUp')
+      moveViewPosition({ y: -VIEW_MOVE_STEP })
+  })
+
   useEffect(() => {
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
