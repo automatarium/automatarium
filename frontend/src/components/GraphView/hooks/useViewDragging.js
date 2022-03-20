@@ -9,7 +9,6 @@ const SCROLL_SPEED = 0.01
 const useViewDragging = (containerRef, toolActive = false) => {
   const viewPosition = useViewStore(s => s.position)
   const viewScale = useViewStore(s => s.scale)
-  const viewSize = useViewStore(s => s.size)
   const setViewPosition = useViewStore(s => s.setViewPosition)
   const setViewScale = useViewStore(s => s.setViewScale)
 
@@ -63,8 +62,8 @@ const useViewDragging = (containerRef, toolActive = false) => {
         const [sx, sy] = dragStartPosition
         const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
         setViewPosition({
-          x: dragStartViewPosition.x + (sx - mx),
-          y: dragStartViewPosition.y + (sy - my)
+          x: dragStartViewPosition.x + (sx - mx) * viewScale,
+          y: dragStartViewPosition.y + (sy - my) * viewScale,
         })
       }
     } else {
