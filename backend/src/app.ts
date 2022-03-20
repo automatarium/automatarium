@@ -1,9 +1,28 @@
 import express from 'express'
+import mongoose from 'mongoose'
+import bodyParser from 'body-parser'
+
+import config from './config'
+import finiteStateAutomatonRoutes from 'routes/finiteStateAutomaton'
 
 const app = express()
 
-app.get('/', (request, response) => {
-  return response.json({ message: 'Hello World ' })
-})
+// Parse the body of the request
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(bodyParser.json())
 
-app.listen('3001')
+// Configure routes
+app.use('/fsa', finiteStateAutomatonRoutes)
+
+app.listen(config.server.port, async () => {
+  console.log(`Listening on port ${config.server.port}`)
+
+  // Connect to database
+  try {
+    await mongoose.connect(config.db.url, config.db.options)
+    console.log('Connected to DB')
+  } catch (error) {
+    console.log(error)
+    process.exit(1)
+  }
+})
