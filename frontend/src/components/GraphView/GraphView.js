@@ -51,8 +51,6 @@ const GraphView = props => {
   const backgroundSize = `${1 / scale * GRID_SNAP * 2}px ${1 / scale * GRID_SNAP * 2}px`
   const showGrid = true
 
-  console.log({ backgroundSize, backgroundPosition })
-
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
     <Svg
