@@ -1,12 +1,13 @@
 import { useEffect, useCallback, useState } from 'react'
 
-import { useViewStore } from '/src/stores'
+import { useViewStore, useToolStore } from '/src/stores'
 
-const SCROLL_MAX = 3
-const SCROLL_MIN = 0.2
-const SCROLL_SPEED = 0.01
+import { SCROLL_MAX, SCROLL_MIN, SCROLL_SPEED } from '/src/config/interactions'
 
-const useViewDragging = (containerRef, toolActive = false) => {
+const useViewDragging = (containerRef) => {
+  const currentTool = useToolStore(s => s.tool)
+  const toolActive = currentTool === 'hand'
+
   const viewPosition = useViewStore(s => s.position)
   const viewScale = useViewStore(s => s.scale)
   const setViewPosition = useViewStore(s => s.setViewPosition)
@@ -45,7 +46,7 @@ const useViewDragging = (containerRef, toolActive = false) => {
   }
 
   const onMouseDown = useCallback(e => {
-    if (toolActive || e.ctrlKey) {
+    if (toolActive) {
       setDragStartPosition(relativeMousePosition(e.clientX, e.clientY))
       setDragStartViewPosition(viewPosition)
     }
@@ -57,7 +58,7 @@ const useViewDragging = (containerRef, toolActive = false) => {
   }, [])
 
   const onMouseMove = useCallback(e => {
-    if (toolActive || e.ctrlKey ) {
+    if (toolActive) {
       if (dragStartPosition !== null && dragStartViewPosition !== null) {
         const [sx, sy] = dragStartPosition
         const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
@@ -77,12 +78,6 @@ const useViewDragging = (containerRef, toolActive = false) => {
     document.addEventListener('mouseup', onMouseUp)
     document.addEventListener('mousemove', onMouseMove)
     document.addEventListener('wheel', onWheel, { passive: false })
-    // document.addEventListener('keydown', e => {
-    //   if (e.code === 'KeyF')
-    //     onWheel({ ...e, deltaY: .05 })
-    //   if (e.code === 'KeyG')
-    //     onWheel({ ...e, deltaY: -.05 })
-    // })
     return () => {
       document.removeEventListener('mousedown', onMouseDown)
       document.removeEventListener('mouseup', onMouseUp)

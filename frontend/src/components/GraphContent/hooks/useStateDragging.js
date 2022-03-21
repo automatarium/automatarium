@@ -1,15 +1,19 @@
 import { useState, useEffect } from 'react'
 
-import { useProjectStore, useViewStore } from '/src/stores'
+import { useProjectStore, useViewStore, useToolStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 const useStateDragging = ({ containerRef }) => {
+  const tool = useToolStore(s => s.tool)
+  const toolActive = tool === 'cursor'
+
+  const viewScale = useViewStore(s => s.scale)
   const updateState = useProjectStore(s => s.updateState)
+
   const [draggedState, setDraggedState] = useState(null)
   const [dragOffset, setDragOffset] = useState()
   const [dragCenter, setDragCenter] = useState()
-  const viewScale = useViewStore(s => s.scale)
 
   const relativeMousePosition = (x, y) => {
     const b = containerRef.current.getBoundingClientRect()
@@ -17,17 +21,19 @@ const useStateDragging = ({ containerRef }) => {
   }
 
   const startDrag = (state, e) => {
-    const [x, y] = relativeMousePosition(e.clientX, e.clientY)
-    setDraggedState(state.id)
-    setDragOffset([x - state.x, y - state.y])
-    setDragCenter([state.x, state.y])
-    e.preventDefault()
+    if (toolActive) {
+      const [x, y] = relativeMousePosition(e.clientX, e.clientY)
+      setDraggedState(state.id)
+      setDragOffset([x - state.x, y - state.y])
+      setDragCenter([state.x, state.y])
+      e.preventDefault()
+    }
   }
 
   // Listen for mouse move - dragging states
   useEffect(() => {
     const doDrag = e => {
-      if (draggedState !== null) {
+      if (draggedState !== null && toolActive) {
         const [x, y] = relativeMousePosition(e.clientX, e.clientY)
         const [dx, dy] = [x - dragOffset[0], y - dragOffset[1]]
 

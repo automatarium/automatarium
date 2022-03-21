@@ -11,7 +11,7 @@ import { useViewDragging } from './hooks'
 const GraphView = props => {
   const containerRef = useRef()
   const { position, size, scale, setViewSize, moveViewPosition } = useViewStore()
-  useViewDragging(containerRef, false) /* pass along tool status */
+  useViewDragging(containerRef)
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {

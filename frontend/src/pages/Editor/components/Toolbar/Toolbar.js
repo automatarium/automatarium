@@ -1,45 +1,47 @@
 import { useState, useRef } from 'react'
-
 import { MousePointer2, Hand, MessageSquare, Circle, ChevronDown } from 'lucide-react'
 
-import { Sidebar } from '../../components'
+import { useToolStore } from '/src/stores'
 import { Dropdown } from '/src/components'
+import { Sidebar } from '../../components'
 
 const tools = [
   {
     label: 'Cursor',
+    value: 'cursor',
     icon: <MousePointer2 />,
   },
   {
     label: 'Hand',
+    value: 'hand',
     icon: <Hand />,
   },
   {
     label: 'Transition',
+    value: 'transition',
     icon: <Circle />,
   },
   {
     label: 'Comment',
+    value: 'comment',
     icon: <MessageSquare />,
   },
 ]
 
-const Toolbar = ({
-  onChange,
-  value,
-}) => {
+const Toolbar = () => {
+  const { tool, setTool } = useToolStore()
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
 
   return (
     <Sidebar $tools>
-      {tools.map(tool => (
+      {tools.map(toolOption => (
         <Sidebar.Button
-          key={tool.label}
-          onClick={() => onChange(tool.label)}
-          $active={value === tool.label}
+          key={toolOption.label}
+          onClick={() => setTool(toolOption.value)}
+          $active={tool === toolOption.value}
         >
-          {tool.icon}
+          {toolOption.icon}
         </Sidebar.Button>
       ))}
 
