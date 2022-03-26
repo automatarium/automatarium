@@ -4,6 +4,7 @@ import { FlaskConical, Info, Settings2 } from 'lucide-react'
 import { Sidebar } from '..'
 
 import { Wrapper, Panel } from './sidepanelStyle'
+import TestingLab from './Panels/TestingLab/TestingLab'
 
 const panels = [
   {
@@ -27,7 +28,7 @@ const Sidepanel = () => {
     <Wrapper>
       {activePanel && (
         <Panel>
-          Mr Sidepanel
+          {activePanel == 'Testing Lab' && <TestingLab/>}
         </Panel>
       )}
 
@@ -35,7 +36,10 @@ const Sidepanel = () => {
         {panels.map(panel => (
           <Sidebar.Button
             key={panel.label}
-            onClick={() => setActivePanel(activePanel === panel.label ? undefined : panel.label)}
+            onClick={() => {
+              setActivePanel(activePanel === panel.label ? undefined : panel.label)
+              console.log(activePanel)
+            }}
             $active={activePanel === panel.label}
             title={panel.label}
           >

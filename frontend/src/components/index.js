@@ -11,3 +11,6 @@ export { default as Button } from './Button/Button'
 export { default as Dropdown } from './Dropdown/Dropdown'
 
 export { default as Hotkey } from './Hotkey/Hotkey'
+
+export { default as MultiTraceInput } from './MultiTraceInput/MultiTraceInput'
+export { default as TraceOutput } from './TraceOutput/TraceOutput'
