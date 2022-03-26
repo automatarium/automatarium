@@ -15,6 +15,7 @@ export const TraceInput = styled('input')`
   margin: 10px;
   border-radius: 5px;
   height: 1.5em;
+  border: none;
 `
 
 export const TraceButtonContainer = styled('div')`
@@ -25,8 +26,21 @@ export const TraceButtonContainer = styled('div')`
 `
 
 export const TraceButton = styled('button')`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   height: 2.3em;
   border-radius: 5px;
+  border: none;
+  outline: none;
+
+  ${p => p.$active && `
+    background: var(--primary);
+    color: var(--white);
+  `}
+
+
 `
 
 export const AddMultiTraceButton = styled('button')`
@@ -34,6 +48,8 @@ export const AddMultiTraceButton = styled('button')`
   height: 2em;
   margin: 10px;
   border-radius: 6px;
+  border: none;
+  outline: none;
 `
 
 export const MultiTraceWrapper = styled('div')`

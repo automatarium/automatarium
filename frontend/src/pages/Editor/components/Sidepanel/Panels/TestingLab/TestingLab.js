@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { SkipBack, ChevronLeft, Play, ChevronRight, SkipForward } from 'lucide-react'
+
 import { TraceOutput } from '/src/components/'
 import { 
   Title, 
@@ -47,21 +49,21 @@ const TestingLab = () => {
       <Subtitle>TRACE</Subtitle>
       <TraceInput onChange={event => setTraceInput(event.target.value)} />
       <TraceButtonContainer>
-        <TraceButton/>
-        <TraceButton/>
-        <TraceButton/>
-        <TraceButton/>
-        <TraceButton/>
+        <TraceButton $active={true}><SkipBack size={20}/></TraceButton>
+        <TraceButton $active={true}><ChevronLeft size={20}/></TraceButton>
+        <TraceButton $active={true}><Play size={20}/></TraceButton>
+        <TraceButton $active={true}><ChevronRight size={20}/></TraceButton>
+        <TraceButton $active={true}><SkipForward size={20}/></TraceButton>
       </TraceButtonContainer>
       <TraceOutput/>
       <Subtitle>MULTI-RUN</Subtitle>
-      { multiTraceInput.map( (item, index) => (
+      {multiTraceInput.map( (item, index) => (
         <MultiTraceWrapper key={index}>
           <MultiTraceInput
           onChange={(e) => onMultiTraceInputChange(index, e)}
           value={item}
           /> 
-          <RemoveMultiTraceInputButton onClick={(e) => handleRemoveMultiTrace(index)}/>
+          <RemoveMultiTraceInputButton onClick={() => handleRemoveMultiTrace(index)}/>
         </MultiTraceWrapper>
       ))}
       <AddMultiTraceButton onClick={handleAddMultiTrace}/>
