@@ -1,18 +1,16 @@
 import { useEffect, useRef, useCallback } from 'react'
 
-import { GraphContent } from '/src/components'
+import { GraphContent, SelectionBox } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions' 
 
 import { Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
-import { useSelectionStore } from '/src/stores'
 
 const GraphView = props => {
   const containerRef = useRef()
   const { position, size, scale, setViewSize, moveViewPosition } = useViewStore()
-  const resetSelectedStates = useSelectionStore(s => s.reset)
   useViewDragging(containerRef)
 
   // Update width and height on resize
@@ -20,12 +18,6 @@ const GraphView = props => {
     const b = containerRef.current.getBoundingClientRect()
     setViewSize({ width: b.width, height: b.height })
   }, [])
-
-  const handleEmptyClick = useCallback(e => {
-    if (e.button === 0) {
-      resetSelectedStates()
-    }
-  })
 
   // Keep track of resizes
   // TODO: use onResize of container
@@ -63,7 +55,6 @@ const GraphView = props => {
   return (
     <Svg
       onContextMenu={e => e.preventDefault()}
-      onClick={e => e.target.tagName === 'svg' && handleEmptyClick(e)}
       viewBox={viewBox}
       ref={containerRef}
       $showGrid={showGrid}
@@ -73,6 +64,9 @@ const GraphView = props => {
         <g>
           {/* Graph states and transitions */}
           <GraphContent containerRef={containerRef} />
+
+          {/* Selection Bounding Box */}
+          <SelectionBox containerRef={containerRef} />
         </g>
       </MarkerProvider>
     </Svg>
