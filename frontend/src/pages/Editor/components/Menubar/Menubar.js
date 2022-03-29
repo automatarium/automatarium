@@ -46,7 +46,6 @@ const Menubar = () => {
   const [dropdown, setDropdown] = useState()
   const undo = useProjectStore(s => s.undo)
   const redo = useProjectStore(s => s.redo)
-  const states = useProjectStore(s => s.project)?.states || []
   const setSelectedStates = useSelectionStore(s => s.set)
 
   const menus = () => [
@@ -149,7 +148,6 @@ const Menubar = () => {
           action: 'SELECT_ALL',
           onClick: () => {
             // TODO
-            setSelectedStates(states.map(state => state.id))
           },
         },
         {
