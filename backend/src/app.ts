@@ -4,6 +4,7 @@ import bodyParser from 'body-parser'
 
 import config from './config'
 import projectRoutes from 'routes/project'
+import userRoutes from 'routes/user'
 
 const app = express()
 
@@ -13,6 +14,7 @@ app.use(bodyParser.json())
 
 // Configure routes
 app.use('/project', projectRoutes)
+app.use('/user', userRoutes)
 
 app.listen(config.server.port, async () => {
   console.log(`Listening on port ${config.server.port}`)
