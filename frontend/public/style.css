@@ -5,6 +5,7 @@
   --primary-s: 84%;
   --primary-l: 52%;
   --primary: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
+  --primary-highlight: #EB991D;
   --grid-dot: #ddd;
   --success: #23AF00;
   --error: #FC5353;

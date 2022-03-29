@@ -9,6 +9,7 @@ export const StyledCircle = styled('circle')`
   }
 
   ${p => p.$selected && `
-    filter: brightness(.7);
+    stroke: var(--primary-highlight);
+    stroke-width: 3.5px;
   `}
 ` 
