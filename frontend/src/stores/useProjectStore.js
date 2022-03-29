@@ -1,6 +1,7 @@
 import create from 'zustand'
 import produce from 'immer'
 import { v4 as uuid } from 'uuid'
+import clone from 'lodash.clonedeep'
 
 import {
   APP_VERSION,
@@ -66,7 +67,7 @@ const sampleInitialData = {
   }]
 }
 
-const createNewProject = () => ({
+export const createNewProject = () => ({
     id: uuid(),
     states: sampleInitialData.states,
     transitions: sampleInitialData.transitions,
@@ -90,12 +91,50 @@ const createNewProject = () => ({
 })
 
 const useProjectStore = create(set => ({
-  project: createNewProject(),
-  set: project => set({ project }),
+  project: null,
+  history: [],
+  historyPointer: null,
+  set: project => set({ project, history: [ clone(project) ], historyPointer: 0 }),
+
+  /* Add current project state to stored history of project states */
+  commit: () => set(produce(state => {
+    // Delete the future
+    state.history = state.history.slice(0, state.historyPointer + 1)
+    
+    // Add new history
+    state.history.push(clone(state.project))
+
+    // Reset pointer
+    state.historyPointer = state.history.length - 1
+  })),
+
+  undo: () => set(produce(state => {
+    // Can we undo? 
+    if (state.historyPointer == 0)
+      return
+
+    // Move pointer
+    state.historyPointer--
+    
+    // Update project
+    state.project = state.history[state.historyPointer]
+  })),
+
+  redo: () => set(produce(state => {
+    // Can we redo?
+    if (state.historyPointer == state.history.length - 1)
+      return
+
+    // Move pointer
+    state.historyPointer++
+
+    // Update project
+    state.project = state.history[state.historyPointer]
+  })),
 
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.append({ ...state, id: project.state.length })
+    project.states.push({ ...state, id: project.state.length })
   })),
 
   /* Update a state by id */

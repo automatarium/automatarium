@@ -6,10 +6,12 @@ import { locateTransition } from '/src/util/states'
 import { useStateDragging } from './hooks'
 
 const GraphContent = ({ containerRef }) => {
-  const states = useProjectStore(s => s.project.states)
-  const transitions = useProjectStore(s => s.project.transitions)
-  const initialState = useProjectStore(s => s.project.initialState)
+  const project = useProjectStore(s => s.project)
   const { startDrag } = useStateDragging({ containerRef })
+
+  const states = project?.states ?? []
+  const transitions = project?.transitions ?? []
+  const initialState = project?.initialState
 
   // Group up transitions by the start&end nodes
   const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to]))
@@ -28,7 +30,7 @@ const GraphContent = ({ containerRef }) => {
 
   return <g>
     {/* Render arrow on initial state */}
-    <InitialStateArrow states={states} initialState={initialState}/>
+    <InitialStateArrow states={states} initialStateID={initialState}/>
 
     {/* Render all sets of edges */}
     {locatedTransitions.map((transitions, i) => <TransitionSet transitions={transitions} key={i} />)}

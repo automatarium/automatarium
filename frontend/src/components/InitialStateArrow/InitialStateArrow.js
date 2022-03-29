@@ -2,8 +2,12 @@ import { STATE_CIRCLE_RADIUS, STATE_TRIANGLE_WIDTH, STATE_TRIANGLE_HEIGHT } from
 
 import { StyledPolygon } from './initialStateArrowStyle'
 
-const InitialStateArrow = ({ states, initialState }) => {
-  const { x, y } = states.find(s => s.id === initialState)
+const InitialStateArrow = ({ states, initialStateID }) => {
+  const initialState = states.find(s => s.id === initialStateID)
+  if (!initialState) 
+    return null
+
+  const { x, y } = initialState
   const triangleStart = `${x-STATE_CIRCLE_RADIUS}, ${y}`
   const triangleTopLeft = `${x-STATE_TRIANGLE_WIDTH-STATE_CIRCLE_RADIUS}, ${y-STATE_TRIANGLE_HEIGHT}`
   const triangleBottomLeft = `${x-STATE_TRIANGLE_WIDTH-STATE_CIRCLE_RADIUS}, ${y+STATE_TRIANGLE_HEIGHT}`

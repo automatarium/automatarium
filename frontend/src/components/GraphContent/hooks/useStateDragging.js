@@ -10,6 +10,7 @@ const useStateDragging = ({ containerRef }) => {
 
   const viewScale = useViewStore(s => s.scale)
   const updateState = useProjectStore(s => s.updateState)
+  const commit = useProjectStore(s => s.commit)
 
   const [draggedState, setDraggedState] = useState(null)
   const [dragOffset, setDragOffset] = useState()
@@ -63,7 +64,11 @@ const useStateDragging = ({ containerRef }) => {
   // Listen for mouse up - stop dragging states
   useEffect(() => {
     const cb = e => {
-      if (e.button === 0) {
+      if (e.button === 0 && draggedState !== null && toolActive) {
+        // Commit drag to history
+        commit()
+
+        // Reset dragging state
         setDraggedState(null)
         setDragOffset(null)
         setDragCenter(null)
@@ -72,7 +77,7 @@ const useStateDragging = ({ containerRef }) => {
     }
     document.addEventListener('mouseup', cb)
     return () => document.removeEventListener('mouseup', cb)
-  }, [])
+  }, [draggedState, toolActive])
 
   return { startDrag }
 }
