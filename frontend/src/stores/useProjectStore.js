@@ -1,5 +1,5 @@
 import create from 'zustand'
-import produce, { current } from 'immer'
+import produce from 'immer'
 import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 
