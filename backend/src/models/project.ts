@@ -1,0 +1,34 @@
+import mongoose, { Schema } from 'mongoose'
+
+import IProject from 'interfaces/project'
+
+const ProjectSchema: Schema = new Schema({
+  id: { type: String, required: true },
+  userid: { type: String, required: true },
+  isPublic: { type: Boolean, required: true },
+  meta: {
+    type: {
+      name: { type: String, required: true },
+      dateCreated: { type: Date, default: Date.now, required: true },
+      dateEdited: { type: Date, default: Date.now, required: true },
+      version: { type: String, required: true },
+      automatariumVersion: { type: String, required: true },
+    },
+    _id: false
+  },
+  initialState: { type: String, required: true },
+  states: { type: Object, _id: false },
+  transitions: { type: Object, _id: false },
+  comments: { type: [{
+    id: { type: String, required: true },
+    text: { type: String, required: true },
+    x: { type: Number, required: true },
+    y: { type: Number, required: true },
+  }], _id: false},
+  tests: { type: {
+    trace: { type: String, required: true },
+    batch: { type: [String], required: true }
+  }, _id: false}
+}, { versionKey: false })
+
+export default mongoose.model<IProject>('Project', ProjectSchema)
