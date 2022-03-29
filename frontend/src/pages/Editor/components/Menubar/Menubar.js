@@ -48,7 +48,7 @@ const Menubar = () => {
   const redo = useProjectStore(s => s.redo)
   const setSelectedStates = useSelectionStore(s => s.set)
 
-  const menus = () => [
+  const menus = [
     {
       label: 'File',
       items: [
