@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
 
 import config from './config'
-import finiteStateAutomatonRoutes from 'routes/finiteStateAutomaton'
+import projectRoutes from 'routes/project'
 
 const app = express()
 
@@ -12,7 +12,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Configure routes
-app.use('/fsa', finiteStateAutomatonRoutes)
+app.use('/project', projectRoutes)
 
 app.listen(config.server.port, async () => {
   console.log(`Listening on port ${config.server.port}`)
