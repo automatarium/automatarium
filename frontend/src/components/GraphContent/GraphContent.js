@@ -23,16 +23,22 @@ const GraphContent = ({ containerRef }) => {
 
   const handleStateMouseDown = (state, e) => {
     if (e.button === 0) {
-      startDrag(state, e)
+      // Select things and then drag
       if (tool === 'cursor') {
-        if (e.shiftKey) {
-          addSelectedStates(state.id)
-        } else {
-          setSelectedStates([state.id])
-        }
+        const newSelected = selectedStates.includes(state.id)
+          ? selectedStates
+          : e.shiftKey
+            ? [...selectedStates, state.id]
+            : [state.id]
+        setSelectedStates(newSelected)
+        
+        // Drag things
+        startDrag(newSelected.map(id => states.find(state => state.id === id)), e)
       }
     }
+  }
 
+  const handleStateMouseUp = (state, e) => {
     // Is this RMB?
     if (e.button === 2) {
       // TODO: bubble up to a parent for creating a context menu
@@ -55,7 +61,8 @@ const GraphContent = ({ containerRef }) => {
       cy={s.y}
       isFinal={s.isFinal}
       selected={selectedStates.includes(s.id)}
-      onMouseDown={e => handleStateMouseDown(s, e)}/>)}
+      onMouseDown={e => handleStateMouseDown(s, e)}
+      onMouseUp={e => handleStateMouseUp(s, e)}/>)}
     </g>
 }
 
