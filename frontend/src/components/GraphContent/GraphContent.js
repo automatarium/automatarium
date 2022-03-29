@@ -1,13 +1,16 @@
 import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, useSelectionStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 import { useStateDragging } from './hooks'
 
 const GraphContent = ({ containerRef }) => {
   const project = useProjectStore(s => s.project)
   const { startDrag } = useStateDragging({ containerRef })
+  const selectedStates = useSelectionStore(s => s.selectedStates)
+  const setSelectedStates = useSelectionStore(s => s.set)
+  const addSelectedStates = useSelectionStore(s => s.add)
 
   const states = project?.states ?? []
   const transitions = project?.transitions ?? []
@@ -18,8 +21,14 @@ const GraphContent = ({ containerRef }) => {
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
   const handleStateMouseDown = (state, e) => {
-    if (e.button === 0)
+    if (e.button === 0) {
       startDrag(state, e)
+      if (e.shiftKey) {
+        addSelectedStates(state.id)
+      } else {
+        setSelectedStates([state.id])
+      }
+    }
 
     // Is this RMB?
     if (e.button === 2) {
@@ -42,6 +51,7 @@ const GraphContent = ({ containerRef }) => {
       cx={s.x}
       cy={s.y}
       isFinal={s.isFinal}
+      selected={selectedStates.includes(s.id)}
       onMouseDown={e => handleStateMouseDown(s, e)}/>)}
     </g>
 }
