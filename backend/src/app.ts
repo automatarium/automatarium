@@ -1,6 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 import config from './config'
 import projectRoutes from 'routes/project'
@@ -8,6 +9,9 @@ import userRoutes from 'routes/user'
 import { decodeToken } from 'middleware'
 
 const app = express()
+
+// Cors configuration
+app.use(cors())
 
 // Configure middleware
 app.use(decodeToken)

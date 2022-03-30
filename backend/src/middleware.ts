@@ -15,8 +15,6 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
   try {
     const userInfo = await admin.auth().verifyIdToken(idToken)
     req.uid = userInfo.uid
-    console.log(req.uid)
-    console.log(userInfo)
   } catch ({ message }) {
     return res.status(500).json({
       error: message,

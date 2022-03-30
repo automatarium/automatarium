@@ -20,12 +20,11 @@ export const getUser = async ( req: Request, res: Response, next: NextFunction )
 }
 
 export const createUser = async ( req: Request, res: Response, next: NextFunction ) => {  
-  const { email, preferences } = req.body
-  
-  console.log(email)
+  const { uid, email, preferences } = req.body
+
   // Create new user
   const user = new User({
-    _id: '1',
+    _id: uid,
     email,
     preferences
   })

@@ -6,7 +6,6 @@ export const getUser = async uid => {
 }
 
 export const createUser = async userDetails => {
-  console.log(userDetails)
   const res = await api.post(`/user`, userDetails)
   return res.data
 }
