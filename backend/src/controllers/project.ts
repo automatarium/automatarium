@@ -9,7 +9,7 @@ export const getProject = async ( req: Request, res: Response, next: NextFunctio
   try {
     const project = await Project.findById(pid).orFail()
     return res.status(200).json({
-      automaton: project
+      project
     })
   } catch (error) {
     return res.status(500).json({
