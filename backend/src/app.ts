@@ -5,8 +5,12 @@ import bodyParser from 'body-parser'
 import config from './config'
 import projectRoutes from 'routes/project'
 import userRoutes from 'routes/user'
+import { decodeToken } from 'middleware'
 
 const app = express()
+
+// Configure middleware
+app.use(decodeToken)
 
 // Parse the body of the request
 app.use(bodyParser.urlencoded({ extended: true }))
