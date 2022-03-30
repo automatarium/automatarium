@@ -20,6 +20,8 @@
     "lint:fix": "eslint --fix 'src/**/*.js'"
   },
   "dependencies": {
+    "axios": "^0.26.1",
+    "firebase": "^9.6.10",
     "goober": "^2.1.8",
     "immer": "^9.0.12",
     "lodash.clonedeep": "^4.5.0",
