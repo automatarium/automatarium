@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { createToken } from 'auth'
-import config from 'config'
+import { createToken } from '../auth'
+import config from '../config'
 
 export const instance = axios.create({
   baseURL: config.API,
@@ -39,5 +39,7 @@ const api = {
   delete: (endpoint, data) =>
   instance.delete(endpoint, data)
 }
+
+export * from './user'
 
 export default api

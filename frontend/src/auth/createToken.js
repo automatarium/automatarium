@@ -1,4 +1,4 @@
-import firebase from './fire'
+import firebase from './firebase'
 
 const createToken = async () => {
   const user = firebase.auth().currentUser
