@@ -18,4 +18,9 @@ export const Svg = styled('svg', forwardRef)`
   stroke-linejoin: round;
   stroke-linecap: round;
   stroke-width: 2px;
+
+  /* Text */
+  text {
+    user-select: none;
+  }
 `

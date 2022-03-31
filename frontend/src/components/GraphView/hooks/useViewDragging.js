@@ -84,7 +84,7 @@ const useViewDragging = (containerRef) => {
       document.removeEventListener('mousemove', onMouseMove)
       document.removeEventListener('wheel', onWheel)
     }
-  })
+  }, [onMouseUp, onMouseDown, onMouseMove, onWheel])
 }
 
 export default useViewDragging

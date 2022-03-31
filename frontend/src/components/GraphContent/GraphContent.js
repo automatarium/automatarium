@@ -1,13 +1,17 @@
 import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, useSelectionStore, useToolStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 import { useStateDragging } from './hooks'
 
 const GraphContent = ({ containerRef }) => {
+  const tool = useToolStore(s => s.tool)
   const project = useProjectStore(s => s.project)
   const { startDrag } = useStateDragging({ containerRef })
+  const selectedStates = useSelectionStore(s => s.selectedStates)
+  const setSelectedStates = useSelectionStore(s => s.set)
+  const addSelectedStates = useSelectionStore(s => s.add)
 
   const states = project?.states ?? []
   const transitions = project?.transitions ?? []
@@ -18,9 +22,23 @@ const GraphContent = ({ containerRef }) => {
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
   const handleStateMouseDown = (state, e) => {
-    if (e.button === 0)
-      startDrag(state, e)
+    if (e.button === 0) {
+      // Select things and then drag
+      if (tool === 'cursor') {
+        const newSelected = selectedStates.includes(state.id)
+          ? selectedStates
+          : e.shiftKey
+            ? [...selectedStates, state.id]
+            : [state.id]
+        setSelectedStates(newSelected)
+        
+        // Drag things
+        startDrag(newSelected.map(id => states.find(state => state.id === id)), e)
+      }
+    }
+  }
 
+  const handleStateMouseUp = (state, e) => {
     // Is this RMB?
     if (e.button === 2) {
       // TODO: bubble up to a parent for creating a context menu
@@ -42,7 +60,9 @@ const GraphContent = ({ containerRef }) => {
       cx={s.x}
       cy={s.y}
       isFinal={s.isFinal}
-      onMouseDown={e => handleStateMouseDown(s, e)}/>)}
+      selected={selectedStates.includes(s.id)}
+      onMouseDown={e => handleStateMouseDown(s, e)}
+      onMouseUp={e => handleStateMouseUp(s, e)}/>)}
     </g>
 }
 

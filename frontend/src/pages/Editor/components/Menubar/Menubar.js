@@ -1,7 +1,7 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 
 import { Button, Logo, Dropdown } from '/src/components'
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, useSelectionStore } from '/src/stores'
 
 import {
   Wrapper,
@@ -46,6 +46,7 @@ const Menubar = () => {
   const [dropdown, setDropdown] = useState()
   const undo = useProjectStore(s => s.undo)
   const redo = useProjectStore(s => s.redo)
+  const setSelectedStates = useSelectionStore(s => s.set)
 
   const menus = [
     {
@@ -141,6 +142,18 @@ const Menubar = () => {
           label: 'Paste',
           action: 'PASTE',
           onClick: () => console.log('Paste'),
+        },
+        {
+          label: 'Select All',
+          action: 'SELECT_ALL',
+          onClick: () => {
+            // TODO
+          },
+        },
+        {
+          label: 'Clear Selection',
+          action: 'SELECT_NONE',
+          onClick: () => setSelectedStates([]),
         },
         'hr',
         {
