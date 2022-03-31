@@ -1,8 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronRight } from 'lucide-react'
 
-import { Hotkey } from '/src/components'
-
 import {
   Wrapper,
   ItemWrapper,

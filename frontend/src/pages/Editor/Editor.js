@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 
+import { useActions } from '/src/hooks'
 import { GraphView } from '/src/components'
 import { useToolStore, useProjectStore } from '/src/stores'
 
@@ -13,6 +14,9 @@ const Editor = () => {
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
   const set = useProjectStore(s => s.set)
+
+  // Register action hotkey
+  useActions(true)
 
   // Load the test project
   useEffect(() => {

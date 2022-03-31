@@ -1,5 +1,5 @@
+import { StrictMode, createElement } from 'react'
 import ReactDOM from 'react-dom'
-import { createElement } from 'react'
 import { setup } from 'goober'
 import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
 
@@ -16,17 +16,19 @@ setup(
 )
 
 ReactDOM.render(
-  <BrowserRouter>
-    <Routes>
-      <Route path="/" element={<Main>
-        <h1>Automatarium</h1>
-        <Link to="/editor" style={{color: 'inherit'}}>Editor</Link><br />
-        <Link to="/svg" style={{color: 'inherit'}}>SVG Demo</Link>
-      </Main>} />
-      <Route path="/editor" element={<Pages.Editor />} />
-      <Route path="/svg" element={<GraphView style={{ width: '100vw', height: '100vh' }} />} />
-      <Route path="*" element={<h1>404</h1>} />
-    </Routes>
-  </BrowserRouter>,
+  <StrictMode>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Main>
+          <h1>Automatarium</h1>
+          <Link to="/editor" style={{color: 'inherit'}}>Editor</Link><br />
+          <Link to="/svg" style={{color: 'inherit'}}>SVG Demo</Link>
+        </Main>} />
+        <Route path="/editor" element={<Pages.Editor />} />
+        <Route path="/svg" element={<GraphView style={{ width: '100vw', height: '100vh' }} />} />
+        <Route path="*" element={<h1>404</h1>} />
+      </Routes>
+    </BrowserRouter>
+  </StrictMode>,
   document.getElementById('app')
 )
