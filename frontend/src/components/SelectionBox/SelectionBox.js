@@ -36,7 +36,6 @@ const SelectionBox = ({ containerRef }) => {
       const startY = Math.min(dragStart[1], mousePos[1])
       const endX = Math.max(dragStart[0], mousePos[0])
       const endY = Math.max(dragStart[1], mousePos[1])
-      console.log(states, { startX, endX, startY, endY })
       const selected = states.filter(state =>
         state.x >= startX &&
         state.x <= endX &&

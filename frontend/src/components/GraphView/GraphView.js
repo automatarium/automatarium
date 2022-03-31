@@ -65,7 +65,7 @@ const GraphView = props => {
           {/* Graph states and transitions */}
           <GraphContent containerRef={containerRef} />
 
-          {/* Selection Bounding Box */}
+          {/* Selection Drag Box */}
           <SelectionBox containerRef={containerRef} />
         </g>
       </MarkerProvider>
