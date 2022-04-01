@@ -11,7 +11,7 @@ const simulateFSA = (
   lambdaCount = 0,
   lastTransitionLambda = false
 ) => {
-  // Are we done processing symbols? - what if there is a lambda from current state
+  // Are we done processing symbols?
   if (input.length === 0) {
     const currState = graph.states.find(state => state.id === currStateID)
     return { accepted: currState.isFinal, trace }
