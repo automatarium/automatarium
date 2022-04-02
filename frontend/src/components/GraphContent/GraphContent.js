@@ -3,15 +3,15 @@ import groupBy from 'lodash.groupby'
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
 import { useProjectStore, useSelectionStore, useToolStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
-import { useStateDragging } from './hooks'
+import { useStateDragging, useStateCreation } from './hooks'
 
 const GraphContent = ({ containerRef }) => {
   const tool = useToolStore(s => s.tool)
   const project = useProjectStore(s => s.project)
-  const { startDrag } = useStateDragging({ containerRef })
   const selectedStates = useSelectionStore(s => s.selectedStates)
   const setSelectedStates = useSelectionStore(s => s.set)
-  const addSelectedStates = useSelectionStore(s => s.add)
+  const { startDrag } = useStateDragging({ containerRef })
+  useStateCreation({ containerRef })
 
   const states = project?.states ?? []
   const transitions = project?.transitions ?? []

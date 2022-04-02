@@ -134,7 +134,7 @@ const useProjectStore = create(set => ({
 
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.push({ ...state, id: project.state.length })
+    project.states.push({ ...state, id: project.states.length })
   })),
 
   /* Update a state by id */
