@@ -1,7 +1,8 @@
 import create from 'zustand'
-import produce from 'immer'
+import produce, { current} from 'immer'
 import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
+import isEqual from 'lodash.isequal'
 
 import {
   APP_VERSION,
@@ -98,6 +99,11 @@ const useProjectStore = create(set => ({
 
   /* Add current project state to stored history of project states */
   commit: () => set(produce(state => {
+    // Check whether anything changed before committing
+    const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
+    if (!didChange)
+      return
+
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)
     

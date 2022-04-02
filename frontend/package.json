@@ -24,6 +24,7 @@
     "immer": "^9.0.12",
     "lodash.clonedeep": "^4.5.0",
     "lodash.groupby": "^4.6.0",
+    "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.17.9",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
