@@ -56,6 +56,7 @@ const GraphContent = ({ containerRef }) => {
     {/* Render all states */}
     {states.map(s => <StateCircle
       key={s.id}
+      id={s.id}
       name={s.name}
       cx={s.x}
       cy={s.y}

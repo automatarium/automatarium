@@ -17,28 +17,24 @@ const sampleInitialData = {
   initialState: 0,
   states: [{
     id: 0, //TODO: can be int?
-    name: 'q0',
     label: null,
     x: 150,
     y: 150,
     isFinal: false,
   }, {
     id: 1,
-    name: 'q1',
     label: null,
     x: 330,
     y: 170,
     isFinal: false,
   },{
     id: 2,
-    name: 'q2',
     label: null,
     x: 150,
     y: 350,
     isFinal: false,
   }, {
     id: 3,
-    name: 'q3',
     label: null,
     x: 530,
     y: 350,

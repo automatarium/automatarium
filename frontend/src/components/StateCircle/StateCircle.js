@@ -3,7 +3,11 @@ import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 const FINAL_OUTLINE_OFFSET = 5
 
-const StateCircle = ({ name, isFinal, cx, cy, selected, ...props }) => {
+const StateCircle = ({ id, name, isFinal, cx, cy, selected, ...props }) => {
+
+  // TODO: use prefix preference
+  const displayName = name || `q${id}`
+
   return <g transform={`translate(${cx}, ${cy})`} {...props}>
     {/* Yellow Circle */}
     <StyledCircle r={STATE_CIRCLE_RADIUS} $selected={selected} />
@@ -13,7 +17,7 @@ const StateCircle = ({ name, isFinal, cx, cy, selected, ...props }) => {
 
     {/* Label */}
     <text textAnchor="middle" alignmentBaseline="central">
-      {name}
+      {displayName}
     </text>
   </g>
 }
