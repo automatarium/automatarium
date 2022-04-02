@@ -6,31 +6,22 @@ const SelectionBox = ({ containerRef }) => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
   const states = useProjectStore(s => s.project?.states)
-  const viewPosition = useViewStore(s => s.position)
-  const viewScale = useViewStore(s => s.scale)
+  const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setSelectedStates = useSelectionStore(s => s.set)
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
-  const relativeMousePosition = (x, y) => {
-    const b = containerRef.current.getBoundingClientRect()
-    return [(x - b.left), (y - b.top)]
-  }
-
-  const applyView = (x, y) => 
-    [x * viewScale + viewPosition.x, y * viewScale + viewPosition.y]
-
   const handleMouseMove = useCallback(e => {
-      setMousePos(applyView(...relativeMousePosition(e.clientX, e.clientY)))
-  }, [viewPosition, viewScale])
+      setMousePos(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
+  }, [containerRef])
 
   const handleMouseDown = useCallback(e => {
     if (e.target === containerRef.current && toolActive) {
-      setDragStart(applyView(...relativeMousePosition(e.clientX, e.clientY)))
+      setDragStart(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
     }
-  }, [toolActive, containerRef?.current, viewPosition, viewScale])
+  }, [toolActive, containerRef?.current])
 
-  const handleMouseUp = useCallback(e => {
+  const handleMouseUp = useCallback(() => {
     if (dragStart !== null && toolActive) {
       const startX = Math.min(dragStart[0], mousePos[0])
       const startY = Math.min(dragStart[1], mousePos[1])
@@ -44,7 +35,7 @@ const SelectionBox = ({ containerRef }) => {
       setSelectedStates(selected)
       setDragStart(null)
     }
-  }, [toolActive, dragStart, mousePos, viewPosition, viewScale, states])
+  }, [toolActive, dragStart, mousePos, states])
 
   // Setup event listeners
   useEffect(() => {
