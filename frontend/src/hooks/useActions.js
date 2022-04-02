@@ -130,7 +130,7 @@ const useActions = (registerHotkeys=false) => {
   useEffect(() => {
     if (registerHotkeys) {
       const handleKeyDown = e => {
-        for (let action of actions) {
+        for (let action of Object.values(actions)) {
           // Skip if no hotkey
           if (!action.hotkey)
             continue
@@ -165,10 +165,10 @@ const useActions = (registerHotkeys=false) => {
   }, [actions])
 
   // Add formatted hotkeys to actions
-  const actionsWithLabels = useMemo(() => actions.map(action => ({
+  const actionsWithLabels = useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
     ...action,
     label: action.hotkey ? formatHotkey(action.hotkey) : null
-  })), [actions])
+  }]))), [actions])
 
   return actionsWithLabels
 }
