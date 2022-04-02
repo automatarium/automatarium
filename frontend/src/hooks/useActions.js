@@ -2,8 +2,12 @@ import { useEffect, useMemo } from 'react'
 import { useProjectStore, useSelectionStore } from '/src/stores'
 
 const isWindows = navigator.platform.match(/Win/)
-const formatHotkey = ({ letter, meta, alt, shift, showCtrl = isWindows }) =>
-  `${shift ? '⇧' : ''}${alt ? '⌥' : ''}${meta ? (showCtrl ? '⌃' : '⌘') : ''}${letter.toUpperCase()}`
+const formatHotkey = ({ letter, meta, alt, shift, showCtrl = isWindows }) => [
+  meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
+  alt && (isWindows ? 'Alt' : '⌥'),
+  shift && (isWindows ? 'Shift' : '⇧'),
+  letter.toUpperCase(),
+].filter(Boolean).join(isWindows ? '+' : ' ')
 
 const useActions = (registerHotkeys=false) => {
   const undo = useProjectStore(s => s.undo)
