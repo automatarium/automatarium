@@ -2,11 +2,11 @@ import { useEffect, useMemo } from 'react'
 import { useProjectStore, useSelectionStore } from '/src/stores'
 
 const isWindows = navigator.platform.match(/Win/)
-const formatHotkey = ({ letter, meta, alt, shift, showCtrl = isWindows }) => [
+const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   alt && (isWindows ? 'Alt' : '⌥'),
   shift && (isWindows ? 'Shift' : '⇧'),
-  letter.toUpperCase(),
+  key.toUpperCase(),
 ].filter(Boolean).join(isWindows ? '+' : ' ')
 
 const useActions = (registerHotkeys=false) => {
@@ -18,27 +18,27 @@ const useActions = (registerHotkeys=false) => {
   // TODO: memoize
   const actions = {
     NEW_FILE: {
-      hotkey: { letter: 'n', meta: true, showCtrl: true },
+      hotkey: { key: 'n', meta: true, showCtrl: true },
       handler: () => console.log('New File'),
     },
     OPEN_FILE: {
-     hotkey: { letter: 'o', meta: true },
+     hotkey: { key: 'o', meta: true },
      handler: () => console.log('Open File'),
     },
     SAVE_FILE: {
-      hotkey: { letter: 's', meta: true },
+      hotkey: { key: 's', meta: true },
       handler: () => console.log('Save'),
     },
     SAVE_FILE_AS: {
-      hotkey: { letter: 's', shift: true, meta: true },
+      hotkey: { key: 's', shift: true, meta: true },
       handler: () => console.log('Save File As'),
     },
     EXPORT_AS_PNG: {
-      hotkey: { letter: 'e', shift: true, meta: true, showCtrl: true },
+      hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
       handler: () => console.log('Export PNG'),
     },
     EXPORT_AS_SVG: {
-      hotkey: { letter: 'e', shift: true, alt: true, meta: true},
+      hotkey: { key: 'e', shift: true, alt: true, meta: true},
       handler: () => console.log('Export SVG'),
     },
     EXPORT_AS_JPG: {
@@ -51,59 +51,59 @@ const useActions = (registerHotkeys=false) => {
       handler: () => console.log('Share'),
     },
     OPEN_PREFERENCES: {
-      hotkey: { letter: ',', meta: true },
+      hotkey: { key: ',', meta: true },
       handler: () => console.log('Preferences'),
     },
     UNDO: {
-      hotkey: { letter: 'z', meta: true },
+      hotkey: { key: 'z', meta: true },
       handler: undo,
     },
     REDO: {
-      hotkey: { letter: 'y', meta: true },
+      hotkey: { key: 'y', meta: true },
       handler: redo,
     },
     COPY: {
-      hotkey: { letter: 'c', meta: true },
+      hotkey: { key: 'c', meta: true },
       handler: () => console.log('Copy'),
     },
     PASTE: {
-      hotkey: { letter: 'p', meta: true },
+      hotkey: { key: 'p', meta: true },
       handler: () => console.log('Paste'),
     },
     SELECT_ALL: {
-      hotkey: { letter: 'a', meta: true },
+      hotkey: { key: 'a', meta: true },
       handler: selectAllStates,
     },
     SELECT_NONE: {
-      hotkey: { letter: 'd', meta: true },
+      hotkey: { key: 'd', meta: true },
       handler: selectNoStates,
     },
     ZOOM_IN: {
-      hotkey: { letter: '=', meta: true },
+      hotkey: { key: '=', meta: true },
       handler: () => console.log('Zoom In'),
     },
     ZOOM_OUT: {
-      hotkey: { letter: '-', meta: true },
+      hotkey: { key: '-', meta: true },
       handler: () => console.log('Zoom Out'),
     },
     ZOOM_100: {
-      hotkey: { letter: '0', meta: true },
+      hotkey: { key: '0', meta: true },
       handler: () => console.log('Zoom to 100%'),
     },
     ZOOM_FIT: {
-      hotkey: { letter: '1', shift: true },
+      hotkey: { key: '1', shift: true },
       handler: () => console.log('Zoom to fit'),
     },
     TESTING_LAB: {
-      hotkey: { letter: 't', meta: true, showCtrl: true },
+      hotkey: { key: 't', meta: true, showCtrl: true },
       handler: () => console.log('Testing Lab'),
     },
     FILE_INFO: {
-      hotkey: { letter: 'i', meta: true },
+      hotkey: { key: 'i', meta: true },
       handler: () => console.log('File Info'),
     },
     FILE_OPTIONS: {
-      hotkey: { letter: 'u', meta: true },
+      hotkey: { key: 'u', meta: true },
       handler: () => console.log('File Options'),
     },
     CONVERT_TO_DFA: {
@@ -119,7 +119,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => console.log('View Documentation'),
     },
     KEYBOARD_SHORTCUTS: {
-      hotkey: { letter: '/', meta: true },
+      hotkey: { key: '/', meta: true },
       handler: () => console.log('Keyboard shortcuts'),
     },
     PRIVACY_POLICY: {
@@ -140,10 +140,10 @@ const useActions = (registerHotkeys=false) => {
             continue
           
           // Guard against other keys 
-          const keyMatch = e.code === `Key${action.hotkey.letter.toUpperCase()}`
-          const digitMatch = e.code === `Digit${action.hotkey.letter}`
-          const letterMatch = e.key === action.hotkey.letter
-          if (!(keyMatch || digitMatch || letterMatch))
+          const letterMatch = e.code === `Key${action.hotkey.key.toUpperCase()}`
+          const digitMatch = e.code === `Digit${action.hotkey.key}`
+          const keyMatch = e.key === action.hotkey.key
+          if (!(letterMatch || digitMatch || keyMatch))
               continue
 
           // Check augmenting keys
