@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { MousePointer2, Hand, MessageSquare, Circle, ChevronDown } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 
 import { useToolStore } from '/src/stores'
 import { Dropdown } from '/src/components'
@@ -17,9 +17,14 @@ const tools = [
     icon: <Hand />,
   },
   {
+    label: 'State',
+    value: 'state',
+    icon: <Circle />,
+  },
+  {
     label: 'Transition',
     value: 'transition',
-    icon: <Circle />,
+    icon: <ArrowUpRight />,
   },
   {
     label: 'Comment',
