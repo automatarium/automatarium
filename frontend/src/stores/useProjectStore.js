@@ -27,7 +27,7 @@ const sampleInitialData = {
     name: 'q1',
     label: null,
     x: 330,
-    y: 170,
+    y: 150,
     isFinal: false,
   },{
     id: 2,
@@ -40,7 +40,7 @@ const sampleInitialData = {
     id: 3,
     name: 'q3',
     label: null,
-    x: 530,
+    x: 550,
     y: 350,
     isFinal: true,
   }],
