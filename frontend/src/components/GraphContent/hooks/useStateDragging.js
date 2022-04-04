@@ -1,8 +1,7 @@
 import { useState, useEffect } from 'react'
 
-import { useProjectStore, useViewStore, useToolStore, useSelectionStore } from '/src/stores'
+import { useProjectStore, useViewStore, useToolStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
-import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 const useStateDragging = ({ containerRef }) => {
   const tool = useToolStore(s => s.tool)
@@ -67,7 +66,7 @@ const useStateDragging = ({ containerRef }) => {
     }
     document.addEventListener('mouseup', cb)
     return () => document.removeEventListener('mouseup', cb)
-  }, [dragOffsets, dragCenters, toolActive])
+  }, [dragOffsets, dragCenters, toolActive, draggingStates])
 
   return { startDrag }
 }
