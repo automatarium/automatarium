@@ -1,0 +1,87 @@
+{
+  "meta": {
+    "name": "Accepts dib - Multiple paths for i",
+    "dateCreated": "",
+    "dateEdited": "",
+    "version": "1.0.0",
+    "automatariumVersion": "0.0.1"
+  },
+  "options": {
+    "type": "FSA",
+    "initialState": "q0",
+    "stateIdentifier": "q",
+    "playbackInterval": 500,
+    "theme": "green"
+  },
+  "states": [
+    {
+      "id": "q0",
+      "x": 100,
+      "y": 50,
+      "isFinal": false
+    },
+    {
+      "id": "q1",
+      "x": 50,
+      "y": 100,
+      "isFinal": false
+    },
+    {
+      "id": "q2",
+      "x": 100,
+      "y": 150,
+      "isFinal": false
+    },
+    {
+      "id": "q3",
+      "x": 200,
+      "y": 200,
+      "isFinal": true
+    },
+    {
+      "id": "q4",
+      "x": 100,
+      "y": 150,
+      "isFinal": false
+    }
+  ],
+  "transitions": [
+    {
+      "from": "q0",
+      "to": "q1",
+      "read": "d"
+    },
+    {
+      "from": "q1",
+      "to": "q2",
+      "read": "i"
+    },
+    {
+      "from": "q1",
+      "to": "q4",
+      "read": "i"
+    },
+    {
+      "from": "q2",
+      "to": "q3",
+      "read": "b"
+    },
+    {
+      "from": "q4",
+      "to": "q3",
+      "read": "b"
+    }
+  ],
+  "comments": [
+    {
+      "id": "0",
+      "text": "This is a comment",
+      "x": 20,
+      "y": 30
+    }
+  ],
+  "tests": {
+    "trace": "ab",
+    "batch": ["ab", "ba", "aab", "abab"]
+  }
+}
