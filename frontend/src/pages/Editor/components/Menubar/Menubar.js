@@ -107,6 +107,7 @@ const menus = [
       {
         label: 'Delete',
         shortcut: '⌫',
+        action: 'DELETE',
       },
     ]
   },
