@@ -3,7 +3,7 @@ import groupBy from 'lodash.groupby'
 import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
 import { useProjectStore, useSelectionStore, useToolStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
-import { useStateDragging, useStateCreation } from './hooks'
+import { useStateDragging, useStateCreation, useTransitionCreation } from './hooks'
 
 const GraphContent = ({ containerRef }) => {
   const tool = useToolStore(s => s.tool)
@@ -11,6 +11,7 @@ const GraphContent = ({ containerRef }) => {
   const selectedStates = useSelectionStore(s => s.selectedStates)
   const setSelectedStates = useSelectionStore(s => s.set)
   const { startDrag } = useStateDragging({ containerRef })
+  const { startEdgeCreate, stopEdgeCreate, createTransitionStart, mousePos } = useTransitionCreation({ containerRef })
   useStateCreation({ containerRef })
 
   const states = project?.states ?? []
@@ -18,7 +19,7 @@ const GraphContent = ({ containerRef }) => {
   const initialState = project?.initialState
 
   // Group up transitions by the start&end nodes
-  const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to]))
+  const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to].sort((a, b) => b - a)))
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
   const handleStateMouseDown = (state, e) => {
@@ -35,10 +36,20 @@ const GraphContent = ({ containerRef }) => {
         // Drag things
         startDrag(newSelected.map(id => states.find(state => state.id === id)), e)
       }
+
+      if (tool === 'transition') {
+        startEdgeCreate(state, e)
+      }
     }
   }
 
   const handleStateMouseUp = (state, e) => {
+    if (e.button === 0) {
+      if (tool === 'transition') {
+        stopEdgeCreate(state, e)
+      }
+    }
+
     // Is this RMB?
     if (e.button === 2) {
       // TODO: bubble up to a parent for creating a context menu
@@ -52,6 +63,9 @@ const GraphContent = ({ containerRef }) => {
 
     {/* Render all sets of edges */}
     {locatedTransitions.map((transitions, i) => <TransitionSet transitions={transitions} key={i} />)}
+
+    {/* Render in-creation transition */}
+    {createTransitionStart && mousePos && <TransitionSet.Transition fullWidth from={createTransitionStart} to={mousePos} count={1} text=''/> }
 
     {/* Render all states */}
     {states.map(s => <StateCircle

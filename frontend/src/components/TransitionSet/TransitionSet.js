@@ -12,7 +12,7 @@ const TransitionSet = ({ transitions }) => <>
   )}
 </>
 
-const Transition = ({ i, count, from, to, text }) => {
+const Transition = ({ i, count, from, to, text, fullWidth=false }) => {
   const { standardArrowHead } = useContext(MarkerContext)
 
   // TODO: for now im gonna use straight lines but eventially we need to
@@ -34,13 +34,18 @@ const Transition = ({ i, count, from, to, text }) => {
   const tangent = { x: to.x - from.x, y: to.y - from.y }
   const a = Math.PI/2
   const orth = { x: tangent.x * Math.cos(a) - tangent.y * Math.sin(a), y: tangent.x * Math.sin(a) + tangent.y * Math.cos(a) }
-  const normal = { x: orth.x / size(orth), y: orth.y / size(orth) }
+  const normal = size(orth) > 0 ? { x: orth.x / size(orth), y: orth.y / size(orth) } : { x: 0, y: 0 }
   const control = { x: center.x + bendValue * normal.x, y: center.y + bendValue * normal.y }
 
   // We connect the edge to the closest point on each circle from the control point
-  const edge1 = movePointTowards(from, control, STATE_CIRCLE_RADIUS)
-  const edge2 = movePointTowards(to, control, STATE_CIRCLE_RADIUS)
-  
+  // (If fullWidth is set we move it just far enough to prevent accidental click events)
+  const edge1 = fullWidth
+    ? movePointTowards(from, control, 2)
+    : movePointTowards(from, control, STATE_CIRCLE_RADIUS)
+  const edge2 = fullWidth
+    ? movePointTowards(to, control, 2)
+    : movePointTowards(to, control, STATE_CIRCLE_RADIUS)
+
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
   const textPathOffset = 5
@@ -65,5 +70,7 @@ const Transition = ({ i, count, from, to, text }) => {
      </text>
   </>
 }
+
+TransitionSet.Transition = Transition
 
 export default TransitionSet
