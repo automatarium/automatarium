@@ -14,6 +14,8 @@ const useActions = (registerHotkeys=false) => {
   const redo = useProjectStore(s => s.redo)
   const selectNoStates = useSelectionStore(s => s.selectNone)
   const selectAllStates = useSelectionStore(s => s.selectAll)
+  const removeStates = useProjectStore(s => s.removeStates)
+  const commit = useProjectStore(s => s.commit)
 
   // TODO: memoize
   const actions = {
@@ -78,6 +80,17 @@ const useActions = (registerHotkeys=false) => {
       hotkey: { key: 'd', meta: true },
       handler: selectNoStates,
     },
+    DELETE: {
+      hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
+      handler: () => {
+        const selectedStateIDs = useSelectionStore.getState().selectedStates
+        if (selectedStateIDs.length > 0) {
+          removeStates(selectedStateIDs)
+          selectNoStates()
+          commit()
+        }
+      },
+    },
     ZOOM_IN: {
       hotkey: { key: '=', meta: true },
       handler: () => console.log('Zoom In'),
@@ -138,27 +151,34 @@ const useActions = (registerHotkeys=false) => {
           // Skip if no hotkey
           if (!action.hotkey)
             continue
+
+          const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey] 
+          const activeHotkey = hotkeys.find(hotkey => {
+            // Guard against other keys 
+            const letterMatch = e.code === `Key${hotkey.key.toUpperCase()}`
+            const digitMatch = e.code === `Digit${hotkey.key}`
+            const keyMatch = e.key === hotkey.key
+            if (!(letterMatch || digitMatch || keyMatch))
+                return false
+
+            // Check augmenting keys
+            if ((hotkey.meta || false) !== (e.metaKey || e.ctrlKey))
+              return false
+            if ((hotkey.alt || false) !== e.altKey)
+              return false
+            if ((hotkey.shift || false) !== e.shiftKey)
+              return false
+
+            return true
+          })
           
-          // Guard against other keys 
-          const letterMatch = e.code === `Key${action.hotkey.key.toUpperCase()}`
-          const digitMatch = e.code === `Digit${action.hotkey.key}`
-          const keyMatch = e.key === action.hotkey.key
-          if (!(letterMatch || digitMatch || keyMatch))
-              continue
-
-          // Check augmenting keys
-          if ((action.hotkey.meta || false) !== (e.metaKey || e.ctrlKey))
-            continue
-          if ((action.hotkey.alt || false) !== e.altKey)
-            continue
-          if ((action.hotkey.shift || false) !== e.shiftKey)
-            continue
-
           // Prevent default and exec callback
-          e.preventDefault()
-          e.stopPropagation()
-          action.handler(e)
-          break
+          if (activeHotkey) {
+            e.preventDefault()
+            e.stopPropagation()
+            action.handler(e)
+            break
+          }
         }
       }
       
@@ -171,7 +191,7 @@ const useActions = (registerHotkeys=false) => {
   // Add formatted hotkeys to actions
   const actionsWithLabels = useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
     ...action,
-    label: action.hotkey ? formatHotkey(action.hotkey) : null
+    label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey) : null
   }]))), [actions])
 
   return actionsWithLabels

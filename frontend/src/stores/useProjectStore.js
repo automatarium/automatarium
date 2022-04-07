@@ -4,6 +4,8 @@ import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
+import { useSelectionStore } from '/src/stores'
+
 import {
   APP_VERSION,
   SCHEMA_VERSION,
@@ -147,6 +149,15 @@ const useProjectStore = create(set => ({
   /* Remove a state by id */
   removeState: state => set(produce(({ project }) => {
     project.states = project.states.filter(st => st.id !== state.id)    
+  })),
+
+  /* Remove states by id */
+  removeStates: stateIDs => set(produce(({ project }) => {
+    // Remove states
+    project.states = project.states.filter(st => !stateIDs.includes(st.id))    
+
+    // Remove associated transitions
+    project.transitions = project.transitions.filter(t => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
   })),
 
   reset: () => set({ project: createNewProject() })

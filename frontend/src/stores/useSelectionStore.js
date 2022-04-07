@@ -13,7 +13,7 @@ const useSelectionStore = create(set => ({
       .project
       ?.states
       ?.map(s => s.id) ?? []
-  }),
+  })
 }))
 
 export default useSelectionStore
