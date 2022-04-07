@@ -1,8 +1,3 @@
-const graph = require('./tests/dib-nfa4_lambdaloop')
-
-const input = 'dip'
-console.log('INPUT:\t', input)
-
 const simulateFSA = (
   graph,
   input,
@@ -47,5 +42,4 @@ const simulateFSA = (
   return acceptingResult || results.sort((r1, r2) => r2.trace.length - r1.trace.length)[0]
 }
 
-const output = simulateFSA(graph, input)
-console.log('OUTPUT:', output)
+export default simulateFSA
