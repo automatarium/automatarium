@@ -84,9 +84,11 @@ const useActions = (registerHotkeys=false) => {
       hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
         const selectedStateIDs = useSelectionStore.getState().selectedStates
-        removeStates(selectedStateIDs)
-        selectNoStates()
-        commit()
+        if (selectedStateIDs.length > 0) {
+          removeStates(selectedStateIDs)
+          selectNoStates()
+          commit()
+        }
       },
     },
     ZOOM_IN: {
