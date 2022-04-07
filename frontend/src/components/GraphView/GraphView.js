@@ -1,6 +1,6 @@
 import { useEffect, useRef, useCallback } from 'react'
 
-import { GraphContent } from '/src/components'
+import { GraphContent, SelectionBox } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions' 
@@ -64,6 +64,9 @@ const GraphView = props => {
         <g>
           {/* Graph states and transitions */}
           <GraphContent containerRef={containerRef} />
+
+          {/* Selection Drag Box */}
+          <SelectionBox containerRef={containerRef} />
         </g>
       </MarkerProvider>
     </Svg>

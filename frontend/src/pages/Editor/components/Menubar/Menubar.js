@@ -18,12 +18,10 @@ const menus = [
       {
         label: 'New...',
         action: 'NEW_FILE',
-        onClick: () => console.log('New File'),
       },
       {
         label: 'Open...',
         action: 'OPEN_FILE',
-        onClick: () => console.log('Open File'),
       },
       {
         label: 'Open recent',
@@ -38,12 +36,10 @@ const menus = [
       {
         label: 'Save',
         action: 'SAVE_FILE',
-        onClick: () => console.log('Save'),
       },
       {
         label: 'Save as...',
         action: 'SAVE_FILE_AS',
-        onClick: () => console.log('Save File As'),
       },
       'hr',
       {
@@ -52,33 +48,30 @@ const menus = [
           {
             label: 'Export as PNG',
             action: 'EXPORT_AS_PNG',
-            onClick: () => console.log('Export PNG'),
           },
           {
             label: 'Export as SVG',
             action: 'EXPORT_AS_SVG',
-            onClick: () => console.log('Export SVG'),
           },
           {
             label: 'Export as JPG',
-            onClick: () => console.log('Export JPG'),
+            action: 'EXPORT_AS_JPG'
           },
           'hr',
           {
             label: 'Export as a JFLAP file',
-            onClick: () => console.log('Export JFLAP'),
+            action: 'EXPORT_AS_JFLAP'
           },
         ],
       },
       {
         label: 'Share...',
-        onClick: () => console.log('Share'),
+        action: 'SHARE',
       },
       'hr',
       {
         label: 'Preferences',
         action: 'OPEN_PREFERENCES',
-        onClick: () => console.log('Preferences'),
       },
     ]
   },
@@ -88,23 +81,27 @@ const menus = [
       {
         label: 'Undo',
         action: 'UNDO',
-        onClick: () => console.log('Undo'),
       },
       {
         label: 'Redo',
         action: 'REDO',
-        onClick: () => console.log('Redo')
       },
       'hr',
       {
         label: 'Copy',
         action: 'COPY',
-        onClick: () => console.log('Copy'),
       },
       {
         label: 'Paste',
         action: 'PASTE',
-        onClick: () => console.log('Paste'),
+      },
+      {
+        label: 'Select All',
+        action: 'SELECT_ALL',
+      },
+      {
+        label: 'Clear Selection',
+        action: 'SELECT_NONE',
       },
       'hr',
       {
@@ -119,44 +116,36 @@ const menus = [
       {
         label: 'Zoom in',
         action: 'ZOOM_IN',
-        onClick: () => console.log('Zoom In'),
       },
       {
         label: 'Zoom out',
         action: 'ZOOM_OUT',
-        onClick: () => console.log('Zoom Out'),
       },
       {
         label: 'Zoom to 100%',
         action: 'ZOOM_100',
-        onClick: () => console.log('Zoom to 100%'),
       },
       {
         label: 'Zoom to fit',
         action: 'ZOOM_FIT',
-        onClick: () => console.log('Zoom to fit'),
       },
       'hr',
       {
         label: 'Fullscreen',
         shortcut: 'F11',
-        onClick: () => console.log('Fullscreen'),
       },
       'hr',
       {
         label: 'Testing lab',
         action: 'TESTING_LAB',
-        onClick: () => console.log('Testing Lab'),
       },
       {
         label: 'File info',
         action: 'FILE_INFO',
-        onClick: () => console.log('File Info'),
       },
       {
         label: 'File options',
         action: 'FILE_OPTIONS',
-        onClick: () => console.log('File Options'),
       },
     ]
   },
@@ -165,16 +154,16 @@ const menus = [
     items: [
       {
         label: 'Convert to DFA',
-        onClick: () => console.log('Convert to DFA'),
+        action: 'CONVERT_TO_DFA'
       },
       {
         label: 'Minimize DFA',
-        onClick: () => console.log('Minimize DFA'),
+        action: 'MINIMIZE_DFA',
       },
       'hr',
       {
         label: 'Auto layout',
-        onClick: () => console.log('Auto Layout'),
+        action: 'AUTO_LAYOUT',
       },
     ]
   },
@@ -183,21 +172,20 @@ const menus = [
     items: [
       {
         label: 'View documentation',
-        onClick: () => console.log('View Documentation'),
+        action: 'OPEN_DOCS'
       },
       {
         label: 'Keyboard shortcuts',
         action: 'KEYBOARD_SHORTCUTS',
-        onClick: () => console.log('Keyboard shortcuts'),
       },
       'hr',
       {
         label: 'Privacy policy',
-        onClick: () => console.log('Privacy Policy'),
+        action: 'PRIVACY_POLICY'
       },
       {
         label: 'About Automatarium',
-        onClick: () => console.log('About Automatarium'),
+        action: 'OPEN_ABOUT'
       },
       'hr',
       {

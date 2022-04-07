@@ -1,11 +1,5 @@
-
-export type bezierControlPoint = {
-  x: number
-  y: number
-}
-
 export type comment = {
-  id: string
+  id: number
   text: string
   x: number
   y: number
@@ -18,6 +12,8 @@ export type tests = {
 
 export type meta = {
   name: string
+  dateCreated: string
+  dateEdited: string
+  version: string
   automatariumVersion: string
-  createdAt: string
 }

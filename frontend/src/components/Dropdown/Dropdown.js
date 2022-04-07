@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { ChevronRight } from 'lucide-react'
 
-import { Hotkey } from '/src/components'
+import { useActions } from '/src/hooks'
 
 import {
   Wrapper,
@@ -10,7 +10,7 @@ import {
   Divider,
 } from './dropdownStyle'
 
-const ItemWithItems = ({ item }) => {
+const ItemWithItems = ({ item, onClose }) => {
   const [active, setActive] = useState(false)
 
   return (
@@ -19,31 +19,36 @@ const ItemWithItems = ({ item }) => {
       onMouseLeave={() => setActive(false)}
       onBlur={e => !e.currentTarget.contains(e.relatedTarget) && setActive(false)}
     >
-      <Item active={active} item={item} setActive={() => setActive(true)} />
+      <Item active={active} item={item} onClose={onClose} setActive={() => setActive(true)} />
       <Dropdown
         items={item.items}
         subMenu
         visible={active}
+        onClose={onClose}
       />
     </div>
   )
 }
 
-const Item = ({ item, active, setActive }) => (
-  <ItemWrapper
-    onClick={item.onClick ?? (item.items?.length > 0 ? setActive : undefined)}
-    disabled={(!item.onClick && !item['items']) || item.items?.length === 0}
-    type="button"
-    $active={active}
-  >
-    <label>{item.label}</label>
-    {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
-    {item.action && <Shortcut aria-hidden="true">
-      <Hotkey action={item.action} onAction={item.onClick} renderLabel={true} />
-    </Shortcut>}
-    {item.items && <ChevronRight size="1em" />}
-  </ItemWrapper>
-)
+const Item = ({ item, active, setActive, onClose }) => {
+  const actions = useActions()
+  const actionHandler = item.action ? actions[item.action].handler : null
+  const hotKeyLabel = item.action ? actions[item.action].label : null
+
+  return  (
+    <ItemWrapper
+      onClick={actionHandler ? () => { actionHandler(); onClose() } : (item.items?.length > 0 ? setActive : undefined)}
+      disabled={(!actionHandler && !item['items']) || item.items?.length === 0}
+      type="button"
+      $active={active}
+    >
+      <label>{item.label}</label>
+      {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
+      {hotKeyLabel && <Shortcut aria-hidden="true">{hotKeyLabel}</Shortcut>}
+      {item.items && <ChevronRight size="1em" />}
+    </ItemWrapper>
+  )
+}
 
 const Dropdown = ({
   subMenu,
@@ -87,9 +92,9 @@ const Dropdown = ({
           <Divider key={`hr-${i}`} />
         ) : (
           item.items ? (
-            <ItemWithItems key={item.label} item={item} />
+            <ItemWithItems key={item.label} item={item} onClose={onClose} />
           ) : (
-            <Item key={item.label} item={item} />
+            <Item key={item.label} item={item} onClose={onClose} />
           )
       ))}
     </Wrapper>

@@ -1,7 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
 
+import { useActions } from '/src/hooks'
 import { GraphView } from '/src/components'
-import { useToolStore } from '/src/stores'
+import { useToolStore, useProjectStore } from '/src/stores'
+
+// #HACK
+import { createNewProject } from '/src/stores/useProjectStore'
 
 import { Menubar, Sidepanel, Toolbar } from './components'
 import { Content } from './editorStyle'
@@ -9,6 +13,15 @@ import { Content } from './editorStyle'
 const Editor = () => {
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
+  const set = useProjectStore(s => s.set)
+
+  // Register action hotkey
+  useActions(true)
+
+  // Load the test project
+  useEffect(() => {
+    set(createNewProject())
+  }, [])
 
   // Change tool when holding certain keys
   const onKeyDown = useCallback(e => {

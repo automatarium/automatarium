@@ -1,6 +1,8 @@
 import create from 'zustand'
-import produce from 'immer'
+import produce, { current} from 'immer'
 import { v4 as uuid } from 'uuid'
+import clone from 'lodash.clonedeep'
+import isEqual from 'lodash.isequal'
 
 import {
   APP_VERSION,
@@ -16,30 +18,26 @@ const sampleInitialData = {
   initialState: 0,
   states: [{
     id: 0, //TODO: can be int?
-    name: 'q0',
     label: null,
     x: 150,
     y: 150,
     isFinal: false,
   }, {
     id: 1,
-    name: 'q1',
     label: null,
     x: 330,
-    y: 170,
+    y: 150,
     isFinal: false,
   },{
     id: 2,
-    name: 'q2',
     label: null,
     x: 150,
     y: 350,
     isFinal: false,
   }, {
     id: 3,
-    name: 'q3',
     label: null,
-    x: 530,
+    x: 550,
     y: 350,
     isFinal: true,
   }],
@@ -66,7 +64,7 @@ const sampleInitialData = {
   }]
 }
 
-const createNewProject = () => ({
+export const createNewProject = () => ({
     id: uuid(),
     states: sampleInitialData.states,
     transitions: sampleInitialData.transitions,
@@ -90,12 +88,55 @@ const createNewProject = () => ({
 })
 
 const useProjectStore = create(set => ({
-  project: createNewProject(),
-  set: project => set({ project }),
+  project: null,
+  history: [],
+  historyPointer: null,
+  set: project => set({ project, history: [ clone(project) ], historyPointer: 0 }),
+
+  /* Add current project state to stored history of project states */
+  commit: () => set(produce(state => {
+    // Check whether anything changed before committing
+    const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
+    if (!didChange)
+      return
+
+    // Delete the future
+    state.history = state.history.slice(0, state.historyPointer + 1)
+    
+    // Add new history
+    state.history.push(clone(state.project))
+
+    // Reset pointer
+    state.historyPointer = state.history.length - 1
+  })),
+
+  undo: () => set(produce(state => {
+    // Can we undo? 
+    if (state.historyPointer == 0)
+      return
+
+    // Move pointer
+    state.historyPointer--
+    
+    // Update project
+    state.project = state.history[state.historyPointer]
+  })),
+
+  redo: () => set(produce(state => {
+    // Can we redo?
+    if (state.historyPointer == state.history.length - 1)
+      return
+
+    // Move pointer
+    state.historyPointer++
+
+    // Update project
+    state.project = state.history[state.historyPointer]
+  })),
 
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.append({ ...state, id: project.state.length })
+    project.states.push({ ...state, id: project.states.length })
   })),
 
   /* Update a state by id */

@@ -7,4 +7,9 @@ export const StyledCircle = styled('circle')`
   + text {
     user-select: none;
   }
+
+  ${p => p.$selected && `
+    stroke: var(--primary);
+    stroke-width: 3.5px;
+  `}
 ` 
