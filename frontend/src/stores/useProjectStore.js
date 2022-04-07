@@ -134,6 +134,11 @@ const useProjectStore = create(set => ({
     state.project = state.history[state.historyPointer]
   })),
 
+  /* Create a new transition */
+  createTransition: transition => set(produce(({ project }) => {
+    project.transitions.push({ ...transition, id: project.transitions.length })
+  })),
+
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
     project.states.push({ ...state, id: project.states.length })
