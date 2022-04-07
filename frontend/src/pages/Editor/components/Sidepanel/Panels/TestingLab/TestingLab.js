@@ -1,18 +1,22 @@
 import { useState } from 'react'
 import { SkipBack, ChevronLeft, Play, ChevronRight, SkipForward } from 'lucide-react'
 
-import { TraceOutput } from '/src/components/'
+import { SectionLabel, Button, TextInput } from '/src/components'
+
+const traceOutput = `a: q0 -> q1
+b: q1 -> q2
+
+SUCCESS`
+
 import { 
-  Title, 
-  Subtitle, 
-  TraceInput, 
-  TraceButton, 
-  TraceButtonContainer, 
-  AddMultiTraceButton, 
-  MultiTraceInput, 
-  MultiTraceWrapper, 
-  RemoveMultiTraceInputButton, 
-  RunMultiTraceInputButton 
+  StepButtons,
+  AddMultiTraceButton,
+  MultiTraceInput,
+  MultiTraceWrapper,
+  RemoveMultiTraceInputButton,
+  RunMultiTraceInputButton,
+  Wrapper,
+  TraceConsole,
 } from './testingLabStyle'
 
 const TestingLab = () => {
@@ -45,18 +49,26 @@ const TestingLab = () => {
 
   return (
     <> 
-      <Title>Testing Lab</Title>
-      <Subtitle>TRACE</Subtitle>
-      <TraceInput onChange={event => setTraceInput(event.target.value)} />
-      <TraceButtonContainer>
-        <TraceButton $active={true}><SkipBack size={20}/></TraceButton>
-        <TraceButton $active={true}><ChevronLeft size={20}/></TraceButton>
-        <TraceButton $active={true}><Play size={20}/></TraceButton>
-        <TraceButton $active={true}><ChevronRight size={20}/></TraceButton>
-        <TraceButton $active={true}><SkipForward size={20}/></TraceButton>
-      </TraceButtonContainer>
-      <TraceOutput/>
-      <Subtitle>MULTI-RUN</Subtitle>
+      <SectionLabel>Trace</SectionLabel>
+      <Wrapper>
+        <TextInput
+          onChange={e => setTraceInput(e.target.value)}
+          value={traceInput}
+          placeholder="Enter a value to test"
+        />
+
+        <StepButtons>
+          <Button icon={<SkipBack />} />
+          <Button icon={<ChevronLeft />} />
+          <Button icon={<Play />} />
+          <Button icon={<ChevronRight />} />
+          <Button icon={<SkipForward />} />
+        </StepButtons>
+
+        <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
+      </Wrapper>
+
+      <SectionLabel>Multi-run</SectionLabel>
       {multiTraceInput.map( (item, index) => (
         <MultiTraceWrapper key={index}>
           <MultiTraceInput

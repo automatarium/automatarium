@@ -11,4 +11,12 @@ export const Wrapper = styled('button')`
   font-size: .9em;
   border-radius: .3em;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  aslign-items: center;
+  gap: .5em;
+
+  ${props => props.$icon && `
+    padding: .375em;
+  `}
 `

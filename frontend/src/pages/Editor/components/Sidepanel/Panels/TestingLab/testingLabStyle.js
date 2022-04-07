@@ -1,46 +1,28 @@
 import { styled } from 'goober'
 
-export const Title = styled('h1')`
-  font-size: 1.5em;
+export const Wrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  margin: .8rem;
 `
 
-export const Subtitle = styled('h2')`
-  background-color: var(--toolbar);
-  font-size: 1em;
-  padding: 10px;
-`
-
-export const TraceInput = styled('input')`
-  width: 90%;
-  margin: 10px;
-  border-radius: 5px;
-  height: 1.5em;
-  border: none;
-`
-
-export const TraceButtonContainer = styled('div')`
+export const StepButtons = styled('div')`
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 10px;
-  margin: 0 10px;
+  gap: .4em;
 `
 
-export const TraceButton = styled('button')`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  height: 2.3em;
-  border-radius: 5px;
-  border: none;
-  outline: none;
+export const TraceConsole = styled('code')`
+  background: var(--toolbar);
+  display: block;
+  border-radius: .3em;
+  box-sizing: border-box;
+  padding: .5rem .7rem;
 
-  ${p => p.$active && `
-    background: var(--primary);
-    color: var(--white);
-  `}
-
-
+  pre {
+    margin: 0;
+  }
 `
 
 export const AddMultiTraceButton = styled('button')`

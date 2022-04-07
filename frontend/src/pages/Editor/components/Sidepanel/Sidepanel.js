@@ -3,20 +3,24 @@ import { FlaskConical, Info, Settings2 } from 'lucide-react'
 
 import { Sidebar } from '..'
 
-import { Wrapper, Panel } from './sidepanelStyle'
-import TestingLab from './Panels/TestingLab/TestingLab'
+import { Wrapper, Panel, Heading } from './sidepanelStyle'
+import { TestingLab } from './Panels'
 
 const panels = [
   {
     label: 'Testing Lab',
+    value: 'test',
     icon: <FlaskConical />,
+    element: <TestingLab />,
   },
   {
     label: 'About Your Automaton',
+    value: 'about',
     icon: <Info />,
   },
   {
     label: 'File Options',
+    value: 'options',
     icon: <Settings2 />,
   },
 ]
@@ -28,19 +32,17 @@ const Sidepanel = () => {
     <Wrapper>
       {activePanel && (
         <Panel>
-          {activePanel == 'Testing Lab' && <TestingLab/>}
+          <Heading>{activePanel?.label}</Heading>
+          {activePanel?.element}
         </Panel>
       )}
 
       <Sidebar>
         {panels.map(panel => (
           <Sidebar.Button
-            key={panel.label}
-            onClick={() => {
-              setActivePanel(activePanel === panel.label ? undefined : panel.label)
-              console.log(activePanel)
-            }}
-            $active={activePanel === panel.label}
+            key={panel.value}
+            onClick={() => setActivePanel(activePanel?.value === panel.value ? undefined : panel)}
+            $active={activePanel?.value === panel.value}
             title={panel.label}
           >
             {panel.icon}
