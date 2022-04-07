@@ -1,0 +1,21 @@
+{
+  "name": "@automatarium/jflap-translator",
+  "version": "1.0.0",
+  "description": "",
+  "source": "src/index.js",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "parcel build",
+    "watch": "parcel watch",
+    "test": "jest"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "jest": "^27.5.1",
+    "parcel": "^2.4.1"
+  },
+  "dependencies": {
+    "xml-js": "^1.6.11"
+  }
+}
