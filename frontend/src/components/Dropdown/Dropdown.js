@@ -44,7 +44,7 @@ const Item = ({ item, active, setActive, onClose }) => {
     >
       <label>{item.label}</label>
       {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
-      {hotKeyLabel && <Shortcut aria-hidden="true">{hotKeyLabel}</Shortcut>}
+      {!item.shortcut && hotKeyLabel && <Shortcut aria-hidden="true">{hotKeyLabel}</Shortcut>}
       {item.items && <ChevronRight size="1em" />}
     </ItemWrapper>
   )
