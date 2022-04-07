@@ -1,10 +1,12 @@
 import { useEffect, useCallback, useState } from 'react'
 
-import { useProjectStore, useViewStore } from '/src/stores'
+import { useProjectStore, useViewStore, useToolStore } from '/src/stores'
 
 const useTransitionCreation = ({ containerRef }) => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const createTransition = useProjectStore(s => s.createTransition)
+  const tool = useToolStore(s => s.tool)
+  const toolActive = tool === 'transition'
 
   const [createTransitionStart, setCreateTransitionStart] = useState(null)
   const [createTransitionState, setCreateTransitionState] = useState(null)
@@ -25,9 +27,11 @@ const useTransitionCreation = ({ containerRef }) => {
   }, [createTransitionState])
 
   const handleMouseMove = useCallback(e => {
-    const [x, y] = screenToViewSpace(e.clientX, e.clientY, containerRef?.current)
-    setMousePos([x, y])
-  }, [])
+    if (toolActive && createTransitionState) {
+      const [x, y] = screenToViewSpace(e.clientX, e.clientY, containerRef?.current)
+      setMousePos([x, y])
+    }
+  }, [toolActive, createTransitionState])
 
   const handleMouseUp = useCallback(e => {
     if (e.target === containerRef?.current) {

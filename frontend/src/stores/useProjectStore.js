@@ -42,22 +42,27 @@ const sampleInitialData = {
     isFinal: true,
   }],
   transitions: [{
+    id: 0,
     from: 0,
     to: 1,
     read: 'a',
   }, {
+    id: 1,
     from: 1,
     to: 2,
     read: 'z',
   },{
+    id: 2,
     from: 2,
     to: 3,
     read: 'a'
   }, {
+    id: 3,
     from: 2,
     to: 3,
     read: 'b'
   }, {
+    id: 4,
     from: 2,
     to: 3,
     read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',

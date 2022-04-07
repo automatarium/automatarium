@@ -19,8 +19,10 @@ const GraphContent = ({ containerRef }) => {
   const initialState = project?.initialState
 
   // Group up transitions by the start&end nodes
-  const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to]))
+  const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to].sort((a, b) => b - a)))
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
+
+  console.log(groupedTransitions)
 
   const handleStateMouseDown = (state, e) => {
     if (e.button === 0) {
