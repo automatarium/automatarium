@@ -2,14 +2,17 @@
   "name": "@automatarium/jflap-translator",
   "version": "1.0.0",
   "description": "",
+  "source": "src/index.js",
   "main": "dist/index.js",
   "scripts": {
-    "build": "parcel build convertJFLAP.js",
-    "watch": "parcel watch convertJFLAP.js"
+    "build": "parcel build",
+    "watch": "parcel watch",
+    "test": "jest"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "jest": "^27.5.1",
     "parcel": "^2.4.1"
   },
   "dependencies": {
