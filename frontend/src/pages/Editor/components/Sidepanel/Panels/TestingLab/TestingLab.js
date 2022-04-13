@@ -12,22 +12,19 @@ import {
   Wrapper,
   TraceConsole,
 } from './testingLabStyle'
-import useProjectStore from '../../../../../../stores/useProjectStore'
-import simulateFSA from '@automatarium/simulation'
-
-const traceOutput = `a: q0 -> q1
-b: q1 -> q2
-
-SUCCESS`
+import useProjectStore from '/src/stores/useProjectStore'
+import { simulateFSA } from '@automatarium/simulation'
 
 const TestingLab = () => {
   const [traceInput, setTraceInput] = useState('')
+  const [traceOutput, setTraceOutput] = useState('')
   const [multiTraceInput, setMultiTraceInput] = useState([[]])
   const graph = {
     states: useProjectStore(s => s.project.states),
     transitions: useProjectStore(s => s.project.transitions),
     initialState: useProjectStore(s => s.project.initialState)
   }
+  const statePrefix = useProjectStore(s => s.project.config.statePrefix)
 
   const handleAddMultiTrace = () => setMultiTraceInput(prev => [...prev, []])
 
@@ -38,74 +35,39 @@ const TestingLab = () => {
   const onMultiTraceInputChange = (index, event) => {
     event.preventDefault();
     event.persist()
-    console.log(event)
+    // console.log(event)
+    const { accepted } = simulateFSA(graph, event.target.value)
+
     setMultiTraceInput(prev => {
       return prev.map((item, i) => {
-        if (i !== index) return item;  
+        if (i !== index) return item;
         return [
-          event.target.value
+          event.target.value,
+          accepted
         ]
       })
     })
   }
   
   const handleRunMultiTrace = () => {
-
   }
 
   const handleRun = (input) => {
-    const x = simulateFSA({
-      initialState: 0,
-      states: [{
-        id: 0, //TODO: can be int?
-        label: null,
-        x: 150,
-        y: 150,
-        isFinal: false,
-      }, {
-        id: 1,
-        label: null,
-        x: 330,
-        y: 150,
-        isFinal: false,
-      },{
-        id: 2,
-        label: null,
-        x: 150,
-        y: 350,
-        isFinal: false,
-      }, {
-        id: 3,
-        label: null,
-        x: 550,
-        y: 350,
-        isFinal: true,
-      }],
-      transitions: [{
-        from: 0,
-        to: 1,
-        read: 'a',
-      }, {
-        from: 1,
-        to: 2,
-        read: 'z',
-      },{
-        from: 2,
-        to: 3,
-        read: 'a'
-      }, {
-        from: 2,
-        to: 3,
-        read: 'b'
-      }, {
-        from: 2,
-        to: 3,
-        read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
-      }]}, 'azb')
-    // console.log(graph);
-    // console.log(input);
-    // const output = simulateFSA(graph, input)
-    console.log(x);
+    let output = ''
+    const { accepted, trace } = simulateFSA(graph, input)
+
+    // Rejected output
+    if (!accepted) {
+      setTraceOutput('REJECTED')
+      return
+    }
+
+    // Calculate transitions taken in trace and set output
+    for (let i = 0; i < input.length; i++) {
+      output += `${input[i]}: ${statePrefix}${trace[i]} -> ${statePrefix}${trace[i+1]}\n`
+    }
+    output += `\nSUCCESS`
+    setTraceOutput(output)
   }
 
   return (
@@ -126,7 +88,7 @@ const TestingLab = () => {
           <Button icon={<SkipForward size={20} />} />
         </StepButtons>
 
-        <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
+        {traceOutput ? <TraceConsole><pre>{traceOutput}</pre></TraceConsole> : null}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
@@ -134,10 +96,11 @@ const TestingLab = () => {
           {multiTraceInput.map( (item, index) => (
               <MultiTraceWrapper key={index}>
                 <MultiTraceInput
-                spellCheck={false}
-                onChange={(e) => onMultiTraceInputChange(index, e)}
-                value={item}
-                /> 
+                  spellCheck={false}
+                  onChange={(e) => onMultiTraceInputChange(index, e)}
+                  value={item[0]}
+                  accepted={item[1]}
+                />
                 <RemoveMultiTraceInputButton onClick={() => handleRemoveMultiTrace(index)}/>
               </MultiTraceWrapper>
           ))}

@@ -35,14 +35,16 @@ export const AddMultiTraceButton = styled('button')`
 `
 
 export const MultiTraceWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: 85% 15%;
-  gap: 10px;
+  display: flex;
   height: 2rem;
+  gap: 10px;
 `
 
 export const MultiTraceInput = styled('input')`
-  background-color: var(--white);
+  /* background-color: var(--white); */
+  width: 85%;
+  background-color: ${p => p.accepted === undefined ? 'var(--white)' :
+    p.accepted ? 'var(--success)' : 'var(--error)'};
   color: var(--black);
   border: none;
   border: solid .1rem;
