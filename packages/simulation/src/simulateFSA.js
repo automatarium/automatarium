@@ -1,8 +1,8 @@
 const simulateFSA = (
   graph,
   input,
-  currStateID = graph?.options?.initialState,
-  trace = [graph?.options?.initialState],
+  currStateID = graph?.initialState,
+  trace = [graph?.initialState],
   lambdaCount = 0,
   lastTransitionLambda = false
 ) => {
@@ -19,6 +19,7 @@ const simulateFSA = (
 
   // Move lambda transitions to end of array (to prioritise non-lambda transitions)
   possibleTransitions.sort((a, b) => b.read.length - a.read.length)
+
 
   // No transitions possible?
   if (possibleTransitions.length === 0) {
@@ -42,4 +43,54 @@ const simulateFSA = (
   return acceptingResult || results.sort((r1, r2) => r2.trace.length - r1.trace.length)[0]
 }
 
-export default simulateFSA
+const x = simulateFSA({
+  initialState: 0,
+  states: [{
+    id: 0, //TODO: can be int?
+    label: null,
+    x: 150,
+    y: 150,
+    isFinal: false,
+  }, {
+    id: 1,
+    label: null,
+    x: 330,
+    y: 150,
+    isFinal: false,
+  },{
+    id: 2,
+    label: null,
+    x: 150,
+    y: 350,
+    isFinal: false,
+  }, {
+    id: 3,
+    label: null,
+    x: 550,
+    y: 350,
+    isFinal: true,
+  }],
+  transitions: [{
+    from: 0,
+    to: 1,
+    read: 'a',
+  }, {
+    from: 1,
+    to: 2,
+    read: 'z',
+  },{
+    from: 2,
+    to: 3,
+    read: 'a'
+  }, {
+    from: 2,
+    to: 3,
+    read: 'b'
+  }, {
+    from: 2,
+    to: 3,
+    read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
+  }]}, 'azb')
+
+  console.log(x);
+// export default simulateFSA
