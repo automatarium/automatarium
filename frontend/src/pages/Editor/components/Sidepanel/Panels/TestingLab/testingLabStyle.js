@@ -41,15 +41,20 @@ export const MultiTraceWrapper = styled('div')`
 `
 
 export const MultiTraceInput = styled('input')`
-  /* background-color: var(--white); */
   width: 85%;
   background-color: ${p => p.accepted === undefined ? 'var(--white)' :
-    p.accepted ? 'var(--success)' : 'var(--error)'};
+    p.accepted ? 'hsl(var(--success-h), 53%, 76%)' : 'hsl(var(--error-h), 97%, 87%)'};
   color: var(--black);
   border: none;
   border: solid .1rem;
   border-radius: .25rem;
-  border-color: var(--input-border);
+  border-color: ${p => p.accepted === undefined ? 'var(--input-border)' :
+    p.accepted ? 'var(--success)' : 'var(--error)'};
+  outline: none;
+
+  &:focus {
+    border-color: ${p => p.accepted === undefined ? 'var(--primary)' : null};
+  }
 
   font-size: 1em;
 `
