@@ -13,8 +13,9 @@ export const Wrapper = styled('button')`
   cursor: pointer;
   display: flex;
   justify-content: center;
-  aslign-items: center;
+  align-items: center;
   gap: .5em;
+  height: 85%;
 
   ${props => props.$icon && `
     padding: .375em;

@@ -58,11 +58,11 @@ const TestingLab = () => {
         />
 
         <StepButtons>
-          <Button icon={<SkipBack />} />
-          <Button icon={<ChevronLeft />} />
-          <Button icon={<Play />} />
-          <Button icon={<ChevronRight />} />
-          <Button icon={<SkipForward />} />
+          <Button icon={<SkipBack size={20} />} />
+          <Button icon={<ChevronLeft size={22} />} />
+          <Button icon={<Play size={20} />} />
+          <Button icon={<ChevronRight size={22} />} />
+          <Button icon={<SkipForward size={20} />} />
         </StepButtons>
 
         <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
