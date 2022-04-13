@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { Trash2 } from 'lucide-react'
 
 export const Wrapper = styled('div')`
   display: flex;
@@ -26,32 +27,46 @@ export const TraceConsole = styled('code')`
 `
 
 export const AddMultiTraceButton = styled('button')`
-  width: 90%;
-  height: 2em;
-  margin: 10px;
+  height: 2.5em;
   border-radius: 6px;
   border: none;
   outline: none;
+  cursor: pointer;
 `
 
 export const MultiTraceWrapper = styled('div')`
   display: grid;
-  grid-template-columns: 3fr 1fr;
+  grid-template-columns: 85% 15%;
   gap: 10px;
-  margin: 10px;
+  height: 2rem;
 `
 
 export const MultiTraceInput = styled('input')`
+  background-color: var(--white);
+  color: var(--black);
+  border: none;
+  border: solid .1rem;
+  border-radius: .25rem;
+  border-color: var(--input-border);
+
   font-size: 1em;
 `
 
-export const RemoveMultiTraceInputButton = styled('button')`
-  
+export const RemoveMultiTraceInputButton = styled(Trash2)`
+  align-self: center;
+  cursor: pointer;
+
 `
 
 export const RunMultiTraceInputButton = styled('button')`
-  width: 90%;
-  height: 2em;
-  margin: 10px;
+  font-weight: bold;
+  height: 2.75em;
+  border: none;
   border-radius: 6px;
+  background-color: var(--primary);
+  cursor: pointer;
+
+  &:active {
+    background-color: hsl(var(--primary-h) var(--primary-s) 47%);
+  }
 `

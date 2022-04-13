@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { SkipBack, ChevronLeft, Play, ChevronRight, SkipForward } from 'lucide-react'
+import { SkipBack, ChevronLeft, Play, ChevronRight, SkipForward, Plus } from 'lucide-react'
 
 import { SectionLabel, Button, TextInput } from '/src/components'
 
@@ -69,17 +69,22 @@ const TestingLab = () => {
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
-      {multiTraceInput.map( (item, index) => (
-        <MultiTraceWrapper key={index}>
-          <MultiTraceInput
-          onChange={(e) => onMultiTraceInputChange(index, e)}
-          value={item}
-          /> 
-          <RemoveMultiTraceInputButton onClick={() => handleRemoveMultiTrace(index)}/>
-        </MultiTraceWrapper>
-      ))}
-      <AddMultiTraceButton onClick={handleAddMultiTrace}/>
-      <RunMultiTraceInputButton onClick={handleRunMultiTrace}/>
+        <Wrapper>
+          {multiTraceInput.map( (item, index) => (
+              <MultiTraceWrapper key={index}>
+                <MultiTraceInput
+                spellCheck={false}
+                onChange={(e) => onMultiTraceInputChange(index, e)}
+                value={item}
+                /> 
+                <RemoveMultiTraceInputButton onClick={() => handleRemoveMultiTrace(index)}/>
+              </MultiTraceWrapper>
+          ))}
+          <AddMultiTraceButton onClick={handleAddMultiTrace}>
+            <Plus />
+          </AddMultiTraceButton>
+          <RunMultiTraceInputButton onClick={handleRunMultiTrace}>Run</RunMultiTraceInputButton>
+      </Wrapper>
     </>
   )
 }
