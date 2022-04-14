@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { SkipBack, ChevronLeft, Play, ChevronRight, SkipForward, Plus } from 'lucide-react'
 
 import { SectionLabel, Button, TextInput } from '/src/components'
@@ -18,7 +18,10 @@ import { simulateFSA } from '@automatarium/simulation'
 const TestingLab = () => {
   const [traceInput, setTraceInput] = useState('')
   const [traceOutput, setTraceOutput] = useState('')
+  const [tracerIdx, setTracerIdx] = useState(0)
+  const [trace, setTrace] = useState([])
   const [multiTraceInput, setMultiTraceInput] = useState([[]])
+
   const graph = {
     states: useProjectStore(s => s.project.states),
     transitions: useProjectStore(s => s.project.transitions),
@@ -55,6 +58,7 @@ const TestingLab = () => {
   const handleRun = (input) => {
     let output = ''
     const { accepted, trace } = simulateFSA(graph, input)
+    setTrace(trace)
 
     // Rejected output
     if (!accepted) {
@@ -68,7 +72,12 @@ const TestingLab = () => {
     }
     output += `\nSUCCESS`
     setTraceOutput(output)
+    setTracerIdx(0)
   }
+
+  // useEffect(() => {
+  //   console.log(tracerIdx, traceInput[tracerIdx], trace[tracerIdx-1], trace[tracerIdx]);
+  // }, [tracerIdx])
 
   return (
     <> 
@@ -81,11 +90,31 @@ const TestingLab = () => {
         />
 
         <StepButtons>
-          <Button icon={<SkipBack size={20} />} />
-          <Button icon={<ChevronLeft size={22} />} />
-          <Button icon={<Play size={20} />} onClick={() => handleRun(traceInput)}/>
-          <Button icon={<ChevronRight size={22} />} />
-          <Button icon={<SkipForward size={20} />} />
+          <Button icon={<SkipBack size={20} />}
+            disabled={tracerIdx <= 0}
+            onClick={() => setTracerIdx(0)} />
+
+          <Button icon={<ChevronLeft size={22} />}
+            disabled={tracerIdx <= 0}
+            onClick={() => {
+              setTracerIdx(tracerIdx-1)
+            }} />
+
+          <Button icon={<Play size={20} />} 
+            onClick={() => handleRun(traceInput)}/>
+
+          <Button icon={<ChevronRight size={22} />}
+            disabled={tracerIdx >= traceInput.length || !trace?.length}
+            onClick={() => {
+              setTraceOutput(`${traceInput[tracerIdx]}: ${statePrefix}${trace[tracerIdx]} -> ${statePrefix}${trace[tracerIdx+1]}`)
+              setTracerIdx(tracerIdx+1)
+            }} />
+
+          <Button icon={<SkipForward size={20} />}
+            disabled={tracerIdx >= traceInput.length || !trace?.length}
+            onClick={() => {
+              setTracerIdx(traceInput.length)
+            }} />
         </StepButtons>
 
         {traceOutput ? <TraceConsole><pre>{traceOutput}</pre></TraceConsole> : null}
