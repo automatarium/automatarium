@@ -15,7 +15,6 @@ export const Wrapper = styled('button')`
   justify-content: center;
   align-items: center;
   gap: .5em;
-  height: 85%;
 
   &:active {
     background-color: hsl(var(--primary-h) var(--primary-s) 47%);

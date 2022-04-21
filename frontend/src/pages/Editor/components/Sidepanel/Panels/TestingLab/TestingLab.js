@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { SkipBack, ChevronLeft, Play, ChevronRight, SkipForward, Plus } from 'lucide-react'
+import { useState, useCallback, useMemo } from 'react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus } from 'lucide-react'
 
 import { SectionLabel, Button, TextInput } from '/src/components'
 import { 
@@ -16,13 +16,12 @@ import useProjectStore from '/src/stores/useProjectStore'
 import { simulateFSA } from '@automatarium/simulation'
 
 const TestingLab = () => {
+  const [simulationResult, setSimulationResult] = useState()
   const [traceInput, setTraceInput] = useState('')
-  const [traceOutput, setTraceOutput] = useState('')
-  const [tracerIdx, setTracerIdx] = useState(0)
-  const [isAccepted, setIsAccepted] = useState(false)
-  const [trace, setTrace] = useState([])
+  const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceInput, setMultiTraceInput] = useState([[]])
 
+  // Graph state
   const graph = {
     states: useProjectStore(s => s.project.states),
     transitions: useProjectStore(s => s.project.transitions),
@@ -30,16 +29,17 @@ const TestingLab = () => {
   }
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
 
-  const handleAddMultiTrace = () => setMultiTraceInput(prev => [...prev, []])
-
+  // Multi Trace
   const handleRemoveMultiTrace = index => {
     setMultiTraceInput((prev) => prev.filter((item) => item !== prev[index]));
   }
 
+  const handleAddMultiTrace = () => setMultiTraceInput(prev => [...prev, []])
+
+  const handleRunMultiTrace = () => {
+  }
+
   const onMultiTraceInputChange = (index, event) => {
-    // event.preventDefault();
-    // event.persist()
-    // console.log(event)
     const { accepted } = simulateFSA(graph, event.target.value)
 
     setMultiTraceInput(prev => {
@@ -53,45 +53,26 @@ const TestingLab = () => {
     })
   }
 
+  // Execute graph
+  const simulateGraph = useCallback(() => {
+    const result = simulateFSA(graph, traceInput)
+    setSimulationResult(result)
+    return result
+  }, [graph, traceInput])
 
-  const handleRunMultiTrace = () => {
-  }
+  const traceOutput = useMemo(() => {
+    // No output before simulating
+    if (!simulationResult)
+      return ''
 
-  const handleRun = (input) => {
-    let output = ''
-    const { accepted, trace } = simulateFSA(graph, input)
-    setTrace(trace)
+    const { trace, accepted } = simulationResult
+    const transitions = trace
+      .map((state, i, states) => traceInput[i]
+        && `${traceInput[i]}: ${statePrefix}${state} -${(states[i+1] ? `> ${statePrefix}${states[i+1]}` : '|')}`)
+      .filter((x, i) => i < traceIdx && x)
 
-    // Rejected output
-    if (!accepted) {
-      setTraceOutput('REJECTED')
-      return
-    }
-
-    // Calculate transitions taken in trace and set output
-    for (let i = 0; i < input.length; i++) {
-      output += `${input[i]}: ${statePrefix}${trace[i]} -> ${statePrefix}${trace[i+1]}\n`
-    }
-    output += `\nSUCCESS`
-    setTraceOutput(output)
-    setTracerIdx(0)
-  }
-
-  // useEffect(() => {
-  //   console.log(tracerIdx, traceInput[tracerIdx], trace[tracerIdx-1], trace[tracerIdx]);
-  // }, [tracerIdx])
-
-  const handleSetTrace = () => {
-    console.log('HERE');
-    const { accepted, trace:hi } = simulateFSA(graph, traceInput)
-    setTrace(hi)
-  }
-
-  // useEffect(() => {
-  //   console.log('trace setting...', trace);
-  //   const { accepted, trace:hi } = simulateFSA(graph, traceInput)
-  //   setTrace(hi)
-  // }, [!trace])
+    return `${transitions.join('\n')}${(traceIdx === trace.length) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
+  }, [traceInput, simulationResult, statePrefix, traceIdx]) 
 
   return (
     <> 
@@ -100,8 +81,8 @@ const TestingLab = () => {
         <TextInput
           onChange={e => {
             setTraceInput(e.target.value)
-            setTrace()
-            setTracerIdx(0)
+            setTraceIdx(0)
+            setSimulationResult()
           }}
           value={traceInput}
           placeholder="Enter a value to test"
@@ -109,163 +90,32 @@ const TestingLab = () => {
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={tracerIdx <= 0}
+            disabled={traceIdx <= 0}
             onClick={() => {
-              setTracerIdx(0)
-              let newTracerIdx = 0
-              setTraceOutput(`${traceInput[newTracerIdx]}: ${statePrefix}${trace[newTracerIdx]} -> ${statePrefix}${trace[newTracerIdx+1]}`)
+              setTraceIdx(0)
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={tracerIdx <= 0}
+            disabled={traceIdx <= 0}
             onClick={() => {
-              setTracerIdx(tracerIdx-1)
-
-              // // Final state reached
-              // if (!traceInput[tracerIdx]) {
-              //   console.log('yo');
-              //   setTraceOutput(`Final State: ${statePrefix}${trace[tracerIdx]}`)
-              // // End of input reached
-              // } else 
-              if (!trace[tracerIdx+1]) {
-                setTraceOutput(`${traceInput[tracerIdx]}: ${statePrefix}${trace[tracerIdx]} -> |`)
-              // There is more input
-              } else {
-                setTraceOutput(`${traceInput[tracerIdx]}: ${statePrefix}${trace[tracerIdx]} -> ${statePrefix}${trace[tracerIdx+1]}`)
-              }
-
-
+              setTraceIdx(traceIdx-1)
             }} />
 
-          {/* <Button icon={<Play size={20} />} 
-            onClick={() => handleRun(traceInput)}/> */}
-
           <Button icon={<ChevronRight size={23} />}
-            disabled={tracerIdx >= trace?.length && tracerIdx != 0}
+            disabled={traceIdx >= simulationResult?.trace?.length}
             onClick={() => {
-              let newTrace
-              // No trace is found (input was recently changed)
-              if (!trace) {
-                console.log('a');
-                const { trace: output } = simulateFSA(graph, traceInput)
-                newTrace = output
-                setTrace(newTrace)
-              // Input has not changed
-              } else {
-                console.log('b');
-                newTrace = trace
+              if (!simulationResult) {
+                simulateGraph()
               }
-              // if (!trace) {
-              //   const { accepted, trace: output } = simulateFSA(graph, traceInput)
-              //   setTrace(output)
-              // }
-              // console.log('HELLO', trace);
-
-              // Final state reached
-              if (!traceInput[tracerIdx]) {
-                console.log('yo');
-                setTraceOutput(`Final State: ${statePrefix}${newTrace[tracerIdx]}`)
-              // End of input reached
-              } else if (!newTrace[tracerIdx+1]) {
-                setTraceOutput(`${traceInput[tracerIdx]}: ${statePrefix}${newTrace[tracerIdx]} -> |`)
-              // There is more input
-              } else {
-                setTraceOutput(`${traceInput[tracerIdx]}: ${statePrefix}${newTrace[tracerIdx]} -> ${statePrefix}${newTrace[tracerIdx+1]}`)
-              }
-
-              // Increment tracer index
-              setTracerIdx(tracerIdx+1)
+              setTraceIdx(traceIdx+1)
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            // disabled={tracerIdx == traceInput.length}
-            disabled={tracerIdx == trace?.length && tracerIdx != 0}
+            disabled={traceIdx === simulationResult?.trace?.length && traceIdx != 0}
             onClick={() => {
-              let newTrace
-              let output = ''
-              let a
-              // No trace is found (input was recently changed)
-              if (!trace) {
-                console.log('a');
-                const { accepted, trace: output } = simulateFSA(graph, traceInput)
-                newTrace = output
-                a = accepted
-                setIsAccepted(accepted)
-                setTrace(newTrace)
-              // Input has not changed
-              } else {
-                console.log('b');
-                newTrace = trace
-                a = isAccepted
-              }
-
-
-              for (let i = 0; i < newTrace.length; i++) {
-                // Final state reached
-                // if (!traceInput[i]) {
-                //   // output += `Final State: ${statePrefix}${newTrace[i]}\n\n`
-                //   output += '\n'
-                // // End of input reached
-                // } else 
-                if (!newTrace[i+1]) {
-                  output += `${traceInput[i]}: ${statePrefix}${newTrace[i]} -> |\n`
-                // There is more input
-                } else {
-                  output += `${traceInput[i]}: ${statePrefix}${newTrace[i]} -> ${statePrefix}${newTrace[i+1]}\n`
-                }
-
-                setTracerIdx(tracerIdx+1)
-              }
-
-              if (a) {
-                output += '\nSUCCESS'
-              } else {
-                output += '\nREJECTED'
-              }
-
-              setTraceOutput(output)
-
               // Increment tracer index
-              setTracerIdx(newTrace.length)
-
-
-
-
-
-
-
-              // let newTrace
-              // let isAccepted
-              // // No trace is found (input was recently changed)
-              // if (!trace) {
-              //   const { accepted, trace: output } = simulateFSA(graph, traceInput)
-              //   newTrace = output
-              //   isAccepted = accepted
-              //   setTrace(newTrace)
-              // // Input has not changed
-              // } else {
-              //   newTrace = trace
-              // }
-
-              // // No trace for the input exists - run the automaton
-              // // handleRun()
-              // let output = ''
-
-              // // Rejected output
-              // if (!isAccepted) {
-              //   setTraceOutput('REJECTED')
-              //   return
-              // }
-
-              // // Calculate transitions taken in trace and set output
-              // for (let i = 0; i < traceInput.length; i++) {
-              //   output += `${traceInput[i]}: ${statePrefix}${newTrace[i]} -> ${statePrefix}${newTrace[i+1]}\n`
-              // }
-              // output += `\nSUCCESS`
-              // setTraceOutput(output)
-              // // setTracerIdx(0)
-
-              // setTracerIdx(newTrace.length)
+              const result = simulationResult ?? simulateGraph()
+              setTraceIdx(result.trace.length)
             }} />
         </StepButtons>
 
