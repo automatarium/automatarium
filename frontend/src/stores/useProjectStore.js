@@ -187,6 +187,11 @@ const useProjectStore = create(set => ({
     project.transitions = project.transitions.filter(t => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
   })),
 
+  /* Remove transitions by id */
+  removeTransitions: transitionIDs => set(produce(({ project }) => {
+    project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))    
+  })),
+
   reset: () => set({ project: createNewProject() })
 }))
 
