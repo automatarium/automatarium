@@ -68,10 +68,10 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown
      <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
      {/* Thicker invisible path used to select the transition */}
-     <path id={pathID} d={pathData} key={`${pathID}-selection`} stroke='transparent' fill='none' strokeWidth={20} onMouseDown={e => onMouseDown(id, e)} />
+     {onMouseDown && <path id={pathID} d={pathData} key={`${pathID}-selection`} stroke='transparent' fill='none' strokeWidth={20} onMouseDown={e => onMouseDown && onMouseDown(id, e)} />}
 
      {/* The label - i.e the accepted symbols*/}
-     <text onMouseDown={e => onMouseDown(id, e)} fill={selected ? 'var(--primary)' : 'black' }>
+     <text onMouseDown={e => onMouseDown && onMouseDown(id, e)} fill={selected ? 'var(--primary)' : 'black' }>
        <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
         {text}
        </textPath>
