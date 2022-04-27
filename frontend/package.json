@@ -3,6 +3,11 @@
   "version": "0.0.1",
   "schemaVersion": "0.0.1",
   "private": true,
+  "targets": {
+    "main": {
+      "includeNodeModules": true
+    }
+  },
   "scripts": {
     "start": "parcel public/index.html --no-cache",
     "build": "rm -rf dist && parcel build public/index.html",
