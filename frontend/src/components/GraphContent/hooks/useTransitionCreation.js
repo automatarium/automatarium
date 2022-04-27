@@ -20,7 +20,8 @@ const useTransitionCreation = ({ containerRef }) => {
 
   const stopEdgeCreate = useCallback(state => {
     if (createTransitionState) {
-      createTransition({ from: createTransitionState.id, to: state.id })
+      const read = window.prompt()
+      createTransition({ from: createTransitionState.id, to: state.id, read })
       setCreateTransitionStart(null)
       setCreateTransitionState(null)
     }
