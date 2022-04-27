@@ -4,11 +4,13 @@ const Button = ({
   type = 'button',
   children,
   icon,
+  secondary,
   ...props
 }) => (
   <Wrapper
     type={type}
     $icon={icon && !children}
+    $secondary={secondary}
     {...props}
   >
     {icon}

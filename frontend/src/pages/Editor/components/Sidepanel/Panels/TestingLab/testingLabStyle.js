@@ -1,5 +1,4 @@
 import { styled } from 'goober'
-import { Trash2 } from 'lucide-react'
 
 export const Wrapper = styled('div')`
   display: flex;
@@ -26,54 +25,36 @@ export const TraceConsole = styled('code')`
   }
 `
 
-export const AddMultiTraceButton = styled('button')`
-  height: 2.5em;
-  border-radius: 6px;
-  border: none;
-  outline: none;
-  cursor: pointer;
-`
-
-export const MultiTraceWrapper = styled('div')`
+export const MultiTraceRow = styled('div')`
   display: flex;
-  height: 2rem;
-  gap: 10px;
-`
 
-export const MultiTraceInput = styled('input')`
-  width: 85%;
-  background-color: ${p => p.accepted === undefined ? 'var(--white)' :
-    p.accepted ? 'hsl(var(--success-h), 53%, 76%)' : 'hsl(var(--error-h), 97%, 87%)'};
-  color: var(--black);
-  border: none;
-  border: solid .1rem;
-  border-radius: .25rem;
-  border-color: ${p => p.accepted === undefined ? 'var(--input-border)' :
-    p.accepted ? 'var(--success)' : 'var(--error)'};
-  outline: none;
-
-  &:focus {
-    border-color: ${p => p.accepted === undefined ? 'var(--primary)' : null};
+  & input {
+    flex: 1;
   }
 
-  font-size: 1em;
-`
-
-export const RemoveMultiTraceInputButton = styled(Trash2)`
-  align-self: center;
-  cursor: pointer;
-
-`
-
-export const RunMultiTraceInputButton = styled('button')`
-  font-weight: bold;
-  height: 2.75em;
-  border: none;
-  border-radius: 6px;
-  background-color: var(--primary);
-  cursor: pointer;
-
-  &:active {
-    background-color: hsl(var(--primary-h) var(--primary-s) 47%);
+  & button {
+    max-width: 0;
+    padding: 0;
+    margin-left: 0;
   }
+  &:focus-within button {
+    max-width: 4em;
+    padding: 0 .5em;
+    margin-left: .2em;
+  }
+`
+
+
+export const RemoveButton = styled('button')`
+  background: none;
+  border: 0;
+  appearance: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
+  margin: 0;
+  display: block;
+  cursor: pointer;
+  overflow: hidden;
+  transition: max-width .15s, padding .15s, margin-left .15s;
 `
