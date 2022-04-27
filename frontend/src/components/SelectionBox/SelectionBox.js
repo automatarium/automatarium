@@ -11,15 +11,21 @@ const SelectionBox = ({ containerRef }) => {
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
-  const handleMouseMove = useCallback(e => {
+  const handleMouseMove = useCallback(
+    e => {
       setMousePos(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
-  }, [containerRef])
+    },
+    [containerRef]
+  )
 
-  const handleMouseDown = useCallback(e => {
-    if (e.target === containerRef.current && toolActive) {
-      setDragStart(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
-    }
-  }, [toolActive, containerRef?.current])
+  const handleMouseDown = useCallback(
+    e => {
+      if (e.target === containerRef.current && toolActive) {
+        setDragStart(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
+      }
+    },
+    [toolActive, containerRef?.current]
+  )
 
   const handleMouseUp = useCallback(() => {
     if (dragStart !== null && toolActive) {
@@ -27,11 +33,9 @@ const SelectionBox = ({ containerRef }) => {
       const startY = Math.min(dragStart[1], mousePos[1])
       const endX = Math.max(dragStart[0], mousePos[0])
       const endY = Math.max(dragStart[1], mousePos[1])
-      const selected = states.filter(state =>
-        state.x >= startX &&
-        state.x <= endX &&
-        state.y >= startY &&
-        state.y <= endY).map(s => s.id)
+      const selected = states
+        .filter(state => state.x >= startX && state.x <= endX && state.y >= startY && state.y <= endY)
+        .map(s => s.id)
       setSelectedStates(selected)
       setDragStart(null)
     }
@@ -51,22 +55,24 @@ const SelectionBox = ({ containerRef }) => {
     }
   }, [containerRef?.current, handleMouseUp, handleMouseDown])
 
-  if (!dragStart || !mousePos || !toolActive)
-    return null
+  if (!dragStart || !mousePos || !toolActive) return null
 
   const startX = Math.min(dragStart[0], mousePos[0])
   const startY = Math.min(dragStart[1], mousePos[1])
   const endX = Math.max(dragStart[0], mousePos[0])
   const endY = Math.max(dragStart[1], mousePos[1])
 
-  return <rect
-    x={startX}
-    y={startY}
-    width={endX-startX}
-    height={endY-startY}
-    fill="none"
-    stroke="var(--black)"
-    strokwidth="1"/>
+  return (
+    <rect
+      x={startX}
+      y={startY}
+      width={endX - startX}
+      height={endY - startY}
+      fill='#00000020'
+      stroke='var(--black)'
+      strokwidth='1'
+    />
+  )
 }
 
 export default SelectionBox
