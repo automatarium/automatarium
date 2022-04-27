@@ -34,6 +34,7 @@ const useTransitionCreation = ({ containerRef }) => {
   }, [toolActive, createTransitionState])
 
   const handleMouseUp = useCallback(e => {
+    setMousePos(null)
     if (e.target === containerRef?.current) {
       setCreateTransitionStart(null)
       setCreateTransitionState(null)
