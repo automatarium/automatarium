@@ -146,12 +146,12 @@ const useProjectStore = create(set => ({
 
   /* Create a new transition */
   createTransition: transition => set(produce(({ project }) => {
-    project.transitions.push({ ...transition, id: 1 + Math.max(...project.transitions.map(t => t.id)) })
+    project.transitions.push({ ...transition, id: 1 + Math.max(-1, ...project.transitions.map(t => t.id)) })
   })),
 
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.push({ ...state, id: 1 + Math.max(...project.states.map(s => s.id)) })
+    project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
   })),
 
   /* Update a state by id */
