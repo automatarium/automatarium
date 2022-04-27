@@ -10,15 +10,18 @@ const GraphContent = ({ containerRef }) => {
   const project = useProjectStore(s => s.project)
   const selectedStates = useSelectionStore(s => s.selectedStates)
   const setSelectedStates = useSelectionStore(s => s.set)
+  
+  // Use hooks for content interactivity
   const { startDrag } = useStateDragging({ containerRef })
   const { startEdgeCreate, stopEdgeCreate, createTransitionStart, mousePos } = useTransitionCreation({ containerRef })
   useStateCreation({ containerRef })
 
+  // Destructure project to get state
   const states = project?.states ?? []
   const transitions = project?.transitions ?? []
   const initialState = project?.initialState
 
-  // Group up transitions by the start&end nodes
+  // Group up transitions by the start and end nodes
   const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to].sort((a, b) => b - a)))
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
@@ -57,12 +60,27 @@ const GraphContent = ({ containerRef }) => {
     }
   }
 
+  const handleTransitionMouseDown = (transitionID, e) => {
+    // Is this LMB?
+    if (e.button === 0) {
+      if (tool === 'cursor') {
+        console.log(transitionID)
+      }
+    }
+
+    // Is this RMB?
+    if (e.button === 2) {
+      // TODO: bubble up to a parent for creating a context menu
+      console.warn('Transition RMB event not implemented')
+    }
+  }
+
   return <g>
     {/* Render arrow on initial state */}
     <InitialStateArrow states={states} initialStateID={initialState}/>
 
     {/* Render all sets of edges */}
-    {locatedTransitions.map((transitions, i) => <TransitionSet transitions={transitions} key={i} />)}
+    {locatedTransitions.map((transitions, i) => <TransitionSet transitions={transitions} key={i} onMouseDown={handleTransitionMouseDown}/>)}
 
     {/* Render in-creation transition */}
     {createTransitionStart && mousePos && <TransitionSet.Transition fullWidth from={createTransitionStart} to={mousePos} count={1} text=''/> }
