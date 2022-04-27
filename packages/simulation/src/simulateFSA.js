@@ -1,8 +1,8 @@
 const simulateFSA = (
   graph,
   input,
-  currStateID = graph?.options?.initialState,
-  trace = [graph?.options?.initialState],
+  currStateID = graph?.initialState,
+  trace = [graph?.initialState],
   lambdaCount = 0,
   lastTransitionLambda = false
 ) => {
@@ -19,6 +19,7 @@ const simulateFSA = (
 
   // Move lambda transitions to end of array (to prioritise non-lambda transitions)
   possibleTransitions.sort((a, b) => b.read.length - a.read.length)
+
 
   // No transitions possible?
   if (possibleTransitions.length === 0) {

@@ -6,7 +6,13 @@
   --primary-l: 52%;
   --primary: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
   --grid-dot: #ddd;
-  --success: #23AF00;
+  --success-h: 108;
+  --success-s: 100%;
+  --success-l: 34%;
+  --success: hsl(var(--success-h), var(--success-s), var(--success-l));
+  --error-h: 0;
+  --error-s: 97%;
+  --error-l: 66%;
   --error: #FC5353;
   --surface: #2C2C2C;
   --toolbar: #424242;

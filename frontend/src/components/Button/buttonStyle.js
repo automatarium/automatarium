@@ -7,8 +7,29 @@ export const Wrapper = styled('button')`
   background: var(--primary);
   font: inherit;
   color: var(--white);
-  font-weight: 500;
+  font-weight: 600;
   font-size: .9em;
   border-radius: .3em;
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  appearance: none;
+  gap: .5em;
+
+  &:active {
+    background-color: hsl(var(--primary-h) var(--primary-s) 47%);
+  }
+
+  &:disabled {
+    background-color: var(--disabled-button);
+  }
+
+  ${props => props.$icon && `
+    padding: .375em;
+  `}
+
+  ${props => props.$secondary && `
+    background-color: var(--toolbar);
+  `}
 `
