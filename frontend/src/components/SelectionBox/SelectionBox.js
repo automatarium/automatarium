@@ -7,7 +7,7 @@ const SelectionBox = ({ containerRef }) => {
   const toolActive = tool === 'cursor'
   const states = useProjectStore(s => s.project?.states)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
-  const setSelectedStates = useSelectionStore(s => s.set)
+  const setSelectedStates = useSelectionStore(s => s.setStates)
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 

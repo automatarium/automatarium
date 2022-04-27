@@ -9,7 +9,9 @@ const GraphContent = ({ containerRef }) => {
   const tool = useToolStore(s => s.tool)
   const project = useProjectStore(s => s.project)
   const selectedStates = useSelectionStore(s => s.selectedStates)
-  const setSelectedStates = useSelectionStore(s => s.set)
+  const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
+  const setSelectedStates = useSelectionStore(s => s.setStates)
+  const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
   
   // Use hooks for content interactivity
   const { startDrag } = useStateDragging({ containerRef })
@@ -35,6 +37,11 @@ const GraphContent = ({ containerRef }) => {
             ? [...selectedStates, state.id]
             : [state.id]
         setSelectedStates(newSelected)
+        
+        // Reset selected transitions?
+        if (!selectedStates.includes(state.id) && !e.shiftKey) {
+          setSelectedTransitions([])
+        }
         
         // Drag things
         startDrag(newSelected.map(id => states.find(state => state.id === id)), e)
@@ -64,7 +71,18 @@ const GraphContent = ({ containerRef }) => {
     // Is this LMB?
     if (e.button === 0) {
       if (tool === 'cursor') {
-        console.log(transitionID)
+        // Update transition selections
+        const newSelected = selectedTransitions.includes(transitionID)
+          ? selectedTransitions
+          : e.shiftKey
+            ? [...selectedTransitions, transitionID]
+            : [transitionID]
+        setSelectedTransitions(newSelected)
+        
+        // Reset selected states?
+        if (!selectedTransitions.includes(transitionID) && !e.shiftKey) {
+          setSelectedStates([])
+        }
       }
     }
 
