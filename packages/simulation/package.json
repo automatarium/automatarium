@@ -7,7 +7,7 @@
   "license": "MIT",
   "scripts": {
     "build": "parcel build",
-    "dev": "parcel watch",
+    "watch": "parcel watch",
     "test": "jest"
   },
   "devDependencies": {
