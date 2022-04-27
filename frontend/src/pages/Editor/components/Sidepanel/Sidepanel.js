@@ -1,9 +1,9 @@
 import { useState } from 'react'
-import { FlaskConical, Info, Settings2 } from 'lucide-react'
+import { ChevronRight, FlaskConical, Info, Settings2 } from 'lucide-react'
 
 import { Sidebar } from '..'
 
-import { Wrapper, Panel, Heading } from './sidepanelStyle'
+import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab } from './Panels'
 
 const panels = [
@@ -31,10 +31,15 @@ const Sidepanel = () => {
   return (
     <Wrapper>
       {activePanel && (
-        <Panel>
-          <Heading>{activePanel?.label}</Heading>
-          {activePanel?.element}
-        </Panel>
+        <>
+          <CloseButton
+            onClick={() => setActivePanel(undefined)}
+          ><ChevronRight /></CloseButton>
+          <Panel>
+            <Heading>{activePanel?.label}</Heading>
+            {activePanel?.element}
+          </Panel>
+        </>
       )}
 
       <Sidebar>

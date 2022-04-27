@@ -20,3 +20,23 @@ export const Heading = styled('h2')`
   font-weight: 600;
   margin: .8em 1em .8em 2em;
 `
+
+export const CloseButton = styled('button')`
+  position: absolute;
+  top: .6em;
+  z-index: 15;
+  left: calc(-350px - 1em);
+  height: 2em;
+  width: 2em;
+  font: inherit;
+  color: inherit;
+  background: var(--toolbar);
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border-radius: .3em;
+  cursor: pointer;
+`
