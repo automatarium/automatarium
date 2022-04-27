@@ -14,6 +14,7 @@ export const Wrapper = styled('button')`
   display: flex;
   justify-content: center;
   align-items: center;
+  appearance: none;
   gap: .5em;
 
   &:active {

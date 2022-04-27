@@ -65,26 +65,29 @@ const sampleInitialData = {
 }
 
 export const createNewProject = () => ({
-    id: uuid(),
-    states: sampleInitialData.states,
-    transitions: sampleInitialData.transitions,
-    comments: [],
-    tests: [],
-    initialState: sampleInitialData.initialState,
-    meta: {
-      name: null,
-      dateCreated: new Date(),
-      dateEdited: new Date(),
-      version: SCHEMA_VERSION,
-      automatariumVersion: APP_VERSION,
-    },
-    config: {
-      type: DEFAULT_PROJECT_TYPE,
-      statePrefix: DEFAULT_STATE_PREFIX,
-      acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-      color: DEFAULT_PROJECT_COLOR,
-      playbackInterval: DEFAULT_PLAYBACK_INTERVAL,
-    }
+  id: uuid(),
+  states: sampleInitialData.states,
+  transitions: sampleInitialData.transitions,
+  comments: [],
+  tests: {
+    single: '',
+    batch: [''],
+  },
+  initialState: sampleInitialData.initialState,
+  meta: {
+    name: null,
+    dateCreated: new Date(),
+    dateEdited: new Date(),
+    version: SCHEMA_VERSION,
+    automatariumVersion: APP_VERSION,
+  },
+  config: {
+    type: DEFAULT_PROJECT_TYPE,
+    statePrefix: DEFAULT_STATE_PREFIX,
+    acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
+    color: DEFAULT_PROJECT_COLOR,
+    playbackInterval: DEFAULT_PLAYBACK_INTERVAL,
+  }
 })
 
 const useProjectStore = create(set => ({
@@ -102,7 +105,7 @@ const useProjectStore = create(set => ({
 
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)
-    
+
     // Add new history
     state.history.push(clone(state.project))
 
@@ -111,13 +114,13 @@ const useProjectStore = create(set => ({
   })),
 
   undo: () => set(produce(state => {
-    // Can we undo? 
+    // Can we undo?
     if (state.historyPointer == 0)
       return
 
     // Move pointer
     state.historyPointer--
-    
+
     // Update project
     state.project = state.history[state.historyPointer]
   })),
@@ -146,10 +149,24 @@ const useProjectStore = create(set => ({
 
   /* Remove a state by id */
   removeState: state => set(produce(({ project }) => {
-    project.states = project.states.filter(st => st.id !== state.id)    
+    project.states = project.states.filter(st => st.id !== state.id)
+  })),
+
+  /* Update tests */
+  setSingleTest: value => set(produce(({ project }) => {
+    project.tests.single = value
+  })),
+  addBatchTest: () => set(produce(({ project }) => {
+    project.tests.batch.push('')
+  })),
+  setBatchTest: (index, value) => set(produce(({ project }) => {
+    project.tests.batch[index] = value
+  })),
+  removeBatchTest: index => set(produce(({ project }) => {
+    project.tests.batch.splice(index, 1)
   })),
 
   reset: () => set({ project: createNewProject() })
 }))
 
-export default useProjectStore 
+export default useProjectStore

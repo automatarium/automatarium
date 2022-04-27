@@ -14,9 +14,7 @@ import { simulateFSA } from '@automatarium/simulation'
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
-  const [traceInput, setTraceInput] = useState('')
   const [traceIdx, setTraceIdx] = useState(0)
-  const [multiTraceInput, setMultiTraceInput] = useState([''])
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
 
   // Graph state
@@ -26,6 +24,13 @@ const TestingLab = () => {
     initialState: useProjectStore(s => s.project.initialState)
   }
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
+
+  const traceInput = useProjectStore(s => s.project.tests.single)
+  const setTraceInput = useProjectStore(s => s.setSingleTest)
+  const multiTraceInput = useProjectStore(s => s.project.tests.batch)
+  const addMultiTraceInput = useProjectStore(s => s.addBatchTest)
+  const setMultiTraceInput = useProjectStore(s => s.setBatchTest)
+  const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
@@ -101,19 +106,28 @@ const TestingLab = () => {
           {multiTraceInput.map((value, index) => (
             <MultiTraceRow key={index}>
               <TextInput
-                onChange={e => setMultiTraceInput(multiTraceInput.map((input, i) => i === index ? e.target.value : input))}
+                onChange={e => {
+                  setMultiTraceInput(index, e.target.value)
+                  setMultiTraceOutput([])
+                }}
                 value={value}
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
               />
               <RemoveButton
-                onClick={() => setMultiTraceInput(multiTraceInput.filter((_, i) => i !== index))}
+                onClick={() => {
+                  removeMultiTraceInput(index)
+                  setMultiTraceOutput([])
+                }}
                 title="Remove"
               ><Trash2 /></RemoveButton>
             </MultiTraceRow>
           ))}
           <Button
             secondary
-            onClick={() => setMultiTraceInput([...multiTraceInput, ''])}
+            onClick={() => {
+              addMultiTraceInput()
+              setMultiTraceOutput([])
+            }}
             icon={<Plus />}
           />
           <Button onClick={() => {
