@@ -3,7 +3,7 @@ import { useEffect, useRef, useCallback } from 'react'
 import { GraphContent, SelectionBox } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
-import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions'
+import { GRID_SNAP } from '/src/config/interactions'
 
 import { Svg } from './graphViewStyle'
 import { ContextMenus } from './components'
@@ -28,23 +28,6 @@ const GraphView = props => {
       window.addEventListener('resize', onContainerResize)
       return () => window.removeEventListener('resize', onContainerResize)
     }
-  }, [])
-
-  // Keyboard commands for view control
-  const onKeyDown = useCallback(e => {
-    if (e.code === 'ArrowRight')
-      moveViewPosition({ x: VIEW_MOVE_STEP })
-    if (e.code === 'ArrowLeft')
-      moveViewPosition({ x: -VIEW_MOVE_STEP })
-    if (e.code === 'ArrowDown')
-      moveViewPosition({ y: VIEW_MOVE_STEP })
-    if (e.code === 'ArrowUp')
-      moveViewPosition({ y: -VIEW_MOVE_STEP })
-  })
-
-  useEffect(() => {
-    window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
   }, [])
 
   // Determine svg background (grid)
