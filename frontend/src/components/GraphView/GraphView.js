@@ -6,7 +6,7 @@ import { useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions'
 
 import { Svg } from './graphViewStyle'
-import { ContextMenus } from './components'
+import { ContextMenus, InputDialogs } from './components'
 import { useViewDragging } from './hooks'
 
 const GraphView = props => {
@@ -83,6 +83,7 @@ const GraphView = props => {
       </Svg>
 
       <ContextMenus />
+      <InputDialogs />
     </>
   )
 }

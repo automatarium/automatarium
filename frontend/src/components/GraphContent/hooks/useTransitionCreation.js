@@ -20,10 +20,10 @@ const useTransitionCreation = ({ containerRef }) => {
 
   const stopEdgeCreate = useCallback(state => {
     if (createTransitionState) {
-      const read = window.prompt()
-      createTransition({ from: createTransitionState.id, to: state.id, read })
+      const id = createTransition({ from: createTransitionState.id, to: state.id })
       setCreateTransitionStart(null)
       setCreateTransitionState(null)
+      window.setTimeout(() => document.dispatchEvent(new CustomEvent('editTransition', { detail: { id }})), 100)
     }
   }, [createTransitionState])
 
@@ -64,7 +64,7 @@ const useTransitionCreation = ({ containerRef }) => {
     mousePos: mousePos && {
       x: mousePos[0],
       y: mousePos[1],
-    } 
+    }
   }
 }
 
