@@ -34,7 +34,16 @@ const TestingLab = () => {
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const result = simulateFSA(graph, traceInput)
+    const { accepted, trace } = simulateFSA(graph, traceInput)
+    result = {
+      accepted,
+      // trace: trace.read === '' ? 'lam' : trace.read
+      trace: trace.map(step => ({
+        to: step.to,
+        read: step.read === '' ? 'λ' : step.read
+      }))
+    }
+    console.log('res', result);
     setSimulationResult(result)
     return result
   }, [graph, traceInput])
@@ -46,8 +55,8 @@ const TestingLab = () => {
 
     const { trace, accepted } = simulationResult
     const transitions = trace
-      .map((state, i, states) => traceInput[i]
-        && `${traceInput[i]}: ${statePrefix}${state} -${(states[i+1] ? `> ${statePrefix}${states[i+1]}` : '|')}`)
+      .map((state, i, states) => states[i+1]
+        && `${states[i+1].read}: ${statePrefix}${state.to} -${(states[i+1].to ? `> ${statePrefix}${states[i+1].to}` : '|')}`)
       .filter((x, i) => i < traceIdx && x)
 
     return `${transitions.join('\n')}${(traceIdx === trace.length) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
