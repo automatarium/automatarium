@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP } from '/src/config/interactions'
+import { haveInputFocused } from '../util/actions'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -169,9 +170,7 @@ const useActions = (registerHotkeys=false) => {
     if (registerHotkeys) {
       const handleKeyDown = e => {
         // Hotkeys are disabled if an input is focused
-        if (['input', 'textarea', 'select'].includes(e.target.tagName.toLowerCase())) {
-          return
-        }
+        if (haveInputFocused(e)) return
         
         // Check hotkeys
         for (let action of Object.values(actions)) {
