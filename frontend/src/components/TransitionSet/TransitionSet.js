@@ -7,13 +7,23 @@ import { useSelectionStore } from '/src/stores'
 
 import { StyledPath } from './transitionSetStyle'
 
-const TransitionSet = ({ transitions, onMouseDown }) => <>
+const TransitionSet = ({ transitions, onMouseDown, onMouseUp }) => <>
   { transitions.map(({id, from, to, read}, i) => (
-    <Transition i={i} count={transitions.length} text={read} from={from} to={to} id={id} key={id} onMouseDown={onMouseDown} />)
+    <Transition
+      i={i}
+      count={transitions.length}
+      text={read}
+      from={from}
+      to={to}
+      id={id}
+      key={id}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
+    />)
   )}
 </>
 
-const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown }) => {
+const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown, onMouseUp }) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
@@ -30,9 +40,9 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown
   const middleValue = count % 2 == 0 ? count / 2 : count / 2 + .5
   const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i+1) : 0) / 2
 
-  // Determine control position 
+  // Determine control position
   // -- this is determined by moving along the normal to the difference between the states
-  // -- with the distance moved controled by the `bend` value 
+  // -- with the distance moved controled by the `bend` value
   const center = lerpPoints(from, to, .5)
   const tangent = { x: to.x - from.x, y: to.y - from.y }
   const a = Math.PI/2
@@ -59,23 +69,36 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown
   // Generate a unique id for this path
   // -- used to place the text on the same path
   const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
-  
+
   return <>
-     {/*The edge itself*/}
-     <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`} $selected={selected} />
-     
-     {/* Invisible path used to place text */}
-     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
+    {/*The edge itself*/}
+    <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`} $selected={selected} />
 
-     {/* Thicker invisible path used to select the transition */}
-     {onMouseDown && <path id={pathID} d={pathData} key={`${pathID}-selection`} stroke='transparent' fill='none' strokeWidth={20} onMouseDown={e => onMouseDown && onMouseDown(id, e)} />}
+    {/* Invisible path used to place text */}
+    <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
-     {/* The label - i.e the accepted symbols*/}
-     <text onMouseDown={e => onMouseDown && onMouseDown(id, e)} fill={selected ? 'var(--primary)' : 'black' }>
-       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
+    {/* Thicker invisible path used to select the transition */}
+    {onMouseDown && <path
+      id={pathID}
+      d={pathData}
+      key={`${pathID}-selection`}
+      stroke='transparent'
+      fill='none'
+      strokeWidth={20}
+      onMouseDown={e => onMouseDown && onMouseDown(id, e)}
+      onMouseUp={e => onMouseUp && onMouseUp(id, e)}
+    />}
+
+    {/* The label - i.e the accepted symbols*/}
+    <text
+      onMouseDown={e => onMouseDown && onMouseDown(id, e)}
+      onMouseUp={e => onMouseUp && onMouseUp(id, e)}
+      fill={selected ? 'var(--primary)' : 'black' }
+    >
+      <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
         {text}
-       </textPath>
-     </text>
+      </textPath>
+    </text>
   </>
 }
 
