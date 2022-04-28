@@ -36,10 +36,23 @@ const useStateDragging = ({ containerRef }) => {
           const [x, y] = relativeMousePosition(e.clientX, e.clientY)
           const [dx, dy] = [x - dragOffsets[i][0], y - dragOffsets[i][1]]
 
+          // Determine leader position and offset from this state's position
+          // This is used to determine snapping when dragging multiple states
+          // (Leader is arbitrarily chosen as first in list of selected states)
+          const [lx, ly] = i === 0
+            ? [dx, dy]
+            : [x - dragOffsets[0][0], y - dragOffsets[0][1]]
+          const [lox, loy] = i === 0
+            ? [0, 0]
+            : [dragOffsets[0][0] - dragOffsets[i][0], dragOffsets[0][1] - dragOffsets[i][1]]
+
           // Snapped dragging
+          // (Leader snaps to closest grid position, others follow leaders movement)
           const [sx, sy] = e.altKey
             ? [dx, dy]
-            : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
+            : i === 0
+              ? [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
+              : [(Math.floor(lx / GRID_SNAP) * GRID_SNAP) + lox, Math.floor(ly / GRID_SNAP) * GRID_SNAP + loy] 
 
           // Update state position
           updateState({ id, x: sx, y: sy })
