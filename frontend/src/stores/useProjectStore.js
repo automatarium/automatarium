@@ -101,6 +101,7 @@ const useProjectStore = create(set => ({
   project: null,
   history: [],
   historyPointer: null,
+  
   set: project => set({ project, history: [ clone(project) ], historyPointer: 0 }),
 
   /* Add current project state to stored history of project states */

@@ -17,16 +17,42 @@ const useActions = (registerHotkeys=false) => {
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
+  const createNewProject = useProjectStore(s => s.reset)
+  const setProject = useProjectStore(s => s.set)
+  const project = useProjectStore(s => s.project)
 
   // TODO: memoize
   const actions = {
     NEW_FILE: {
       hotkey: { key: 'n', meta: true, showCtrl: true },
-      handler: () => console.log('New File'),
+      handler: () => {
+        createNewProject()
+      },
     },
     OPEN_FILE: {
-     hotkey: { key: 'o', meta: true },
-     handler: () => console.log('Open File'),
+      hotkey: { key: 'o', meta: true },
+      handler: async () => {
+        // Prompt user for file input
+        let input = document.createElement('input')
+        input.type = 'file'
+        input.onchange = () => {
+          // Read file data
+          const reader = new FileReader()
+          reader.onloadend = () => {
+            console.log(reader.result);
+            const loadedProject = JSON.parse(
+              window.atob(
+                reader.result.substring(reader.result.indexOf(',')+1)
+              )
+            )
+            // Set project (file) in project store
+            setProject(loadedProject)
+          }
+          reader.readAsDataURL(input.files[0])
+
+        };
+        input.click();
+     },
     },
     SAVE_FILE: {
       hotkey: { key: 's', meta: true },
