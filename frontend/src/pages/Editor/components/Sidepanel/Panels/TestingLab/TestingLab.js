@@ -43,7 +43,6 @@ const TestingLab = () => {
         read: step.read === '' ? 'λ' : step.read
       }))
     }
-    console.log('res', result);
     setSimulationResult(result)
     return result
   }, [graph, traceInput])
