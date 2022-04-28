@@ -3,17 +3,20 @@ import { useContext } from 'react'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
+import { useSelectionStore } from '/src/stores'
 
 import { StyledPath } from './transitionSetStyle'
 
-const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({from, to, read}, i) => (
-    <Transition i={i} count={transitions.length} text={read} from={from} to={to} key={`${i} ${from.x} ${to.x} ${from.y} ${to.y}`} />)
+const TransitionSet = ({ transitions, onMouseDown }) => <>
+  { transitions.map(({id, from, to, read}, i) => (
+    <Transition i={i} count={transitions.length} text={read} from={from} to={to} id={id} key={id} onMouseDown={onMouseDown} />)
   )}
 </>
 
-const Transition = ({ i, count, from, to, text, fullWidth=false }) => {
-  const { standardArrowHead } = useContext(MarkerContext)
+const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown }) => {
+  const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
+  const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
+  const selected = selectedTransitions?.includes(id)
 
   // TODO: for now im gonna use straight lines but eventially we need to
   // compute control points. Thats why this is a transition set,
@@ -59,11 +62,16 @@ const Transition = ({ i, count, from, to, text, fullWidth=false }) => {
   
   return <>
      {/*The edge itself*/}
-     <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${standardArrowHead})`} />
+     <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`} $selected={selected} />
+     
+     {/* Invisible path used to place text */}
      <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
+     {/* Thicker invisible path used to select the transition */}
+     {onMouseDown && <path id={pathID} d={pathData} key={`${pathID}-selection`} stroke='transparent' fill='none' strokeWidth={20} onMouseDown={e => onMouseDown && onMouseDown(id, e)} />}
+
      {/* The label - i.e the accepted symbols*/}
-     <text>
+     <text onMouseDown={e => onMouseDown && onMouseDown(id, e)} fill={selected ? 'var(--primary)' : 'black' }>
        <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
         {text}
        </textPath>

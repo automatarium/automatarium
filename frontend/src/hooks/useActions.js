@@ -15,6 +15,7 @@ const useActions = (registerHotkeys=false) => {
   const selectNoStates = useSelectionStore(s => s.selectNone)
   const selectAllStates = useSelectionStore(s => s.selectAll)
   const removeStates = useProjectStore(s => s.removeStates)
+  const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
 
   // TODO: memoize
@@ -84,8 +85,10 @@ const useActions = (registerHotkeys=false) => {
       hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
         const selectedStateIDs = useSelectionStore.getState().selectedStates
-        if (selectedStateIDs.length > 0) {
+        const selectedTransitionIDs = useSelectionStore.getState().selectedTransitions
+        if (selectedStateIDs.length > 0 || selectedTransitionIDs.length > 0) {
           removeStates(selectedStateIDs)
+          removeTransitions(selectedTransitionIDs)
           selectNoStates()
           commit()
         }
