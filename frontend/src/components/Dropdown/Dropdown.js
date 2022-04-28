@@ -34,11 +34,12 @@ const Item = ({ item, active, setActive, onClose }) => {
   const actions = useActions()
   const actionHandler = item.action ? actions[item.action]?.handler : null
   const hotKeyLabel = item.action ? actions[item.action]?.label : null
+  const actionDisabled = actions[item.action]?.disabled?.()
 
   return  (
     <ItemWrapper
       onClick={actionHandler ? () => { actionHandler(); onClose() } : (item.items?.length > 0 ? setActive : undefined)}
-      disabled={(!actionHandler && !item['items']) || item.items?.length === 0}
+      disabled={(!actionHandler && !item['items']) || item.items?.length === 0 || actionDisabled}
       type="button"
       $active={active}
     >

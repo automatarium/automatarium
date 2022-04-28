@@ -178,6 +178,14 @@ const useProjectStore = create(set => ({
     project.tests.batch.splice(index, 1)
   })),
 
+  /* Set given state to be the initial state */
+  setStateInitial: stateID => set(s => ({ project: { ...s.project, initialState: stateID } })),
+
+  /* Set all provided states as final */
+  toggleStatesFinal: stateIDs => set(produce(({ project}) => {
+    project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal}))
+  })),
+
   /* Remove states by id */
   removeStates: stateIDs => set(produce(({ project }) => {
     // Remove states

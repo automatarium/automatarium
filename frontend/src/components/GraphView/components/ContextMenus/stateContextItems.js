@@ -4,8 +4,8 @@ const stateContextItems = [
     action: 'SET_STATE_INITIAL',
   },
   {
-    label: 'Set as final',
-    action: 'SET_STATE_FINAL',
+    label: 'Toggle is final',
+    action: 'TOGGLE_STATES_FINAL',
   },
   'hr',
   {
