@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { useActions } from '/src/hooks'
 import { GraphView } from '/src/components'
 import { useToolStore, useProjectStore } from '/src/stores'
+import { haveInputFocused } from '/src/util/actions'
 
 // #HACK
 import { createNewProject } from '/src/stores/useProjectStore'
@@ -25,6 +26,9 @@ const Editor = () => {
 
   // Change tool when holding certain keys
   const onKeyDown = useCallback(e => {
+    // Hotkeys are disabled if an input is focused
+    if (haveInputFocused(e)) return
+
     if (!priorTool && e.code === 'Space') {
       setPriorTool(tool)
       setTool('hand')
@@ -32,6 +36,9 @@ const Editor = () => {
     }
   }, [tool, priorTool])
   const onKeyUp = useCallback(e => {
+    // Hotkeys are disabled if an input is focused
+    if (haveInputFocused(e)) return
+
     if (priorTool && e.code === 'Space') {
       setTool(priorTool)
       setPriorTool(undefined)

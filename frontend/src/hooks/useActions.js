@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react'
-import { useProjectStore, useSelectionStore } from '/src/stores'
+import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
+import { VIEW_MOVE_STEP } from '/src/config/interactions'
+import { haveInputFocused } from '../util/actions'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -17,6 +19,7 @@ const useActions = (registerHotkeys=false) => {
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
+  const moveView = useViewStore(s => s.moveViewPosition)
 
   // TODO: memoize
   const actions = {
@@ -144,12 +147,32 @@ const useActions = (registerHotkeys=false) => {
     OPEN_ABOUT: {
       handler: () => console.log('About Automatarium'),
     },
+    MOVE_VIEW_LEFT: {
+      hotkey: { key: 'ArrowLeft' },
+      handler: () => moveView({ x: -VIEW_MOVE_STEP })
+    },
+    MOVE_VIEW_RIGHT: {
+      hotkey: { key: 'ArrowRight' },
+      handler: () => moveView({ x: VIEW_MOVE_STEP })
+    },
+    MOVE_VIEW_UP: {
+      hotkey: { key: 'ArrowUp' },
+      handler: () => moveView({ y: -VIEW_MOVE_STEP })
+    },
+    MOVE_VIEW_DOWN: {
+      hotkey: { key: 'ArrowDown' },
+      handler: () => moveView({ y: VIEW_MOVE_STEP })
+    }
   }
 
   // Register action hotkeys
   useEffect(() => {
     if (registerHotkeys) {
       const handleKeyDown = e => {
+        // Hotkeys are disabled if an input is focused
+        if (haveInputFocused(e)) return
+        
+        // Check hotkeys
         for (let action of Object.values(actions)) {
           // Skip if no hotkey
           if (!action.hotkey)
