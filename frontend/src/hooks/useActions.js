@@ -150,6 +150,12 @@ const useActions = (registerHotkeys=false) => {
   useEffect(() => {
     if (registerHotkeys) {
       const handleKeyDown = e => {
+        // Hotkeys are disabled if an input is focused
+        if (['input', 'textarea', 'select'].includes(e.target.tagName.toLowerCase())) {
+          return
+        }
+        
+        // Check hotkeys
         for (let action of Object.values(actions)) {
           // Skip if no hotkey
           if (!action.hotkey)
