@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react'
 
 import { useProjectStore, useViewStore, useToolStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
-import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 const useStateDragging = ({ containerRef }) => {
   const tool = useToolStore(s => s.tool)
@@ -12,49 +11,52 @@ const useStateDragging = ({ containerRef }) => {
   const updateState = useProjectStore(s => s.updateState)
   const commit = useProjectStore(s => s.commit)
 
-  const [draggedState, setDraggedState] = useState(null)
-  const [dragOffset, setDragOffset] = useState()
-  const [dragCenter, setDragCenter] = useState()
+  const [dragOffsets, setDragOffsets] = useState()
+  const [dragCenters, setDragCenters] = useState()
+  const [draggingStates, setDraggingStates] = useState(null)
 
   const relativeMousePosition = (x, y) => {
     const b = containerRef.current.getBoundingClientRect()
     return [(x - b.left) * viewScale, (y - b.top) * viewScale]
   }
 
-  const startDrag = (state, e) => {
-    if (toolActive) {
-      const [x, y] = relativeMousePosition(e.clientX, e.clientY)
-      setDraggedState(state.id)
-      setDragOffset([x - state.x, y - state.y])
-      setDragCenter([state.x, state.y])
-      e.preventDefault()
-    }
+  const startDrag = (states, e) => {
+    const [x, y] = relativeMousePosition(e.clientX, e.clientY)
+    setDragOffsets(states.map(state => [x - state.x, y - state.y]))
+    setDragCenters(states.map(state => [state.x, state.y]))
+    setDraggingStates(states.map(state => state.id))
+    e.preventDefault()
   }
 
   // Listen for mouse move - dragging states
   useEffect(() => {
     const doDrag = e => {
-      if (draggedState !== null && toolActive) {
-        const [x, y] = relativeMousePosition(e.clientX, e.clientY)
-        const [dx, dy] = [x - dragOffset[0], y - dragOffset[1]]
+      if (draggingStates !== null && toolActive) {
+        draggingStates.forEach((id, i) => {
+          const [x, y] = relativeMousePosition(e.clientX, e.clientY)
+          const [dx, dy] = [x - dragOffsets[i][0], y - dragOffsets[i][1]]
 
-        // Snapped dragging
-        const [sx, sy] = e.altKey
-          ? [dx, dy]
-          : [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
+          // Determine leader position and offset from this state's position
+          // This is used to determine snapping when dragging multiple states
+          // (Leader is arbitrarily chosen as first in list of selected states)
+          const [lx, ly] = i === 0
+            ? [dx, dy]
+            : [x - dragOffsets[0][0], y - dragOffsets[0][1]]
+          const [lox, loy] = i === 0
+            ? [0, 0]
+            : [dragOffsets[0][0] - dragOffsets[i][0], dragOffsets[0][1] - dragOffsets[i][1]]
 
-        // Aligned Dragging
-        const distX = Math.abs(x - dragCenter[0])
-        const distY = Math.abs(y - dragCenter[1])
-        const dist = Math.sqrt(Math.pow(distX, 2) + Math.pow(distY, 2))
-        const [ax, ay] = e.shiftKey
-          ? dist > STATE_CIRCLE_RADIUS/2
-            ? (distX > distY ? [sx, dragCenter[1]] : [dragCenter[0], sy])
-            : dragCenter
-          : [sx, sy]
+          // Snapped dragging
+          // (Leader snaps to closest grid position, others follow leaders movement)
+          const [sx, sy] = e.altKey
+            ? [dx, dy]
+            : i === 0
+              ? [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
+              : [(Math.floor(lx / GRID_SNAP) * GRID_SNAP) + lox, Math.floor(ly / GRID_SNAP) * GRID_SNAP + loy] 
 
-        // Update state position
-        updateState({ id: draggedState, x: ax, y: ay })
+          // Update state position
+          updateState({ id, x: sx, y: sy })
+        })
       }
     }
     containerRef.current.addEventListener('mousemove', doDrag)
@@ -64,20 +66,20 @@ const useStateDragging = ({ containerRef }) => {
   // Listen for mouse up - stop dragging states
   useEffect(() => {
     const cb = e => {
-      if (e.button === 0 && draggedState !== null && toolActive) {
+      if (e.button === 0 && draggingStates !== null && toolActive) {
         // Commit drag to history
         commit()
 
         // Reset dragging state
-        setDraggedState(null)
-        setDragOffset(null)
-        setDragCenter(null)
+        setDragOffsets(null)
+        setDragCenters(null)
+        setDraggingStates(null)
         e.preventDefault()
       }
     }
     document.addEventListener('mouseup', cb)
     return () => document.removeEventListener('mouseup', cb)
-  }, [draggedState, toolActive])
+  }, [dragOffsets, dragCenters, toolActive, draggingStates])
 
   return { startDrag }
 }

@@ -1,18 +1,13 @@
 {
-  "name": "automatarium",
+  "name": "frontend",
   "version": "0.0.1",
   "schemaVersion": "0.0.1",
-  "description": "A place for your automata",
-  "repository": "git@github.com:GRA0007/automatarium.git",
-  "contributors": [
-    "Maxwell Reid (https://maxwellreid.tech/)",
-    "Thomas Dib (https://tdib.xyz/)",
-    "Ewan Breakey (https://ewanb.me/)",
-    "Benji Grant (https://bengrant.dev/)",
-    "Timothy Tran"
-  ],
-  "license": "MIT",
   "private": true,
+  "targets": {
+    "main": {
+      "includeNodeModules": true
+    }
+  },
   "scripts": {
     "start": "parcel public/index.html --no-cache",
     "build": "rm -rf dist && parcel build public/index.html",
@@ -26,12 +21,14 @@
     "immer": "^9.0.12",
     "lodash.clonedeep": "^4.5.0",
     "lodash.groupby": "^4.6.0",
+    "lodash.isequal": "^4.5.0",
     "lucide-react": "^0.17.9",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.28.1",
     "react-router-dom": "^6.2.2",
+    "@automatarium/simulation": "1.0.0",
     "uuid": "^8.3.2",
     "zustand": "^3.7.1"
   },

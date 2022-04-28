@@ -2,6 +2,7 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "Automatarium backend",
+  "private": true,
   "main": "dist/main.js",
   "source": "src/app.ts",
   "scripts": {

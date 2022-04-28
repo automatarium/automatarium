@@ -1,1 +1,1 @@
-export { default as useHotkeyAction } from './useHotkeyAction'
+export { default as useActions } from './useActions'

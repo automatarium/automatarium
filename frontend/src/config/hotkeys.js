@@ -11,6 +11,8 @@ export default {
   'REDO': { letter: 'y', meta: true },
   'COPY': { letter: 'c', meta: true },
   'PASTE': { letter: 'p', meta: true },
+  'SELECT_ALL': { letter: 'a', meta: true },
+  'SELECT_NONE': { letter: 'd', meta: true },
 
   'ZOOM_IN': { letter: '=', meta: true },
   'ZOOM_OUT': { letter: '-', meta: true },

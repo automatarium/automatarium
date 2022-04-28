@@ -1,7 +1,10 @@
 import create from 'zustand'
-import produce from 'immer'
+import produce, { current} from 'immer'
 import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
+import isEqual from 'lodash.isequal'
+
+import { useSelectionStore } from '/src/stores'
 
 import {
   APP_VERSION,
@@ -17,50 +20,51 @@ const sampleInitialData = {
   initialState: 0,
   states: [{
     id: 0, //TODO: can be int?
-    name: 'q0',
     label: null,
     x: 150,
     y: 150,
     isFinal: false,
   }, {
     id: 1,
-    name: 'q1',
     label: null,
     x: 330,
-    y: 170,
+    y: 150,
     isFinal: false,
   },{
     id: 2,
-    name: 'q2',
     label: null,
     x: 150,
     y: 350,
     isFinal: false,
   }, {
     id: 3,
-    name: 'q3',
     label: null,
-    x: 530,
+    x: 550,
     y: 350,
     isFinal: true,
   }],
   transitions: [{
+    id: 0,
     from: 0,
     to: 1,
     read: 'a',
   }, {
+    id: 1,
     from: 1,
     to: 2,
     read: 'z',
   },{
+    id: 2,
     from: 2,
     to: 3,
     read: 'a'
   }, {
+    id: 3,
     from: 2,
     to: 3,
     read: 'b'
   }, {
+    id: 4,
     from: 2,
     to: 3,
     read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
@@ -68,26 +72,29 @@ const sampleInitialData = {
 }
 
 export const createNewProject = () => ({
-    id: uuid(),
-    states: sampleInitialData.states,
-    transitions: sampleInitialData.transitions,
-    comments: [],
-    tests: [],
-    initialState: sampleInitialData.initialState,
-    meta: {
-      name: null,
-      dateCreated: new Date(),
-      dateEdited: new Date(),
-      version: SCHEMA_VERSION,
-      automatariumVersion: APP_VERSION,
-    },
-    config: {
-      type: DEFAULT_PROJECT_TYPE,
-      statePrefix: DEFAULT_STATE_PREFIX,
-      acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-      color: DEFAULT_PROJECT_COLOR,
-      playbackInterval: DEFAULT_PLAYBACK_INTERVAL,
-    }
+  id: uuid(),
+  states: sampleInitialData.states,
+  transitions: sampleInitialData.transitions,
+  comments: [],
+  tests: {
+    single: '',
+    batch: [''],
+  },
+  initialState: sampleInitialData.initialState,
+  meta: {
+    name: null,
+    dateCreated: new Date(),
+    dateEdited: new Date(),
+    version: SCHEMA_VERSION,
+    automatariumVersion: APP_VERSION,
+  },
+  config: {
+    type: DEFAULT_PROJECT_TYPE,
+    statePrefix: DEFAULT_STATE_PREFIX,
+    acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
+    color: DEFAULT_PROJECT_COLOR,
+    playbackInterval: DEFAULT_PLAYBACK_INTERVAL,
+  }
 })
 
 const useProjectStore = create(set => ({
@@ -98,9 +105,14 @@ const useProjectStore = create(set => ({
 
   /* Add current project state to stored history of project states */
   commit: () => set(produce(state => {
+    // Check whether anything changed before committing
+    const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
+    if (!didChange)
+      return
+
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)
-    
+
     // Add new history
     state.history.push(clone(state.project))
 
@@ -109,13 +121,13 @@ const useProjectStore = create(set => ({
   })),
 
   undo: () => set(produce(state => {
-    // Can we undo? 
+    // Can we undo?
     if (state.historyPointer == 0)
       return
 
     // Move pointer
     state.historyPointer--
-    
+
     // Update project
     state.project = state.history[state.historyPointer]
   })),
@@ -132,9 +144,14 @@ const useProjectStore = create(set => ({
     state.project = state.history[state.historyPointer]
   })),
 
+  /* Create a new transition */
+  createTransition: transition => set(produce(({ project }) => {
+    project.transitions.push({ ...transition, id: 1 + Math.max(-1, ...project.transitions.map(t => t.id)) })
+  })),
+
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.push({ ...state, id: project.state.length })
+    project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
   })),
 
   /* Update a state by id */
@@ -144,10 +161,38 @@ const useProjectStore = create(set => ({
 
   /* Remove a state by id */
   removeState: state => set(produce(({ project }) => {
-    project.states = project.states.filter(st => st.id !== state.id)    
+    project.states = project.states.filter(st => st.id !== state.id)
+  })),
+
+  /* Update tests */
+  setSingleTest: value => set(produce(({ project }) => {
+    project.tests.single = value
+  })),
+  addBatchTest: () => set(produce(({ project }) => {
+    project.tests.batch.push('')
+  })),
+  setBatchTest: (index, value) => set(produce(({ project }) => {
+    project.tests.batch[index] = value
+  })),
+  removeBatchTest: index => set(produce(({ project }) => {
+    project.tests.batch.splice(index, 1)
+  })),
+
+  /* Remove states by id */
+  removeStates: stateIDs => set(produce(({ project }) => {
+    // Remove states
+    project.states = project.states.filter(st => !stateIDs.includes(st.id))    
+
+    // Remove associated transitions
+    project.transitions = project.transitions.filter(t => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
+  })),
+
+  /* Remove transitions by id */
+  removeTransitions: transitionIDs => set(produce(({ project }) => {
+    project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))    
   })),
 
   reset: () => set({ project: createNewProject() })
 }))
 
-export default useProjectStore 
+export default useProjectStore
