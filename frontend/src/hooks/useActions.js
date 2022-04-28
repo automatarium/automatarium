@@ -16,6 +16,8 @@ const useActions = (registerHotkeys=false) => {
   const redo = useProjectStore(s => s.redo)
   const selectNoStates = useSelectionStore(s => s.selectNone)
   const selectAllStates = useSelectionStore(s => s.selectAll)
+  const setStateInitial = useProjectStore(s => s.setStateInitial)
+  const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -162,7 +164,26 @@ const useActions = (registerHotkeys=false) => {
     MOVE_VIEW_DOWN: {
       hotkey: { key: 'ArrowDown' },
       handler: () => moveView({ y: VIEW_MOVE_STEP })
-    }
+    },
+    SET_STATE_INITIAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length > 1,
+      handler: () => {
+        const selectedState = useSelectionStore.getState().selectedStates?.[0]
+        if (selectedState !== undefined) {
+          setStateInitial(selectedState)
+          commit()
+        }
+      }
+    },
+    TOGGLE_STATES_FINAL: {
+      handler: () => {
+        const selectedStateIDs = useSelectionStore.getState().selectedStates
+        if (selectedStateIDs.length > 0) {
+          toggleStatesFinal(selectedStateIDs)
+          commit()
+        }
+      }
+    },
   }
 
   // Register action hotkeys
@@ -176,6 +197,10 @@ const useActions = (registerHotkeys=false) => {
         for (let action of Object.values(actions)) {
           // Skip if no hotkey
           if (!action.hotkey)
+            continue
+
+          // Skip if disabled
+          if (action.disabled && action.disabled())
             continue
 
           const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey] 
