@@ -9,7 +9,7 @@ const stateContextItems = [
   },
   'hr',
   {
-    label: 'Set  label',
+    label: 'Set label',
     action: 'SET_STATE_LABEL',
   },
   'hr',

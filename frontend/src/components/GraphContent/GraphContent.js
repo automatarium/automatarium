@@ -65,6 +65,7 @@ const GraphContent = ({ containerRef }) => {
 
     // Is this RMB?
     if (e.button === 2) {
+      e.stopPropagation()
       const rightClickEvent = new CustomEvent('stateContext', { detail: {
         states: selectedStates,
         x: e.clientX,
@@ -94,6 +95,7 @@ const GraphContent = ({ containerRef }) => {
   const handleTransitionMouseUp = (transitionID, e) => {
     // Is this RMB?
     if (e.button === 2) {
+      e.stopPropagation()
       const rightClickEvent = new CustomEvent('transitionContext', { detail: {
         transitions: selectedTransitions,
         x: e.clientX,
