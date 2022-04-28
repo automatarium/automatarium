@@ -32,8 +32,8 @@ const ItemWithItems = ({ item, onClose }) => {
 
 const Item = ({ item, active, setActive, onClose }) => {
   const actions = useActions()
-  const actionHandler = item.action ? actions[item.action].handler : null
-  const hotKeyLabel = item.action ? actions[item.action].label : null
+  const actionHandler = item.action ? actions[item.action]?.handler : null
+  const hotKeyLabel = item.action ? actions[item.action]?.label : null
 
   return  (
     <ItemWrapper
@@ -44,7 +44,7 @@ const Item = ({ item, active, setActive, onClose }) => {
     >
       <label>{item.label}</label>
       {item.shortcut && <Shortcut aria-hidden="true">{item.shortcut}</Shortcut>}
-      {hotKeyLabel && <Shortcut aria-hidden="true">{hotKeyLabel}</Shortcut>}
+      {!item.shortcut && hotKeyLabel && <Shortcut aria-hidden="true">{hotKeyLabel}</Shortcut>}
       {item.items && <ChevronRight size="1em" />}
     </ItemWrapper>
   )

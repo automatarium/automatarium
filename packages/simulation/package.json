@@ -7,10 +7,11 @@
   "license": "MIT",
   "scripts": {
     "build": "parcel build",
-    "dev": "parcel watch",
+    "watch": "parcel watch",
     "test": "jest"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.16.11",
     "jest": "^27.5.1",
     "parcel": "^2.4.1"
   }

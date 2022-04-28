@@ -4,6 +4,8 @@ import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
+import { useSelectionStore } from '/src/stores'
+
 import {
   APP_VERSION,
   SCHEMA_VERSION,
@@ -42,22 +44,27 @@ const sampleInitialData = {
     isFinal: true,
   }],
   transitions: [{
+    id: 0,
     from: 0,
     to: 1,
     read: 'a',
   }, {
+    id: 1,
     from: 1,
     to: 2,
     read: 'z',
   },{
+    id: 2,
     from: 2,
     to: 3,
     read: 'a'
   }, {
+    id: 3,
     from: 2,
     to: 3,
     read: 'b'
   }, {
+    id: 4,
     from: 2,
     to: 3,
     read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
@@ -137,9 +144,14 @@ const useProjectStore = create(set => ({
     state.project = state.history[state.historyPointer]
   })),
 
+  /* Create a new transition */
+  createTransition: transition => set(produce(({ project }) => {
+    project.transitions.push({ ...transition, id: 1 + Math.max(-1, ...project.transitions.map(t => t.id)) })
+  })),
+
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.push({ ...state, id: project.states.length })
+    project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
   })),
 
   /* Update a state by id */
@@ -164,6 +176,20 @@ const useProjectStore = create(set => ({
   })),
   removeBatchTest: index => set(produce(({ project }) => {
     project.tests.batch.splice(index, 1)
+  })),
+
+  /* Remove states by id */
+  removeStates: stateIDs => set(produce(({ project }) => {
+    // Remove states
+    project.states = project.states.filter(st => !stateIDs.includes(st.id))    
+
+    // Remove associated transitions
+    project.transitions = project.transitions.filter(t => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
+  })),
+
+  /* Remove transitions by id */
+  removeTransitions: transitionIDs => set(produce(({ project }) => {
+    project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))    
   })),
 
   reset: () => set({ project: createNewProject() })

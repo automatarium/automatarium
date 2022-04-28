@@ -5,6 +5,8 @@ export const lerpPoints = (p1, p2, t) => ({
 
 export const movePointTowards = (p, tar, d) => {
   const l = size({x: tar.x - p.x, y: tar.y - p.y})
+  if (p.x === tar.x && p.y === tar.y)
+    return p
   return {
     x: p.x + d * (tar.x - p.x) / l,
     y: p.y + d * (tar.y - p.y) / l,
