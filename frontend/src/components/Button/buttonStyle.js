@@ -23,6 +23,8 @@ export const Wrapper = styled('button')`
 
   &:disabled {
     background-color: var(--disabled-button);
+    opacity: .8;
+    cursor: default;
   }
 
   ${props => props.$icon && `

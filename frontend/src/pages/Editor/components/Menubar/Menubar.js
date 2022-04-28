@@ -255,7 +255,7 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          <Button>Share</Button>
+          <Button disabled>Share</Button>
         </Actions>
       </Wrapper>
     </>

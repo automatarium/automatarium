@@ -70,7 +70,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => console.log('Copy'),
     },
     PASTE: {
-      hotkey: { key: 'p', meta: true },
+      hotkey: { key: 'v', meta: true },
       handler: () => console.log('Paste'),
     },
     SELECT_ALL: {

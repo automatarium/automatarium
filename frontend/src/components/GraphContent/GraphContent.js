@@ -12,7 +12,7 @@ const GraphContent = ({ containerRef }) => {
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelectedStates = useSelectionStore(s => s.setStates)
   const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
-  
+
   // Use hooks for content interactivity
   const { startDrag } = useStateDragging({ containerRef })
   const { startEdgeCreate, stopEdgeCreate, createTransitionStart, mousePos } = useTransitionCreation({ containerRef })
@@ -37,12 +37,12 @@ const GraphContent = ({ containerRef }) => {
             ? [...selectedStates, state.id]
             : [state.id]
         setSelectedStates(newSelected)
-        
+
         // Reset selected transitions?
         if (!selectedStates.includes(state.id) && !e.shiftKey) {
           setSelectedTransitions([])
         }
-        
+
         // Drag things
         startDrag(newSelected.map(id => states.find(state => state.id === id)), e)
       }
@@ -62,8 +62,19 @@ const GraphContent = ({ containerRef }) => {
 
     // Is this RMB?
     if (e.button === 2) {
-      // TODO: bubble up to a parent for creating a context menu
-      console.warn('State RMB event not implemented')
+      const newSelected = selectedStates.includes(state.id)
+        ? selectedStates
+        : e.shiftKey
+          ? [...selectedStates, state.id]
+          : [state.id]
+      setSelectedStates(newSelected)
+
+      const rightClickEvent = new CustomEvent('stateContext', { detail: {
+        states: newSelected,
+        x: e.clientX,
+        y: e.clientY,
+      }})
+      document.dispatchEvent(rightClickEvent)
     }
   }
 
@@ -78,7 +89,7 @@ const GraphContent = ({ containerRef }) => {
             ? [...selectedTransitions, transitionID]
             : [transitionID]
         setSelectedTransitions(newSelected)
-        
+
         // Reset selected states?
         if (!selectedTransitions.includes(transitionID) && !e.shiftKey) {
           setSelectedStates([])
