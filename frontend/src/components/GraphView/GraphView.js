@@ -3,9 +3,10 @@ import { useEffect, useRef, useCallback } from 'react'
 import { GraphContent, SelectionBox } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
-import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions' 
+import { VIEW_MOVE_STEP, GRID_SNAP } from '/src/config/interactions'
 
 import { Svg } from './graphViewStyle'
+import { ContextMenus } from './components'
 import { useViewDragging } from './hooks'
 
 const GraphView = props => {
@@ -24,9 +25,9 @@ const GraphView = props => {
   useEffect(() => {
     if (containerRef.current) {
       onContainerResize()
-      window.addEventListener('resize', onContainerResize) 
-      return () => window.removeEventListener('resize', onContainerResize) 
-    }    
+      window.addEventListener('resize', onContainerResize)
+      return () => window.removeEventListener('resize', onContainerResize)
+    }
   }, [])
 
   // Keyboard commands for view control
@@ -53,23 +54,36 @@ const GraphView = props => {
 
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
-    <Svg
-      onContextMenu={e => e.preventDefault()}
-      viewBox={viewBox}
-      ref={containerRef}
-      $showGrid={showGrid}
-      {...props}
-      style={{ backgroundSize, backgroundPosition, ...props.style }}>
-      <MarkerProvider>
-        <g>
-          {/* Graph states and transitions */}
-          <GraphContent containerRef={containerRef} />
+    <>
+      <Svg
+        onContextMenu={e => e.preventDefault()}
+        onMouseUp={e => {
+          if (e.button === 2) {
+            const rightClickEvent = new CustomEvent('graphContext', { detail: {
+              x: e.clientX,
+              y: e.clientY,
+            }})
+            document.dispatchEvent(rightClickEvent)
+          }
+        }}
+        viewBox={viewBox}
+        ref={containerRef}
+        $showGrid={showGrid}
+        {...props}
+        style={{ backgroundSize, backgroundPosition, ...props.style }}>
+        <MarkerProvider>
+          <g>
+            {/* Graph states and transitions */}
+            <GraphContent containerRef={containerRef} />
 
-          {/* Selection Drag Box */}
-          <SelectionBox containerRef={containerRef} />
-        </g>
-      </MarkerProvider>
-    </Svg>
+            {/* Selection Drag Box */}
+            <SelectionBox containerRef={containerRef} />
+          </g>
+        </MarkerProvider>
+      </Svg>
+
+      <ContextMenus />
+    </>
   )
 }
 

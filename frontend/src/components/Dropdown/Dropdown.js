@@ -88,7 +88,7 @@ const Dropdown = ({
       onBlur={e => !subMenu && visible && !e.currentTarget.contains(e.relatedTarget) && onClose()}
       {...props}
     >
-      {items.map((item, i) => item === 'hr' ? (
+      {items?.map((item, i) => item === 'hr' ? (
           <Divider key={`hr-${i}`} />
         ) : (
           item.items ? (
@@ -97,6 +97,7 @@ const Dropdown = ({
             <Item key={item.label} item={item} onClose={onClose} />
           )
       ))}
+      {props.children}
     </Wrapper>
   )
 }

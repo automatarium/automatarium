@@ -47,7 +47,7 @@ const Editor = () => {
       document.removeEventListener('keyup', onKeyUp)
     }
   })
-  
+
   return (
     <>
       <Menubar />
