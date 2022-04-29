@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useProjectStore, useSelectionStore } from '/src/stores'
+import { convertJFLAPXML } from '@automatarium/jflap-translator'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -39,17 +40,20 @@ const useActions = (registerHotkeys=false) => {
           // Read file data
           const reader = new FileReader()
           reader.onloadend = () => {
-            console.log(reader.result);
-            const loadedProject = JSON.parse(
-              window.atob(
-                reader.result.substring(reader.result.indexOf(',')+1)
-              )
-            )
-            // Set project (file) in project store
-            setProject(loadedProject)
+            const fileToOpen = input.files[0]
+            const fileData = window.atob(reader.result.substring(reader.result.indexOf(',')+1))
+            // JFLAP file load - handle conversion
+            if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
+              setProject(convertJFLAPXML(fileData))
+            } else if (fileToOpen.name.toLowerCase().endsWith('.json')) {
+              // Set project (file) in project store
+              setProject(JSON.parse(fileData))
+            } else {
+              window.alert('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
+            }
+
           }
           reader.readAsDataURL(input.files[0])
-
         };
         input.click();
      },
