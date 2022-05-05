@@ -20,7 +20,7 @@ const useViewStore = create((set, get) => ({
   setViewScale: scale => set({ scale }),
 
   /* Apply the view to transform a point */
-  applyView: (x, y) => 
+  applyView: (x, y) =>
     [x * get().scale + get().position.x, y * get().scale + get().position.y],
 
   /* Convert from screen mouse coords to view space*/

@@ -3,24 +3,33 @@ import { useEffect, useCallback, useState, useRef } from 'react'
 import { Dropdown, TextInput } from '/src/components'
 
 import { useProjectStore } from '/src/stores'
+import { locateTransition } from '/src/util/states'
+import { lerpPoints } from '/src/util/points'
 
 const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
   const inputRef = useRef()
 
   const [editTransitionValue, setEditTransitionValue] = useState('')
-  const project = useProjectStore(s => s.project)
-  const transitions = project?.transitions ?? []
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
+  const commit = useProjectStore(s => s.commit)
 
   const onEditTransition = useCallback(({ detail: { id } }) => {
-    const previousValue = transitions.find(t => t.id === id)?.read
-    setEditTransitionValue(previousValue ?? '')
+    const { states, transitions } = useProjectStore.getState()?.project ?? {}
+    const transition = transitions.find(t => t.id === id)
+    setEditTransitionValue(transition?.read ?? '')
 
-    setDialog({ visible: true, x:200, y:200, id, previousValue })
+    const pos = locateTransition(transition, states)
+
+    setDialog({
+      visible: true,
+      ...lerpPoints(pos.from, pos.to, .5),
+      id,
+      previousValue: transition?.read,
+    })
     setTimeout(() => inputRef.current?.focus(), 100)
-  }, [transitions, inputRef.current])
+  }, [inputRef.current])
 
   useEffect(() => {
     document.addEventListener('editTransition', onEditTransition)
@@ -50,6 +59,7 @@ const InputDialogs = () => {
           if (e.key === 'Enter') {
             // Edit transition
             editTransition(dialog.id, editTransitionValue)
+            commit()
             setDialog({ ...dialog, visible: false })
           }
         }}

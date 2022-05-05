@@ -5,7 +5,6 @@ import { useProjectStore, useViewStore, useToolStore } from '/src/stores'
 const useTransitionCreation = ({ containerRef }) => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const createTransition = useProjectStore(s => s.createTransition)
-  const commit = useProjectStore(s => s.commit)
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'transition'
 
