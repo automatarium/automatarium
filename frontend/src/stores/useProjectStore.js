@@ -62,12 +62,7 @@ const sampleInitialData = {
     id: 3,
     from: 2,
     to: 3,
-    read: 'b'
-  }, {
-    id: 4,
-    from: 2,
-    to: 3,
-    read: 'c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t',
+    read: 'b[c-t]',
   }]
 }
 
@@ -176,6 +171,14 @@ const useProjectStore = create(set => ({
   })),
   removeBatchTest: index => set(produce(({ project }) => {
     project.tests.batch.splice(index, 1)
+  })),
+
+  /* Set given state to be the initial state */
+  setStateInitial: stateID => set(s => ({ project: { ...s.project, initialState: stateID } })),
+
+  /* Set all provided states as final */
+  toggleStatesFinal: stateIDs => set(produce(({ project}) => {
+    project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal}))
   })),
 
   /* Remove states by id */

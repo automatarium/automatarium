@@ -12,7 +12,7 @@ const GraphContent = ({ containerRef }) => {
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelectedStates = useSelectionStore(s => s.setStates)
   const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
-  
+
   // Use hooks for content interactivity
   const { startDrag } = useStateDragging({ containerRef })
   const { startEdgeCreate, stopEdgeCreate, createTransitionStart, mousePos } = useTransitionCreation({ containerRef })
@@ -28,23 +28,26 @@ const GraphContent = ({ containerRef }) => {
   const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
 
   const handleStateMouseDown = (state, e) => {
+    let newSelected
+    if (tool === 'cursor') {
+      // Select states
+      newSelected = selectedStates.includes(state.id)
+        ? selectedStates
+        : e.shiftKey
+          ? [...selectedStates, state.id]
+          : [state.id]
+      setSelectedStates(newSelected)
+
+      // Reset selected transitions?
+      if (!selectedStates.includes(state.id) && !e.shiftKey) {
+        setSelectedTransitions([])
+      }
+    }
+
     if (e.button === 0) {
-      // Select things and then drag
       if (tool === 'cursor') {
-        const newSelected = selectedStates.includes(state.id)
-          ? selectedStates
-          : e.shiftKey
-            ? [...selectedStates, state.id]
-            : [state.id]
-        setSelectedStates(newSelected)
-        
-        // Reset selected transitions?
-        if (!selectedStates.includes(state.id) && !e.shiftKey) {
-          setSelectedTransitions([])
-        }
-        
         // Drag things
-        startDrag(newSelected.map(id => states.find(state => state.id === id)), e)
+        startDrag(newSelected?.map(id => states.find(state => state.id === id)), e)
       }
 
       if (tool === 'transition') {
@@ -62,34 +65,43 @@ const GraphContent = ({ containerRef }) => {
 
     // Is this RMB?
     if (e.button === 2) {
-      // TODO: bubble up to a parent for creating a context menu
-      console.warn('State RMB event not implemented')
+      e.stopPropagation()
+      const rightClickEvent = new CustomEvent('stateContext', { detail: {
+        states: selectedStates,
+        x: e.clientX,
+        y: e.clientY,
+      }})
+      document.dispatchEvent(rightClickEvent)
     }
   }
 
   const handleTransitionMouseDown = (transitionID, e) => {
-    // Is this LMB?
-    if (e.button === 0) {
-      if (tool === 'cursor') {
-        // Update transition selections
-        const newSelected = selectedTransitions.includes(transitionID)
-          ? selectedTransitions
-          : e.shiftKey
-            ? [...selectedTransitions, transitionID]
-            : [transitionID]
-        setSelectedTransitions(newSelected)
-        
-        // Reset selected states?
-        if (!selectedTransitions.includes(transitionID) && !e.shiftKey) {
-          setSelectedStates([])
-        }
+    if (tool === 'cursor') {
+      // Update transition selections
+      const newSelected = selectedTransitions.includes(transitionID)
+        ? selectedTransitions
+        : e.shiftKey
+          ? [...selectedTransitions, transitionID]
+          : [transitionID]
+      setSelectedTransitions(newSelected)
+
+      // Reset selected states?
+      if (!selectedTransitions.includes(transitionID) && !e.shiftKey) {
+        setSelectedStates([])
       }
     }
+  }
 
+  const handleTransitionMouseUp = (transitionID, e) => {
     // Is this RMB?
     if (e.button === 2) {
-      // TODO: bubble up to a parent for creating a context menu
-      console.warn('Transition RMB event not implemented')
+      e.stopPropagation()
+      const rightClickEvent = new CustomEvent('transitionContext', { detail: {
+        transitions: selectedTransitions,
+        x: e.clientX,
+        y: e.clientY,
+      }})
+      document.dispatchEvent(rightClickEvent)
     }
   }
 
@@ -98,10 +110,21 @@ const GraphContent = ({ containerRef }) => {
     <InitialStateArrow states={states} initialStateID={initialState}/>
 
     {/* Render all sets of edges */}
-    {locatedTransitions.map((transitions, i) => <TransitionSet transitions={transitions} key={i} onMouseDown={handleTransitionMouseDown}/>)}
+    {locatedTransitions.map((transitions, i) => <TransitionSet
+      transitions={transitions}
+      key={i}
+      onMouseDown={handleTransitionMouseDown}
+      onMouseUp={handleTransitionMouseUp}
+    />)}
 
     {/* Render in-creation transition */}
-    {createTransitionStart && mousePos && <TransitionSet.Transition fullWidth from={createTransitionStart} to={mousePos} count={1} text=''/> }
+    {createTransitionStart && mousePos && <TransitionSet.Transition
+      fullWidth
+      from={createTransitionStart}
+      to={mousePos}
+      count={1}
+      text=''
+    />}
 
     {/* Render all states */}
     {states.map(s => <StateCircle
@@ -113,8 +136,9 @@ const GraphContent = ({ containerRef }) => {
       isFinal={s.isFinal}
       selected={selectedStates.includes(s.id)}
       onMouseDown={e => handleStateMouseDown(s, e)}
-      onMouseUp={e => handleStateMouseUp(s, e)}/>)}
-    </g>
+      onMouseUp={e => handleStateMouseUp(s, e)}
+    />)}
+  </g>
 }
 
 export default GraphContent
