@@ -42,7 +42,7 @@ const InputDialogs = () => {
       onClose={() => {
         setDialog({ ...dialog, visible: false })
         // Delete transitions if not new
-        if (!dialog.previousValue) {
+        if (dialog.previousValue === undefined) {
           removeTransitions([dialog.id])
         }
       }}
