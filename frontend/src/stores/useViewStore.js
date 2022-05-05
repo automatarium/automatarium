@@ -1,9 +1,16 @@
 import create from 'zustand'
 import produce from 'immer'
 
-const relativeMousePosition = (x, y, container) => {
+
+const screenToCanvasSpace = (x, y, container) => {
   const b = container.getBoundingClientRect()
   return [(x - b.left), (y - b.top)]
+}
+
+
+const canvasToScreenSpace = (x, y, container) => {
+  const b = container.getBoundingClientRect()
+  return [(x + b.left), (y + b.top)]
 }
 
 
@@ -19,13 +26,21 @@ const useViewStore = create((set, get) => ({
   setViewSize: size => set({ size }),
   setViewScale: scale => set({ scale }),
 
-  /* Apply the view to transform a point */
+  /* Apply the view transform to a point */
   applyView: (x, y) =>
     [x * get().scale + get().position.x, y * get().scale + get().position.y],
 
-  /* Convert from screen mouse coords to view space*/
+  /* Apply an inverse view transform to a point */
+  applyInverseView: (x, y) =>
+    [(x - get().position.x)/get().scale, (y - get().position.y)/get().scale],
+
+  /* Convert from screen mouse coords to view space */
   screenToViewSpace: (clientX, clientY, container) =>
-    get().applyView(...relativeMousePosition(clientX, clientY, container))
+    get().applyView(...screenToCanvasSpace(clientX, clientY, container)),
+
+  /* Convert from screen mouse coords to view space */
+  viewToScreenSpace: (viewX, viewY, container) =>
+    canvasToScreenSpace(...get().applyInverseView(viewX, viewY), container),
 
 }))
 
