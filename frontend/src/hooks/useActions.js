@@ -20,7 +20,6 @@ const useActions = (registerHotkeys=false) => {
   const commit = useProjectStore(s => s.commit)
   const createNewProject = useProjectStore(s => s.reset)
   const setProject = useProjectStore(s => s.set)
-  const project = useProjectStore(s => s.project)
 
   // TODO: memoize
   const actions = {
@@ -31,30 +30,20 @@ const useActions = (registerHotkeys=false) => {
       },
     },
     OPEN_FILE: {
-      hotkey: { key: 'o', meta: true },
+      hotkey: { key: 'o', meta: true, handler: () => console.log('Open') }
+    },
+    IMPORT_AUTOMATARIUM_PROJECT: {
+      hotkey: { key: 'i', meta: true },
       handler: async () => {
-        // Prompt user for file input
-        let input = document.createElement('input')
-        input.type = 'file'
-        input.onchange = () => {
-          // Read file data
-          const reader = new FileReader()
-          reader.onloadend = () => {
-            const fileToOpen = input.files[0]
-            // JFLAP file load - handle conversion
-            if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
-              setProject(convertJFLAPXML(reader.result))
-            } else if (fileToOpen.name.toLowerCase().endsWith('.json')) {
-              // Set project (file) in project store
-              setProject(JSON.parse(reader.result))
-            } else {
-              window.alert('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
-            }
-
-          }
-          reader.readAsText(input.files[0])
-        }
-        input.click()
+        if (window.confirm('Importing will override your current project. Continue anyway?'))
+          promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project')
+     },
+    },
+    IMPORT_JFLAP_PROJECT: {
+      hotkey: { key: 'i', meta: true, shift: true },
+      handler: async () => {
+        if (window.confirm('Importing will override your current project. Continue anyway?'))
+          promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project')
      },
     },
     SAVE_FILE: {
@@ -66,6 +55,10 @@ const useActions = (registerHotkeys=false) => {
       handler: () => {
         const fileName = window.prompt('What would you like to name this automaton?') // TODO: better prompt
         if (fileName) {
+          // Pull project state
+          const { project } = useProjectStore.getState()
+          
+          // Create a download link and use it
           const a = document.createElement('a')
           const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
           a.href = URL.createObjectURL(file)
@@ -153,7 +146,6 @@ const useActions = (registerHotkeys=false) => {
       handler: () => console.log('Testing Lab'),
     },
     FILE_INFO: {
-      hotkey: { key: 'i', meta: true },
       handler: () => console.log('File Info'),
     },
     FILE_OPTIONS: {
@@ -236,6 +228,27 @@ const useActions = (registerHotkeys=false) => {
   }]))), [actions])
 
   return actionsWithLabels
+}
+
+const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
+  // Prompt user for file input
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.onchange = () => {
+    // Read file data
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      try {
+        const data = parse(reader.result)
+        onData(data)
+      } catch (error) {
+        window.alert(errorMessage)
+        console.error(error)
+      }
+    }
+    reader.readAsText(input.files[0])
+  }
+  input.click()
 }
 
 export default useActions
