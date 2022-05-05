@@ -18,6 +18,7 @@
   --toolbar: #424242;
   --disabled-button: #6F6F6F;
   --input-border: #C4C4C4;
+  --selection-fill: #00000020;
 }
 
 body {
