@@ -12,7 +12,7 @@ const simulateFSA = (
   // Are we done processing symbols?
   if (input.length === 0) {
     const currState = graph.states.find(state => state.id === currStateID)
-    return { accepted: currState.isFinal, trace }
+    return { accepted: currState.isFinal, trace, remaining: input }
   }
 
   // Get next set of possible transitions
@@ -23,10 +23,9 @@ const simulateFSA = (
   // Move lambda transitions to end of array (to prioritise non-lambda transitions)
   possibleTransitions.sort((a, b) => b.read.length - a.read.length)
 
-
   // No transitions possible?
   if (possibleTransitions.length === 0) {
-    return { accepted: false, trace }
+    return { accepted: false, trace, remaining: input }
   }
 
   // Continue recurring

@@ -34,14 +34,16 @@ const TestingLab = () => {
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const { accepted, trace } = simulateFSA(graph, traceInput)
+    const { accepted, trace, remaining } = simulateFSA(graph, traceInput)
     result = {
       accepted,
+      remaining,
       // trace: trace.read === '' ? 'lam' : trace.read
       trace: trace.map(step => ({
         to: step.to,
         read: step.read === '' ? 'λ' : step.read
-      }))
+      })),
+      transitionCount: trace.length - (accepted ? 1 : 0)
     }
     setSimulationResult(result)
     return result
@@ -52,13 +54,27 @@ const TestingLab = () => {
     if (!simulationResult)
       return ''
 
-    const { trace, accepted } = simulationResult
-    const transitions = trace
-      .map((state, i, states) => states[i+1]
-        && `${states[i+1].read}: ${statePrefix}${state.to} -${(states[i+1].to ? `> ${statePrefix}${states[i+1].to}` : '|')}`)
-      .filter((x, i) => i < traceIdx && x)
+    const { trace, accepted, remaining, transitionCount } = simulationResult
 
-    return `${transitions.join('\n')}${(traceIdx === trace.length) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
+    // Return null if not enough states in trace to render transitions 
+    if (trace.length < 2) {
+      return null
+    }
+    
+    // Represent transitions as strings of form start -> end
+    const transitions = trace
+      .slice(0, -1)
+      .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
+      .map(([read, start, end]) => `${read}: ${statePrefix}${start} -> ${statePrefix}${end}`)
+      .filter((x, i) => i < traceIdx)
+
+    // Add rejecting transition if applicable
+    const transitionsWithRejected = !accepted && traceIdx === trace.length
+      ? [...transitions, `${remaining[0]}: ${statePrefix}${trace[trace.length-1].to} ->|`]
+      : transitions
+
+    // Add 'REJECTED'/'ACCEPTED' label
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx])
 
   return (
@@ -89,7 +105,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<ChevronRight size={23} />}
-            disabled={traceIdx >= simulationResult?.trace?.length}
+            disabled={traceIdx >= simulationResult?.transitionCount}
             onClick={() => {
               if (!simulationResult) {
                 simulateGraph()
@@ -98,7 +114,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.trace?.length && traceIdx != 0}
+            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0}
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()

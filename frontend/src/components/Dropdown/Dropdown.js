@@ -34,11 +34,12 @@ const Item = ({ item, active, setActive, onClose }) => {
   const actions = useActions()
   const actionHandler = item.action ? actions[item.action]?.handler : null
   const hotKeyLabel = item.action ? actions[item.action]?.label : null
+  const actionDisabled = actions[item.action]?.disabled?.()
 
   return  (
     <ItemWrapper
       onClick={actionHandler ? () => { actionHandler(); onClose() } : (item.items?.length > 0 ? setActive : undefined)}
-      disabled={(!actionHandler && !item['items']) || item.items?.length === 0}
+      disabled={(!actionHandler && !item['items']) || item.items?.length === 0 || actionDisabled}
       type="button"
       $active={active}
     >
@@ -88,7 +89,7 @@ const Dropdown = ({
       onBlur={e => !subMenu && visible && !e.currentTarget.contains(e.relatedTarget) && onClose()}
       {...props}
     >
-      {items.map((item, i) => item === 'hr' ? (
+      {items?.map((item, i) => item === 'hr' ? (
           <Divider key={`hr-${i}`} />
         ) : (
           item.items ? (
@@ -97,6 +98,7 @@ const Dropdown = ({
             <Item key={item.label} item={item} onClose={onClose} />
           )
       ))}
+      {props.children}
     </Wrapper>
   )
 }
