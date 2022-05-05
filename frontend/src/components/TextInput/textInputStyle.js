@@ -1,6 +1,7 @@
 import { styled } from 'goober'
+import { forwardRef } from 'react'
 
-export const StyledInput = styled('input')`
+export const StyledInput = styled('input', forwardRef)`
   font: inherit;
   border: 1px solid var(--border-color, var(--input-border));
   background: var(--white);
