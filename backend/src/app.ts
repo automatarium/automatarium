@@ -21,8 +21,8 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Configure routes
-app.use('/project', projectRoutes)
-app.use('/user', userRoutes)
+app.use('/projects', projectRoutes)
+app.use('/users', userRoutes)
 
 app.listen(config.server.port, async () => {
   console.log(`Listening on port ${config.server.port}`)

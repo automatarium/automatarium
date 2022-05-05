@@ -5,6 +5,7 @@ import admin from 'firebaseAdmin'
 export const decodeToken = async (req: Request, res: Response, next: NextFunction) => {
   // Expect a token
   const header = req.headers.authorization
+
   if (!header || header === 'Bearer null' || !header.startsWith('Bearer '))
     return next()
 
@@ -14,7 +15,7 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
   // Verify token
   try {
     const userInfo = await admin.auth().verifyIdToken(idToken)
-    req.uid = userInfo.uid
+    req.user = userInfo
   } catch ({ message }) {
     return res.status(500).json({
       error: message,
@@ -22,4 +23,13 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
   }
 
   return next()
+}
+
+export const isAuthenticated = (req: Request, res: Response, next: NextFunction) => {
+  if (req.user) {
+    return next()
+  }
+  return res.status(403).json({
+    error: "User must be authenticated"
+  })
 }
