@@ -44,13 +44,11 @@ export const createProject = async ( req: Request, res: Response, next: NextFunc
   // Save project
   try {
     await project.save()
-    console.log("Heree")
-    console.log("Project", project)
     return res.status(201).json({
       project
     })
   } catch (error) {
-    console.log("Errorrr", error)
+
     return res.status(500).json({
       error: error?.message ?? error
     })
@@ -82,10 +80,10 @@ export const updateProject = async ( req: Request, res: Response, next: NextFunc
   try {
     // Update existing project
     const project = await Project.findOneAndUpdate({
-      _id: pid
+      _id: pid,
+      userid: uid
     },
     { 
-      userid: uid,
       isPublic,
       meta,
       initialState,

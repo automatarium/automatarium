@@ -20,7 +20,6 @@ export const getUser = async ( req: Request, res: Response, next: NextFunction )
 }
 
 export const createUser = async ( req: Request, res: Response, next: NextFunction ) => {  
-  console.log("req body", req.body)
   const { uid, email, preferences } = req.body
   
   // Create new user
