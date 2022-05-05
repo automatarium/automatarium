@@ -31,25 +31,25 @@ const SelectionBox = ({ containerRef }) => {
       const startY = Math.min(dragStart[1], mousePos[1])
       const endX = Math.max(dragStart[0], mousePos[0])
       const endY = Math.max(dragStart[1], mousePos[1])
-      
+
       // Determine selected states
       const selectedStates = states.filter(state =>
         state.x >= startX &&
         state.x <= endX &&
         state.y >= startY &&
         state.y <= endY).map(s => s.id)
-      
+
       // Determine selected transitions
       const selectedTransitions = transitions.map(t => locateTransition(t, states)).filter(transition =>
-        transition.from.x  >= startX && 
+        transition.from.x  >= startX &&
         transition.from.x <= endX &&
         transition.from.y >= startY &&
         transition.from.y <= endY &&
-        transition.to.x >= startX && 
+        transition.to.x >= startX &&
         transition.to.x <= endX &&
         transition.to.y >= startY &&
         transition.to.y <= endY).map(t => t.id)
-      
+
       // Update state
       setSelectedStates(selectedStates)
       setSelectedTransitions(selectedTransitions)
@@ -82,11 +82,12 @@ const SelectionBox = ({ containerRef }) => {
   return <rect
     x={startX}
     y={startY}
-    width={endX-startX}
-    height={endY-startY}
-    fill="none"
-    stroke="var(--black)"
-    strokwidth="1"/>
+    width={endX - startX}
+    height={endY - startY}
+    fill='var(--selection-fill)'
+    stroke='var(--black)'
+    strokeWidth='1.75'
+  />
 }
 
 export default SelectionBox

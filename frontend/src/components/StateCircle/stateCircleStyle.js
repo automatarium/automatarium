@@ -9,7 +9,8 @@ export const StyledCircle = styled('circle')`
   }
 
   ${p => p.$selected && `
-    stroke: var(--primary);
-    stroke-width: 3.5px;
+    fill: hsl(var(--primary-h) 75% 65%);
+    stroke: hsl(var(--primary-h) var(--primary-s) 47.5%);
+    stroke-width: 2.5px;
   `}
 ` 
