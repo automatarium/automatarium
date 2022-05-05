@@ -92,7 +92,7 @@ export const createNewProject = () => ({
   }
 })
 
-const useProjectStore = create(set => ({
+const useProjectStore = create((set, get) => ({
   project: null,
   history: [],
   historyPointer: null,
@@ -141,8 +141,15 @@ const useProjectStore = create(set => ({
   })),
 
   /* Create a new transition */
-  createTransition: transition => set(produce(({ project }) => {
-    project.transitions.push({ ...transition, id: 1 + Math.max(-1, ...project.transitions.map(t => t.id)) })
+  createTransition: transition => {
+    const id = 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
+    set(produce(({ project }) => {
+      project.transitions.push({ ...transition, id })
+    }))
+    return id
+  },
+  editTransition: (id, read) => set(produce(({ project }) => {
+    project.transitions.find(t => t.id === id).read = read
   })),
 
   /* Create a new state */
@@ -185,7 +192,7 @@ const useProjectStore = create(set => ({
   /* Remove states by id */
   removeStates: stateIDs => set(produce(({ project }) => {
     // Remove states
-    project.states = project.states.filter(st => !stateIDs.includes(st.id))    
+    project.states = project.states.filter(st => !stateIDs.includes(st.id))
 
     // Remove associated transitions
     project.transitions = project.transitions.filter(t => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
@@ -193,7 +200,7 @@ const useProjectStore = create(set => ({
 
   /* Remove transitions by id */
   removeTransitions: transitionIDs => set(produce(({ project }) => {
-    project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))    
+    project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))
   })),
 
   reset: () => set({ project: createNewProject() })

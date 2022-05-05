@@ -123,7 +123,6 @@ const GraphContent = ({ containerRef }) => {
       from={createTransitionStart}
       to={mousePos}
       count={1}
-      text=''
     />}
 
     {/* Render all states */}

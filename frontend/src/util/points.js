@@ -11,7 +11,7 @@ export const movePointTowards = (p, tar, d) => {
     x: p.x + d * (tar.x - p.x) / l,
     y: p.y + d * (tar.y - p.y) / l,
   }
-} 
+}
 
 export const size = p =>
   Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2))

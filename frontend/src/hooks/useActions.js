@@ -197,7 +197,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => moveView({ y: VIEW_MOVE_STEP })
     },
     SET_STATE_INITIAL: {
-      disabled: () => useSelectionStore.getState()?.selectedStates?.length > 1,
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length !== 1,
       handler: () => {
         const selectedState = useSelectionStore.getState().selectedStates?.[0]
         if (selectedState !== undefined) {
@@ -215,6 +215,14 @@ const useActions = (registerHotkeys=false) => {
         }
       }
     },
+    EDIT_TRANSITION: {
+      disabled: () => useSelectionStore.getState()?.selectedTransitions?.length !== 1,
+      handler: () => {
+        const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
+        if (selectedTransition === undefined) return
+        document.dispatchEvent(new CustomEvent('editTransition', { detail: { id: selectedTransition }}))
+      }
+    },
   }
 
   // Register action hotkeys
@@ -223,7 +231,7 @@ const useActions = (registerHotkeys=false) => {
       const handleKeyDown = e => {
         // Hotkeys are disabled if an input is focused
         if (haveInputFocused(e)) return
-        
+
         // Check hotkeys
         for (let action of Object.values(actions)) {
           // Skip if no hotkey
@@ -234,9 +242,9 @@ const useActions = (registerHotkeys=false) => {
           if (action.disabled && action.disabled())
             continue
 
-          const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey] 
+          const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey]
           const activeHotkey = hotkeys.find(hotkey => {
-            // Guard against other keys 
+            // Guard against other keys
             const letterMatch = e.code === `Key${hotkey.key.toUpperCase()}`
             const digitMatch = e.code === `Digit${hotkey.key}`
             const keyMatch = e.key === hotkey.key
@@ -253,7 +261,7 @@ const useActions = (registerHotkeys=false) => {
 
             return true
           })
-          
+
           // Prevent default and exec callback
           if (activeHotkey) {
             e.preventDefault()
@@ -263,7 +271,7 @@ const useActions = (registerHotkeys=false) => {
           }
         }
       }
-      
+
       // Add listener
       document.addEventListener('keydown', handleKeyDown)
       return () => document.removeEventListener('keydown', handleKeyDown)

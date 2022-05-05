@@ -65,7 +65,7 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown
       fill={selected ? 'var(--primary)' : 'black' }
     >
       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
-        {text}
+        {text === '' ? 'λ' : text}
       </textPath>
     </text>
   </>

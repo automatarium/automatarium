@@ -1,7 +1,7 @@
 const transitionContextItems = [
   {
     label: 'Edit transition',
-    action: 'SET_TRANSITION_INPUT',
+    action: 'EDIT_TRANSITION',
   },
   'hr',
   {
