@@ -15,9 +15,10 @@ const InputDialogs = () => {
   const removeTransitions = useProjectStore(s => s.removeTransitions)
 
   const onEditTransition = useCallback(({ detail: { id } }) => {
-    setEditTransitionValue(transitions.find(t => t.id === id) ?? '')
+    const previousValue = transitions.find(t => t.id === id)?.read
+    setEditTransitionValue(previousValue ?? '')
 
-    setDialog({ visible: true, x:200, y:200, id })
+    setDialog({ visible: true, x:200, y:200, id, previousValue })
     setTimeout(() => inputRef.current?.focus(), 100)
   }, [transitions, inputRef.current])
 
@@ -32,8 +33,9 @@ const InputDialogs = () => {
       onClose={() => {
         setDialog({ ...dialog, visible: false })
         // Delete transitions if not new
-        removeTransitions([dialog.id])
-        //TODO: cancel edit if not new
+        if (!dialog.previousValue) {
+          removeTransitions([dialog.id])
+        }
       }}
       style={{
         top: `${dialog.y}px`,
