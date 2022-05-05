@@ -70,7 +70,7 @@ const TestingLab = () => {
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
-      ? [...transitions, `${remaining[0]}: ${statePrefix}${trace[trace.length-1].to} -|`]
+      ? [...transitions, `${remaining[0]}: ${statePrefix}${trace[trace.length-1].to} ->|`]
       : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
