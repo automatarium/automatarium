@@ -46,7 +46,8 @@ export const convertJFLAPProject = jflapProject => {
   }))
 
   // Convert transitions
-  const automatariumTransitions = transitions.map(transition => ({
+  const automatariumTransitions = transitions.map((transition, idx) => ({
+    id: idx,
     from: Number(transition.from._text),
     to: Number(transition.to._text),
     read: transition.read._text ? transition.read._text : '',
@@ -61,7 +62,10 @@ export const convertJFLAPProject = jflapProject => {
   }))
 
   return {
-    config: { type: PROJECT_TYPE_MAP[type._text] },
+    config: {
+      type: PROJECT_TYPE_MAP[type._text],
+      statePrefix: 'q',
+    },
     initialState: initialStateID,
     states: automatariumStates,
     transitions: automatariumTransitions,

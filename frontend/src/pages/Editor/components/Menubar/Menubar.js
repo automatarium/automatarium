@@ -43,6 +43,19 @@ const menus = [
       },
       'hr',
       {
+        label: 'Import',
+        items: [
+          {
+            label: 'Import Automatarium Project',
+            action: 'IMPORT_AUTOMATARIUM_PROJECT'
+          },
+          {
+            label: 'Import JFLAP Project',
+            action: 'IMPORT_JFLAP_PROJECT'
+          },
+        ],
+      },
+      {
         label: 'Export',
         items: [
           {

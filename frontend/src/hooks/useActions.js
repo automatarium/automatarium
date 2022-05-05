@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from 'react'
-import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
+import { useProjectStore, useSelectionStore } from '/src/stores'
 import { VIEW_MOVE_STEP } from '/src/config/interactions'
+import { convertJFLAPXML } from '@automatarium/jflap-translator'
+
 import { haveInputFocused } from '../util/actions'
 
 const isWindows = navigator.platform.match(/Win/)
@@ -21,17 +23,34 @@ const useActions = (registerHotkeys=false) => {
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
+  const createNewProject = useProjectStore(s => s.reset)
+  const setProject = useProjectStore(s => s.set)
   const moveView = useViewStore(s => s.moveViewPosition)
 
   // TODO: memoize
   const actions = {
     NEW_FILE: {
       hotkey: { key: 'n', meta: true, showCtrl: true },
-      handler: () => console.log('New File'),
+      handler: () => {
+        createNewProject()
+      },
     },
     OPEN_FILE: {
-     hotkey: { key: 'o', meta: true },
-     handler: () => console.log('Open File'),
+      hotkey: { key: 'o', meta: true, handler: () => console.log('Open') }
+    },
+    IMPORT_AUTOMATARIUM_PROJECT: {
+      hotkey: { key: 'i', meta: true },
+      handler: async () => {
+        if (window.confirm('Importing will override your current project. Continue anyway?'))
+          promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project')
+     },
+    },
+    IMPORT_JFLAP_PROJECT: {
+      hotkey: { key: 'i', meta: true, shift: true },
+      handler: async () => {
+        if (window.confirm('Importing will override your current project. Continue anyway?'))
+          promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project')
+     },
     },
     SAVE_FILE: {
       hotkey: { key: 's', meta: true },
@@ -39,7 +58,20 @@ const useActions = (registerHotkeys=false) => {
     },
     SAVE_FILE_AS: {
       hotkey: { key: 's', shift: true, meta: true },
-      handler: () => console.log('Save File As'),
+      handler: () => {
+        const fileName = window.prompt('What would you like to name this automaton?') // TODO: better prompt
+        if (fileName) {
+          // Pull project state
+          const { project } = useProjectStore.getState()
+          
+          // Create a download link and use it
+          const a = document.createElement('a')
+          const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
+          a.href = URL.createObjectURL(file)
+          a.download = fileName // TODO: prompt file location - might not be possible?
+          a.click()
+        }
+      },
     },
     EXPORT_AS_PNG: {
       hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
@@ -120,7 +152,6 @@ const useActions = (registerHotkeys=false) => {
       handler: () => console.log('Testing Lab'),
     },
     FILE_INFO: {
-      hotkey: { key: 'i', meta: true },
       handler: () => console.log('File Info'),
     },
     FILE_OPTIONS: {
@@ -246,6 +277,27 @@ const useActions = (registerHotkeys=false) => {
   }]))), [actions])
 
   return actionsWithLabels
+}
+
+const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
+  // Prompt user for file input
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.onchange = () => {
+    // Read file data
+    const reader = new FileReader()
+    reader.onloadend = () => {
+      try {
+        const data = parse(reader.result)
+        onData(data)
+      } catch (error) {
+        window.alert(errorMessage)
+        console.error(error)
+      }
+    }
+    reader.readAsText(input.files[0])
+  }
+  input.click()
 }
 
 export default useActions
