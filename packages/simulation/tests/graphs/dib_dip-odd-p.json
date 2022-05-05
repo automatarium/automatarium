@@ -1,0 +1,30 @@
+{
+  "id": "2c99dfed-6e96-45ea-b5a6-73475909d04c",
+  "states": [
+    { "id": 0, "x": 135, "y": 180, "isFinal": false },
+    { "id": 1, "x": 285, "y": 180, "isFinal": false },
+    { "id": 2, "x": 420, "y": 270, "isFinal": false },
+    { "id": 3, "x": 615, "y": 270, "isFinal": true },
+    { "id": 4, "x": 420, "y": 120, "isFinal": false },
+    { "id": 5, "x": 615, "y": 120, "isFinal": true }
+  ],
+  "transitions": [
+    { "id": 0, "from": 0, "to": 1, "read": "d" },
+    { "id": 1, "from": 1, "to": 2, "read": "i" },
+    { "id": 2, "from": 1, "to": 4, "read": "i" },
+    { "id": 3, "from": 2, "to": 3, "read": "b" },
+    { "id": 4, "from": 4, "to": 5, "read": "p" },
+    { "id": 5, "from": 5, "to": 4, "read": "p" }
+  ],
+  "comments": [],
+  "tests": { "single": "", "batch": [""] },
+  "initialState": 0,
+  "meta": {
+    "name": "Accepts dib or dip (odd number of p's)",
+    "dateCreated": "2022-04-28T15:06:04.582Z",
+    "dateEdited": "2022-04-28T15:06:04.582Z",
+    "version": "0.0.1",
+    "automatariumVersion": "0.0.1"
+  },
+  "config": { "type": "FSA", "statePrefix": "q", "acceptanceCriteria": "both", "color": "", "playbackInterval": 1000 }
+}

@@ -2,14 +2,17 @@ const simulateFSA = (
   graph,
   input,
   currStateID = graph?.initialState,
-  trace = [graph?.initialState],
+  trace = [{
+    to: graph?.initialState,
+    read: null,
+  }],
   lambdaCount = 0,
   lastTransitionLambda = false
 ) => {
   // Are we done processing symbols?
   if (input.length === 0) {
     const currState = graph.states.find(state => state.id === currStateID)
-    return { accepted: currState.isFinal, trace }
+    return { accepted: currState.isFinal, trace, remaining: input }
   }
 
   // Get next set of possible transitions
@@ -20,10 +23,9 @@ const simulateFSA = (
   // Move lambda transitions to end of array (to prioritise non-lambda transitions)
   possibleTransitions.sort((a, b) => b.read.length - a.read.length)
 
-
   // No transitions possible?
   if (possibleTransitions.length === 0) {
-    return { accepted: false, trace }
+    return { accepted: false, trace, remaining: input }
   }
 
   // Continue recurring
@@ -32,7 +34,10 @@ const simulateFSA = (
       graph,
       tr.read === '' ? input : input.slice(1), // Slice first character off input
       tr.to, // Transition to next possible state
-      [...trace, tr.to], // Append next transition to trace
+      [...trace, {
+        to: tr.to,
+        read: tr.read,
+      }], // Append next transition to trace
       tr.read === '' && lastTransitionLambda ? lambdaCount + 1 : 0, // Increment lambda counter
       tr.read === '' // Tell the next recurse whether this transition was a lambda
     )
