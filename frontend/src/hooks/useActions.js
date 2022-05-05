@@ -1,5 +1,7 @@
 import { useEffect, useMemo } from 'react'
-import { useProjectStore, useSelectionStore } from '/src/stores'
+import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
+import { VIEW_MOVE_STEP } from '/src/config/interactions'
+import { haveInputFocused } from '../util/actions'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -14,9 +16,12 @@ const useActions = (registerHotkeys=false) => {
   const redo = useProjectStore(s => s.redo)
   const selectNoStates = useSelectionStore(s => s.selectNone)
   const selectAllStates = useSelectionStore(s => s.selectAll)
+  const setStateInitial = useProjectStore(s => s.setStateInitial)
+  const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
+  const moveView = useViewStore(s => s.moveViewPosition)
 
   // TODO: memoize
   const actions = {
@@ -144,15 +149,58 @@ const useActions = (registerHotkeys=false) => {
     OPEN_ABOUT: {
       handler: () => console.log('About Automatarium'),
     },
+    MOVE_VIEW_LEFT: {
+      hotkey: { key: 'ArrowLeft' },
+      handler: () => moveView({ x: -VIEW_MOVE_STEP })
+    },
+    MOVE_VIEW_RIGHT: {
+      hotkey: { key: 'ArrowRight' },
+      handler: () => moveView({ x: VIEW_MOVE_STEP })
+    },
+    MOVE_VIEW_UP: {
+      hotkey: { key: 'ArrowUp' },
+      handler: () => moveView({ y: -VIEW_MOVE_STEP })
+    },
+    MOVE_VIEW_DOWN: {
+      hotkey: { key: 'ArrowDown' },
+      handler: () => moveView({ y: VIEW_MOVE_STEP })
+    },
+    SET_STATE_INITIAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length > 1,
+      handler: () => {
+        const selectedState = useSelectionStore.getState().selectedStates?.[0]
+        if (selectedState !== undefined) {
+          setStateInitial(selectedState)
+          commit()
+        }
+      }
+    },
+    TOGGLE_STATES_FINAL: {
+      handler: () => {
+        const selectedStateIDs = useSelectionStore.getState().selectedStates
+        if (selectedStateIDs.length > 0) {
+          toggleStatesFinal(selectedStateIDs)
+          commit()
+        }
+      }
+    },
   }
 
   // Register action hotkeys
   useEffect(() => {
     if (registerHotkeys) {
       const handleKeyDown = e => {
+        // Hotkeys are disabled if an input is focused
+        if (haveInputFocused(e)) return
+        
+        // Check hotkeys
         for (let action of Object.values(actions)) {
           // Skip if no hotkey
           if (!action.hotkey)
+            continue
+
+          // Skip if disabled
+          if (action.disabled && action.disabled())
             continue
 
           const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey] 

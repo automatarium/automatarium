@@ -26,6 +26,10 @@ const useViewDragging = (containerRef) => {
   }, [containerRef?.current])
 
   const onWheel = e => {
+    if (!containerRef.current.contains(e.target)) {
+      return
+    }
+
     // Prevent defaults
     e.stopPropagation()
     e.preventDefault()

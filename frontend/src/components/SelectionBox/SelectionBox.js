@@ -82,11 +82,12 @@ const SelectionBox = ({ containerRef }) => {
   return <rect
     x={startX}
     y={startY}
-    width={endX-startX}
-    height={endY-startY}
-    fill="none"
-    stroke="var(--black)"
-    strokwidth="1"/>
+    width={endX - startX}
+    height={endY - startY}
+    fill='var(--selection-fill)'
+    stroke='var(--black)'
+    strokeWidth='1.75'
+  />
 }
 
 export default SelectionBox
