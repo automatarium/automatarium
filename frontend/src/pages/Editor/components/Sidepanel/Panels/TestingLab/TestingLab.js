@@ -70,8 +70,9 @@ const TestingLab = () => {
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
       ? [...transitions,
-        remaining[0] && `${remaining[0]}: `,
-        `${statePrefix}${trace[trace.length-1].to} ->|`]
+        remaining[0] ?
+          `${remaining[0]}: ${statePrefix}${trace[trace.length-1].to} ->|`
+          : `\n${statePrefix}${trace[trace.length-1].to} ->|`]
       : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
@@ -119,7 +120,7 @@ const TestingLab = () => {
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
-              setTraceIdx(result.trace.length)
+              setTraceIdx(result.trace.length - (result.accepted ? 1 : 0))
             }} />
         </StepButtons>
 
