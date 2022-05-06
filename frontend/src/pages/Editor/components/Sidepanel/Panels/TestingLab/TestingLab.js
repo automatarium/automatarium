@@ -38,7 +38,6 @@ const TestingLab = () => {
     result = {
       accepted,
       remaining,
-      // trace: trace.read === '' ? 'lam' : trace.read
       trace: trace.map(step => ({
         to: step.to,
         read: step.read === '' ? 'λ' : step.read
@@ -70,7 +69,9 @@ const TestingLab = () => {
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
-      ? [...transitions, `${remaining[0]}: ${statePrefix}${trace[trace.length-1].to} ->|`]
+      ? [...transitions,
+        remaining[0] && `${remaining[0]}: `,
+        `${statePrefix}${trace[trace.length-1].to} ->|`]
       : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
