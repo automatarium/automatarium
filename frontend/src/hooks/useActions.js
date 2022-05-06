@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { useProjectStore, useSelectionStore } from '/src/stores'
+import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 
