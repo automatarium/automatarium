@@ -35,7 +35,7 @@ const TestingLab = () => {
   // Execute graph
   const simulateGraph = useCallback(() => {
     const { accepted, trace, remaining } = simulateFSA(graph, traceInput)
-    result = {
+    const result = {
       accepted,
       remaining,
       trace: trace.map(step => ({
