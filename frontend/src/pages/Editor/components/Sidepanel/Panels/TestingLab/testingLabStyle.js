@@ -16,7 +16,8 @@ export const StepButtons = styled('div')`
 export const TraceConsole = styled('code')`
   background: var(--toolbar);
   display: block;
-  border-radius: .3em;
+  border-end-end-radius: .3em;
+  border-end-start-radius: .3em;
   box-sizing: border-box;
   padding: .5rem .7rem;
 

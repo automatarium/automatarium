@@ -1,7 +1,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle } from 'lucide-react'
 
-import { SectionLabel, Button, TextInput } from '/src/components'
+import { SectionLabel, Button, TextInput, TracePreview } from '/src/components'
 import {
   StepButtons,
   MultiTraceRow,
@@ -125,7 +125,10 @@ const TestingLab = () => {
             }} />
         </StepButtons>
 
-        {traceOutput && <TraceConsole><pre>{traceOutput}</pre></TraceConsole>}
+        {traceOutput && <div>
+          <TracePreview trace={simulationResult} step={traceIdx} />
+          <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
+        </div>}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
