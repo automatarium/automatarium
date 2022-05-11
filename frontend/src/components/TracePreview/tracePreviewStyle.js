@@ -10,6 +10,7 @@ export const Wrapper = styled('div')`
   align-items: center;
   box-sizing: border-box;
   overflow-x: auto;
+  width: 100%;
 `
 
 export const State = styled('div')`
@@ -22,6 +23,7 @@ export const State = styled('div')`
   box-sizing: border-box;
   height: 2rem;
   width: 2rem;
+  min-width: 2rem;
   font-size: .8em;
   position: relative;
 
@@ -38,6 +40,7 @@ export const State = styled('div')`
 
 export const StyledInitialArrow = styled('svg')`
   height: 2rem;
+  min-width: 1rem;
 
   polygon {
     fill: var(--white);
@@ -48,6 +51,7 @@ export const StyledInitialArrow = styled('svg')`
 
 export const StyledTransition = styled('svg')`
   height: 2rem;
+  min-width: 1.6rem;
 
   path {
     fill: none;
