@@ -6,7 +6,7 @@ export const Wrapper = styled('div')`
 `
 
 export const Panel = styled('div')`
-  min-width: 350px;
+  width: 350px;
   height: 100%;
   overflow-y: auto;
   background: var(--surface);

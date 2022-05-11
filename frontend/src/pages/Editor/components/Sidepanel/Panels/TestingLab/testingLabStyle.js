@@ -16,7 +16,8 @@ export const StepButtons = styled('div')`
 export const TraceConsole = styled('code')`
   background: var(--toolbar);
   display: block;
-  border-radius: .3em;
+  border-end-end-radius: .3em;
+  border-end-start-radius: .3em;
   box-sizing: border-box;
   padding: .5rem .7rem;
 
@@ -57,4 +58,16 @@ export const RemoveButton = styled('button')`
   cursor: pointer;
   overflow: hidden;
   transition: max-width .15s, padding .15s, margin-left .15s;
+`
+
+export const StatusIcon = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: .8em;
+  color: var(--error);
+
+  ${props => props.$accepted && `
+    color: var(--success);
+  `}
 `
