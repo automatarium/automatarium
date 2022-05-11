@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2 } from 'lucide-react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle } from 'lucide-react'
 
 import { SectionLabel, Button, TextInput } from '/src/components'
 import {
@@ -8,6 +8,7 @@ import {
   RemoveButton,
   Wrapper,
   TraceConsole,
+  StatusIcon,
 } from './testingLabStyle'
 import useProjectStore from '/src/stores/useProjectStore'
 import { simulateFSA } from '@automatarium/simulation'
@@ -55,11 +56,11 @@ const TestingLab = () => {
 
     const { trace, accepted, remaining, transitionCount } = simulationResult
 
-    // Return null if not enough states in trace to render transitions 
+    // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
       return null
     }
-    
+
     // Represent transitions as strings of form start -> end
     const transitions = trace
       .slice(0, -1)
@@ -131,6 +132,11 @@ const TestingLab = () => {
         <Wrapper>
           {multiTraceInput.map((value, index) => (
             <MultiTraceRow key={index}>
+              {multiTraceOutput?.[index]?.accepted !== undefined && (
+                <StatusIcon $accepted={multiTraceOutput[index].accepted}>
+                  {multiTraceOutput[index].accepted ? <CheckCircle2 /> : <XCircle />}
+                </StatusIcon>
+              )}
               <TextInput
                 onChange={e => {
                   setMultiTraceInput(index, e.target.value)

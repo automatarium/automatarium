@@ -58,3 +58,15 @@ export const RemoveButton = styled('button')`
   overflow: hidden;
   transition: max-width .15s, padding .15s, margin-left .15s;
 `
+
+export const StatusIcon = styled('div')`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: .8em;
+  color: var(--error);
+
+  ${props => props.$accepted && `
+    color: var(--success);
+  `}
+`
