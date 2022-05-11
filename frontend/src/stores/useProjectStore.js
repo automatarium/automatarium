@@ -30,39 +30,12 @@ const sampleInitialData = {
     x: 330,
     y: 150,
     isFinal: false,
-  },{
-    id: 2,
-    label: null,
-    x: 150,
-    y: 350,
-    isFinal: false,
-  }, {
-    id: 3,
-    label: null,
-    x: 550,
-    y: 350,
-    isFinal: true,
   }],
   transitions: [{
     id: 0,
     from: 0,
     to: 1,
     read: 'a',
-  }, {
-    id: 1,
-    from: 1,
-    to: 2,
-    read: 'z',
-  },{
-    id: 2,
-    from: 2,
-    to: 3,
-    read: 'a'
-  }, {
-    id: 3,
-    from: 2,
-    to: 3,
-    read: 'b[c-t]',
   }]
 }
 
