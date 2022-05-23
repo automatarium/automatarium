@@ -5,7 +5,7 @@ import { Main } from '/src/components'
 const NotFound = () => <Main>
   <Main.Header center />
   <h2>404 Not Found</h2>
-  <p>As recomponse, try out this cool puzzle. Can you figure out what this says?</p>
+  <p>As recompense, try out this cool puzzle. Can you figure out what this says?</p>
   <Code>
     Svvrz sprl fvby puwba nva ylqljalk olol
   </Code>
