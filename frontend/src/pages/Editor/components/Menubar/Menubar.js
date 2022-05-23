@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { Button, Logo, Dropdown } from '/src/components'
+import { useAuth } from '/src/hooks'
 
 import {
   Wrapper,
@@ -8,6 +10,7 @@ import {
   Name,
   DropdownMenus,
   Actions,
+  ButtonGroup,
   DropdownButtonWrapper,
 } from './menubarStyle'
 
@@ -240,6 +243,8 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
 }
 
 const Menubar = () => {
+  const navigate = useNavigate()
+  const { user, loading: userLoading } = useAuth()
   const [dropdown, setDropdown] = useState()
 
   return (
@@ -268,6 +273,11 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
+          {!userLoading && !user && <ButtonGroup>
+            <Button secondary border onClick={() => confirm('You will lose any unsaved work. Continue?') && navigate('/login')}>Log In</Button>
+            <span>or</span>
+            <Button onClick={() => confirm('You will lose any unsaved work. Continue?') && navigate('/signup')}>Sign Up</Button>
+          </ButtonGroup>}
           <Button disabled>Share</Button>
         </Actions>
       </Wrapper>

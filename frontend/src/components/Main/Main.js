@@ -1,11 +1,15 @@
-import { styled } from 'goober'
+import { MainContainer, HeaderContainer } from './mainStyle'
+import { Logo } from '/src/components'
 
-const Main = styled('main')`
-  max-width: 600px;
-  width: 100%;
-  padding: 2em;
-  box-sizing: border-box;
-  margin: 0 auto;
-`
+const Main = ({wide, fullWidth, ...props}) =>
+  <MainContainer $wide={wide} $fullWidth={fullWidth} {...props}/>
+
+
+const Header = ({ center }) => <HeaderContainer $center={center}>
+  <Logo />
+  <h1>Automatarium</h1>
+</HeaderContainer>
+
+Main.Header = Header
 
 export default Main

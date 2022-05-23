@@ -5,7 +5,7 @@ const firebaseConfigDev = require('./firebase-config-dev.json')
 const config = {
   development: {
     baseUrl: 'http://localhost:1234',
-    API: 'http://localhost:3001',
+    API: 'http://10.0.0.40:3001',
     documentTitle: '[Dev] Automatarium',
     firebaseConfig: firebaseConfigDev,
   }, production: {

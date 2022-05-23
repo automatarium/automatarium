@@ -30,8 +30,20 @@ export const Name = styled('span')`
 
 export const Actions = styled('div')`
   display: flex;
+  align-items: center;
   gap: .5em;
   padding: 1em;
+`
+
+export const ButtonGroup = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: .5em;
+  margin-inline-end: .75em;
+  
+  span {
+    font-size: .8rem;
+  }
 `
 
 export const DropdownMenus = styled('div')`

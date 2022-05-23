@@ -5,12 +5,14 @@ const Button = ({
   children,
   icon,
   secondary,
+  border,
   ...props
 }) => (
   <Wrapper
     type={type}
     $icon={icon && !children}
     $secondary={secondary}
+    $border={border}
     {...props}
   >
     {icon}

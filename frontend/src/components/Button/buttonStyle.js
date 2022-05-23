@@ -34,4 +34,8 @@ export const Wrapper = styled('button')`
   ${props => props.$secondary && `
     background-color: var(--toolbar);
   `}
+
+  ${props => props.$border && `
+    border: 2px solid var(--primary);
+  `}
 `
