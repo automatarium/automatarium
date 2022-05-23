@@ -5,6 +5,7 @@ import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-do
 
 import * as Pages from './pages'
 
+import { useEgg } from '/src/hooks'
 import { GraphView, Main, Footer } from '/src/components'
 
 // Set up goober to use React
@@ -18,6 +19,8 @@ setup(
 const App = () => {
   const location = useLocation()
   const hideFooter = location.pathname.match('/editor')
+
+  useEgg()
 
   return <>
     <Routes>
