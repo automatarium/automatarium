@@ -5,7 +5,7 @@ dotenv.config()
 
 // Determine env
 const env = process.env.NODE_ENV || 'production'
-console.log('Using config for environment: ', env)
+console.log(`🔧 Using config for environment: ${env}`)
 
 // DB connection params
 const dbUsername = process.env.DB_USERNAME
