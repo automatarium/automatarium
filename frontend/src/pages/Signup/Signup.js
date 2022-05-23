@@ -37,11 +37,10 @@ const Signup = () => {
         preferences: {}
       })
 
-      if (res?.data) {
-        console.log(res?.data)
-      } else {
+      if (res?.error) {
         setError(res?.error)
       }
+
     } catch (error) {
       if (error.code && error.code === 'auth/email-already-in-use') {
         setFieldError('email', {
