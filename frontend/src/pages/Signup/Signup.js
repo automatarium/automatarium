@@ -112,7 +112,7 @@ const Signup = () => {
       })} />
       <p>{errors.passwordAgain?.message}</p>
 
-      <Button type='submit' disabled={!isDirty || isSubmitting}>Signup</Button>
+      <Button type='submit' disabled={!isDirty || isSubmitting}>Sign Up</Button>
     </form>
   </Main>
 }

@@ -1,6 +1,6 @@
-import { styled } from 'goober'
-
 import { Main } from '/src/components'
+
+import { Code, Hint } from './notFoundStyle'
 
 const NotFound = () => <Main>
   <Main.Header center />
@@ -13,19 +13,5 @@ const NotFound = () => <Main>
     Think about salad and backstabbing.
   </Hint>
 </Main>
-
-const Code = styled('div')`
-  padding: 1em;
-  background: var(--toolbar);
-  font-family: monospace;
-  border-radius: .5rem;
-`
-
-const Hint = styled('p')`
-  margin-top: 100vh;
-  color: grey;
-  opacity: .2;
-  border-radius: .5rem;
-`
 
 export default NotFound
