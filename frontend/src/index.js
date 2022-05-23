@@ -23,7 +23,6 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Pages.Landing />} />
       <Route path="/editor" element={<Pages.Editor />} />
-      <Route path="/svg" element={<GraphView style={{ width: '100vw', height: '100vh' }} />} />
       <Route path="/login" element={<Pages.Login />} />
       <Route path="/signup" element={<Pages.Signup />} />
       <Route path="/logout" element={<Pages.Logout />} />
