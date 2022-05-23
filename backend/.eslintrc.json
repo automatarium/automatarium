@@ -31,6 +31,9 @@
         "semi": [
             "error",
             "never"
-        ]
+        ],
+        "rules": {
+            "@typescript-eslint/no-var-requires": "false"
+        }
     }
 }

@@ -8,9 +8,9 @@ const env = process.env.NODE_ENV || 'production'
 console.log('Using config for environment: ', env)
 
 // DB connection params
-const dbUsername = process.env.DB_USERNAME || 'superuser'
-const dbPassword = process.env.DB_PASSWORD || 'passw0rd'
-const dbHostname = process.env.DB_HOST || 'localhost'
+const dbUsername = process.env.DB_USERNAME
+const dbPassword = process.env.DB_PASSWORD
+const dbHostname = process.env.DB_HOST
 
 // Mongo options
 export const mongoOptions = {
@@ -41,9 +41,13 @@ const server = {
   port: serverPort
 }
 
+// Firebase configuration
+const firebaseAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT
+
 const config = {
-  db: db,
-  server: server
+  db,
+  server,
+  firebaseAccountPath
 }
 
 export default config

@@ -1,9 +1,9 @@
 import { Document } from 'mongoose'
 
-import { comment, tests, meta } from 'types/main'
+import { comment, tests, meta } from 'types'
 
 export default interface IProject extends Document {
-  id: string
+  _id: string
   userid: string
   isPublic: boolean
   meta: meta

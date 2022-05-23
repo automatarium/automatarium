@@ -1,18 +1,28 @@
 import express from 'express'
 import mongoose from 'mongoose'
 import bodyParser from 'body-parser'
+import cors from 'cors'
 
 import config from './config'
 import projectRoutes from 'routes/project'
+import userRoutes from 'routes/user'
+import { decodeToken } from 'middleware'
 
 const app = express()
+
+// Cors configuration
+app.use(cors())
+
+// Configure middleware
+app.use(decodeToken)
 
 // Parse the body of the request
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 // Configure routes
-app.use('/project', projectRoutes)
+app.use('/projects', projectRoutes)
+app.use('/users', userRoutes)
 
 app.listen(config.server.port, async () => {
   console.log(`Listening on port ${config.server.port}`)

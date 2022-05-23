@@ -3,7 +3,7 @@ import mongoose, { Schema } from 'mongoose'
 import IProject from 'interfaces/project'
 
 const ProjectSchema: Schema = new Schema({
-  id: { type: String, required: true },
+  _id: { type: String, required: true },
   userid: { type: String, required: true },
   isPublic: { type: Boolean, required: true },
   meta: {
@@ -29,6 +29,6 @@ const ProjectSchema: Schema = new Schema({
     trace: { type: String, required: true },
     batch: { type: [String], required: true }
   }, _id: false}
-}, { versionKey: false })
+}, { versionKey: false, _id: false })
 
 export default mongoose.model<IProject>('Project', ProjectSchema)

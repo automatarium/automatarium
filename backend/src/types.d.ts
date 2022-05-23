@@ -17,3 +17,13 @@ export type meta = {
   version: string
   automatariumVersion: string
 }
+
+export type RequestUser = {
+  uid: string
+}
+
+declare module 'express-serve-static-core' {
+  interface Request {
+    user?: RequestUser
+  }
+}

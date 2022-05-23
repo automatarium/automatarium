@@ -1,32 +1,37 @@
 import { NextFunction, Request, Response } from 'express'
 
-import Project from '../models/project'
+import Project from 'models/project'
+import { RequestUser } from 'types'
 
-export const getProject = ( req: Request, res: Response, next: NextFunction ) => {
+export const getProject = async ( req: Request, res: Response, next: NextFunction ) => {
   const { pid } = req.params
-
+  
   // Retrieve project by id
-  Project.findById(pid)
-    .exec()
-    .then((result) => {
+  try {
+    const project = await Project.findById(pid)
+    if (!project || project.isPublic || req?.user?.uid == project?.userid) {
       return res.status(200).json({
-        automaton: result
+        project
       })
-    }).catch((error) => {
-      return res.status(500).json({
-        message: error.message,
-        error
-      })
+    }
+    return res.status(403).json({
+      error: "You do not have access to this project"
     })
+  } catch (error) {
+    return res.status(500).json({
+      error: error?.message ?? error
+    })
+  }
 }
 
-export const createProject = ( req: Request, res: Response, next: NextFunction ) => {  
-  const { id, userid, isPublic, meta, initialState, states, transitions, comments, tests } = req.body
-  
+export const createProject = async ( req: Request, res: Response, next: NextFunction ) => {  
+  const { id, isPublic, meta, initialState, states, transitions, comments, tests } = req.body
+  const { uid } = req.user as RequestUser
+
   // Create new project
   const project = new Project({
-    id,
-    userid,
+    _id: id,
+    userid: uid,
     isPublic,
     meta,
     initialState,
@@ -37,15 +42,62 @@ export const createProject = ( req: Request, res: Response, next: NextFunction )
   })
 
   // Save project
-  return project.save()
-    .then( (result) => {
-      return res.status(201).json({
-        automaton: result
-      })
-    }).catch((error) => {
-      return res.status(500).json({
-        message: error.message,
-        error
-      })
+  try {
+    await project.save()
+    return res.status(201).json({
+      project
     })
+  } catch (error) {
+
+    return res.status(500).json({
+      error: error?.message ?? error
+    })
+  }
+  // Save project
+}
+
+export const getProjects = async ( req: Request, res: Response, next: NextFunction ) => {
+  const { uid } = req.user as RequestUser
+
+  // Retrieve project by id
+  try {
+    const projects = await Project.find({ userid: uid })
+    return res.status(200).json({
+      projects
+    })
+  } catch (error) {
+    return res.status(500).json({
+      error: error?.message ?? error
+    })
+  }
+}
+
+export const updateProject = async ( req: Request, res: Response, next: NextFunction ) => {
+  const { pid } = req.params  
+  const { uid } = req.user as RequestUser
+  const { isPublic, meta, initialState, states, transitions, comments, tests } = req.body
+
+  try {
+    // Update existing project
+    const project = await Project.findOneAndUpdate({
+      _id: pid,
+      userid: uid
+    },
+    { 
+      isPublic,
+      meta,
+      initialState,
+      states,
+      transitions,
+      comments,
+      tests
+    }, { useFindAndModify: false })
+    return res.status(200).json({
+      project
+    })
+  } catch (error) {
+    return res.status(500).json({
+      error: error?.message ?? error
+    })
+  }
 }
