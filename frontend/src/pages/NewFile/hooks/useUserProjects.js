@@ -22,7 +22,6 @@ const useUserProjects = () => {
     if (user) {
       getProjects()
         .then(({ projects: backendProjects }) => {
-          console.log( {projects})
           // Find projects that exist only on backend or local storage (but not both)
           const isolatedBackendProjects = backendProjects.filter(bp => !projects.find(lp => lp._id === bp._id))
           const isolatedLocalProjects = projects.filter(lp => !backendProjects.find(bp => lp._id === bp._id))
