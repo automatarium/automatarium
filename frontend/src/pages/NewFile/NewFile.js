@@ -5,6 +5,8 @@ import { Main, Button } from '/src/components'
 import { NewProjectCard, ProjectCard, CardList } from './components'
 import { useUserProjects } from './hooks'
 
+import { NoResultSpan } from './newFileStyle'
+
 const NewFile = () => {
   const navigate = useNavigate()
   const projects = useUserProjects()
@@ -41,6 +43,7 @@ const NewFile = () => {
             type={p?.config?.type ?? '???'}
             date={dayjs(p?.meta?.dateEdited)} />
         )}
+        {projects.length === 0 && <NoResultSpan>No projects yet :)</NoResultSpan>}
       </CardList>
     </section>
   </Main>
