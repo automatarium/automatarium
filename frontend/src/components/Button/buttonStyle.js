@@ -35,7 +35,7 @@ export const Wrapper = styled('button')`
     background-color: var(--toolbar);
   `}
 
-  ${props => props.$border && `
-    border: 2px solid var(--primary);
+  ${props => props.$surface && `
+    background-color: var(--surface);
   `}
 `

@@ -274,7 +274,7 @@ const Menubar = () => {
 
         <Actions>
           {!userLoading && !user && <ButtonGroup>
-            <Button secondary border onClick={() => confirm('You will lose any unsaved work. Continue?') && navigate('/login')}>Log In</Button>
+            <Button secondary surface onClick={() => confirm('You will lose any unsaved work. Continue?') && navigate('/login')}>Log In</Button>
             <span>or</span>
             <Button onClick={() => confirm('You will lose any unsaved work. Continue?') && navigate('/signup')}>Sign Up</Button>
           </ButtonGroup>}
