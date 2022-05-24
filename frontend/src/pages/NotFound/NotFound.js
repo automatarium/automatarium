@@ -1,9 +1,9 @@
-import { Main } from '/src/components'
+import { Main, Header } from '/src/components'
 
 import { Code, Hint } from './notFoundStyle'
 
 const NotFound = () => <Main>
-  <Main.Header center />
+  <Header center />
   <h2>404 Not Found</h2>
   <p>As recompense, try out this cool puzzle. Can you figure out what this says?</p>
   <Code>

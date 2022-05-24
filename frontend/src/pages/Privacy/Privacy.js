@@ -1,8 +1,8 @@
-import { Main } from '/src/components'
+import { Main, Header } from '/src/components'
 
 const Privacy = () => {
   return <Main>
-    <Main.Header center />
+    <Header center />
     <h2>Privacy</h2>
     <p>
     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius vestibulum pretium velit vitae euismod magna mi, in. Erat nulla risus, tellus diam. Faucibus sagittis parturient convallis egestas duis. Condimentum dictumst habitant penatibus egestas sem scelerisque. Ornare dui, est senectus metus morbi. Vulputate maecenas suspendisse ornare urna, feugiat elit ornare lectus ornare. Adipiscing nunc iaculis tortor felis amet lacus. Consectetur fermentum eget aliquet nulla pellentesque enim elementum mattis sed.<br/><br/>

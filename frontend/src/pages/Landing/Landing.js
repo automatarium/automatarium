@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { Github } from 'lucide-react'
 
 import { Sections, ColumnsSection, BannerSection } from './landingStyle'
-import { Main, Button } from '/src/components'
+import { Main, Button, Header } from '/src/components'
 
 import automataSVG from './svgs/automata.svg'
 import testingSVG from './svgs/testing.svg'
@@ -11,7 +11,7 @@ import matrixSVG from './svgs/matrix.svg'
 const Landing = () => {
 
   return <Main fullWidth>
-    <Main.Header center />
+    <Header center />
     <Sections>
       <ColumnsSection>
         <img src={automataSVG} />

@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 
-import { Main, Button } from '/src/components'
+import { Main, Button, Header } from '/src/components'
 import { NewProjectCard, ProjectCard, CardList } from './components'
 import { useUserProjects } from './hooks'
 
@@ -17,7 +17,7 @@ const NewFile = () => {
   }
 
   return <Main wide>
-    <Main.Header />
+    <Header />
     <section>
       <CardList title="New File">
         <NewProjectCard

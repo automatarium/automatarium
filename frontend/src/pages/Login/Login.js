@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useNavigate, useLocation } from 'react-router-dom'
 
-import { Main, TextInput, Button, Label } from '/src/components'
+import { Main, TextInput, Button, Label, Header } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -53,7 +53,7 @@ const Login = () => {
   }
 
   return <Main>
-    <Main.Header center/>
+    <Header center/>
     <h2>Login</h2>
     <form onSubmit={handleSubmit(onSubmit)}>
       {error && (

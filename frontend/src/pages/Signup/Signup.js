@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 
 import { firebase } from '/src/auth'
 import { createUser } from '/src/services'
-import { Main, Label, TextInput, Button } from '/src/components'
+import { Main, Label, TextInput, Button, Header } from '/src/components'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '/src/hooks'
 
@@ -90,7 +90,7 @@ const Signup = () => {
   }
 
   return <Main>
-    <Main.Header center/>
+    <Header center/>
     <h2>Sign Up</h2>
     <form onSubmit={handleSubmit(onSubmit)} >
       {error && (
