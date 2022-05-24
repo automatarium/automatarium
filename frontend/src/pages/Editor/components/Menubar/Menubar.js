@@ -278,7 +278,7 @@ const Menubar = () => {
             <span>or</span>
             <Button onClick={() => confirm('You will lose any unsaved work. Continue?') && navigate('/signup')}>Sign Up</Button>
           </ButtonGroup>}
-          <Button disabled>Share</Button>
+          {!userLoading && user && <Button>Share</Button>}
         </Actions>
       </Wrapper>
     </>
