@@ -19,7 +19,7 @@ const NewFile = () => {
   return <Main wide>
     <Header />
     <section>
-      <CardList title="New File">
+      <CardList title="New File" scroll>
         <NewProjectCard
           title={'Finite State Automaton'}
           description={'Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars.'}

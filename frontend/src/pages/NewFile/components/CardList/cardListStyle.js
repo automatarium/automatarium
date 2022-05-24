@@ -16,4 +16,10 @@ export const CardListContainer = styled('div')`
   gap: .4em;
   margin-block-start: 1em;
   margin-block-end: 3em;
+  flex-wrap: wrap;
+
+  ${p => p.$scroll && `
+    flex-wrap: nowrap;
+    overflow-x: scroll;
+  `}
 `

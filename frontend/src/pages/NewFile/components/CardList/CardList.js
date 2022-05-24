@@ -1,11 +1,11 @@
 import { CardListContainer, CardListTitleContainer, CardListTitle } from './cardListStyle'
 
-const CardList = ({ title, children, button=null }) => <>
+const CardList = ({ title, children, scroll=false, button=null }) => <>
   <CardListTitleContainer>
     {title && <CardListTitle>{title}</CardListTitle>}
     {button}
   </CardListTitleContainer>
-  <CardListContainer>
+  <CardListContainer $scroll={scroll}>
     {children}
   </CardListContainer>
 </>
