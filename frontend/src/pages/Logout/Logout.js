@@ -1,20 +1,18 @@
-import { Redirect } from 'react-router-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
+import { Navigate } from 'react-router-dom'
 
-import { useProfileStore } from '../../stores'
+import { useAuth } from '/src/hooks'
 
 const Logout = () => {
-  const signOut = useProfileStore(state => state.signOut)
-  const [loading, setLoading] = useState(true)
+  const { signOut, loading } = useAuth()
 
   useEffect(() => {
     const doSignout = async () => {
       await signOut()
-      setLoading(false)
     }
 
     doSignout()
-  }, [signOut])
+  }, [])
 
   return loading ? (
     <div style={{
@@ -27,7 +25,10 @@ const Logout = () => {
     }}>
       <p>test</p>
     </div>
-  ) : <p>Signed out</p>
+  ) : <>
+    <p>Signed out</p>
+    <Navigate to='/new'/>
+  </>
 }
 
 export default Logout
