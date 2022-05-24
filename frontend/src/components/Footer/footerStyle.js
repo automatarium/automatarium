@@ -5,7 +5,7 @@ export const Container = styled('footer')`
   align-items: center;
   gap: 1em;
   padding-inline: 1em;
-  position: fixed;
+  margin-top: auto;
   bottom: 0;
   left: 0;
   width: 100%;
@@ -25,4 +25,8 @@ export const FooterItem = styled('span')`
       color: grey;
     }
   }
+
+  ${p => p.$right && `
+    margin-left: auto; 
+  `}
 `
