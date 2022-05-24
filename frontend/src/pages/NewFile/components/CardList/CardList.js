@@ -1,4 +1,4 @@
-import { CardListContainer, CardListTitleContainer, CardList } from './cardListStyle'
+import { CardListContainer, CardListTitleContainer, CardListTitle } from './cardListStyle'
 
 const CardList = ({ title, children, button=null }) => <>
   <CardListTitleContainer>
@@ -9,6 +9,5 @@ const CardList = ({ title, children, button=null }) => <>
     {children}
   </CardListContainer>
 </>
-
 
 export default CardList
