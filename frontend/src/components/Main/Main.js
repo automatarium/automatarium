@@ -1,11 +1,6 @@
-import { styled } from 'goober'
+import { MainContainer } from './mainStyle'
 
-const Main = styled('main')`
-  max-width: 600px;
-  width: 100%;
-  padding: 2em;
-  box-sizing: border-box;
-  margin: 0 auto;
-`
+const Main = ({wide, fullWidth, ...props}) =>
+  <MainContainer $wide={wide} $fullWidth={fullWidth} {...props}/>
 
 export default Main

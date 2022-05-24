@@ -19,13 +19,14 @@
   --disabled-button: #6F6F6F;
   --input-border: #C4C4C4;
   --selection-fill: #00000020;
+  --font-feature: 'Rubik Mono One', sans-serif;
 }
 
 body {
   color-scheme: light dark;
   margin: 0;
   font-family: sans-serif;
-  background: var(--toolbar);
+  background: var(--surface);
   color: var(--white);
 }
 

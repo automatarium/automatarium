@@ -42,7 +42,10 @@ const Editor = () => {
     if (priorTool && e.code === 'Space') {
       setTool(priorTool)
       setPriorTool(undefined)
+    }
+    if (e.code === 'Space') {
       e.preventDefault()
+      e.stopPropagation()
     }
   }, [tool, priorTool])
 

@@ -6,6 +6,6 @@ import { isAuthenticated } from 'middleware'
 const app = express.Router()
 
 app.post('', createUser)
-app.get('', isAuthenticated, getUser)
+app.get('/:uid', isAuthenticated, getUser)
 
 export default app

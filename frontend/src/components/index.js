@@ -7,11 +7,15 @@ export { default as SelectionBox } from './SelectionBox/SelectionBox'
 
 export { default as Main } from './Main/Main'
 export { default as Logo } from './Logo/Logo'
+export { default as Header } from './Header/Header'
 
 export { default as Button } from './Button/Button'
 export { default as Dropdown } from './Dropdown/Dropdown'
+export { default as Label } from './Label/Label'
 
 export { default as SectionLabel } from './SectionLabel/SectionLabel'
 export { default as TracePreview } from './TracePreview/TracePreview'
 
 export { default as TextInput } from './TextInput/TextInput'
+
+export { default as Footer } from './Footer/Footer'

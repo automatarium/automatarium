@@ -1,11 +1,12 @@
 import { StrictMode, createElement } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
-import { BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom'
 
 import * as Pages from './pages'
 
-import { GraphView, Main } from '/src/components'
+import { useEgg } from '/src/hooks'
+import { GraphView, Main, Footer } from '/src/components'
 
 // Set up goober to use React
 setup(
@@ -15,25 +16,33 @@ setup(
   props => Object.keys(props).forEach(p => p[0] === '$' && delete props[p])
 )
 
+const App = () => {
+  const location = useLocation()
+  const hideFooter = location.pathname.match('/editor')
+
+  useEgg()
+
+  return <>
+    <Routes>
+      <Route path="/" element={<Pages.Landing />} />
+      <Route path="/editor" element={<Pages.Editor />} />
+      <Route path="/login" element={<Pages.Login />} />
+      <Route path="/signup" element={<Pages.Signup />} />
+      <Route path="/logout" element={<Pages.Logout />} />
+      <Route path="/about" element={<Pages.About />} />
+      <Route path="/privacy" element={<Pages.Privacy />} />
+      <Route path="/new" element={<Pages.NewFile />} />
+      <Route path="*" element={<Pages.NotFound />} />
+    </Routes>
+    {!hideFooter && <Footer/>}
+  </>
+}
+
+// Render the app
 ReactDOM.render(
   <StrictMode>
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Main>
-          <h1>Automatarium</h1>
-          <Link to="/editor" style={{color: 'inherit'}}>Editor</Link><br />
-          <Link to="/svg" style={{color: 'inherit'}}>SVG Demo</Link>
-          <Link to="/login" style={{color: 'inherit'}}>Login</Link><br />
-          <Link to="/signup" style={{color: 'inherit'}}>Signup</Link><br />
-          <Link to="/logout" style={{color: 'inherit'}}>Logout</Link>
-        </Main>} />
-        <Route path="/editor" element={<Pages.Editor />} />
-        <Route path="/svg" element={<GraphView style={{ width: '100vw', height: '100vh' }} />} />
-        <Route path="/login" element={<Pages.Login />} />
-        <Route path="/signup" element={<Pages.Signup />} />
-        <Route path="/logout" element={<Pages.Logout />} />
-        <Route path="*" element={<h1>404</h1>} />
-      </Routes>
+      <App />
     </BrowserRouter>
   </StrictMode>,
   document.getElementById('app')

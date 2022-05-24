@@ -1,16 +1,16 @@
-export type comment = {
+export type Comment = {
   id: number
   text: string
   x: number
   y: number
 }
 
-export type tests = {
+export type Tests = {
   trace: string
   batch: string[]
 }
 
-export type meta = {
+export type Meta = {
   name: string
   dateCreated: string
   dateEdited: string

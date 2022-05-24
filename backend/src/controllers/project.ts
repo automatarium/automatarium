@@ -91,7 +91,7 @@ export const updateProject = async ( req: Request, res: Response, next: NextFunc
       transitions,
       comments,
       tests
-    }, { useFindAndModify: false })
+    }, { useFindAndModify: false, upsert: true, new: true })
     return res.status(200).json({
       project
     })
