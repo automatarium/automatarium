@@ -1,15 +1,13 @@
-import { GraphContent, GraphView, SelectionBox, TransitionSet } from '/src/components'
-import { useEvent } from '/src/hooks'
-
-import { ContextMenus, InputDialogs } from '../'
+import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs } from '/src/components'
 import {
+  useEvent,
   useStateDragging,
   useStateCreation,
   useTransitionCreation,
   useStateSelection,
   useTransitionSelection,
   useContextMenus,
-} from '../../hooks'
+} from '/src/hooks'
 
 const EditorPanel = () => {
   // Interactivity hooks

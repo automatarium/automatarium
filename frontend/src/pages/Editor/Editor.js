@@ -4,8 +4,8 @@ import { useActions } from '/src/hooks'
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
+import { Menubar, Sidepanel, Toolbar, EditorPanel } from '/src/components'
 
-import { Menubar, Sidepanel, Toolbar, EditorPanel } from './components'
 import { Content } from './editorStyle'
 
 const Editor = () => {
