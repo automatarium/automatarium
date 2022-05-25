@@ -3,26 +3,28 @@ import { useEffect, useState, useCallback } from 'react'
 import { useProjectStore, useViewStore, useSelectionStore, useToolStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 
-const SelectionBox = ({ containerRef }) => {
+const SelectionBox = () => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
+  const svgElement = useViewStore(s => s.svgElement)
   const setSelectedStates = useSelectionStore(s => s.setStates)
   const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
   const handleMouseMove = useCallback(e => {
-      setMousePos(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
-  }, [containerRef])
+      setMousePos(screenToViewSpace(e.clientX, e.clientY))
+  }, [])
 
+  // TODO: use custom events nistead
   const handleMouseDown = useCallback(e => {
-    if (e.target === containerRef.current && toolActive) {
-      setDragStart(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
+    if (e.target === svgElement && toolActive) {
+      setDragStart(screenToViewSpace(e.clientX, e.clientY))
     }
-  }, [toolActive, containerRef?.current])
+  }, [toolActive, svgElement])
 
   const handleMouseUp = useCallback(() => {
     if (dragStart !== null && toolActive) {
@@ -59,17 +61,17 @@ const SelectionBox = ({ containerRef }) => {
 
   // Setup event listeners
   useEffect(() => {
-    if (containerRef?.current) {
-      containerRef.current.addEventListener('mousedown', handleMouseDown)
-      containerRef.current.addEventListener('mouseup', handleMouseUp)
-      containerRef.current.addEventListener('mousemove', handleMouseMove)
+    if (svgElement) {
+      svgElement.addEventListener('mousedown', handleMouseDown)
+      svgElement.addEventListener('mouseup', handleMouseUp)
+      svgElement.addEventListener('mousemove', handleMouseMove)
       return () => {
-        containerRef.current.removeEventListener('mousedown', handleMouseDown)
-        containerRef.current.removeEventListener('mouseup', handleMouseUp)
-        containerRef.current.removeEventListener('mousemove', handleMouseMove)
+        svgElement.removeEventListener('mousedown', handleMouseDown)
+        svgElement.removeEventListener('mouseup', handleMouseUp)
+        svgElement.removeEventListener('mousemove', handleMouseMove)
       }
     }
-  }, [containerRef?.current, handleMouseUp, handleMouseDown])
+  }, [svgElement, handleMouseUp, handleMouseDown, handleMouseMove])
 
   if (!dragStart || !mousePos || !toolActive)
     return null

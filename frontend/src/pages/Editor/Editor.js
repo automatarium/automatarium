@@ -1,14 +1,11 @@
 import { useState, useEffect, useCallback } from 'react'
 
 import { useActions } from '/src/hooks'
-import { GraphView } from '/src/components'
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
+import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 
-// #HACK
-import { createNewProject } from '/src/stores/useProjectStore'
-
-import { Menubar, Sidepanel, Toolbar } from './components'
+import { Menubar, Sidepanel, Toolbar, EditorPanel } from './components'
 import { Content } from './editorStyle'
 
 const Editor = () => {
@@ -61,10 +58,9 @@ const Editor = () => {
   return (
     <>
       <Menubar />
-
       <Content>
         <Toolbar />
-        <GraphView style={{flex: 1}} />
+        <EditorPanel />
         <Sidepanel />
       </Content>
     </>
