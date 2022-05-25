@@ -1,6 +1,7 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useState } from 'react'
 
 import { Dropdown } from '/src/components'
+import { useEvent } from '/src/hooks'
 
 import graphContextItems from './graphContextItems'
 import stateContextItems from './stateContextItems'
@@ -9,27 +10,16 @@ import transitionContextItems from './transitionContextItems'
 const ContextMenus = () => {
   const [context, setContext] = useState({ visible: false })
 
-  const onGraphContext = useCallback(({ detail: { x, y } }) => {
+  useEvent('ctx:svg', ({ detail: { x, y } }) => {
     setContext({ visible: true, x, y, items: graphContextItems })
   }, [])
 
-  const onStateContext = useCallback(({ detail: { states, x, y } }) => {
+  useEvent('ctx:state', ({ detail: { x, y } }) => {
     setContext({ visible: true, x, y, items: stateContextItems })
   }, [])
 
-  const onTransitionContext = useCallback(({ detail: { transitions, x, y } }) => {
+  useEvent('ctx:transition', ({ detail: { x, y } }) => {
     setContext({ visible: true, x, y, items: transitionContextItems })
-  }, [])
-
-  useEffect(() => {
-    document.addEventListener('graphContext', onGraphContext)
-    document.addEventListener('stateContext', onStateContext)
-    document.addEventListener('transitionContext', onTransitionContext)
-    return () => {
-      document.removeEventListener('graphContext', onGraphContext)
-      document.removeEventListener('stateContext', onStateContext)
-      document.removeEventListener('transitionContext', onTransitionContext)
-    }
   }, [])
 
   return (

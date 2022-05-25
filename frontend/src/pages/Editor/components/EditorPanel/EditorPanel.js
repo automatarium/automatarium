@@ -7,26 +7,26 @@ import {
   useStateCreation,
   useTransitionCreation,
   useStateSelection,
-  useTransitionSelection
+  useTransitionSelection,
+  useContextMenus,
 } from '../../hooks'
 
 const EditorPanel = () => {
-  // Selection hooks
+  // Interactivity hooks
   const { selectState } = useStateSelection()
   const { selectTransition } = useTransitionSelection()
-
-  // Dragging hooks
   const { startDrag } = useStateDragging()
-
-  // Creation hooks
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   useStateCreation()
+  useContextMenus()
 
   // Events
   useEvent('state:mousedown', e => {
     const selectedStateIDs = selectState(e)
-    startDrag(e, selectedStateIDs)
+    if (e.detail.originalEvent.button === 0)
+      startDrag(e, selectedStateIDs)
   })
+
   useEvent('transition:mousedown', e => {
     selectTransition(e)
   })

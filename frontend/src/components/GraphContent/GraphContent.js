@@ -107,14 +107,6 @@ const GraphContent = () => {
       key={i}
     />)}
 
-    {/* Render in-creation transition
-    {createTransitionStart && mousePos && <TransitionSet.Transition
-      fullWidth
-      from={createTransitionStart}
-      to={mousePos}
-      count={1}
-    />} */}
-
     {/* Render all states */}
     {states.map(s => <StateCircle
       key={s.id}

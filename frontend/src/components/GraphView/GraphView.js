@@ -81,15 +81,6 @@ const GraphView = ({ children, ...props }) => {
   return (
     <Svg
       onContextMenu={e => e.preventDefault()}
-      onMouseUp={e => {
-        if (e.button === 2) {
-          const rightClickEvent = new CustomEvent('graphContext', { detail: {
-            x: e.clientX,
-            y: e.clientY,
-          }})
-          document.dispatchEvent(rightClickEvent)
-        }
-      }}
       viewBox={viewBox}
       ref={containerRef}
       $showGrid={showGrid}
