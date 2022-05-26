@@ -15,7 +15,7 @@ const useTransitionSelection = () => {
       const transitionID = e.detail.transition.id
       newSelected = selectedTransitions.includes(transitionID)
         ? selectedTransitions
-        : e.shiftKey
+        : e.detail.originalEvent.shiftKey
           ? [...selectedTransitions, transitionID]
           : [transitionID]
       setSelectedTransitions(newSelected)
