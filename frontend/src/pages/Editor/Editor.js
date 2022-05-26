@@ -1,6 +1,6 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect } from 'react'
 
-import { useActions } from '/src/hooks'
+import { useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
@@ -22,17 +22,21 @@ const Editor = () => {
   }, [])
 
   // Change tool when holding certain keys
-  const onKeyDown = useCallback(e => {
+  useEvent('keydown', e => {
     // Hotkeys are disabled if an input is focused
     if (haveInputFocused(e)) return
 
     if (!priorTool && e.code === 'Space') {
       setPriorTool(tool)
       setTool('hand')
+    }
+    if (e.code === 'Space') {
       e.preventDefault()
+      e.stopPropagation()
     }
   }, [tool, priorTool])
-  const onKeyUp = useCallback(e => {
+
+  useEvent('keyup', e => {
     // Hotkeys are disabled if an input is focused
     if (haveInputFocused(e)) return
 
@@ -41,19 +45,11 @@ const Editor = () => {
       setPriorTool(undefined)
     }
     if (e.code === 'Space') {
+      console.log('pressed space')
       e.preventDefault()
       e.stopPropagation()
     }
   }, [tool, priorTool])
-
-  useEffect(() => {
-    document.addEventListener('keydown', onKeyDown)
-    document.addEventListener('keyup', onKeyUp)
-    return () => {
-      document.removeEventListener('keydown', onKeyDown)
-      document.removeEventListener('keyup', onKeyUp)
-    }
-  })
 
   return (
     <>
