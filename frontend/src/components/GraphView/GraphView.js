@@ -9,13 +9,13 @@ import { Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
 
 const GraphView = ({ children, ...props }) => {
-  const containerRef = useRef()
+  const svgRef = useRef()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
-  useViewDragging(containerRef)
+  useViewDragging(svgRef)
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
-    const b = containerRef.current.getBoundingClientRect()
+    const b = svgRef.current.getBoundingClientRect()
     setViewSize({ width: b.width, height: b.height })
   }, [])
 
@@ -23,7 +23,7 @@ const GraphView = ({ children, ...props }) => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
     dispatchEvent('svg:mousedown', {
       originalEvent: e,
-      didTargetSVG: e.target === containerRef?.current,
+      didTargetSVG: e.target === svgRef?.current,
       viewX, viewY
     })
   }, [])
@@ -32,7 +32,7 @@ const GraphView = ({ children, ...props }) => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
     dispatchEvent('svg:mouseup', {
       originalEvent: e,
-      didTargetSVG: e.target === containerRef?.current,
+      didTargetSVG: e.target === svgRef?.current,
       viewX, viewY
     })
   }, [])
@@ -41,7 +41,7 @@ const GraphView = ({ children, ...props }) => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
     dispatchEvent('svg:mousemove', {
       originalEvent: e,
-      didTargetSVG: e.target === containerRef?.current,
+      didTargetSVG: e.target === svgRef?.current,
       viewX, viewY
     })
   }, [])
@@ -49,28 +49,28 @@ const GraphView = ({ children, ...props }) => {
   // Keep track of resizes
   // TODO: use onResize of container
   useEffect(() => {
-    if (containerRef.current) {
+    if (svgRef.current) {
       // Update reference
-      setSvgElement(containerRef.current)
+      setSvgElement(svgRef.current)
       
       // Manage resizing of view
       onContainerResize()
       window.addEventListener('resize', onContainerResize)
       
       // Setup handlers
-      containerRef.current.addEventListener('mousedown', onContainerMouseDown)
-      containerRef.current.addEventListener('mouseup', onContainerMouseUp)
-      containerRef.current.addEventListener('mousemove', onContainerMouseMove)
+      svgRef.current.addEventListener('mousedown', onContainerMouseDown)
+      svgRef.current.addEventListener('mouseup', onContainerMouseUp)
+      svgRef.current.addEventListener('mousemove', onContainerMouseMove)
 
       // Unset handlers
       return () => {
         window.removeEventListener('resize', onContainerResize)
-        containerRef.current.removeEventListener('mousedown', onContainerMouseDown)
-        containerRef.current.removeEventListener('mouseup', onContainerMouseUp)
-        containerRef.current.removeEventListener('mousedown', onContainerMouseMove)
+        svgRef.current.removeEventListener('mousedown', onContainerMouseDown)
+        svgRef.current.removeEventListener('mouseup', onContainerMouseUp)
+        svgRef.current.removeEventListener('mousedown', onContainerMouseMove)
       }
     }
-  }, [containerRef.current])
+  }, [svgRef.current])
 
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
@@ -82,10 +82,10 @@ const GraphView = ({ children, ...props }) => {
     <Svg
       onContextMenu={e => e.preventDefault()}
       viewBox={viewBox}
-      ref={containerRef}
+      ref={svgRef}
       $showGrid={showGrid}
       {...props}
-      style={{ backgroundSize, backgroundPosition, ...props.style }}>
+      style={{ flex: 1, backgroundSize, backgroundPosition, ...props.style }}>
       <MarkerProvider>
         <g>
           {children}
