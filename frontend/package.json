@@ -23,6 +23,7 @@
     "lucide-react": "^0.17.9",
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
+    "react-a11y-dialog": "^6.1.5",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.28.1",
     "react-router-dom": "^6.2.2",
