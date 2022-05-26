@@ -20,6 +20,7 @@ const useActions = (registerHotkeys=false) => {
   const selectAllStates = useSelectionStore(s => s.selectAll)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
+  const flipTransitions = useProjectStore(s => s.flipTransitions)
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -221,6 +222,14 @@ const useActions = (registerHotkeys=false) => {
         const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
         if (selectedTransition === undefined) return
         document.dispatchEvent(new CustomEvent('editTransition', { detail: { id: selectedTransition }}))
+      }
+    },
+    FLIP_TRANSITION: {
+      handler: () => {
+        const selectedTransitions = useSelectionStore.getState().selectedTransitions
+        if (selectedTransitions === undefined || selectedTransitions?.length === 0) return
+        flipTransitions(selectedTransitions)
+        commit()
       }
     },
   }
