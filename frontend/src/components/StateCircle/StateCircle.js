@@ -22,7 +22,7 @@ const StateCircle = ({ id, name, isFinal, cx, cy, selected, ...props }) => {
     })
 
   return <g transform={`translate(${cx}, ${cy})`} onMouseDown={handleStateMouseDown} onMouseUp={handleStateMouseUp} {...props}>
-    {/* Yellow Circle */}
+    {/* Filled Circle */}
     <StyledCircle r={STATE_CIRCLE_RADIUS} $selected={selected} />
 
     {/* Extra outline for final states */}
