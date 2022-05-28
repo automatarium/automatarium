@@ -16,10 +16,6 @@ export const Container = styled('div', forwardRef)`
     opacity: 0;
     visibility: hidden;
   }
-
-  /* @media (max-width: ${mobileBP}) {
-    padding: 0;
-  } */
 `
 
 export const Overlay = styled('div', forwardRef)`
@@ -46,9 +42,10 @@ export const Content = styled('div', forwardRef)`
     transform: translateY(5px);
   }
 
-  /* @media (max-width: ${mobileBP}) {
-    border-radius: 0;
-  } */
+  ${p => p.$narrow && `
+    width: 500px;
+    padding: 1.2em 2em 2em;
+  `}
 `
 
 export const Buttons = styled('div')`

@@ -16,6 +16,7 @@ export { default as SelectionBox } from './SelectionBox/SelectionBox'
 export { default as Main } from './Main/Main'
 export { default as Logo } from './Logo/Logo'
 export { default as Header } from './Header/Header'
+export { default as Modal } from './Modal/Modal'
 
 export { default as Button } from './Button/Button'
 export { default as Dropdown } from './Dropdown/Dropdown'
