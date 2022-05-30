@@ -4,8 +4,6 @@ import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
-import { useSelectionStore } from '/src/stores'
-
 import {
   APP_VERSION,
   SCHEMA_VERSION,
@@ -16,39 +14,16 @@ import {
   DEFAULT_PLAYBACK_INTERVAL,
 } from '/src/config/projects'
 
-const sampleInitialData = {
-  initialState: 0,
-  states: [{
-    id: 0, //TODO: can be int?
-    label: null,
-    x: 150,
-    y: 150,
-    isFinal: false,
-  }, {
-    id: 1,
-    label: null,
-    x: 330,
-    y: 150,
-    isFinal: false,
-  }],
-  transitions: [{
-    id: 0,
-    from: 0,
-    to: 1,
-    read: 'a',
-  }]
-}
-
 export const createNewProject = () => ({
   id: uuid(),
-  states: sampleInitialData.states,
-  transitions: sampleInitialData.transitions,
+  states: [],
+  transitions: [],
   comments: [],
   tests: {
     single: '',
     batch: [''],
   },
-  initialState: sampleInitialData.initialState,
+  initialState: null,
   meta: {
     name: null,
     dateCreated: new Date(),
