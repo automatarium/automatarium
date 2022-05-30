@@ -15,7 +15,7 @@ const useTransitionCreation = () => {
   const [createTransitionEnd, setCreateTransitionEnd] = useState(null)
 
   useEvent('state:mousedown', e => {
-    if (tool === 'transition') {
+    if (tool === 'transition' && e.detail.originalEvent.button === 0) {
       const [viewX, viewY] = screenToViewSpace(e.detail.originalEvent.clientX, e.detail.originalEvent.clientY)
       const states = useProjectStore.getState().project?.states ?? []
       const state = states.find(s => s.id === e.detail.state.id)
@@ -25,7 +25,7 @@ const useTransitionCreation = () => {
   }, [tool])
 
   useEvent('state:mouseup', e => {
-    if (createTransitionState) {
+    if (createTransitionState && e.detail.originalEvent.button === 0) {
       const id = createTransition({ from: createTransitionState.id, to: e.detail.state.id })
       setCreateTransitionStart(null)
       setCreateTransitionState(null)

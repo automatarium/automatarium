@@ -24,7 +24,7 @@ const InputDialogs = () => {
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, .5)
-    const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y, document.querySelector('svg'))
+    const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
 
     setDialog({
       visible: true,

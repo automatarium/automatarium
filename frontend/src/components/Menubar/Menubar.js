@@ -72,7 +72,7 @@ const Menubar = () => {
                   item={item}
                   dropdown={dropdown}
                   setDropdown={setDropdown}
-                  onClick={() => setDropdown(dropdown === item.label ? undefined : item.label)}
+                  onClick={e => { setDropdown(dropdown === item.label ? undefined : item.label); e.stopPropagation() }}
                   onMouseEnter={() => dropdown !== undefined && setDropdown(item.label)}
                 />
               ))}

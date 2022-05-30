@@ -222,7 +222,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => {
         const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
         if (selectedTransition === undefined) return
-        dispatchCustomEvent('editTransition', { id: selectedTransition })
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition }), 100)
       }
     },
     FLIP_TRANSITION: {
