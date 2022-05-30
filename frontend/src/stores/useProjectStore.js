@@ -162,6 +162,15 @@ const useProjectStore = create((set, get) => ({
     project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal}))
   })),
 
+  /* Toggle direction of transitions */
+  flipTransitions: transitionIDs => set(produce(({ project }) => {
+    project.transitions = project.transitions.map(t => transitionIDs.includes(t.id) ? ({
+      ...t,
+      from: t.to,
+      to: t.from,
+    }) : t)
+  })),
+
   /* Remove states by id */
   removeStates: stateIDs => set(produce(({ project }) => {
     // Remove states
