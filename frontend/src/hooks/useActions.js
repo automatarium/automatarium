@@ -3,7 +3,8 @@ import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 
-import { haveInputFocused } from '../util/actions'
+import { haveInputFocused } from '/src/util/actions'
+import { dispatchCustomEvent } from '/src/util/events'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -220,7 +221,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => {
         const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
         if (selectedTransition === undefined) return
-        document.dispatchEvent(new CustomEvent('editTransition', { detail: { id: selectedTransition }}))
+        dispatchCustomEvent('editTransition', { id: selectedTransition })
       }
     },
   }
