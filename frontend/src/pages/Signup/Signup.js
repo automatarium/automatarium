@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, forwardRef } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { firebase } from '/src/auth'
 import { createUser } from '/src/services'
-import { Main, Label, TextInput, Button, Header } from '/src/components'
+import { Main, Label, TextInput, Button, Header, Modal } from '/src/components'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '/src/hooks'
 
@@ -13,18 +13,12 @@ const defaultValues = {
   passwordAgain: ''
 }
 
-const Signup = () => {
-  const navigate = useNavigate()
+const Signup = {}
+
+Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
-  const { user: currentUser, signOut, setSigningUp } = useAuth()
-
-  // Navigate away if already logged in
-  useEffect(() => {
-    if (currentUser && !isSubmitting) {
-      navigate('/new')
-    }
-  }, [currentUser])
+  const { signOut, setSigningUp } = useAuth()
 
   const {
     register,
@@ -33,6 +27,14 @@ const Signup = () => {
     setError: setFieldError,
     formState: { errors, isDirty },
   } = useForm({ defaultValues})
+
+  useEffect(() => {
+    if (setFormActions) {
+      setFormActions(<>
+        <Button type='submit' form='signup-form' disabled={!isDirty || isSubmitting}>Sign Up</Button> 
+      </>)
+    }
+  }, [isDirty, isSubmitting, ref?.current, setFormActions])
 
   const watchPassword = watch('password')
 
@@ -53,10 +55,10 @@ const Signup = () => {
         preferences: {},
       })
 
-      if (res?.data) {
-        navigate('/new')
+      if (res?.user) {
+        onComplete?.()
       } else {
-        setError(res?.error?.message)
+        setError(res?.error?.message ?? res?.error)
       }
     } catch (error) {
       // Is it an 'email taken' error?
@@ -89,32 +91,46 @@ const Signup = () => {
     }
   }
 
-  return <Main>
+  return <form onSubmit={handleSubmit(onSubmit)} ref={ref} id='signup-form' {...props}>
+    {error && (
+      <p>${error}</p>
+    )}
+    <Label htmlFor='email'>Email</Label>
+    <TextInput type='email' {...register('email')} />
+    <p>{errors.email?.message}</p>
+
+    <Label htmlFor='password'>Password</Label>
+    <TextInput type='password' {...register('password')} />
+
+    <p>{errors.email?.password}</p>
+
+    <Label htmlFor='passwordAgain'>Confirm Password</Label>
+    <TextInput type='password' {...register('passwordAgain', {
+      validate: value =>
+      value === watchPassword || 'Passwords must match',
+    })} />
+    <p>{errors.passwordAgain?.message}</p>
+  </form>
+})
+
+Signup.Modal = ({ ...props }) => {
+  const [formActions, setFormActions] = useState()
+  
+  return <Modal
+    narrow
+    actions={<>
+      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button> 
+      {formActions}
+    </>}
+    {...props}
+  >
     <Header center/>
-    <h2>Sign Up</h2>
-    <form onSubmit={handleSubmit(onSubmit)} >
-      {error && (
-        <p>${error}</p>
-      )}
-      <Label htmlFor='email'>Email</Label>
-      <TextInput type='email' {...register('email')} />
-      <p>{errors.email?.message}</p>
-
-      <Label htmlFor='password'>Password</Label>
-      <TextInput type='password' {...register('password')} />
-
-      <p>{errors.email?.password}</p>
-
-      <Label htmlFor='passwordAgain'>Confirm Password</Label>
-      <TextInput type='password' {...register('passwordAgain', {
-        validate: value =>
-        value === watchPassword || 'Passwords must match',
-      })} />
-      <p>{errors.passwordAgain?.message}</p>
-
-      <Button type='submit' disabled={!isDirty || isSubmitting}>Sign Up</Button>
-    </form>
-  </Main>
+    <h2>Signup</h2>
+    <Signup.Form
+      onComplete={props?.onClose}
+      setFormActions={setFormActions}
+      style={{ paddingBottom: '1em' }} />
+  </Modal>
 }
 
 export default Signup

@@ -8,7 +8,7 @@ const TextInput = forwardRef(({
   ...props
 }, ref) => (
   <StyledInput
-    id={props.name}
+    id={props.id ?? props.name}
     $color={color}
     {...props}
     type={type || 'text'}
