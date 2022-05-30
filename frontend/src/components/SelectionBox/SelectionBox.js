@@ -1,6 +1,7 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import { useProjectStore, useViewStore, useSelectionStore, useToolStore } from '/src/stores'
+import { useEvent } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
 
 const SelectionBox = () => {
@@ -15,18 +16,18 @@ const SelectionBox = () => {
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
-  const handleMouseMove = useCallback(e => {
+  useEvent('mousemove', e => {
       setMousePos(screenToViewSpace(e.clientX, e.clientY))
   }, [])
 
   // TODO: use custom events nistead
-  const handleMouseDown = useCallback(e => {
-    if (e.target === svgElement && toolActive) {
-      setDragStart(screenToViewSpace(e.clientX, e.clientY))
+  useEvent('svg:mousedown', e => {
+    if (e.detail.didTargetSVG && toolActive) {
+      setDragStart([e.detail.viewX, e.detail.viewY])
     }
   }, [toolActive, svgElement])
 
-  const handleMouseUp = useCallback(() => {
+  useEvent('svg:mouseup', () => {
     if (dragStart !== null && toolActive) {
       // Calculate drag bounds
       const startX = Math.min(dragStart[0], mousePos[0])
@@ -58,20 +59,6 @@ const SelectionBox = () => {
       setDragStart(null)
     }
   }, [toolActive, dragStart, mousePos, states])
-
-  // Setup event listeners
-  useEffect(() => {
-    if (svgElement) {
-      svgElement.addEventListener('mousedown', handleMouseDown)
-      svgElement.addEventListener('mouseup', handleMouseUp)
-      svgElement.addEventListener('mousemove', handleMouseMove)
-      return () => {
-        svgElement.removeEventListener('mousedown', handleMouseDown)
-        svgElement.removeEventListener('mouseup', handleMouseUp)
-        svgElement.removeEventListener('mousemove', handleMouseMove)
-      }
-    }
-  }, [svgElement, handleMouseUp, handleMouseDown, handleMouseMove])
 
   if (!dragStart || !mousePos || !toolActive)
     return null

@@ -5,10 +5,8 @@ import { useProjectStore, useSelectionStore, useToolStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 
 const GraphContent = () => {
-  // const tool = useToolStore(s => s.tool)
   const project = useProjectStore(s => s.project)
   const selectedStates = useSelectionStore(s => s.selectedStates)
-  const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
 
   // Destructure project to get state
   const states = project?.states ?? []

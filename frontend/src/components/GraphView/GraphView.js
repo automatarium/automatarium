@@ -3,7 +3,7 @@ import { useEffect, useRef, useCallback } from 'react'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
-import { dispatchEvent } from '/src/util/events'
+import { dispatchCustomEvent } from '/src/util/events'
 
 import { Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
@@ -21,7 +21,7 @@ const GraphView = ({ children, ...props }) => {
 
   const onContainerMouseDown = useCallback(e => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
-    dispatchEvent('svg:mousedown', {
+    dispatchCustomEvent('svg:mousedown', {
       originalEvent: e,
       didTargetSVG: e.target === svgRef?.current,
       viewX, viewY
@@ -30,7 +30,7 @@ const GraphView = ({ children, ...props }) => {
 
   const onContainerMouseUp = useCallback(e => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
-    dispatchEvent('svg:mouseup', {
+    dispatchCustomEvent('svg:mouseup', {
       originalEvent: e,
       didTargetSVG: e.target === svgRef?.current,
       viewX, viewY
@@ -39,7 +39,7 @@ const GraphView = ({ children, ...props }) => {
 
   const onContainerMouseMove = useCallback(e => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
-    dispatchEvent('svg:mousemove', {
+    dispatchCustomEvent('svg:mousemove', {
       originalEvent: e,
       didTargetSVG: e.target === svgRef?.current,
       viewX, viewY

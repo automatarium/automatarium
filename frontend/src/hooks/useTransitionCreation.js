@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useViewStore } from '/src/stores'
+import { dispatchCustomEvent } from '/src/util/events'
 
 const useTransitionCreation = () => {
   const createTransition = useProjectStore(s => s.createTransition)
@@ -28,7 +29,7 @@ const useTransitionCreation = () => {
       const id = createTransition({ from: createTransitionState.id, to: e.detail.state.id })
       setCreateTransitionStart(null)
       setCreateTransitionState(null)
-      window.setTimeout(() => document.dispatchEvent(new CustomEvent('editTransition', { detail: { id }})), 100)
+      window.setTimeout(() => dispatchCustomEvent('editTransition', { id }), 100)
     }
   }, [createTransitionState])
 

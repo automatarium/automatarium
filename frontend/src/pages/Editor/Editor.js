@@ -45,7 +45,6 @@ const Editor = () => {
       setPriorTool(undefined)
     }
     if (e.code === 'Space') {
-      console.log('pressed space')
       e.preventDefault()
       e.stopPropagation()
     }
