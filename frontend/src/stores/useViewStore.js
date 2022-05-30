@@ -15,6 +15,7 @@ const canvasToScreenSpace = (x, y, container) => {
 
 
 const useViewStore = create((set, get) => ({
+  svgElement: null, 
   position: { x: 0, y: 0 },
   size: { width: 0, height: 0},
   scale: 1,
@@ -25,6 +26,7 @@ const useViewStore = create((set, get) => ({
   setViewPosition: position => set({ position }),
   setViewSize: size => set({ size }),
   setViewScale: scale => set({ scale }),
+  setSvgElement: svgElement => set({ svgElement }),
 
   /* Apply the view transform to a point */
   applyView: (x, y) =>
@@ -35,13 +37,12 @@ const useViewStore = create((set, get) => ({
     [(x - get().position.x)/get().scale, (y - get().position.y)/get().scale],
 
   /* Convert from screen mouse coords to view space */
-  screenToViewSpace: (clientX, clientY, container) =>
-    get().applyView(...screenToCanvasSpace(clientX, clientY, container)),
+  screenToViewSpace: (clientX, clientY) =>
+    get().applyView(...screenToCanvasSpace(clientX, clientY, get().svgElement)),
 
   /* Convert from screen mouse coords to view space */
-  viewToScreenSpace: (viewX, viewY, container) =>
-    canvasToScreenSpace(...get().applyInverseView(viewX, viewY), container),
-
+  viewToScreenSpace: (viewX, viewY) =>
+    canvasToScreenSpace(...get().applyInverseView(viewX, viewY), get().svgElement),
 }))
 
 export default useViewStore

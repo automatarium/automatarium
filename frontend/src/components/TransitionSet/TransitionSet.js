@@ -3,11 +3,12 @@ import { useContext } from 'react'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
+import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 
 import { StyledPath } from './transitionSetStyle'
 
-const TransitionSet = ({ transitions, onMouseDown, onMouseUp }) => <>
+const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read}, i) => (
     <Transition
       i={i}
@@ -17,13 +18,11 @@ const TransitionSet = ({ transitions, onMouseDown, onMouseUp }) => <>
       to={to}
       id={id}
       key={id}
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
     />)
   )}
 </>
 
-const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown, onMouseUp }) => {
+const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEvents=false }) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
@@ -39,6 +38,18 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown
   // -- used to place the text on the same path
   const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
 
+  // TODO: use Callback
+  const handleTransitionMouseUp = e =>
+    dispatchCustomEvent('transition:mouseup', {
+      originalEvent: e,
+      transition: { id, from, to, text },
+    })
+  const handleTransitionMouseDown = e =>
+    dispatchCustomEvent('transition:mousedown', {
+      originalEvent: e,
+      transition: { id, from, to, text },
+    })
+
   return <>
     {/*The edge itself*/}
     <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`} $selected={selected} />
@@ -47,21 +58,21 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, onMouseDown
     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
     {/* Thicker invisible path used to select the transition */}
-    {onMouseDown && <path
+    {!suppressEvents && <path
       id={pathID}
       d={pathData}
       key={`${pathID}-selection`}
       stroke='transparent'
       fill='none'
       strokeWidth={20}
-      onMouseDown={e => onMouseDown && onMouseDown(id, e)}
-      onMouseUp={e => onMouseUp && onMouseUp(id, e)}
+      onMouseDown={handleTransitionMouseDown}
+      onMouseUp={handleTransitionMouseUp}
     />}
 
     {/* The label - i.e the accepted symbols*/}
     <text
-      onMouseDown={e => onMouseDown && onMouseDown(id, e)}
-      onMouseUp={e => onMouseUp && onMouseUp(id, e)}
+      onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+      onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
       fill={selected ? 'var(--primary)' : 'black' }
     >
       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>

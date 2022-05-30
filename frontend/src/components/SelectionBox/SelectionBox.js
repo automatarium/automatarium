@@ -1,30 +1,33 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useState } from 'react'
 
 import { useProjectStore, useViewStore, useSelectionStore, useToolStore } from '/src/stores'
+import { useEvent } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
 
-const SelectionBox = ({ containerRef }) => {
+const SelectionBox = () => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
+  const svgElement = useViewStore(s => s.svgElement)
   const setSelectedStates = useSelectionStore(s => s.setStates)
   const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
-  const handleMouseMove = useCallback(e => {
-      setMousePos(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
-  }, [containerRef])
+  useEvent('mousemove', e => {
+      setMousePos(screenToViewSpace(e.clientX, e.clientY))
+  }, [])
 
-  const handleMouseDown = useCallback(e => {
-    if (e.target === containerRef.current && toolActive) {
-      setDragStart(screenToViewSpace(e.clientX, e.clientY, containerRef.current))
+  // TODO: use custom events nistead
+  useEvent('svg:mousedown', e => {
+    if (e.detail.didTargetSVG && toolActive) {
+      setDragStart([e.detail.viewX, e.detail.viewY])
     }
-  }, [toolActive, containerRef?.current])
+  }, [toolActive, svgElement])
 
-  const handleMouseUp = useCallback(() => {
+  useEvent('svg:mouseup', () => {
     if (dragStart !== null && toolActive) {
       // Calculate drag bounds
       const startX = Math.min(dragStart[0], mousePos[0])
@@ -56,20 +59,6 @@ const SelectionBox = ({ containerRef }) => {
       setDragStart(null)
     }
   }, [toolActive, dragStart, mousePos, states])
-
-  // Setup event listeners
-  useEffect(() => {
-    if (containerRef?.current) {
-      containerRef.current.addEventListener('mousedown', handleMouseDown)
-      containerRef.current.addEventListener('mouseup', handleMouseUp)
-      containerRef.current.addEventListener('mousemove', handleMouseMove)
-      return () => {
-        containerRef.current.removeEventListener('mousedown', handleMouseDown)
-        containerRef.current.removeEventListener('mouseup', handleMouseUp)
-        containerRef.current.removeEventListener('mousemove', handleMouseMove)
-      }
-    }
-  }, [containerRef?.current, handleMouseUp, handleMouseDown])
 
   if (!dragStart || !mousePos || !toolActive)
     return null

@@ -1,34 +1,76 @@
 import { useEffect, useRef, useCallback } from 'react'
 
-import { GraphContent, SelectionBox } from '/src/components'
 import { MarkerProvider } from '/src/providers'
 import { useViewStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
+import { dispatchCustomEvent } from '/src/util/events'
 
 import { Svg } from './graphViewStyle'
-import { ContextMenus, InputDialogs } from './components'
 import { useViewDragging } from './hooks'
 
-const GraphView = props => {
-  const containerRef = useRef()
-  const { position, size, scale, setViewSize, moveViewPosition } = useViewStore()
-  useViewDragging(containerRef)
+const GraphView = ({ children, ...props }) => {
+  const svgRef = useRef()
+  const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
+  useViewDragging(svgRef)
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
-    const b = containerRef.current.getBoundingClientRect()
+    const b = svgRef.current.getBoundingClientRect()
     setViewSize({ width: b.width, height: b.height })
+  }, [])
+
+  const onContainerMouseDown = useCallback(e => {
+    const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
+    dispatchCustomEvent('svg:mousedown', {
+      originalEvent: e,
+      didTargetSVG: e.target === svgRef?.current,
+      viewX, viewY
+    })
+  }, [])
+
+  const onContainerMouseUp = useCallback(e => {
+    const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
+    dispatchCustomEvent('svg:mouseup', {
+      originalEvent: e,
+      didTargetSVG: e.target === svgRef?.current,
+      viewX, viewY
+    })
+  }, [])
+
+  const onContainerMouseMove = useCallback(e => {
+    const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
+    dispatchCustomEvent('svg:mousemove', {
+      originalEvent: e,
+      didTargetSVG: e.target === svgRef?.current,
+      viewX, viewY
+    })
   }, [])
 
   // Keep track of resizes
   // TODO: use onResize of container
   useEffect(() => {
-    if (containerRef.current) {
+    if (svgRef.current) {
+      // Update reference
+      setSvgElement(svgRef.current)
+      
+      // Manage resizing of view
       onContainerResize()
       window.addEventListener('resize', onContainerResize)
-      return () => window.removeEventListener('resize', onContainerResize)
+      
+      // Setup handlers
+      svgRef.current.addEventListener('mousedown', onContainerMouseDown)
+      svgRef.current.addEventListener('mouseup', onContainerMouseUp)
+      svgRef.current.addEventListener('mousemove', onContainerMouseMove)
+
+      // Unset handlers
+      return () => {
+        window.removeEventListener('resize', onContainerResize)
+        svgRef.current.removeEventListener('mousedown', onContainerMouseDown)
+        svgRef.current.removeEventListener('mouseup', onContainerMouseUp)
+        svgRef.current.removeEventListener('mousedown', onContainerMouseMove)
+      }
     }
-  }, [])
+  }, [svgRef.current])
 
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
@@ -37,37 +79,19 @@ const GraphView = props => {
 
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
-    <>
-      <Svg
-        onContextMenu={e => e.preventDefault()}
-        onMouseUp={e => {
-          if (e.button === 2) {
-            const rightClickEvent = new CustomEvent('graphContext', { detail: {
-              x: e.clientX,
-              y: e.clientY,
-            }})
-            document.dispatchEvent(rightClickEvent)
-          }
-        }}
-        viewBox={viewBox}
-        ref={containerRef}
-        $showGrid={showGrid}
-        {...props}
-        style={{ backgroundSize, backgroundPosition, ...props.style }}>
-        <MarkerProvider>
-          <g>
-            {/* Graph states and transitions */}
-            <GraphContent containerRef={containerRef} />
-
-            {/* Selection Drag Box */}
-            <SelectionBox containerRef={containerRef} />
-          </g>
-        </MarkerProvider>
-      </Svg>
-
-      <ContextMenus />
-      <InputDialogs />
-    </>
+    <Svg
+      onContextMenu={e => e.preventDefault()}
+      viewBox={viewBox}
+      ref={svgRef}
+      $showGrid={showGrid}
+      {...props}
+      style={{ flex: 1, backgroundSize, backgroundPosition, ...props.style }}>
+      <MarkerProvider>
+        <g>
+          {children}
+        </g>
+      </MarkerProvider>
+    </Svg>
   )
 }
 
