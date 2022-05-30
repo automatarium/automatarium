@@ -3,7 +3,7 @@ import { useContext } from 'react'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
-import { dispatchEvent } from '/src/util/events'
+import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 
 import { StyledPath } from './transitionSetStyle'
@@ -40,12 +40,12 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
 
   // TODO: use Callback
   const handleTransitionMouseUp = e =>
-    dispatchEvent('transition:mouseup', {
+    dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
       transition: { id, from, to, text },
     })
   const handleTransitionMouseDown = e =>
-    dispatchEvent('transition:mousedown', {
+    dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
       transition: { id, from, to, text },
     })
