@@ -1,25 +1,49 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { useActions, useEvent } from '/src/hooks'
+import { useAuth, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
-import { createNewProject } from '/src/stores/useProjectStore' // #HACK
-import { Menubar, Sidepanel, Toolbar, EditorPanel } from '/src/components'
+import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
+import { getProject } from '/src/services/project'
 
-import { Content } from './editorStyle'
+import { Content, LoadingContainer } from './editorStyle'
 
 const Editor = () => {
+  const { user, loading: userLoading } = useAuth()
+  const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
-  const set = useProjectStore(s => s.set)
+  const [loading, setLoading] = useState(true)
 
   // Register action hotkey
   useActions(true)
 
-  // Load the test project
+  // Project must be set
   useEffect(() => {
-    set(createNewProject())
+    if (!useProjectStore.getState().project) {
+      navigate('/new')
+    }
   }, [])
+
+  // Ensure project is syncronised with the backend before showing editor page
+  // This prevents situation where user updates local copy of project before its overriden by backend sync
+  useEffect(() => {
+    if (!userLoading) {
+      if (!user) {
+        // If not logged in, just show what is stored
+        setLoading(false)
+      } else {
+        // If logged in, attempt to update stored project from backend before showing it
+        const projectStore = useProjectStore.getState()
+        const { project: currentProject, set: setProject } = projectStore
+        getProject(currentProject._id)
+          .then(({ project }) => project && setProject(project))
+          .then(() => setLoading(false))
+          .catch(e => { console.warn(e); setLoading(false) })
+      }
+    }
+  }, [user, userLoading])
 
   // Change tool when holding certain keys
   useEvent('keydown', e => {
@@ -49,6 +73,10 @@ const Editor = () => {
       e.stopPropagation()
     }
   }, [tool, priorTool])
+
+  if (loading) return <LoadingContainer>
+    <Spinner />
+  </LoadingContainer>
 
   return (
     <>

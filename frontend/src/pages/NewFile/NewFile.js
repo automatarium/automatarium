@@ -3,16 +3,18 @@ import dayjs from 'dayjs'
 
 import { Main, Button, Header } from '/src/components'
 import { NewProjectCard, ProjectCard, CardList } from './components'
-import { useUserProjects } from './hooks'
+import { useProjectsStore, useProjectStore } from '/src/stores'
+import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 
 import { NoResultSpan } from './newFileStyle'
 
 const NewFile = () => {
   const navigate = useNavigate()
-  const projects = useUserProjects()
+  const projects = useProjectsStore(s => s.projects)
+  const setProject = useProjectStore(s => s.set)
 
   const handleNewFile = projectType => {
-    // TODO: Handle different project types
+    setProject(createNewProject(projectType))
     navigate('/editor')
   }
 

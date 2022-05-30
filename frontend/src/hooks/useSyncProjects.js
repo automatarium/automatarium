@@ -1,22 +1,13 @@
-import create from 'zustand'
-import { persist } from 'zustand/middleware'
-import { useState, useEffect } from 'react'
-import dayjs from 'dayjs'
+import { useEffect } from 'react'
 
 import { useAuth } from '/src/hooks'
-import { getProjects, updateProject } from '/src/services/project'
+import { useProjectsStore } from '/src/stores'
+import { getProjects } from '/src/services/project'
 
-const useProjectsStore = create(persist(set => ({
-  projects: [],
-  setProjects: projects => set({ projects })
-}), {
-  name: 'automatarium-projects'
-}))
-
-const useUserProjects = () => {
+const useSyncProjects = () => {
   const { user } = useAuth()
   const { projects, setProjects } = useProjectsStore()
-  
+
   // Update projects from backend (if authenticated)
   useEffect(() => {
     if (user) {
@@ -52,4 +43,4 @@ const useUserProjects = () => {
   return projects
 }
 
-export default useUserProjects
+export default useSyncProjects

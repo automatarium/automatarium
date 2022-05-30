@@ -1,4 +1,5 @@
 import create from 'zustand'
+import { persist } from 'zustand/middleware'
 import produce, { current} from 'immer'
 import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
@@ -14,8 +15,9 @@ import {
   DEFAULT_PLAYBACK_INTERVAL,
 } from '/src/config/projects'
 
-export const createNewProject = () => ({
-  id: uuid(),
+export const createNewProject = (projectType) => ({
+  // TODO: use project type
+  _id: uuid(),
   states: [],
   transitions: [],
   comments: [],
@@ -40,7 +42,7 @@ export const createNewProject = () => ({
   }
 })
 
-const useProjectStore = create((set, get) => ({
+const useProjectStore = create(persist((set, get) => ({
   project: null,
   history: [],
   historyPointer: null,
@@ -161,6 +163,8 @@ const useProjectStore = create((set, get) => ({
   })),
 
   reset: () => set({ project: createNewProject() })
+}), {
+  name: 'automatarium-project'
 }))
 
 export default useProjectStore

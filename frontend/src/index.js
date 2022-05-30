@@ -6,7 +6,8 @@ import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-do
 import * as Pages from './pages'
 
 import { useEgg } from '/src/hooks'
-import { GraphView, Main, Footer } from '/src/components'
+import { Footer } from '/src/components'
+import useSyncProjects from '/src/hooks/useSyncProjects'
 
 // Set up goober to use React
 setup(
@@ -21,6 +22,7 @@ const App = () => {
   const hideFooter = location.pathname.match('/editor')
 
   useEgg()
+  useSyncProjects()
 
   return <>
     <Routes>
