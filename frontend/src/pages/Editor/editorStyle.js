@@ -8,7 +8,6 @@ export const Content = styled('main')`
 export const LoadingContainer = styled('main')`
   height: 100vh;
   width: 100vw;
-  background: var(--white);
   display: flex;
   flex-direction: column;
   align-items: center;
