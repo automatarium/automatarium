@@ -25,7 +25,7 @@ export const getProject = async ( req: Request, res: Response, next: NextFunctio
 }
 
 export const createProject = async ( req: Request, res: Response, next: NextFunction ) => {  
-  const { id, isPublic, meta, initialState, states, transitions, comments, tests } = req.body
+  const { id, isPublic, meta, initialState, states, transitions, comments, tests, config } = req.body
   const { uid } = req.user as RequestUser
 
   // Create new project
@@ -34,6 +34,7 @@ export const createProject = async ( req: Request, res: Response, next: NextFunc
     userid: uid,
     isPublic,
     meta,
+    config,
     initialState,
     states,
     transitions,
@@ -75,7 +76,7 @@ export const getProjects = async ( req: Request, res: Response, next: NextFuncti
 export const updateProject = async ( req: Request, res: Response, next: NextFunction ) => {
   const { pid } = req.params  
   const { uid } = req.user as RequestUser
-  const { isPublic, meta, initialState, states, transitions, comments, tests } = req.body
+  const { isPublic, meta, initialState, states, transitions, comments, tests, config } = req.body
 
   try {
     // Update existing project
@@ -86,6 +87,7 @@ export const updateProject = async ( req: Request, res: Response, next: NextFunc
     { 
       isPublic,
       meta,
+      config,
       initialState,
       states,
       transitions,
