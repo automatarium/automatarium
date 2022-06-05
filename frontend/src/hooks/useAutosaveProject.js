@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react'
-import isEqual from 'lodash.isequal'
+import { useEffect } from 'react'
 
 import { useProjectsStore, useProjectStore } from '/src/stores'
+import dayjs from 'dayjs'
 
 const SAVE_INTERVAL = 5 * 1000
 
 const useAutosaveProject = () => {
-  const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
-  const [savedProject, setSavedProject] = useState()
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
+  const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
 
   useEffect(() => {
     const timer = setInterval(() => {
       const currentProject = useProjectStore.getState().project
-      if (!isEqual(currentProject, savedProject)) {
+      if (!lastSaveDate || dayjs(lastChangeDate).isAfter(lastSaveDate)) {
         const toSave = {...currentProject, meta: { ...currentProject.meta, dateEdited: new Date() }}
         upsertProject(toSave) 
-        setSavedProject(toSave)
         setLastSaveDate(new Date())
       }
     }, SAVE_INTERVAL)
