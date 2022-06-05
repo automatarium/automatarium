@@ -18,6 +18,11 @@ const NewFile = () => {
     navigate('/editor')
   }
 
+  const handleLoadProject = project => {
+    setProject(project)
+    navigate('/editor')
+  }
+
   return <Main wide>
     <Header />
     <section>
@@ -43,7 +48,8 @@ const NewFile = () => {
             key={p._id}
             name={p?.meta?.name ?? '<Untitled>'}
             type={p?.config?.type ?? '???'}
-            date={dayjs(p?.meta?.dateEdited)} />
+            date={dayjs(p?.meta?.dateEdited)}
+            onClick={() => handleLoadProject(p)}/>
         )}
         {projects.length === 0 && <NoResultSpan>No projects yet :)</NoResultSpan>}
       </CardList>

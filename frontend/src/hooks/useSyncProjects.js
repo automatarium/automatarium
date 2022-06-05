@@ -26,8 +26,8 @@ const useSyncProjects = () => {
             .filter(bp => !isolatedProjects.find(ip => ip._id === bp._id))
             .map(bp => {
               const localProject = projects.find(lp => lp._id === bp._id)
-              const localDate = dayjs(localProject.meta.editedAt)
-              const remoteDate = dayjs(bp.meta.editedAt)
+              const localDate = dayjs(localProject.meta.dateEdited)
+              const remoteDate = dayjs(bp.meta.dateEdited)
               return remoteDate.isAfter(localDate)
                 ? bp
                 : localProject

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import dayjs from 'dayjs'
 
 import { useAuth, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore } from '/src/stores'
@@ -16,6 +17,7 @@ const Editor = () => {
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
   const [loading, setLoading] = useState(true)
+  const [fetchedProject, setFetchedProject] = useState(false)
 
   // Auto save project
   useAutosaveProject()
@@ -33,17 +35,30 @@ const Editor = () => {
   // Ensure project is syncronised with the backend before showing editor page
   // This prevents situation where user updates local copy of project before its overriden by backend sync
   useEffect(() => {
-    if (!userLoading) {
+    if (!userLoading && !fetchedProject) {
+      console.log('user not loading')
       if (!user) {
         // If not logged in, just show what is stored
+        console.log('no user, showing project')
         setLoading(false)
       } else {
+        console.log('user loaded, getting from BE')
         // If logged in, attempt to update stored project from backend before showing it
         const projectStore = useProjectStore.getState()
         const { project: currentProject, set: setProject } = projectStore
-        // TODO: only update if edited date is newer
+        console.log('got project from BE')
+
+        // Get project from BE
+        setFetchedProject(true)
         getProject(currentProject._id)
-          .then(({ project }) => project && setProject(project))
+          .then(({ project }) => {
+            if (dayjs(project.meta.dateEdited).isAfter(currentProject.meta.dateEdited)) {
+              console.log('Setting to project from BE');
+              project && setProject(project)
+            } else {
+              console.log('Ignoring BE project because older')
+            }
+          })
           .then(() => setLoading(false))
           .catch(e => { console.warn(e); setLoading(false) })
       }
