@@ -29,6 +29,22 @@ export const Name = styled('span')`
   cursor: pointer;
 `
 
+export const NameRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: .2em;
+`
+
+export const SaveStatus = styled('span')`
+  font-style: italic;
+  opacity: .2;
+  transition: opacity .5s;
+
+  ${p => !p.$show && `
+    opacity: 0; 
+  `}
+`
+
 export const Actions = styled('div')`
   display: flex;
   align-items: center;

@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
 import { useAuth } from '/src/hooks'
@@ -10,6 +12,8 @@ import {
   Wrapper,
   Menu,
   Name,
+  NameRow,
+  SaveStatus,
   DropdownMenus,
   Actions,
   ButtonGroup,
@@ -17,6 +21,9 @@ import {
 } from './menubarStyle'
 import menus from './menus'
 import useProjectStore from '../../stores/useProjectStore'
+
+// Extend dayjs
+dayjs.extend(relativeTime)
 
 
 const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
@@ -57,6 +64,8 @@ const Menubar = () => {
   const [signupModalVisible, setSignupModalVisible] = useState(false)
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
+  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const setProjectName = useProjectStore(s => s.setName)
 
   const handleChangeProjectName = () => {
@@ -72,7 +81,10 @@ const Menubar = () => {
 
           <div>
             {/* TODO: Make the title editable */}
-            <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
+            <NameRow>
+              <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
+              <SaveStatus $show={!(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))}>Saving...</SaveStatus>
+            </NameRow>
 
             <DropdownMenus>
               {menus.map(item => (

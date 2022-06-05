@@ -48,6 +48,8 @@ const useProjectStore = create(persist((set, get) => ({
   project: null,
   history: [],
   historyPointer: null,
+  lastChangeDate: null,
+  lastSaveDate: null,
   
   set: project => { set({ project, history: [ clone(project) ], historyPointer: 0 })},
 
@@ -66,6 +68,9 @@ const useProjectStore = create(persist((set, get) => ({
 
     // Reset pointer
     state.historyPointer = state.history.length - 1
+
+    // Update edited date
+    state.lastChangeDate = new Date()
   })),
 
   undo: () => set(produce(state => {
@@ -78,6 +83,9 @@ const useProjectStore = create(persist((set, get) => ({
 
     // Update project
     state.project = state.history[state.historyPointer]
+
+    // Update edited date
+    state.lastChangeDate = new Date()
   })),
 
   redo: () => set(produce(state => {
@@ -90,11 +98,18 @@ const useProjectStore = create(persist((set, get) => ({
 
     // Update project
     state.project = state.history[state.historyPointer]
+
+    // Update edited date
+    state.lastChangeDate = new Date()
   })),
+
+  /* Change the date the project was last saved */
+  setLastSaveDate: lastSaveDate => set({ lastSaveDate }),
 
   /* Change the projects name */
   setName: name => set(s => ({
-    project: {...s.project, meta: {...s.project.meta, name }}
+    project: {...s.project, meta: {...s.project.meta, name }},
+    lastChangeDate: new Date(),
   })),
 
   /* Create a new transition */
@@ -125,17 +140,21 @@ const useProjectStore = create(persist((set, get) => ({
   })),
 
   /* Update tests */
-  setSingleTest: value => set(produce(({ project }) => {
-    project.tests.single = value
+  setSingleTest: value => set(produce((state) => {
+    state.project.tests.single = value
+    state.lastChangeDate = new Date()
   })),
-  addBatchTest: () => set(produce(({ project }) => {
-    project.tests.batch.push('')
+  addBatchTest: () => set(produce((state) => {
+    state.project.tests.batch.push('')
+    state.lastChangeDate = new Date()
   })),
-  setBatchTest: (index, value) => set(produce(({ project }) => {
-    project.tests.batch[index] = value
+  setBatchTest: (index, value) => set(produce((state) => {
+    state.project.tests.batch[index] = value
+    state.lastChangeDate = new Date()
   })),
-  removeBatchTest: index => set(produce(({ project }) => {
-    project.tests.batch.splice(index, 1)
+  removeBatchTest: index => set(produce((state) => {
+    state.project.tests.batch.splice(index, 1)
+    state.lastChangeDate = new Date()
   })),
 
   /* Set given state to be the initial state */
@@ -169,7 +188,7 @@ const useProjectStore = create(persist((set, get) => ({
     project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))
   })),
 
-  reset: () => set({ project: createNewProject(), history: [], historyPointer: null })
+  reset: () => set({ project: createNewProject(), history: [], historyPointer: null, dateEdited: null })
 }), {
   name: 'automatarium-project'
 }))

@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { useProjectStore, useSelectionStore, useViewStore } from '/src/stores'
+import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 
@@ -28,6 +28,8 @@ const useActions = (registerHotkeys=false) => {
   const createNewProject = useProjectStore(s => s.reset)
   const setProject = useProjectStore(s => s.set)
   const moveView = useViewStore(s => s.moveViewPosition)
+  const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
+  const upsertProject = useProjectsStore(s => s.upsertProject)
 
   // TODO: memoize
   const actions = {
@@ -38,7 +40,7 @@ const useActions = (registerHotkeys=false) => {
       },
     },
     OPEN_FILE: {
-      hotkey: { key: 'o', meta: true, handler: () => console.log('Open') }
+      hotkey: { key: 'o', meta: true, handler: () => console.log('Open') },
     },
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkey: { key: 'i', meta: true },
@@ -56,7 +58,12 @@ const useActions = (registerHotkeys=false) => {
     },
     SAVE_FILE: {
       hotkey: { key: 's', meta: true },
-      handler: () => console.log('Save'),
+      handler: () => {
+        const project = useProjectStore.getState().project
+        const toSave = {...project, meta: { ...project.meta, dateEdited: new Date() }}
+        upsertProject(toSave)
+        setLastSaveDate(new Date())
+      },
     },
     SAVE_FILE_AS: {
       hotkey: { key: 's', shift: true, meta: true },
