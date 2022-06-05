@@ -43,7 +43,7 @@ const NewFile = () => {
     </section>
     <section>
       <CardList title="Recent" button={<Button>Open...</Button>}>
-        {projects.map(p =>
+        {projects.sort((a, b) => b.meta.dateEdited < a.meta.dateEdited ? -1 : 1).map(p =>
           <ProjectCard
             key={p._id}
             name={p?.meta?.name ?? '<Untitled>'}
