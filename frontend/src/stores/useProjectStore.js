@@ -5,6 +5,8 @@ import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
+import { randomProjectName } from '/src/util/projectName'
+
 import {
   APP_VERSION,
   SCHEMA_VERSION,
@@ -27,7 +29,7 @@ export const createNewProject = (projectType) => ({
   },
   initialState: null,
   meta: {
-    name: null,
+    name: randomProjectName(),
     dateCreated: new Date(),
     dateEdited: new Date(),
     version: SCHEMA_VERSION,
@@ -47,7 +49,7 @@ const useProjectStore = create(persist((set, get) => ({
   history: [],
   historyPointer: null,
   
-  set: project => set({ project, history: [ clone(project) ], historyPointer: 0 }),
+  set: project => { set({ project, history: [ clone(project) ], historyPointer: 0 })},
 
   /* Add current project state to stored history of project states */
   commit: () => set(produce(state => {
@@ -162,7 +164,7 @@ const useProjectStore = create(persist((set, get) => ({
     project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))
   })),
 
-  reset: () => set({ project: createNewProject() })
+  reset: () => set({ project: createNewProject(), history: [], historyPointer: null })
 }), {
   name: 'automatarium-project'
 }))

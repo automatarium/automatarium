@@ -16,6 +16,7 @@ import {
   DropdownButtonWrapper,
 } from './menubarStyle'
 import menus from './menus'
+import useProjectStore from '../../stores/useProjectStore'
 
 
 const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
@@ -55,6 +56,8 @@ const Menubar = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
 
+  const projectName = useProjectStore(s => s.project?.meta?.name)
+
   return (
     <>
       <Wrapper>
@@ -63,7 +66,7 @@ const Menubar = () => {
 
           <div>
             {/* TODO: Make the title editable */}
-            <Name>Example Title</Name>
+            <Name>{projectName ?? 'Untitled Project'}</Name>
 
             <DropdownMenus>
               {menus.map(item => (

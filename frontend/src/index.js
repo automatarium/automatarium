@@ -8,6 +8,7 @@ import * as Pages from './pages'
 import { useEgg } from '/src/hooks'
 import { Footer } from '/src/components'
 import useSyncProjects from '/src/hooks/useSyncProjects'
+import useAutosaveProject from './hooks/useAutosaveProject'
 
 // Set up goober to use React
 setup(

@@ -8,6 +8,7 @@ import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/componen
 import { getProject } from '/src/services/project'
 
 import { Content, LoadingContainer } from './editorStyle'
+import useAutosaveProject from '/src/hooks/useAutosaveProject'
 
 const Editor = () => {
   const { user, loading: userLoading } = useAuth()
@@ -15,6 +16,9 @@ const Editor = () => {
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
   const [loading, setLoading] = useState(true)
+
+  // Auto save project
+  useAutosaveProject()
 
   // Register action hotkey
   useActions(true)
@@ -37,6 +41,7 @@ const Editor = () => {
         // If logged in, attempt to update stored project from backend before showing it
         const projectStore = useProjectStore.getState()
         const { project: currentProject, set: setProject } = projectStore
+        // TODO: only update if edited date is newer
         getProject(currentProject._id)
           .then(({ project }) => project && setProject(project))
           .then(() => setLoading(false))

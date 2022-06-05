@@ -1,16 +1,19 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
+import dayjs from 'dayjs'
 
 import { useAuth } from '/src/hooks'
 import { useProjectsStore } from '/src/stores'
-import { getProjects } from '/src/services/project'
+import { getProjects, updateProject } from '/src/services/project'
+import isEqual from 'lodash.isequal'
 
 const useSyncProjects = () => {
   const { user } = useAuth()
   const { projects, setProjects } = useProjectsStore()
+  const [savedProjects, setSavedProjects] = useState()
 
   // Update projects from backend (if authenticated)
   useEffect(() => {
-    if (user) {
+    if (user && !isEqual(projects, savedProjects)) {
       getProjects()
         .then(({ projects: backendProjects }) => {
           // Find projects that exist only on backend or local storage (but not both)
@@ -33,12 +36,13 @@ const useSyncProjects = () => {
           // Update projects state
           const updatedProjects = [...isolatedProjects, ...resolvedProjects]
           setProjects(updatedProjects)
+          setSavedProjects(updatedProjects)
 
           // Update backend with resolved projects
           Promise.all(updatedProjects.map(p => updateProject(p)))
         })
     }
-  }, [user])
+  }, [user, projects])
 
   return projects
 }
