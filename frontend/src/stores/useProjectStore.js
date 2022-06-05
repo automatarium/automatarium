@@ -92,6 +92,11 @@ const useProjectStore = create(persist((set, get) => ({
     state.project = state.history[state.historyPointer]
   })),
 
+  /* Change the projects name */
+  setName: name => set(s => ({
+    project: {...s.project, meta: {...s.project.meta, name }}
+  })),
+
   /* Create a new transition */
   createTransition: transition => {
     const id = 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))

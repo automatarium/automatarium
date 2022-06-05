@@ -57,6 +57,12 @@ const Menubar = () => {
   const [signupModalVisible, setSignupModalVisible] = useState(false)
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
+  const setProjectName = useProjectStore(s => s.setName)
+
+  const handleChangeProjectName = () => {
+    const newName = prompt('Name for project?')
+    if (newName) setProjectName(newName)
+  }
 
   return (
     <>
@@ -66,7 +72,7 @@ const Menubar = () => {
 
           <div>
             {/* TODO: Make the title editable */}
-            <Name>{projectName ?? 'Untitled Project'}</Name>
+            <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
 
             <DropdownMenus>
               {menus.map(item => (

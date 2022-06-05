@@ -26,6 +26,7 @@ export const Name = styled('span')`
   display: block;
   font-size: 1.2em;
   padding: .2em .5rem;
+  cursor: pointer;
 `
 
 export const Actions = styled('div')`
