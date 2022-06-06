@@ -1,6 +1,18 @@
-const simulateFSA = (
-  graph,
-  input,
+import parseRead from './parseRead'
+import { UnresolvedFSAGraph, FSAGraph } from './types'
+
+const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
+  // Resolve graph transitions
+  const transitions = graph.transitions.map(transition => ({...transition, read: parseRead(transition.read)}))
+  const resolvedGraph: FSAGraph = { ...graph, transitions }
+  
+  // Simulate
+  return simulateFSAGraph(resolvedGraph, input)
+}
+
+const simulateFSAGraph = (
+  graph: FSAGraph,
+  input: string,
   currStateID = graph?.initialState,
   trace = [{
     to: graph?.initialState,
@@ -9,10 +21,9 @@ const simulateFSA = (
   lambdaCount = 0,
   lastTransitionLambda = false
 ) => {
-
   // Get next set of possible transitions
   const possibleTransitions = graph.transitions.filter(
-    tr => tr.from === currStateID && (tr.read === input[0] || (tr.read === '' && lambdaCount < 100))
+    tr => tr.from === currStateID && (input?.[0] && tr.read?.some(r => r === input[0]) || (tr.read.length === 0 && lambdaCount < 100))
   )
 
   // Move lambda transitions to end of array (to prioritise non-lambda transitions)
@@ -36,18 +47,20 @@ const simulateFSA = (
     return { accepted: true, trace, remaining: input }
   }
 
+  // TODO: determine which read value was used for trace
+
   // Continue recurring
   const results = possibleTransitions.map(tr =>
-    simulateFSA(
+    simulateFSAGraph(
       graph,
-      tr.read === '' ? input : input.slice(1), // Slice first character off input
+      tr.read.length === 0 ? input : input.slice(1), // Slice first character off input
       tr.to, // Transition to next possible state
       [...trace, {
         to: tr.to,
-        read: tr.read,
+        read: tr.read.length === 0 ? '' : input[0],
       }], // Append next transition to trace
-      tr.read === '' && lastTransitionLambda ? lambdaCount + 1 : 0, // Increment lambda counter
-      tr.read === '' // Tell the next recurse whether this transition was a lambda
+      tr.read.length === 0 && lastTransitionLambda ? lambdaCount + 1 : 0, // Increment lambda counter
+      tr.read.length === 0 // Tell the next recurse whether this transition was a lambda
     )
   )
 

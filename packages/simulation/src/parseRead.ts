@@ -1,17 +1,17 @@
+import { ReadSymbol } from './types'
+
 const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/
-const RANGE_VALS = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
+const RANGE_VALS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
-type Symbol = string
-
-const makeCharRange = (start:Symbol, stop:Symbol): Symbol[] => {
+const makeCharRange = (start:ReadSymbol, stop:ReadSymbol): ReadSymbol[] => {
   const startChar = RANGE_VALS.indexOf(start)
   const stopChar = RANGE_VALS.indexOf(stop)
   return Array.from({ length: stopChar - startChar + 1 })
     .map((_, i) => RANGE_VALS[startChar + i])
 }
 
-const parseRead = (read:string): Symbol[] => {
+const parseRead = (read:string): ReadSymbol[] => {
   // Find ranges
   const rangeStrings = read.match(RANGE_REG) ?? []
   read = read.replace(RANGE_REG, '')

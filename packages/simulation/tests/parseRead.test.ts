@@ -20,6 +20,10 @@ describe('Expand literals', () => {
     const symbols = parseRead('!@#$%^&*()_+-=')
     expect(symbols).toIncludeSameMembers(expectedSymbols)
   })
+
+  test('Return empty for no length string', () => {
+    expect(parseRead('')).toStrictEqual([])
+  })
 })
 
 describe('Expand ranges', () => {
@@ -152,6 +156,12 @@ describe('Expand ranges', () => {
   test('Should expand [0-Z]', () => {
     const expectedSymbols = '0123456789abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
     const symbols = parseRead('[0-Z]')
+    expect(symbols).toIncludeSameMembers(expectedSymbols)
+  })
+
+  test('Should expand empty string', () => {
+    const expectedSymbols = ''.split('')
+    const symbols = parseRead('')
     expect(symbols).toIncludeSameMembers(expectedSymbols)
   })
 })
