@@ -1,6 +1,7 @@
 export type ReadSymbol = string
 
 type StateID = number
+type TransitionID = number
 
 type State = {
   id: StateID
@@ -9,6 +10,7 @@ type State = {
 }
 
 type Transition = {
+  id: TransitionID,
   to: StateID,
   from: StateID,
   read: ReadSymbol[],
@@ -23,6 +25,7 @@ type FSAGraph = {
 }
 
 type UnresolvedTransition = {
+  id: TransitionID,
   to: StateID,
   from: StateID,
   read: string

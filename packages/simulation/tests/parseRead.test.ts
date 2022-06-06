@@ -21,7 +21,7 @@ describe('Expand literals', () => {
     expect(symbols).toIncludeSameMembers(expectedSymbols)
   })
 
-  test('Return empty for no length string', () => {
+  test('Return empty for zero-length string', () => {
     expect(parseRead('')).toStrictEqual([])
   })
 })
@@ -42,18 +42,6 @@ describe('Expand ranges', () => {
   test('Should expand [a-c][e-g]', () => {
     const expectedSymbols = 'abcefg'.split('')
     const symbols = parseRead('[a-c][e-g]')
-    expect(symbols).toIncludeSameMembers(expectedSymbols)
-  })
-
-  test('Should expand [a-c][e-g]', () => {
-    const expectedSymbols = 'abcefg'.split('')
-    const symbols = parseRead('[a-c][e-g]')
-    expect(symbols).toIncludeSameMembers(expectedSymbols)
-  })
-
-  test('Should expand [a-z][A-Z]', () => {
-    const expectedSymbols = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-    const symbols = parseRead('[a-z][A-Z]')
     expect(symbols).toIncludeSameMembers(expectedSymbols)
   })
 
@@ -144,12 +132,6 @@ describe('Expand ranges', () => {
   test('Should expand [0-z]', () => {
     const expectedSymbols = '0123456789abcdefghijklmnopqrstuvwyxz'.split('')
     const symbols = parseRead('[0-z]')
-    expect(symbols).toIncludeSameMembers(expectedSymbols)
-  })
-
-  test('Should expand [0-Z]', () => {
-    const expectedSymbols = '0123456789abcdefghijklmnopqrstuvwyxzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-    const symbols = parseRead('[0-Z]')
     expect(symbols).toIncludeSameMembers(expectedSymbols)
   })
 

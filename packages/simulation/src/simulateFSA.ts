@@ -1,4 +1,5 @@
 import parseRead from './parseRead'
+import validTransitions from './validTransitions'
 import { UnresolvedFSAGraph, FSAGraph } from './types'
 
 const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
@@ -17,19 +18,15 @@ const simulateFSAGraph = (
   trace = [{
     to: graph?.initialState,
     read: null,
-  }],
-  lambdaCount = 0,
-  lastTransitionLambda = false
+  }]
 ) => {
-  // Get next set of possible transitions
-  const possibleTransitions = graph.transitions
-    .filter(tr => tr.from === currStateID && (input?.[0] && tr.read?.some(r => r === input[0]) || (tr.read.length === 0 && lambdaCount < 100)))
-    .sort((a, b) => b.read.length - a.read.length)
-
   // Find current state
   const currentState = graph.states.find(state => state.id === currStateID)
 
-  // No transitions possible?
+  // Get next set of possible transitions
+  const possibleTransitions = validTransitions(graph, currStateID, input?.[0])
+
+  // Are no transitions possible?
   if (possibleTransitions.length === 0) {
     // No transitions due to no remaining input
     if (input.length === 0) {
@@ -46,17 +43,12 @@ const simulateFSAGraph = (
   }
 
   // Continue recurring
-  const results = possibleTransitions.map(tr =>
+  const results = possibleTransitions.map(({ transition, trace: nextTrace }) =>
     simulateFSAGraph(
       graph,
-      tr.read.length === 0 ? input : input.slice(1), // Slice first character off input
-      tr.to, // Transition to next possible state
-      [...trace, {
-        to: tr.to,
-        read: tr.read.length === 0 ? '' : input[0],
-      }], // Append next transition to trace
-      tr.read.length === 0 && lastTransitionLambda ? lambdaCount + 1 : 0, // Increment lambda counter
-      tr.read.length === 0 // Tell the next recurse whether this transition was a lambda
+      transition.read.length === 0 ? input : input.slice(1), // Slice first character off input
+      transition.to, // Transition to next possible state
+      [...trace, ...nextTrace], // Append next transition to trace
     )
   )
 
