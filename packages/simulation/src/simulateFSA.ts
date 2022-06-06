@@ -22,20 +22,18 @@ const simulateFSAGraph = (
   lastTransitionLambda = false
 ) => {
   // Get next set of possible transitions
-  const possibleTransitions = graph.transitions.filter(
-    tr => tr.from === currStateID && (input?.[0] && tr.read?.some(r => r === input[0]) || (tr.read.length === 0 && lambdaCount < 100))
-  )
+  const possibleTransitions = graph.transitions
+    .filter(tr => tr.from === currStateID && (input?.[0] && tr.read?.some(r => r === input[0]) || (tr.read.length === 0 && lambdaCount < 100)))
+    .sort((a, b) => b.read.length - a.read.length)
 
-  // Move lambda transitions to end of array (to prioritise non-lambda transitions)
-  possibleTransitions.sort((a, b) => b.read.length - a.read.length)
-
-  const currState = graph.states.find(state => state.id === currStateID)
+  // Find current state
+  const currentState = graph.states.find(state => state.id === currStateID)
 
   // No transitions possible?
   if (possibleTransitions.length === 0) {
     // No transitions due to no remaining input
     if (input.length === 0) {
-      return { accepted: currState.isFinal, trace, remaining: input }
+      return { accepted: currentState.isFinal, trace, remaining: input }
     // No transitions due to incorrect input character
     } else {
       return { accepted: false, trace, remaining: input }
@@ -43,11 +41,9 @@ const simulateFSAGraph = (
   }
 
   // Are we done processing symbols?
-  if (input.length === 0 && currState.isFinal) {
+  if (input.length === 0 && currentState.isFinal) {
     return { accepted: true, trace, remaining: input }
   }
-
-  // TODO: determine which read value was used for trace
 
   // Continue recurring
   const results = possibleTransitions.map(tr =>
