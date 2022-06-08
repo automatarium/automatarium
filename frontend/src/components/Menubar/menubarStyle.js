@@ -83,3 +83,8 @@ export const DropdownButtonWrapper = styled('button', forwardRef)`
     background: var(--surface);
   }
 `
+
+export const LogoWrapper = styled('a')`
+  cursor: pointer;
+  display: inherit;
+`

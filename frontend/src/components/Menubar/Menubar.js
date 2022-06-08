@@ -10,6 +10,7 @@ import SignupPage from '/src/pages/Signup/Signup'
 
 import {
   Wrapper,
+  LogoWrapper,
   Menu,
   Name,
   NameRow,
@@ -77,7 +78,9 @@ const Menubar = () => {
     <>
       <Wrapper>
         <Menu>
-          <Logo />
+          <LogoWrapper href='/new'>
+            <Logo />
+          </LogoWrapper>
 
           <div>
             {/* TODO: Make the title editable */}
