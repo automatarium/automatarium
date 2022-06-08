@@ -4,22 +4,26 @@
     {
       "x": 435,
       "y": 225,
-      "id": 0
+      "id": 0,
+      "isFinal": false
     },
     {
       "x": 615,
       "y": 225,
-      "id": 1
+      "id": 1,
+      "isFinal": false
     },
     {
       "x": 795,
       "y": 225,
-      "id": 2
+      "id": 2,
+      "isFinal": false
     },
     {
       "x": 975,
       "y": 225,
-      "id": 3
+      "id": 3,
+      "isFinal": false
     },
     {
       "x": 1155,

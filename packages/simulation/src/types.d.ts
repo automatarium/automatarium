@@ -10,30 +10,31 @@ type State = {
 }
 
 type Transition = {
-  id: TransitionID,
-  to: StateID,
-  from: StateID,
-  read: ReadSymbol[],
+  id: TransitionID
+  to: StateID
+  from: StateID
+  read: ReadSymbol[]
   [other: string]: unknown
 }
 
 type FSAGraph = {
-  initialState: StateID,
-  states: State[],
-  transitions: Transition[],
+  initialState: StateID
+  states: State[]
+  transitions: Transition[]
   [other: string]: unknown
 }
 
 type UnresolvedTransition = {
-  id: TransitionID,
-  to: StateID,
-  from: StateID,
+  id: TransitionID
+  to: StateID
+  from: StateID
   read: string
   [other: string]: unknown
 }
 
 type UnresolvedFSAGraph = {
-  initialState: StateID,
-  states: State[],
-  transitions: UnresolvedTransition[],
+  initialState: StateID
+  states: State[]
+  transitions: UnresolvedTransition[]
+  [other: string]: unknown
 }

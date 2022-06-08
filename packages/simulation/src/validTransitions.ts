@@ -24,10 +24,19 @@ const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: Re
       .map(transition => ({ transition, trace: precedingTransitions })))
     .reduce((a, b) => [...a, ...b], [])
 
+  // Find transitions to final states in lambda closure
+  const finalTransitions = closure
+    .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
+    .map(([stateID, precedingTransitions]) => ({
+      transition: graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0),
+      trace: precedingTransitions.slice(0, -1),
+    }))
+
   // Combine transitions
   const allTransitions = [
     ...directTransitions,
     ...indirectTransitions,
+    ...finalTransitions,
   ]
 
   // Format trace, add final transition to trace and return
