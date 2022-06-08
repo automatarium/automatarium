@@ -30,7 +30,7 @@ const simulateFSAGraph = (
   if (possibleTransitions.length === 0) {
     // No transitions due to no remaining input
     if (input.length === 0) {
-      return { accepted: currentState.isFinal, trace, remaining: input }
+      return { accepted: currentState.isFinal === true, trace, remaining: input }
     // No transitions due to incorrect input character
     } else {
       return { accepted: false, trace, remaining: input }
