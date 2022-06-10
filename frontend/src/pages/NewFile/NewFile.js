@@ -86,6 +86,7 @@ const NewFile = () => {
           name={p?.meta?.name ?? '<Untitled>'}
           type={p?.config?.type ?? '???'}
           date={dayjs(p?.meta?.dateEdited)}
+          pid={p._id}
           onClick={() => handleLoadProject(p)}
         />
       )}

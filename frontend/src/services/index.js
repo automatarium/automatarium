@@ -41,5 +41,6 @@ const api = {
 }
 
 export * from './user'
+export * from './project'
 
 export default api
