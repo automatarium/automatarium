@@ -129,6 +129,21 @@ const useProjectStore = create(persist((set, get) => ({
     project.transitions.find(t => t.id === id).read = read
   })),
 
+  /* Create a new comment */
+  createComment: comment => set(produce(({ project }) => {
+    project.comments.push({ ...comment, id: 1 + Math.max(-1, ...project.comments.map(c => c.id)) })
+  })),
+
+  /* Update a comment by id */
+  updateComment: comment => set(produce(({ project }) => {
+    project.comments = project.comments.map(cm => cm.id === comment.id ? {...cm, ...comment} : cm)
+  })),
+
+  /* Remove a commejt by id */
+  removeComment: comment => set(produce(({ project }) => {
+    project.comments = project.comments.filter(cm => cm.id !== comment.id)
+  })),
+
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
     project.states.push({ isFinal: false, ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
@@ -191,6 +206,11 @@ const useProjectStore = create(persist((set, get) => ({
   /* Remove transitions by id */
   removeTransitions: transitionIDs => set(produce(({ project }) => {
     project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))
+  })),
+
+  /* Remove comments by id */
+  removeComments: commentIDs => set(produce(({ project }) => {
+    project.comments = project.comments.filter(c => !commentIDs.includes(c.id))
   })),
 
   reset: () => set({ project: createNewProject(), history: [], historyPointer: null, dateEdited: null })

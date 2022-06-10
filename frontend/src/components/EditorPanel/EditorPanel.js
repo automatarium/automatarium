@@ -2,8 +2,11 @@ import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, Inp
 import {
   useEvent,
   useStateDragging,
+  useCommentDragging,
+  useCommentSelection,
   useStateCreation,
   useTransitionCreation,
+  useCommentCreation,
   useStateSelection,
   useTransitionSelection,
   useContextMenus,
@@ -11,18 +14,26 @@ import {
 
 const EditorPanel = () => {
   // Interactivity hooks
-  const { selectState } = useStateSelection()
-  const { selectTransition } = useTransitionSelection()
-  const { startDrag } = useStateDragging()
+  const { select: selectState } = useStateSelection()
+  const { select: selectTransition } = useTransitionSelection()
+  const { select: selectComment } = useCommentSelection()
+  const { startDrag: startStateDrag } = useStateDragging()
+  const { startDrag: startCommentDrag } = useCommentDragging()
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   useStateCreation()
+  useCommentCreation()
   useContextMenus()
 
-  // Events
   useEvent('state:mousedown', e => {
     const selectedStateIDs = selectState(e)
     if (e.detail.originalEvent.button === 0)
-      startDrag(e, selectedStateIDs)
+      startStateDrag(e, selectedStateIDs)
+  })
+
+  useEvent('comment:mousedown', e => {
+    const selectedCommentIDs = selectComment(e)
+    if (e.detail.originalEvent.button === 0)
+      startCommentDrag(e, selectedCommentIDs)
   })
 
   useEvent('transition:mousedown', e => {

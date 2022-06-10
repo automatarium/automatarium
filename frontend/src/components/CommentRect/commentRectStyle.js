@@ -8,4 +8,10 @@ export const CommentContainer = styled('div', forwardRef)`
   border-radius: .5rem;
   border: 2.5px solid var(--input-border);
   user-select: none;
+  width: max-content;
+  margin: auto;
+
+  ${p => p.$selected && `
+    border-color: var(--primary);
+  `}
 `

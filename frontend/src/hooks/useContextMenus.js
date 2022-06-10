@@ -17,6 +17,7 @@ const useContextMenus = () => {
   useEvent('svg:mouseup', showContext('ctx:svg'))
   useEvent('state:mouseup', showContext('ctx:state'))
   useEvent('transition:mouseup', showContext('ctx:transition'))
+  useEvent('comment:mouseup', showContext('ctx:comment'))
 }
 
 export default useContextMenus

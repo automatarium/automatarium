@@ -7,12 +7,18 @@ import { locateTransition } from '/src/util/states'
 const SelectionBox = () => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
+
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
+  const comments = useProjectStore(s => s.project?.comments)
+
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const svgElement = useViewStore(s => s.svgElement)
+
   const setSelectedStates = useSelectionStore(s => s.setStates)
   const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
+  const setSelectedComments = useSelectionStore(s => s.setComments)
+
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
@@ -53,9 +59,17 @@ const SelectionBox = () => {
         transition.to.y >= startY &&
         transition.to.y <= endY).map(t => t.id)
 
+      // Determine selected comments
+      const selectedComments = comments.filter(comment =>
+        comment.x >= startX &&
+        comment.y >= startY &&
+        comment.x <= endX && 
+        comment.y <= endY).map(c => c.id)
+
       // Update state
       setSelectedStates(selectedStates)
       setSelectedTransitions(selectedTransitions)
+      setSelectedComments(selectedComments)
       setDragStart(null)
     }
   }, [toolActive, dragStart, mousePos, states])
