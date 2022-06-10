@@ -83,10 +83,6 @@ const TestingLab = () => {
 
   useEffect(() => {
     setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
-  }, [])
-
-  useEffect(() => {
-    setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
     simulateGraph()
   }, [lastChangeDate])
 
