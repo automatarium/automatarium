@@ -20,6 +20,7 @@ import {
   Actions,
   ButtonGroup,
   DropdownButtonWrapper,
+  NameInput,
 } from './menubarStyle'
 import menus from './menus'
 import useProjectStore from '../../stores/useProjectStore'
@@ -66,19 +67,31 @@ const Menubar = () => {
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const [shareModalVisible, setShareModalVisible] = useState(false)
 
+  const titleRef = useRef()
+  const [editingTitle, setEditingTitle] = useState(false)
+  const [titleValue, setTitleValue] = useState('')
+
   const projectName = useProjectStore(s => s.project?.meta?.name)
   const projectId = useProjectStore(s => s.project?._id)
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const setProjectName = useProjectStore(s => s.setName)
 
-  const handleChangeProjectName = () => {
-    const newName = prompt('Name for project?')
-    if (newName) setProjectName(newName)
+  const handleEditProjectName = () => {
+    setTitleValue(projectName ?? '')
+    setEditingTitle(true)
+    window.setTimeout(() => titleRef.current?.select(), 50)
+  }
+  const handleSaveProjectName = () => {
+    if (titleValue && !/^\s*$/.test(titleValue)) {
+      setProjectName(titleValue)
+    }
+    setEditingTitle(false)
   }
 
   // Determine whether saving
-  const isSaving = !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
+  const isSaving = user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
+
   return (
     <>
       <Wrapper>
@@ -88,9 +101,18 @@ const Menubar = () => {
           </LogoWrapper>
 
           <div>
-
             <NameRow>
-              <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
+              {editingTitle ? (
+                <NameInput
+                  value={titleValue}
+                  onChange={e => setTitleValue(e.target.value)}
+                  onBlur={handleSaveProjectName}
+                  onKeyDown={e => e.code === 'Enter' && handleSaveProjectName()}
+                  ref={titleRef}
+                />
+              ) : (
+                <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
+              )}
               <SaveStatus $show={isSaving}>Saving...</SaveStatus>
             </NameRow>
 
