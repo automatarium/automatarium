@@ -22,6 +22,7 @@ const App = () => {
   const location = useLocation()
   const hideFooter = location.pathname.match('/editor')
 
+  // Set color theme
   const colorPref = usePreferencesStore(state => state.preferences.color)
   const project = useProjectStore(state => state.project)
   useEffect(() => {
@@ -31,6 +32,13 @@ const App = () => {
     document.documentElement.style.setProperty('--primary-s', color.s + '%')
     document.documentElement.style.setProperty('--primary-l', color.l + '%')
   }, [colorPref, project?.config?.color])
+
+  // Set light/dark mode
+  const themePref = usePreferencesStore(state => state.preferences.theme)
+  useEffect(() => {
+    document.body.classList.toggle('light', themePref === 'light')
+    document.body.classList.toggle('dark', themePref === 'dark')
+  }, [themePref])
 
   useEgg()
   useSyncProjects()

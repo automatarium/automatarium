@@ -88,7 +88,7 @@ const SelectionBox = () => {
     width={endX - startX}
     height={endY - startY}
     fill='var(--selection-fill)'
-    stroke='var(--black)'
+    stroke='var(--stroke)'
     strokeWidth='1.75'
   />
 }

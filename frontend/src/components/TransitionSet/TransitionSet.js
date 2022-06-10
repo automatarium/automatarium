@@ -80,7 +80,7 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
     <text
       onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
       onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-      fill={selected ? 'var(--primary)' : 'black' }
+      fill={selected ? 'var(--primary)' : 'var(--stroke)' }
     >
       <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
         {text === '' ? 'λ' : text}
