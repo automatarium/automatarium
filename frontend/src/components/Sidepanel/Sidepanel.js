@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { ChevronRight, FlaskConical, Info, Settings2 } from 'lucide-react'
+import { ChevronRight, FlaskConical, Info as InfoIcon, Settings2 } from 'lucide-react'
 
 import { Sidebar } from '..'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
-import { TestingLab } from './Panels'
+import { TestingLab, Info } from './Panels'
 
 const panels = [
   {
@@ -16,7 +16,8 @@ const panels = [
   {
     label: 'About Your Automaton',
     value: 'about',
-    icon: <Info />,
+    icon: <InfoIcon />,
+    element: <Info />,
   },
   {
     label: 'File Options',

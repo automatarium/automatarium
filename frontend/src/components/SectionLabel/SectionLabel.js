@@ -1,14 +1,8 @@
-import { styled } from 'goober'
+import { Label } from './sectionLabelStyle'
 
-const SectionLabel = styled('label')`
-  text-transform: uppercase;
-  font-size: .75em;
-  font-weight: 600;
-  letter-spacing: .1em;
-  background: var(--toolbar);
-  color: var(--input-border);
-  display: block;
-  padding: .7em .8rem;
-`
+const SectionLabel = ({children, ...props}) =>
+  <Label {...props}>
+    {children}
+  </Label>
 
 export default SectionLabel
