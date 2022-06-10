@@ -1,10 +1,11 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 import { useViewStore, useToolStore } from '/src/stores'
+import { useEvent } from '/src/hooks'
 
 import { SCROLL_MAX, SCROLL_MIN, SCROLL_SPEED } from '/src/config/interactions'
 
-const useViewDragging = (containerRef) => {
+const useViewDragging = containerRef => {
   const currentTool = useToolStore(s => s.tool)
   const toolActive = currentTool === 'hand'
 
@@ -25,7 +26,7 @@ const useViewDragging = (containerRef) => {
     ]
   }, [containerRef?.current])
 
-  const onWheel = e => {
+  useEvent('wheel', e => {
     if (!containerRef.current.contains(e.target)) {
       return
     }
@@ -47,21 +48,24 @@ const useViewDragging = (containerRef) => {
       y: viewPosition.y - my * scrollAmount,
     })
     setViewScale(newScale)
-  }
+  }, [viewScale, viewPosition], {
+    options: { passive: false }
+  })
 
-  const onMouseDown = useCallback(e => {
-    if (toolActive) {
+  useEvent('mousedown', e => {
+    if (toolActive && e.target === containerRef.current) {
       setDragStartPosition(relativeMousePosition(e.clientX, e.clientY))
       setDragStartViewPosition(viewPosition)
     }
   }, [toolActive, viewPosition])
 
-  const onMouseUp = useCallback(() => {
+  const onMouseUp = () => {
     setDragStartPosition(null)
     setDragStartViewPosition(null)
-  }, [])
+  }
+  useEvent('mouseup', onMouseUp, [onMouseUp])
 
-  const onMouseMove = useCallback(e => {
+  useEvent('mousemove', e => {
     if (toolActive) {
       if (dragStartPosition !== null && dragStartViewPosition !== null) {
         const [sx, sy] = dragStartPosition
@@ -75,20 +79,6 @@ const useViewDragging = (containerRef) => {
       onMouseUp()
     }
   }, [dragStartPosition, dragStartViewPosition])
-
-  // Add listeners
-  useEffect(() => {
-    document.addEventListener('mousedown', onMouseDown)
-    document.addEventListener('mouseup', onMouseUp)
-    document.addEventListener('mousemove', onMouseMove)
-    document.addEventListener('wheel', onWheel, { passive: false })
-    return () => {
-      document.removeEventListener('mousedown', onMouseDown)
-      document.removeEventListener('mouseup', onMouseUp)
-      document.removeEventListener('mousemove', onMouseMove)
-      document.removeEventListener('wheel', onWheel)
-    }
-  }, [onMouseUp, onMouseDown, onMouseMove, onWheel])
 }
 
 export default useViewDragging
