@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
+import { convertJFLAPXML } from '@automatarium/jflap-translator'
 
 import { Main, Button, Header, ProjectCard } from '/src/components'
 import { NewProjectCard, CardList } from './components'
@@ -23,11 +24,44 @@ const NewFile = () => {
     navigate('/editor')
   }
 
+  const importProject = () => {
+    // Prompt user for file input
+    let input = document.createElement('input')
+    input.type = 'file'
+    input.onchange = () => {
+      // Read file data
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        const fileToOpen = input.files[0]
+        // JFLAP file load - handle conversion
+        if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
+          setProject({
+            ...createNewProject(),
+            ...convertJFLAPXML(reader.result)
+          })
+          navigate('/editor')
+        } else if (fileToOpen.name.toLowerCase().endsWith('.json')) {
+          // Set project (file) in project store
+          setProject({
+            ...createNewProject(),
+            ...JSON.parse(reader.result),
+          })
+          navigate('/editor')
+        } else {
+          window.alert('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
+        }
+
+      }
+      reader.readAsText(input.files[0])
+    }
+    input.click()
+  }
+
   return <Main wide>
     <Header />
 
     <CardList title="New Project"
-      button={<Button onClick={() => alert('Coming soon...')}>Import...</Button>}
+      button={<Button onClick={importProject}>Import...</Button>}
     >
       <NewProjectCard
         title="Finite State Automaton"
