@@ -99,7 +99,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
     <p>{errors.email?.message}</p>
 
     <Label htmlFor='password'>Password</Label>
-    <TextInput type='password' {...register('password')} />
+    <TextInput type='password' minLength={6} {...register('password')} />
 
     <p>{errors.email?.password}</p>
 
