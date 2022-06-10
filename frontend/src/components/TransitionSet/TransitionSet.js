@@ -28,8 +28,10 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
   const selected = selectedTransitions?.includes(id)
 
   // Determine how much to bend this path
-  const middleValue = count % 2 == 0 ? count / 2 : count / 2 + .5
-  const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i+1) : 0) / 2
+  const evenCount = count % 2 === 0
+  const middleValue = evenCount ? count / 2 + .5 : Math.floor(count / 2)
+  const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i + (evenCount ? 1 : 0)) : 0) / 2
+  console.log({ text, i, middleValue, bendValue })
 
   // Calculate path
   const { pathData, textPathData } = calculateTransitionPath({ from, to, bendValue, fullWidth }) 
@@ -90,13 +92,14 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
   // Determine control position
   // -- this is determined by moving along the normal to the difference between the states
   // -- with the distance moved controled by the `bend` value
-  const center = lerpPoints(from, to, .5)
-  const tangent = { x: to.x - from.x, y: to.y - from.y }
+  const [left, right] = from.x < to.x ? [from, to] : [to, from]
+  const center = lerpPoints(left, right, .5)
+  const tangent = { x: left.x - right.x, y: left.y - right.y }
   const a = Math.PI/2
   const orth = { x: tangent.x * Math.cos(a) - tangent.y * Math.sin(a), y: tangent.x * Math.sin(a) + tangent.y * Math.cos(a) }
   const normal = size(orth) > 0 ? { x: orth.x / size(orth), y: orth.y / size(orth) } : { x: 0, y: 0 }
   const control = isReflexive
-    ? { x: from.x, y: from.y - REFLEXIVE_Y_OFFSET }
+    ? { x: left.x, y: left.y - REFLEXIVE_Y_OFFSET }
     : { x: center.x + bendValue * normal.x, y: center.y + bendValue * normal.y }
   
   // Translate control points (Used for reflexive paths)
@@ -106,11 +109,11 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
   // We connect the edge to the closest point on each circle from the control point
   // (If fullWidth is set we move it just far enough to prevent accidental click events)
   const edge1 = fullWidth
-    ? movePointTowards(from, translatedControl1, 2)
-    : movePointTowards(from, translatedControl1, STATE_CIRCLE_RADIUS)
+    ? movePointTowards(to, translatedControl1, 2)
+    : movePointTowards(to, translatedControl1, STATE_CIRCLE_RADIUS)
   const edge2 = fullWidth
-    ? movePointTowards(to, translatedControl2, 2)
-    : movePointTowards(to, translatedControl2, STATE_CIRCLE_RADIUS)
+    ? movePointTowards(from, translatedControl2, 2)
+    : movePointTowards(from, translatedControl2, STATE_CIRCLE_RADIUS)
 
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
