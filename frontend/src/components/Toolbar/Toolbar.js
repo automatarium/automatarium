@@ -3,7 +3,8 @@ import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown }
 
 import { useToolStore } from '/src/stores'
 import { Dropdown } from '/src/components'
-import { Sidebar } from '../../components'
+import { Sidebar } from '/src/components'
+import useViewStore from '/src/stores/useViewStore'
 
 const tools = [
   {
@@ -37,6 +38,7 @@ const Toolbar = () => {
   const { tool, setTool } = useToolStore()
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
+  const viewScale = useViewStore(s => s.scale)
 
   return (
     <Sidebar $tools>
@@ -62,7 +64,7 @@ const Toolbar = () => {
         ref={r => zoomButtonRect.current = r?.getBoundingClientRect()}
         $active={zoomMenuOpen}
       >
-        <span>100%</span>
+        <span>{Math.floor(1/viewScale * 100)}%</span>
         <ChevronDown size="1.1em" />
       </Sidebar.Button>
 
