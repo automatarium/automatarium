@@ -28,11 +28,13 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
   const selected = selectedTransitions?.includes(id)
 
   // Determine how much to bend this path
-  const middleValue = count % 2 == 0 ? count / 2 : count / 2 + .5
-  const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i+1) : 0) / 2
+  const evenCount = count % 2 === 0
+  const middleValue = evenCount ? count / 2 + .5 : Math.floor(count / 2)
+  const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i + (evenCount ? 1 : 0)) : 0) / 2
 
   // Calculate path
-  const { pathData, textPathData } = calculateTransitionPath({ from, to, bendValue, fullWidth }) 
+  const isReflexive = from.x === to.x && from.y === to.y
+  const { pathData, textPathData } = calculateTransitionPath({ from, to, bendValue, fullWidth, i }) 
 
   // Generate a unique id for this path
   // -- used to place the text on the same path
@@ -52,13 +54,18 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
 
   return <>
     {/*The edge itself*/}
-    <StyledPath id={pathID} d={pathData} key={pathID} markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`} $selected={selected} />
+    <StyledPath
+      id={pathID}
+      d={pathData}
+      key={pathID}
+      markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`}
+      $selected={selected}/>
 
     {/* Invisible path used to place text */}
     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
     {/* Thicker invisible path used to select the transition */}
-    {!suppressEvents && <path
+    {!(isReflexive && count > 1) && !suppressEvents && <path
       id={pathID}
       d={pathData}
       key={`${pathID}-selection`}
@@ -82,7 +89,7 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
   </>
 }
 
-const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
+const calculateTransitionPath = ({ from, to, bendValue, fullWidth, i }) => {
 
   // Is this path reflexive
   const isReflexive = from.x === to.x && from.y === to.y
@@ -90,13 +97,14 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
   // Determine control position
   // -- this is determined by moving along the normal to the difference between the states
   // -- with the distance moved controled by the `bend` value
-  const center = lerpPoints(from, to, .5)
-  const tangent = { x: to.x - from.x, y: to.y - from.y }
+  const [left, right] = from.x < to.x ? [from, to] : [to, from]
+  const center = lerpPoints(left, right, .5)
+  const tangent = { x: left.x - right.x, y: left.y - right.y }
   const a = Math.PI/2
   const orth = { x: tangent.x * Math.cos(a) - tangent.y * Math.sin(a), y: tangent.x * Math.sin(a) + tangent.y * Math.cos(a) }
   const normal = size(orth) > 0 ? { x: orth.x / size(orth), y: orth.y / size(orth) } : { x: 0, y: 0 }
   const control = isReflexive
-    ? { x: from.x, y: from.y - REFLEXIVE_Y_OFFSET }
+    ? { x: left.x, y: left.y - REFLEXIVE_Y_OFFSET }
     : { x: center.x + bendValue * normal.x, y: center.y + bendValue * normal.y }
   
   // Translate control points (Used for reflexive paths)
@@ -114,9 +122,10 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
 
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
+  const textOffset = TEXT_PATH_OFFSET + (isReflexive ? (TEXT_PATH_OFFSET/2 + TEXT_PATH_OFFSET * 3.5 * i) : 0)
   const textPathData = edge1.x < edge2.x
-    ? `M${edge1.x}, ${edge1.y - TEXT_PATH_OFFSET} Q${control.x}, ${control.y - TEXT_PATH_OFFSET} ${edge2.x}, ${edge2.y - TEXT_PATH_OFFSET}`
-    : `M${edge2.x}, ${edge2.y - TEXT_PATH_OFFSET} Q${control.x}, ${control.y - TEXT_PATH_OFFSET} ${edge1.x}, ${edge1.y - TEXT_PATH_OFFSET}`
+    ? `M${edge1.x}, ${edge1.y - textOffset} Q${control.x}, ${control.y - textOffset} ${edge2.x}, ${edge2.y - textOffset}`
+    : `M${edge2.x}, ${edge2.y - textOffset} Q${control.x}, ${control.y - textOffset} ${edge1.x}, ${edge1.y - textOffset}`
 
   return { pathData, textPathData }
 }
