@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
 import { Navigate } from 'react-router-dom'
+import useProjectsStore from '/src/stores/useProjectsStore'
 
 import { useAuth } from '/src/hooks'
 
 const Logout = () => {
   const { signOut, loading } = useAuth()
+  const clearProjects = useProjectsStore(s => s.clearProjects)
 
   useEffect(() => {
     const doSignout = async () => {
       await signOut()
+      clearProjects()
     }
 
     doSignout()
