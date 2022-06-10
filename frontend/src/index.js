@@ -26,7 +26,7 @@ const App = () => {
   const colorPref = usePreferencesStore(state => state.preferences.color)
   const project = useProjectStore(state => state.project)
   useEffect(() => {
-    const projectColor = (project?.config?.color !== '' && project?.config?.color) || 'amber'
+    const projectColor = (project?.config?.color !== '' && project?.config?.color) || 'orange'
     const color = colorPref === 'match' ? COLORS[projectColor] : COLORS[colorPref]
     document.documentElement.style.setProperty('--primary-h', color.h)
     document.documentElement.style.setProperty('--primary-s', color.s + '%')
