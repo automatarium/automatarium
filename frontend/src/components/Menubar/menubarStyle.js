@@ -21,28 +21,54 @@ export const Menu = styled('div')`
     align-items: flex-start;
   }
 `
+export const NameRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: .5em;
+`
 
 export const Name = styled('span')`
   display: block;
   font-size: 1.2em;
   padding: .2em .5rem;
-  cursor: pointer;
 `
 
-export const NameRow = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: .2em;
+export const NameInput = styled('input', forwardRef)`
+  font: inherit;
+  font-size: 1.2em;
+  padding: .2em .5rem;
+  border: 0;
+  border-radius: .3em;
 `
 
 export const SaveStatus = styled('span')`
-  font-style: italic;
-  opacity: .2;
-  transition: opacity .5s;
+  position: relative;
+  font-size: .8em;
+  opacity: 0;
+  transition: opacity .3s;
+  padding-left: 1.8em;
+  user-select: none;
+  pointer-events: none;
 
-  ${p => !p.$show && `
-    opacity: 0; 
+  ${p => p.$show && `
+    opacity: .75;
   `}
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: calc(50% - .6em);
+    height: 1.2em;
+    width: 1.2em;
+    border-radius: 10em;
+    box-sizing: border-box;
+    border: 2px solid currentColor;
+    border-block-end: 2px solid transparent;
+    animation: spin 1s linear infinite;
+  }
 `
 
 export const Actions = styled('div')`
@@ -57,7 +83,7 @@ export const ButtonGroup = styled('div')`
   align-items: center;
   gap: .5em;
   margin-inline-end: .75em;
-  
+
   span {
     font-size: .8rem;
   }
