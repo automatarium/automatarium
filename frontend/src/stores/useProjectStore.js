@@ -22,7 +22,12 @@ export const createNewProject = (projectType) => ({
   _id: uuid(),
   states: [],
   transitions: [],
-  comments: [],
+  comments: [{
+    id: 0,
+    x: 100,
+    y: 100,
+    text: 'Bonza M8! have a brewski! Yeah thats right, the ute\'s at the garage. Did you want a sanga?'
+  }],
   tests: {
     single: '',
     batch: [''],

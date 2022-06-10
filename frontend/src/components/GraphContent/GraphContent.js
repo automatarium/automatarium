@@ -1,6 +1,6 @@
 import groupBy from 'lodash.groupby'
 
-import { StateCircle, TransitionSet, InitialStateArrow } from '/src/components'
+import { StateCircle, TransitionSet, InitialStateArrow, CommentRect } from '/src/components'
 import { useProjectStore, useSelectionStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 
@@ -11,6 +11,7 @@ const GraphContent = () => {
   // Destructure project to get state
   const states = project?.states ?? []
   const transitions = project?.transitions ?? []
+  const comments = project?.comments ?? []
   const initialState = project?.initialState
 
   // Group up transitions by the start and end nodes
@@ -40,6 +41,15 @@ const GraphContent = () => {
       cy={s.y}
       isFinal={s.isFinal}
       selected={selectedStates.includes(s.id)}
+    />)}
+
+    {/* Render all comments */}
+    {comments.map(c => <CommentRect
+      key={c.id}
+      id={c.id}
+      x={c.x}
+      y={c.y}
+      text={c.text}
     />)}
   </g>
 }
