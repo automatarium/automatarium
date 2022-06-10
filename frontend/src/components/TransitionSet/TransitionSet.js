@@ -114,11 +114,11 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth, i }) => {
   // We connect the edge to the closest point on each circle from the control point
   // (If fullWidth is set we move it just far enough to prevent accidental click events)
   const edge1 = fullWidth
-    ? movePointTowards(to, translatedControl1, 2)
-    : movePointTowards(to, translatedControl1, STATE_CIRCLE_RADIUS)
+    ? movePointTowards(from, translatedControl1, 2)
+    : movePointTowards(from, translatedControl1, STATE_CIRCLE_RADIUS)
   const edge2 = fullWidth
-    ? movePointTowards(from, translatedControl2, 2)
-    : movePointTowards(from, translatedControl2, STATE_CIRCLE_RADIUS)
+    ? movePointTowards(to, translatedControl2, 2)
+    : movePointTowards(to, translatedControl2, STATE_CIRCLE_RADIUS)
 
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
