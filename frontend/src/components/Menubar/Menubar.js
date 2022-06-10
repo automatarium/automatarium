@@ -77,6 +77,8 @@ const Menubar = () => {
     if (newName) setProjectName(newName)
   }
 
+  // Determine whether saving
+  const isSaving = !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
   return (
     <>
       <Wrapper>
@@ -89,7 +91,7 @@ const Menubar = () => {
 
             <NameRow>
               <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
-              <SaveStatus $show={!(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))}>Saving...</SaveStatus>
+              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
@@ -113,7 +115,7 @@ const Menubar = () => {
             <span>or</span>
             <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
           </ButtonGroup>}
-          {!userLoading && user && <Button onClick={() => setShareModalVisible(true)}>Share</Button>}
+          {!userLoading && user && <Button disabled={isSaving} onClick={() => setShareModalVisible(true)}>Share</Button>}
           {user && <Button onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
         </Actions>
 
