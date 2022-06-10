@@ -26,7 +26,9 @@ const NewFile = () => {
   return <Main wide>
     <Header />
 
-    <CardList title="Create">
+    <CardList title="New Project"
+      button={<Button onClick={() => alert('Coming soon...')}>Import...</Button>}
+    >
       <NewProjectCard
         title="Finite State Automaton"
         description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
@@ -43,7 +45,6 @@ const NewFile = () => {
 
     <CardList
       title="Your Projects"
-      button={<Button onClick={() => alert('Coming soon...')}>Import...</Button>}
     >
       {projects.sort((a, b) => b.meta.dateEdited < a.meta.dateEdited ? -1 : 1).map(p =>
         <ProjectCard
