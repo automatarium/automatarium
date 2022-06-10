@@ -86,7 +86,7 @@ const Menubar = () => {
             {/* TODO: Make the title editable */}
             <NameRow>
               <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
-              <SaveStatus $show={!(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))}>Saving...</SaveStatus>
+              <SaveStatus $show={user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))}>Saving...</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
