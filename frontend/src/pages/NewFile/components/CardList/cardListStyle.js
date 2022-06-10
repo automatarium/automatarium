@@ -20,6 +20,5 @@ export const CardListContainer = styled('div')`
 
   ${p => p.$scroll && `
     flex-wrap: nowrap;
-    overflow-x: scroll;
   `}
 `

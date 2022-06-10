@@ -26,6 +26,23 @@ export const Name = styled('span')`
   display: block;
   font-size: 1.2em;
   padding: .2em .5rem;
+  cursor: pointer;
+`
+
+export const NameRow = styled('div')`
+  display: flex;
+  align-items: center;
+  gap: .2em;
+`
+
+export const SaveStatus = styled('span')`
+  font-style: italic;
+  opacity: .2;
+  transition: opacity .5s;
+
+  ${p => !p.$show && `
+    opacity: 0; 
+  `}
 `
 
 export const Actions = styled('div')`
@@ -65,4 +82,9 @@ export const DropdownButtonWrapper = styled('button', forwardRef)`
   &:hover ${props => props.$active && `,&`} {
     background: var(--surface);
   }
+`
+
+export const LogoWrapper = styled('a')`
+  cursor: pointer;
+  display: inherit;
 `

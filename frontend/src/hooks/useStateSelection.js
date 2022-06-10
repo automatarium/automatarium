@@ -10,7 +10,7 @@ const useStateSelection = () => {
 
   const selectState = useCallback(e => {
     let newSelected
-    if (tool === 'cursor') {
+    if (tool === 'cursor' || e.detail.originalEvent.button === 2) {
       // Select states
       const stateID = e.detail.state.id
       newSelected = selectedStates.includes(stateID)

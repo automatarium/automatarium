@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import dayjs from 'dayjs'
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
 import { useAuth } from '/src/hooks'
@@ -8,14 +10,21 @@ import SignupPage from '/src/pages/Signup/Signup'
 
 import {
   Wrapper,
+  LogoWrapper,
   Menu,
   Name,
+  NameRow,
+  SaveStatus,
   DropdownMenus,
   Actions,
   ButtonGroup,
   DropdownButtonWrapper,
 } from './menubarStyle'
 import menus from './menus'
+import useProjectStore from '../../stores/useProjectStore'
+
+// Extend dayjs
+dayjs.extend(relativeTime)
 
 
 const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
@@ -55,15 +64,30 @@ const Menubar = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
 
+  const projectName = useProjectStore(s => s.project?.meta?.name)
+  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const setProjectName = useProjectStore(s => s.setName)
+
+  const handleChangeProjectName = () => {
+    const newName = prompt('Name for project?')
+    if (newName) setProjectName(newName)
+  }
+
   return (
     <>
       <Wrapper>
         <Menu>
-          <Logo />
+          <LogoWrapper href='/new'>
+            <Logo />
+          </LogoWrapper>
 
           <div>
             {/* TODO: Make the title editable */}
-            <Name>Example Title</Name>
+            <NameRow>
+              <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
+              <SaveStatus $show={!(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))}>Saving...</SaveStatus>
+            </NameRow>
 
             <DropdownMenus>
               {menus.map(item => (
@@ -72,7 +96,7 @@ const Menubar = () => {
                   item={item}
                   dropdown={dropdown}
                   setDropdown={setDropdown}
-                  onClick={() => setDropdown(dropdown === item.label ? undefined : item.label)}
+                  onClick={e => { setDropdown(dropdown === item.label ? undefined : item.label); e.stopPropagation() }}
                   onMouseEnter={() => dropdown !== undefined && setDropdown(item.label)}
                 />
               ))}

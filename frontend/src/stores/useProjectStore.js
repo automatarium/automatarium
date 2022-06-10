@@ -1,10 +1,11 @@
 import create from 'zustand'
+import { persist } from 'zustand/middleware'
 import produce, { current} from 'immer'
 import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
-import { useSelectionStore } from '/src/stores'
+import { randomProjectName } from '/src/util/projectName'
 
 import {
   APP_VERSION,
@@ -16,41 +17,19 @@ import {
   DEFAULT_PLAYBACK_INTERVAL,
 } from '/src/config/projects'
 
-const sampleInitialData = {
-  initialState: 0,
-  states: [{
-    id: 0, //TODO: can be int?
-    label: null,
-    x: 150,
-    y: 150,
-    isFinal: false,
-  }, {
-    id: 1,
-    label: null,
-    x: 330,
-    y: 150,
-    isFinal: false,
-  }],
-  transitions: [{
-    id: 0,
-    from: 0,
-    to: 1,
-    read: 'a',
-  }]
-}
-
-export const createNewProject = () => ({
-  id: uuid(),
-  states: sampleInitialData.states,
-  transitions: sampleInitialData.transitions,
+export const createNewProject = (projectType) => ({
+  // TODO: use project type
+  _id: uuid(),
+  states: [],
+  transitions: [],
   comments: [],
   tests: {
     single: '',
     batch: [''],
   },
-  initialState: sampleInitialData.initialState,
+  initialState: null,
   meta: {
-    name: null,
+    name: randomProjectName(),
     dateCreated: new Date(),
     dateEdited: new Date(),
     version: SCHEMA_VERSION,
@@ -65,12 +44,14 @@ export const createNewProject = () => ({
   }
 })
 
-const useProjectStore = create((set, get) => ({
+const useProjectStore = create(persist((set, get) => ({
   project: null,
   history: [],
   historyPointer: null,
+  lastChangeDate: null,
+  lastSaveDate: null,
   
-  set: project => set({ project, history: [ clone(project) ], historyPointer: 0 }),
+  set: project => { set({ project, history: [ clone(project) ], historyPointer: 0 })},
 
   /* Add current project state to stored history of project states */
   commit: () => set(produce(state => {
@@ -87,6 +68,9 @@ const useProjectStore = create((set, get) => ({
 
     // Reset pointer
     state.historyPointer = state.history.length - 1
+
+    // Update edited date
+    state.lastChangeDate = new Date()
   })),
 
   undo: () => set(produce(state => {
@@ -99,6 +83,9 @@ const useProjectStore = create((set, get) => ({
 
     // Update project
     state.project = state.history[state.historyPointer]
+
+    // Update edited date
+    state.lastChangeDate = new Date()
   })),
 
   redo: () => set(produce(state => {
@@ -111,6 +98,18 @@ const useProjectStore = create((set, get) => ({
 
     // Update project
     state.project = state.history[state.historyPointer]
+
+    // Update edited date
+    state.lastChangeDate = new Date()
+  })),
+
+  /* Change the date the project was last saved */
+  setLastSaveDate: lastSaveDate => set({ lastSaveDate }),
+
+  /* Change the projects name */
+  setName: name => set(s => ({
+    project: {...s.project, meta: {...s.project.meta, name }},
+    lastChangeDate: new Date(),
   })),
 
   /* Create a new transition */
@@ -141,17 +140,21 @@ const useProjectStore = create((set, get) => ({
   })),
 
   /* Update tests */
-  setSingleTest: value => set(produce(({ project }) => {
-    project.tests.single = value
+  setSingleTest: value => set(produce((state) => {
+    state.project.tests.single = value
+    state.lastChangeDate = new Date()
   })),
-  addBatchTest: () => set(produce(({ project }) => {
-    project.tests.batch.push('')
+  addBatchTest: () => set(produce((state) => {
+    state.project.tests.batch.push('')
+    state.lastChangeDate = new Date()
   })),
-  setBatchTest: (index, value) => set(produce(({ project }) => {
-    project.tests.batch[index] = value
+  setBatchTest: (index, value) => set(produce((state) => {
+    state.project.tests.batch[index] = value
+    state.lastChangeDate = new Date()
   })),
-  removeBatchTest: index => set(produce(({ project }) => {
-    project.tests.batch.splice(index, 1)
+  removeBatchTest: index => set(produce((state) => {
+    state.project.tests.batch.splice(index, 1)
+    state.lastChangeDate = new Date()
   })),
 
   /* Set given state to be the initial state */
@@ -185,7 +188,9 @@ const useProjectStore = create((set, get) => ({
     project.transitions = project.transitions.filter(t => !transitionIDs.includes(t.id))
   })),
 
-  reset: () => set({ project: createNewProject() })
+  reset: () => set({ project: createNewProject(), history: [], historyPointer: null, dateEdited: null })
+}), {
+  name: 'automatarium-project'
 }))
 
 export default useProjectStore

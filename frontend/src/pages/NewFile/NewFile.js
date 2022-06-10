@@ -3,16 +3,23 @@ import dayjs from 'dayjs'
 
 import { Main, Button, Header } from '/src/components'
 import { NewProjectCard, ProjectCard, CardList } from './components'
-import { useUserProjects } from './hooks'
+import { useProjectsStore, useProjectStore } from '/src/stores'
+import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 
 import { NoResultSpan } from './newFileStyle'
 
 const NewFile = () => {
   const navigate = useNavigate()
-  const projects = useUserProjects()
+  const projects = useProjectsStore(s => s.projects)
+  const setProject = useProjectStore(s => s.set)
 
   const handleNewFile = projectType => {
-    // TODO: Handle different project types
+    setProject(createNewProject(projectType))
+    navigate('/editor')
+  }
+
+  const handleLoadProject = project => {
+    setProject(project)
     navigate('/editor')
   }
 
@@ -36,12 +43,13 @@ const NewFile = () => {
     </section>
     <section>
       <CardList title="Recent" button={<Button>Open...</Button>}>
-        {projects.map(p =>
+        {projects.sort((a, b) => b.meta.dateEdited < a.meta.dateEdited ? -1 : 1).map(p =>
           <ProjectCard
             key={p._id}
             name={p?.meta?.name ?? '<Untitled>'}
             type={p?.config?.type ?? '???'}
-            date={dayjs(p?.meta?.dateEdited)} />
+            date={dayjs(p?.meta?.dateEdited)}
+            onClick={() => handleLoadProject(p)}/>
         )}
         {projects.length === 0 && <NoResultSpan>No projects yet :)</NoResultSpan>}
       </CardList>

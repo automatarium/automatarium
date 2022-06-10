@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-const CardContainer = styled('div')`
+export const CardContainer = styled('div')`
   width: 12em;
   margin: 3px;
 
@@ -12,7 +12,7 @@ const CardContainer = styled('div')`
   `}
 `
 
-const TypeBadge = styled('div')`
+export const TypeBadge = styled('div')`
   position: absolute;
   top: 0;
   right: 0;
@@ -27,7 +27,7 @@ const TypeBadge = styled('div')`
   color: var(--white);
 `
 
-const CardDetail = styled('div')`
+export const CardDetail = styled('div')`
   display: flex;
   flex-direction: column;
   margin-block-start: 1em;
@@ -38,7 +38,7 @@ const CardDetail = styled('div')`
   }
 `
 
-const CardImage = styled('div')`
+export const CardImage = styled('div')`
   aspect-ratio: 1;  
   border-radius: .5rem;
   display: flex;

@@ -10,22 +10,22 @@ const menus = [
         label: 'Open...',
         action: 'OPEN_FILE',
       },
-      {
-        label: 'Open recent',
-        items: [
-          // { label: 'Test file' },
-          // { label: 'Another test file' },
-          // { label: 'Best NFA' },
-          // { label: 'Turing machine' },
-        ],
-      },
+      // {
+      //   label: 'Open recent',
+      //   items: [
+      //     // { label: 'Test file' },
+      //     // { label: 'Another test file' },
+      //     // { label: 'Best NFA' },
+      //     // { label: 'Turing machine' },
+      //   ],
+      // },
       'hr',
       {
         label: 'Save',
         action: 'SAVE_FILE',
       },
       {
-        label: 'Save as...',
+        label: 'Download...',
         action: 'SAVE_FILE_AS',
       },
       'hr',

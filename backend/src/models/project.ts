@@ -16,6 +16,7 @@ const ProjectSchema: Schema = new Schema({
     },
     _id: false
   },
+  config: { type: Object },
   initialState: { type: String, required: true },
   states: { type: Object, _id: false },
   transitions: { type: Object, _id: false },

@@ -1,12 +1,12 @@
 import { StrictMode, createElement } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
-import { BrowserRouter, Link, Route, Routes, useLocation } from 'react-router-dom'
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 import * as Pages from './pages'
 
-import { useEgg } from '/src/hooks'
-import { GraphView, Main, Footer } from '/src/components'
+import { useEgg, useSyncProjects } from '/src/hooks'
+import { Footer } from '/src/components'
 
 // Set up goober to use React
 setup(
@@ -21,6 +21,7 @@ const App = () => {
   const hideFooter = location.pathname.match('/editor')
 
   useEgg()
+  useSyncProjects()
 
   return <>
     <Routes>

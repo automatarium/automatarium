@@ -1,24 +1,32 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { useActions, useEvent } from '/src/hooks'
+import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
-import { createNewProject } from '/src/stores/useProjectStore' // #HACK
-import { Menubar, Sidepanel, Toolbar, EditorPanel } from '/src/components'
+import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
 
-import { Content } from './editorStyle'
+import { Content, LoadingContainer } from './editorStyle'
 
 const Editor = () => {
+  const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
-  const set = useProjectStore(s => s.set)
+
+  // Syncronize last-opened project with backend before showing it
+  const loading = useSyncCurrentProject() 
+
+  // Auto save project as its edited
+  useAutosaveProject() 
 
   // Register action hotkey
   useActions(true)
 
-  // Load the test project
+  // Project must be set
   useEffect(() => {
-    set(createNewProject())
+    if (!useProjectStore.getState().project) {
+      navigate('/new')
+    }
   }, [])
 
   // Change tool when holding certain keys
@@ -49,6 +57,10 @@ const Editor = () => {
       e.stopPropagation()
     }
   }, [tool, priorTool])
+
+  if (loading) return <LoadingContainer>
+    <Spinner />
+  </LoadingContainer>
 
   return (
     <>

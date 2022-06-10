@@ -10,7 +10,7 @@ const useTransitionSelection = () => {
 
   const selectTransition = useCallback(e => {
     let newSelected
-    if (tool === 'cursor') {
+    if (tool === 'cursor' || e.detail.originalEvent.button === 2) {
       // Update transition selections
       const transitionID = e.detail.transition.id
       newSelected = selectedTransitions.includes(transitionID)

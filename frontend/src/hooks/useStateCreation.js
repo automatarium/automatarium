@@ -7,7 +7,7 @@ const useStateCreation = () => {
   const commit = useProjectStore(s => s.commit)
 
   useEvent('svg:mousedown', e => {
-    if (tool === 'state' && e.detail.didTargetSVG) {
+    if (tool === 'state' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       createState({ x: e.detail.viewX, y: e.detail.viewY })
       commit()
     }

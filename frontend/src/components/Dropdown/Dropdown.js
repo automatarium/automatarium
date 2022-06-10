@@ -62,7 +62,7 @@ const Dropdown = ({
   const dropdownRef = useRef()
 
   // Close dropdown if click outside
-  const handleClick = useCallback(e => !dropdownRef.current?.contains(e.target) && onClose(), [onClose])
+  const handleClick = useCallback(e => !dropdownRef.current?.contains(e.target) && onClose(), [dropdownRef.current, onClose])
 
   // Close dropdown if escape pressed
   const handleKey = useCallback(e => e.key === 'Escape' && onClose(), [onClose])

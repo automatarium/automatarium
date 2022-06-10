@@ -1,25 +1,19 @@
-import create from 'zustand'
-import { persist } from 'zustand/middleware'
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 
 import { useAuth } from '/src/hooks'
+import { useProjectsStore } from '/src/stores'
 import { getProjects, updateProject } from '/src/services/project'
+import isEqual from 'lodash.isequal'
 
-const useProjectsStore = create(persist(set => ({
-  projects: [],
-  setProjects: projects => set({ projects })
-}), {
-  name: 'automatarium-projects'
-}))
-
-const useUserProjects = () => {
+const useSyncProjects = () => {
   const { user } = useAuth()
   const { projects, setProjects } = useProjectsStore()
-  
+  const [savedProjects, setSavedProjects] = useState()
+
   // Update projects from backend (if authenticated)
   useEffect(() => {
-    if (user) {
+    if (user && !isEqual(projects, savedProjects)) {
       getProjects()
         .then(({ projects: backendProjects }) => {
           // Find projects that exist only on backend or local storage (but not both)
@@ -32,8 +26,8 @@ const useUserProjects = () => {
             .filter(bp => !isolatedProjects.find(ip => ip._id === bp._id))
             .map(bp => {
               const localProject = projects.find(lp => lp._id === bp._id)
-              const localDate = dayjs(localProject.meta.editedAt)
-              const remoteDate = dayjs(bp.meta.editedAt)
+              const localDate = dayjs(localProject.meta.dateEdited)
+              const remoteDate = dayjs(bp.meta.dateEdited)
               return remoteDate.isAfter(localDate)
                 ? bp
                 : localProject
@@ -42,14 +36,15 @@ const useUserProjects = () => {
           // Update projects state
           const updatedProjects = [...isolatedProjects, ...resolvedProjects]
           setProjects(updatedProjects)
+          setSavedProjects(updatedProjects)
 
           // Update backend with resolved projects
           Promise.all(updatedProjects.map(p => updateProject(p)))
         })
     }
-  }, [user])
+  }, [user, projects])
 
   return projects
 }
 
-export default useUserProjects
+export default useSyncProjects
