@@ -1,7 +1,10 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle } from 'lucide-react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { SectionLabel, Button, TextInput, TracePreview } from '/src/components'
+import useProjectStore from '/src/stores/useProjectStore'
+import { simulateFSA } from '@automatarium/simulation'
+
 import {
   StepButtons,
   MultiTraceRow,
@@ -9,9 +12,8 @@ import {
   Wrapper,
   TraceConsole,
   StatusIcon,
+  WarningLabel,
 } from './testingLabStyle'
-import useProjectStore from '/src/stores/useProjectStore'
-import { simulateFSA } from '@automatarium/simulation'
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
@@ -59,7 +61,7 @@ const TestingLab = () => {
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
-      return null
+      return accepted ? 'ACCEPTED' : 'REJECTED'
     }
 
     // Represent transitions as strings of form start -> end
@@ -83,11 +85,32 @@ const TestingLab = () => {
 
   useEffect(() => {
     setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+  }, [])
+
+  useEffect(() => {
     simulateGraph()
+    setMultiTraceOutput()
+    setTraceIdx(0)
   }, [lastChangeDate])
+
+  console.log(simulationResult)
+
+  // Update warnings
+  const warnings = []
+  if (!graph?.initialState || !graph?.states.find(s => s.id === graph?.initialState))
+    warnings.push('There is no initial state')
+  if (!graph?.states.find(s => s.isFinal))
+    warnings.push('There are no final states')
 
   return (
     <>
+      {warnings.length > 0 && <>
+        <SectionLabel>Warnings</SectionLabel>
+        {warnings.map(warning => <WarningLabel key={warning}>
+          <AlertTriangle />
+          {warning}  
+        </WarningLabel>)}
+      </>}
       <SectionLabel>Trace</SectionLabel>
       <Wrapper>
         <TextInput
