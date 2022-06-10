@@ -24,7 +24,7 @@ const Share = () => {
   const handleCopy = useCallback(() => {
     setProject({_id: uuid(), userid: null, ...sharedProject})
     navigate('/editor')
-  }, [pid])
+  }, [pid, sharedProject])
 
   if (!sharedProject && !loading) navigate('/new')
 

@@ -25,7 +25,7 @@ const ShareModal = ({ projectId, ...props }) => {
   >
     <Container>
       <h2>Share</h2>
-      <TextInput value={shareUrl} />
+      <TextInput readOnly value={shareUrl} />
     </Container>
   </Modal>
 }
