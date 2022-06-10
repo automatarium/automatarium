@@ -1,13 +1,13 @@
 import { CardListContainer, CardListTitleContainer, CardListTitle } from './cardListStyle'
 
-const CardList = ({ title, children, scroll=false, button=null }) => <>
-  <CardListTitleContainer>
-    {title && <CardListTitle>{title}</CardListTitle>}
-    {button}
-  </CardListTitleContainer>
-  <CardListContainer $scroll={scroll}>
-    {children}
-  </CardListContainer>
-</>
+const CardList = ({ title, button, ...props }) => (
+  <section>
+    <CardListTitleContainer>
+      {title && <CardListTitle>{title}</CardListTitle>}
+      {button}
+    </CardListTitleContainer>
+    <CardListContainer {...props} />
+  </section>
+)
 
 export default CardList
