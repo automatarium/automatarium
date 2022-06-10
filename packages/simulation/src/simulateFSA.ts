@@ -1,6 +1,6 @@
 import parseRead from './parseRead'
 import validTransitions from './validTransitions'
-import { UnresolvedFSAGraph, FSAGraph } from './types'
+import { UnresolvedFSAGraph, FSAGraph, ExecutionResult, ExecutionTrace, StateID } from './types'
 
 const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
   // Resolve graph transitions
@@ -14,14 +14,17 @@ const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
 const simulateFSAGraph = (
   graph: FSAGraph,
   input: string,
-  currStateID = graph?.initialState,
-  trace = [{
+  currStateID: StateID = graph?.initialState,
+  trace: ExecutionTrace[] = [{
     to: graph?.initialState,
     read: null,
   }]
-) => {
+): ExecutionResult => {
   // Find current state
   const currentState = graph.states.find(state => state.id === currStateID)
+  if (!currentState) {
+    return { accepted: false, trace, remaining: input }
+  }
 
   // Get next set of possible transitions
   const possibleTransitions = validTransitions(graph, currStateID, input?.[0])
@@ -54,7 +57,7 @@ const simulateFSAGraph = (
 
   // Return first accepting trace or longest rejecting
   const acceptingResult = results.find(r => r.accepted)
-  return acceptingResult || results.sort((r1, r2) => r2.trace.length - r1.trace.length)[0]
+  return acceptingResult ?? results.sort((r1, r2) => r2.trace.length - r1.trace.length)[0]
 }
 
 export default simulateFSA

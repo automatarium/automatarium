@@ -1,8 +1,15 @@
 import { forwardRef } from 'react'
 import { styled } from 'goober'
 
-export const Svg = styled('svg', forwardRef)`
+export const Wrapper = styled('div', forwardRef)`
+  flex: 1;
+  position: relative;
+`
 
+export const Svg = styled('svg', forwardRef)`
+  position: absolute;
+  inset: 0;
+  display: block;
   background: var(--white);
 
   /* Grid */
@@ -23,4 +30,12 @@ export const Svg = styled('svg', forwardRef)`
   text {
     user-select: none;
   }
+
+  /* Cursors */
+  ${p => p.$tool === 'hand' && `
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+  `}
 `

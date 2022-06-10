@@ -71,3 +71,13 @@ export const StatusIcon = styled('div')`
     color: var(--success);
   `}
 `
+
+export const WarningLabel = styled('div')`
+  display: flex;
+  margin: .8rem;
+  border-radius: .3rem;
+  padding: .5em;
+  gap: .5em;
+  align-items: center;
+  background: var(--error);
+`

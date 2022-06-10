@@ -10,8 +10,7 @@ export const Panel = styled('div')`
   height: 100%;
   overflow-y: auto;
   background: var(--surface);
-  position: absolute;
-  right: 100%;
+  position: relative;
   z-index: 10;
 `
 
@@ -25,7 +24,7 @@ export const CloseButton = styled('button')`
   position: absolute;
   top: .6em;
   z-index: 15;
-  left: calc(-350px - 1em);
+  left: -1em;
   height: 2em;
   width: 2em;
   font: inherit;
