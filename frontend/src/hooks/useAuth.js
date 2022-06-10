@@ -32,7 +32,6 @@ const useAuth = () => {
   // When the firebase auth state changes, get the user from the backend
   useEffect(() => {
     return firebase.auth().onAuthStateChanged(fireUser => {
-      console.log('Auth state changed', fireUser)
       setFireState({ fireLoaded: true, fireUser })
     })
   }, [])
