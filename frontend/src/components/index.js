@@ -29,3 +29,5 @@ export { default as TracePreview } from './TracePreview/TracePreview'
 export { default as TextInput } from './TextInput/TextInput'
 
 export { default as Footer } from './Footer/Footer'
+
+export { default as ProjectCard } from './ProjectCard/ProjectCard'

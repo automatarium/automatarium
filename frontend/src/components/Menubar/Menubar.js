@@ -7,6 +7,7 @@ import { Button, Logo, Dropdown } from '/src/components'
 import { useAuth } from '/src/hooks'
 import LoginPage from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
+import ShareModal from './components/ShareModal/ShareModal'
 
 import {
   Wrapper,
@@ -63,8 +64,10 @@ const Menubar = () => {
   const [dropdown, setDropdown] = useState()
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
+  const [shareModalVisible, setShareModalVisible] = useState(false)
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
+  const projectId = useProjectStore(s => s.project?._id)
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const setProjectName = useProjectStore(s => s.setName)
@@ -83,7 +86,7 @@ const Menubar = () => {
           </LogoWrapper>
 
           <div>
-            {/* TODO: Make the title editable */}
+
             <NameRow>
               <Name onClick={handleChangeProjectName}>{projectName ?? 'Untitled Project'}</Name>
               <SaveStatus $show={!(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))}>Saving...</SaveStatus>
@@ -110,12 +113,14 @@ const Menubar = () => {
             <span>or</span>
             <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
           </ButtonGroup>}
-          {!userLoading && user && <Button>Share</Button>}
+          {!userLoading && user && <Button onClick={() => setShareModalVisible(true)}>Share</Button>}
           {user && <Button onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
         </Actions>
 
         <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
         <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
+        <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />
+
       </Wrapper>
     </>
   )
