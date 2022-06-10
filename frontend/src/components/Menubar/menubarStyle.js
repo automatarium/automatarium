@@ -33,6 +33,14 @@ export const Name = styled('span')`
   padding: .2em .5rem;
 `
 
+export const NameInput = styled('input', forwardRef)`
+  font: inherit;
+  font-size: 1.2em;
+  padding: .2em .5rem;
+  border: 0;
+  border-radius: .3em;
+`
+
 export const SaveStatus = styled('span')`
   position: relative;
   font-size: .8em;
