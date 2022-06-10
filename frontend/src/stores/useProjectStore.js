@@ -126,7 +126,7 @@ const useProjectStore = create(persist((set, get) => ({
 
   /* Create a new state */
   createState: state => set(produce(({ project }) => {
-    project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
+    project.states.push({ isFinal: false, ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
   })),
 
   /* Update a state by id */
