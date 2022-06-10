@@ -46,7 +46,7 @@ const TestingLab = () => {
         to: step.to,
         read: step.read === '' ? 'λ' : step.read
       })),
-      transitionCount: trace.length - (accepted ? 1 : 0)
+      transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
     setSimulationResult(result)
     return result
@@ -61,7 +61,9 @@ const TestingLab = () => {
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
-      return accepted ? 'ACCEPTED' : 'REJECTED'
+      if (traceIdx > 0)
+        return accepted ? 'ACCEPTED' : 'REJECTED'
+      return null
     }
 
     // Represent transitions as strings of form start -> end
@@ -69,7 +71,7 @@ const TestingLab = () => {
       .slice(0, -1)
       .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
       .map(([read, start, end]) => `${read}: ${statePrefix}${start} -> ${statePrefix}${end}`)
-      .filter((x, i) => i < traceIdx)
+      .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
@@ -95,7 +97,7 @@ const TestingLab = () => {
 
   // Update warnings
   const warnings = []
-  if (!graph?.initialState || !graph?.states.find(s => s.id === graph?.initialState))
+  if ([null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState))
     warnings.push('There is no initial state')
   if (!graph?.states.find(s => s.isFinal))
     warnings.push('There are no final states')
