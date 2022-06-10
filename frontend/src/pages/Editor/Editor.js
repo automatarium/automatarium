@@ -14,10 +14,10 @@ const Editor = () => {
   const [priorTool, setPriorTool] = useState()
 
   // Syncronize last-opened project with backend before showing it
-  const loading = useSyncCurrentProject() 
+  const loading = useSyncCurrentProject()
 
   // Auto save project as its edited
-  useAutosaveProject() 
+  useAutosaveProject()
 
   // Register action hotkey
   useActions(true)

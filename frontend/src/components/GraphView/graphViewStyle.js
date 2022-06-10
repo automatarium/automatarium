@@ -30,4 +30,12 @@ export const Svg = styled('svg', forwardRef)`
   text {
     user-select: none;
   }
+
+  /* Cursors */
+  ${p => p.$tool === 'hand' && `
+    cursor: grab;
+    &:active {
+      cursor: grabbing;
+    }
+  `}
 `

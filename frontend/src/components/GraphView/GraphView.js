@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
-import { useViewStore } from '/src/stores'
+import { useViewStore, useToolStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -12,6 +12,7 @@ const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
   const svgRef = useRef()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
+  const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
 
   // Update width and height on resize
@@ -94,6 +95,7 @@ const GraphView = ({ children, ...props }) => {
         viewBox={viewBox}
         ref={svgRef}
         $showGrid={showGrid}
+        $tool={tool}
         {...props}
         style={{ backgroundSize, backgroundPosition, ...props.style }}>
         <MarkerProvider>
