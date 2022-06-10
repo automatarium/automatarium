@@ -16,7 +16,10 @@ const GraphContent = () => {
   // Group up transitions by the start and end nodes
   // We sort the IDs in the pair to make direction not impact grouping
   const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to].sort((a, b) => b - a)))
-  const locatedTransitions = groupedTransitions.map(transitions => transitions.map(t => locateTransition(t, states)))
+  const locatedTransitions = groupedTransitions
+    .map(transitions => transitions
+      .map(t => locateTransition(t, states)) // Resolve location of transition states
+      .sort((t1, t2) => t2.from.x < t1.from.x ? -1 : 1 )) // Sort by direction
 
   return <g>
     {/* Render arrow on initial state */}
