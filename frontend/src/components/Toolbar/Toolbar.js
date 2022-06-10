@@ -58,7 +58,7 @@ const Toolbar = () => {
           fontSize: '.9em',
           padding: '.8em 0',
         }}
-        onClick={() => setZoomMenuOpen(true)}
+        onClick={e => { setZoomMenuOpen(true); e.stopPropagation() }}
         ref={r => zoomButtonRect.current = r?.getBoundingClientRect()}
         $active={zoomMenuOpen}
       >
@@ -76,29 +76,24 @@ const Toolbar = () => {
         items={[
           {
             label: 'Zoom in',
-            shortcut: '⌘ =',
-            onClick: () => {},
+            action: 'ZOOM_IN',
           },
           {
             label: 'Zoom out',
-            shortcut: '⌘ -',
-            onClick: () => {},
+            action: 'ZOOM_OUT',
           },
           {
             label: 'Zoom to 100%',
-            shortcut: '⌘ 0',
-            onClick: () => {},
+            action: 'ZOOM_100',
           },
           {
             label: 'Zoom to fit',
-            shortcut: '⇧ 1',
-            onClick: () => {},
+            action: 'ZOOM_FIT',
           },
           'hr',
           {
             label: 'Fullscreen',
             shortcut: 'F11',
-            onClick: () => {},
           },
         ]}
       />
