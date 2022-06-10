@@ -29,6 +29,7 @@ export const Svg = styled('svg', forwardRef)`
   /* Text */
   text {
     user-select: none;
+    -webkit-user-select: none; /* for safari */
   }
 
   /* Cursors */
