@@ -154,7 +154,24 @@ const useActions = (registerHotkeys=false) => {
     },
     ZOOM_FIT: {
       hotkey: { key: '1', shift: true },
-      handler: () => console.log('Zoom to fit'),
+      handler: () => {
+        // Get state
+        const view = useViewStore.getState()
+        const states = useProjectStore.getState()?.project.states ?? []
+        if (states.length === 0)
+          return
+        
+        // Calculate fit region
+        const border = 100
+        const minX = states.reduce((acc, s) => s.x < acc ? s.x : acc, Infinity) - border
+        const maxX = states.reduce((acc, s) => s.x > acc ? s.x : acc, -Infinity) + border
+        const minY = states.reduce((acc, s) => s.y < acc ? s.y : acc, Infinity) - border
+        const maxY = states.reduce((acc, s) => s.y > acc ? s.y : acc, -Infinity) + border
+        const [regionWidth, regionHeight] = [maxX - minX, maxY - minY]
+        const desiredScale = Math.max(regionWidth / view.size.width, regionHeight / view.size.height)
+        view.setViewScale(desiredScale)
+        view.setViewPosition({ x: minX, y: minY })
+      },
     },
     TESTING_LAB: {
       hotkey: { key: 't', meta: true, showCtrl: true },
@@ -308,7 +325,7 @@ const zoomViewTo = to => {
   const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, to))
   const view = useViewStore.getState()
   const scrollAmount = newScale - view.scale
-  if (Math.abs(scrollAmount) < 1e-4) {
+  if (Math.abs(scrollAmount) < 1e-3) {
     view.setViewScale(to < 1 ? SCROLL_MIN : SCROLL_MAX)
     return
   } else {
@@ -316,7 +333,7 @@ const zoomViewTo = to => {
       x: view.position.x - view.size.width/2 * scrollAmount,
       y: view.position.y - view.size.height/2 * scrollAmount,
     })
-    view.setViewScale(to)
+    view.setViewScale(newScale)
   }
 }
 
