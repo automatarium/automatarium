@@ -66,9 +66,9 @@ const GraphView = ({ children, ...props }) => {
       // Unset handlers
       return () => {
         window.removeEventListener('resize', onContainerResize)
-        svgRef.current.removeEventListener('mousedown', onContainerMouseDown)
-        svgRef.current.removeEventListener('mouseup', onContainerMouseUp)
-        svgRef.current.removeEventListener('mousedown', onContainerMouseMove)
+        svgRef.current?.removeEventListener('mousedown', onContainerMouseDown)
+        svgRef.current?.removeEventListener('mouseup', onContainerMouseUp)
+        svgRef.current?.removeEventListener('mousedown', onContainerMouseMove)
       }
     }
   }, [svgRef.current])

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
@@ -11,14 +11,12 @@ import ShareModal from './components/ShareModal/ShareModal'
 
 import {
   Wrapper,
-  LogoWrapper,
   Menu,
   Name,
   NameRow,
   SaveStatus,
   DropdownMenus,
   Actions,
-  ButtonGroup,
   DropdownButtonWrapper,
   NameInput,
 } from './menubarStyle'
@@ -96,9 +94,9 @@ const Menubar = () => {
     <>
       <Wrapper>
         <Menu>
-          <LogoWrapper href='/new'>
+          <Link to='/new'>
             <Logo />
-          </LogoWrapper>
+          </Link>
 
           <div>
             <NameRow>
@@ -132,19 +130,18 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          {!userLoading && !user && <ButtonGroup>
+          {!userLoading && !user && <>
             <Button secondary surface onClick={() => setLoginModalVisible(true)}>Log In</Button>
-            <span>or</span>
             <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
-          </ButtonGroup>}
+          </>}
+
+          {user && <Button secondary surface onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
           {!userLoading && user && <Button disabled={isSaving} onClick={() => setShareModalVisible(true)}>Share</Button>}
-          {user && <Button onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
         </Actions>
 
         <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
         <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
         <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />
-
       </Wrapper>
     </>
   )

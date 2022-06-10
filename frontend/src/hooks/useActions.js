@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
 import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions'
@@ -25,22 +26,18 @@ const useActions = (registerHotkeys=false) => {
   const removeStates = useProjectStore(s => s.removeStates)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
-  const createNewProject = useProjectStore(s => s.reset)
   const setProject = useProjectStore(s => s.set)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
 
+  const navigate = useNavigate()
+
   // TODO: memoize
   const actions = {
     NEW_FILE: {
       hotkey: { key: 'n', meta: true, showCtrl: true },
-      handler: () => {
-        createNewProject()
-      },
-    },
-    OPEN_FILE: {
-      hotkey: { key: 'o', meta: true, handler: () => console.log('Open') },
+      handler: () => navigate('/new'),
     },
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkey: { key: 'i', meta: true },
@@ -72,7 +69,7 @@ const useActions = (registerHotkeys=false) => {
         if (fileName) {
           // Pull project state
           const { project } = useProjectStore.getState()
-          
+
           // Create a download link and use it
           const a = document.createElement('a')
           const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
@@ -84,20 +81,20 @@ const useActions = (registerHotkeys=false) => {
     },
     EXPORT_AS_PNG: {
       hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
-      handler: () => console.log('Export PNG'),
+      //handler: () => console.log('Export PNG'),
     },
     EXPORT_AS_SVG: {
       hotkey: { key: 'e', shift: true, alt: true, meta: true},
-      handler: () => console.log('Export SVG'),
+      //handler: () => console.log('Export SVG'),
     },
     EXPORT_AS_JPG: {
-      handler: () => console.log('Export JPG'),
+      //handler: () => console.log('Export JPG'),
     },
     EXPORT_AS_JFLAP: {
-      handler: () => console.log('Export JFLAP'),
+      //handler: () => console.log('Export JFLAP'),
     },
     SHARE: {
-      handler: () => console.log('Share'),
+      //handler: () => console.log('Share'),
     },
     OPEN_PREFERENCES: {
       hotkey: { key: ',', meta: true },
@@ -113,11 +110,11 @@ const useActions = (registerHotkeys=false) => {
     },
     COPY: {
       hotkey: { key: 'c', meta: true },
-      handler: () => console.log('Copy'),
+      //handler: () => console.log('Copy'),
     },
     PASTE: {
       hotkey: { key: 'v', meta: true },
-      handler: () => console.log('Paste'),
+      //handler: () => console.log('Paste'),
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
@@ -160,7 +157,7 @@ const useActions = (registerHotkeys=false) => {
         const states = useProjectStore.getState()?.project.states ?? []
         if (states.length === 0)
           return
-        
+
         // Calculate fit region
         const border = 100
         const minX = states.reduce((acc, s) => s.x < acc ? s.x : acc, Infinity) - border
@@ -173,38 +170,41 @@ const useActions = (registerHotkeys=false) => {
         view.setViewPosition({ x: minX, y: minY })
       },
     },
+    FULLSCREEN: {
+      handler: () => document.documentElement.requestFullscreen(),
+    },
     TESTING_LAB: {
       hotkey: { key: 't', meta: true, showCtrl: true },
-      handler: () => console.log('Testing Lab'),
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' }),
     },
     FILE_INFO: {
-      handler: () => console.log('File Info'),
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' }),
     },
     FILE_OPTIONS: {
       hotkey: { key: 'u', meta: true },
-      handler: () => console.log('File Options'),
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' }),
     },
     CONVERT_TO_DFA: {
-      handler: () => console.log('Convert to DFA'),
+      //handler: () => console.log('Convert to DFA'),
     },
     MINIMIZE_DFA: {
-      handler: () => console.log('Minimize DFA'),
+      //handler: () => console.log('Minimize DFA'),
     },
     AUTO_LAYOUT: {
-      handler: () => console.log('Auto Layout'),
+      //handler: () => console.log('Auto Layout'),
     },
     OPEN_DOCS: {
-      handler: () => console.log('View Documentation'),
+      //handler: () => console.log('View Documentation'),
     },
     KEYBOARD_SHORTCUTS: {
       hotkey: { key: '/', meta: true },
-      handler: () => console.log('Keyboard shortcuts'),
+      //handler: () => console.log('Keyboard shortcuts'),
     },
     PRIVACY_POLICY: {
-      handler: () => console.log('Privacy Policy'),
+      handler: () => navigate('/privacy'),
     },
     OPEN_ABOUT: {
-      handler: () => console.log('About Automatarium'),
+      handler: () => navigate('/about'),
     },
     MOVE_VIEW_LEFT: {
       hotkey: { key: 'ArrowLeft' },

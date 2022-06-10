@@ -47,6 +47,7 @@ const Toolbar = () => {
           key={toolOption.label}
           onClick={() => setTool(toolOption.value)}
           $active={tool === toolOption.value}
+          title={toolOption.label}
         >
           {toolOption.icon}
         </Sidebar.Button>
@@ -96,6 +97,7 @@ const Toolbar = () => {
           {
             label: 'Fullscreen',
             shortcut: 'F11',
+            action: 'FULLSCREEN',
           },
         ]}
       />

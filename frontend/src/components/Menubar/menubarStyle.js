@@ -74,19 +74,8 @@ export const SaveStatus = styled('span')`
 export const Actions = styled('div')`
   display: flex;
   align-items: center;
-  gap: .5em;
+  gap: 1em;
   padding: 1em;
-`
-
-export const ButtonGroup = styled('div')`
-  display: flex;
-  align-items: center;
-  gap: .5em;
-  margin-inline-end: .75em;
-
-  span {
-    font-size: .8rem;
-  }
 `
 
 export const DropdownMenus = styled('div')`
@@ -108,9 +97,4 @@ export const DropdownButtonWrapper = styled('button', forwardRef)`
   &:hover ${props => props.$active && `,&`} {
     background: var(--surface);
   }
-`
-
-export const LogoWrapper = styled('a')`
-  cursor: pointer;
-  display: inherit;
 `
