@@ -14,7 +14,7 @@ const CommentRect = ({ id, x, y, text }) => {
   useEffect(() => {
     if (containerRef.current) {
       const bounds = containerRef.current.getBoundingClientRect()
-      setHeight(bounds.height)
+      setHeight(bounds.height + 10)
     }
   }, [containerRef?.current, text])
   
