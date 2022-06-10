@@ -322,8 +322,10 @@ const useActions = (registerHotkeys=false) => {
 }
 
 const zoomViewTo = to => {
-  const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, to))
   const view = useViewStore.getState()
+  if (view.scale === to)
+    return
+  const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, to))
   const scrollAmount = newScale - view.scale
   if (Math.abs(scrollAmount) < 1e-3) {
     view.setViewScale(to < 1 ? SCROLL_MIN : SCROLL_MAX)
