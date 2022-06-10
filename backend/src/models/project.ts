@@ -17,11 +17,11 @@ const ProjectSchema: Schema = new Schema({
     _id: false
   },
   config: { type: Object },
-  initialState: { type: String, required: true },
+  initialState: { type: Number, required: true },
   states: { type: Object, _id: false },
   transitions: { type: Object, _id: false },
   comments: { type: [{
-    id: { type: String, required: true },
+    id: { type: Number, required: true },
     text: { type: String, required: true },
     x: { type: Number, required: true },
     y: { type: Number, required: true },
