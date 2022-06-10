@@ -3,8 +3,7 @@ import { useForm } from 'react-hook-form'
 
 import { firebase } from '/src/auth'
 import { createUser } from '/src/services'
-import { Main, Label, TextInput, Button, Header, Modal } from '/src/components'
-import { useNavigate } from 'react-router-dom'
+import { Label, TextInput, Button, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -125,7 +124,7 @@ Signup.Modal = ({ ...props }) => {
     {...props}
   >
     <Header center/>
-    <h2>Signup</h2>
+    <h2>Sign Up</h2>
     <Signup.Form
       onComplete={props?.onClose}
       setFormActions={setFormActions}
