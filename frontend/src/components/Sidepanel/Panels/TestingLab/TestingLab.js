@@ -93,8 +93,6 @@ const TestingLab = () => {
     setTraceIdx(0)
   }, [lastChangeDate])
 
-  console.log(simulationResult)
-
   // Update warnings
   const warnings = []
   if (!graph?.initialState || !graph?.states.find(s => s.id === graph?.initialState))
