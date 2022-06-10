@@ -1,6 +1,6 @@
 const commentContextItems = [
   {
-    label: 'Edit text',
+    label: 'Edit comment',
     action: 'EDIT_COMMENT',
   },
   'hr',
