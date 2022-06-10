@@ -43,7 +43,7 @@ const useAuth = () => {
         .then(({ user }) => setUser(user))
         .then(() => setFetching(false))
     }
-  }, [fireUser])
+  }, [fireUser, signingUp])
 
   return {
     user: fireUser ? user : null,

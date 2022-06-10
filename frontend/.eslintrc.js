@@ -25,6 +25,7 @@ module.exports = {
     "rules": {
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
+      "react/display-name": "off",
       "no-unused-vars": "warn"
     }
 }
