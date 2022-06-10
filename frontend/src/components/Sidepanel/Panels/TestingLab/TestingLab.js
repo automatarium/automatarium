@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle } from 'lucide-react'
 
 import { SectionLabel, Button, TextInput, TracePreview } from '/src/components'
@@ -32,6 +32,7 @@ const TestingLab = () => {
   const addMultiTraceInput = useProjectStore(s => s.addBatchTest)
   const setMultiTraceInput = useProjectStore(s => s.setBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
@@ -79,6 +80,15 @@ const TestingLab = () => {
     // Add 'REJECTED'/'ACCEPTED' label
     return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx])
+
+  useEffect(() => {
+    setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+  }, [])
+
+  useEffect(() => {
+    setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+    simulateGraph()
+  }, [lastChangeDate])
 
   return (
     <>
