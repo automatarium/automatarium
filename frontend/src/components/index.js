@@ -12,6 +12,7 @@ export { default as InitialStateArrow } from './InitialStateArrow/InitialStateAr
 export { default as StateCircle } from './StateCircle/StateCircle'
 export { default as TransitionSet } from './TransitionSet/TransitionSet'
 export { default as SelectionBox } from './SelectionBox/SelectionBox'
+export { default as CommentRect } from './CommentRect/CommentRect'
 
 export { default as Main } from './Main/Main'
 export { default as Logo } from './Logo/Logo'

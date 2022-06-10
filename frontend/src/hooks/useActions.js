@@ -17,12 +17,13 @@ const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
 const useActions = (registerHotkeys=false) => {
   const undo = useProjectStore(s => s.undo)
   const redo = useProjectStore(s => s.redo)
-  const selectNoStates = useSelectionStore(s => s.selectNone)
-  const selectAllStates = useSelectionStore(s => s.selectAll)
+  const selectNone = useSelectionStore(s => s.selectNone)
+  const selectAll = useSelectionStore(s => s.selectAll)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
   const flipTransitions = useProjectStore(s => s.flipTransitions)
   const removeStates = useProjectStore(s => s.removeStates)
+  const removeComments = useProjectStore(s => s.removeComments)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
   const createNewProject = useProjectStore(s => s.reset)
@@ -121,21 +122,24 @@ const useActions = (registerHotkeys=false) => {
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
-      handler: selectAllStates,
+      handler: selectAll,
     },
     SELECT_NONE: {
       hotkey: { key: 'd', meta: true },
-      handler: selectNoStates,
+      handler: selectNone,
     },
     DELETE: {
       hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
-        const selectedStateIDs = useSelectionStore.getState().selectedStates
-        const selectedTransitionIDs = useSelectionStore.getState().selectedTransitions
-        if (selectedStateIDs.length > 0 || selectedTransitionIDs.length > 0) {
+        const selectionState = useSelectionStore.getState()
+        const selectedStateIDs = selectionState.selectedStates
+        const selectedTransitionIDs = selectionState.selectedTransitions
+        const selectedCommentIDs = selectionState.selectedComments
+        if (selectedStateIDs.length > 0 || selectedTransitionIDs.length > 0 || selectedCommentIDs.length > 0) {
           removeStates(selectedStateIDs)
           removeTransitions(selectedTransitionIDs)
-          selectNoStates()
+          removeComments(selectedCommentIDs)
+          selectNone()
           commit()
         }
       },
@@ -239,6 +243,16 @@ const useActions = (registerHotkeys=false) => {
           toggleStatesFinal(selectedStateIDs)
           commit()
         }
+      }
+    },
+    EDIT_COMMENT: {
+      disabled: () => useSelectionStore.getState()?.selectedComments?.length !== 1,
+      handler: () => {
+        const selectedCommentID = useSelectionStore.getState().selectedComments?.[0]
+        const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === selectedCommentID)
+        if (selectedCommentID === undefined || selectedComment === undefined) return
+        const text = window.prompt('New text for comment?', selectedComment.text)
+        useProjectStore.getState().updateComment({ ...selectedComment, text })
       }
     },
     EDIT_TRANSITION: {
