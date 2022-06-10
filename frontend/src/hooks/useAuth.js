@@ -32,6 +32,7 @@ const useAuth = () => {
   // When the firebase auth state changes, get the user from the backend
   useEffect(() => {
     return firebase.auth().onAuthStateChanged(fireUser => {
+      console.log('Auth state changed', fireUser)
       setFireState({ fireLoaded: true, fireUser })
     })
   }, [])
@@ -43,7 +44,7 @@ const useAuth = () => {
         .then(({ user }) => setUser(user))
         .then(() => setFetching(false))
     }
-  }, [fireUser])
+  }, [fireUser, signingUp])
 
   return {
     user: fireUser ? user : null,
