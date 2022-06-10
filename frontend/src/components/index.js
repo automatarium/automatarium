@@ -26,8 +26,10 @@ export { default as Label } from './Label/Label'
 
 export { default as SectionLabel } from './SectionLabel/SectionLabel'
 export { default as TracePreview } from './TracePreview/TracePreview'
+export { default as Preference } from './Preference/Preference'
 
 export { default as TextInput } from './TextInput/TextInput'
+export { default as SelectInput } from './SelectInput/SelectInput'
 
 export { default as Footer } from './Footer/Footer'
 

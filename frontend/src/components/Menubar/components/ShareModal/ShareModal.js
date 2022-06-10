@@ -17,7 +17,6 @@ const ShareModal = ({ projectId, ...props }) => {
   const shareUrl = `${config.baseUrl}/share/${projectId}`
 
   return <Modal
-    narrow
     actions={<>
       <Button onClick={handleCopy}>{copied ? 'Copied' : 'Copy'}</Button>
     </>}

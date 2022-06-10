@@ -30,7 +30,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   useEffect(() => {
     if (setFormActions) {
       setFormActions(<>
-        <Button type='submit' form='signup-form' disabled={!isDirty || isSubmitting}>Sign Up</Button> 
+        <Button type='submit' form='signup-form' disabled={!isDirty || isSubmitting}>Sign Up</Button>
       </>)
     }
   }, [isDirty, isSubmitting, ref?.current, setFormActions])
@@ -114,11 +114,10 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
 Signup.Modal = ({ ...props }) => {
   const [formActions, setFormActions] = useState()
-  
+
   return <Modal
-    narrow
     actions={<>
-      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button> 
+      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button>
       {formActions}
     </>}
     {...props}

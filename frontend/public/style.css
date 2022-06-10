@@ -1,9 +1,9 @@
 :root {
   --white: #FAFAFA;
   --black: #111;
-  --primary-h: 36;
+  --primary-h: 38;
   --primary-s: 84%;
-  --primary-l: 52%;
+  --primary-l: 50%;
   --primary: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
   --grid-dot: #ddd;
   --success-h: 108;

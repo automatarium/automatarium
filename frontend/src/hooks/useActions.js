@@ -99,7 +99,7 @@ const useActions = (registerHotkeys=false) => {
     },
     OPEN_PREFERENCES: {
       hotkey: { key: ',', meta: true },
-      handler: () => console.log('Preferences'),
+      handler: () => dispatchCustomEvent('modal:preferences'),
     },
     UNDO: {
       hotkey: { key: 'z', meta: true },

@@ -1,4 +1,4 @@
-import { StrictMode, createElement } from 'react'
+import { StrictMode, createElement, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
@@ -6,6 +6,8 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import * as Pages from './pages'
 
 import { useEgg, useSyncProjects } from '/src/hooks'
+import { usePreferencesStore, useProjectStore } from '/src/stores'
+import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
 
 // Set up goober to use React
@@ -19,6 +21,16 @@ setup(
 const App = () => {
   const location = useLocation()
   const hideFooter = location.pathname.match('/editor')
+
+  const colorPref = usePreferencesStore(state => state.preferences.color)
+  const project = useProjectStore(state => state.project)
+  useEffect(() => {
+    const projectColor = (project?.config?.color !== '' && project?.config?.color) || 'amber'
+    const color = colorPref === 'match' ? COLORS[projectColor] : COLORS[colorPref]
+    document.documentElement.style.setProperty('--primary-h', color.h)
+    document.documentElement.style.setProperty('--primary-s', color.s + '%')
+    document.documentElement.style.setProperty('--primary-l', color.l + '%')
+  }, [colorPref, project?.config?.color])
 
   useEgg()
   useSyncProjects()

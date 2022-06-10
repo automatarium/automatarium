@@ -43,8 +43,10 @@ const Sidepanel = () => {
             onClick={() => setActivePanel(undefined)}
           ><ChevronRight /></CloseButton>
           <Panel>
-            <Heading>{activePanel?.label}</Heading>
-            {activePanel?.element}
+            <div>
+              <Heading>{activePanel?.label}</Heading>
+              {activePanel?.element}
+            </div>
           </Panel>
         </>
       )}

@@ -28,7 +28,7 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   useEffect(() => {
     if (setFormActions) {
       setFormActions(<>
-        <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button> 
+        <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button>
       </>)
     }
   }, [isDirty, isLoading, isSubmitting, ref?.current, setFormActions])
@@ -63,11 +63,10 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
 Login.Modal = ({ ...props }) => {
   const [formActions, setFormActions] = useState()
-  
+
   return <Modal
-    narrow
     actions={<>
-      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button> 
+      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button>
       {formActions}
     </>}
     {...props}

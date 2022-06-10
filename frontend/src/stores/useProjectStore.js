@@ -14,10 +14,9 @@ import {
   DEFAULT_STATE_PREFIX,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR,
-  DEFAULT_PLAYBACK_INTERVAL,
 } from '/src/config/projects'
 
-export const createNewProject = (projectType) => ({
+export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
   // TODO: use project type
   _id: uuid(),
   states: [],
@@ -36,11 +35,10 @@ export const createNewProject = (projectType) => ({
     automatariumVersion: APP_VERSION,
   },
   config: {
-    type: DEFAULT_PROJECT_TYPE,
+    type: projectType,
     statePrefix: DEFAULT_STATE_PREFIX,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    color: DEFAULT_PROJECT_COLOR,
-    playbackInterval: DEFAULT_PLAYBACK_INTERVAL,
+    color: DEFAULT_PROJECT_COLOR[projectType],
   }
 })
 
@@ -50,7 +48,7 @@ const useProjectStore = create(persist((set, get) => ({
   historyPointer: null,
   lastChangeDate: null,
   lastSaveDate: null,
-  
+
   set: project => { set({ project, history: [ clone(project) ], historyPointer: 0 })},
 
   /* Add current project state to stored history of project states */
