@@ -6,6 +6,7 @@ import { useEvent } from '/src/hooks'
 import graphContextItems from './graphContextItems'
 import stateContextItems from './stateContextItems'
 import transitionContextItems from './transitionContextItems'
+import commentContextItems from './commentContextItems'
 
 const ContextMenus = () => {
   const [context, setContext] = useState({ visible: false })
@@ -20,6 +21,10 @@ const ContextMenus = () => {
 
   useEvent('ctx:transition', ({ detail: { x, y } }) => {
     setContext({ visible: true, x, y, items: transitionContextItems })
+  }, [])
+
+  useEvent('ctx:comment', ({ detail: { x, y } }) => {
+    setContext({ visible: true, x, y, items: commentContextItems })
   }, [])
 
   return (

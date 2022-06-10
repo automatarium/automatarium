@@ -5,11 +5,13 @@ import { useProjectStore } from '/src/stores'
 const useSelectionStore = create(set => ({
   selectedStates: [],
   selectedTransitions: [],
+  selectedComments: [],
+  setComments: selectedComments => set({ selectedComments }),
   setStates: selectedStates => set({ selectedStates }),
   addState: state => set(s => ({ selectedStates: [...s.selectedStates, state]})),
   setTransitions: selectedTransitions => set({ selectedTransitions }),
   addTransition: transition => set(s => ({ selectedTransitions: [...s.selectedTransitions, transition]})),
-  selectNone: () => set({ selectedStates: [], selectedTransitions: [] }),
+  selectNone: () => set({ selectedStates: [], selectedTransitions: [], selectedComments: [] }),
   selectAll: () => set({
     selectedStates: useProjectStore
       .getState()
@@ -20,7 +22,12 @@ const useSelectionStore = create(set => ({
       .getState()
       .project
       ?.transitions
-      ?.map(t => t.id) ?? []
+      ?.map(t => t.id) ?? [],
+    selectedComments: useProjectStore
+      .getState()
+      .project
+      ?.comments
+      ?.map(c => c.id) ?? []
   })
 }))
 
