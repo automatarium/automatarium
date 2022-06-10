@@ -1,0 +1,83 @@
+{
+  "_id": "35816684-4564-4566-affb-a51b89538284",
+  "states": [
+    {
+      "x": 435,
+      "y": 225,
+      "id": 0,
+      "isFinal": false
+    },
+    {
+      "x": 615,
+      "y": 225,
+      "id": 1,
+      "isFinal": false
+    },
+    {
+      "x": 795,
+      "y": 225,
+      "id": 2,
+      "isFinal": false
+    },
+    {
+      "x": 975,
+      "y": 225,
+      "id": 3,
+      "isFinal": false
+    },
+    {
+      "x": 1155,
+      "y": 225,
+      "id": 4,
+      "isFinal": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 0,
+      "read": "d"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 1,
+      "read": "i"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "id": 3,
+      "read": "b"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "id": 4,
+      "read": ""
+    }
+  ],
+  "comments": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Accepts dib (ends with a lambda transition)",
+    "dateCreated": "2022-06-08T08:29:43.582Z",
+    "dateEdited": "2022-06-08T08:51:44.516Z",
+    "version": "0.0.1",
+    "automatariumVersion": "0.0.1"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "",
+    "playbackInterval": 1000
+  }
+}
