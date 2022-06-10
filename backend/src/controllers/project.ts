@@ -9,13 +9,8 @@ export const getProject = async ( req: Request, res: Response, next: NextFunctio
   // Retrieve project by id
   try {
     const project = await Project.findById(pid)
-    if (!project || project.isPublic || req?.user?.uid == project?.userid) {
-      return res.status(200).json({
-        project
-      })
-    }
-    return res.status(403).json({
-      error: "You do not have access to this project"
+    return res.status(200).json({
+      project
     })
   } catch (error) {
     return res.status(500).json({

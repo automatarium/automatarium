@@ -3,7 +3,8 @@ import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown }
 
 import { useToolStore } from '/src/stores'
 import { Dropdown } from '/src/components'
-import { Sidebar } from '../../components'
+import { Sidebar } from '/src/components'
+import useViewStore from '/src/stores/useViewStore'
 
 const tools = [
   {
@@ -37,6 +38,7 @@ const Toolbar = () => {
   const { tool, setTool } = useToolStore()
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
+  const viewScale = useViewStore(s => s.scale)
 
   return (
     <Sidebar $tools>
@@ -58,11 +60,11 @@ const Toolbar = () => {
           fontSize: '.9em',
           padding: '.8em 0',
         }}
-        onClick={() => setZoomMenuOpen(true)}
+        onClick={e => { setZoomMenuOpen(true); e.stopPropagation() }}
         ref={r => zoomButtonRect.current = r?.getBoundingClientRect()}
         $active={zoomMenuOpen}
       >
-        <span>100%</span>
+        <span>{Math.floor(1/viewScale * 100)}%</span>
         <ChevronDown size="1.1em" />
       </Sidebar.Button>
 
@@ -76,29 +78,24 @@ const Toolbar = () => {
         items={[
           {
             label: 'Zoom in',
-            shortcut: '⌘ =',
-            onClick: () => {},
+            action: 'ZOOM_IN',
           },
           {
             label: 'Zoom out',
-            shortcut: '⌘ -',
-            onClick: () => {},
+            action: 'ZOOM_OUT',
           },
           {
             label: 'Zoom to 100%',
-            shortcut: '⌘ 0',
-            onClick: () => {},
+            action: 'ZOOM_100',
           },
           {
             label: 'Zoom to fit',
-            shortcut: '⇧ 1',
-            onClick: () => {},
+            action: 'ZOOM_FIT',
           },
           'hr',
           {
             label: 'Fullscreen',
             shortcut: 'F11',
-            onClick: () => {},
           },
         ]}
       />

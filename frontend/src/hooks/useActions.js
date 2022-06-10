@@ -1,8 +1,8 @@
 import { useEffect, useMemo } from 'react'
-import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
-import { VIEW_MOVE_STEP } from '/src/config/interactions'
-import { convertJFLAPXML } from '@automatarium/jflap-translator'
 
+import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
+import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions'
+import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -27,9 +27,9 @@ const useActions = (registerHotkeys=false) => {
   const commit = useProjectStore(s => s.commit)
   const createNewProject = useProjectStore(s => s.reset)
   const setProject = useProjectStore(s => s.set)
-  const moveView = useViewStore(s => s.moveViewPosition)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
+  const moveView = useViewStore(s => s.moveViewPosition)
 
   // TODO: memoize
   const actions = {
@@ -142,19 +142,36 @@ const useActions = (registerHotkeys=false) => {
     },
     ZOOM_IN: {
       hotkey: { key: '=', meta: true },
-      handler: () => console.log('Zoom In'),
+      handler: () => zoomViewTo(useViewStore.getState().scale - .1),
     },
     ZOOM_OUT: {
       hotkey: { key: '-', meta: true },
-      handler: () => console.log('Zoom Out'),
+      handler: () => zoomViewTo(useViewStore.getState().scale + .1),
     },
     ZOOM_100: {
       hotkey: { key: '0', meta: true },
-      handler: () => console.log('Zoom to 100%'),
+      handler: () => { zoomViewTo(1) },
     },
     ZOOM_FIT: {
       hotkey: { key: '1', shift: true },
-      handler: () => console.log('Zoom to fit'),
+      handler: () => {
+        // Get state
+        const view = useViewStore.getState()
+        const states = useProjectStore.getState()?.project.states ?? []
+        if (states.length === 0)
+          return
+        
+        // Calculate fit region
+        const border = 100
+        const minX = states.reduce((acc, s) => s.x < acc ? s.x : acc, Infinity) - border
+        const maxX = states.reduce((acc, s) => s.x > acc ? s.x : acc, -Infinity) + border
+        const minY = states.reduce((acc, s) => s.y < acc ? s.y : acc, Infinity) - border
+        const maxY = states.reduce((acc, s) => s.y > acc ? s.y : acc, -Infinity) + border
+        const [regionWidth, regionHeight] = [maxX - minX, maxY - minY]
+        const desiredScale = Math.max(regionWidth / view.size.width, regionHeight / view.size.height)
+        view.setViewScale(desiredScale)
+        view.setViewPosition({ x: minX, y: minY })
+      },
     },
     TESTING_LAB: {
       hotkey: { key: 't', meta: true, showCtrl: true },
@@ -303,6 +320,25 @@ const useActions = (registerHotkeys=false) => {
 
   return actionsWithLabels
 }
+
+const zoomViewTo = to => {
+  const view = useViewStore.getState()
+  if (view.scale === to)
+    return
+  const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, to))
+  const scrollAmount = newScale - view.scale
+  if (Math.abs(scrollAmount) < 1e-3) {
+    view.setViewScale(to < 1 ? SCROLL_MIN : SCROLL_MAX)
+    return
+  } else {
+    view.setViewPosition({
+      x: view.position.x - view.size.width/2 * scrollAmount,
+      y: view.position.y - view.size.height/2 * scrollAmount,
+    })
+    view.setViewScale(newScale)
+  }
+}
+
 
 const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
   // Prompt user for file input

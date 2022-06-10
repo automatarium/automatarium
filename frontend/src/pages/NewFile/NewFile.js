@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 
-import { Main, Button, Header } from '/src/components'
-import { NewProjectCard, ProjectCard, CardList } from './components'
+import { Main, Button, Header, ProjectCard } from '/src/components'
+import { NewProjectCard, CardList } from './components'
 import { useProjectsStore, useProjectStore } from '/src/stores'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 
