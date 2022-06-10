@@ -38,3 +38,14 @@ type UnresolvedFSAGraph = {
   transitions: UnresolvedTransition[]
   [other: string]: unknown
 }
+
+type ExecutionTrace = {
+  read: string | null,
+  to: StateID
+}
+
+type ExecutionResult = {
+  accepted: boolean
+  remaining: string
+  trace: ExecutionTrace[]
+}
