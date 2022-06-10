@@ -76,8 +76,8 @@ const Preferences = ({ isOpen, onClose }) => {
         <SectionLabel>Display</SectionLabel>
         <Section>
           <Preference
-            label="Show grid"
-            description="This also enables snapping to the grid"
+            label="Enable grid"
+            description="This also enables snapping"
             htmlFor="showGrid"
           >
             <input id="showGrid" type="checkbox" {...register('showGrid')} />
