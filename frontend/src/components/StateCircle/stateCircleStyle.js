@@ -12,6 +12,6 @@ export const StyledCircle = styled('circle')`
   ${p => p.$selected && `
     stroke: var(--primary);
     stroke-width: 2.5px;
-    filter: brightness(.85) saturate(1.4);
+    fill: var(--state-bg-selected); 
   `}
 `
