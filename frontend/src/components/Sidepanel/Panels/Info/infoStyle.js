@@ -68,7 +68,7 @@ export const Table = styled('table')`
    th {
     background: var(--toolbar);
     font-weight: 400;
-    border-color: white;
+    border-color: var(--table-border-color);
    }
 
    td {
