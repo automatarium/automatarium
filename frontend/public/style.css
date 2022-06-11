@@ -35,9 +35,9 @@
   /* Dark */
   --grid-bg-dark: #1B1B1B;
   --grid-dot-dark: #333;
-  --stroke-dark: hsl(var(--primary-h) 85% 90%);
+  --stroke-dark: hsl(var(--primary-h) 85% 93%);
   --selection-fill-dark: #FFFFFF20;
-  --state-bg-dark: hsl(var(--primary-h) 47% 33%); 
+  --state-bg-dark: hsl(var(--primary-h) 47% 33%);
   --state-bg-selected-dark: hsl(var(--primary-h) 65% 23%);
 
   --grid-bg: var(--grid-bg-light);
