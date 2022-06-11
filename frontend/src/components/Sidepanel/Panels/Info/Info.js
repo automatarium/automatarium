@@ -1,7 +1,6 @@
 import { useMemo } from 'react'
 import { parseRead, validTransitions } from '@automatarium/simulation'
 
-import { Details } from '/src/components'
 import { useProjectStore } from '/src/stores'
 
 import { Wrapper, Symbol, SymbolList, Table } from './infoStyle'
@@ -21,12 +20,12 @@ const Info = () => {
       .reduce((a, b) => [...a, ...b], [])
       .sort()
     ))
-  )
+  , [transitions])
 
   // Resolve graph
   const resolvedGraph = useMemo(() => ({
     ...graph, transitions: graph.transitions.map(tr => ({ ...tr, read: tr.read ? parseRead(tr.read) : []}))
-  }))
+  }), [graph])
 
   const transitionMap = useMemo(() => {
     let map = {} // (ID, Symbol) -> ID[]
@@ -40,7 +39,7 @@ const Info = () => {
     }
 
     return map
-  })
+  }, [states, alphabet, resolvedGraph])
 
   return <>
     <SectionLabel>Alphabet</SectionLabel>
