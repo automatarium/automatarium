@@ -31,6 +31,7 @@ const ItemWithItems = ({ item, onClose }) => {
 }
 
 const Item = ({ item, active, setActive, onClose }) => {
+  console.log('re-render item')
   const actions = useActions()
   const actionHandler = item.action ? actions[item.action]?.handler : null
   const hotKeyLabel = item.action ? actions[item.action]?.label : null
