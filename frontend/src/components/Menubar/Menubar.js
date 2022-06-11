@@ -72,8 +72,6 @@ const Menubar = () => {
   const projectId = useProjectStore(s => s.project?._id)
   const setProjectName = useProjectStore(s => s.setName)
 
-  console.log('re-render menubar')
-
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
     setEditingTitle(true)
@@ -147,8 +145,6 @@ const SavingIndicator = () => {
   const { user } = useAuth()
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
-
-  console.log('re-render saving indicator')
 
   // Determine whether saving
   const isSaving = user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
