@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
+import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, TextInput, TracePreview } from '/src/components'
 import useProjectStore from '/src/stores/useProjectStore'
 import { simulateFSA } from '@automatarium/simulation'
@@ -103,6 +104,9 @@ const TestingLab = () => {
   if (!graph?.states.find(s => s.isFinal))
     warnings.push('There are no final states')
 
+  // :^)
+  const dibEgg = useDibEgg()
+
   return (
     <>
       {warnings.length > 0 && <>
@@ -152,6 +156,7 @@ const TestingLab = () => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
               setTraceIdx(result.trace.length - (result.accepted ? 1 : 0))
+              dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
 
