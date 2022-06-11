@@ -48,7 +48,7 @@ const Info = () => {
         {alphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
       </SymbolList>
     </Wrapper>
-    
+
     <SectionLabel>Transition Function</SectionLabel>
     <Wrapper>
       <Table>
@@ -73,7 +73,7 @@ const Info = () => {
             <th></th>
             {alphabet.map(symbol => <th key={symbol}>{symbol}</th>)}
           </tr>
-          {resolvedGraph.states.map(state => <tr key={state.id}> 
+          {resolvedGraph.states.map(state => <tr key={state.id}>
             <th>{statePrefix}{state.id}</th>
             {alphabet.map(symbol => <td key={symbol}>
               {Object.entries(transitionMap)

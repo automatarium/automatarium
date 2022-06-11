@@ -4,7 +4,9 @@ export const Wrapper = styled('div')`
   display: flex;
   flex-direction: column;
   gap: .8rem;
-  margin: .8rem;
+  margin-block: .8rem;
+  padding-inline: .8rem;
+  overflow-x: auto;
 `
 
 export const Symbol = styled('div')`
