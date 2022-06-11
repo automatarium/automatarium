@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { ChevronRight, FlaskConical, Info as InfoIcon, Settings2 } from 'lucide-react'
 
 import { Sidebar } from '..'
+import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, Info } from './Panels'
@@ -29,6 +30,12 @@ const panels = [
 const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState()
 
+  // Open panel via event
+  useEvent('sidepanel:open', e => {
+    const panel = panels.find(p => p.value === e.detail.panel)
+    setActivePanel(activePanel?.value === panel.value ? undefined : panel)
+  }, [activePanel])
+
   return (
     <Wrapper>
       {activePanel && (
@@ -37,8 +44,10 @@ const Sidepanel = () => {
             onClick={() => setActivePanel(undefined)}
           ><ChevronRight /></CloseButton>
           <Panel>
-            <Heading>{activePanel?.label}</Heading>
-            {activePanel?.element}
+            <div>
+              <Heading>{activePanel?.label}</Heading>
+              {activePanel?.element}
+            </div>
           </Panel>
         </>
       )}

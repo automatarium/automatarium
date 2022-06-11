@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
 
 import { useEvent } from '/src/hooks'
-import { useProjectStore, useToolStore, useViewStore } from '/src/stores'
+import { useProjectStore, useToolStore, useViewStore, usePreferencesStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 
 const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
@@ -15,6 +15,8 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
   const [dragOffsets, setDragOffsets] = useState()
   const [dragCenters, setDragCenters] = useState()
   const [dragging, setDragging] = useState(null)
+
+  const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
   const startDrag = useCallback((e, selectedResourceIDs) => {
     if (toolActive) {
@@ -46,7 +48,7 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
 
         // Snapped dragging
         // (Leader snaps to closest grid position, others follow leaders movement)
-        const [sx, sy] = e.detail.originalEvent.altKey
+        const [sx, sy] = (e.detail.originalEvent.altKey || !gridVisible)
           ? [dx, dy]
           : i === 0
             ? [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
@@ -56,8 +58,8 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
         updateResource({ id, x: sx, y: sy })
       })
     }
-  }, [toolActive, dragging])
-  
+  }, [toolActive, dragging, gridVisible])
+
   // Listen for mouse up - stop dragging states
   useEvent('svg:mouseup', e => {
     if (e.detail.originalEvent.button === 0 && dragging !== null && toolActive) {

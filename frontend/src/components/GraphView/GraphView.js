@@ -1,7 +1,7 @@
 import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
-import { useViewStore, useToolStore } from '/src/stores'
+import { useViewStore, useToolStore, usePreferencesStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -66,9 +66,9 @@ const GraphView = ({ children, ...props }) => {
       // Unset handlers
       return () => {
         window.removeEventListener('resize', onContainerResize)
-        svgRef.current.removeEventListener('mousedown', onContainerMouseDown)
-        svgRef.current.removeEventListener('mouseup', onContainerMouseUp)
-        svgRef.current.removeEventListener('mousedown', onContainerMouseMove)
+        svgRef.current?.removeEventListener('mousedown', onContainerMouseDown)
+        svgRef.current?.removeEventListener('mouseup', onContainerMouseUp)
+        svgRef.current?.removeEventListener('mousedown', onContainerMouseMove)
       }
     }
   }, [svgRef.current])
@@ -85,7 +85,7 @@ const GraphView = ({ children, ...props }) => {
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
   const backgroundSize = `${1 / scale * GRID_SNAP * 2}px ${1 / scale * GRID_SNAP * 2}px`
-  const showGrid = true
+  const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
@@ -94,7 +94,7 @@ const GraphView = ({ children, ...props }) => {
         onContextMenu={e => e.preventDefault()}
         viewBox={viewBox}
         ref={svgRef}
-        $showGrid={showGrid}
+        $showGrid={gridVisible}
         $tool={tool}
         {...props}
         style={{ backgroundSize, backgroundPosition, ...props.style }}>

@@ -10,7 +10,7 @@ export const Svg = styled('svg', forwardRef)`
   position: absolute;
   inset: 0;
   display: block;
-  background: var(--white);
+  background: var(--grid-bg);
 
   /* Grid */
   ${p => p.$showGrid && `
@@ -18,7 +18,7 @@ export const Svg = styled('svg', forwardRef)`
     background: radial-gradient(
       var(--grid-dot),
       var(--grid-dot) var(--dot-fraction),
-      var(--white) var(--dot-fraction));
+      var(--grid-bg) var(--dot-fraction));
   `};
 
   /* Paths */

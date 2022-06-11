@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, forwardRef } from 'react'
+import React, { useState, useEffect, forwardRef } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { Main, TextInput, Button, Label, Header, Modal } from '/src/components'
+import { TextInput, Button, Label, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -28,7 +28,7 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   useEffect(() => {
     if (setFormActions) {
       setFormActions(<>
-        <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button> 
+        <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button>
       </>)
     }
   }, [isDirty, isLoading, isSubmitting, ref?.current, setFormActions])
@@ -63,11 +63,10 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
 Login.Modal = ({ ...props }) => {
   const [formActions, setFormActions] = useState()
-  
+
   return <Modal
-    narrow
     actions={<>
-      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button> 
+      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button>
       {formActions}
     </>}
     {...props}
@@ -77,7 +76,7 @@ Login.Modal = ({ ...props }) => {
     <Login.Form
       onComplete={props?.onClose}
       setFormActions={setFormActions}
-      style={{ paddingBottom: '1em' }} />
+    />
   </Modal>
 }
 

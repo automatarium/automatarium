@@ -8,10 +8,15 @@ export const Wrapper = styled('div')`
 export const Panel = styled('div')`
   width: 350px;
   height: 100%;
-  overflow-y: auto;
   background: var(--surface);
   position: relative;
   z-index: 10;
+
+  & > div {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+  }
 `
 
 export const Heading = styled('h2')`

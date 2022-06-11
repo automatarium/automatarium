@@ -39,7 +39,7 @@ export const CardDetail = styled('div')`
 `
 
 export const CardImage = styled('div')`
-  aspect-ratio: 1;  
+  aspect-ratio: 1;
   border-radius: .5rem;
   display: flex;
   align-items: center;
@@ -60,8 +60,8 @@ export const CardImage = styled('div')`
   /* TODO: use image in place of temp background */
   --dot-fraction: 12.5%;
   background: radial-gradient(
-    var(--grid-dot),
-    var(--grid-dot) var(--dot-fraction),
+    #DDDDDD,
+    #DDDDDD var(--dot-fraction),
     var(--white) var(--dot-fraction));
   background-size: 30px 30px;
   background-position: 5px 5px;
