@@ -60,6 +60,22 @@ const Editor = () => {
     }
   }, [tool, priorTool])
 
+
+  // Middle mouse pan
+  useEvent('svg:mousedown', e => {
+    if (!priorTool && e.detail.originalEvent.button === 1) {
+      setPriorTool(tool)
+      setTool('hand')
+    }
+  }, [tool, priorTool])
+
+  useEvent('svg:mouseup', e => {
+    if (priorTool && e.detail.originalEvent.button === 1) {
+      setTool(priorTool)
+      setPriorTool(undefined)
+    }
+  }, [tool, priorTool])
+
   useEvent('modal:preferences', () => setShowPreferencesModal(true), [])
 
   if (loading) return <LoadingContainer>
