@@ -9,7 +9,9 @@ export const CommentContainer = styled('div', forwardRef)`
   border: 2.5px solid var(--input-border);
   user-select: none;
   width: max-content;
+  max-width: 255px;
   margin: auto;
+  box-sizing: border-box;
 
   ${p => p.$selected && `
     border-color: var(--primary);
