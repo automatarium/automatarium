@@ -32,6 +32,7 @@ const useActions = (registerHotkeys=false) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
   const createComment = useProjectStore(s => s.createComment)
+  const createState = useProjectStore(s => s.createState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
 
   const navigate = useNavigate()
@@ -277,6 +278,13 @@ const useActions = (registerHotkeys=false) => {
         const text = window.prompt('Text of comment?')
         const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
         createComment({ x: viewX, y: viewY, text })
+        commit()
+      }
+    },
+    CREATE_STATE: {
+      handler: e => {
+        const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
+        createState({ x: viewX, y: viewY })
         commit()
       }
     },
