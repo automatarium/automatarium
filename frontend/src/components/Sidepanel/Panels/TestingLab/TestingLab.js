@@ -32,7 +32,7 @@ const TestingLab = () => {
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const multiTraceInput = useProjectStore(s => s.project.tests.batch)
   const addMultiTraceInput = useProjectStore(s => s.addBatchTest)
-  const setMultiTraceInput = useProjectStore(s => s.setBatchTest)
+  const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
 
@@ -108,7 +108,7 @@ const TestingLab = () => {
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
           <AlertTriangle />
-          {warning}  
+          {warning}
         </WarningLabel>)}
       </>}
       <SectionLabel>Trace</SectionLabel>
@@ -171,14 +171,39 @@ const TestingLab = () => {
               )}
               <TextInput
                 onChange={e => {
-                  setMultiTraceInput(index, e.target.value)
+                  updateMultiTraceInput(index, e.target.value)
                   setMultiTraceOutput([])
                 }}
                 value={value}
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
+                onPaste={e => {
+                  const paste = (e.clipboardData || window.clipboardData).getData('text')
+                  if (!paste.includes('\n')) return
+
+                  e.preventDefault()
+                  const lines = paste.split(/\r?\n/)
+                  lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    addMultiTraceInput()
+                    window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)
+                  }
+                  if (e.key === 'Backspace' && value === '') {
+                    e.target?.focus()
+                    if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
+                      e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
+                    }
+                    removeMultiTraceInput(index)
+                    setMultiTraceOutput([])
+                  }
+                }}
               />
               <RemoveButton
-                onClick={() => {
+                onClick={e => {
+                  const container = e.target.closest('div')
+                  const next = container?.nextSibling?.tagName === 'DIV' ? container : container?.previousSibling
+                  next?.querySelector('input')?.focus()
                   removeMultiTraceInput(index)
                   setMultiTraceOutput([])
                 }}

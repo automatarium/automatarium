@@ -157,11 +157,11 @@ const useProjectStore = create(persist((set, get) => ({
     state.project.tests.single = value
     state.lastChangeDate = new Date()
   })),
-  addBatchTest: () => set(produce((state) => {
-    state.project.tests.batch.push('')
+  addBatchTest: (value = '') => set(produce((state) => {
+    state.project.tests.batch.push(value)
     state.lastChangeDate = new Date()
   })),
-  setBatchTest: (index, value) => set(produce((state) => {
+  updateBatchTest: (index, value) => set(produce((state) => {
     state.project.tests.batch[index] = value
     state.lastChangeDate = new Date()
   })),
