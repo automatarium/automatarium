@@ -94,9 +94,6 @@ const useActions = (registerHotkeys=false) => {
     EXPORT_AS_JFLAP: {
       //handler: () => console.log('Export JFLAP'),
     },
-    SHARE: {
-      //handler: () => console.log('Share'),
-    },
     OPEN_PREFERENCES: {
       hotkey: { key: ',', meta: true },
       handler: () => dispatchCustomEvent('modal:preferences'),
@@ -175,7 +172,9 @@ const useActions = (registerHotkeys=false) => {
       },
     },
     FULLSCREEN: {
-      handler: () => document.documentElement.requestFullscreen(),
+      handler: () => document.fullscreenElement
+        ? document.exitFullscreen()
+        : document.documentElement.requestFullscreen(),
     },
     TESTING_LAB: {
       hotkey: { key: 't', meta: true, showCtrl: true },

@@ -26,7 +26,6 @@ import useProjectStore from '../../stores/useProjectStore'
 // Extend dayjs
 dayjs.extend(relativeTime)
 
-
 const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
   const buttonRef = useRef()
   const [rect, setRect] = useState({})
@@ -136,7 +135,7 @@ const Menubar = () => {
           </>}
 
           {user && <Button secondary surface onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
-          {!userLoading && user && <Button disabled={isSaving} onClick={() => setShareModalVisible(true)}>Share</Button>}
+          {!userLoading && user && <Button onClick={() => setShareModalVisible(true)}>Share</Button>}
         </Actions>
 
         <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />

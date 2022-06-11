@@ -58,10 +58,6 @@ const menus = [
           },
         ],
       },
-      {
-        label: 'Share...',
-        action: 'SHARE',
-      },
       'hr',
       {
         label: 'Preferences',

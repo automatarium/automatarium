@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, forwardRef } from 'react'
+import React, { useState, useEffect, forwardRef } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { Main, TextInput, Button, Label, Header, Modal } from '/src/components'
+import { TextInput, Button, Label, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {

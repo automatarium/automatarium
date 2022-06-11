@@ -122,7 +122,7 @@ Signup.Modal = ({ ...props }) => {
     </>}
     {...props}
   >
-    <Header center/>
+    <Header center />
     <h2>Sign Up</h2>
     <Signup.Form
       onComplete={props?.onClose}
