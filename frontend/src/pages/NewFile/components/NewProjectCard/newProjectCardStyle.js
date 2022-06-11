@@ -45,8 +45,8 @@ export const CardImage = styled('div')`
   /* TODO: use image in place of temp background */
   --dot-fraction: 12.5%;
   background: radial-gradient(
-    var(--grid-dot),
-    var(--grid-dot) var(--dot-fraction),
+    #DDDDDD,
+    #DDDDDD var(--dot-fraction),
     var(--white) var(--dot-fraction));
   background-size: 30px 30px;
   background-position: 5px 5px;
