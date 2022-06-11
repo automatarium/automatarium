@@ -1,6 +1,6 @@
 export { default as useActions } from './useActions'
 export { default as useAuth } from './useAuth'
-export { default as useEggDib } from './useEggDib'
+export { default as useDibEgg } from './useDibEgg'
 export { default as useEgg } from './useEgg'
 export { default as useEvent } from './useEvent'
 export { default as useStateDragging } from './useStateDragging'
