@@ -1,8 +1,8 @@
 const COLORS = {
   red: {
     h: 0,
-    s: 65,
-    l: 51,
+    s: 63,
+    l: 48,
   },
   pink: {
     h: 316,
