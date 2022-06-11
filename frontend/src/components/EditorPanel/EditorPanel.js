@@ -50,13 +50,13 @@ const EditorPanel = () => {
         to={createTransitionEnd}
         count={1}
       />}
-      
+
       {/* Render states and transitions */}
       <GraphContent />
-      
+
       {/* Render selection marquee */}
       <SelectionBox />
-    </GraphView> 
+    </GraphView>
     <ContextMenus />
     <InputDialogs />
   </>

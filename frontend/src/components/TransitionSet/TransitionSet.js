@@ -12,7 +12,7 @@ const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read}, i) => (
     <Transition
       i={i}
-      count={transitions.length}
+      transitions={transitions}
       text={read}
       from={from}
       to={to}
@@ -22,10 +22,21 @@ const TransitionSet = ({ transitions }) => <>
   )}
 </>
 
-const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEvents=false }) => {
+const Transition = ({
+  id,
+  i,
+  transitions = [],
+  count = transitions.length,
+  from,
+  to,
+  text,
+  fullWidth=false,
+  suppressEvents=false,
+}) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
+  const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
 
   // Determine how much to bend this path
   const evenCount = count % 2 === 0
@@ -52,20 +63,24 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
       transition: { id, from, to, text },
     })
 
+  // Calculate text offset (increased for additional reflexive transitions)
+  const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
+
   return <>
     {/* The edge itself */}
-    <StyledPath
+    {!(isReflexive && i > 0) && <StyledPath
       id={pathID}
       d={pathData}
       key={pathID}
-      markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`}
-      $selected={selected}/>
+      markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
+      $selected={selected || (isReflexive && setSelected)}
+    />}
 
     {/* Invisible path used to place text */}
     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
     {/* Thicker invisible path used to select the transition */}
-    {!(isReflexive && count > 1) && !suppressEvents && <path
+    {!suppressEvents && <path
       id={pathID}
       d={pathData}
       key={`${pathID}-selection`}
@@ -81,7 +96,7 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
       onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
       onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
       fill={selected ? 'var(--primary)' : 'var(--stroke)' }
-      dy={`-${TEXT_PATH_OFFSET}`}
+      dy={`-${textOffset}`}
     >
       <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
         {text === '' ? 'λ' : text}

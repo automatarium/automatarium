@@ -66,7 +66,6 @@ const Preferences = ({ isOpen, onClose }) => {
               <option value="green">Green</option>
               <option value="teal">Teal</option>
               <option value="blue">Blue</option>
-              <option value="indigo">Indigo</option>
               <option value="purple">Purple</option>
               <option value="pink">Pink</option>
             </SelectInput>
