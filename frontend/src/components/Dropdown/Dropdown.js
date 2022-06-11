@@ -38,7 +38,7 @@ const Item = ({ item, active, setActive, onClose }) => {
 
   return  (
     <ItemWrapper
-      onClick={actionHandler ? () => { actionHandler(); onClose() } : (item.items?.length > 0 ? setActive : undefined)}
+      onClick={actionHandler ? e => { actionHandler(e); onClose() } : (item.items?.length > 0 ? setActive : undefined)}
       disabled={(!actionHandler && !item['items']) || item.items?.length === 0 || actionDisabled}
       type="button"
       $active={active}
