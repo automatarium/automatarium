@@ -130,7 +130,7 @@ const Menubar = () => {
           </>}
 
           {user && <Button secondary surface onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
-          {!userLoading && user && <Button onClick={() => setShareModalVisible(true)}>Share</Button>}
+          {user && <Button disabled={userLoading} onClick={() => setShareModalVisible(true)}>Share</Button>}
         </Actions>
 
         <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
