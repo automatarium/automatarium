@@ -1,3 +1,5 @@
+import { APP_VERSION } from '/src/config/projects'
+
 const menus = [
   {
     label: 'File',
@@ -183,7 +185,7 @@ const menus = [
       },
       'hr',
       {
-        label: 'Version 1.0.0',
+        label: `Version ${APP_VERSION}`,
       },
     ]
   },

@@ -6,7 +6,7 @@ export const DEFAULT_PROJECT_TYPE = 'FSA'
 export const DEFAULT_STATE_PREFIX = 'q'
 export const DEFAULT_ACCEPTANCE_CRITERIA = 'both'
 export const DEFAULT_PROJECT_COLOR = {
-  FSA: 'amber',
+  FSA: 'orange',
   PDA: 'red',
   TM: 'purple',
 }
