@@ -41,10 +41,10 @@ const Preferences = ({ isOpen, onClose }) => {
       style={{ paddingInline: 0 }}
     >
       <form id="preferences_form" onSubmit={handleSubmit(onSubmit)}>
-        <SectionLabel>Theme</SectionLabel>
+        <SectionLabel>Appearance</SectionLabel>
         <Section>
           <Preference
-            label="Light/dark mode"
+            label="Theme"
             description="Up late? Switch to dark mode"
             htmlFor="theme"
           >
@@ -55,7 +55,7 @@ const Preferences = ({ isOpen, onClose }) => {
             </SelectInput>
           </Preference>
           <Preference
-            label="Colour theme"
+            label="Colour accent"
             description="Roses are red, Automatarium is blue"
             htmlFor="color"
           >
