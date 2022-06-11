@@ -2,9 +2,9 @@ import { useMemo } from 'react'
 import { parseRead, validTransitions } from '@automatarium/simulation'
 
 import { useProjectStore } from '/src/stores'
+import { Table, SectionLabel } from '/src/components'
 
-import { Wrapper, Symbol, SymbolList, Table } from './infoStyle'
-import SectionLabel from '../../../SectionLabel/SectionLabel'
+import { Wrapper, Symbol, SymbolList } from './infoStyle'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix) ?? 'q'

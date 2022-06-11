@@ -24,6 +24,7 @@ export { default as Button } from './Button/Button'
 export { default as Dropdown } from './Dropdown/Dropdown'
 export { default as Label } from './Label/Label'
 export { default as Details } from './Details/Details'
+export { default as Table } from './Table/Table'
 
 export { default as SectionLabel } from './SectionLabel/SectionLabel'
 export { default as TracePreview } from './TracePreview/TracePreview'
