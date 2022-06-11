@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
+import { useEggDib } from '/src/hooks'
 import { SectionLabel, Button, TextInput, TracePreview } from '/src/components'
 import useProjectStore from '/src/stores/useProjectStore'
 import { simulateFSA } from '@automatarium/simulation'
@@ -152,6 +153,8 @@ const TestingLab = () => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
               setTraceIdx(result.trace.length - (result.accepted ? 1 : 0))
+              // :^)
+              useEggDib(traceInput, result.accepted)
             }} />
         </StepButtons>
 
