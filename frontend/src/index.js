@@ -9,7 +9,6 @@ import { useEgg, useSyncProjects } from '/src/hooks'
 import { usePreferencesStore, useProjectStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
-import { config } from 'process'
 
 // Set up goober to use React
 setup(
