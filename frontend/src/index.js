@@ -24,14 +24,14 @@ const App = () => {
 
   // Set color theme
   const colorPref = usePreferencesStore(state => state.preferences.color)
-  const project = useProjectStore(state => state.project)
+  const projectColor = useProjectStore(state => state.project?.config.color)
   useEffect(() => {
-    const projectColor = (project?.config?.color !== '' && project?.config?.color) || 'orange'
-    const color = colorPref === 'match' ? COLORS[projectColor] : COLORS[colorPref]
+    const computedColor = (projectColor !== '' && projectColor) || 'orange'
+    const color = colorPref === 'match' ? COLORS[computedColor] : COLORS[colorPref]
     document.documentElement.style.setProperty('--primary-h', color.h)
     document.documentElement.style.setProperty('--primary-s', color.s + '%')
     document.documentElement.style.setProperty('--primary-l', color.l + '%')
-  }, [colorPref, project?.config?.color])
+  }, [colorPref, projectColor])
 
   // Set light/dark mode
   const themePref = usePreferencesStore(state => state.preferences.theme)

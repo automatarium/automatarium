@@ -70,8 +70,6 @@ const Menubar = () => {
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
   const projectId = useProjectStore(s => s.project?._id)
-  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
-  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const setProjectName = useProjectStore(s => s.setName)
 
   const handleEditProjectName = () => {
@@ -85,9 +83,6 @@ const Menubar = () => {
     }
     setEditingTitle(false)
   }
-
-  // Determine whether saving
-  const isSaving = user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
 
   return (
     <>
@@ -110,7 +105,7 @@ const Menubar = () => {
               ) : (
                 <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
               )}
-              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
+              <SavingIndicator />
             </NameRow>
 
             <DropdownMenus>
@@ -144,6 +139,19 @@ const Menubar = () => {
       </Wrapper>
     </>
   )
+}
+
+const SavingIndicator = () => {
+  const { user } = useAuth()
+  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+
+  // Determine whether saving
+  const isSaving = user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
+  
+  return <SaveStatus $show={isSaving}>
+    Saving...
+  </SaveStatus>
 }
 
 export default Menubar
