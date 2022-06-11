@@ -76,7 +76,7 @@ Login.Modal = ({ ...props }) => {
     <Login.Form
       onComplete={props?.onClose}
       setFormActions={setFormActions}
-      style={{ paddingBottom: '1em' }} />
+    />
   </Modal>
 }
 

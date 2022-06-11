@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid'
 
 import { getProject } from '/src/services/project'
 import { Spinner, ProjectCard, Button } from '/src/components'
-import { useProjectStore } from '/src/stores' 
+import { useProjectStore } from '/src/stores'
 import { Container } from './shareStyle'
 
 const Share = () => {

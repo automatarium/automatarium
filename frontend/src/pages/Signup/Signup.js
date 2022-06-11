@@ -127,7 +127,7 @@ Signup.Modal = ({ ...props }) => {
     <Signup.Form
       onComplete={props?.onClose}
       setFormActions={setFormActions}
-      style={{ paddingBottom: '1em' }} />
+    />
   </Modal>
 }
 

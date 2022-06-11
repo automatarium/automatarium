@@ -22,6 +22,10 @@ export const Overlay = styled('div', forwardRef)`
   position: fixed;
   inset: 0;
   background: rgba(0 0 0 / .5);
+
+  .dropdown & {
+    background: transparent;
+  }
 `
 
 export const Content = styled('div', forwardRef)`
@@ -33,12 +37,16 @@ export const Content = styled('div', forwardRef)`
   width: 500px;
   max-width: 100%;
   box-sizing: border-box;
+  box-shadow: 0 2px 5px rgba(0 0 0 / .5);
 
   transform: translateY(0);
   transition: transform .15s;
 
   [aria-hidden='true'] & {
     transform: translateY(5px);
+  }
+  [aria-hidden='true'].dropdown & {
+    transform: translateY(-5px);
   }
 `
 

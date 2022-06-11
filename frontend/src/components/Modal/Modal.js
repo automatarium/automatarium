@@ -24,6 +24,8 @@ const Modal = ({
   isOpen,
   onClose,
   focusRef,
+  dropdown = false,
+  containerStyle,
   ...props
 }) => {
   const [instance, attr] = useA11yDialog({ id, role, title })
@@ -43,7 +45,11 @@ const Modal = ({
   }, [instance, onClose, focusRef?.current])
 
   const dialog = createPortal(
-    <Container {...attr.container}>
+    <Container
+      {...attr.container}
+      className={dropdown ? 'dropdown' : ''}
+      style={containerStyle}
+    >
       <Overlay {...attr.overlay} />
 
       <Content {...attr.dialog}>

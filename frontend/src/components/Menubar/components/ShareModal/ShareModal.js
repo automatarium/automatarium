@@ -3,10 +3,10 @@ import { useCallback, useState } from 'react'
 import { Button, Modal, TextInput } from '/src/components'
 import config from '/src/config'
 
-import { Container } from './shareModalStyle'
-
 const ShareModal = ({ projectId, ...props }) => {
   const [copied, setCopied] = useState(false)
+
+  const shareUrl = `${config.baseUrl}/share/${projectId}`
 
   const handleCopy = useCallback(() => {
     navigator.clipboard.writeText(shareUrl)
@@ -14,19 +14,24 @@ const ShareModal = ({ projectId, ...props }) => {
     setTimeout(() => setCopied(false), 2000)
   }, [projectId])
 
-  const shareUrl = `${config.baseUrl}/share/${projectId}`
-
-  return <Modal
-    actions={<>
-      <Button onClick={handleCopy}>{copied ? 'Copied' : 'Copy'}</Button>
-    </>}
-    {...props}
-  >
-    <Container>
-      <h2>Share</h2>
+  return (
+    <Modal
+      title="Share this project"
+      description="This link lets others make a copy of your project"
+      actions={<Button onClick={handleCopy} disabled={copied}>{copied ? 'Copied!' : 'Copy to clipboard'}</Button>}
+      dropdown
+      containerStyle={{
+        position: 'absolute',
+        left: 'initial',
+        bottom: 'initial',
+        right: '1rem',
+        top: '2rem',
+      }}
+      {...props}
+    >
       <TextInput readOnly value={shareUrl} />
-    </Container>
-  </Modal>
+    </Modal>
+  )
 }
 
 export default ShareModal
