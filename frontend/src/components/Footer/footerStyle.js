@@ -17,16 +17,13 @@ export const Container = styled('footer')`
 
 export const FooterItem = styled('span')`
   color: var(--white);
+  font-size: .9em;
 
   > a {
     text-decoration: underline;
     color: inherit;
     &:hover {
-      color: grey;
+      color: hsl(var(--primary-h) var(--primary-s) 70%);
     }
   }
-
-  ${p => p.$right && `
-    margin-left: auto; 
-  `}
 `
