@@ -32,7 +32,7 @@ const TestingLab = () => {
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const multiTraceInput = useProjectStore(s => s.project.tests.batch)
   const addMultiTraceInput = useProjectStore(s => s.addBatchTest)
-  const setMultiTraceInput = useProjectStore(s => s.setBatchTest)
+  const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
 
@@ -96,8 +96,9 @@ const TestingLab = () => {
   }, [lastChangeDate])
 
   // Update warnings
+  const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const warnings = []
-  if ([null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState))
+  if (noInitialState)
     warnings.push('There is no initial state')
   if (!graph?.states.find(s => s.isFinal))
     warnings.push('There are no final states')
@@ -108,7 +109,7 @@ const TestingLab = () => {
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
           <AlertTriangle />
-          {warning}  
+          {warning}
         </WarningLabel>)}
       </>}
       <SectionLabel>Trace</SectionLabel>
@@ -137,7 +138,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<ChevronRight size={23} />}
-            disabled={traceIdx >= simulationResult?.transitionCount}
+            disabled={traceIdx >= simulationResult?.transitionCount || noInitialState}
             onClick={() => {
               if (!simulationResult) {
                 simulateGraph()
@@ -146,7 +147,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0}
+            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0 || noInitialState}
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
@@ -171,14 +172,51 @@ const TestingLab = () => {
               )}
               <TextInput
                 onChange={e => {
-                  setMultiTraceInput(index, e.target.value)
+                  updateMultiTraceInput(index, e.target.value)
                   setMultiTraceOutput([])
                 }}
                 value={value}
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
+                onPaste={e => {
+                  const paste = (e.clipboardData || window.clipboardData).getData('text')
+                  if (!paste.includes('\n')) return
+
+                  e.preventDefault()
+                  const lines = paste.split(/\r?\n/)
+                  lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
+                }}
+                onKeyDown={e => {
+                  if (e.key === 'Enter' && !e.repeat) {
+                    if (e.metaKey || e.ctrlKey) {
+                      // Run shortcut
+                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+                    } else {
+                      addMultiTraceInput()
+                      window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)
+                    }
+                  }
+                  if (e.key === 'Backspace' && value === '' && !e.repeat) {
+                    e.preventDefault()
+                    e.target?.focus()
+                    if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
+                      e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
+                    }
+                    removeMultiTraceInput(index)
+                    setMultiTraceOutput([])
+                  }
+                  if (e.key === 'ArrowUp') {
+                    e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
+                  }
+                  if (e.key === 'ArrowDown') {
+                    e.target?.closest('div')?.nextSibling?.querySelector('input')?.focus()
+                  }
+                }}
               />
               <RemoveButton
-                onClick={() => {
+                onClick={e => {
+                  const container = e.target.closest('div')
+                  const next = container?.nextSibling?.tagName === 'DIV' ? container : container?.previousSibling
+                  next?.querySelector('input')?.focus()
                   removeMultiTraceInput(index)
                   setMultiTraceOutput([])
                 }}
