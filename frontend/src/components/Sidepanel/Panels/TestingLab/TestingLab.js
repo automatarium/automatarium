@@ -96,8 +96,9 @@ const TestingLab = () => {
   }, [lastChangeDate])
 
   // Update warnings
+  const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const warnings = []
-  if ([null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState))
+  if (noInitialState)
     warnings.push('There is no initial state')
   if (!graph?.states.find(s => s.isFinal))
     warnings.push('There are no final states')
@@ -137,7 +138,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<ChevronRight size={23} />}
-            disabled={traceIdx >= simulationResult?.transitionCount}
+            disabled={traceIdx >= simulationResult?.transitionCount || noInitialState}
             onClick={() => {
               if (!simulationResult) {
                 simulateGraph()
@@ -146,7 +147,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0}
+            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0 || noInitialState}
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
