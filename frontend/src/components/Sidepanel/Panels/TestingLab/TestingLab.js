@@ -186,17 +186,29 @@ const TestingLab = () => {
                   lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
                 }}
                 onKeyDown={e => {
-                  if (e.key === 'Enter') {
-                    addMultiTraceInput()
-                    window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)
+                  if (e.key === 'Enter' && !e.repeat) {
+                    if (e.metaKey || e.ctrlKey) {
+                      // Run shortcut
+                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+                    } else {
+                      addMultiTraceInput()
+                      window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)
+                    }
                   }
-                  if (e.key === 'Backspace' && value === '') {
+                  if (e.key === 'Backspace' && value === '' && !e.repeat) {
+                    e.preventDefault()
                     e.target?.focus()
                     if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
                       e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
                     }
                     removeMultiTraceInput(index)
                     setMultiTraceOutput([])
+                  }
+                  if (e.key === 'ArrowUp') {
+                    e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
+                  }
+                  if (e.key === 'ArrowDown') {
+                    e.target?.closest('div')?.nextSibling?.querySelector('input')?.focus()
                   }
                 }}
               />
