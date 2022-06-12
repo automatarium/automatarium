@@ -155,7 +155,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => { zoomViewTo(1) },
     },
     ZOOM_FIT: {
-      hotkey: { key: '0', shift: true },
+      hotkey: { key: 'f', shift: true },
       handler: () => {
         // Get state
         const view = useViewStore.getState()
