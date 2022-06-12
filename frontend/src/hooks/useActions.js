@@ -77,7 +77,7 @@ const useActions = (registerHotkeys=false) => {
         const a = document.createElement('a')
         const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
         a.href = URL.createObjectURL(file)
-        a.download = project.meta.name // TODO: prompt file location - might not be possible?
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') // TODO: prompt file location - might not be possible?
         a.click()
       },
     },
