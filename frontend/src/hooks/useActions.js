@@ -6,7 +6,7 @@ import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
-import { createNewProject } from '../stores/useProjectStore'
+import { createNewProject } from '/src/stores/useProjectStore'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
