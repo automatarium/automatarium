@@ -5,7 +5,7 @@ import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from 
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
-import { Preferences } from '/src/pages'
+import { Preferences, ShortcutGuide } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
 
@@ -14,6 +14,7 @@ const Editor = () => {
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState()
   const [showPreferencesModal, setShowPreferencesModal] = useState(false)
+  const [showShortcutGuide, setShowShortcutGuide] = useState(false)
 
   // Syncronize last-opened project with backend before showing it
   const loading = useSyncCurrentProject()
@@ -77,6 +78,7 @@ const Editor = () => {
   }, [tool, priorTool])
 
   useEvent('modal:preferences', () => setShowPreferencesModal(true), [])
+  useEvent('modal:shortcuts', () => setShowShortcutGuide(true), [])
 
   if (loading) return <LoadingContainer>
     <Spinner />
@@ -94,6 +96,10 @@ const Editor = () => {
       <Preferences
         isOpen={showPreferencesModal}
         onClose={() => setShowPreferencesModal(false)}
+      />
+      <ShortcutGuide
+        isOpen={showShortcutGuide}
+        onClose={() => setShowShortcutGuide(false)}
       />
     </>
   )

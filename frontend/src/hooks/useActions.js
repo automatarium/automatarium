@@ -8,12 +8,12 @@ import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
 const isWindows = navigator.platform.match(/Win/)
-const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
+export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   alt && (isWindows ? 'Alt' : '⌥'),
   shift && (isWindows ? 'Shift' : '⇧'),
-  key.toUpperCase(),
-].filter(Boolean).join(isWindows ? '+' : ' ')
+  key?.toUpperCase(),
+].filter(Boolean)
 
 const useActions = (registerHotkeys=false) => {
   const undo = useProjectStore(s => s.undo)
@@ -40,7 +40,6 @@ const useActions = (registerHotkeys=false) => {
   // TODO: memoize
   const actions = {
     NEW_FILE: {
-      hotkey: { key: 'n', meta: true, showCtrl: true },
       handler: () => navigate('/new'),
     },
     IMPORT_AUTOMATARIUM_PROJECT: {
@@ -154,7 +153,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => { zoomViewTo(1) },
     },
     ZOOM_FIT: {
-      hotkey: { key: '1', shift: true },
+      hotkey: { key: '0', shift: true },
       handler: () => {
         // Get state
         const view = useViewStore.getState()
@@ -180,14 +179,15 @@ const useActions = (registerHotkeys=false) => {
         : document.documentElement.requestFullscreen(),
     },
     TESTING_LAB: {
-      hotkey: { key: 't', meta: true, showCtrl: true },
+      hotkey: { key: '1', shift: true },
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' }),
     },
     FILE_INFO: {
+      hotkey: { key: '2', shift: true },
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' }),
     },
     FILE_OPTIONS: {
-      hotkey: { key: 'u', meta: true },
+      hotkey: { key: '3', shift: true },
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' }),
     },
     CONVERT_TO_DFA: {
@@ -200,17 +200,17 @@ const useActions = (registerHotkeys=false) => {
       //handler: () => console.log('Auto Layout'),
     },
     OPEN_DOCS: {
-      //handler: () => console.log('View Documentation'),
+      handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank'),
     },
     KEYBOARD_SHORTCUTS: {
       hotkey: { key: '/', meta: true },
-      //handler: () => console.log('Keyboard shortcuts'),
+      handler: () => dispatchCustomEvent('modal:shortcuts'),
     },
     PRIVACY_POLICY: {
-      handler: () => navigate('/privacy'),
+      handler: () => window.open('/privacy', '_blank'),
     },
     OPEN_ABOUT: {
-      handler: () => navigate('/about'),
+      handler: () => window.open('/about', '_blank'),
     },
     MOVE_VIEW_LEFT: {
       hotkey: { key: 'ArrowLeft' },
@@ -346,7 +346,7 @@ const useActions = (registerHotkeys=false) => {
   // Add formatted hotkeys to actions
   const actionsWithLabels = useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
     ...action,
-    label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey) : null
+    label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey).join(isWindows ? '+' : ' ') : null
   }]))), [actions])
 
   return actionsWithLabels
