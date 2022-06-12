@@ -381,11 +381,18 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
     const reader = new FileReader()
     reader.onloadend = () => { 
       try {
-        const data = parse(reader.result)
-        onData({
+        const fileData = parse(reader.result)
+        const project = {
           ...createNewProject(),
-          ...data
-        } )
+          ...fileData,
+        }
+        onData({
+          ...project,
+          meta: {
+            ...project.meta,
+            name: input.files[0]?.name.split('.').slice(0, -1).join('.')
+          }
+        })
       } catch (error) {
         window.alert(errorMessage)
         console.error(error)
