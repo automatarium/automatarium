@@ -112,7 +112,7 @@ const GraphView = ({ children, ...props }) => {
           ...props.style,
         }}>
         <MarkerProvider>
-          <g>{children}</g>
+          <g id="automatarium-graph">{children}</g>
         </MarkerProvider>
       </Svg>
     </Wrapper>

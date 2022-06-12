@@ -22,7 +22,7 @@ const GraphContent = () => {
       .map(t => locateTransition(t, states)) // Resolve location of transition states
       .sort((t1, t2) => t2.from.x < t1.from.x ? 1 : -1 )) // Sort by direction
 
-  return <g>
+  return <>
     {/* Render arrow on initial state */}
     <InitialStateArrow states={states} initialStateID={initialState}/>
 
@@ -51,7 +51,7 @@ const GraphContent = () => {
       y={c.y}
       text={c.text}
     />)}
-  </g>
+  </>
 }
 
 export default GraphContent
