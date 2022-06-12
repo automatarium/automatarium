@@ -88,10 +88,10 @@ const useActions = (registerHotkeys=false) => {
     },
     EXPORT_AS_SVG: {
       hotkey: { key: 'e', shift: true, alt: true, meta: true},
-      //handler: () => console.log('Export SVG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'svg' }),
     },
     EXPORT_AS_JPG: {
-      //handler: () => console.log('Export JPG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'jpg' }),
     },
     EXPORT_AS_JFLAP: {
       //handler: () => console.log('Export JFLAP'),

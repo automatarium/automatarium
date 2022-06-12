@@ -29,18 +29,31 @@ const useImageExport = svgRef => {
         .replaceAll('var(--state-bg)', styles.getPropertyValue('--state-bg-light'))
         .replaceAll('var(--state-bg-selected)', styles.getPropertyValue('--state-bg-selected-light'))
 
+      // Setup download link
+      const link = document.createElement('a')
+      link.download = `${projectName.replace(/[\s]/g, '_').replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.${e.detail.type}`
+
+      // Export SVG
+      if (e.detail.type === 'svg') {
+        link.href = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
+        link.click()
+        return
+      }
+
       // Setup a canvas
       const canvas = document.createElement('canvas')
       canvas.height = height*2
       canvas.width = width*2
       const ctx = canvas.getContext('2d')
+      if (e.detail.type === 'jpg') {
+        ctx.fillStyle = styles.getPropertyValue('--grid-bg-light')
+        ctx.fillRect(0, 0, canvas.width, canvas.height)
+      }
       const img = new Image
       img.onload = () => {
         // Draw and save the image
         ctx.drawImage(img, 0, 0)
-        const link = document.createElement('a')
-        link.download = `${projectName.replace(/[\s]/g, '_').replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.png`
-        link.href = canvas.toDataURL('image/png')
+        link.href = canvas.toDataURL({png: 'image/png', jpg: 'image/jpeg'}[e.detail.type ?? 'png'])
         link.click()
       }
       img.src = 'data:image/svg+xml,'+encodeURIComponent(svg)
