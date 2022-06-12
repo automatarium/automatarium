@@ -6,6 +6,7 @@ import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
+import { createNewProject } from '../stores/useProjectStore'
 
 const isWindows = navigator.platform.match(/Win/)
 const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -378,10 +379,13 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
   input.onchange = () => {
     // Read file data
     const reader = new FileReader()
-    reader.onloadend = () => {
+    reader.onloadend = () => { 
       try {
         const data = parse(reader.result)
-        onData(data)
+        onData({
+          ...createNewProject(),
+          ...data
+        } )
       } catch (error) {
         window.alert(errorMessage)
         console.error(error)
