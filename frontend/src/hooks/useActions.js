@@ -84,7 +84,7 @@ const useActions = (registerHotkeys=false) => {
     },
     EXPORT_AS_PNG: {
       hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
-      //handler: () => console.log('Export PNG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png' }),
     },
     EXPORT_AS_SVG: {
       hotkey: { key: 'e', shift: true, alt: true, meta: true},

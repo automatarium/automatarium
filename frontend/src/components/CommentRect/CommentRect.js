@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 
-import { CommentContainer } from './commentRectStyle'
+import { commentStyles, commentSelectedStyles } from './commentRectStyle'
 
 const CommentRect = ({ id, x, y, text }) => {
   const containerRef = useRef()
@@ -33,15 +33,13 @@ const CommentRect = ({ id, x, y, text }) => {
     })
 
   return <foreignObject x={x} y={y} {...size}>
-    <CommentContainer
+    <div
       xmlns="http://www.w3.org/1999/xhtml"
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      $selected={selected}
-    >
-      {text}
-    </CommentContainer>
+      style={selected ? commentSelectedStyles : commentStyles}
+    >{text}</div>
   </foreignObject>
 }
 

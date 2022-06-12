@@ -21,11 +21,6 @@ export const Svg = styled('svg', forwardRef)`
       var(--grid-bg) var(--dot-fraction));
   `};
 
-  /* Paths */
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  stroke-width: 2px;
-
   /* Text */
   text {
     user-select: none;

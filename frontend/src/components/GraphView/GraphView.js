@@ -6,7 +6,7 @@ import { GRID_SNAP } from '/src/config/interactions'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
-import { useViewDragging } from './hooks'
+import { useViewDragging, useImageExport } from './hooks'
 
 const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
@@ -14,11 +14,12 @@ const GraphView = ({ children, ...props }) => {
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
+  useImageExport(svgRef)
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
-    const b = wrapperRef.current.getBoundingClientRect()
-    setViewSize({ width: b.width, height: b.height })
+    const b = wrapperRef.current?.getBoundingClientRect()
+    b && setViewSize({ width: b.width, height: b.height })
   }, [])
 
   const onContainerMouseDown = useCallback(e => {
@@ -73,6 +74,7 @@ const GraphView = ({ children, ...props }) => {
     }
   }, [svgRef.current])
 
+  // Add a resize observer to the wrapper div
   useEffect(() => {
     if (wrapperRef.current) {
       const resizeObserver = new ResizeObserver(onContainerResize)
@@ -91,13 +93,24 @@ const GraphView = ({ children, ...props }) => {
   return (
     <Wrapper ref={wrapperRef}>
       <Svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+
         onContextMenu={e => e.preventDefault()}
         viewBox={viewBox}
         ref={svgRef}
         $showGrid={gridVisible}
         $tool={tool}
         {...props}
-        style={{ backgroundSize, backgroundPosition, ...props.style }}>
+        style={{
+          strokeLinejoin: 'round',
+          strokeLinecap: 'round',
+          strokeWidth: '2px',
+          backgroundSize,
+          backgroundPosition,
+          ...props.style,
+        }}>
         <MarkerProvider>
           <g>{children}</g>
         </MarkerProvider>
