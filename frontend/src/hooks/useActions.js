@@ -394,7 +394,7 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
           }
         })
       } catch (error) {
-        window.alert(errorMessage)
+        window.alert(errorMessage + '\n' + error)
         console.error(error)
       }
     }
