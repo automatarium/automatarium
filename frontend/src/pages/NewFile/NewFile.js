@@ -35,16 +35,30 @@ const NewFile = () => {
         const fileToOpen = input.files[0]
         // JFLAP file load - handle conversion
         if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
-          setProject({
+          const project = {
             ...createNewProject(),
-            ...convertJFLAPXML(reader.result)
+            ...convertJFLAPXML(reader.result),
+          }
+          setProject({
+            ...project,
+            meta: {
+              ...project.meta,
+              name: input.files[0]?.name.split('.').slice(0, -1).join('.')
+            }
           })
           navigate('/editor')
         } else if (fileToOpen.name.toLowerCase().endsWith('.json')) {
           // Set project (file) in project store
-          setProject({
+          const project = {
             ...createNewProject(),
             ...JSON.parse(reader.result),
+          }
+          setProject({
+            ...project,
+            meta: {
+              ...project.meta,
+              name: input.files[0]?.name.split('.').slice(0, -1).join('.')
+            }
           })
           navigate('/editor')
         } else {
