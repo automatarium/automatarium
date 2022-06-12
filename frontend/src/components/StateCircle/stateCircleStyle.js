@@ -13,3 +13,8 @@ export const textStyles = {
   userSelect: 'none',
   fill: 'var(--stroke)',
 }
+
+export const labelStyles = {
+  fill: 'var(--state-bg)',
+  stroke: 'var(--primary)',
+}
