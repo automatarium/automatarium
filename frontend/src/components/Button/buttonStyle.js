@@ -18,10 +18,11 @@ export const Wrapper = styled('button')`
   gap: .5em;
 
   &:active {
-    background-color: hsl(var(--primary-h) var(--primary-s) 47%);
+    filter: brightness(0.94);
   }
 
   &:disabled {
+    filter: none;
     background-color: var(--disabled-button);
     opacity: .8;
     cursor: default;
