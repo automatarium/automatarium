@@ -27,9 +27,9 @@ export const convertJFLAPProject = jflapProject => {
   }
 
   // Convert attributes to arrays if they are not already
-  states = Array.isArray(states) ? states : [states]
-  transitions = Array.isArray(transitions) ? transitions : [transitions]
-  notes = Array.isArray(notes) ? notes : [notes]
+  states === undefined ? [] : Array.isArray(states) ? states : [states]
+  transitions === undefined ? [] : Array.isArray(transitions) ? transitions : [transitions]
+  notes === undefined ? [] : Array.isArray(notes) ? notes : [notes]
 
   // Find initial state
   const initialState = states.find(s => s.initial)
