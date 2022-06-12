@@ -1,10 +1,14 @@
-import { useEffect, useCallback, useState, useRef } from 'react'
+import { useState, useRef } from 'react'
+import { CornerDownLeft } from 'lucide-react'
 
 import { Dropdown, TextInput } from '/src/components'
 
 import { useProjectStore, useViewStore } from '/src/stores'
+import { useEvent } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
+
+import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 
 const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
@@ -16,7 +20,7 @@ const InputDialogs = () => {
   const commit = useProjectStore(s => s.commit)
   const viewToScreenSpace = useViewStore(s => s.viewToScreenSpace)
 
-  const onEditTransition = useCallback(({ detail: { id } }) => {
+  useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     setEditTransitionValue(transition?.read ?? '')
@@ -36,10 +40,11 @@ const InputDialogs = () => {
     setTimeout(() => inputRef.current?.focus(), 100)
   }, [inputRef.current])
 
-  useEffect(() => {
-    document.addEventListener('editTransition', onEditTransition)
-    return () => document.removeEventListener('editTransition', onEditTransition)
-  }, [])
+  const saveTransition = () => {
+    editTransition(dialog.id, editTransitionValue)
+    commit()
+    setDialog({ ...dialog, visible: false })
+  }
 
   return (
     <Dropdown
@@ -56,20 +61,17 @@ const InputDialogs = () => {
         left: `${dialog.x}px`,
       }}
     >
-      <TextInput
-        ref={inputRef}
-        value={editTransitionValue}
-        onChange={e => setEditTransitionValue(e.target.value)}
-        onKeyUp={e => {
-          if (e.key === 'Enter') {
-            // Edit transition
-            editTransition(dialog.id, editTransitionValue)
-            commit()
-            setDialog({ ...dialog, visible: false })
-          }
-        }}
-        style={{ width: '5em', textAlign: 'center', margin: '0 .4em' }}
-      />
+      <InputWrapper>
+        <TextInput
+          ref={inputRef}
+          value={editTransitionValue}
+          onChange={e => setEditTransitionValue(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && saveTransition()}
+          placeholder="λ"
+          style={{ width: 'calc(10ch + 2.5em)', margin: '0 .4em', paddingRight: '2.5em' }}
+        />
+        <SubmitButton onClick={saveTransition}><CornerDownLeft size="18px" /></SubmitButton>
+      </InputWrapper>
     </Dropdown>
   )
 }
