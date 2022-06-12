@@ -72,7 +72,7 @@ const Preferences = ({ isOpen, onClose }) => {
           </Preference>
         </Section>
 
-        <SectionLabel>Display</SectionLabel>
+        <SectionLabel>Behaviour</SectionLabel>
         <Section>
           <Preference
             label="Enable grid"

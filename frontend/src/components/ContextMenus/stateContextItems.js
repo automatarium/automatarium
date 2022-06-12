@@ -9,10 +9,18 @@ const stateContextItems = [
   },
   'hr',
   {
+    label: 'Align Horizontally',
+    action: 'ALIGN_STATES_HORIZONTAL',
+  },
+  {
+    label: 'Align Vertically',
+    action: 'ALIGN_STATES_VERTICAL',
+  },
+  'hr',
+  {
     label: 'Set label',
     action: 'SET_STATE_LABEL',
   },
-  'hr',
   {
     label: 'Change name',
     action: 'SET_STATE_NAME',

@@ -1,17 +1,15 @@
-import { styled } from 'goober'
+export const circleStyles = {
+  fill: 'var(--state-bg)',
+  stroke: 'var(--stroke)',
+}
 
-export const StyledCircle = styled('circle')`
-  fill: var(--state-bg);
-  stroke: var(--stroke);
+export const circleSelectedStyles = {
+  fill: 'var(--state-bg-selected)',
+  stroke: 'var(--primary)',
+  strokeWidth: '2.5px',
+}
 
-  + text {
-    user-select: none;
-    fill: var(--stroke);
-  }
-
-  ${p => p.$selected && `
-    stroke: var(--primary);
-    stroke-width: 2.5px;
-    fill: var(--state-bg-selected); 
-  `}
-`
+export const textStyles = {
+  userSelect: 'none',
+  fill: 'var(--stroke)',
+}

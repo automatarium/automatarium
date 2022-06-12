@@ -84,14 +84,14 @@ const useActions = (registerHotkeys=false) => {
     },
     EXPORT_AS_PNG: {
       hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
-      //handler: () => console.log('Export PNG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png' }),
     },
     EXPORT_AS_SVG: {
       hotkey: { key: 'e', shift: true, alt: true, meta: true},
-      //handler: () => console.log('Export SVG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'svg' }),
     },
     EXPORT_AS_JPG: {
-      //handler: () => console.log('Export JPG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'jpg' }),
     },
     EXPORT_AS_JFLAP: {
       //handler: () => console.log('Export JFLAP'),
@@ -157,20 +157,25 @@ const useActions = (registerHotkeys=false) => {
       handler: () => {
         // Get state
         const view = useViewStore.getState()
-        const states = useProjectStore.getState()?.project.states ?? []
-        if (states.length === 0)
-          return
+
+        // Padding around view
+        const border = 20
+
+        // Get the bounding box of the SVG group
+        const b = document.getElementById('automatarium-graph').getBBox()
+        const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
 
         // Calculate fit region
-        const border = 100
-        const minX = states.reduce((acc, s) => s.x < acc ? s.x : acc, Infinity) - border
-        const maxX = states.reduce((acc, s) => s.x > acc ? s.x : acc, -Infinity) + border
-        const minY = states.reduce((acc, s) => s.y < acc ? s.y : acc, Infinity) - border
-        const maxY = states.reduce((acc, s) => s.y > acc ? s.y : acc, -Infinity) + border
-        const [regionWidth, regionHeight] = [maxX - minX, maxY - minY]
-        const desiredScale = Math.max(regionWidth / view.size.width, regionHeight / view.size.height)
+        const desiredScale = Math.max(
+          width / view.size.width,
+          height / view.size.height
+        )
         view.setViewScale(desiredScale)
-        view.setViewPosition({ x: minX, y: minY })
+        // Calculate x and y to centre graph
+        view.setViewPosition({
+          x: x - (view.size.width - width / desiredScale)/2,
+          y: y - (view.size.height - height / desiredScale)/2,
+        })
       },
     },
     FULLSCREEN: {
@@ -289,6 +294,32 @@ const useActions = (registerHotkeys=false) => {
         const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
         createState({ x: viewX, y: viewY })
         commit()
+      }
+    },
+    ALIGN_STATES_HORIZONTAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length <= 1,
+      handler: () => {
+        const selected = useSelectionStore.getState().selectedStates
+        const storeState = useProjectStore.getState()
+        const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
+        if (states && states.length > 1) {
+          const meanY = states.map(state => state.y).reduce((a, b) => a + b) / states.length
+          states.forEach(state => storeState.updateState({ ...state, y: meanY }))
+          commit()
+        }
+      }
+    },
+    ALIGN_STATES_VERTICAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length <= 1,
+      handler: () => {
+        const selected = useSelectionStore.getState().selectedStates
+        const storeState = useProjectStore.getState()
+        const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
+        if (states && states.length > 1) {
+          const meanX = states.map(state => state.x).reduce((a, b) => a + b) / states.length
+          states.forEach(state => storeState.updateState({ ...state, x: meanX }))
+          commit()
+        }
       }
     },
   }
