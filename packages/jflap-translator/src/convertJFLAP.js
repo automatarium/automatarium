@@ -9,7 +9,6 @@ export const convertJFLAPXML = xml => {
   const jflapProject = JSON.parse(json)
   return convertJFLAPProject(jflapProject)
 }
-// window.convertJFLAPXML = convertJFLAPXML
 
 // Convert JFLAP JSON to Automatarium format
 export const convertJFLAPProject = jflapProject => {
