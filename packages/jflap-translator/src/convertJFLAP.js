@@ -9,7 +9,6 @@ export const convertJFLAPXML = xml => {
   const jflapProject = JSON.parse(json)
   return convertJFLAPProject(jflapProject)
 }
-// window.convertJFLAPXML = convertJFLAPXML
 
 // Convert JFLAP JSON to Automatarium format
 export const convertJFLAPProject = jflapProject => {
@@ -27,9 +26,9 @@ export const convertJFLAPProject = jflapProject => {
   }
 
   // Convert attributes to arrays if they are not already
-  states = Array.isArray(states) ? states : [states]
-  transitions = Array.isArray(transitions) ? transitions : [transitions]
-  notes = Array.isArray(notes) ? notes : [notes]
+  states = states === undefined ? [] : (Array.isArray(states) ? states : [states])
+  transitions = transitions === undefined ? [] : (Array.isArray(transitions) ? transitions : [transitions])
+  notes = notes === undefined ? [] : (Array.isArray(notes) ? notes : [notes])
 
   // Find initial state
   const initialState = states.find(s => s.initial)
