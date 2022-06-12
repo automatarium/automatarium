@@ -98,3 +98,26 @@ export const updateProject = async ( req: Request, res: Response, next: NextFunc
     })
   }
 }
+
+export const deleteProject = async ( req: Request, res: Response, next: NextFunction) => {
+  const { pid } = req.params  
+  const { uid } = req.user as RequestUser
+
+  try {
+    const project = await Project.findById(pid)
+
+    // Ensure project belongs to authenticated user
+    if (project?.userid !== uid) {
+      return res.status(403).json({
+        error: "whoever reviews this can decide on this message"
+      })
+    }
+    
+    return res.status(200).json()
+
+  } catch (error) {
+    return res.status(500).json({
+      error: error?.message ?? error
+    })
+  }
+}
