@@ -1,18 +1,25 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import dayjs from 'dayjs'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
+import dayjs from 'dayjs'
 
 import { Main, Button, Header, ProjectCard } from '/src/components'
-import { NewProjectCard, CardList } from './components'
 import { useProjectsStore, useProjectStore } from '/src/stores'
+import { useAuth } from '/src/hooks'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
+import LoginPage from '/src/pages/Login/Login'
+import SignupPage from '/src/pages/Signup/Signup'
 
-import { NoResultSpan } from './newFileStyle'
+import { NewProjectCard, CardList } from './components'
+import { ButtonGroup, NoResultSpan, HeaderRow } from './newFileStyle'
 
 const NewFile = () => {
   const navigate = useNavigate()
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
+  const [loginModalVisible, setLoginModalVisible] = useState(false)
+  const [signupModalVisible, setSignupModalVisible] = useState(false)
+  const { user, userLoading } = useAuth()
 
   const handleNewFile = projectType => {
     setProject(createNewProject(projectType))
@@ -58,7 +65,16 @@ const NewFile = () => {
   }
 
   return <Main wide>
-    <Header />
+    <HeaderRow>
+      <Header />
+      <ButtonGroup>
+        {!userLoading && !user && <>
+          <Button secondary onClick={() => setLoginModalVisible(true)}>Log In</Button>
+          <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
+        </>}
+        {user && <Button secondary onClick={() => navigate('/logout')}>Logout</Button>}
+      </ButtonGroup>
+    </HeaderRow>
 
     <CardList title="New Project"
       button={<Button onClick={importProject}>Import...</Button>}
@@ -91,6 +107,9 @@ const NewFile = () => {
       )}
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
     </CardList>
+
+    <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
+    <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
 }
 

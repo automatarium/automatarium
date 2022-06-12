@@ -6,7 +6,7 @@ import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 
-import { StyledPath } from './transitionSetStyle'
+import { pathStyles, pathSelectedStyles } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read}, i) => (
@@ -68,12 +68,12 @@ const Transition = ({
 
   return <>
     {/* The edge itself */}
-    {!(isReflexive && i > 0) && <StyledPath
+    {!(isReflexive && i > 0) && <path
       id={pathID}
       d={pathData}
       key={pathID}
       markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
-      $selected={selected || (isReflexive && setSelected)}
+      style={(selected || (isReflexive && setSelected)) ? pathSelectedStyles : pathStyles}
     />}
 
     {/* Invisible path used to place text */}
@@ -95,7 +95,8 @@ const Transition = ({
     <text
       onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
       onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-      fill={selected ? 'var(--primary)' : 'var(--stroke)' }
+      fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+      style={{ userSelect: 'none' }}
       dy={`-${textOffset}`}
     >
       <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
