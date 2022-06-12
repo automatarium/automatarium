@@ -1,10 +1,9 @@
-import { styled } from 'goober'
+export const pathStyles = {
+  stroke: 'var(--stroke)',
+  fill: 'none',
+}
 
-export const StyledPath = styled('path')`
-  stroke: var(--stroke);
-  fill: none;
-
-  ${p => p.$selected && `
-    stroke: var(--primary);
-  `}
-`
+export const pathSelectedStyles = {
+  ...pathStyles,
+  stroke: 'var(--primary)',
+}

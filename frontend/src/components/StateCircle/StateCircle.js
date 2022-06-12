@@ -1,4 +1,4 @@
-import { StyledCircle } from './stateCircleStyle'
+import { circleStyles, circleSelectedStyles, textStyles } from './stateCircleStyle'
 import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -23,13 +23,13 @@ const StateCircle = ({ id, name, isFinal, cx, cy, selected, ...props }) => {
 
   return <g transform={`translate(${cx}, ${cy})`} onMouseDown={handleStateMouseDown} onMouseUp={handleStateMouseUp} {...props}>
     {/* Filled Circle */}
-    <StyledCircle r={STATE_CIRCLE_RADIUS} $selected={selected} />
+    <circle r={STATE_CIRCLE_RADIUS} style={selected ? circleSelectedStyles : circleStyles} />
 
     {/* Extra outline for final states */}
-    { isFinal && <StyledCircle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} $selected={selected} />}
+    { isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={selected ? circleSelectedStyles : circleStyles} />}
 
     {/* Label */}
-    <text textAnchor="middle" alignmentBaseline="central">
+    <text textAnchor="middle" alignmentBaseline="central" style={textStyles}>
       {displayName}
     </text>
   </g>
