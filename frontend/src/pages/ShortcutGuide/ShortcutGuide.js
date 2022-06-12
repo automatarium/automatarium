@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useMemo, Fragment } from 'react'
 
 import { SectionLabel, Modal } from '/src/components'
 import useActions, { formatHotkey } from '/src/hooks/useActions'
@@ -7,6 +7,7 @@ import { Section, Shortcut } from './shortcutGuideStyle'
 
 const shortcuts = [
   {
+    title: 'Application',
     items: [
       {
         label: 'Preferences',
@@ -155,7 +156,7 @@ const shortcuts = [
     items: [
       {
         label: 'Move between multi-run cells',
-        hotkeys: ['←', '↑', '→', '↓'],
+        hotkeys: ['↑', '↓'],
       },
       {
         label: 'Create multi-run cell',
@@ -184,7 +185,7 @@ const ShortcutGuide = ({ isOpen, onClose }) => {
       onClose={onClose}
       style={{ paddingInline: 0 }}
     >
-      {useMemo(() => shortcuts.map(category => <>
+      {useMemo(() => shortcuts.map(category => <Fragment key={category.title}>
         {category.title && <SectionLabel>{category.title}</SectionLabel>}
         <Section>{category.items.map(item => (
           <Shortcut key={item.label}>
@@ -192,7 +193,7 @@ const ShortcutGuide = ({ isOpen, onClose }) => {
             {((item.action && formatHotkey(actions[item.action].hotkey)) || item.hotkeys)?.map(key => <kbd key={key}>{key}</kbd>)}
           </Shortcut>
         ))}</Section>
-      </>), [actions])}
+      </Fragment>), [actions])}
     </Modal>
   )
 }
