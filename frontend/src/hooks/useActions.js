@@ -158,10 +158,11 @@ const useActions = (registerHotkeys=false) => {
         // Get state
         const view = useViewStore.getState()
 
+        // Padding around view
+        const border = 20
+
         // Get the bounding box of the SVG group
-        const svgGroup = document.getElementById('automatarium-graph')
-        const b = svgGroup.getBBox()
-        const border = 20 // Padding around view
+        const b = document.getElementById('automatarium-graph').getBBox()
         const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
 
         // Calculate fit region

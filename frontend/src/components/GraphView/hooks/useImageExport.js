@@ -1,15 +1,23 @@
 import { useEvent } from '/src/hooks'
-import { useSelectionStore } from '/src/stores'
+import { useSelectionStore, useProjectStore } from '/src/stores'
 
 const useImageExport = svgRef => {
   const selectNone = useSelectionStore(s => s.selectNone)
+  const projectName = useProjectStore(s => s.project.meta.name)
 
   useEvent('exportImage', e => {
-    console.log('Export', e.detail.type)
-    selectNone()
+    selectNone() // Deselect all
 
+    // After deselection
     window.setTimeout(() => {
+      // Clone the SVG element
       const svgElement = svgRef.current?.cloneNode(true)
+
+      // Set viewbox
+      const b = document.querySelector('body #automatarium-graph').getBBox()
+      const border = 20 // Padding around view
+      const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
+      svgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
 
       // Replace colour variables
       const styles = getComputedStyle(document.body)
@@ -21,10 +29,23 @@ const useImageExport = svgRef => {
         .replaceAll('var(--state-bg)', styles.getPropertyValue('--state-bg-light'))
         .replaceAll('var(--state-bg-selected)', styles.getPropertyValue('--state-bg-selected-light'))
 
-      // ...
-      navigator.clipboard.writeText('data:image/svg+xml,'+encodeURIComponent(svg))
+      // Setup a canvas
+      const canvas = document.createElement('canvas')
+      canvas.height = height*2
+      canvas.width = width*2
+      const ctx = canvas.getContext('2d')
+      const img = new Image
+      img.onload = () => {
+        // Draw and save the image
+        ctx.drawImage(img, 0, 0)
+        const link = document.createElement('a')
+        link.download = `${projectName.replace(/[\s]/g, '_').replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.png`
+        link.href = canvas.toDataURL('image/png')
+        link.click()
+      }
+      img.src = 'data:image/svg+xml,'+encodeURIComponent(svg)
     }, 100)
-  }, [svgRef.current])
+  }, [svgRef.current, projectName])
 }
 
 export default useImageExport
