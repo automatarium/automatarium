@@ -17,7 +17,7 @@ export default {
   'ZOOM_IN': { letter: '=', meta: true },
   'ZOOM_OUT': { letter: '-', meta: true },
   'ZOOM_100': { letter: '0', meta: true },
-  'ZOOM_FIT': { letter: '1', shift: true },
+  'ZOOM_FIT': { letter: 'f', shift: true },
 
   'TESTING_LAB': { letter: 't', meta: true, showCtrl: true },
   'FILE_INFO': { letter: 'i', meta: true },
