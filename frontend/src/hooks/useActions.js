@@ -291,6 +291,32 @@ const useActions = (registerHotkeys=false) => {
         commit()
       }
     },
+    ALIGN_STATES_HORIZONTAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length <= 1,
+      handler: () => {
+        const selected = useSelectionStore.getState().selectedStates
+        const storeState = useProjectStore.getState()
+        const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
+        if (states && states.length > 1) {
+          const meanY = states.map(state => state.y).reduce((a, b) => a + b) / states.length
+          states.forEach(state => storeState.updateState({ ...state, y: meanY }))
+          commit()
+        }
+      }
+    },
+    ALIGN_STATES_VERTICAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length <= 1,
+      handler: () => {
+        const selected = useSelectionStore.getState().selectedStates
+        const storeState = useProjectStore.getState()
+        const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
+        if (states && states.length > 1) {
+          const meanX = states.map(state => state.x).reduce((a, b) => a + b) / states.length
+          states.forEach(state => storeState.updateState({ ...state, x: meanX }))
+          commit()
+        }
+      }
+    },
   }
 
   // Register action hotkeys
