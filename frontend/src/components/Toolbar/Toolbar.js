@@ -6,29 +6,41 @@ import { Dropdown } from '/src/components'
 import { Sidebar } from '/src/components'
 import useViewStore from '/src/stores/useViewStore'
 
+import { ToolPopup, ToolName, ToolHotkey } from './toolbarStyle'
+
 const tools = [
   {
-    label: 'Cursor',
+    label: 'Cursor tool',
+    hotkey: 'V',
+    description: 'Select and move items',
     value: 'cursor',
     icon: <MousePointer2 />,
   },
   {
-    label: 'Hand',
+    label: 'Hand tool',
+    hotkey: 'H',
+    description: 'Drag to pan around your automaton',
     value: 'hand',
     icon: <Hand />,
   },
   {
-    label: 'State',
+    label: 'State tool',
+    hotkey: 'S',
+    description: 'Create states by clicking',
     value: 'state',
     icon: <Circle />,
   },
   {
-    label: 'Transition',
+    label: 'Transition tool',
+    hotkey: 'T',
+    description: 'Drag between states to create transitions',
     value: 'transition',
     icon: <ArrowUpRight />,
   },
   {
-    label: 'Comment',
+    label: 'Comment tool',
+    hotkey: 'C',
+    description: 'Add comments to your automaton',
     value: 'comment',
     icon: <MessageSquare />,
   },
@@ -39,6 +51,8 @@ const Toolbar = () => {
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
   const viewScale = useViewStore(s => s.scale)
+  const [toolPopup, setToolPopup] = useState({})
+  const toolPopupHover = useRef({})
 
   return (
     <Sidebar $tools>
@@ -47,11 +61,33 @@ const Toolbar = () => {
           key={toolOption.label}
           onClick={() => setTool(toolOption.value)}
           $active={tool === toolOption.value}
-          title={toolOption.label}
+          onMouseEnter={e => {
+            toolPopupHover.current = { ...toolPopupHover.current, value: toolOption.value }
+            window.setTimeout(() => {
+              if (toolPopupHover.current.value !== toolOption.value) return
+              const box = e.target.getBoundingClientRect()
+              setToolPopup({ visible: true, y: box.y, tool: tools.find(t => t.value === toolOption.value) })
+            }, toolPopupHover.current.timeout || 1000)
+          }}
+          onMouseLeave={e => {
+            toolPopupHover.current = { value: undefined, timeout: (e.relatedTarget.tagName === 'BUTTON' && toolPopup.visible) && 10 }
+            setToolPopup({ ...toolPopup, visible: false })
+          }}
         >
           {toolOption.icon}
         </Sidebar.Button>
       ))}
+
+      <ToolPopup $y={toolPopup.y} className={toolPopup.visible ? 'visible' : ''}>
+        {/* <img src={toolPopup.tool?.image} alt="" /> TODO: animated image */}
+        <div>
+          <ToolName>
+            <span>{toolPopup.tool?.label}</span>
+            <ToolHotkey>{toolPopup.tool?.hotkey}</ToolHotkey>
+          </ToolName>
+          <span>{toolPopup.tool?.description}</span>
+        </div>
+      </ToolPopup>
 
       <div style={{ flex: 1 }} />
 

@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
+import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore, useToolStore } from '/src/stores'
 import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
@@ -35,6 +35,7 @@ const useActions = (registerHotkeys=false) => {
   const createComment = useProjectStore(s => s.createComment)
   const createState = useProjectStore(s => s.createState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
+  const setTool = useToolStore(s => s.setTool)
 
   const navigate = useNavigate()
 
@@ -322,6 +323,26 @@ const useActions = (registerHotkeys=false) => {
           commit()
         }
       }
+    },
+    TOOL_CURSOR: {
+      hotkey: { key: 'V' },
+      handler: () => setTool('cursor'),
+    },
+    TOOL_HAND: {
+      hotkey: { key: 'H' },
+      handler: () => setTool('hand'),
+    },
+    TOOL_STATE: {
+      hotkey: { key: 'S' },
+      handler: () => setTool('state'),
+    },
+    TOOL_TRANSITION: {
+      hotkey: { key: 'T' },
+      handler: () => setTool('transition'),
+    },
+    TOOL_COMMENT: {
+      hotkey: { key: 'C' },
+      handler: () => setTool('comment'),
     },
   }
 
