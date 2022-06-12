@@ -70,7 +70,7 @@ const Info = () => {
       <Table>
         <tbody>
           <tr>
-            <th></th>
+            <th>&delta;</th>
             {alphabet.map(symbol => <th key={symbol}>{symbol}</th>)}
           </tr>
           {resolvedGraph.states.map(state => <tr key={state.id}>
