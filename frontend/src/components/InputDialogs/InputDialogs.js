@@ -41,7 +41,10 @@ const InputDialogs = () => {
   }, [inputRef.current])
 
   const saveTransition = () => {
-    editTransition(dialog.id, editTransitionValue)
+    // Remove duplicate characters
+    const ranges = editTransitionValue.match(/\[(.*?)\]/g)
+    const chars = editTransitionValue.replace(/\[(.*?)\]/g, '')
+    editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
     commit()
     setDialog({ ...dialog, visible: false })
   }
