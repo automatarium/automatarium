@@ -161,7 +161,7 @@ const useActions = (registerHotkeys=false) => {
         const border = 20
 
         // Get the bounding box of the SVG group
-        const b = document.getElementById('automatarium-graph').getBBox()
+        const b = document.querySelector('#automatarium-graph > g').getBBox()
         const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
 
         // Calculate fit region

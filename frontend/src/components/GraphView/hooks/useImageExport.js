@@ -14,7 +14,7 @@ const useImageExport = svgRef => {
       const svgElement = svgRef.current?.cloneNode(true)
 
       // Set viewbox
-      const b = document.querySelector('body #automatarium-graph').getBBox()
+      const b = document.querySelector('#automatarium-graph > g').getBBox()
       const border = 20 // Padding around view
       const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
       svgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
