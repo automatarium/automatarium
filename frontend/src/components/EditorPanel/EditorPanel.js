@@ -41,8 +41,6 @@ const EditorPanel = () => {
     selectTransition(e)
   })
 
-  console.log(ghostState)
-
   return <>
     <GraphView>
       {/* Render in-creation transition */}
