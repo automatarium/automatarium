@@ -18,7 +18,7 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
   useEffect(() => {
     const { x, y, width, height } = labelRef.current?.getBBox() ?? {}
     setLabelBox({ x, y: y - 3, width: width + 14, height: height + 6 })
-  }, [labelRef.current])
+  }, [labelRef.current, label])
 
   // TODO: use Callback
   const handleStateMouseUp = e =>

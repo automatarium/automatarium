@@ -34,6 +34,7 @@ const useActions = (registerHotkeys=false) => {
   const moveView = useViewStore(s => s.moveViewPosition)
   const createComment = useProjectStore(s => s.createComment)
   const createState = useProjectStore(s => s.createState)
+  const updateState = useProjectStore(s => s.updateState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
 
@@ -287,6 +288,26 @@ const useActions = (registerHotkeys=false) => {
         createComment({ x: viewX, y: viewY, text })
         commit()
       }
+    },
+    SET_STATE_NAME: {
+      handler: () => {
+        const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
+        const selectedState = useProjectStore.getState().project?.states.find(s => s.id === selectedStateID)
+        if (selectedStateID === undefined || selectedState === undefined) return
+        const name = window.prompt('Rename state', selectedState.name)
+        updateState({ ...selectedState, name: name || undefined })
+        commit()
+      },
+    },
+    SET_STATE_LABEL: {
+      handler: () => {
+        const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
+        const selectedState = useProjectStore.getState().project?.states.find(s => s.id === selectedStateID)
+        if (selectedStateID === undefined || selectedState === undefined) return
+        const label = window.prompt('State label', selectedState.label)
+        updateState({ ...selectedState, label: label || undefined })
+        commit()
+      },
     },
     CREATE_STATE: {
       handler: e => {
