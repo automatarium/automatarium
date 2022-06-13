@@ -6,6 +6,8 @@ const Sidebar = styled('nav')`
   color: var(--white);
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 2;
 
   ${props => props.$tools && `
     & > button {

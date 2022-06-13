@@ -102,7 +102,7 @@ const GraphView = ({ children, ...props }) => {
 
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef} id='editor-panel-wrapper'>
       <Svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"

@@ -19,19 +19,15 @@ export { default as Logo } from './Logo/Logo'
 export { default as Header } from './Header/Header'
 export { default as Modal } from './Modal/Modal'
 export { default as Spinner } from './Spinner/Spinner'
-
 export { default as Button } from './Button/Button'
 export { default as Dropdown } from './Dropdown/Dropdown'
 export { default as Label } from './Label/Label'
 export { default as Details } from './Details/Details'
 export { default as Table } from './Table/Table'
-
 export { default as SectionLabel } from './SectionLabel/SectionLabel'
 export { default as TracePreview } from './TracePreview/TracePreview'
 export { default as Preference } from './Preference/Preference'
-
+export { default as TraceStepBubble } from './TraceStepBubble/TraceStepBubble'
 export { default as Input } from './Input/Input'
-
 export { default as Footer } from './Footer/Footer'
-
 export { default as ProjectCard } from './ProjectCard/ProjectCard'
