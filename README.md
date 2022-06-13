@@ -4,6 +4,8 @@
 
 Automatarium is a modern take on the useful [JFLAP](https://www.jflap.org/), but designed with a modern user interface and quality-of-life features that were lacking in JFLAP. Currently Automatarium supports finite automata, with room to add additional functionality such as push-down automata and Turing machines in the future.
 
+![Screenshot of Automatarium editor](./screenshot.png)
+
 ## Contributors
 
 Automatarium was built by RMIT students
