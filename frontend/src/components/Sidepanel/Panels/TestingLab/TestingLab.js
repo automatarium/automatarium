@@ -20,7 +20,7 @@ const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
   const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
-  const [showTraceTape, setShowTraceTape] = useState(true)
+  const [showTraceTape, setShowTraceTape] = useState(false)
 
   // Graph state
   const graph = {
@@ -30,7 +30,7 @@ const TestingLab = () => {
   }
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
 
-  const traceInput = useProjectStore(s => s.project.tests.single)
+  const traceInput = useProjectStore(s => s.project.tests.single) ?? ''
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const multiTraceInput = useProjectStore(s => s.project.tests.batch)
   const addMultiTraceInput = useProjectStore(s => s.addBatchTest)
@@ -115,7 +115,7 @@ const TestingLab = () => {
 
   return (
     <>
-      {showTraceTape && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
+      {(showTraceTape && traceInput !== '' && traceInput) && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
@@ -171,7 +171,7 @@ const TestingLab = () => {
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
         <Preference
-          label={useMemo(() => Math.random() < .001 ? "Show Trace Buddy" : "Trace tape", [])}
+          label={useMemo(() => Math.random() < .001 ? "Trace buddy" : "Trace tape", [])}
           htmlFor="trace-tape"
           style={{ marginBlock: 0 }}
         >
@@ -179,7 +179,8 @@ const TestingLab = () => {
             id="trace-tape"
             type="checkbox"
             checked={showTraceTape}
-            onChange={e => setShowTraceTape(e.target.checked)} />
+            onChange={e => setShowTraceTape(e.target.checked)}
+          />
         </Preference>
       </Wrapper>
 

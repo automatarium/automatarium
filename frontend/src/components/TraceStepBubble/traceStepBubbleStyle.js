@@ -1,52 +1,37 @@
 import { styled } from 'goober'
 
 export const Container = styled('div')`
+  --cell-width: 35px;
+
   position: fixed;
   padding-block: .8em;
   background: var(--surface);
-  min-width: 5em;
-  min-height: 2em;
+  width: calc(var(--cell-width) * 5);
   pointer-events: none;
   border-radius: .3rem;
   transform: translate(-50%, -180%);
-
-  > div > span {
-    padding-inline: .8em;
-  }
+  transform-origin: bottom;
 
   &::before {
     display: block;
     content: '';
-    width: 3em;
+    width: 2em;
     aspect-ratio: 1;
     transform: translate(-50%, -70%) rotate(45deg);
-    border-radius: 0.3rem;
+    border-radius: .3rem;
     background: inherit;
     top: 100%;
     position: absolute;
     left: 50%;
-    z-index: -1;
   }
 
   &.animate {
     transition: top .2s, left .2s;
   }
-`
 
-export const Content = styled('div')`
-  display: flex;
-  flex-direction: column;
-  gap: .5em;
-  position: relative;
-  z-index: 1;
-  background: inherit;
-  overflow-x: hidden;
-`
-
-export const TickerTapeWrapper = styled('div')`
-  --cell-width: 35px;
-  overflow: hidden;
-  max-width: calc(5 * var(--cell-width) + 1px);
+  & > div {
+    overflow: hidden;
+  }
 `
 
 export const TickerTape = styled('div')`
@@ -69,38 +54,36 @@ export const TickerTapeCell = styled('span')`
   box-sizing: border-box;
   background: var(--white);
   color: var(--black);
+  border-left: 1px dashed var(--input-border);
 
-  &:not(:nth-last-child(1)) {
-    border-left: 1px dashed var(--input-border);
-  }
   &:last-of-type {
     border-right: 1px dashed var(--input-border);
   }
 
   ${p => p.$consumed && `
-    color: var(--grey);
+    color: #CCC;
   `}
 `
 
-export const SerratedEdgeContainer = styled('div')`
+export const SerratedEdgeContainer = styled('svg')`
   position: absolute;
-  left: calc(-1 * var(--cell-width) / 3);
-  min-width: calc(var(--cell-width) / 3);
-  display: grid;
-  grid-template-rows: repeat(5, 1fr);
-  overflow: hidden;
-  height: 123%;
-  transform: translateY(-19%);
+  right: 100%;
+  top: 0;
+  bottom: 0;
+  height: 100%;
 
   ${p => p.$flipped && `
+    right: initial;
     left: 100%;
-    transform: translateY(-19%) rotateY(180deg);
+    transform: rotate(180deg);
   `}
 `
 
-export const Triangle = styled('div')`
-  background: var(--white);
-  transform: translate(70%, 10%) rotate(45deg);
-  width: 100%;
-  height: 150%;
+export const PointerContainer = styled('svg')`
+  position: absolute;
+  left: calc(50% - 8px);
+  top: 6px;
+  height: 12px;
+  width: 16px;
+  z-index: 1;
 `
