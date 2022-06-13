@@ -45,7 +45,7 @@ const Transition = ({
 
   // Calculate path
   const isReflexive = from.x === to.x && from.y === to.y
-  const { pathData, textPathData } = calculateTransitionPath({ from, to, bendValue, fullWidth, i })
+  const { pathData, textPathData, control } = calculateTransitionPath({ from, to, bendValue, fullWidth, i })
 
   // Generate a unique id for this path
   // -- used to place the text on the same path
@@ -66,7 +66,7 @@ const Transition = ({
   // Calculate text offset (increased for additional reflexive transitions)
   const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
 
-  return <>
+  return <g>
     {/* The edge itself */}
     {!(isReflexive && i > 0) && <path
       id={pathID}
@@ -98,12 +98,20 @@ const Transition = ({
       fill={selected ? 'var(--primary)' : 'var(--stroke)'}
       style={{ userSelect: 'none' }}
       dy={`-${textOffset}`}
+      textAnchor="middle"
+      alignmentBaseline="central"
+      {...isReflexive && {
+        x: control.x,
+        y: control.y + REFLEXIVE_Y_OFFSET/3,
+      }}
     >
-      <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-        {text === '' ? 'λ' : text}
-      </textPath>
+      {isReflexive ? (text === '' ? 'λ' : text) : (
+        <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+          {text === '' ? 'λ' : text}
+        </textPath>
+      )}
     </text>
-  </>
+  </g>
 }
 
 const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
@@ -147,6 +155,7 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
   return {
     pathData,
     textPathData: (angle > 90 || angle <= -90) ? pathReversed : pathData,
+    control,
   }
 }
 
