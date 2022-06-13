@@ -25,7 +25,7 @@
     "build:packages": "yarn build:simulation && yarn build:jflap-translator",
     "dev:frontend": "concurrently \"yarn watch:packages\" \"yarn workspace frontend start\"",
     "dev:backend": "yarn workspace backend dev",
-    "build:front": "yarn workspace frontend build",
+    "build:frontend": "yarn workspace frontend build",
     "build:backend": "yarn workspace backend build",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
