@@ -4,7 +4,7 @@ export const ToolPopup = styled('div')`
   background: var(--toolbar);
   border-radius: .3em;
   overflow: hidden;
-  position: absolute;
+  position: fixed;
   top: ${props => props.$y ?? 85}px;
   left: 5rem;
   z-index: 5;
