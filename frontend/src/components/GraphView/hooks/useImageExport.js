@@ -31,7 +31,7 @@ const useImageExport = svgRef => {
 
       // Setup download link
       const link = document.createElement('a')
-      link.download = `${projectName.replace(/[\s]/g, '_').replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.${e.detail.type}`
+      link.download = `${projectName.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.${e.detail.type}`
 
       // Export SVG
       if (e.detail.type === 'svg') {

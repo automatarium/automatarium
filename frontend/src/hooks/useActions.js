@@ -70,18 +70,15 @@ const useActions = (registerHotkeys=false) => {
     SAVE_FILE_AS: {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
-        const fileName = window.prompt('What would you like to name this automaton?') // TODO: better prompt
-        if (fileName) {
-          // Pull project state
-          const { project } = useProjectStore.getState()
+        // Pull project state
+        const { project } = useProjectStore.getState()
 
-          // Create a download link and use it
-          const a = document.createElement('a')
-          const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
-          a.href = URL.createObjectURL(file)
-          a.download = fileName // TODO: prompt file location - might not be possible?
-          a.click()
-        }
+        // Create a download link and use it
+        const a = document.createElement('a')
+        const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
+        a.href = URL.createObjectURL(file)
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') // TODO: prompt file location - might not be possible?
+        a.click()
       },
     },
     EXPORT_AS_PNG: {
