@@ -14,6 +14,7 @@ const GraphView = ({ children, ...props }) => {
   const svgRef = useRef()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
   const projectColor = useProjectStore(state => state.project?.config.color)
+  const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
   useImageExport(svgRef)
@@ -92,7 +93,7 @@ const GraphView = ({ children, ...props }) => {
     svgRef.current.style.setProperty('--primary-h', color.h)
     svgRef.current.style.setProperty('--primary-s', color.s + '%')
     svgRef.current.style.setProperty('--primary-l', color.l + '%')
-  }, [projectColor])
+  }, [projectColor, colorPref])
 
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
