@@ -11,7 +11,7 @@ const makeCharRange = (start:ReadSymbol, stop:ReadSymbol): ReadSymbol[] => {
     .map((_, i) => RANGE_VALS[startChar + i])
 }
 
-const parseRead = (read:string): ReadSymbol[] => {
+const expandReadSymbols = (read:string): ReadSymbol[] => {
   // Find ranges
   const rangeStrings = read.match(RANGE_REG) ?? []
   read = read.replace(RANGE_REG, '')
@@ -34,4 +34,4 @@ const parseRead = (read:string): ReadSymbol[] => {
   ])).sort()
 }
 
-export default parseRead
+export default expandReadSymbols
