@@ -101,6 +101,10 @@ const shortcuts = [
         action: 'SELECT_NONE',
       },
       {
+        label: 'Select multiple',
+        hotkeys: [...formatHotkey({ shift: true })],
+      },
+      {
         label: 'Delete',
         hotkeys: ['⌫'],
       },
