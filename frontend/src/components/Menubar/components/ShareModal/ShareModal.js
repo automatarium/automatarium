@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { Button, Modal, TextInput } from '/src/components'
+import { Button, Modal, Input } from '/src/components'
 import config from '/src/config'
 
 const ShareModal = ({ projectId, ...props }) => {
@@ -29,7 +29,7 @@ const ShareModal = ({ projectId, ...props }) => {
       }}
       {...props}
     >
-      <TextInput readOnly value={shareUrl} />
+      <Input readOnly value={shareUrl} />
     </Modal>
   )
 }

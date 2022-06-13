@@ -5,7 +5,7 @@ import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
-import { TestingLab, Info } from './Panels'
+import { TestingLab, Info, Options } from './Panels'
 
 const panels = [
   {
@@ -24,6 +24,7 @@ const panels = [
     label: 'File Options',
     value: 'options',
     icon: <Settings2 />,
+    element: <Options />,
   },
 ]
 

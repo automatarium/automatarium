@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { CornerDownLeft } from 'lucide-react'
 
-import { Dropdown, TextInput } from '/src/components'
+import { Dropdown, Input } from '/src/components'
 
 import { useProjectStore, useViewStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
@@ -62,7 +62,7 @@ const InputDialogs = () => {
       }}
     >
       <InputWrapper>
-        <TextInput
+        <Input
           ref={inputRef}
           value={editTransitionValue}
           onChange={e => setEditTransitionValue(e.target.value)}
