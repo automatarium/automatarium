@@ -1,19 +1,24 @@
-import { useMemo } from 'react'
+import { useRef, useEffect, useState } from 'react'
 
-import { circleStyles, circleSelectedStyles, textStyles, labelStyles } from './stateCircleStyle'
+import { circleStyles, circleSelectedStyles, textStyles } from './stateCircleStyle'
 import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useProjectStore } from '/src/stores'
 
-import { ADJECTIVES } from '/src/util/projectName'
-
 const FINAL_OUTLINE_OFFSET = 5
 
-const StateCircle = ({ id, name, isFinal, cx, cy, selected, ...props }) => {
+const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix) ?? 'q'
 
   const displayName = name || `${statePrefix}${id}`
-  const label = useMemo(() => ADJECTIVES[Math.random()*ADJECTIVES.length|0], [])
+
+  const labelRef = useRef()
+  const [labelBox, setLabelBox] = useState()
+
+  useEffect(() => {
+    const { x, y, width, height } = labelRef.current?.getBBox() ?? {}
+    setLabelBox({ x, y: y - 3, width: width + 14, height: height + 6 })
+  }, [labelRef.current])
 
   // TODO: use Callback
   const handleStateMouseUp = e =>
@@ -32,18 +37,25 @@ const StateCircle = ({ id, name, isFinal, cx, cy, selected, ...props }) => {
     <circle r={STATE_CIRCLE_RADIUS} style={selected ? circleSelectedStyles : circleStyles} />
 
     {/* Extra outline for final states */}
-    { isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={selected ? circleSelectedStyles : circleStyles} />}
+    {isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={selected ? circleSelectedStyles : circleStyles} />}
 
     {/* Name */}
     <text textAnchor="middle" alignmentBaseline="central" style={textStyles}>
       {displayName}
     </text>
 
-    {/* Login */}
-    <g transform={`translate(0, ${STATE_CIRCLE_RADIUS*.8})`}>
-      <rect x={-9 * label?.length / 2} y={0} width={9 * label?.length} height={STATE_CIRCLE_RADIUS/1.5} style={labelStyles} />
-      <text textAnchor='middle' alignmentBaseline='central' dy={10}>{label}</text>
-    </g>
+    {/* State label */}
+    {label && <g transform={`translate(0, ${STATE_CIRCLE_RADIUS})`}>
+      <rect
+        x={-(labelBox?.width ?? 0) / 2}
+        y={labelBox?.y}
+        width={labelBox?.width}
+        height={labelBox?.height}
+        style={selected ? circleSelectedStyles : circleStyles}
+        ry="5" rx="5"
+      />
+      <text ref={labelRef} textAnchor="middle" alignmentBaseline="central">{label}</text>
+    </g>}
   </g>
 }
 
