@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
-import { SectionLabel, Button, TextInput, TracePreview } from '/src/components'
+import { SectionLabel, Button, Input, TracePreview } from '/src/components'
 import useProjectStore from '/src/stores/useProjectStore'
 import { simulateFSA } from '@automatarium/simulation'
 
@@ -118,7 +118,7 @@ const TestingLab = () => {
       </>}
       <SectionLabel>Trace</SectionLabel>
       <Wrapper>
-        <TextInput
+        <Input
           onChange={e => {
             setTraceInput(e.target.value)
             setTraceIdx(0)
@@ -175,7 +175,7 @@ const TestingLab = () => {
                   {multiTraceOutput[index].accepted ? <CheckCircle2 /> : <XCircle />}
                 </StatusIcon>
               )}
-              <TextInput
+              <Input
                 onChange={e => {
                   updateMultiTraceInput(index, e.target.value)
                   setMultiTraceOutput([])

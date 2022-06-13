@@ -23,7 +23,9 @@
   --toolbar: #424242;
   --disabled-button: #6F6F6F;
   --input-border: #C4C4C4;
+}
 
+* {
   /* Light */
   --grid-bg-light: var(--white);
   --grid-dot-light: #DDDDDD;
@@ -49,7 +51,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  * {
     --grid-bg: var(--grid-bg-dark);
     --grid-dot: var(--grid-dot-dark);
     --stroke: var(--stroke-dark);
@@ -59,7 +61,7 @@
   }
 }
 
-body.light {
+body.light * {
   --grid-bg: var(--grid-bg-light);
   --grid-dot: var(--grid-dot-light);
   --stroke: var(--stroke-light);
@@ -67,7 +69,7 @@ body.light {
   --state-bg: var(--state-bg-light);
   --state-bg-selected: var(--state-bg-selected-light);
 }
-body.dark {
+body.dark * {
   --grid-bg: var(--grid-bg-dark);
   --grid-dot: var(--grid-dot-dark);
   --stroke: var(--stroke-dark);

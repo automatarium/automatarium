@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 
 import { firebase } from '/src/auth'
 import { createUser } from '/src/services'
-import { Label, TextInput, Button, Header, Modal } from '/src/components'
+import { Label, Input, Button, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -95,16 +95,16 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
       <p>${error}</p>
     )}
     <Label htmlFor='email'>Email</Label>
-    <TextInput type='email' {...register('email')} />
+    <Input type='email' {...register('email')} />
     <p>{errors.email?.message}</p>
 
     <Label htmlFor='password'>Password</Label>
-    <TextInput type='password' minLength={6} {...register('password')} />
+    <Input type='password' minLength={6} {...register('password')} />
 
     <p>{errors.email?.password}</p>
 
     <Label htmlFor='passwordAgain'>Confirm Password</Label>
-    <TextInput type='password' {...register('passwordAgain', {
+    <Input type='password' {...register('passwordAgain', {
       validate: value =>
       value === watchPassword || 'Passwords must match',
     })} />
