@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
-import { SectionLabel, Button, Input, TracePreview } from '/src/components'
+import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference } from '/src/components'
 import useProjectStore from '/src/stores/useProjectStore'
 import { simulateFSA } from '@automatarium/simulation'
 
@@ -20,6 +20,7 @@ const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
   const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
+  const [showTraceTape, setShowTraceTape] = useState(true)
 
   // Graph state
   const graph = {
@@ -107,8 +108,14 @@ const TestingLab = () => {
   // :^)
   const dibEgg = useDibEgg()
 
+  // Determine input position
+  const currentTrace = simulationResult?.trace.slice(0, traceIdx+1) ?? []
+  const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
+  const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
+
   return (
     <>
+      {showTraceTape && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
@@ -159,11 +166,21 @@ const TestingLab = () => {
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-
         {traceOutput && <div>
           <TracePreview trace={simulationResult} step={traceIdx} />
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
+        <Preference
+          label={useMemo(() => Math.random() < .001 ? "Show Trace Buddy" : "Trace tape", [])}
+          htmlFor="trace-tape"
+          style={{ marginBlock: 0 }}
+        >
+          <input
+            id="trace-tape"
+            type="checkbox"
+            checked={showTraceTape}
+            onChange={e => setShowTraceTape(e.target.checked)} />
+        </Preference>
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
