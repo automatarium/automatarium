@@ -20,7 +20,7 @@ const useImageExport = svgRef => {
       svgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
 
       // Replace colour variables
-      const styles = getComputedStyle(document.body)
+      const styles = getComputedStyle(svgRef.current)
       svgElement.style.fontFamily = styles.getPropertyValue('font-family')
       const svg = svgElement.outerHTML
         .replaceAll('var(--input-border)', styles.getPropertyValue('--input-border'))

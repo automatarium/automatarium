@@ -1,8 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
-import { useViewStore, useToolStore, usePreferencesStore } from '/src/stores'
+import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
+import COLORS from '/src/config/colors'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
@@ -12,6 +13,7 @@ const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
   const svgRef = useRef()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
+  const projectColor = useProjectStore(state => state.project?.config.color)
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
   useImageExport(svgRef)
@@ -83,6 +85,14 @@ const GraphView = ({ children, ...props }) => {
       return () => resizeObserver.disconnect()
     }
   }, [wrapperRef.current])
+
+  // Set color theme
+  useEffect(() => {
+    const color = COLORS[(projectColor !== '' && projectColor) || 'orange']
+    svgRef.current.style.setProperty('--primary-h', color.h)
+    svgRef.current.style.setProperty('--primary-s', color.s + '%')
+    svgRef.current.style.setProperty('--primary-l', color.l + '%')
+  }, [projectColor])
 
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
