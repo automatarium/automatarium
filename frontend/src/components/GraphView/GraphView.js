@@ -107,6 +107,7 @@ const GraphView = ({ children, ...props }) => {
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
+        id="automatarium-graph"
 
         onContextMenu={e => e.preventDefault()}
         viewBox={viewBox}
@@ -123,7 +124,7 @@ const GraphView = ({ children, ...props }) => {
           ...props.style,
         }}>
         <MarkerProvider>
-          <g id="automatarium-graph">{children}</g>
+          <g>{children}</g>
         </MarkerProvider>
       </Svg>
     </Wrapper>
