@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { parseRead, validTransitions } from '@automatarium/simulation'
+import { expandReadSymbols, validTransitions } from '@automatarium/simulation'
 
 import { useProjectStore } from '/src/stores'
 import { Table, SectionLabel } from '/src/components'
@@ -16,7 +16,7 @@ const Info = () => {
   // Determine alphabet
   const alphabet = useMemo(() =>
     Array.from(new Set(transitions
-      .map(tr => tr.read ? parseRead(tr.read) : [])
+      .map(tr => tr.read ? expandReadSymbols(tr.read) : [])
       .reduce((a, b) => [...a, ...b], [])
       .sort()
     ))
@@ -24,7 +24,7 @@ const Info = () => {
 
   // Resolve graph
   const resolvedGraph = useMemo(() => ({
-    ...graph, transitions: graph.transitions.map(tr => ({ ...tr, read: tr.read ? parseRead(tr.read) : []}))
+    ...graph, transitions: graph.transitions.map(tr => ({ ...tr, read: tr.read ? expandReadSymbols(tr.read) : []}))
   }), [graph])
 
   const transitionMap = useMemo(() => {

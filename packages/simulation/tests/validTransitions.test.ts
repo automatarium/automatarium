@@ -1,4 +1,4 @@
-import { validTransitions, parseRead } from '../src'
+import { validTransitions, expandReadSymbols } from '../src'
 import { FSAGraph } from '../src/types'
 
 import dib_dip_lambdaloop from './graphs/dib_dip-lambdaloop.json'
@@ -6,7 +6,7 @@ import dib_dip_lambdaloop from './graphs/dib_dip-lambdaloop.json'
 
 const resolveGraph = graph => {
   // Resolve graph transitions
-  const transitions = graph.transitions.map(transition => ({...transition, read: parseRead(transition.read)}))
+  const transitions = graph.transitions.map(transition => ({...transition, read: expandReadSymbols(transition.read)}))
   const resolvedGraph: FSAGraph = { ...graph, transitions }
 
   return resolvedGraph

@@ -1,10 +1,10 @@
-import parseRead from './parseRead'
+import expandReadTransitions from './expandReadSymbols'
 import validTransitions from './validTransitions'
 import { UnresolvedFSAGraph, FSAGraph, ExecutionResult, ExecutionTrace, StateID } from './types'
 
 const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
   // Resolve graph transitions
-  const transitions = graph.transitions.map(transition => ({...transition, read: parseRead(transition.read)}))
+  const transitions = graph.transitions.map(transition => ({...transition, read: expandReadTransitions(transition.read)}))
   const resolvedGraph: FSAGraph = { ...graph, transitions }
   
   // Simulate
