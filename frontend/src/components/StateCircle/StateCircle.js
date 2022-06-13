@@ -3,18 +3,17 @@ import { useMemo } from 'react'
 import { circleStyles, circleSelectedStyles, textStyles, labelStyles } from './stateCircleStyle'
 import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 import { dispatchCustomEvent } from '/src/util/events'
+import { useProjectStore } from '/src/stores'
 
 import { ADJECTIVES } from '/src/util/projectName'
 
 const FINAL_OUTLINE_OFFSET = 5
 
 const StateCircle = ({ id, name, isFinal, cx, cy, selected, ...props }) => {
+  const statePrefix = useProjectStore(s => s.project?.config?.statePrefix) ?? 'q'
 
-  // #HACK #TEMP
+  const displayName = name || `${statePrefix}${id}`
   const label = useMemo(() => ADJECTIVES[Math.random()*ADJECTIVES.length|0], [])
-
-  // TODO: use prefix preference
-  const displayName = name || `q${id}`
 
   // TODO: use Callback
   const handleStateMouseUp = e =>

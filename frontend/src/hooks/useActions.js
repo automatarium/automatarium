@@ -1,11 +1,12 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
+import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore, useToolStore } from '/src/stores'
 import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
+import { createNewProject } from '/src/stores/useProjectStore'
 
 const isWindows = navigator.platform.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -34,6 +35,7 @@ const useActions = (registerHotkeys=false) => {
   const createComment = useProjectStore(s => s.createComment)
   const createState = useProjectStore(s => s.createState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
+  const setTool = useToolStore(s => s.setTool)
 
   const navigate = useNavigate()
 
@@ -68,18 +70,15 @@ const useActions = (registerHotkeys=false) => {
     SAVE_FILE_AS: {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
-        const fileName = window.prompt('What would you like to name this automaton?') // TODO: better prompt
-        if (fileName) {
-          // Pull project state
-          const { project } = useProjectStore.getState()
+        // Pull project state
+        const { project } = useProjectStore.getState()
 
-          // Create a download link and use it
-          const a = document.createElement('a')
-          const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
-          a.href = URL.createObjectURL(file)
-          a.download = fileName // TODO: prompt file location - might not be possible?
-          a.click()
-        }
+        // Create a download link and use it
+        const a = document.createElement('a')
+        const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
+        a.href = URL.createObjectURL(file)
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') // TODO: prompt file location - might not be possible?
+        a.click()
       },
     },
     EXPORT_AS_PNG: {
@@ -153,7 +152,7 @@ const useActions = (registerHotkeys=false) => {
       handler: () => { zoomViewTo(1) },
     },
     ZOOM_FIT: {
-      hotkey: { key: '0', shift: true },
+      hotkey: { key: 'f', shift: true },
       handler: () => {
         // Get state
         const view = useViewStore.getState()
@@ -162,7 +161,7 @@ const useActions = (registerHotkeys=false) => {
         const border = 20
 
         // Get the bounding box of the SVG group
-        const b = document.getElementById('automatarium-graph').getBBox()
+        const b = document.querySelector('#automatarium-graph > g').getBBox()
         const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
 
         // Calculate fit region
@@ -259,7 +258,7 @@ const useActions = (registerHotkeys=false) => {
         const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === selectedCommentID)
         if (selectedCommentID === undefined || selectedComment === undefined) return
         const text = window.prompt('New text for comment?', selectedComment.text)
-        if (/^\s*$/.test(text)) return
+        if (!text || /^\s*$/.test(text)) return
         useProjectStore.getState().updateComment({ ...selectedComment, text })
         commit()
       }
@@ -283,7 +282,7 @@ const useActions = (registerHotkeys=false) => {
     CREATE_COMMENT: {
       handler: e => {
         const text = window.prompt('Text of comment?')
-        if (/^\s*$/.test(text)) return
+        if (!text || /^\s*$/.test(text)) return
         const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
         createComment({ x: viewX, y: viewY, text })
         commit()
@@ -321,6 +320,26 @@ const useActions = (registerHotkeys=false) => {
           commit()
         }
       }
+    },
+    TOOL_CURSOR: {
+      hotkey: { key: 'V' },
+      handler: () => setTool('cursor'),
+    },
+    TOOL_HAND: {
+      hotkey: { key: 'H' },
+      handler: () => setTool('hand'),
+    },
+    TOOL_STATE: {
+      hotkey: { key: 'S' },
+      handler: () => setTool('state'),
+    },
+    TOOL_TRANSITION: {
+      hotkey: { key: 'T' },
+      handler: () => setTool('transition'),
+    },
+    TOOL_COMMENT: {
+      hotkey: { key: 'C' },
+      handler: () => setTool('comment'),
     },
   }
 
@@ -412,12 +431,22 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
   input.onchange = () => {
     // Read file data
     const reader = new FileReader()
-    reader.onloadend = () => {
+    reader.onloadend = () => { 
       try {
-        const data = parse(reader.result)
-        onData(data)
+        const fileData = parse(reader.result)
+        const project = {
+          ...createNewProject(),
+          ...fileData,
+        }
+        onData({
+          ...project,
+          meta: {
+            ...project.meta,
+            name: input.files[0]?.name.split('.').slice(0, -1).join('.')
+          }
+        })
       } catch (error) {
-        window.alert(errorMessage)
+        window.alert(`${errorMessage}\n${error}`)
         console.error(error)
       }
     }

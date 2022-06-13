@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { SectionLabel, SelectInput, Button, Preference, Modal } from '/src/components'
+import { SectionLabel, Input, Button, Preference, Modal } from '/src/components'
 import { usePreferencesStore } from '/src/stores'
 
 import { Section } from './preferencesStyle'
@@ -48,18 +48,18 @@ const Preferences = ({ isOpen, onClose }) => {
             description="Up late? Switch to dark mode"
             htmlFor="theme"
           >
-            <SelectInput id="theme" {...register('theme')}>
+            <Input id="theme" type="select" small {...register('theme')}>
               <option value="system">Match system</option>
               <option value="light">Light</option>
               <option value="dark">Dark</option>
-            </SelectInput>
+            </Input>
           </Preference>
           <Preference
             label="Colour accent"
             description="Roses are red, Automatarium is blue"
             htmlFor="color"
           >
-            <SelectInput id="color" {...register('color')}>
+            <Input id="color" type="select" small {...register('color')}>
               <option value="match">Match file theme</option>
               <option value="red">Red</option>
               <option value="orange">Orange</option>
@@ -68,7 +68,7 @@ const Preferences = ({ isOpen, onClose }) => {
               <option value="blue">Blue</option>
               <option value="purple">Purple</option>
               <option value="pink">Pink</option>
-            </SelectInput>
+            </Input>
           </Preference>
         </Section>
 

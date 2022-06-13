@@ -10,6 +10,8 @@ import { usePreferencesStore, useProjectStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
 
+import favicon from 'bundle-text:/public/logo.svg'
+
 // Set up goober to use React
 setup(
   createElement,
@@ -31,6 +33,17 @@ const App = () => {
     document.documentElement.style.setProperty('--primary-h', color.h)
     document.documentElement.style.setProperty('--primary-s', color.s + '%')
     document.documentElement.style.setProperty('--primary-l', color.l + '%')
+
+    // Set favicon
+    const link = document.querySelector('head link[rel=icon]')
+    link.setAttribute(
+      'href',
+      'data:image/svg+xml,' +
+      encodeURIComponent(favicon
+        .replace(/var\(--primary, (.*?)\)/, `hsl(${color.h} ${color.s}% ${color.l}%)`)
+        .replace(/var\(--state-bg, (.*?)\)/, `hsl(${color.h} ${color.s}% 75%)`)
+      )
+    )
   }, [colorPref, projectColor])
 
   // Set light/dark mode

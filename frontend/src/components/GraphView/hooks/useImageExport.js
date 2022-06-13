@@ -14,13 +14,13 @@ const useImageExport = svgRef => {
       const svgElement = svgRef.current?.cloneNode(true)
 
       // Set viewbox
-      const b = document.querySelector('body #automatarium-graph').getBBox()
+      const b = document.querySelector('#automatarium-graph > g').getBBox()
       const border = 20 // Padding around view
       const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
       svgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
 
       // Replace colour variables
-      const styles = getComputedStyle(document.body)
+      const styles = getComputedStyle(svgRef.current)
       svgElement.style.fontFamily = styles.getPropertyValue('font-family')
       const svg = svgElement.outerHTML
         .replaceAll('var(--input-border)', styles.getPropertyValue('--input-border'))
@@ -31,7 +31,7 @@ const useImageExport = svgRef => {
 
       // Setup download link
       const link = document.createElement('a')
-      link.download = `${projectName.replace(/[\s]/g, '_').replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.${e.detail.type}`
+      link.download = `${projectName.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.${e.detail.type}`
 
       // Export SVG
       if (e.detail.type === 'svg') {

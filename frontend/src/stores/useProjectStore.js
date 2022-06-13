@@ -206,6 +206,11 @@ const useProjectStore = create(persist((set, get) => ({
     project.comments = project.comments.filter(c => !commentIDs.includes(c.id))
   })),
 
+  // Change the config
+  updateConfig: newConfig => set(produce(({ project }) => {
+    project.config = { ...project.config, ...newConfig }
+  })),
+
   reset: () => set({ project: createNewProject(), history: [], historyPointer: null, dateEdited: null })
 }), {
   name: 'automatarium-project'

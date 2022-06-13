@@ -1,4 +1,4 @@
-:root {
+:root, #automatarium-graph {
   --font-feature: 'Rubik Mono One', sans-serif;
 
   --white: #FAFAFA;
@@ -49,7 +49,7 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root, #automatarium-graph {
     --grid-bg: var(--grid-bg-dark);
     --grid-dot: var(--grid-dot-dark);
     --stroke: var(--stroke-dark);
@@ -59,7 +59,7 @@
   }
 }
 
-body.light {
+body.light, body.light #automatarium-graph {
   --grid-bg: var(--grid-bg-light);
   --grid-dot: var(--grid-dot-light);
   --stroke: var(--stroke-light);
@@ -67,7 +67,7 @@ body.light {
   --state-bg: var(--state-bg-light);
   --state-bg-selected: var(--state-bg-selected-light);
 }
-body.dark {
+body.dark, body.dark #automatarium-graph {
   --grid-bg: var(--grid-bg-dark);
   --grid-dot: var(--grid-dot-dark);
   --stroke: var(--stroke-dark);

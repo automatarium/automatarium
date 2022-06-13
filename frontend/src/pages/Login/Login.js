@@ -1,7 +1,7 @@
 import React, { useState, useEffect, forwardRef } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { TextInput, Button, Label, Header, Modal } from '/src/components'
+import { Input, Button, Label, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -52,11 +52,11 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
       <p>{error}</p>
     )}
     <Label htmlFor='login-email'>Email</Label>
-    <TextInput id='login-email' type='email' {...register('email')} />
+    <Input id='login-email' type='email' {...register('email')} />
     <p>{errors.email?.message}</p>
 
     <Label htmlFor='login-password'>Password</Label>
-    <TextInput id='login-password' type='password' {...register('password')} />
+    <Input id='login-password' type='password' {...register('password')} />
     <p>{errors.email?.password}</p>
   </form>
 })

@@ -9,7 +9,7 @@ const useCommentCreation = () => {
   useEvent('svg:mousedown', e => {
     if (tool === 'comment' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       const text = window.prompt('Text of comment?')
-      if (/^\s*$/.test(text)) return
+      if (!text || /^\s*$/.test(text)) return
       createComment({ x: e.detail.viewX, y: e.detail.viewY, text })
       commit()
     }

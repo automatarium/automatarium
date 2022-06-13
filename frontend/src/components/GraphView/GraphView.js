@@ -1,8 +1,9 @@
 import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
-import { useViewStore, useToolStore, usePreferencesStore } from '/src/stores'
+import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
+import COLORS from '/src/config/colors'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
@@ -12,6 +13,8 @@ const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
   const svgRef = useRef()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
+  const projectColor = useProjectStore(state => state.project?.config.color)
+  const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
   useImageExport(svgRef)
@@ -84,6 +87,14 @@ const GraphView = ({ children, ...props }) => {
     }
   }, [wrapperRef.current])
 
+  // Set color theme
+  useEffect(() => {
+    const color = COLORS[(projectColor !== '' && projectColor) || 'orange']
+    svgRef.current.style.setProperty('--primary-h', color.h)
+    svgRef.current.style.setProperty('--primary-s', color.s + '%')
+    svgRef.current.style.setProperty('--primary-l', color.l + '%')
+  }, [projectColor, colorPref])
+
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
   const backgroundSize = `${1 / scale * GRID_SNAP * 2}px ${1 / scale * GRID_SNAP * 2}px`
@@ -96,6 +107,7 @@ const GraphView = ({ children, ...props }) => {
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
+        id="automatarium-graph"
 
         onContextMenu={e => e.preventDefault()}
         viewBox={viewBox}
@@ -112,7 +124,7 @@ const GraphView = ({ children, ...props }) => {
           ...props.style,
         }}>
         <MarkerProvider>
-          <g id="automatarium-graph">{children}</g>
+          <g>{children}</g>
         </MarkerProvider>
       </Svg>
     </Wrapper>

@@ -29,4 +29,10 @@ export const StyledInput = styled('input', forwardRef)`
     background: hsl(var(--error-h), 97%, 87%);
     --border-color: var(--error);
   `}
+
+  ${p => p.$small && `
+    width: initial;
+    padding: .4em .5em;
+    font-size: .875em;
+  `}
 `

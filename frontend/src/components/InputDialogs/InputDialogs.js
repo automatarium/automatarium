@@ -1,7 +1,7 @@
 import { useState, useRef } from 'react'
 import { CornerDownLeft } from 'lucide-react'
 
-import { Dropdown, TextInput } from '/src/components'
+import { Dropdown, Input } from '/src/components'
 
 import { useProjectStore, useViewStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
@@ -41,7 +41,10 @@ const InputDialogs = () => {
   }, [inputRef.current])
 
   const saveTransition = () => {
-    editTransition(dialog.id, editTransitionValue)
+    // Remove duplicate characters
+    const ranges = editTransitionValue.match(/\[(.*?)\]/g)
+    const chars = editTransitionValue.replace(/\[(.*?)\]/g, '')
+    editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
     commit()
     setDialog({ ...dialog, visible: false })
   }
@@ -62,7 +65,7 @@ const InputDialogs = () => {
       }}
     >
       <InputWrapper>
-        <TextInput
+        <Input
           ref={inputRef}
           value={editTransitionValue}
           onChange={e => setEditTransitionValue(e.target.value)}
