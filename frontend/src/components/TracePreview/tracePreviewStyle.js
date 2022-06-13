@@ -13,29 +13,18 @@ export const Wrapper = styled('div')`
   width: 100%;
 `
 
-export const State = styled('div')`
-  background: hsl(var(--primary-h) var(--primary-s) 75%);
-  border: 1px solid currentColor;
-  border-radius: 100em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
+export const StyledState = styled('svg')`
   height: 2rem;
-  width: 2rem;
   min-width: 2rem;
-  font-size: .8em;
-  position: relative;
 
-  ${props => props.$final && `
-    &::after {
-      content: '';
-      position: absolute;
-      inset: 2px;
-      border-radius: inherit;
-      border: inherit;
-    }
-  `}
+  circle {
+    stroke: currentColor;
+    stroke-width: 1px;
+    fill: var(--state-bg-light);
+  }
+  text {
+    font-size: 1.2em;
+  }
 `
 
 export const StyledInitialArrow = styled('svg')`

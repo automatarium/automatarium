@@ -3,7 +3,7 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference } from '/src/components'
-import useProjectStore from '/src/stores/useProjectStore'
+import { useProjectStore } from '/src/stores'
 import { simulateFSA } from '@automatarium/simulation'
 
 import {
@@ -28,7 +28,7 @@ const TestingLab = () => {
     transitions: useProjectStore(s => s.project.transitions),
     initialState: useProjectStore(s => s.project.initialState)
   }
-  const statePrefix = useProjectStore(s => s.project.config.statePrefix)
+  const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
 
   const traceInput = useProjectStore(s => s.project.tests.single) ?? ''
   const setTraceInput = useProjectStore(s => s.setSingleTest)
@@ -54,6 +54,8 @@ const TestingLab = () => {
     return result
   }, [graph, traceInput])
 
+  const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
+
   const traceOutput = useMemo(() => {
     // No output before simulating
     if (!simulationResult)
@@ -72,7 +74,7 @@ const TestingLab = () => {
     const transitions = trace
       .slice(0, -1)
       .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
-      .map(([read, start, end]) => `${read}: ${statePrefix}${start} -> ${statePrefix}${end}`)
+      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix+start} -> ${getStateName(end) ?? statePrefix+end}`)
       .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
@@ -85,7 +87,7 @@ const TestingLab = () => {
 
     // Add 'REJECTED'/'ACCEPTED' label
     return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
-  }, [traceInput, simulationResult, statePrefix, traceIdx])
+  }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
     setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))

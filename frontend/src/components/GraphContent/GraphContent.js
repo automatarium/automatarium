@@ -37,6 +37,7 @@ const GraphContent = () => {
       key={s.id}
       id={s.id}
       name={s.name}
+      label={s.label}
       cx={s.x}
       cy={s.y}
       isFinal={s.isFinal}
