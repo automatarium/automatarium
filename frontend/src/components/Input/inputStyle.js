@@ -32,6 +32,7 @@ export const StyledInput = styled('input', forwardRef)`
 
   ${p => p.$small && `
     width: initial;
-    padding: .2em .4em;
+    padding: .4em .5em;
+    font-size: .875em;
   `}
 `
