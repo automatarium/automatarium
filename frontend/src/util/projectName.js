@@ -1,5 +1,5 @@
 
-const ADJECTIVES = [
+export const ADJECTIVES = [
   "Aristotelian",
   "Tudor",
   "abstract",
@@ -274,7 +274,7 @@ const ADJECTIVES = [
   "worthless"
 ]
 
-const NOUNS = [
+export const NOUNS = [
   "accident",
   "acid",
   "acrylic",
