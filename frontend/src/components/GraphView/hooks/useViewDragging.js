@@ -53,7 +53,7 @@ const useViewDragging = containerRef => {
   })
 
   useEvent('mousedown', e => {
-    if (toolActive && e.target === containerRef.current) {
+    if (toolActive && containerRef.current?.contains(e.target)) {
       setDragStartPosition(relativeMousePosition(e.clientX, e.clientY))
       setDragStartViewPosition(viewPosition)
     }
