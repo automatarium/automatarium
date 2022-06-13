@@ -54,7 +54,7 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
         style={selected ? circleSelectedStyles : circleStyles}
         ry="5" rx="5"
       />
-      <text ref={labelRef} textAnchor="middle" alignmentBaseline="central">{label}</text>
+      <text ref={labelRef} textAnchor="middle" alignmentBaseline="central" style={textStyles}>{label}</text>
     </g>}
   </g>
 }
