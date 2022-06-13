@@ -2,7 +2,7 @@ import { ReadSymbol } from './types'
 
 const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/
-const RANGE_VALS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+export const RANGE_VALS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
 const makeCharRange = (start:ReadSymbol, stop:ReadSymbol): ReadSymbol[] => {
   const startChar = RANGE_VALS.indexOf(start)
@@ -32,6 +32,10 @@ const expandReadSymbols = (read:string): ReadSymbol[] => {
     ...symbols,
     ...rangeSymbols,
   ])).sort()
+}
+
+const parseRead = (read: string) => {
+
 }
 
 export default expandReadSymbols
