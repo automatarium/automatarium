@@ -1,6 +1,6 @@
-# Automatarium
+# 🌏 Automatarium
 
-A place for automata
+> A place for automata
 
 Automatarium is a modern take on the useful [JFLAP](https://www.jflap.org/), but designed with a modern user interface and quality-of-life features that were lacking in JFLAP. Currently Automatarium supports finite automata, with room to add additional functionality such as push-down automata and Turing machines in the future.
 
@@ -22,7 +22,8 @@ Automatarium is a React project with a Node JS backend (that connects to a Mongo
 
 1. Clone this repository onto your local machine
 2. Run `yarn` to install dependencies (don't have yarn? run `npm i -g yarn`)
-3. Run `yarn dev` to start the dev server at [http://localhost:1234](http://localhost:1234)
+3. Optionally, set up environment variables in a `.env` file in the backend to connect to a database
+4. Run `yarn dev` to start the dev server at [http://localhost:1234](http://localhost:1234)
 
 There are also other yarn commands, for example you can run `yarn dev:frontend` to start the frontend without the backend (useful to test functionality without connecting a database). See `package.json` for all available commands.
 
