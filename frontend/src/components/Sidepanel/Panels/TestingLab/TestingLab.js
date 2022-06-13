@@ -187,7 +187,7 @@ const TestingLab = () => {
                   if (!paste.includes('\n')) return
 
                   e.preventDefault()
-                  const lines = paste.split(/\r?\n/)
+                  const lines = paste.split(/\r?\n/).filter(l => l !== '')
                   lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
                 }}
                 onKeyDown={e => {
