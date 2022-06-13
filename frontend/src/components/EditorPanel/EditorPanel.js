@@ -1,3 +1,4 @@
+import StateCircle from '../StateCircle/StateCircle'
 import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs } from '/src/components'
 import {
   useEvent,
@@ -20,7 +21,7 @@ const EditorPanel = () => {
   const { startDrag: startStateDrag } = useStateDragging()
   const { startDrag: startCommentDrag } = useCommentDragging()
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
-  useStateCreation()
+  const { ghostState } = useStateCreation()
   useCommentCreation()
   useContextMenus()
 
@@ -40,6 +41,8 @@ const EditorPanel = () => {
     selectTransition(e)
   })
 
+  console.log(ghostState)
+
   return <>
     <GraphView>
       {/* Render in-creation transition */}
@@ -50,6 +53,9 @@ const EditorPanel = () => {
         to={createTransitionEnd}
         count={1}
       />}
+
+      {/* Ghost State */}
+      {ghostState && <StateCircle.Ghost cx={ghostState.x} cy={ghostState.y} /> }
 
       {/* Render states and transitions */}
       <GraphContent />
