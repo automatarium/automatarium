@@ -1,6 +1,6 @@
 import { forwardRef } from 'react'
 
-import { StyledInput, SwitchInput, StyledSwitch } from './inputStyle'
+import { StyledInput } from './inputStyle'
 
 const Input = forwardRef(({
   type,
@@ -17,13 +17,6 @@ const Input = forwardRef(({
     type={type}
     ref={ref}
   />
-))
-
-Input.Switch = forwardRef((props, ref) => (
-  <>
-    <SwitchInput id={props.id ?? props.name} type="checkbox" ref={ref} {...props} />
-    <StyledSwitch><div /></StyledSwitch>
-  </>
 ))
 
 export default Input

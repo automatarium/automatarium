@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
-import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference } from '/src/components'
+import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
 import { simulateFSA } from '@automatarium/simulation'
 
@@ -177,7 +177,7 @@ const TestingLab = () => {
           htmlFor="trace-tape"
           style={{ marginBlock: 0 }}
         >
-          <input
+          <Switch
             id="trace-tape"
             type="checkbox"
             checked={showTraceTape}

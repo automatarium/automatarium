@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { SectionLabel, Input, Button, Preference, Modal } from '/src/components'
+import { SectionLabel, Input, Button, Preference, Modal, Switch } from '/src/components'
 import { usePreferencesStore } from '/src/stores'
 
 import { Section } from './preferencesStyle'
@@ -79,7 +79,7 @@ const Preferences = ({ isOpen, onClose }) => {
             description="This also enables snapping"
             htmlFor="showGrid"
           >
-            <input id="showGrid" type="checkbox" {...register('showGrid')} />
+            <Switch id="showGrid" type="checkbox" {...register('showGrid')} />
           </Preference>
         </Section>
       </form>
