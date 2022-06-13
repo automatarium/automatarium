@@ -1,9 +1,10 @@
 import { useRef, useEffect, useState } from 'react'
 
-import { circleStyles, circleSelectedStyles, textStyles } from './stateCircleStyle'
-import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useProjectStore } from '/src/stores'
+import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
+
+import { circleStyles, circleSelectedStyles, textStyles } from './stateCircleStyle'
 
 const FINAL_OUTLINE_OFFSET = 5
 
@@ -58,5 +59,8 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
     </g>}
   </g>
 }
+
+StateCircle.Ghost = ({ cx, cy }) =>
+  <circle cx={cx} cy={cy} r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, opacity: .3, pointerEvents: 'none' }} />
 
 export default StateCircle
