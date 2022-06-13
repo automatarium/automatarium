@@ -261,7 +261,7 @@ const useActions = (registerHotkeys=false) => {
         const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === selectedCommentID)
         if (selectedCommentID === undefined || selectedComment === undefined) return
         const text = window.prompt('New text for comment?', selectedComment.text)
-        if (/^\s*$/.test(text)) return
+        if (!text || /^\s*$/.test(text)) return
         useProjectStore.getState().updateComment({ ...selectedComment, text })
         commit()
       }
@@ -285,7 +285,7 @@ const useActions = (registerHotkeys=false) => {
     CREATE_COMMENT: {
       handler: e => {
         const text = window.prompt('Text of comment?')
-        if (/^\s*$/.test(text)) return
+        if (!text || /^\s*$/.test(text)) return
         const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
         createComment({ x: viewX, y: viewY, text })
         commit()
