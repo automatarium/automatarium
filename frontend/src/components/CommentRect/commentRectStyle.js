@@ -1,7 +1,7 @@
 export const commentStyles = {
-  color: 'var(--stroke)',
+  color: 'var(--comment-text)',
   background: 'var(--grid-bg)',
-  padding: '1em',
+  padding: '.8em 1em',
   borderRadius: '.5rem',
   borderWidth: '2.5px',
   borderStyle: 'solid',
