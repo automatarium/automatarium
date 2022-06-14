@@ -35,7 +35,7 @@ export const Content = styled('div', forwardRef)`
   background: var(--surface);
   border-radius: 1em;
   width: 500px;
-  max-width: 100%;
+  max-width: calc(100% - 40px);
   box-sizing: border-box;
   box-shadow: 0 2px 5px rgba(0 0 0 / .5);
 

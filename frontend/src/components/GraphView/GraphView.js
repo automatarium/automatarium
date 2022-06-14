@@ -17,7 +17,7 @@ const GraphView = ({ children, ...props }) => {
   const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
-  useImageExport(svgRef)
+  useImageExport()
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {

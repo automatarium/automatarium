@@ -36,16 +36,20 @@ const menus = [
         label: 'Export',
         items: [
           {
-            label: 'Export as PNG',
+            label: 'Export image...',
+            action: 'EXPORT',
+          },
+          {
+            label: 'Quick export as PNG',
             action: 'EXPORT_AS_PNG',
           },
           {
-            label: 'Export as SVG',
+            label: 'Quick export as SVG',
             action: 'EXPORT_AS_SVG',
           },
           {
-            label: 'Export as JPG',
-            action: 'EXPORT_AS_JPG'
+            label: 'Copy to clipboard',
+            action: 'EXPORT_TO_CLIPBOARD',
           },
           'hr',
           {

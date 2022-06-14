@@ -5,7 +5,7 @@ import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from 
 import { useToolStore, useProjectStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
-import { Preferences, ShortcutGuide } from '/src/pages'
+import { Preferences, ShortcutGuide, ExportImage } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
 
@@ -80,6 +80,7 @@ const Editor = () => {
   useEvent('modal:preferences', () => setShowPreferencesModal(true), [])
   useEvent('modal:shortcuts', () => setShowShortcutGuide(true), [])
 
+
   if (loading) return <LoadingContainer>
     <Spinner />
   </LoadingContainer>
@@ -101,6 +102,7 @@ const Editor = () => {
         isOpen={showShortcutGuide}
         onClose={() => setShowShortcutGuide(false)}
       />
+      <ExportImage />
     </>
   )
 }

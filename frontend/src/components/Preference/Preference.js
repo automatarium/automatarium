@@ -1,10 +1,10 @@
 import { Wrapper, Description } from './preferenceStyle'
 
-const Preference = ({ label, description, children, htmlFor, ...props }) => (
-  <Wrapper {...props}>
+const Preference = ({ label, description, children, fullWidth, ...props }) => (
+  <Wrapper $fullWidth={fullWidth} {...props}>
     <div>
-      <label htmlFor={htmlFor}>{label}</label>
-      {description && <Description htmlFor={htmlFor}>{description}</Description>}
+      <span>{label}</span>
+      {description && <Description>{description}</Description>}
     </div>
     {children}
   </Wrapper>

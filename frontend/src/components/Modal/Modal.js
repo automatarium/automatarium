@@ -26,6 +26,7 @@ const Modal = ({
   focusRef,
   dropdown = false,
   containerStyle,
+  width,
   ...props
 }) => {
   const [instance, attr] = useA11yDialog({ id, role, title })
@@ -52,7 +53,7 @@ const Modal = ({
     >
       <Overlay {...attr.overlay} />
 
-      <Content {...attr.dialog}>
+      <Content {...attr.dialog} style={{ width }}>
         {title && <Heading {...attr.title}>{title}</Heading>}
         {description && <Description>{description}</Description>}
 
