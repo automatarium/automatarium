@@ -69,12 +69,14 @@ const ExportImage = () => {
 
   const copyToClipboard = useCallback(async () => {
     if (type === 'svg') {
-      navigator.clipboard.write(svg)
+      // TODO: kinda broken, might need to clean the svg at an earlier stage
+      const blob = new Blob([svg], { type: 'text/plain' })
+      navigator.clipboard.write([new window.ClipboardItem({'text/plain': blob})])
     }
 
     if (type === 'png' || type === 'jpg') {
       const canvas = await svgToCanvas({ ...size, svg })
-      canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({[type === 'jpg' ? 'image/jpeg' : 'image/png']: blob})]), type === 'jpg' && 'image/jpeg')
+      canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({[type === 'jpg' ? 'image/jpeg' : 'image/png']: blob})]), type === 'jpg' && 'image/jpeg')
     }
 
     setExportVisible(false)

@@ -132,7 +132,7 @@ const useImageExport = () => {
 
         // Export to clipboard
         if (e.detail.clipboard) {
-          return canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]))
+          return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({'image/png': blob})]))
         }
 
         return downloadURL({
