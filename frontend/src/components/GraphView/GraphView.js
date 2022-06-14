@@ -2,12 +2,13 @@ import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
 import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
+import { useImageExport } from '/src/hooks'
 import { GRID_SNAP } from '/src/config/interactions'
 import COLORS from '/src/config/colors'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
-import { useViewDragging, useImageExport } from './hooks'
+import { useViewDragging } from './hooks'
 
 const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()

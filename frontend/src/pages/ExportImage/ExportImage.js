@@ -2,9 +2,9 @@ import { useEffect, useCallback, useState } from 'react'
 
 import { Preference, Input, Modal, Button, Switch } from '/src/components'
 import { useExportStore, useProjectStore } from '/src/stores'
+import { downloadURL, getSvgString, svgToCanvas } from '/src/hooks/useImageExport'
 
 import { Wrapper, Image } from './exportImageStyle'
-import { downloadURL, getSvgString, svgToCanvas } from '../../components/GraphView/hooks/useImageExport'
 
 const ExportImage = () => {
   const { exportVisible, setExportVisible, options, setOptions } = useExportStore()
@@ -67,6 +67,19 @@ const ExportImage = () => {
     if (data) downloadURL({ filename, extension: type, data })
   }, [svg, size, type, filename])
 
+  const copyToClipboard = useCallback(async () => {
+    if (type === 'svg') {
+      navigator.clipboard.write(svg)
+    }
+
+    if (type === 'png' || type === 'jpg') {
+      const canvas = await svgToCanvas({ ...size, svg })
+      canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({[type === 'jpg' ? 'image/jpeg' : 'image/png']: blob})]), type === 'jpg' && 'image/jpeg')
+    }
+
+    setExportVisible(false)
+  }, [svg, size, type, filename])
+
   return (
     <Modal
       title="Export Image"
@@ -75,6 +88,8 @@ const ExportImage = () => {
       onClose={() => setExportVisible(false)}
       actions={<>
         <Button secondary onClick={() => setExportVisible(false)}>Cancel</Button>
+        <div style={{ flex: 1 }} />
+        <Button secondary onClick={copyToClipboard}>Copy to clipboard</Button>
         <Button onClick={doExport}>Export</Button>
       </>}
       width="800px"
@@ -108,8 +123,8 @@ const ExportImage = () => {
           </Preference>
           <Preference label="Background" fullWidth>
             <Input type="select" small value={background} onChange={e => setOptions({ background: e.target.value })}>
-              <option value="none" disabled={type === 'jpg'}>Transparent</option>
               <option value="solid">Solid</option>
+              <option value="none" disabled={type === 'jpg'}>Transparent</option>
               {/* <option value="grid">Dot grid</option> */}
             </Input>
           </Preference>

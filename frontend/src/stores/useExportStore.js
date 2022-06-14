@@ -8,7 +8,7 @@ const useExportStore = create(set => ({
     padding: 20,
     color: '',
     darkMode: false,
-    background: 'none',
+    background: 'solid',
   },
 
   setExportVisible: exportVisible => set({ exportVisible }),

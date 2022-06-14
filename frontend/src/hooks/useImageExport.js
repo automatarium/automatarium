@@ -36,13 +36,14 @@ export const getSvgString = ({
   background = 'none',
   color,
   darkMode = false,
-}) => {
+} = {}) => {
   // Clone the SVG element
   const svgElement = document.querySelector('#automatarium-graph')
   const clonedSvgElement = svgElement.cloneNode(true)
 
   // Set viewbox
   const b = document.querySelector('#automatarium-graph > g').getBBox()
+  padding = Number(padding ?? 0)+1
   const [x, y, width, height] = [b.x - padding, b.y - padding, b.width + padding*2, b.height + padding*2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
 
@@ -128,6 +129,12 @@ const useImageExport = () => {
       // Quick export PNG
       if (e.detail?.type === 'png') {
         const canvas = await svgToCanvas({ height, width, svg })
+
+        // Export to clipboard
+        if (e.detail.clipboard) {
+          return canvas.toBlob(blob => navigator.clipboard.write([new ClipboardItem({'image/png': blob})]))
+        }
+
         return downloadURL({
           filename: projectName,
           extension: 'png',
