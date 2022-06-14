@@ -163,18 +163,16 @@ const useActions = (registerHotkeys=false) => {
 
         // Get the bounding box of the SVG group
         const b = document.querySelector('#automatarium-graph > g').getBBox()
+        if (Math.max(b.width, b.height) < border) return // Bail if the bounding box is too small
         const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
 
         // Calculate fit region
-        const desiredScale = Math.max(
-          width / view.size.width,
-          height / view.size.height
-        )
+        const desiredScale = Math.max(width / view.size.width, height / view.size.height)
         view.setViewScale(desiredScale)
         // Calculate x and y to centre graph
         view.setViewPosition({
-          x: x - (view.size.width - width / desiredScale)/2,
-          y: y - (view.size.height - height / desiredScale)/2,
+          x: x + (width - view.size.width * desiredScale)/2,
+          y: y + (height - view.size.height * desiredScale)/2,
         })
       },
     },
