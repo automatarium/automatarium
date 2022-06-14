@@ -9,7 +9,6 @@ export const commentStyles = {
   userSelect: 'none',
   width: 'max-content',
   maxWidth: '255px',
-  margin: 'auto',
   boxSizing: 'border-box',
 }
 
