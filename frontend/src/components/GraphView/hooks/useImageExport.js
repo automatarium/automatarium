@@ -23,6 +23,7 @@ const useImageExport = svgRef => {
       const styles = getComputedStyle(svgRef.current)
       svgElement.style.fontFamily = styles.getPropertyValue('font-family')
       const svg = svgElement.outerHTML
+        .replaceAll('var(--initial-arrow-bg, var(--grid-bg))', 'none')
         .replaceAll('var(--input-border)', styles.getPropertyValue('--input-border'))
         .replaceAll('var(--grid-bg)', styles.getPropertyValue('--grid-bg-light'))
         .replaceAll('var(--stroke)', styles.getPropertyValue('--stroke-light'))
