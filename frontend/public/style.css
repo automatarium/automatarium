@@ -100,3 +100,6 @@ body {
 a {
   color: var(--primary);
 }
+ul li, ol li {
+  margin-block: 1em;
+}
