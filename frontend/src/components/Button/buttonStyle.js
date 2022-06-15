@@ -11,11 +11,12 @@ export const Wrapper = styled('button')`
   font-size: .9em;
   border-radius: .3em;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   appearance: none;
   gap: .5em;
+  text-decoration: none;
 
   &:active {
     filter: brightness(0.94);
