@@ -10,11 +10,11 @@ export const Wrapper = styled('label')`
     flex-direction: column;
     gap: .2em;
     align-items: flex-start;
-  `}
 
-  select, input {
-    width: 100%;
-  }
+    select, input {
+      width: 100%;
+    }
+  `}
 `
 
 export const Description = styled('span')`
