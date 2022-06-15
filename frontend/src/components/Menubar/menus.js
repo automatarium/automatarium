@@ -48,7 +48,7 @@ const menus = [
             action: 'EXPORT_AS_SVG',
           },
           {
-            label: 'Copy to clipboard',
+            label: 'Quick copy to clipboard',
             action: 'EXPORT_TO_CLIPBOARD',
           },
           'hr',
