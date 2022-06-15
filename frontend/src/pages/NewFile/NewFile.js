@@ -80,7 +80,7 @@ const NewFile = () => {
 
   return <Main wide>
     <HeaderRow>
-      <Header />
+      <Header linkTo="/" />
       <ButtonGroup>
         {!userLoading && !user && <>
           <Button secondary onClick={() => setLoginModalVisible(true)}>Log In</Button>
