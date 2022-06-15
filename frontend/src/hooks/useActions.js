@@ -159,7 +159,7 @@ const useActions = (registerHotkeys=false) => {
         const view = useViewStore.getState()
 
         // Padding around view
-        const border = 20
+        const border = 40
 
         // Get the bounding box of the SVG group
         const b = document.querySelector('#automatarium-graph > g').getBBox()
