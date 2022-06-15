@@ -31,6 +31,7 @@
   --selection-fill-light: #00000020;
   --state-bg-light: hsl(var(--primary-h) var(--primary-s) 75%);
   --state-bg-selected-light: hsl(var(--primary-h) 70% 65%);
+  --comment-text-light: var(--black);
 
   /* Dark */
   --grid-bg-dark: #1B1B1B;
@@ -39,6 +40,7 @@
   --selection-fill-dark: #FFFFFF20;
   --state-bg-dark: hsl(var(--primary-h) 47% 33%);
   --state-bg-selected-dark: hsl(var(--primary-h) 65% 23%);
+  --comment-text-dark: var(--white);
 
   --grid-bg: var(--grid-bg-light);
   --grid-dot: var(--grid-dot-light);
@@ -46,6 +48,7 @@
   --selection-fill: var(--selection-fill-light);
   --state-bg: var(--state-bg-light);
   --state-bg-selected: var(--state-bg-selected-light);
+  --comment-text: var(--comment-text-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -56,6 +59,7 @@
     --selection-fill: var(--selection-fill-dark);
     --state-bg: var(--state-bg-dark);
     --state-bg-selected: var(--state-bg-selected-dark);
+    --comment-text: var(--comment-text-dark);
   }
 }
 
@@ -66,6 +70,7 @@ body.light, body.light #automatarium-graph {
   --selection-fill: var(--selection-fill-light);
   --state-bg: var(--state-bg-light);
   --state-bg-selected: var(--state-bg-selected-light);
+  --comment-text: var(--comment-text-light);
 }
 body.dark, body.dark #automatarium-graph {
   --grid-bg: var(--grid-bg-dark);
@@ -74,6 +79,7 @@ body.dark, body.dark #automatarium-graph {
   --selection-fill: var(--selection-fill-dark);
   --state-bg: var(--state-bg-dark);
   --state-bg-selected: var(--state-bg-selected-dark);
+  --comment-text: var(--comment-text-dark);
 }
 
 body {

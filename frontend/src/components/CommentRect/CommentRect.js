@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { dispatchCustomEvent } from '/src/util/events'
-import { useSelectionStore } from '/src/stores'
+import { useSelectionStore, useViewStore } from '/src/stores'
 
 import { commentStyles, commentSelectedStyles } from './commentRectStyle'
 
@@ -10,16 +10,17 @@ const CommentRect = ({ id, x, y, text }) => {
   const [size, setSize] = useState({ height: 150, width: 255 })
   const selectedComments = useSelectionStore(s => s.selectedComments)
   const selected = selectedComments.includes(id)
+  const scale = useViewStore(s => s.scale)
 
   useEffect(() => {
     if (containerRef.current) {
       const bounds = containerRef.current.getBoundingClientRect()
       setSize({
-        height: bounds.height,
-        width: bounds.width,
+        height: bounds.height*scale,
+        width: bounds.width*scale,
       })
     }
-  }, [containerRef?.current, text])
+  }, [containerRef?.current, text, scale])
 
   const handleMouseDown = e =>
     dispatchCustomEvent('comment:mousedown', {
