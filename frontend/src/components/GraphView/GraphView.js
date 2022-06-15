@@ -2,12 +2,13 @@ import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
 import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
+import { useImageExport } from '/src/hooks'
 import { GRID_SNAP } from '/src/config/interactions'
 import COLORS from '/src/config/colors'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
-import { useViewDragging, useImageExport } from './hooks'
+import { useViewDragging } from './hooks'
 
 const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
@@ -17,7 +18,7 @@ const GraphView = ({ children, ...props }) => {
   const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
-  useImageExport(svgRef)
+  useImageExport()
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {

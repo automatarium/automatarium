@@ -78,20 +78,25 @@ const useActions = (registerHotkeys=false) => {
         const a = document.createElement('a')
         const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
         a.href = URL.createObjectURL(file)
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') // TODO: prompt file location - might not be possible?
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')
         a.click()
       },
     },
+    EXPORT: {
+      hotkey: { key: 'e', meta: true},
+      handler: () => dispatchCustomEvent('exportImage'),
+    },
     EXPORT_AS_PNG: {
-      hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
+      hotkey: { key: 'e', shift: true, meta: true },
       handler: () => dispatchCustomEvent('exportImage', { type: 'png' }),
     },
     EXPORT_AS_SVG: {
       hotkey: { key: 'e', shift: true, alt: true, meta: true},
       handler: () => dispatchCustomEvent('exportImage', { type: 'svg' }),
     },
-    EXPORT_AS_JPG: {
-      handler: () => dispatchCustomEvent('exportImage', { type: 'jpg' }),
+    EXPORT_TO_CLIPBOARD: {
+      hotkey: { key: 'c', shift: true, meta: true},
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png', clipboard: true }),
     },
     EXPORT_AS_JFLAP: {
       //handler: () => console.log('Export JFLAP'),

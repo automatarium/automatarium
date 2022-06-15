@@ -174,11 +174,9 @@ const TestingLab = () => {
         </div>}
         <Preference
           label={useMemo(() => Math.random() < .001 ? "Trace buddy" : "Trace tape", [])}
-          htmlFor="trace-tape"
           style={{ marginBlock: 0 }}
         >
           <Switch
-            id="trace-tape"
             type="checkbox"
             checked={showTraceTape}
             onChange={e => setShowTraceTape(e.target.checked)}

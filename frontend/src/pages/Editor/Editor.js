@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
-import { useToolStore, useProjectStore } from '/src/stores'
+import { useToolStore, useProjectStore, useExportStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
-import { Preferences, ShortcutGuide } from '/src/pages'
+import { Preferences, ShortcutGuide, ExportImage } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
 
@@ -15,6 +15,7 @@ const Editor = () => {
   const [priorTool, setPriorTool] = useState()
   const [showPreferencesModal, setShowPreferencesModal] = useState(false)
   const [showShortcutGuide, setShowShortcutGuide] = useState(false)
+  const resetExportSettings = useExportStore(s => s.reset)
 
   // Syncronize last-opened project with backend before showing it
   const loading = useSyncCurrentProject()
@@ -30,6 +31,7 @@ const Editor = () => {
     if (!useProjectStore.getState().project) {
       navigate('/new')
     }
+    resetExportSettings()
   }, [])
 
   // Change tool when holding certain keys
@@ -101,6 +103,7 @@ const Editor = () => {
         isOpen={showShortcutGuide}
         onClose={() => setShowShortcutGuide(false)}
       />
+      <ExportImage />
     </>
   )
 }

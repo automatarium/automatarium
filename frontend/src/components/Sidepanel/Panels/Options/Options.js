@@ -14,10 +14,8 @@ const Options = () => {
       <Preference
         label="State identifier"
         description="Used to denote a state"
-        htmlFor="state_identifier"
       >
         <Input
-          id="state_identifier"
           small
           style={{ width: '8ch' }}
           value={statePrefix}
@@ -31,10 +29,8 @@ const Options = () => {
       <Preference
         label="Project colour"
         description="Set the theme for this automaton"
-        htmlFor="project_color"
       >
         <Input
-          id="project_color"
           type="select"
           small
           value={projectColor === '' ? 'orange' : projectColor}

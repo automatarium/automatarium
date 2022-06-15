@@ -13,7 +13,7 @@ const InitialStateArrow = ({ states, initialStateID }) => {
     <polygon
       points={`${triangleStart} ${triangleTopLeft} ${triangleBottomLeft}`}
       style={{
-        fill: 'var(--grid-bg)',
+        fill: 'var(--initial-arrow-bg, var(--grid-bg))',
         stroke: 'var(--stroke)',
       }}
     />

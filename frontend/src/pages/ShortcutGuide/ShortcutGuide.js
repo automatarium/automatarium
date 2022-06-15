@@ -24,23 +24,23 @@ const shortcuts = [
     items: [
       {
         label: 'Cursor tool',
-        hotkeys: ['V'],
+        action: 'TOOL_CURSOR',
       },
       {
         label: 'Hand tool',
-        hotkeys: ['H'],
+        action: 'TOOL_HAND',
       },
       {
         label: 'State tool',
-        hotkeys: ['S'],
+        action: 'TOOL_STATE',
       },
       {
         label: 'Transition tool',
-        hotkeys: ['T'],
+        action: 'TOOL_TRANSITION',
       },
       {
         label: 'Comment tool',
-        hotkeys: ['C'],
+        action: 'TOOL_COMMENT',
       },
     ],
   },
@@ -64,12 +64,20 @@ const shortcuts = [
         action: 'SAVE_FILE_AS',
       },
       {
-        label: 'Export as PNG',
+        label: 'Export image',
+        action: 'EXPORT',
+      },
+      {
+        label: 'Quick export as PNG',
         action: 'EXPORT_AS_PNG',
       },
       {
-        label: 'Export as SVG',
+        label: 'Quick export as SVG',
         action: 'EXPORT_AS_SVG',
+      },
+      {
+        label: 'Quick copy to clipboard',
+        action: 'EXPORT_TO_CLIPBOARD',
       },
     ],
   },

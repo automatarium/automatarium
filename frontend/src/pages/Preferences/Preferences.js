@@ -46,9 +46,8 @@ const Preferences = ({ isOpen, onClose }) => {
           <Preference
             label="Theme"
             description="Up late? Switch to dark mode"
-            htmlFor="theme"
           >
-            <Input id="theme" type="select" small {...register('theme')}>
+            <Input type="select" small {...register('theme')}>
               <option value="system">Match system</option>
               <option value="light">Light</option>
               <option value="dark">Dark</option>
@@ -57,9 +56,8 @@ const Preferences = ({ isOpen, onClose }) => {
           <Preference
             label="Colour accent"
             description="Roses are red, Automatarium is blue"
-            htmlFor="color"
           >
-            <Input id="color" type="select" small {...register('color')}>
+            <Input type="select" small {...register('color')}>
               <option value="match">Match file theme</option>
               <option value="red">Red</option>
               <option value="orange">Orange</option>
@@ -77,9 +75,8 @@ const Preferences = ({ isOpen, onClose }) => {
           <Preference
             label="Enable grid"
             description="This also enables snapping"
-            htmlFor="showGrid"
           >
-            <Switch id="showGrid" type="checkbox" {...register('showGrid')} />
+            <Switch type="checkbox" {...register('showGrid')} />
           </Preference>
         </Section>
       </form>
