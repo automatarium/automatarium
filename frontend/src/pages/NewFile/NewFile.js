@@ -110,7 +110,7 @@ const NewFile = () => {
     <CardList
       title="Your Projects"
     >
-      {projects.sort((a, b) => b.meta.dateEdited < a.meta.dateEdited ? -1 : 1).map(p =>
+      {projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map(p =>
         <ProjectCard
           key={p._id}
           name={p?.meta?.name ?? '<Untitled>'}

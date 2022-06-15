@@ -19,4 +19,9 @@ export const HeaderContainer = styled('header')`
     align-items: center;
     gap: 1em;
   }
+
+  h1 {
+    padding-right: 10px;
+    margin-block: .6em;
+  }
 `
