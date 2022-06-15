@@ -1,3 +1,10 @@
+@font-face {
+  font-family: 'Rubik Mono One';
+  src: url('RubikMonoOne.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 :root, #automatarium-graph {
   --font-feature: 'Rubik Mono One', sans-serif;
 
@@ -88,4 +95,8 @@ body {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+}
+
+a {
+  color: var(--primary);
 }
