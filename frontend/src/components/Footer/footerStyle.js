@@ -23,7 +23,7 @@ export const FooterItem = styled('span')`
     text-decoration: underline;
     color: inherit;
     &:hover {
-      color: hsl(var(--primary-h) var(--primary-s) 70%);
+      color: var(--primary);
     }
   }
 `
