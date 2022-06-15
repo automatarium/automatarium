@@ -109,6 +109,7 @@ const ExportImage = () => {
               <option value="svg">SVG</option>
             </Input>
           </Preference>
+          {type === 'svg' && <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>Note: SVG exporting is still in beta and may not work as expected</span>}
           <Preference label="Padding" fullWidth>
             <Input type="number" small value={padding} onChange={e => setOptions({ padding: e.target.value })} />
           </Preference>
