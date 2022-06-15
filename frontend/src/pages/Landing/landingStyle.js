@@ -7,48 +7,47 @@ export const Sections = styled('div')`
   gap: 6em;
   margin-block-start: 3em;
 
-  img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    border-radius: .5rem;
-    max-height: 14em;
-  }
-
-  a {
-    text-decoration: none;
+  @media (max-width: 600px) {
+    gap: 3em;
   }
 `
 
-export const ColumnsSection = styled('section')`
+export const Section = styled('section')`
   display: grid;
   width: 100%;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr 1.2fr;
   grid-template-areas: "img text";
   gap: 2em;
   max-width: 800px;
-  min-height: 12em;
+  min-height: 5em;
+  padding-inline: 2em;
+  box-sizing: border-box;
 
   ${p => p.$reverse && `
-    grid-template-areas: "text img"; 
+    grid-template-areas: "text img";
+    grid-template-columns: 1.2fr 1fr;
   `}
 
-  img {
-    grid-area: img;
-  }
-  div {
+  .text {
     grid-area: text;
+  }
+
+  @media (max-width: 600px) {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
   }
 `
 
-export const BannerSection = styled('section')`
+export const Banner = styled('section')`
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding-block: 2em;
+  padding: 2em;
+  box-sizing: border-box;
   background: hsl(var(--primary-h) var(--primary-s) var(--primary-l) / 25%);
 
   h2, h3 {

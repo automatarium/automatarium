@@ -81,8 +81,8 @@ const TestingLab = () => {
     const transitionsWithRejected = !accepted && traceIdx === trace.length
       ? [...transitions,
         remaining[0] ?
-          `${remaining[0]}: ${statePrefix}${trace[trace.length-1].to} ->|`
-          : `\n${statePrefix}${trace[trace.length-1].to} ->|`]
+          `${remaining[0]}: ${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`
+          : `\n${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`]
       : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
@@ -169,7 +169,7 @@ const TestingLab = () => {
             }} />
         </StepButtons>
         {traceOutput && <div>
-          <TracePreview trace={simulationResult} step={traceIdx} />
+          <TracePreview trace={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states} />
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
         <Preference

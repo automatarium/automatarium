@@ -1,3 +1,5 @@
+import { Link } from 'react-router-dom'
+
 import { Wrapper } from './buttonStyle'
 
 const Button = ({
@@ -13,6 +15,7 @@ const Button = ({
     $icon={icon && !children}
     $secondary={secondary}
     $surface={surface}
+    as={props.href ? 'a' : (props.to ? Link : 'button')}
     {...props}
   >
     {icon}

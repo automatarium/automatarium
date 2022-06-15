@@ -16,7 +16,7 @@ const ProjectCard = ({ name, type, date, ...props }) =>
     </CardImage>
     <CardDetail>
       <strong>{name}</strong>
-      <span>{dayjs().to(date)}</span>
+      {date && <span>{dayjs().to(date)}</span>}
     </CardDetail>
   </CardContainer>
 
