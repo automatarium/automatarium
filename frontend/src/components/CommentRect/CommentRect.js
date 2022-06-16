@@ -20,7 +20,7 @@ const CommentRect = ({ id, x, y, text }) => {
         width: bounds.width*scale,
       })
     }
-  }, [containerRef?.current, text, scale])
+  }, [containerRef?.current, text, scale, x, y])
 
   const handleMouseDown = e =>
     dispatchCustomEvent('comment:mousedown', {
