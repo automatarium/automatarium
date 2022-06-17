@@ -14,12 +14,8 @@ export const Svg = styled('svg', forwardRef)`
 
   /* Grid */
   ${p => p.$showGrid && `
-    --dot-fraction: 12.5%;
-    background: radial-gradient(
-      var(--grid-dot),
-      var(--grid-dot) var(--dot-fraction),
-      var(--grid-bg) var(--dot-fraction));
-  `};
+    background: var(--grid-pattern);
+  `}
 
   /* Text */
   text {

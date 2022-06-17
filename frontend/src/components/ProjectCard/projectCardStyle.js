@@ -1,68 +1,77 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('div')`
+export const CardContainer = styled('button')`
   width: 12em;
+  padding: 0;
   margin: 3px;
+  background: none;
+  border: 0;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: pointer;
 
-  ${p => !p.$disabled && `
-    cursor: pointer;
-    &:hover > div:first-of-type {
-      border: 3px solid var(--primary);
+  &:hover, &:focus {
+    outline: none;
+
+    &:not(:disabled) > div:first-of-type {
+      box-shadow: 0 0 0 3px var(--primary);
     }
-  `}
-`
-
-export const TypeBadge = styled('div')`
-  position: absolute;
-  top: 0;
-  right: 0;
-  background: var(--toolbar);
-  margin-right: .5em;
-  margin-top: .5em;
-  padding: .3em;
-  padding-inline: .5em;
-  border-radius: .4em;
-  letter-spacing: .2ch;
-  font-size: .9rem;
-  color: var(--white);
-`
-
-export const CardDetail = styled('div')`
-  display: flex;
-  flex-direction: column;
-  margin-block-start: 1em;
-  gap: .2em;
-
-  span {
-    opacity: .5;
+  }
+  &:disabled {
+    cursor: default;
   }
 `
 
 export const CardImage = styled('div')`
   aspect-ratio: 1;
-  border-radius: .5rem;
+  border-radius: .6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  border: 3px solid transparent;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
   svg {
-    width: 7rem;
-    height: 7rem;
-    filter: drop-shadow(0px 3px 0px #BBB);
+    width: 60%;
+    height: 60%;
+    aspect-ratio: inherit;
+    display: block;
+  }
+  img {
+    height: 100%;
+    width: 100%;
+    display: block;
+    object-fit: contain;
   }
 
-  /* TODO: use image in place of temp background */
-  --dot-fraction: 12.5%;
-  background: radial-gradient(
-    #DDDDDD,
-    #DDDDDD var(--dot-fraction),
-    var(--white) var(--dot-fraction));
-  background-size: 30px 30px;
-  background-position: 5px 5px;
+  background: var(--grid-pattern);
+  background-size: 1.875em 1.875em;
+  background-position: .4735em .4735em;
+`
+
+export const TypeBadge = styled('div')`
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: var(--toolbar);
+  padding: .4em .6em;
+  border-radius: .3em;
+  letter-spacing: .1em;
+  font-size: .8rem;
+  font-weight: 600;
+`
+
+export const CardDetail = styled('div')`
+  margin-block-start: 1em;
+
+  span {
+    display: block;
+    opacity: .5;
+    margin-block-start: .2rem;
+    font-size: .9em;
+  }
 `

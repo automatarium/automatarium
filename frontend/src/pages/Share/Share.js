@@ -32,7 +32,7 @@ const Share = () => {
     <Container>
       {loading ? <Spinner /> : <>
         <ProjectCard
-          $disabled
+          disabled
           key={sharedProject._id}
           name={sharedProject.meta?.name}
           type={sharedProject.config?.type}

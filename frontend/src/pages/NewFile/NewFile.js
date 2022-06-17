@@ -90,7 +90,8 @@ const NewFile = () => {
       </ButtonGroup>
     </HeaderRow>
 
-    <CardList title="New Project"
+    <CardList
+      title="New Project"
       button={<Button onClick={importProject}>Import...</Button>}
     >
       <NewProjectCard
@@ -109,6 +110,7 @@ const NewFile = () => {
 
     <CardList
       title="Your Projects"
+      style={{ gap: '1.5em .4em' }}
     >
       {projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map(p =>
         <ProjectCard

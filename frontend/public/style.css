@@ -89,6 +89,14 @@ body.dark, body.dark #automatarium-graph {
   --comment-text: var(--comment-text-dark);
 }
 
+:root, body, #automatarium-graph {
+  --dot-fraction: 12.5%;
+  --grid-pattern: radial-gradient(
+    var(--grid-dot),
+    var(--grid-dot) var(--dot-fraction),
+    var(--grid-bg) var(--dot-fraction));
+}
+
 body {
   color-scheme: light dark;
   margin: 0;
