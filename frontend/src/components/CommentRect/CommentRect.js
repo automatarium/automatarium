@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore, useViewStore } from '/src/stores'
 
-import { commentStyles, commentSelectedStyles } from './commentRectStyle'
+import { commentStyles, commentSelectedClass } from './commentRectStyle'
 
 const CommentRect = ({ id, x, y, text }) => {
   const containerRef = useRef()
@@ -39,7 +39,8 @@ const CommentRect = ({ id, x, y, text }) => {
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      style={selected ? commentSelectedStyles : commentStyles}
+      style={commentStyles}
+      className={selected && commentSelectedClass}
     >{text}</div>
   </foreignObject>
 }
