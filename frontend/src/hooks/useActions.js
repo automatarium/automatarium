@@ -63,9 +63,9 @@ const useActions = (registerHotkeys=false) => {
       hotkey: { key: 's', meta: true },
       handler: () => {
         const project = useProjectStore.getState().project
-        const toSave = {...project, meta: { ...project.meta, dateEdited: new Date() }}
+        const toSave = {...project, meta: { ...project.meta, dateEdited: new Date().getTime() }}
         upsertProject(toSave)
-        setLastSaveDate(new Date())
+        setLastSaveDate(new Date().getTime())
       },
     },
     SAVE_FILE_AS: {

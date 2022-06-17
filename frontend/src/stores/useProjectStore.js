@@ -29,8 +29,8 @@ export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
   initialState: null,
   meta: {
     name: randomProjectName(),
-    dateCreated: new Date(),
-    dateEdited: new Date(),
+    dateCreated: new Date().getTime(),
+    dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,
     automatariumVersion: APP_VERSION,
   },
@@ -68,7 +68,7 @@ const useProjectStore = create(persist((set, get) => ({
     state.historyPointer = state.history.length - 1
 
     // Update edited date
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   undo: () => set(produce(state => {
@@ -83,7 +83,7 @@ const useProjectStore = create(persist((set, get) => ({
     state.project = state.history[state.historyPointer]
 
     // Update edited date
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   redo: () => set(produce(state => {
@@ -98,7 +98,7 @@ const useProjectStore = create(persist((set, get) => ({
     state.project = state.history[state.historyPointer]
 
     // Update edited date
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   /* Change the date the project was last saved */
@@ -107,7 +107,7 @@ const useProjectStore = create(persist((set, get) => ({
   /* Change the projects name */
   setName: name => set(s => ({
     project: {...s.project, meta: {...s.project.meta, name }},
-    lastChangeDate: new Date(),
+    lastChangeDate: new Date().getTime(),
   })),
 
   /* Create a new transition */
@@ -155,19 +155,19 @@ const useProjectStore = create(persist((set, get) => ({
   /* Update tests */
   setSingleTest: value => set(produce((state) => {
     state.project.tests.single = value
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
   addBatchTest: (value = '') => set(produce((state) => {
     state.project.tests.batch.push(value)
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
   updateBatchTest: (index, value) => set(produce((state) => {
     state.project.tests.batch[index] = value
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
   removeBatchTest: index => set(produce((state) => {
     state.project.tests.batch.splice(index, 1)
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   /* Set given state to be the initial state */
