@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
+
 import { useEvent } from '/src/hooks'
-import { useSelectionStore, useProjectStore, useExportStore } from '/src/stores'
+import { useSelectionStore, useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -103,8 +105,9 @@ export const getSvgString = ({
 
 const useImageExport = () => {
   const selectNone = useSelectionStore(s => s.selectNone)
-  const projectName = useProjectStore(s => s.project.meta.name)
+  const project = useProjectStore(s => s.project)
   const setExportVisible = useExportStore(s => s.setExportVisible)
+  const setThumbnail = useThumbnailStore(s => s.setThumbnail)
 
   useEvent('exportImage', e => {
     selectNone() // Deselect all
@@ -120,7 +123,7 @@ const useImageExport = () => {
       // Quick export SVG
       if (e.detail?.type === 'svg') {
         return downloadURL({
-          filename: projectName,
+          filename: project.meta.name,
           extension: 'svg',
           data: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
         })
@@ -136,13 +139,19 @@ const useImageExport = () => {
         }
 
         return downloadURL({
-          filename: projectName,
+          filename: project.meta.name,
           extension: 'png',
           data: canvas.toDataURL()
         })
       }
     }, 100)
-  }, [projectName])
+  }, [project.meta.name])
+
+  // Generate thumbnail
+  useEffect(() => {
+    const { svg } = getSvgString()
+    setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg))
+  }, [project])
 }
 
 export default useImageExport

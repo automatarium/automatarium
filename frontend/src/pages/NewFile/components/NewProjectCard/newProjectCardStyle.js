@@ -42,7 +42,6 @@ export const CardContent = styled('div')`
 
 export const CardImage = styled('div')`
   height: 100%;
-  /* TODO: use image in place of temp background */
   background: var(--grid-pattern);
   background-size: 30px 30px;
   background-position: 7px 7px;
