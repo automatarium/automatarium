@@ -30,6 +30,7 @@ export const CardImage = styled('div')`
   align-items: center;
   justify-content: center;
   position: relative;
+  background: var(--grid-bg-light);
 
   display: flex;
   align-items: center;
@@ -48,9 +49,11 @@ export const CardImage = styled('div')`
     object-fit: contain;
   }
 
-  background: var(--grid-pattern);
-  background-size: 1.875em 1.875em;
-  background-position: .4735em .4735em;
+  ${props => !props.$image && `
+    background: var(--grid-pattern);
+    background-size: 1.875em 1.875em;
+    background-position: .4735em .4735em;
+  `}
 `
 
 export const TypeBadge = styled('div')`

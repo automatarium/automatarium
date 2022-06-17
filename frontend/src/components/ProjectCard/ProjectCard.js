@@ -8,7 +8,7 @@ import { CardContainer, CardImage, TypeBadge, CardDetail } from './projectCardSt
 
 const ProjectCard = ({ name, type, date, image, ...props }) => (
   <CardContainer {...props}>
-    <CardImage>
+    <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
       <TypeBadge>{type}</TypeBadge>
     </CardImage>
