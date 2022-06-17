@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
@@ -18,9 +18,17 @@ const NewFile = () => {
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
   const thumbnails = useThumbnailStore(s => s.thumbnails)
+  const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const { user, userLoading } = useAuth()
+
+  // Remove old thumbnails
+  useEffect(() => {
+    if (projects.length) {
+      Object.keys(thumbnails).forEach(id => !projects.some(p => p._id === id) && removeThumbnail(id))
+    }
+  }, [projects, thumbnails])
 
   const handleNewFile = projectType => {
     setProject(createNewProject(projectType))

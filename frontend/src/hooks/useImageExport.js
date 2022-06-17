@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 import { useEvent } from '/src/hooks'
-import { useSelectionStore, useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
+import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -106,47 +106,41 @@ export const getSvgString = ({
 }
 
 const useImageExport = () => {
-  const selectNone = useSelectionStore(s => s.selectNone)
   const project = useProjectStore(s => s.project)
   const setExportVisible = useExportStore(s => s.setExportVisible)
   const setThumbnail = useThumbnailStore(s => s.setThumbnail)
 
-  useEvent('exportImage', e => {
-    selectNone() // Deselect all
-
+  useEvent('exportImage', async e => {
     // Detailed export
     if (!e.detail?.type) return setExportVisible(true)
 
-    // After deselection
-    window.setTimeout(async () => {
-      // Get the svg string
-      const { svg, height, width } = getSvgString()
+    // Get the svg string
+    const { svg, height, width } = getSvgString()
 
-      // Quick export SVG
-      if (e.detail?.type === 'svg') {
-        return downloadURL({
-          filename: project.meta.name,
-          extension: 'svg',
-          data: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
-        })
+    // Quick export SVG
+    if (e.detail?.type === 'svg') {
+      return downloadURL({
+        filename: project.meta.name,
+        extension: 'svg',
+        data: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
+      })
+    }
+
+    // Quick export PNG
+    if (e.detail?.type === 'png') {
+      const canvas = await svgToCanvas({ height, width, svg })
+
+      // Export to clipboard
+      if (e.detail.clipboard) {
+        return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({'image/png': blob})]))
       }
 
-      // Quick export PNG
-      if (e.detail?.type === 'png') {
-        const canvas = await svgToCanvas({ height, width, svg })
-
-        // Export to clipboard
-        if (e.detail.clipboard) {
-          return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({'image/png': blob})]))
-        }
-
-        return downloadURL({
-          filename: project.meta.name,
-          extension: 'png',
-          data: canvas.toDataURL()
-        })
-      }
-    }, 100)
+      return downloadURL({
+        filename: project.meta.name,
+        extension: 'png',
+        data: canvas.toDataURL()
+      })
+    }
   }, [project.meta.name])
 
   // Generate thumbnail

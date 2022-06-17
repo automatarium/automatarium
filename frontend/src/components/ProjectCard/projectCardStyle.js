@@ -66,6 +66,7 @@ export const TypeBadge = styled('div')`
   letter-spacing: .1em;
   font-size: .8rem;
   font-weight: 600;
+  opacity: .9;
 `
 
 export const CardDetail = styled('div')`

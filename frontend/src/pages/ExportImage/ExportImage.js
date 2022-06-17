@@ -24,10 +24,11 @@ const ExportImage = () => {
 
   // Set svg
   useEffect(() => {
+    if (!exportVisible) return
     const { height, width, svg } = getSvgString({ padding, background, color, darkMode })
     setSvg(svg)
     setSize({ height, width })
-  }, [padding, color, darkMode, background])
+  }, [padding, color, darkMode, background, exportVisible])
 
   useEffect(() => {
     if (type === 'svg') {
