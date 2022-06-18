@@ -10,6 +10,8 @@ import useViewStore from '/src/stores/useViewStore'
 import { ToolPopup, ToolName, ToolHotkey, Animation } from './toolbarStyle'
 
 import cursorAnimation from './animations/cursor.json'
+import handAnimation from './animations/hand.json'
+import transitionAnimation from './animations/transition.json'
 
 const tools = [
   {
@@ -26,6 +28,7 @@ const tools = [
     description: 'Drag to pan around your automaton',
     value: 'hand',
     icon: <Hand />,
+    animation: handAnimation,
   },
   {
     label: 'State tool',
@@ -40,6 +43,7 @@ const tools = [
     description: 'Drag between states to create transitions',
     value: 'transition',
     icon: <ArrowUpRight />,
+    animation: transitionAnimation,
   },
   {
     label: 'Comment tool',
