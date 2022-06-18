@@ -6,7 +6,7 @@ import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 
-import { pathStyles, pathSelectedStyles } from './transitionSetStyle'
+import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read}, i) => (
@@ -73,7 +73,8 @@ const Transition = ({
       d={pathData}
       key={pathID}
       markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
-      style={(selected || (isReflexive && setSelected)) ? pathSelectedStyles : pathStyles}
+      style={pathStyles}
+      className={(selected || (isReflexive && setSelected)) && pathSelectedClass}
     />}
 
     {/* Invisible path used to place text */}

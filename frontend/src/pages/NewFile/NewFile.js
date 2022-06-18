@@ -1,10 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
 
 import { Main, Button, Header, ProjectCard } from '/src/components'
-import { useProjectsStore, useProjectStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useThumbnailStore } from '/src/stores'
 import { useAuth } from '/src/hooks'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 import LoginPage from '/src/pages/Login/Login'
@@ -17,9 +17,18 @@ const NewFile = () => {
   const navigate = useNavigate()
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
+  const thumbnails = useThumbnailStore(s => s.thumbnails)
+  const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const { user, userLoading } = useAuth()
+
+  // Remove old thumbnails
+  useEffect(() => {
+    if (projects.length) {
+      Object.keys(thumbnails).forEach(id => !projects.some(p => p._id === id) && removeThumbnail(id))
+    }
+  }, [projects, thumbnails])
 
   const handleNewFile = projectType => {
     setProject(createNewProject(projectType))
@@ -90,7 +99,8 @@ const NewFile = () => {
       </ButtonGroup>
     </HeaderRow>
 
-    <CardList title="New Project"
+    <CardList
+      title="New Project"
       button={<Button onClick={importProject}>Import...</Button>}
     >
       <NewProjectCard
@@ -109,6 +119,7 @@ const NewFile = () => {
 
     <CardList
       title="Your Projects"
+      style={{ gap: '1.5em .4em' }}
     >
       {projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map(p =>
         <ProjectCard
@@ -116,6 +127,7 @@ const NewFile = () => {
           name={p?.meta?.name ?? '<Untitled>'}
           type={p?.config?.type ?? '???'}
           date={dayjs(p?.meta?.dateEdited)}
+          image={thumbnails[p._id]}
           onClick={() => handleLoadProject(p)}
         />
       )}

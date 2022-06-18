@@ -1,3 +1,5 @@
+import { css } from 'goober'
+
 export const commentStyles = {
   color: 'var(--comment-text)',
   background: 'var(--grid-bg)',
@@ -12,7 +14,6 @@ export const commentStyles = {
   boxSizing: 'border-box',
 }
 
-export const commentSelectedStyles = {
-  ...commentStyles,
-  borderColor: 'var(--primary)',
-}
+export const commentSelectedClass = css`
+  border-color: var(--primary) !important;
+`

@@ -42,14 +42,9 @@ export const CardContent = styled('div')`
 
 export const CardImage = styled('div')`
   height: 100%;
-  /* TODO: use image in place of temp background */
-  --dot-fraction: 12.5%;
-  background: radial-gradient(
-    #DDDDDD,
-    #DDDDDD var(--dot-fraction),
-    var(--white) var(--dot-fraction));
+  background: var(--grid-pattern);
   background-size: 30px 30px;
-  background-position: 5px 5px;
+  background-position: 7px 7px;
 
   ${p => p.$disabled && `
     position: relative;

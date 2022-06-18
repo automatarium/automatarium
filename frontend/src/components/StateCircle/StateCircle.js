@@ -4,7 +4,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { useProjectStore } from '/src/stores'
 import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
-import { circleStyles, circleSelectedStyles, textStyles } from './stateCircleStyle'
+import { circleStyles, circleSelectedClass, textStyles } from './stateCircleStyle'
 
 const FINAL_OUTLINE_OFFSET = 5
 
@@ -35,10 +35,10 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
 
   return <g transform={`translate(${cx}, ${cy})`} onMouseDown={handleStateMouseDown} onMouseUp={handleStateMouseUp} {...props}>
     {/* Filled Circle */}
-    <circle r={STATE_CIRCLE_RADIUS} style={selected ? circleSelectedStyles : circleStyles} />
+    <circle r={STATE_CIRCLE_RADIUS} style={circleStyles} className={selected && circleSelectedClass} />
 
     {/* Extra outline for final states */}
-    {isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={selected ? circleSelectedStyles : circleStyles} />}
+    {isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={circleStyles} className={selected && circleSelectedClass} />}
 
     {/* Name */}
     <text textAnchor="middle" alignmentBaseline="central" style={textStyles}>
@@ -52,7 +52,8 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
         y={labelBox?.y}
         width={labelBox?.width}
         height={labelBox?.height}
-        style={selected ? circleSelectedStyles : circleStyles}
+        style={circleStyles}
+        className={selected && circleSelectedClass}
         ry="5" rx="5"
       />
       <text ref={labelRef} textAnchor="middle" alignmentBaseline="central" style={textStyles}>{label}</text>

@@ -56,7 +56,7 @@ const Landing = () => (
       </Section>
 
       <Section $reverse>
-        <ProjectCard name="My Project" type="FSA" $disabled />
+        <ProjectCard name="My Project" type="FSA" date="2 days ago" disabled />
         <div className="text">
           <h3>Share with colleagues</h3>
           <p>Easily share your projects with your peers via a link that lets anyone make a copy of your project and continue working.</p>

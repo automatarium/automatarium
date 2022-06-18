@@ -1,5 +1,7 @@
+import { useEffect } from 'react'
+
 import { useEvent } from '/src/hooks'
-import { useSelectionStore, useProjectStore, useExportStore } from '/src/stores'
+import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
@@ -89,6 +91,7 @@ export const getSvgString = ({
     .replaceAll('var(--grid-bg)', styles.getPropertyValue(`--grid-bg-${theme}`))
     .replaceAll('var(--stroke)', styles.getPropertyValue(`--stroke-${theme}`))
     .replaceAll('var(--state-bg)', styles.getPropertyValue(`--state-bg-${theme}`))
+    .replaceAll('var(--state-bg-selected)', styles.getPropertyValue(`--state-bg-${theme}`))
     .replaceAll('var(--comment-text)', styles.getPropertyValue(`--comment-text-${theme}`))
 
   // If changing colour, reset the actual svg back to what it was previously
@@ -102,47 +105,48 @@ export const getSvgString = ({
 }
 
 const useImageExport = () => {
-  const selectNone = useSelectionStore(s => s.selectNone)
-  const projectName = useProjectStore(s => s.project.meta.name)
+  const project = useProjectStore(s => s.project)
   const setExportVisible = useExportStore(s => s.setExportVisible)
+  const setThumbnail = useThumbnailStore(s => s.setThumbnail)
 
-  useEvent('exportImage', e => {
-    selectNone() // Deselect all
-
+  useEvent('exportImage', async e => {
     // Detailed export
     if (!e.detail?.type) return setExportVisible(true)
 
-    // After deselection
-    window.setTimeout(async () => {
-      // Get the svg string
-      const { svg, height, width } = getSvgString()
+    // Get the svg string
+    const { svg, height, width } = getSvgString()
 
-      // Quick export SVG
-      if (e.detail?.type === 'svg') {
-        return downloadURL({
-          filename: projectName,
-          extension: 'svg',
-          data: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
-        })
+    // Quick export SVG
+    if (e.detail?.type === 'svg') {
+      return downloadURL({
+        filename: project.meta.name,
+        extension: 'svg',
+        data: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
+      })
+    }
+
+    // Quick export PNG
+    if (e.detail?.type === 'png') {
+      const canvas = await svgToCanvas({ height, width, svg })
+
+      // Export to clipboard
+      if (e.detail.clipboard) {
+        return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({'image/png': blob})]))
       }
 
-      // Quick export PNG
-      if (e.detail?.type === 'png') {
-        const canvas = await svgToCanvas({ height, width, svg })
+      return downloadURL({
+        filename: project.meta.name,
+        extension: 'png',
+        data: canvas.toDataURL()
+      })
+    }
+  }, [project.meta.name])
 
-        // Export to clipboard
-        if (e.detail.clipboard) {
-          return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({'image/png': blob})]))
-        }
-
-        return downloadURL({
-          filename: projectName,
-          extension: 'png',
-          data: canvas.toDataURL()
-        })
-      }
-    }, 100)
-  }, [projectName])
+  // Generate thumbnail
+  useEffect(() => window.setTimeout(() => {
+    const { svg } = getSvgString()
+    setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg))
+  }, 200), [project])
 }
 
 export default useImageExport

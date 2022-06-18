@@ -15,9 +15,9 @@ const useAutosaveProject = () => {
     const timer = setInterval(() => {
       const currentProject = useProjectStore.getState().project
       if (!lastSaveDate || dayjs(lastChangeDate).isAfter(lastSaveDate)) {
-        const toSave = {...currentProject, meta: { ...currentProject.meta, dateEdited: new Date() }}
-        upsertProject(toSave) 
-        setLastSaveDate(new Date())
+        const toSave = {...currentProject, meta: { ...currentProject.meta, dateEdited: new Date().getTime() }}
+        upsertProject(toSave)
+        setLastSaveDate(new Date().getTime())
       }
     }, SAVE_INTERVAL)
     return () => clearInterval(timer)
