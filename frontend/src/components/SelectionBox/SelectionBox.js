@@ -90,6 +90,8 @@ const SelectionBox = () => {
     fill='var(--selection-fill)'
     stroke='var(--stroke)'
     strokeWidth='1.75'
+    rx={3}
+    ry={3}
   />
 }
 

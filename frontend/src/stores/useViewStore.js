@@ -15,7 +15,7 @@ const canvasToScreenSpace = (x, y, container) => {
 
 
 const useViewStore = create((set, get) => ({
-  svgElement: null, 
+  svgElement: null,
   position: { x: 0, y: 0 },
   size: { width: 0, height: 0},
   scale: 1,
@@ -27,6 +27,7 @@ const useViewStore = create((set, get) => ({
   setViewSize: size => set({ size }),
   setViewScale: scale => set({ scale }),
   setSvgElement: svgElement => set({ svgElement }),
+  setViewPositionAndScale: (position, scale) => set({ position, scale }),
 
   /* Apply the view transform to a point */
   applyView: (x, y) =>
