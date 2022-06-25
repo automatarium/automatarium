@@ -284,21 +284,15 @@ const useActions = (registerHotkeys=false) => {
     SET_STATE_NAME: {
       handler: () => {
         const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
-        const selectedState = useProjectStore.getState().project?.states.find(s => s.id === selectedStateID)
-        if (selectedStateID === undefined || selectedState === undefined) return
-        const name = window.prompt('Rename state', selectedState.name)
-        updateState({ ...selectedState, name: name || undefined })
-        commit()
+        if (selectedStateID === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editStateName', { id: selectedStateID }), 100)
       },
     },
     SET_STATE_LABEL: {
       handler: () => {
         const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
-        const selectedState = useProjectStore.getState().project?.states.find(s => s.id === selectedStateID)
-        if (selectedStateID === undefined || selectedState === undefined) return
-        const label = window.prompt('State label', selectedState.label)
-        updateState({ ...selectedState, label: label || undefined })
-        commit()
+        if (selectedStateID === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editStateLabel', { id: selectedStateID }), 100)
       },
     },
     CREATE_STATE: {

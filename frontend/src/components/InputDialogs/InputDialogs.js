@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'
@@ -19,6 +19,10 @@ const InputDialogs = () => {
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
   const viewToScreenSpace = useViewStore(s => s.viewToScreenSpace)
+  const statePrefix = useProjectStore(s => s.project.config.statePrefix)
+
+  const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
+  const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
@@ -38,7 +42,7 @@ const InputDialogs = () => {
       previousValue: transition?.read,
       type: 'transition',
     })
-    setTimeout(() => inputRef.current?.focus(), 100)
+    focusInput()
   }, [inputRef.current])
 
   const saveTransition = () => {
@@ -47,7 +51,7 @@ const InputDialogs = () => {
     const chars = value.replace(/\[(.*?)\]/g, '')
     editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
     commit()
-    setDialog({ ...dialog, visible: false })
+    hideDialog()
   }
 
   useEvent('editComment', ({ detail: { id, x, y } }) => {
@@ -58,10 +62,9 @@ const InputDialogs = () => {
       visible: true,
       selectedComment,
       x, y,
-      previousValue: selectedComment?.text,
       type: 'comment',
     })
-    setTimeout(() => inputRef.current?.focus(), 100)
+    focusInput()
   }, [inputRef.current])
 
   const saveComment = () => {
@@ -73,21 +76,61 @@ const InputDialogs = () => {
       }
       commit()
     }
-    setDialog({ ...dialog, visible: false })
+    hideDialog()
+  }
+
+  useEvent('editStateName', ({ detail: { id } }) => {
+    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
+    setValue(selectedState.name ?? '')
+
+    setDialog({
+      visible: true,
+      selectedState,
+      x: selectedState.x, y: selectedState.y,
+      type: 'stateName',
+    })
+    focusInput()
+  }, [inputRef.current])
+
+  const saveStateName = () => {
+    useProjectStore.getState().updateState({ ...dialog.selectedState, name: (!value || /^\s*$/.test(value)) ? undefined : value })
+    commit()
+    hideDialog()
+  }
+
+  useEvent('editStateLabel', ({ detail: { id } }) => {
+    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
+    setValue(selectedState.label ?? '')
+
+    setDialog({
+      visible: true,
+      selectedState,
+      x: selectedState.x, y: selectedState.y,
+      type: 'stateLabel',
+    })
+    focusInput()
+  }, [inputRef.current])
+
+  const saveStateLabel = () => {
+    useProjectStore.getState().updateState({ ...dialog.selectedState, label: (!value || /^\s*$/.test(value)) ? undefined : value })
+    commit()
+    hideDialog()
   }
 
   const save = {
     transition: saveTransition,
     comment: saveComment,
+    stateName: saveStateName,
+    stateLabel: saveStateLabel,
   }[dialog.type]
 
   return (
     <Dropdown
       visible={dialog.visible}
       onClose={() => {
-        setDialog({ ...dialog, visible: false })
+        hideDialog()
         // Delete transitions if not new
-        if (dialog.previousValue === undefined && dialog.type === 'transition') {
+        if (dialog.type === 'transition' && dialog.previousValue === undefined) {
           removeTransitions([dialog.id])
         }
       }}
@@ -106,12 +149,11 @@ const InputDialogs = () => {
           placeholder={{
             transition: 'λ',
             comment: 'Comment text...',
+            stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+            stateLabel: 'State label...',
           }[dialog.type]}
           style={{
-            width: `calc(${{
-                transition: '10ch',
-                comment: '20ch',
-              }[dialog.type]} + 2.5em)`,
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
             margin: '0 .4em',
             paddingRight: '2.5em',
           }}
