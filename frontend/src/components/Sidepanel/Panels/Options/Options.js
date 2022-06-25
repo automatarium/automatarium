@@ -4,8 +4,8 @@ import { SectionLabel, Preference, Input } from '/src/components'
 import { Wrapper } from './optionsStyle'
 
 const Options = () => {
-  const statePrefix = useProjectStore(s => s.project?.config?.statePrefix) ?? 'q'
-  const projectColor = useProjectStore(s => s.project?.config?.color) ?? 'orange'
+  const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
+  const projectColor = useProjectStore(s => s.project?.config?.color)
   const updateConfig = useProjectStore(s => s.updateConfig)
 
   return <>
@@ -18,7 +18,7 @@ const Options = () => {
         <Input
           small
           style={{ width: '8ch' }}
-          value={statePrefix}
+          value={statePrefix ?? 'q'}
           onChange={e => updateConfig({ statePrefix: e.target.value })}
         />
       </Preference>
@@ -33,7 +33,7 @@ const Options = () => {
         <Input
           type="select"
           small
-          value={projectColor === '' ? 'orange' : projectColor}
+          value={(projectColor === '' || !projectColor) ? 'orange' : projectColor}
           onChange={e => updateConfig({ color: e.target.value })}
         >
           <option value="red">Red</option>

@@ -30,7 +30,7 @@ const TestingLab = () => {
   }
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
 
-  const traceInput = useProjectStore(s => s.project.tests.single) ?? ''
+  const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const multiTraceInput = useProjectStore(s => s.project.tests.batch)
   const addMultiTraceInput = useProjectStore(s => s.addBatchTest)
@@ -133,7 +133,7 @@ const TestingLab = () => {
             setTraceIdx(0)
             setSimulationResult()
           }}
-          value={traceInput}
+          value={traceInput ?? ''}
           placeholder="Enter a value to test"
         />
 
