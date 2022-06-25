@@ -12,8 +12,8 @@ export type Tests = {
 
 export type Meta = {
   name: string
-  dateCreated: string
-  dateEdited: string
+  dateCreated: number
+  dateEdited: number
   version: string
   automatariumVersion: string
 }
