@@ -1,8 +1,9 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { SectionLabel, Input, Button, Preference, Modal, Switch } from '/src/components'
 import { usePreferencesStore } from '/src/stores'
+import { useEvent } from '/src/hooks'
 
 import { Section } from './preferencesStyle'
 
@@ -12,7 +13,9 @@ const defaultValues = {
   showGrid: true,
 }
 
-const Preferences = ({ isOpen, onClose }) => {
+const Preferences = () => {
+  const [isOpen, setIsOpen] = useState(false)
+
   const preferences = usePreferencesStore(state => state.preferences)
   const setPreferences = usePreferencesStore(state => state.setPreferences)
 
@@ -20,22 +23,24 @@ const Preferences = ({ isOpen, onClose }) => {
 
   const onSubmit = values => {
     setPreferences(values)
-    onClose()
+    setIsOpen(false)
   }
 
   useEffect(() => {
     reset(preferences)
   }, [preferences, isOpen])
 
+  useEvent('modal:preferences', () => setIsOpen(true), [])
+
   return (
     <Modal
       title="Preferences"
       description="Your Automatarium preferences are saved to your browser"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => setIsOpen(false)}
       role="alertdialog" // Prevents closing by clicking away
       actions={<>
-        <Button secondary onClick={onClose}>Close without saving</Button>
+        <Button secondary onClick={() => setIsOpen(false)}>Close without saving</Button>
         <Button type="submit" form="preferences_form">Save changes</Button>
       </>}
       style={{ paddingInline: 0 }}
