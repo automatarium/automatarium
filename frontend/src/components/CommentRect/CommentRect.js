@@ -7,7 +7,7 @@ import { commentStyles, commentSelectedClass } from './commentRectStyle'
 
 const CommentRect = ({ id, x, y, text }) => {
   const containerRef = useRef()
-  const [size, setSize] = useState({ height: 150, width: 255 })
+  const [size, setSize] = useState({ height: 30, width: 30 })
   const selectedComments = useSelectionStore(s => s.selectedComments)
   const selected = selectedComments.includes(id)
   const scale = useViewStore(s => s.scale)

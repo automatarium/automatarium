@@ -43,8 +43,9 @@ export const CardContent = styled('div')`
 export const CardImage = styled('div')`
   height: 100%;
   background: var(--grid-pattern);
-  background-size: 30px 30px;
-  background-position: 7px 7px;
+  background-size: 1.875em 1.875em;
+  background-position: .4375em .4375em;
+  position: relative;
 
   ${p => p.$disabled && `
     position: relative;
@@ -61,4 +62,13 @@ export const CardImage = styled('div')`
       font-family: var(--font-feature);
     }
   `}
+
+  img, svg {
+    display: block;
+    object-fit: contain;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
 `

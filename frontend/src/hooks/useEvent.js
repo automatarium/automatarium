@@ -7,7 +7,7 @@ const useEvent = (name, handler, dependencies, {
   const callback = useCallback(handler, dependencies)
   useEffect(() => {
     target.addEventListener(name, callback, options)
-    return () => target.removeEventListener(name, callback)
+    return () => target.removeEventListener(name, callback, options)
   }, [callback])
 }
 

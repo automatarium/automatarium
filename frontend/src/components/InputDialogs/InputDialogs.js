@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { CornerDownLeft } from 'lucide-react'
+import { useState, useRef, useCallback } from 'react'
+import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'
 
@@ -14,16 +14,20 @@ const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
   const inputRef = useRef()
 
-  const [editTransitionValue, setEditTransitionValue] = useState('')
+  const [value, setValue] = useState('')
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
   const viewToScreenSpace = useViewStore(s => s.viewToScreenSpace)
+  const statePrefix = useProjectStore(s => s.project.config.statePrefix)
+
+  const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
+  const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
-    setEditTransitionValue(transition?.read ?? '')
+    setValue(transition?.read ?? '')
 
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
@@ -36,26 +40,97 @@ const InputDialogs = () => {
       y: screenMidPoint[1],
       id,
       previousValue: transition?.read,
+      type: 'transition',
     })
-    setTimeout(() => inputRef.current?.focus(), 100)
+    focusInput()
   }, [inputRef.current])
 
   const saveTransition = () => {
     // Remove duplicate characters
-    const ranges = editTransitionValue.match(/\[(.*?)\]/g)
-    const chars = editTransitionValue.replace(/\[(.*?)\]/g, '')
+    const ranges = value.match(/\[(.*?)\]/g)
+    const chars = value.replace(/\[(.*?)\]/g, '')
     editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
     commit()
-    setDialog({ ...dialog, visible: false })
+    hideDialog()
   }
+
+  useEvent('editComment', ({ detail: { id, x, y } }) => {
+    const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === id)
+    setValue(selectedComment?.text ?? '')
+
+    setDialog({
+      visible: true,
+      selectedComment,
+      x, y,
+      type: 'comment',
+    })
+    focusInput()
+  }, [inputRef.current])
+
+  const saveComment = () => {
+    if (value && !/^\s*$/.test(value)) {
+      if (dialog.selectedComment === undefined) {
+        useProjectStore.getState().createComment({ x: dialog.x, y: dialog.y, text: value.trim() })
+      } else {
+        useProjectStore.getState().updateComment({ ...dialog.selectedComment, text: value.trim() })
+      }
+      commit()
+    }
+    hideDialog()
+  }
+
+  useEvent('editStateName', ({ detail: { id } }) => {
+    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
+    setValue(selectedState.name ?? '')
+
+    setDialog({
+      visible: true,
+      selectedState,
+      x: selectedState.x, y: selectedState.y,
+      type: 'stateName',
+    })
+    focusInput()
+  }, [inputRef.current])
+
+  const saveStateName = () => {
+    useProjectStore.getState().updateState({ ...dialog.selectedState, name: (!value || /^\s*$/.test(value)) ? undefined : value })
+    commit()
+    hideDialog()
+  }
+
+  useEvent('editStateLabel', ({ detail: { id } }) => {
+    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
+    setValue(selectedState.label ?? '')
+
+    setDialog({
+      visible: true,
+      selectedState,
+      x: selectedState.x, y: selectedState.y,
+      type: 'stateLabel',
+    })
+    focusInput()
+  }, [inputRef.current])
+
+  const saveStateLabel = () => {
+    useProjectStore.getState().updateState({ ...dialog.selectedState, label: (!value || /^\s*$/.test(value)) ? undefined : value })
+    commit()
+    hideDialog()
+  }
+
+  const save = {
+    transition: saveTransition,
+    comment: saveComment,
+    stateName: saveStateName,
+    stateLabel: saveStateLabel,
+  }[dialog.type]
 
   return (
     <Dropdown
       visible={dialog.visible}
       onClose={() => {
-        setDialog({ ...dialog, visible: false })
+        hideDialog()
         // Delete transitions if not new
-        if (dialog.previousValue === undefined) {
+        if (dialog.type === 'transition' && dialog.previousValue === undefined) {
           removeTransitions([dialog.id])
         }
       }}
@@ -65,15 +140,27 @@ const InputDialogs = () => {
       }}
     >
       <InputWrapper>
+        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
         <Input
           ref={inputRef}
-          value={editTransitionValue}
-          onChange={e => setEditTransitionValue(e.target.value)}
-          onKeyUp={e => e.key === 'Enter' && saveTransition()}
-          placeholder="λ"
-          style={{ width: 'calc(10ch + 2.5em)', margin: '0 .4em', paddingRight: '2.5em' }}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ',
+            comment: 'Comment text...',
+            stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+            stateLabel: 'State label...',
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
         />
-        <SubmitButton onClick={saveTransition}><CornerDownLeft size="18px" /></SubmitButton>
+        <SubmitButton onClick={save}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
       </InputWrapper>
     </Dropdown>
   )

@@ -14,6 +14,7 @@ import SignupPage from '/src/pages/Signup/Signup'
 
 import { NewProjectCard, CardList } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
+import FSA from './images/FSA'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -110,15 +111,19 @@ const NewFile = () => {
       <NewProjectCard
         title="Finite State Automaton"
         description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
-        onClick={() => handleNewFile('FSA')} />
+        onClick={() => handleNewFile('FSA')}
+        image={<FSA />}
+      />
       <NewProjectCard
         disabled
         title="Push Down Automaton"
-        description="Create an automaton with a push-down stack capable of representing context-free grammars." />
+        description="Create an automaton with a push-down stack capable of representing context-free grammars."
+      />
       <NewProjectCard
         disabled
         title="Turing Machine"
-        description="Create a turing machine capable of representing recursively enumerable grammars." />
+        description="Create a turing machine capable of representing recursively enumerable grammars."
+      />
     </CardList>
 
     <CardList
