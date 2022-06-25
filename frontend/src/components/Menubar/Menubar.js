@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
-import { useAuth } from '/src/hooks'
+import { useAuth, useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
 import LoginPage from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
@@ -91,6 +91,12 @@ const Menubar = () => {
     }
     setEditingTitle(false)
   }
+
+  useEvent('beforeunload', e => {
+    if (!isSaving) return
+    e.preventDefault()
+    return e.returnValue = 'Your project isn\'t saved yet, are you sure you want to leave?'
+  }, [isSaving], { options: { capture: true }, target: window })
 
   return (
     <>
