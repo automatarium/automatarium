@@ -97,6 +97,10 @@ body.dark, body.dark #automatarium-graph {
     var(--grid-bg) var(--dot-fraction));
 }
 
+html, body {
+  overscroll-behavior: none;
+}
+
 body {
   color-scheme: light dark;
   margin: 0;
