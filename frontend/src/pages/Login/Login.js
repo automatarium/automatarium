@@ -45,7 +45,7 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
         if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
           setFireError('Incorrect email or password')
         } else {
-          setFireError('An error occurred, check you are connected to the internet and try again')
+          setFireError('An error occurred, please check you are connected to the internet and try again')
         }
         setIsSubmitting(false)
       })
