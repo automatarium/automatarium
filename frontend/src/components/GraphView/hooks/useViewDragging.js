@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { useViewStore, useToolStore } from '/src/stores'
+import { useViewStore, useToolStore, usePreferencesStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
 
 import { SCROLL_MAX, SCROLL_MIN, SCROLL_SPEED } from '/src/config/interactions'
@@ -13,6 +13,8 @@ const useViewDragging = containerRef => {
   const viewScale = useViewStore(s => s.scale)
   const setViewPosition = useViewStore(s => s.setViewPosition)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
+
+  const ctrlZoom = usePreferencesStore(s => s.preferences.ctrlZoom)
 
   // Keep track of drag events
   const [dragStartPosition, setDragStartPosition] = useState(null)
@@ -36,7 +38,7 @@ const useViewDragging = containerRef => {
     e.preventDefault()
 
     // Do zoom
-    if (e.ctrlKey) {
+    if (ctrlZoom ? e.ctrlKey : true) {
       // Determine scroll amount and whether its possible
       const desiredScrollAmount = e.deltaY * SCROLL_SPEED * viewScale
       const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, viewScale + desiredScrollAmount))
@@ -56,7 +58,7 @@ const useViewDragging = containerRef => {
         y: viewPosition.y + e.deltaY * viewScale,
       })
     }
-  }, [viewScale, viewPosition], {
+  }, [viewScale, viewPosition, ctrlZoom], {
     options: { passive: false }
   })
 
