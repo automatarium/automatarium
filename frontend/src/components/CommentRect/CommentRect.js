@@ -40,7 +40,7 @@ const CommentRect = ({ id, x, y, text }) => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
       style={commentStyles}
-      className={selected && commentSelectedClass}
+      className={(selected && commentSelectedClass) || undefined}
     >{text}</div>
   </foreignObject>
 }

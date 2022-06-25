@@ -74,7 +74,7 @@ const Transition = ({
       key={pathID}
       markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
       style={pathStyles}
-      className={(selected || (isReflexive && setSelected)) && pathSelectedClass}
+      className={((selected || (isReflexive && setSelected)) && pathSelectedClass) || undefined}
     />}
 
     {/* Invisible path used to place text */}

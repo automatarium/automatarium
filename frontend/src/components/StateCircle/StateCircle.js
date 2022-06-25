@@ -35,10 +35,10 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
 
   return <g transform={`translate(${cx}, ${cy})`} onMouseDown={handleStateMouseDown} onMouseUp={handleStateMouseUp} {...props}>
     {/* Filled Circle */}
-    <circle r={STATE_CIRCLE_RADIUS} style={circleStyles} className={selected && circleSelectedClass} />
+    <circle r={STATE_CIRCLE_RADIUS} style={circleStyles} className={(selected && circleSelectedClass) || undefined} />
 
     {/* Extra outline for final states */}
-    {isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={circleStyles} className={selected && circleSelectedClass} />}
+    {isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={circleStyles} className={(selected && circleSelectedClass) || undefined} />}
 
     {/* Name */}
     <text textAnchor="middle" alignmentBaseline="central" style={textStyles}>
@@ -53,7 +53,7 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, ...props }) =
         width={labelBox?.width}
         height={labelBox?.height}
         style={circleStyles}
-        className={selected && circleSelectedClass}
+        className={(selected && circleSelectedClass) || undefined}
         ry="5" rx="5"
       />
       <text ref={labelRef} textAnchor="middle" alignmentBaseline="central" style={textStyles}>{label}</text>
