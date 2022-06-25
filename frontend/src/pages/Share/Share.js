@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
-import { v4 as uuid } from 'uuid'
 
 import { getProject } from '/src/services/project'
 import { Spinner, ProjectCard, Button } from '/src/components'
@@ -22,7 +21,7 @@ const Share = () => {
   }, [pid])
 
   const handleCopy = useCallback(() => {
-    setProject({_id: uuid(), userid: null, ...sharedProject})
+    setProject({...sharedProject, _id: crypto.randomUUID(), userid: null})
     navigate('/editor')
   }, [pid, sharedProject])
 

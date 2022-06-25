@@ -1,7 +1,6 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
 import produce, { current } from 'immer'
-import { v4 as uuid } from 'uuid'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
@@ -18,7 +17,7 @@ import {
 
 export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
   // TODO: use project type
-  _id: uuid(),
+  _id: crypto.randomUUID(),
   states: [],
   transitions: [],
   comments: [],
