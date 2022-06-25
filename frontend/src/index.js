@@ -68,8 +68,6 @@ const App = () => {
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
     {!hideFooter && <Footer/>}
-
-    <Pages.Preferences />
   </>
 }
 

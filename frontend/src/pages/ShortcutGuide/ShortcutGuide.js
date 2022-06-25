@@ -1,7 +1,8 @@
-import { useMemo, Fragment } from 'react'
+import { useMemo, Fragment, useState } from 'react'
 
 import { SectionLabel, Modal } from '/src/components'
-import useActions, { formatHotkey } from '/src/hooks/useActions'
+import { useActions, useEvent } from '/src/hooks'
+import { formatHotkey } from '/src/hooks/useActions'
 
 import { Section, Shortcut } from './shortcutGuideStyle'
 
@@ -186,7 +187,10 @@ const shortcuts = [
   },
 ]
 
-const ShortcutGuide = ({ isOpen, onClose }) => {
+const ShortcutGuide = () => {
+  const [isOpen, setIsOpen] = useState(false)
+  useEvent('modal:shortcuts', () => setIsOpen(true), [])
+
   const actions = useActions()
 
   return (
@@ -194,7 +198,7 @@ const ShortcutGuide = ({ isOpen, onClose }) => {
       title="Keyboard Shortcuts"
       description="Become an Automatarium master"
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => setIsOpen(false)}
       style={{ paddingInline: 0 }}
     >
       {useMemo(() => shortcuts.map(category => <Fragment key={category.title}>
