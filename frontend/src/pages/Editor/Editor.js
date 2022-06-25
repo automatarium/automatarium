@@ -5,7 +5,7 @@ import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from 
 import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
-import { ShortcutGuide, ExportImage, Preferences } from '/src/pages'
+import { ShortcutGuide, ExportImage } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
 
