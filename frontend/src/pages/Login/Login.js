@@ -41,15 +41,19 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
         setIsSubmitting(false)
       })
       .then(() => { onComplete?.() })
-      .catch(() => {
-        setFireError('Incorrect email or password')
+      .catch(e => {
+        if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+          setFireError('Incorrect email or password')
+        } else {
+          setFireError('An error occurred, please check you are connected to the internet and try again')
+        }
         setIsSubmitting(false)
       })
   }
 
   return <form onSubmit={handleSubmit(onSubmit)} ref={ref} id='login-form' {...props}>
     {error && (
-      <p>{error}</p>
+      <p style={{ color: 'var(--error)' }}>{error}</p>
     )}
     <Label htmlFor='login-email'>Email</Label>
     <Input id='login-email' type='email' {...register('email')} />

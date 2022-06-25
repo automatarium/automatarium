@@ -92,10 +92,10 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
   return <form onSubmit={handleSubmit(onSubmit)} ref={ref} id='signup-form' {...props}>
     {error && (
-      <p>${error}</p>
+      <p style={{ color: 'var(--error)' }}>{error}</p>
     )}
     <Label htmlFor='email'>Email</Label>
-    <Input type='email' {...register('email')} />
+    <Input type='email' {...register('email')} placeholder="you@example.com" />
     <p>{errors.email?.message}</p>
 
     <Label htmlFor='password'>Password</Label>
