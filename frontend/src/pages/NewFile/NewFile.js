@@ -2,16 +2,18 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
+import { Settings } from 'lucide-react'
 
 import { Main, Button, Header, ProjectCard } from '/src/components'
 import { useProjectsStore, useProjectStore, useThumbnailStore } from '/src/stores'
+import { dispatchCustomEvent } from '/src/util/events'
 import { useAuth } from '/src/hooks'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 import LoginPage from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 
 import { NewProjectCard, CardList } from './components'
-import { ButtonGroup, NoResultSpan, HeaderRow } from './newFileStyle'
+import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
 import FSA from './images/FSA'
 
 const NewFile = () => {
@@ -91,12 +93,14 @@ const NewFile = () => {
   return <Main wide>
     <HeaderRow>
       <Header linkTo="/" />
+      <div style={{ flex: 1 }} />
       <ButtonGroup>
         {!userLoading && !user && <>
           <Button secondary onClick={() => setLoginModalVisible(true)}>Log In</Button>
           <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
         </>}
         {user && <Button secondary onClick={() => navigate('/logout')}>Logout</Button>}
+        <PreferencesButton title="Preferences" type="button" onClick={() => dispatchCustomEvent('modal:preferences')}><Settings /></PreferencesButton>
       </ButtonGroup>
     </HeaderRow>
 
