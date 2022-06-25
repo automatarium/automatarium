@@ -8,7 +8,7 @@ import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 
-const isWindows = navigator.platform.match(/Win/)
+const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   alt && (isWindows ? 'Alt' : '⌥'),

@@ -6,6 +6,7 @@ const usePreferencesStore = create(persist(set => ({
     theme: 'system',
     color: 'match',
     showGrid: true,
+    ctrlZoom: !navigator.platform?.match(/Win/),
   },
 
   setPreferences: preferences => set({ preferences }),

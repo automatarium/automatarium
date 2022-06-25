@@ -10,6 +10,7 @@ const defaultValues = {
   theme: 'system',
   color: 'match',
   showGrid: true,
+  ctrlZoom: true,
 }
 
 const Preferences = ({ isOpen, onClose }) => {
@@ -53,6 +54,7 @@ const Preferences = ({ isOpen, onClose }) => {
               <option value="dark">Dark</option>
             </Input>
           </Preference>
+
           <Preference
             label="Colour accent"
             description="Roses are red, Automatarium is blue"
@@ -77,6 +79,13 @@ const Preferences = ({ isOpen, onClose }) => {
             description="This also enables snapping"
           >
             <Switch type="checkbox" {...register('showGrid')} />
+          </Preference>
+
+          <Preference
+            label="Zoom with the control key"
+            description="Allows panning using a trackpad"
+          >
+            <Switch type="checkbox" {...register('ctrlZoom')} />
           </Preference>
         </Section>
       </form>
