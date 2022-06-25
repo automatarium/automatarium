@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { CornerDownLeft } from 'lucide-react'
+import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'
 
@@ -97,6 +97,7 @@ const InputDialogs = () => {
       }}
     >
       <InputWrapper>
+        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
         <Input
           ref={inputRef}
           value={value}

@@ -2,6 +2,8 @@ import { styled } from 'goober'
 
 export const InputWrapper = styled('div')`
   position: relative;
+  display: flex;
+  align-items: center;
 `
 
 export const SubmitButton = styled('button')`
