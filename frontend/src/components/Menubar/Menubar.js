@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useState, useEffect, useRef, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
 import { useAuth } from '/src/hooks'
+import { useProjectStore, useProjectsStore } from '/src/stores'
 import LoginPage from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 import ShareModal from './components/ShareModal/ShareModal'
@@ -20,8 +21,8 @@ import {
   DropdownButtonWrapper,
   NameInput,
 } from './menubarStyle'
+
 import menus from './menus'
-import useProjectStore from '../../stores/useProjectStore'
 
 // Extend dayjs
 dayjs.extend(relativeTime)
@@ -71,6 +72,13 @@ const Menubar = () => {
   const projectName = useProjectStore(s => s.project?.meta?.name)
   const projectId = useProjectStore(s => s.project?._id)
   const setProjectName = useProjectStore(s => s.setName)
+  const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
+  const upsertProject = useProjectsStore(s => s.upsertProject)
+
+  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  // Determine whether saving
+  const isSaving = useMemo(() => user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate)), [user, lastChangeDate, lastSaveDate])
 
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
@@ -88,9 +96,18 @@ const Menubar = () => {
     <>
       <Wrapper>
         <Menu>
-          <Link to='/new'>
+          <a href="/new" onClick={e => {
+            e.preventDefault()
+            if (isSaving) {
+              // If there are unsaved changes, save and then navigate
+              const project = useProjectStore.getState().project
+              upsertProject({...project, meta: { ...project.meta, dateEdited: new Date().getTime() }})
+              setLastSaveDate(new Date().getTime())
+            }
+            navigate('/new')
+          }}>
             <Logo />
-          </Link>
+          </a>
 
           <div>
             <NameRow>
@@ -105,7 +122,7 @@ const Menubar = () => {
               ) : (
                 <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
               )}
-              <SavingIndicator />
+              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
@@ -139,19 +156,6 @@ const Menubar = () => {
       </Wrapper>
     </>
   )
-}
-
-const SavingIndicator = () => {
-  const { user } = useAuth()
-  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
-  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
-
-  // Determine whether saving
-  const isSaving = user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate))
-  
-  return <SaveStatus $show={isSaving}>
-    Saving...
-  </SaveStatus>
 }
 
 export default Menubar
