@@ -6,7 +6,7 @@ const usePreferencesStore = create(persist(set => ({
     theme: 'system',
     color: 'match',
     showGrid: true,
-    ctrlZoom: !navigator.platform?.match(/Win/),
+    ctrlZoom: !navigator.platform?.match(/Win/), // Default to false on windows, which more often has a mouse
   },
 
   setPreferences: preferences => set({ preferences }),
