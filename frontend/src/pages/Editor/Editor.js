@@ -92,7 +92,6 @@ const Editor = () => {
         <Sidepanel />
       </Content>
 
-      <Preferences />
       <ShortcutGuide />
       <ExportImage />
     </>
