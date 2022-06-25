@@ -90,6 +90,7 @@ export const getSvgString = ({
     .replaceAll('var(--input-border)', styles.getPropertyValue('--input-border'))
     .replaceAll('var(--grid-bg)', styles.getPropertyValue(`--grid-bg-${theme}`))
     .replaceAll('var(--stroke)', styles.getPropertyValue(`--stroke-${theme}`))
+    .replaceAll('var(--primary)', styles.getPropertyValue(`--stroke-${theme}`))
     .replaceAll('var(--state-bg)', styles.getPropertyValue(`--state-bg-${theme}`))
     .replaceAll('var(--state-bg-selected)', styles.getPropertyValue(`--state-bg-${theme}`))
     .replaceAll('var(--comment-text)', styles.getPropertyValue(`--comment-text-${theme}`))
