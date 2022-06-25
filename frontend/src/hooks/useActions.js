@@ -32,7 +32,6 @@ const useActions = (registerHotkeys=false) => {
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
-  const createComment = useProjectStore(s => s.createComment)
   const createState = useProjectStore(s => s.createState)
   const updateState = useProjectStore(s => s.updateState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
@@ -257,14 +256,10 @@ const useActions = (registerHotkeys=false) => {
     },
     EDIT_COMMENT: {
       disabled: () => useSelectionStore.getState()?.selectedComments?.length !== 1,
-      handler: () => {
+      handler: e => {
         const selectedCommentID = useSelectionStore.getState().selectedComments?.[0]
-        const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === selectedCommentID)
-        if (selectedCommentID === undefined || selectedComment === undefined) return
-        const text = window.prompt('New text for comment?', selectedComment.text)
-        if (!text || /^\s*$/.test(text)) return
-        useProjectStore.getState().updateComment({ ...selectedComment, text })
-        commit()
+        if (selectedCommentID === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY, id: selectedCommentID }), 100)
       }
     },
     EDIT_TRANSITION: {
@@ -284,13 +279,7 @@ const useActions = (registerHotkeys=false) => {
       }
     },
     CREATE_COMMENT: {
-      handler: e => {
-        const text = window.prompt('Text of comment?')
-        if (!text || /^\s*$/.test(text)) return
-        const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
-        createComment({ x: viewX, y: viewY, text })
-        commit()
-      }
+      handler: e => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100),
     },
     SET_STATE_NAME: {
       handler: () => {
@@ -455,7 +444,7 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
   input.onchange = () => {
     // Read file data
     const reader = new FileReader()
-    reader.onloadend = () => { 
+    reader.onloadend = () => {
       try {
         const fileData = parse(reader.result)
         const project = {

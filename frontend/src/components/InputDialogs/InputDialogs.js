@@ -14,7 +14,7 @@ const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
   const inputRef = useRef()
 
-  const [editTransitionValue, setEditTransitionValue] = useState('')
+  const [value, setValue] = useState('')
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -23,7 +23,7 @@ const InputDialogs = () => {
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
-    setEditTransitionValue(transition?.read ?? '')
+    setValue(transition?.read ?? '')
 
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
@@ -36,18 +36,50 @@ const InputDialogs = () => {
       y: screenMidPoint[1],
       id,
       previousValue: transition?.read,
+      type: 'transition',
     })
     setTimeout(() => inputRef.current?.focus(), 100)
   }, [inputRef.current])
 
   const saveTransition = () => {
     // Remove duplicate characters
-    const ranges = editTransitionValue.match(/\[(.*?)\]/g)
-    const chars = editTransitionValue.replace(/\[(.*?)\]/g, '')
+    const ranges = value.match(/\[(.*?)\]/g)
+    const chars = value.replace(/\[(.*?)\]/g, '')
     editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
     commit()
     setDialog({ ...dialog, visible: false })
   }
+
+  useEvent('editComment', ({ detail: { id, x, y } }) => {
+    const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === id)
+    setValue(selectedComment?.text ?? '')
+
+    setDialog({
+      visible: true,
+      selectedComment,
+      x, y,
+      previousValue: selectedComment?.text,
+      type: 'comment',
+    })
+    setTimeout(() => inputRef.current?.focus(), 100)
+  }, [inputRef.current])
+
+  const saveComment = () => {
+    if (value && !/^\s*$/.test(value)) {
+      if (dialog.selectedComment === undefined) {
+        useProjectStore.getState().createComment({ x: dialog.x, y: dialog.y, text: value.trim() })
+      } else {
+        useProjectStore.getState().updateComment({ ...dialog.selectedComment, text: value.trim() })
+      }
+      commit()
+    }
+    setDialog({ ...dialog, visible: false })
+  }
+
+  const save = {
+    transition: saveTransition,
+    comment: saveComment,
+  }[dialog.type]
 
   return (
     <Dropdown
@@ -55,7 +87,7 @@ const InputDialogs = () => {
       onClose={() => {
         setDialog({ ...dialog, visible: false })
         // Delete transitions if not new
-        if (dialog.previousValue === undefined) {
+        if (dialog.previousValue === undefined && dialog.type === 'transition') {
           removeTransitions([dialog.id])
         }
       }}
@@ -67,13 +99,25 @@ const InputDialogs = () => {
       <InputWrapper>
         <Input
           ref={inputRef}
-          value={editTransitionValue}
-          onChange={e => setEditTransitionValue(e.target.value)}
-          onKeyUp={e => e.key === 'Enter' && saveTransition()}
-          placeholder="λ"
-          style={{ width: 'calc(10ch + 2.5em)', margin: '0 .4em', paddingRight: '2.5em' }}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ',
+            comment: 'Comment text...',
+          }[dialog.type]}
+          style={{
+            width: `calc(${{
+                transition: '10ch',
+                comment: '20ch',
+              }[dialog.type]} + 2.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
         />
-        <SubmitButton onClick={saveTransition}><CornerDownLeft size="18px" /></SubmitButton>
+        <SubmitButton onClick={save}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
       </InputWrapper>
     </Dropdown>
   )
