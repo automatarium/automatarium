@@ -50,7 +50,7 @@ export const CardImage = styled('div')`
   }
 
   ${props => !props.$image && `
-    background: var(--grid-pattern);
+    background: var(--grid-pattern-light);
     background-size: 1.875em 1.875em;
     background-position: .4735em .4735em;
   `}
