@@ -207,8 +207,9 @@ const useProjectStore = create(persist((set, get) => ({
   })),
 
   // Change the config
-  updateConfig: newConfig => set(produce(({ project }) => {
-    project.config = { ...project.config, ...newConfig }
+  updateConfig: newConfig => set(produce((state) => {
+    state.project.config = { ...state.project.config, ...newConfig }
+    state.lastChangeDate = new Date().getTime()
   })),
 
   reset: () => set({ project: createNewProject(), history: [], historyPointer: null, dateEdited: null })
