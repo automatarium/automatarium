@@ -31,6 +31,8 @@
   --disabled-button: #6F6F6F;
   --input-border: #C4C4C4;
 
+  --dot-fraction: 12.5%;
+
   /* Light */
   --grid-bg-light: var(--white);
   --grid-dot-light: #DDDDDD;
@@ -39,6 +41,7 @@
   --state-bg-light: hsl(var(--primary-h) var(--primary-s) 75%);
   --state-bg-selected-light: hsl(var(--primary-h) 70% 65%);
   --comment-text-light: var(--black);
+  --grid-pattern-light: radial-gradient(var(--grid-dot-light), var(--grid-dot-light) var(--dot-fraction), var(--grid-bg-light) var(--dot-fraction));
 
   /* Dark */
   --grid-bg-dark: #1B1B1B;
@@ -48,6 +51,7 @@
   --state-bg-dark: hsl(var(--primary-h) 47% 33%);
   --state-bg-selected-dark: hsl(var(--primary-h) 65% 23%);
   --comment-text-dark: var(--white);
+  --grid-pattern-dark: radial-gradient(var(--grid-dot-dark), var(--grid-dot-dark) var(--dot-fraction), var(--grid-bg-dark) var(--dot-fraction));
 
   --grid-bg: var(--grid-bg-light);
   --grid-dot: var(--grid-dot-light);
@@ -56,6 +60,7 @@
   --state-bg: var(--state-bg-light);
   --state-bg-selected: var(--state-bg-selected-light);
   --comment-text: var(--comment-text-light);
+  --grid-pattern: var(--grid-pattern-light);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -67,6 +72,7 @@
     --state-bg: var(--state-bg-dark);
     --state-bg-selected: var(--state-bg-selected-dark);
     --comment-text: var(--comment-text-dark);
+    --grid-pattern: var(--grid-pattern-dark);
   }
 }
 
@@ -78,6 +84,7 @@ body.light, body.light #automatarium-graph {
   --state-bg: var(--state-bg-light);
   --state-bg-selected: var(--state-bg-selected-light);
   --comment-text: var(--comment-text-light);
+  --grid-pattern: var(--grid-pattern-light);
 }
 body.dark, body.dark #automatarium-graph {
   --grid-bg: var(--grid-bg-dark);
@@ -87,14 +94,7 @@ body.dark, body.dark #automatarium-graph {
   --state-bg: var(--state-bg-dark);
   --state-bg-selected: var(--state-bg-selected-dark);
   --comment-text: var(--comment-text-dark);
-}
-
-:root, body, #automatarium-graph {
-  --dot-fraction: 12.5%;
-  --grid-pattern: radial-gradient(
-    var(--grid-dot),
-    var(--grid-dot) var(--dot-fraction),
-    var(--grid-bg) var(--dot-fraction));
+  --grid-pattern: var(--grid-pattern-dark);
 }
 
 html, body {

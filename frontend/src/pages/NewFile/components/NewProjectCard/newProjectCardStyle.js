@@ -42,7 +42,7 @@ export const CardContent = styled('div')`
 
 export const CardImage = styled('div')`
   height: 100%;
-  background: var(--grid-pattern);
+  background: var(--grid-pattern-light);
   background-size: 1.875em 1.875em;
   background-position: .4375em .4375em;
   position: relative;
