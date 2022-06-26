@@ -33,7 +33,6 @@ const useActions = (registerHotkeys=false) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
   const createState = useProjectStore(s => s.createState)
-  const updateState = useProjectStore(s => s.updateState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
 
