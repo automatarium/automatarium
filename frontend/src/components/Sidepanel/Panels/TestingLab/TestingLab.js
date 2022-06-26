@@ -199,6 +199,7 @@ const TestingLab = () => {
                   setMultiTraceOutput([])
                 }}
                 value={value}
+                placeholder="λ"
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
                 onPaste={e => {
                   const paste = (e.clipboardData || window.clipboardData).getData('text')
@@ -219,6 +220,7 @@ const TestingLab = () => {
                     }
                   }
                   if (e.key === 'Backspace' && value === '' && !e.repeat) {
+                    if (multiTraceInput.length === 1) return
                     e.preventDefault()
                     e.target?.focus()
                     if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
@@ -238,9 +240,13 @@ const TestingLab = () => {
               <RemoveButton
                 onClick={e => {
                   const container = e.target.closest('div')
-                  const next = container?.nextSibling?.tagName === 'DIV' ? container : container?.previousSibling
+                  const next = (container?.nextSibling?.tagName === 'DIV' || multiTraceInput.length === 1) ? container : container?.previousSibling
+                  if (multiTraceInput.length === 1) {
+                    updateMultiTraceInput(index, '')
+                  } else {
+                    removeMultiTraceInput(index)
+                  }
                   next?.querySelector('input')?.focus()
-                  removeMultiTraceInput(index)
                   setMultiTraceOutput([])
                 }}
                 title="Remove"
