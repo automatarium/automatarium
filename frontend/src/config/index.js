@@ -8,19 +8,12 @@ const config = {
     API: 'http://localhost:3001',
     documentTitle: '[Dev] Automatarium',
     firebaseConfig: firebaseConfigDev,
-  }, production: {
-    baseUrl: '',
-    API: '',
-    documentTitle: '',
-    firebaseConfig: {
-      apiKey: '',
-      authDomain: '',
-      databaseURL: '',
-      projectId: '',
-      storageBucket: '',
-      messagingSenderId: '',
-      appId: '',
-    },
+  },
+  production: {
+    baseUrl: 'https://automatarium.garden',
+    API: 'https://api.automatarium.garden',
+    documentTitle: 'Automatarium',
+    firebaseConfig: firebaseConfigDev,
   }
 }
 
