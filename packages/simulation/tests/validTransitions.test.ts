@@ -1,16 +1,7 @@
-import { validTransitions, expandReadSymbols } from '../src'
-import { FSAGraph } from '../src/types'
+import { validTransitions, resolveGraph } from '../src'
+import { FSAGraph } from '../src/types.d'
 
 import dib_dip_lambdaloop from './graphs/dib_dip-lambdaloop.json'
-
-
-const resolveGraph = graph => {
-  // Resolve graph transitions
-  const transitions = graph.transitions.map(transition => ({...transition, read: expandReadSymbols(transition.read)}))
-  const resolvedGraph: FSAGraph = { ...graph, transitions }
-
-  return resolvedGraph
-}
 
 describe('Non-lambda transitions', () => {
   test('Identify single transition', () => {
