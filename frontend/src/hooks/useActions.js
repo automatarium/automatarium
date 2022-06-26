@@ -162,7 +162,7 @@ const useActions = (registerHotkeys=false) => {
         // Get state
         const view = useViewStore.getState()
 
-        // Padding around view
+        // Margin around view
         const border = 40
 
         // Get the bounding box of the SVG group

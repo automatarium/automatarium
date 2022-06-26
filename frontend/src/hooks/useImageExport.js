@@ -34,7 +34,7 @@ export const svgToCanvas = ({ height, width, svg }) => new Promise(resolve => {
 
 // Extract the SVG graph as a string
 export const getSvgString = ({
-  padding = 20,
+  margin = 20,
   background = 'none',
   color,
   darkMode = false,
@@ -45,8 +45,8 @@ export const getSvgString = ({
 
   // Set viewbox
   const b = document.querySelector('#automatarium-graph > g').getBBox()
-  padding = Number(padding ?? 0)+1
-  const [x, y, width, height] = [b.x - padding, b.y - padding, b.width + padding*2, b.height + padding*2]
+  margin = Number(margin ?? 0)+1
+  const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin*2, b.height + margin*2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
 
   // If changing colour, save what is on the actual svg, then change them temporarily
