@@ -28,7 +28,7 @@ const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: Re
   const finalTransitions = closure
     .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
     .map(([stateID, precedingTransitions]) => ({
-      transition: graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0),
+      transition: (graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as Transition),
       trace: precedingTransitions.slice(0, -1),
     }))
 
@@ -60,7 +60,7 @@ const lambdaClosure = (graph: FSAGraph, currentStateID: StateID): Set<[StateID, 
   // Perform flood fill until fully discovered
   while (open.length > 0) {
     // Pop next value to check
-    let node = open.pop()
+    let node = open.pop() as ClosureNode
     closed.push(node)
 
     // Add neighbouring lambda transitions
