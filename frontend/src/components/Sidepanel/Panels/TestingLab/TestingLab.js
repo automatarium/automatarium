@@ -199,6 +199,7 @@ const TestingLab = () => {
                   setMultiTraceOutput([])
                 }}
                 value={value}
+                placeholder="λ"
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
                 onPaste={e => {
                   const paste = (e.clipboardData || window.clipboardData).getData('text')
