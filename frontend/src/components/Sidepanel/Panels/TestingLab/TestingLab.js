@@ -4,7 +4,7 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
-import { simulateFSA } from '@automatarium/simulation'
+import { closureWithPredicate, resolveGraph, simulateFSA } from '@automatarium/simulation'
 
 import {
   StepButtons,
@@ -101,11 +101,21 @@ const TestingLab = () => {
 
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
+  const noFinalState = !graph?.states.find(s => s.isFinal)
   const warnings = []
   if (noInitialState)
     warnings.push('There is no initial state')
-  if (!graph?.states.find(s => s.isFinal))
+  if (noFinalState)
     warnings.push('There are no final states')
+
+  // Update disconnected warning
+  const pathToFinal = useMemo(() => {
+    const resolvedGraph = resolveGraph(graph)
+    const closure = closureWithPredicate(resolvedGraph, resolvedGraph.initialState, () => true)
+    return Array.from(closure).some(([stateID]) => resolvedGraph.states.find(s => s.id === stateID)?.isFinal)
+  }, [graph])
+  if (!pathToFinal && !noInitialState && !noFinalState)
+    warnings.push('There is no path to a final state')
 
   // :^)
   const dibEgg = useDibEgg()
