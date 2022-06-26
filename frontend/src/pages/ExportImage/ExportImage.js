@@ -112,7 +112,7 @@ const ExportImage = () => {
           </Preference>
           {type === 'svg' && <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>Note: SVG exporting is still in beta and may not work as expected</span>}
           <Preference label="Margin" fullWidth>
-            <Input type="number" small value={margin} onChange={e => setOptions({ margin: e.target.value })} />
+            <Input type="number" min="0" max="500" small value={margin} onChange={e => setOptions({ margin: e.target.value === '' ? e.target.value : Math.min(Math.max(e.target.value, 0), 500) })} />
           </Preference>
           <Preference label="Accent colour" fullWidth>
             <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value })}>
