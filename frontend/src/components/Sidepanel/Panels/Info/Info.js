@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { expandReadSymbols, validTransitions } from '@automatarium/simulation'
+import { validTransitions, resolveGraph, closureWithPredicate } from '@automatarium/simulation'
 
 import { useProjectStore } from '/src/stores'
 import { Table, SectionLabel } from '/src/components'
@@ -13,19 +13,17 @@ const Info = () => {
   const initialState = useProjectStore(s => s.project?.initialState)
   const graph = { states, transitions, initialState }
 
+  // Resolve graph
+  const resolvedGraph = useMemo(() => resolveGraph(graph), [graph])
+
   // Determine alphabet
   const alphabet = useMemo(() =>
-    Array.from(new Set(transitions
-      .map(tr => tr.read ? expandReadSymbols(tr.read) : [])
+    Array.from(new Set(resolvedGraph.transitions
+      .map(tr => tr.read)
       .reduce((a, b) => [...a, ...b], [])
       .sort()
     ))
   , [transitions])
-
-  // Resolve graph
-  const resolvedGraph = useMemo(() => ({
-    ...graph, transitions: graph.transitions.map(tr => ({ ...tr, read: tr.read ? expandReadSymbols(tr.read) : []}))
-  }), [graph])
 
   const transitionMap = useMemo(() => {
     let map = {} // (ID, Symbol) -> ID[]
@@ -33,7 +31,16 @@ const Info = () => {
       for (let symbol of alphabet) {
         const transitions = validTransitions(resolvedGraph, state.id, symbol)
         for (let { transition } of transitions) {
+          // Record accessibility after transition
           map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], transition.to]))
+
+          // Record accessibility of states indirectly accessible after transition via lambdas
+          if (transition.read.length > 0) {
+            const lambdaClosure = closureWithPredicate(resolvedGraph, transition.to, tr => tr.read.length === 0)
+            for (let [stateID] of lambdaClosure) {
+              map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], stateID]))
+            }
+          }
         }
       }
     }

@@ -12,7 +12,9 @@ export const RANGE_VALS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
  */
 export const resolveGraph = (graph: UnresolvedFSAGraph): FSAGraph => {
   // Resolve graph transitions
-  const transitions = graph.transitions.map(transition => ({...transition, read: expandReadSymbols(transition.read)}))
+  const transitions = graph.transitions
+    .filter(transition => transition !== undefined && transition.read !== undefined)
+    .map(transition => ({...transition, read: expandReadSymbols(transition.read)}))
   return { ...graph, transitions }
 }
 
