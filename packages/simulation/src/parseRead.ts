@@ -1,25 +1,43 @@
-import { RANGE_VALS } from './expandReadSymbols'
+import { RANGE_VALS } from './resolveGraph'
 
-type RangeOpenToken =  { kind: 'range_open' }
-type RangeCloseToken = { kind: 'range_close' }
-type RangeSepToken =   { kind: 'range_sep' }
-type LiteralToken =    { kind: 'literal', value: string, }
-type ReadToken = LiteralToken | RangeOpenToken | RangeCloseToken | RangeSepToken
+export type RangeOpenToken =  { kind: 'range_open' }
+export type RangeCloseToken = { kind: 'range_close' }
+export type RangeSepToken =   { kind: 'range_sep' }
+export type LiteralToken =    { kind: 'literal', value: string, }
+export type ReadToken = LiteralToken | RangeOpenToken | RangeCloseToken | RangeSepToken
 
-type LiteralNode = {
+export type LiteralNode = {
   kind: 'literal',
   value: string,
 }
 
-type RangeNode = {
+export type RangeNode = {
   kind: 'range',
   start: string,
   stop: string,
 }
 
-type ReadNode = LiteralNode | RangeNode
+export type ReadNode = LiteralNode | RangeNode
 
-const parseRead = (read: string): ReadNode[] => {
+/**
+ * Parse and check syntax of read string
+ *
+ * @param read - string to parse
+ * @returns Abstract syntax tree representing read string  
+ * @throws {@link ReadSyntaxError}
+ *
+ * @example Parse simple range expression
+ * ```ts
+ * const ast = parseRead('[a-z]')
+ * console.log(ast) // { kind: 'range', start: 'a', stop: 'z' }
+ * ```
+ * 
+ * @example Attempt to parse invalid range
+ * ```ts
+ * parseRead('[a-]') // throws ReadSyntaxError
+ * ```
+ */
+export const parseRead = (read: string): ReadNode[] => {
   const tokens = tokeniseRead(read)
   let nodes: ReadNode[] = []
   let rangeNode
@@ -100,6 +118,4 @@ const tokeniseRead = (read: string): ReadToken[] => {
     })
 }
 
-class ReadSyntaxError extends Error { }
-
-export default parseRead
+export class ReadSyntaxError extends Error { }

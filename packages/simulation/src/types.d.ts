@@ -1,30 +1,27 @@
 export type ReadSymbol = string
+export type StateID = number
+export type TransitionID = number
 
-type StateID = number
-type TransitionID = number
-
-type State = {
+export type State = {
   id: StateID
   isFinal: boolean
-  [other: string]: unknown
 }
 
-type Transition = {
+export type Transition = {
   id: TransitionID
   to: StateID
   from: StateID
   read: ReadSymbol[]
-  [other: string]: unknown
 }
 
-type FSAGraph = {
+export type FSAGraph = {
   initialState: StateID
   states: State[]
   transitions: Transition[]
   [other: string]: unknown
 }
 
-type UnresolvedTransition = {
+export type UnresolvedTransition = {
   id: TransitionID
   to: StateID
   from: StateID
@@ -32,19 +29,19 @@ type UnresolvedTransition = {
   [other: string]: unknown
 }
 
-type UnresolvedFSAGraph = {
+export type UnresolvedFSAGraph = {
   initialState: StateID
   states: State[]
   transitions: UnresolvedTransition[]
   [other: string]: unknown
 }
 
-type ExecutionTrace = {
+export type ExecutionTrace = {
   read: string | null,
   to: StateID
 }
 
-type ExecutionResult = {
+export type ExecutionResult = {
   accepted: boolean
   remaining: string
   trace: ExecutionTrace[]
