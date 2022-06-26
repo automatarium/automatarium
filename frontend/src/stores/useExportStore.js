@@ -3,7 +3,7 @@ import create from 'zustand'
 const defaultOptions = {
   filename: '',
   type: 'png',
-  padding: 20,
+  margin: 20,
   color: '',
   darkMode: false,
   background: 'solid',

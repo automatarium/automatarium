@@ -33,7 +33,6 @@ const useActions = (registerHotkeys=false) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
   const createState = useProjectStore(s => s.createState)
-  const updateState = useProjectStore(s => s.updateState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
 
@@ -162,7 +161,7 @@ const useActions = (registerHotkeys=false) => {
         // Get state
         const view = useViewStore.getState()
 
-        // Padding around view
+        // Margin around view
         const border = 40
 
         // Get the bounding box of the SVG group
