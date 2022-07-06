@@ -8,7 +8,7 @@ export const ToolPopup = styled('div')`
   top: ${props => props.$y ?? 85}px;
   left: 5rem;
   z-index: 5;
-  max-width: 200px;
+  max-width: 225px;
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
