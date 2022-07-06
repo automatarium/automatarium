@@ -13,6 +13,7 @@ import cursorAnimation from './animations/cursor.json'
 import handAnimation from './animations/hand.json'
 import stateAnimation from './animations/state.json'
 import transitionAnimation from './animations/transition.json'
+import commentAnimation from './animations/comment.json'
 
 const tools = [
   {
@@ -53,6 +54,7 @@ const tools = [
     description: 'Add comments to your automaton',
     value: 'comment',
     icon: <MessageSquare />,
+    animation: commentAnimation,
   },
 ]
 
