@@ -8,21 +8,16 @@ export const ToolPopup = styled('div')`
   top: ${props => props.$y ?? 85}px;
   left: 5rem;
   z-index: 5;
-  max-width: 200px;
+  max-width: 225px;
   opacity: 0;
   pointer-events: none;
   visibility: hidden;
   transition: opacity .15s, visibility .15s;
+  box-shadow: 0 2px 5px rgba(0 0 0 / .3);
 
   &.visible {
     opacity: 1;
     visibility: visible;
-  }
-
-  img {
-    display: block;
-    height: 4rem;
-    background-color: var(--input-border);
   }
 
   & > div {
@@ -50,4 +45,17 @@ export const ToolHotkey = styled('span')`
   border: 1px solid currentColor;
   border-radius: .3em;
   font-size: .7em;
+`
+
+export const Animation = styled('span')`
+  display: block;
+  background-color: var(--input-border);
+
+  & > div {
+    width: 100%;
+
+    svg {
+      display: block;
+    }
+  }
 `

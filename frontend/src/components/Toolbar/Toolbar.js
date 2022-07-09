@@ -1,12 +1,19 @@
 import { useState, useRef } from 'react'
 import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
+import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { useToolStore } from '/src/stores'
 import { Dropdown } from '/src/components'
 import { Sidebar } from '/src/components'
 import useViewStore from '/src/stores/useViewStore'
 
-import { ToolPopup, ToolName, ToolHotkey } from './toolbarStyle'
+import { ToolPopup, ToolName, ToolHotkey, Animation } from './toolbarStyle'
+
+import cursorAnimation from './animations/cursor.json'
+import handAnimation from './animations/hand.json'
+import stateAnimation from './animations/state.json'
+import transitionAnimation from './animations/transition.json'
+import commentAnimation from './animations/comment.json'
 
 const tools = [
   {
@@ -15,6 +22,7 @@ const tools = [
     description: 'Select and move items',
     value: 'cursor',
     icon: <MousePointer2 />,
+    animation: cursorAnimation,
   },
   {
     label: 'Hand tool',
@@ -22,6 +30,7 @@ const tools = [
     description: 'Drag to pan around your automaton',
     value: 'hand',
     icon: <Hand />,
+    animation: handAnimation,
   },
   {
     label: 'State tool',
@@ -29,6 +38,7 @@ const tools = [
     description: 'Create states by clicking',
     value: 'state',
     icon: <Circle />,
+    animation: stateAnimation,
   },
   {
     label: 'Transition tool',
@@ -36,6 +46,7 @@ const tools = [
     description: 'Drag between states to create transitions',
     value: 'transition',
     icon: <ArrowUpRight />,
+    animation: transitionAnimation,
   },
   {
     label: 'Comment tool',
@@ -43,6 +54,7 @@ const tools = [
     description: 'Add comments to your automaton',
     value: 'comment',
     icon: <MessageSquare />,
+    animation: commentAnimation,
   },
 ]
 
@@ -79,7 +91,11 @@ const Toolbar = () => {
       ))}
 
       <ToolPopup $y={toolPopup.y} className={toolPopup.visible ? 'visible' : ''}>
-        {/* <img src={toolPopup.tool?.image} alt="" /> TODO: animated image */}
+        {!!toolPopup.tool?.animation && (
+          <Animation>
+            <Lottie loop animationData={toolPopup.tool.animation} play={toolPopup.visible} />
+          </Animation>
+        )}
         <div>
           <ToolName>
             <span>{toolPopup.tool?.label}</span>
