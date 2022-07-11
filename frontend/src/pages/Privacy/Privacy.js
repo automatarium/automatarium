@@ -1,21 +1,55 @@
 import { Main, Header } from '/src/components'
 
-const Privacy = () => {
-  return <Main>
-    <Header center />
+const Privacy = () => (
+  <Main>
+    <Header center linkTo="/" />
     <h2>Privacy</h2>
-    <p>
-    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Varius vestibulum pretium velit vitae euismod magna mi, in. Erat nulla risus, tellus diam. Faucibus sagittis parturient convallis egestas duis. Condimentum dictumst habitant penatibus egestas sem scelerisque. Ornare dui, est senectus metus morbi. Vulputate maecenas suspendisse ornare urna, feugiat elit ornare lectus ornare. Adipiscing nunc iaculis tortor felis amet lacus. Consectetur fermentum eget aliquet nulla pellentesque enim elementum mattis sed.<br/><br/>
 
-    Laoreet id donec rhoncus, convallis scelerisque. Adipiscing sit tincidunt quam diam eget. Curabitur est at amet tempor in nulla consectetur. Quis dictumst vulputate pellentesque tincidunt. Aliquet vitae tristique a adipiscing porttitor faucibus ut rutrum urna. Donec placerat volutpat dignissim suspendisse mauris. Blandit id elit mauris arcu convallis vestibulum eget viverra.<br/><br/>
+    <p>Automatarium (hereafter referred to as "Automatarium" or "we" or "our") understands your privacy is important, and has developed this privacy policy that describes how we collect and use your personal information when you are using the Automatarium website, platform, applications and related web technologies hereafter referred as the "Service" and the steps we take to protect your data.</p>
+    <p>This page is used to inform visitors regarding the policies of the collection, use, and disclosure of Personal Information if using the Service.</p>
+    <p>If you choose to use the Service, then you agree to the collection and use of information in relation to this policy. Your information will not be used or shared with anyone except as described in this Privacy Policy.</p>
 
-    Arcu praesent a ullamcorper et venenatis aliquam eu ultricies. Dui risus amet lectus eget. Non leo integer semper est donec sapien aliquam, nulla in. Dignissim at accumsan, phasellus eget turpis. Convallis et vel molestie proin eu iaculis magna pellentesque in.<br/><br/>
+    <h3>Information Collection and Use</h3>
+    <p>When you interact with our Service, we may collect the following information from you, as described below:</p>
+    <ul>
+      <li><strong>Information you provide:</strong> We collect information from you when you interact with the Service, e.g. making an account, creating a project, sharing a project, etc.</li>
+      <li><strong>Information collected automatically:</strong> When you interact with our Service, we collect information that is automatically sent to us, this includes your IP address, any information that your browser sends to our Service as well as your activity in the Service</li>
+    </ul>
+    <p>We use the information we collect from you in a way that is consistent with this Privacy Policy.</p>
+    <p>The information we collect is used only in the following manner:</p>
+    <ul>
+      <li>Store your projects and preferences and sync between devices</li>
+    </ul>
 
-    Porttitor urna erat tincidunt mi porta volutpat placerat posuere augue. Nullam in cras diam in fringilla montes, sed nunc, vitae. Duis mollis aliquet sed pharetra commodo elementum etiam sit. Suspendisse at neque pulvinar amet, nec. Sit a cursus at pharetra. Sapien ultricies pharetra molestie habitasse in id tempor condimentum convallis. Diam, consectetur sodales ac risus. Nunc risus urna duis nec amet eu tristique laoreet. Sed nibh eget sed etiam ultricies. Eget convallis in libero at morbi ut vulputate gravida posuere. Sit aliquet bibendum malesuada risus, non mauris nunc sapien feugiat. Justo, velit blandit eget erat tincidunt senectus rhoncus tempor.<br/><br/>
+    <h3>Information Disclosure</h3>
+    <p>Automatarium does not provide, sell, rent or lease your information to any third parties. However, there are certain circumstances where your information may be disclosed to certain third parties:</p>
+    <ul>
+      <li><strong>Consent:</strong> We may disclose your information with your consent.</li>
+      <li><strong>Business transfer:</strong> If we or our business assets are acquired and user information among our assets transferred to or be acquired by a third party. You acknowledge that such transfers may occur, and that any parties who acquire us may continue to use your personal information according to this policy.</li>
+      <li><strong>Legal obligation:</strong> We may disclose your information if required to do so by law, to comply with our legal obligations or to protect the safety and integrity of our Service.</li>
+    </ul>
 
-    Quam libero tortor orci, eros fermentum cursus eleifend nulla. Cursus ultrices convallis velit tellus sit egestas elementum duis. Malesuada massa amet ornare pharetra donec erat. Pulvinar pretium sollicitudin tincidunt gravida donec non pulvinar et suscipit. Risus id nibh platea non et et. Pulvinar ipsum viverra nunc amet in aliquam lacus, lectus quis. A dictumst vitae lacus risus neque gravida nunc. Mi cras scelerisque risus morbi morbi dignissim. Nisl facilisis nec et, viverra. Nibh diam lorem fermentum quam in nunc. Sagittis id gravida condimentum aliquam elementum augue sit morbi phasellus.<br/><br/>
-    </p>
+    <h3>Security</h3>
+    <p>We take security seriously and use industry standard practices to protect personal information from loss or theft, as well as unauthorized access, disclosure, copying, use or modification. We regularly review our information collection, storage and processing practices.</p>
+
+    <h3>Cookies</h3>
+    <p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.</p>
+    <p>Cookies are used by Firebase Authentication to keep you signed in on the Service.</p>
+
+    <h3>Links to Other Sites</h3>
+    <p>The Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by the Service. Therefore, you are advised to review the Privacy Policy of these websites.</p>
+
+    <h3>Children's Privacy</h3>
+    <p>Our services are for users over the age of 13. We do not knowingly collect or store personal information from children (visitors under the age of 13). If you are under the age of 13, you are ineligible to use the Service. If you believe your child has provided us with personal information, we encourage you to contact us immediately, and we will promptly remove such information from our Service.</p>
+
+    <h3>Changes to our Privacy Policy</h3>
+    <p>We reserve the right to update or modify this Privacy Policy at any time and from time to time without prior notice. Please review this policy periodically, and especially before you provide any information. This Privacy Policy was last updated on the date indicated below. Your continued use of the Service after any changes or revisions to this Privacy Policy shall indicate your agreement with the terms of such revised Privacy Policy.</p>
+
+    <h3>Contact</h3>
+    <p>For any questions or concerns please contact RMIT University.</p>
+
+    <p>Last updated: <strong>15th June, 2022</strong></p>
   </Main>
-}
+)
 
 export default Privacy

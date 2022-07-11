@@ -1,16 +1,17 @@
-import { styled } from 'goober'
+import { css } from 'goober'
 
-export const StyledCircle = styled('circle')`
-  fill: hsl(var(--primary-h) var(--primary-s) 75%);
-  stroke: var(--black);
+export const circleStyles = {
+  fill: 'var(--state-bg)',
+  stroke: 'var(--stroke)',
+}
 
-  + text {
-    user-select: none;
-  }
+export const circleSelectedClass = css`
+  fill: var(--state-bg-selected) !important;
+  stroke: var(--primary) !important;
+  stroke-width: 2.5px !important;
+`
 
-  ${p => p.$selected && `
-    fill: hsl(var(--primary-h) 75% 65%);
-    stroke: hsl(var(--primary-h) var(--primary-s) 47.5%);
-    stroke-width: 2.5px;
-  `}
-` 
+export const textStyles = {
+  userSelect: 'none',
+  fill: 'var(--stroke)',
+}

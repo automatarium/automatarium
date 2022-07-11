@@ -1,7 +1,6 @@
 import create from 'zustand'
 import { persist } from 'zustand/middleware'
-import produce, { current} from 'immer'
-import { v4 as uuid } from 'uuid'
+import produce, { current } from 'immer'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
@@ -14,12 +13,11 @@ import {
   DEFAULT_STATE_PREFIX,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR,
-  DEFAULT_PLAYBACK_INTERVAL,
 } from '/src/config/projects'
 
-export const createNewProject = (projectType) => ({
+export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
   // TODO: use project type
-  _id: uuid(),
+  _id: crypto.randomUUID(),
   states: [],
   transitions: [],
   comments: [],
@@ -30,17 +28,16 @@ export const createNewProject = (projectType) => ({
   initialState: null,
   meta: {
     name: randomProjectName(),
-    dateCreated: new Date(),
-    dateEdited: new Date(),
+    dateCreated: new Date().getTime(),
+    dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,
     automatariumVersion: APP_VERSION,
   },
   config: {
-    type: DEFAULT_PROJECT_TYPE,
+    type: projectType,
     statePrefix: DEFAULT_STATE_PREFIX,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    color: DEFAULT_PROJECT_COLOR,
-    playbackInterval: DEFAULT_PLAYBACK_INTERVAL,
+    color: DEFAULT_PROJECT_COLOR[projectType],
   }
 })
 
@@ -50,7 +47,7 @@ const useProjectStore = create(persist((set, get) => ({
   historyPointer: null,
   lastChangeDate: null,
   lastSaveDate: null,
-  
+
   set: project => { set({ project, history: [ clone(project) ], historyPointer: 0 })},
 
   /* Add current project state to stored history of project states */
@@ -70,7 +67,7 @@ const useProjectStore = create(persist((set, get) => ({
     state.historyPointer = state.history.length - 1
 
     // Update edited date
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   undo: () => set(produce(state => {
@@ -85,7 +82,7 @@ const useProjectStore = create(persist((set, get) => ({
     state.project = state.history[state.historyPointer]
 
     // Update edited date
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   redo: () => set(produce(state => {
@@ -100,7 +97,7 @@ const useProjectStore = create(persist((set, get) => ({
     state.project = state.history[state.historyPointer]
 
     // Update edited date
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   /* Change the date the project was last saved */
@@ -109,7 +106,7 @@ const useProjectStore = create(persist((set, get) => ({
   /* Change the projects name */
   setName: name => set(s => ({
     project: {...s.project, meta: {...s.project.meta, name }},
-    lastChangeDate: new Date(),
+    lastChangeDate: new Date().getTime(),
   })),
 
   /* Create a new transition */
@@ -157,19 +154,19 @@ const useProjectStore = create(persist((set, get) => ({
   /* Update tests */
   setSingleTest: value => set(produce((state) => {
     state.project.tests.single = value
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
-  addBatchTest: () => set(produce((state) => {
-    state.project.tests.batch.push('')
-    state.lastChangeDate = new Date()
+  addBatchTest: (value = '') => set(produce((state) => {
+    state.project.tests.batch.push(value)
+    state.lastChangeDate = new Date().getTime()
   })),
-  setBatchTest: (index, value) => set(produce((state) => {
+  updateBatchTest: (index, value) => set(produce((state) => {
     state.project.tests.batch[index] = value
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
   removeBatchTest: index => set(produce((state) => {
     state.project.tests.batch.splice(index, 1)
-    state.lastChangeDate = new Date()
+    state.lastChangeDate = new Date().getTime()
   })),
 
   /* Set given state to be the initial state */
@@ -206,6 +203,12 @@ const useProjectStore = create(persist((set, get) => ({
   /* Remove comments by id */
   removeComments: commentIDs => set(produce(({ project }) => {
     project.comments = project.comments.filter(c => !commentIDs.includes(c.id))
+  })),
+
+  // Change the config
+  updateConfig: newConfig => set(produce((state) => {
+    state.project.config = { ...state.project.config, ...newConfig }
+    state.lastChangeDate = new Date().getTime()
   })),
 
   reset: () => set({ project: createNewProject(), history: [], historyPointer: null, dateEdited: null })

@@ -1,8 +1,10 @@
 import { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
-import { useViewStore, useToolStore } from '/src/stores'
+import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
+import { useImageExport } from '/src/hooks'
 import { GRID_SNAP } from '/src/config/interactions'
+import COLORS from '/src/config/colors'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
@@ -12,13 +14,16 @@ const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
   const svgRef = useRef()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
+  const projectColor = useProjectStore(state => state.project?.config.color)
+  const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
   useViewDragging(svgRef)
+  useImageExport()
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
-    const b = wrapperRef.current.getBoundingClientRect()
-    setViewSize({ width: b.width, height: b.height })
+    const b = wrapperRef.current?.getBoundingClientRect()
+    b && setViewSize({ width: b.width, height: b.height })
   }, [])
 
   const onContainerMouseDown = useCallback(e => {
@@ -66,13 +71,14 @@ const GraphView = ({ children, ...props }) => {
       // Unset handlers
       return () => {
         window.removeEventListener('resize', onContainerResize)
-        svgRef.current.removeEventListener('mousedown', onContainerMouseDown)
-        svgRef.current.removeEventListener('mouseup', onContainerMouseUp)
-        svgRef.current.removeEventListener('mousedown', onContainerMouseMove)
+        svgRef.current?.removeEventListener('mousedown', onContainerMouseDown)
+        svgRef.current?.removeEventListener('mouseup', onContainerMouseUp)
+        svgRef.current?.removeEventListener('mousedown', onContainerMouseMove)
       }
     }
   }, [svgRef.current])
 
+  // Add a resize observer to the wrapper div
   useEffect(() => {
     if (wrapperRef.current) {
       const resizeObserver = new ResizeObserver(onContainerResize)
@@ -82,22 +88,42 @@ const GraphView = ({ children, ...props }) => {
     }
   }, [wrapperRef.current])
 
+  // Set color theme
+  useEffect(() => {
+    const color = COLORS[(projectColor !== '' && projectColor) || 'orange']
+    svgRef.current.style.setProperty('--primary-h', color.h)
+    svgRef.current.style.setProperty('--primary-s', color.s + '%')
+    svgRef.current.style.setProperty('--primary-l', color.l + '%')
+  }, [projectColor, colorPref])
+
   // Determine svg background (grid)
   const backgroundPosition = `${-position.x / scale}px ${-position.y / scale}px`
   const backgroundSize = `${1 / scale * GRID_SNAP * 2}px ${1 / scale * GRID_SNAP * 2}px`
-  const showGrid = true
+  const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
   const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
   return (
-    <Wrapper ref={wrapperRef}>
+    <Wrapper ref={wrapperRef} id='editor-panel-wrapper'>
       <Svg
+        version="1.1"
+        xmlns="http://www.w3.org/2000/svg"
+        xmlnsXlink="http://www.w3.org/1999/xlink"
+        id="automatarium-graph"
+
         onContextMenu={e => e.preventDefault()}
         viewBox={viewBox}
         ref={svgRef}
-        $showGrid={showGrid}
+        $showGrid={gridVisible}
         $tool={tool}
         {...props}
-        style={{ backgroundSize, backgroundPosition, ...props.style }}>
+        style={{
+          strokeLinejoin: 'round',
+          strokeLinecap: 'round',
+          strokeWidth: '2px',
+          backgroundSize,
+          backgroundPosition,
+          ...props.style,
+        }}>
         <MarkerProvider>
           <g>{children}</g>
         </MarkerProvider>

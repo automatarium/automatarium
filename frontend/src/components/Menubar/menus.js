@@ -1,3 +1,5 @@
+import { APP_VERSION } from '/src/config/projects'
+
 const menus = [
   {
     label: 'File',
@@ -6,10 +8,7 @@ const menus = [
         label: 'New...',
         action: 'NEW_FILE',
       },
-      {
-        label: 'Open...',
-        action: 'OPEN_FILE',
-      },
+      // TODO: Support dynamic menu items to show recent files
       // {
       //   label: 'Open recent',
       //   items: [
@@ -21,23 +20,14 @@ const menus = [
       // },
       'hr',
       {
-        label: 'Save',
-        action: 'SAVE_FILE',
-      },
-      {
-        label: 'Download...',
-        action: 'SAVE_FILE_AS',
-      },
-      'hr',
-      {
         label: 'Import',
         items: [
           {
-            label: 'Import Automatarium Project',
+            label: 'Import Automatarium file',
             action: 'IMPORT_AUTOMATARIUM_PROJECT'
           },
           {
-            label: 'Import JFLAP Project',
+            label: 'Import JFLAP file',
             action: 'IMPORT_JFLAP_PROJECT'
           },
         ],
@@ -46,27 +36,31 @@ const menus = [
         label: 'Export',
         items: [
           {
-            label: 'Export as PNG',
+            label: 'Export image...',
+            action: 'EXPORT',
+          },
+          {
+            label: 'Quick export as PNG',
             action: 'EXPORT_AS_PNG',
           },
           {
-            label: 'Export as SVG',
+            label: 'Quick export as SVG',
             action: 'EXPORT_AS_SVG',
           },
           {
-            label: 'Export as JPG',
-            action: 'EXPORT_AS_JPG'
+            label: 'Quick copy to clipboard',
+            action: 'EXPORT_TO_CLIPBOARD',
           },
           'hr',
+          {
+            label: 'Export as an Automatarium file',
+            action: 'SAVE_FILE_AS'
+          },
           {
             label: 'Export as a JFLAP file',
             action: 'EXPORT_AS_JFLAP'
           },
         ],
-      },
-      {
-        label: 'Share...',
-        action: 'SHARE',
       },
       'hr',
       {
@@ -134,6 +128,7 @@ const menus = [
       {
         label: 'Fullscreen',
         shortcut: 'F11',
+        action: 'FULLSCREEN',
       },
       'hr',
       {
@@ -190,7 +185,7 @@ const menus = [
       },
       'hr',
       {
-        label: 'Version 1.2.6',
+        label: `Version ${APP_VERSION}`,
       },
     ]
   },

@@ -1,14 +1,20 @@
-import { FSAGraph, StateID, ReadSymbol, Transition } from './types'
+import { FSAGraph, StateID, ReadSymbol, Transition } from './types.d'
+import closureWithPredicate from './closureWithPredicate'
 
-type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}
-type ClosureNode = { transition: Transition, parents: Transition[] }
+export type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}
 
-// Return transitions that are directly or indirectly navigable from the current state given a specific input
-// we return those transitions along with a "trace" list of necessary prior (lambda) transitions
-// the transitions in "trace" are recorded for the sake of producing trace output but can otherwise be disregarded
-const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
+/**
+ * Compute the list of transitions that are directly or indirectly navigable from a given starting state using a specific input symbol.
+ * Records the "trace" of all requisite transitions so that a trace output can be produced.
+ *
+ * @param graph - The FSA graph object used as input
+ * @param currentStateID - The ID of the current state used to compute the valid transitions
+ * @param nextRead  - The input symbol to be read next
+ * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
+ */
+export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
   // Compute lambda closure (states accessible without consuming input)
-  const closure = Array.from(lambdaClosure(graph, currentStateID))
+  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
 
   // Find direct non-lambda transitions
   const directTransitions = graph.transitions
@@ -28,7 +34,7 @@ const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: Re
   const finalTransitions = closure
     .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
     .map(([stateID, precedingTransitions]) => ({
-      transition: graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0),
+      transition: (graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as Transition),
       trace: precedingTransitions.slice(0, -1),
     }))
 
@@ -46,33 +52,3 @@ const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: Re
       trace: [...trace, transition].map(tr => ({ to: tr.to, read: tr.read.length === 0 ? '' : nextRead }))
     }))
 }
-
-// Compute states accessible from given state without consuming input
-// i.e accessible only by navigating lambda transitions
-// we return those states along with a path of transitions to get there
-const lambdaClosure = (graph: FSAGraph, currentStateID: StateID): Set<[StateID, Transition[]]> => {
-  // Setup flood fill sets
-  let closed: ClosureNode[] = []
-  let open: ClosureNode[] = graph.transitions
-    .filter(tr => tr.from === currentStateID && tr.read.length === 0)
-    .map(transition => ({ transition, parents: [] }))
-
-  // Perform flood fill until fully discovered
-  while (open.length > 0) {
-    // Pop next value to check
-    let node = open.pop()
-    closed.push(node)
-
-    // Add neighbouring lambda transitions
-    for (let neighbour of graph.transitions.filter(tr => tr.from === node.transition.to && tr.read.length === 0)) {
-      if (![...closed, ...open].map(({ transition }) => transition.id).includes(neighbour.id)) {
-        // Add neighbour to open set and record the path to it in parents
-        open.push({ transition: neighbour, parents: [...node.parents, node.transition] })
-      }
-    }
-  }
-
-  return new Set(closed.map(node => [node.transition.to, [...node.parents, node.transition]]))
-}
-
-export default validTransitions

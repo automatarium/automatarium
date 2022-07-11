@@ -6,13 +6,13 @@ import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 
-import { StyledPath } from './transitionSetStyle'
+import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read}, i) => (
     <Transition
       i={i}
-      count={transitions.length}
+      transitions={transitions}
       text={read}
       from={from}
       to={to}
@@ -22,10 +22,21 @@ const TransitionSet = ({ transitions }) => <>
   )}
 </>
 
-const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEvents=false }) => {
+const Transition = ({
+  id,
+  i,
+  transitions = [],
+  count = transitions.length,
+  from,
+  to,
+  text,
+  fullWidth=false,
+  suppressEvents=false,
+}) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
+  const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
 
   // Determine how much to bend this path
   const evenCount = count % 2 === 0
@@ -34,13 +45,13 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
 
   // Calculate path
   const isReflexive = from.x === to.x && from.y === to.y
-  const { pathData, textPathData } = calculateTransitionPath({ from, to, bendValue, fullWidth, i }) 
+  const { pathData, textPathData, control } = calculateTransitionPath({ from, to, bendValue, fullWidth, i })
 
   // Generate a unique id for this path
   // -- used to place the text on the same path
   const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
 
-  // TODO: use Callback
+  // TODO: useCallback
   const handleTransitionMouseUp = e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
@@ -52,20 +63,25 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
       transition: { id, from, to, text },
     })
 
-  return <>
-    {/*The edge itself*/}
-    <StyledPath
+  // Calculate text offset (increased for additional reflexive transitions)
+  const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
+
+  return <g>
+    {/* The edge itself */}
+    {!(isReflexive && i > 0) && <path
       id={pathID}
       d={pathData}
       key={pathID}
-      markerEnd={`url(#${selected ? selectedArrowHead : standardArrowHead})`}
-      $selected={selected}/>
+      markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
+      style={pathStyles}
+      className={((selected || (isReflexive && setSelected)) && pathSelectedClass) || undefined}
+    />}
 
     {/* Invisible path used to place text */}
     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
 
     {/* Thicker invisible path used to select the transition */}
-    {!(isReflexive && count > 1) && !suppressEvents && <path
+    {!suppressEvents && <path
       id={pathID}
       d={pathData}
       key={`${pathID}-selection`}
@@ -76,20 +92,30 @@ const Transition = ({ id, i, count, from, to, text, fullWidth=false, suppressEve
       onMouseUp={handleTransitionMouseUp}
     />}
 
-    {/* The label - i.e the accepted symbols*/}
+    {/* The label - i.e the accepted symbols */}
     <text
       onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
       onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-      fill={selected ? 'var(--primary)' : 'black' }
+      fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+      style={{ userSelect: 'none' }}
+      dy={`-${textOffset}`}
+      textAnchor="middle"
+      alignmentBaseline="central"
+      {...isReflexive && {
+        x: control.x,
+        y: control.y + REFLEXIVE_Y_OFFSET/3,
+      }}
     >
-      <textPath startOffset="50%" textAnchor="middle" alignmentBaseline="bottom" xlinkHref={`#${pathID}-text`}>
-        {text === '' ? 'λ' : text}
-      </textPath>
+      {isReflexive ? (text === '' ? 'λ' : text) : (
+        <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+          {text === '' ? 'λ' : text}
+        </textPath>
+      )}
     </text>
-  </>
+  </g>
 }
 
-const calculateTransitionPath = ({ from, to, bendValue, fullWidth, i }) => {
+const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
 
   // Is this path reflexive
   const isReflexive = from.x === to.x && from.y === to.y
@@ -106,7 +132,7 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth, i }) => {
   const control = isReflexive
     ? { x: left.x, y: left.y - REFLEXIVE_Y_OFFSET }
     : { x: center.x + bendValue * normal.x, y: center.y + bendValue * normal.y }
-  
+
   // Translate control points (Used for reflexive paths)
   const translatedControl1 = !isReflexive ? control : { ...control, x: control.x - REFLEXIVE_X_OFFSET }
   const translatedControl2= !isReflexive ? control : { ...control, x: control.x + REFLEXIVE_X_OFFSET }
@@ -122,12 +148,16 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth, i }) => {
 
   // Generate the path data
   const pathData = `M${edge1.x}, ${edge1.y} Q${control.x}, ${control.y} ${edge2.x}, ${edge2.y}`
-  const textOffset = TEXT_PATH_OFFSET + (isReflexive ? (TEXT_PATH_OFFSET/2 + TEXT_PATH_OFFSET * 3.5 * i) : 0)
-  const textPathData = edge1.x < edge2.x
-    ? `M${edge1.x}, ${edge1.y - textOffset} Q${control.x}, ${control.y - textOffset} ${edge2.x}, ${edge2.y - textOffset}`
-    : `M${edge2.x}, ${edge2.y - textOffset} Q${control.x}, ${control.y - textOffset} ${edge1.x}, ${edge1.y - textOffset}`
+  const pathReversed = `M${edge2.x}, ${edge2.y} Q${control.x}, ${control.y} ${edge1.x}, ${edge1.y}`
 
-  return { pathData, textPathData }
+  // Calculate the angle of the line
+  const angle = Math.atan2(edge2.y - edge1.y, edge2.x - edge1.x) * 180 / Math.PI
+
+  return {
+    pathData,
+    textPathData: (angle > 90 || angle <= -90) ? pathReversed : pathData,
+    control,
+  }
 }
 
 

@@ -28,7 +28,7 @@ const SelectionBox = () => {
 
   // TODO: use custom events nistead
   useEvent('svg:mousedown', e => {
-    if (e.detail.didTargetSVG && toolActive) {
+    if (e.detail.originalEvent.button === 0 && e.detail.didTargetSVG && toolActive) {
       setDragStart([e.detail.viewX, e.detail.viewY])
     }
   }, [toolActive, svgElement])
@@ -88,8 +88,10 @@ const SelectionBox = () => {
     width={endX - startX}
     height={endY - startY}
     fill='var(--selection-fill)'
-    stroke='var(--black)'
+    stroke='var(--stroke)'
     strokeWidth='1.75'
+    rx={3}
+    ry={3}
   />
 }
 

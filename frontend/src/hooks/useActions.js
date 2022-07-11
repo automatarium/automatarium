@@ -1,18 +1,20 @@
 import { useEffect, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore } from '/src/stores'
+import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore, useToolStore } from '/src/stores'
 import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
+import { createNewProject } from '/src/stores/useProjectStore'
 
-const isWindows = navigator.platform.match(/Win/)
-const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
+const isWindows = navigator.platform?.match(/Win/)
+export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   alt && (isWindows ? 'Alt' : '⌥'),
   shift && (isWindows ? 'Shift' : '⇧'),
-  key.toUpperCase(),
-].filter(Boolean).join(isWindows ? '+' : ' ')
+  key?.toUpperCase(),
+].filter(Boolean)
 
 const useActions = (registerHotkeys=false) => {
   const undo = useProjectStore(s => s.undo)
@@ -26,22 +28,20 @@ const useActions = (registerHotkeys=false) => {
   const removeComments = useProjectStore(s => s.removeComments)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
-  const createNewProject = useProjectStore(s => s.reset)
   const setProject = useProjectStore(s => s.set)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
+  const createState = useProjectStore(s => s.createState)
+  const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
+  const setTool = useToolStore(s => s.setTool)
+
+  const navigate = useNavigate()
 
   // TODO: memoize
   const actions = {
     NEW_FILE: {
-      hotkey: { key: 'n', meta: true, showCtrl: true },
-      handler: () => {
-        createNewProject()
-      },
-    },
-    OPEN_FILE: {
-      hotkey: { key: 'o', meta: true, handler: () => console.log('Open') },
+      handler: () => navigate('/new'),
     },
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkey: { key: 'i', meta: true },
@@ -61,48 +61,47 @@ const useActions = (registerHotkeys=false) => {
       hotkey: { key: 's', meta: true },
       handler: () => {
         const project = useProjectStore.getState().project
-        const toSave = {...project, meta: { ...project.meta, dateEdited: new Date() }}
+        const toSave = {...project, meta: { ...project.meta, dateEdited: new Date().getTime() }}
         upsertProject(toSave)
-        setLastSaveDate(new Date())
+        setLastSaveDate(new Date().getTime())
       },
     },
     SAVE_FILE_AS: {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
-        const fileName = window.prompt('What would you like to name this automaton?') // TODO: better prompt
-        if (fileName) {
-          // Pull project state
-          const { project } = useProjectStore.getState()
-          
-          // Create a download link and use it
-          const a = document.createElement('a')
-          const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
-          a.href = URL.createObjectURL(file)
-          a.download = fileName // TODO: prompt file location - might not be possible?
-          a.click()
-        }
+        // Pull project state
+        const { project } = useProjectStore.getState()
+
+        // Create a download link and use it
+        const a = document.createElement('a')
+        const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
+        a.href = URL.createObjectURL(file)
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')
+        a.click()
       },
     },
+    EXPORT: {
+      hotkey: { key: 'e', meta: true},
+      handler: () => dispatchCustomEvent('exportImage'),
+    },
     EXPORT_AS_PNG: {
-      hotkey: { key: 'e', shift: true, meta: true, showCtrl: true },
-      handler: () => console.log('Export PNG'),
+      hotkey: { key: 'e', shift: true, meta: true },
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png' }),
     },
     EXPORT_AS_SVG: {
       hotkey: { key: 'e', shift: true, alt: true, meta: true},
-      handler: () => console.log('Export SVG'),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'svg' }),
     },
-    EXPORT_AS_JPG: {
-      handler: () => console.log('Export JPG'),
+    EXPORT_TO_CLIPBOARD: {
+      hotkey: { key: 'c', shift: true, meta: true},
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png', clipboard: true }),
     },
     EXPORT_AS_JFLAP: {
-      handler: () => console.log('Export JFLAP'),
-    },
-    SHARE: {
-      handler: () => console.log('Share'),
+      //handler: () => console.log('Export JFLAP'),
     },
     OPEN_PREFERENCES: {
       hotkey: { key: ',', meta: true },
-      handler: () => console.log('Preferences'),
+      handler: () => dispatchCustomEvent('modal:preferences'),
     },
     UNDO: {
       hotkey: { key: 'z', meta: true },
@@ -114,11 +113,11 @@ const useActions = (registerHotkeys=false) => {
     },
     COPY: {
       hotkey: { key: 'c', meta: true },
-      handler: () => console.log('Copy'),
+      //handler: () => console.log('Copy'),
     },
     PASTE: {
       hotkey: { key: 'v', meta: true },
-      handler: () => console.log('Paste'),
+      //handler: () => console.log('Paste'),
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
@@ -157,58 +156,67 @@ const useActions = (registerHotkeys=false) => {
       handler: () => { zoomViewTo(1) },
     },
     ZOOM_FIT: {
-      hotkey: { key: '1', shift: true },
+      hotkey: { key: 'f', shift: true },
       handler: () => {
         // Get state
         const view = useViewStore.getState()
-        const states = useProjectStore.getState()?.project.states ?? []
-        if (states.length === 0)
-          return
-        
+
+        // Margin around view
+        const border = 40
+
+        // Get the bounding box of the SVG group
+        const b = document.querySelector('#automatarium-graph > g').getBBox()
+        if (Math.max(b.width, b.height) < border) return // Bail if the bounding box is too small
+        const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
+
         // Calculate fit region
-        const border = 100
-        const minX = states.reduce((acc, s) => s.x < acc ? s.x : acc, Infinity) - border
-        const maxX = states.reduce((acc, s) => s.x > acc ? s.x : acc, -Infinity) + border
-        const minY = states.reduce((acc, s) => s.y < acc ? s.y : acc, Infinity) - border
-        const maxY = states.reduce((acc, s) => s.y > acc ? s.y : acc, -Infinity) + border
-        const [regionWidth, regionHeight] = [maxX - minX, maxY - minY]
-        const desiredScale = Math.max(regionWidth / view.size.width, regionHeight / view.size.height)
+        const desiredScale = Math.max(width / view.size.width, height / view.size.height)
         view.setViewScale(desiredScale)
-        view.setViewPosition({ x: minX, y: minY })
+        // Calculate x and y to centre graph
+        view.setViewPosition({
+          x: x + (width - view.size.width * desiredScale)/2,
+          y: y + (height - view.size.height * desiredScale)/2,
+        })
       },
     },
+    FULLSCREEN: {
+      handler: () => document.fullscreenElement
+        ? document.exitFullscreen()
+        : document.documentElement.requestFullscreen(),
+    },
     TESTING_LAB: {
-      hotkey: { key: 't', meta: true, showCtrl: true },
-      handler: () => console.log('Testing Lab'),
+      hotkey: { key: '1', shift: true },
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' }),
     },
     FILE_INFO: {
-      handler: () => console.log('File Info'),
+      hotkey: { key: '2', shift: true },
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' }),
     },
     FILE_OPTIONS: {
-      hotkey: { key: 'u', meta: true },
-      handler: () => console.log('File Options'),
+      hotkey: { key: '3', shift: true },
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' }),
     },
     CONVERT_TO_DFA: {
-      handler: () => console.log('Convert to DFA'),
+      //handler: () => console.log('Convert to DFA'),
     },
     MINIMIZE_DFA: {
-      handler: () => console.log('Minimize DFA'),
+      //handler: () => console.log('Minimize DFA'),
     },
     AUTO_LAYOUT: {
-      handler: () => console.log('Auto Layout'),
+      //handler: () => console.log('Auto Layout'),
     },
     OPEN_DOCS: {
-      handler: () => console.log('View Documentation'),
+      handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank'),
     },
     KEYBOARD_SHORTCUTS: {
       hotkey: { key: '/', meta: true },
-      handler: () => console.log('Keyboard shortcuts'),
+      handler: () => dispatchCustomEvent('modal:shortcuts'),
     },
     PRIVACY_POLICY: {
-      handler: () => console.log('Privacy Policy'),
+      handler: () => window.open('/privacy', '_blank'),
     },
     OPEN_ABOUT: {
-      handler: () => console.log('About Automatarium'),
+      handler: () => window.open('/about', '_blank'),
     },
     MOVE_VIEW_LEFT: {
       hotkey: { key: 'ArrowLeft' },
@@ -247,12 +255,10 @@ const useActions = (registerHotkeys=false) => {
     },
     EDIT_COMMENT: {
       disabled: () => useSelectionStore.getState()?.selectedComments?.length !== 1,
-      handler: () => {
+      handler: e => {
         const selectedCommentID = useSelectionStore.getState().selectedComments?.[0]
-        const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === selectedCommentID)
-        if (selectedCommentID === undefined || selectedComment === undefined) return
-        const text = window.prompt('New text for comment?', selectedComment.text)
-        useProjectStore.getState().updateComment({ ...selectedComment, text })
+        if (selectedCommentID === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY, id: selectedCommentID }), 100)
       }
     },
     EDIT_TRANSITION: {
@@ -270,6 +276,76 @@ const useActions = (registerHotkeys=false) => {
         flipTransitions(selectedTransitions)
         commit()
       }
+    },
+    CREATE_COMMENT: {
+      handler: e => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100),
+    },
+    SET_STATE_NAME: {
+      handler: () => {
+        const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
+        if (selectedStateID === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editStateName', { id: selectedStateID }), 100)
+      },
+    },
+    SET_STATE_LABEL: {
+      handler: () => {
+        const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
+        if (selectedStateID === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editStateLabel', { id: selectedStateID }), 100)
+      },
+    },
+    CREATE_STATE: {
+      handler: e => {
+        const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
+        createState({ x: viewX, y: viewY })
+        commit()
+      }
+    },
+    ALIGN_STATES_HORIZONTAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length <= 1,
+      handler: () => {
+        const selected = useSelectionStore.getState().selectedStates
+        const storeState = useProjectStore.getState()
+        const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
+        if (states && states.length > 1) {
+          const meanY = states.map(state => state.y).reduce((a, b) => a + b) / states.length
+          states.forEach(state => storeState.updateState({ ...state, y: meanY }))
+          commit()
+        }
+      }
+    },
+    ALIGN_STATES_VERTICAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length <= 1,
+      handler: () => {
+        const selected = useSelectionStore.getState().selectedStates
+        const storeState = useProjectStore.getState()
+        const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
+        if (states && states.length > 1) {
+          const meanX = states.map(state => state.x).reduce((a, b) => a + b) / states.length
+          states.forEach(state => storeState.updateState({ ...state, x: meanX }))
+          commit()
+        }
+      }
+    },
+    TOOL_CURSOR: {
+      hotkey: { key: 'V' },
+      handler: () => setTool('cursor'),
+    },
+    TOOL_HAND: {
+      hotkey: { key: 'H' },
+      handler: () => setTool('hand'),
+    },
+    TOOL_STATE: {
+      hotkey: { key: 'S' },
+      handler: () => setTool('state'),
+    },
+    TOOL_TRANSITION: {
+      hotkey: { key: 'T' },
+      handler: () => setTool('transition'),
+    },
+    TOOL_COMMENT: {
+      hotkey: { key: 'C' },
+      handler: () => setTool('comment'),
     },
   }
 
@@ -329,7 +405,7 @@ const useActions = (registerHotkeys=false) => {
   // Add formatted hotkeys to actions
   const actionsWithLabels = useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
     ...action,
-    label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey) : null
+    label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey).join(isWindows ? '+' : ' ') : null
   }]))), [actions])
 
   return actionsWithLabels
@@ -363,10 +439,20 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
     const reader = new FileReader()
     reader.onloadend = () => {
       try {
-        const data = parse(reader.result)
-        onData(data)
+        const fileData = parse(reader.result)
+        const project = {
+          ...createNewProject(),
+          ...fileData,
+        }
+        onData({
+          ...project,
+          meta: {
+            ...project.meta,
+            name: input.files[0]?.name.split('.').slice(0, -1).join('.')
+          }
+        })
       } catch (error) {
-        window.alert(errorMessage)
+        window.alert(`${errorMessage}\n${error}`)
         console.error(error)
       }
     }

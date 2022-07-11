@@ -11,17 +11,19 @@ export const Wrapper = styled('button')`
   font-size: .9em;
   border-radius: .3em;
   cursor: pointer;
-  display: flex;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   appearance: none;
   gap: .5em;
+  text-decoration: none;
 
   &:active {
-    background-color: hsl(var(--primary-h) var(--primary-s) 47%);
+    filter: brightness(0.94);
   }
 
   &:disabled {
+    filter: none;
     background-color: var(--disabled-button);
     opacity: .8;
     cursor: default;

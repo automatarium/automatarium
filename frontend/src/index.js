@@ -1,4 +1,4 @@
-import { StrictMode, createElement } from 'react'
+import { StrictMode, createElement, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
@@ -6,7 +6,11 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 import * as Pages from './pages'
 
 import { useEgg, useSyncProjects } from '/src/hooks'
+import { usePreferencesStore, useProjectStore } from '/src/stores'
+import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
+
+import favicon from 'bundle-text:/public/logo.svg'
 
 // Set up goober to use React
 setup(
@@ -19,6 +23,35 @@ setup(
 const App = () => {
   const location = useLocation()
   const hideFooter = location.pathname.match('/editor')
+
+  // Set color theme
+  const colorPref = usePreferencesStore(state => state.preferences.color)
+  const projectColor = useProjectStore(state => state.project?.config.color)
+  useEffect(() => {
+    const computedColor = (projectColor !== '' && projectColor) || 'orange'
+    const color = colorPref === 'match' ? COLORS[computedColor] : COLORS[colorPref]
+    document.documentElement.style.setProperty('--primary-h', color.h)
+    document.documentElement.style.setProperty('--primary-s', color.s + '%')
+    document.documentElement.style.setProperty('--primary-l', color.l + '%')
+
+    // Set favicon
+    const link = document.querySelector('head link[rel=icon]')
+    link.setAttribute(
+      'href',
+      'data:image/svg+xml,' +
+      encodeURIComponent(favicon
+        .replace(/var\(--primary, (.*?)\)/, `hsl(${color.h} ${color.s}% ${color.l}%)`)
+        .replace(/var\(--state-bg, (.*?)\)/, `hsl(${color.h} ${color.s}% 75%)`)
+      )
+    )
+  }, [colorPref, projectColor])
+
+  // Set light/dark mode
+  const themePref = usePreferencesStore(state => state.preferences.theme)
+  useEffect(() => {
+    document.body.classList.toggle('light', themePref === 'light')
+    document.body.classList.toggle('dark', themePref === 'dark')
+  }, [themePref])
 
   useEgg()
   useSyncProjects()
@@ -35,6 +68,8 @@ const App = () => {
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
     {!hideFooter && <Footer/>}
+
+    <Pages.Preferences />
   </>
 }
 

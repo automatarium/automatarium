@@ -10,21 +10,12 @@ export const Svg = styled('svg', forwardRef)`
   position: absolute;
   inset: 0;
   display: block;
-  background: var(--white);
+  background: var(--grid-bg);
 
   /* Grid */
   ${p => p.$showGrid && `
-    --dot-fraction: 12.5%;
-    background: radial-gradient(
-      var(--grid-dot),
-      var(--grid-dot) var(--dot-fraction),
-      var(--white) var(--dot-fraction));
-  `};
-
-  /* Paths */
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  stroke-width: 2px;
+    background: var(--grid-pattern);
+  `}
 
   /* Text */
   text {

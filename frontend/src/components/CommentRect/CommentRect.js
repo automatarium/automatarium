@@ -1,23 +1,27 @@
 import { useState, useEffect, useRef } from 'react'
 
 import { dispatchCustomEvent } from '/src/util/events'
-import { useSelectionStore } from '/src/stores'
+import { useSelectionStore, useViewStore } from '/src/stores'
 
-import { CommentContainer } from './commentRectStyle'
+import { commentStyles, commentSelectedClass } from './commentRectStyle'
 
 const CommentRect = ({ id, x, y, text }) => {
   const containerRef = useRef()
-  const [height, setHeight] = useState(150)
+  const [size, setSize] = useState({ height: 30, width: 30 })
   const selectedComments = useSelectionStore(s => s.selectedComments)
   const selected = selectedComments.includes(id)
-  
+
   useEffect(() => {
     if (containerRef.current) {
       const bounds = containerRef.current.getBoundingClientRect()
-      setHeight(bounds.height + 10)
+      const { scale } = useViewStore.getState()
+      setSize({
+        height: bounds.height*scale,
+        width: bounds.width*scale,
+      })
     }
-  }, [containerRef?.current, text])
-  
+  }, [containerRef?.current, text, x, y])
+
   const handleMouseDown = e =>
     dispatchCustomEvent('comment:mousedown', {
       originalEvent: e,
@@ -28,16 +32,16 @@ const CommentRect = ({ id, x, y, text }) => {
       originalEvent: e,
       comment: { id, text },
     })
-  
-  return <foreignObject x={x} y={y} width={255} height={height}>
-    <CommentContainer
+
+  return <foreignObject x={x} y={y} {...size}>
+    <div
       xmlns="http://www.w3.org/1999/xhtml"
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
-      $selected={selected}>
-        {text}
-    </CommentContainer>
+      style={commentStyles}
+      className={(selected && commentSelectedClass) || undefined}
+    >{text}</div>
   </foreignObject>
 }
 

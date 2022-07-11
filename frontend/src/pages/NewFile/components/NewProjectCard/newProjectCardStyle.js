@@ -42,14 +42,10 @@ export const CardContent = styled('div')`
 
 export const CardImage = styled('div')`
   height: 100%;
-  /* TODO: use image in place of temp background */
-  --dot-fraction: 12.5%;
-  background: radial-gradient(
-    var(--grid-dot),
-    var(--grid-dot) var(--dot-fraction),
-    var(--white) var(--dot-fraction));
-  background-size: 30px 30px;
-  background-position: 5px 5px;
+  background: var(--grid-pattern-light);
+  background-size: 1.875em 1.875em;
+  background-position: .4375em .4375em;
+  position: relative;
 
   ${p => p.$disabled && `
     position: relative;
@@ -66,4 +62,13 @@ export const CardImage = styled('div')`
       font-family: var(--font-feature);
     }
   `}
+
+  img, svg {
+    display: block;
+    object-fit: contain;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
 `

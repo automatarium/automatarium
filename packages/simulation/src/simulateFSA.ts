@@ -1,16 +1,26 @@
-import parseRead from './parseRead'
-import validTransitions from './validTransitions'
 import { UnresolvedFSAGraph, FSAGraph, ExecutionResult, ExecutionTrace, StateID } from './types'
+import { validTransitions } from './validTransitions'
+import { resolveGraph } from './resolveGraph'
 
-const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
-  // Resolve graph transitions
-  const transitions = graph.transitions.map(transition => ({...transition, read: parseRead(transition.read)}))
-  const resolvedGraph: FSAGraph = { ...graph, transitions }
-  
+/**
+ * Simulate and return the execution result of a given FSA with a given input.
+ *
+ * @param graph - FSA Graph object to simulate
+ * @param input - Input to run the FSA against
+ * @returns The execution result object including the acceptance state and the trace of states
+ */
+export const simulateFSA = (graph: UnresolvedFSAGraph, input: string) => {
+  // Resolve graph 
+  const resolvedGraph = resolveGraph(graph)
+
   // Simulate
   return simulateFSAGraph(resolvedGraph, input)
 }
 
+/**
+ * Recursively simulate resolved FSA graph
+ * @internal
+ */
 const simulateFSAGraph = (
   graph: FSAGraph,
   input: string,
@@ -59,5 +69,3 @@ const simulateFSAGraph = (
   const acceptingResult = results.find(r => r.accepted)
   return acceptingResult ?? results.sort((r1, r2) => r2.trace.length - r1.trace.length)[0]
 }
-
-export default simulateFSA

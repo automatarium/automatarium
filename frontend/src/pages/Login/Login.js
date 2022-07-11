@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, forwardRef } from 'react'
+import React, { useState, useEffect, forwardRef } from 'react'
 import { useForm } from 'react-hook-form'
 
-import { Main, TextInput, Button, Label, Header, Modal } from '/src/components'
+import { Input, Button, Label, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -28,7 +28,7 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   useEffect(() => {
     if (setFormActions) {
       setFormActions(<>
-        <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button> 
+        <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button>
       </>)
     }
   }, [isDirty, isLoading, isSubmitting, ref?.current, setFormActions])
@@ -41,33 +41,36 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
         setIsSubmitting(false)
       })
       .then(() => { onComplete?.() })
-      .catch(() => {
-        setFireError('Incorrect email or password')
+      .catch(e => {
+        if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
+          setFireError('Incorrect email or password')
+        } else {
+          setFireError('An error occurred, please check you are connected to the internet and try again')
+        }
         setIsSubmitting(false)
       })
   }
 
   return <form onSubmit={handleSubmit(onSubmit)} ref={ref} id='login-form' {...props}>
     {error && (
-      <p>{error}</p>
+      <p style={{ color: 'var(--error)' }}>{error}</p>
     )}
     <Label htmlFor='login-email'>Email</Label>
-    <TextInput id='login-email' type='email' {...register('email')} />
+    <Input id='login-email' type='email' {...register('email')} />
     <p>{errors.email?.message}</p>
 
     <Label htmlFor='login-password'>Password</Label>
-    <TextInput id='login-password' type='password' {...register('password')} />
+    <Input id='login-password' type='password' {...register('password')} />
     <p>{errors.email?.password}</p>
   </form>
 })
 
 Login.Modal = ({ ...props }) => {
   const [formActions, setFormActions] = useState()
-  
+
   return <Modal
-    narrow
     actions={<>
-      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button> 
+      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button>
       {formActions}
     </>}
     {...props}
@@ -77,7 +80,7 @@ Login.Modal = ({ ...props }) => {
     <Login.Form
       onComplete={props?.onClose}
       setFormActions={setFormActions}
-      style={{ paddingBottom: '1em' }} />
+    />
   </Modal>
 }
 

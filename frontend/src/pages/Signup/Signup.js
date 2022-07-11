@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 
 import { firebase } from '/src/auth'
 import { createUser } from '/src/services'
-import { Label, TextInput, Button, Header, Modal } from '/src/components'
+import { Label, Input, Button, Header, Modal } from '/src/components'
 import { useAuth } from '/src/hooks'
 
 const defaultValues = {
@@ -30,7 +30,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   useEffect(() => {
     if (setFormActions) {
       setFormActions(<>
-        <Button type='submit' form='signup-form' disabled={!isDirty || isSubmitting}>Sign Up</Button> 
+        <Button type='submit' form='signup-form' disabled={!isDirty || isSubmitting}>Sign Up</Button>
       </>)
     }
   }, [isDirty, isSubmitting, ref?.current, setFormActions])
@@ -92,19 +92,19 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
   return <form onSubmit={handleSubmit(onSubmit)} ref={ref} id='signup-form' {...props}>
     {error && (
-      <p>${error}</p>
+      <p style={{ color: 'var(--error)' }}>{error}</p>
     )}
     <Label htmlFor='email'>Email</Label>
-    <TextInput type='email' {...register('email')} />
+    <Input type='email' {...register('email')} placeholder="you@example.com" />
     <p>{errors.email?.message}</p>
 
     <Label htmlFor='password'>Password</Label>
-    <TextInput type='password' minLength={6} {...register('password')} />
+    <Input type='password' minLength={6} {...register('password')} />
 
     <p>{errors.email?.password}</p>
 
     <Label htmlFor='passwordAgain'>Confirm Password</Label>
-    <TextInput type='password' {...register('passwordAgain', {
+    <Input type='password' {...register('passwordAgain', {
       validate: value =>
       value === watchPassword || 'Passwords must match',
     })} />
@@ -114,21 +114,20 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
 Signup.Modal = ({ ...props }) => {
   const [formActions, setFormActions] = useState()
-  
+
   return <Modal
-    narrow
     actions={<>
-      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button> 
+      <Button secondary style={{ marginRight: 'auto' }} onClick={props?.onClose}>Close</Button>
       {formActions}
     </>}
     {...props}
   >
-    <Header center/>
+    <Header center />
     <h2>Sign Up</h2>
     <Signup.Form
       onComplete={props?.onClose}
       setFormActions={setFormActions}
-      style={{ paddingBottom: '1em' }} />
+    />
   </Modal>
 }
 

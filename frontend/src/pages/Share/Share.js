@@ -1,11 +1,10 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
-import { v4 as uuid } from 'uuid'
 
 import { getProject } from '/src/services/project'
 import { Spinner, ProjectCard, Button } from '/src/components'
-import { useProjectStore } from '/src/stores' 
+import { useProjectStore } from '/src/stores'
 import { Container } from './shareStyle'
 
 const Share = () => {
@@ -22,7 +21,7 @@ const Share = () => {
   }, [pid])
 
   const handleCopy = useCallback(() => {
-    setProject({_id: uuid(), userid: null, ...sharedProject})
+    setProject({...sharedProject, _id: crypto.randomUUID(), userid: null})
     navigate('/editor')
   }, [pid, sharedProject])
 
@@ -32,7 +31,7 @@ const Share = () => {
     <Container>
       {loading ? <Spinner /> : <>
         <ProjectCard
-          $disabled
+          disabled
           key={sharedProject._id}
           name={sharedProject.meta?.name}
           type={sharedProject.config?.type}

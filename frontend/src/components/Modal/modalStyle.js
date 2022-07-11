@@ -22,6 +22,10 @@ export const Overlay = styled('div', forwardRef)`
   position: fixed;
   inset: 0;
   background: rgba(0 0 0 / .5);
+
+  .dropdown & {
+    background: transparent;
+  }
 `
 
 export const Content = styled('div', forwardRef)`
@@ -30,10 +34,10 @@ export const Content = styled('div', forwardRef)`
   position: relative;
   background: var(--surface);
   border-radius: 1em;
-  width: 700px;
-  max-width: 100%;
+  width: 500px;
+  max-width: calc(100% - 40px);
   box-sizing: border-box;
-  padding: 1.2em 1em 1em;
+  box-shadow: 0 2px 5px rgba(0 0 0 / .5);
 
   transform: translateY(0);
   transition: transform .15s;
@@ -41,11 +45,24 @@ export const Content = styled('div', forwardRef)`
   [aria-hidden='true'] & {
     transform: translateY(5px);
   }
+  [aria-hidden='true'].dropdown & {
+    transform: translateY(-5px);
+  }
+`
 
-  ${p => p.$narrow && `
-    width: 500px;
-    padding: 1.2em 2em 2em;
-  `}
+export const Children = styled('div')`
+  padding: .8rem 1rem 1rem;
+`
+
+export const Heading = styled('h2')`
+  padding: 1rem 1rem 0;
+  margin-block: 0 .2rem;
+`
+
+export const Description = styled('span')`
+  display: block;
+  padding-inline: 1rem;
+  opacity: .5;
 `
 
 export const Buttons = styled('div')`
@@ -53,5 +70,7 @@ export const Buttons = styled('div')`
   align-items: center;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 1em;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 1px solid var(--toolbar);
 `

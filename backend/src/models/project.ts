@@ -9,19 +9,19 @@ const ProjectSchema: Schema = new Schema({
   meta: {
     type: {
       name: { type: String, required: true },
-      dateCreated: { type: Date, default: Date.now, required: true },
-      dateEdited: { type: Date, default: Date.now, required: true },
+      dateCreated: { type: Number, required: true },
+      dateEdited: { type: Number, required: true },
       version: { type: String, required: true },
       automatariumVersion: { type: String, required: true },
     },
     _id: false
   },
   config: { type: Object },
-  initialState: { type: String, required: true },
+  initialState: { type: Number, required: true },
   states: { type: Object, _id: false },
   transitions: { type: Object, _id: false },
   comments: { type: [{
-    id: { type: String, required: true },
+    id: { type: Number, required: true },
     text: { type: String, required: true },
     x: { type: Number, required: true },
     y: { type: Number, required: true },

@@ -1,11 +1,11 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 
 import Project from 'models/project'
 import { RequestUser } from 'types'
 
-export const getProject = async ( req: Request, res: Response, next: NextFunction ) => {
+export const getProject = async ( req: Request, res: Response ) => {
   const { pid } = req.params
-  
+
   // Retrieve project by id
   try {
     const project = await Project.findById(pid)
@@ -19,7 +19,7 @@ export const getProject = async ( req: Request, res: Response, next: NextFunctio
   }
 }
 
-export const createProject = async ( req: Request, res: Response, next: NextFunction ) => {  
+export const createProject = async ( req: Request, res: Response ) => {
   const { id, isPublic, meta, initialState, states, transitions, comments, tests, config } = req.body
   const { uid } = req.user as RequestUser
 
@@ -52,7 +52,7 @@ export const createProject = async ( req: Request, res: Response, next: NextFunc
   // Save project
 }
 
-export const getProjects = async ( req: Request, res: Response, next: NextFunction ) => {
+export const getProjects = async ( req: Request, res: Response ) => {
   const { uid } = req.user as RequestUser
 
   // Retrieve project by id
@@ -68,8 +68,8 @@ export const getProjects = async ( req: Request, res: Response, next: NextFuncti
   }
 }
 
-export const updateProject = async ( req: Request, res: Response, next: NextFunction ) => {
-  const { pid } = req.params  
+export const updateProject = async ( req: Request, res: Response ) => {
+  const { pid } = req.params
   const { uid } = req.user as RequestUser
   const { isPublic, meta, initialState, states, transitions, comments, tests, config } = req.body
 
@@ -79,7 +79,7 @@ export const updateProject = async ( req: Request, res: Response, next: NextFunc
       _id: pid,
       userid: uid
     },
-    { 
+    {
       isPublic,
       meta,
       config,
@@ -92,6 +92,29 @@ export const updateProject = async ( req: Request, res: Response, next: NextFunc
     return res.status(200).json({
       project
     })
+  } catch (error) {
+    return res.status(500).json({
+      error: error?.message ?? error
+    })
+  }
+}
+
+export const deleteProject = async ( req: Request, res: Response) => {
+  const { pid } = req.params
+  const { uid } = req.user as RequestUser
+
+  try {
+    const project = await Project.findById(pid)
+
+    // Ensure project belongs to authenticated user
+    if (project?.userid !== uid) {
+      return res.status(403).json({
+        error: "You cannot delete this project as it does not belong to you."
+      })
+    }
+
+    return res.status(200).json()
+
   } catch (error) {
     return res.status(500).json({
       error: error?.message ?? error

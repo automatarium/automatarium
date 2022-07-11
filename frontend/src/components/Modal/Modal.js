@@ -2,20 +2,32 @@ import { createPortal } from 'react-dom'
 import { useEffect } from 'react'
 import { useA11yDialog } from 'react-a11y-dialog'
 
-import { Heading, Button } from '/src/components'
+import { Button } from '/src/components'
 
-import { Container, Overlay, Content, Buttons } from './modalStyle'
+import {
+  Container,
+  Overlay,
+  Content,
+  Buttons,
+  Children,
+  Heading,
+  Description,
+} from './modalStyle'
 
 const Modal = ({
   id = 'dialog',
   role = 'dialog',
   title,
+  description,
   children,
   actions,
   isOpen,
   onClose,
   focusRef,
-  narrow = false,
+  dropdown = false,
+  containerStyle,
+  width,
+  ...props
 }) => {
   const [instance, attr] = useA11yDialog({ id, role, title })
 
@@ -34,13 +46,20 @@ const Modal = ({
   }, [instance, onClose, focusRef?.current])
 
   const dialog = createPortal(
-    <Container {...attr.container}>
+    <Container
+      {...attr.container}
+      className={dropdown ? 'dropdown' : ''}
+      style={containerStyle}
+    >
       <Overlay {...attr.overlay} />
 
-      <Content {...attr.dialog} $narrow={narrow}>
-        {title && <h2 {...attr.title}>{title}</h2>}
+      <Content {...attr.dialog} style={{ width }}>
+        {title && <Heading {...attr.title}>{title}</Heading>}
+        {description && <Description>{description}</Description>}
 
-        {children}
+        <Children {...props}>
+          {children}
+        </Children>
 
         <Buttons>
           {actions ?? <Button {...attr.closeButton} secondary>Close</Button>}

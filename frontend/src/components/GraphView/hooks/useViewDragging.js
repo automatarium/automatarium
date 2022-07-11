@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 
-import { useViewStore, useToolStore } from '/src/stores'
+import { useViewStore, useToolStore, usePreferencesStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
 
 import { SCROLL_MAX, SCROLL_MIN, SCROLL_SPEED } from '/src/config/interactions'
@@ -12,7 +12,9 @@ const useViewDragging = containerRef => {
   const viewPosition = useViewStore(s => s.position)
   const viewScale = useViewStore(s => s.scale)
   const setViewPosition = useViewStore(s => s.setViewPosition)
-  const setViewScale = useViewStore(s => s.setViewScale)
+  const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
+
+  const ctrlZoom = usePreferencesStore(s => s.preferences.ctrlZoom)
 
   // Keep track of drag events
   const [dragStartPosition, setDragStartPosition] = useState(null)
@@ -35,25 +37,33 @@ const useViewDragging = containerRef => {
     e.stopPropagation()
     e.preventDefault()
 
-    // Determine scroll amount and whether its possible
-    const desiredScrollAmount = e.deltaY * SCROLL_SPEED / 5
-    const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, viewScale + desiredScrollAmount))
-    const scrollAmount = newScale - viewScale
-    if (scrollAmount === 0)
-      return
+    // Do zoom
+    if (ctrlZoom ? e.ctrlKey : true) {
+      // Determine scroll amount and whether its possible
+      const desiredScrollAmount = e.deltaY * SCROLL_SPEED * viewScale
+      const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, viewScale + desiredScrollAmount))
+      const scrollAmount = newScale - viewScale
+      if (scrollAmount === 0)
+        return
 
-    const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
-    setViewPosition({
-      x: viewPosition.x - mx * scrollAmount,
-      y: viewPosition.y - my * scrollAmount,
-    })
-    setViewScale(newScale)
-  }, [viewScale, viewPosition], {
+      const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
+      setViewPositionAndScale({
+        x: viewPosition.x - mx * scrollAmount,
+        y: viewPosition.y - my * scrollAmount,
+      }, newScale)
+    } else {
+      // Pan
+      setViewPosition({
+        x: viewPosition.x + e.deltaX * viewScale,
+        y: viewPosition.y + e.deltaY * viewScale,
+      })
+    }
+  }, [viewScale, viewPosition, ctrlZoom], {
     options: { passive: false }
   })
 
   useEvent('mousedown', e => {
-    if (toolActive && e.target === containerRef.current) {
+    if (toolActive && containerRef.current?.contains(e.target)) {
       setDragStartPosition(relativeMousePosition(e.clientX, e.clientY))
       setDragStartViewPosition(viewPosition)
     }

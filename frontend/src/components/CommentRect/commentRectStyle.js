@@ -1,17 +1,19 @@
-import { styled } from 'goober'
-import { forwardRef } from 'react'
+import { css } from 'goober'
 
-export const CommentContainer = styled('div', forwardRef)`
-  color: black;  
-  background: white;
-  padding: 1em;
-  border-radius: .5rem;
-  border: 2.5px solid var(--input-border);
-  user-select: none;
-  width: max-content;
-  margin: auto;
+export const commentStyles = {
+  color: 'var(--comment-text)',
+  background: 'var(--grid-bg)',
+  padding: '.8em 1em',
+  borderRadius: '.5rem',
+  borderWidth: '2.5px',
+  borderStyle: 'solid',
+  borderColor: 'var(--input-border)',
+  userSelect: 'none',
+  width: 'max-content',
+  maxWidth: '255px',
+  boxSizing: 'border-box',
+}
 
-  ${p => p.$selected && `
-    border-color: var(--primary);
-  `}
+export const commentSelectedClass = css`
+  border-color: var(--primary) !important;
 `

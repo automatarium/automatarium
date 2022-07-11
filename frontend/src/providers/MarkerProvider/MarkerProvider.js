@@ -33,7 +33,7 @@ const MarkerProvider = ({ children }) => {
         refY={markerRefY}
         orient="auto"
         markerUnits="strokeWidth">
-        <path d={`${arrowStart} ${arrowTopLeft} ${arrowBottomLeft} z`} fill="black" />
+        <path d={`${arrowStart} ${arrowTopLeft} ${arrowBottomLeft} z`} fill="var(--stroke)" />
       </marker>
 
       {/*Selected Arrowhead Definition*/}
@@ -57,7 +57,7 @@ const MarkerProvider = ({ children }) => {
         refY={markerRefY}
         orient="auto"
         markerUnits="strokeWidth">
-      <path d={`${arrowStart} ${arrowTopLeft} ${arrowStart} ${arrowBottomLeft}`} stroke="black" />
+      <path d={`${arrowStart} ${arrowTopLeft} ${arrowStart} ${arrowBottomLeft}`} stroke="var(--stroke)" />
       </marker>
     </defs>
 
