@@ -56,22 +56,6 @@ const Info = () => {
       </SymbolList>
     </Wrapper>
 
-    <SectionLabel>Transition Function</SectionLabel>
-    <Wrapper>
-      <Table>
-        <tbody>
-          <tr>
-            <th>Q &times; &Sigma;</th>
-            <th> &delta;(Q &times; &Sigma;) </th>
-          </tr>
-          {Object.entries(transitionMap).map(([key, states]) => <tr key={key}>
-            <td>({statePrefix}{key.split(',')[0]}, {key.split(',')[1]})</td>
-            <td>{`{${states.sort().map(s => `${statePrefix}${s}`).join(',')}}`}</td>
-          </tr>)}
-        </tbody>
-      </Table>
-    </Wrapper>
-
     <SectionLabel>State Transition Table</SectionLabel>
     <Wrapper>
       <Table>
@@ -87,6 +71,22 @@ const Info = () => {
                 .filter(([key]) => key.split(',')[0] == state.id && key.split(',')[1] == symbol)
                 .map(([, states]) => states.map(s => `${statePrefix}${s}`).join(', '))[0] ?? '-'}
             </td>)}
+          </tr>)}
+        </tbody>
+      </Table>
+    </Wrapper>
+
+    <SectionLabel>Transition Function</SectionLabel>
+    <Wrapper>
+      <Table>
+        <tbody>
+          <tr>
+            <th>Q &times; &Sigma;</th>
+            <th> &delta;(Q &times; &Sigma;) </th>
+          </tr>
+          {Object.entries(transitionMap).map(([key, states]) => <tr key={key}>
+            <td>({statePrefix}{key.split(',')[0]}, {key.split(',')[1]})</td>
+            <td>{`{${states.sort().map(s => `${statePrefix}${s}`).join(',')}}`}</td>
           </tr>)}
         </tbody>
       </Table>
