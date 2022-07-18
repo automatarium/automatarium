@@ -53,7 +53,6 @@ const Info = () => {
 
     return map
   }, [states, alphabet, resolvedGraph])
-  console.log(transitionMap);
 
   return <>
     <SectionLabel>Alphabet</SectionLabel>
