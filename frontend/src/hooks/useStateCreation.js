@@ -15,8 +15,10 @@ const useStateCreation = () => {
     setMousePos(positionFromEvent(e))
   })
 
-  useEvent('svg:mousedown', () => {
-    setShowGhost(true)
+  useEvent('svg:mousedown', e => {
+    if (tool === 'state' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+      setShowGhost(true)
+    }
   })
 
   useEvent('svg:mouseup', e => {
