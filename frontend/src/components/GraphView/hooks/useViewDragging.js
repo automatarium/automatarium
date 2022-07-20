@@ -40,7 +40,7 @@ const useViewDragging = containerRef => {
     // Do zoom
     if (ctrlZoom ? e.ctrlKey : true) {
       // Determine scroll amount and whether its possible
-      const desiredScrollAmount = e.deltaY * SCROLL_SPEED * viewScale
+      const desiredScrollAmount = e.deltaY * SCROLL_SPEED
       const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, viewScale + desiredScrollAmount))
       const scrollAmount = newScale - viewScale
       if (scrollAmount === 0)
