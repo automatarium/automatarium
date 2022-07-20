@@ -72,7 +72,6 @@ const InputDialogs = () => {
     if (value && !/^\s*$/.test(value)) {
       if (dialog.selectedComment === undefined) {
         const pos = screenToViewSpace(dialog.x, dialog.y)
-        console.log(pos)
         useProjectStore.getState().createComment({ x: pos[0], y: pos[1], text: value.trim() })
       } else {
         useProjectStore.getState().updateComment({ ...dialog.selectedComment, text: value.trim() })
