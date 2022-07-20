@@ -16,11 +16,10 @@ const ExportImage = () => {
   const [preview, setPreview] = useState('#')
   const [prevBG, setPrevBG] = useState()
 
-  // Set project settings if unset
+  // Set project settings if they change
   useEffect(() => {
-    if (filename === '') setOptions({ filename: projectName })
-    if (color === '') setOptions({ color: projectColor })
-  }, [exportVisible, projectName, projectColor])
+    setOptions({ filename: projectName, color: projectColor })
+  }, [projectName, projectColor])
 
   // Set svg
   useEffect(() => {
