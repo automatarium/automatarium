@@ -19,6 +19,7 @@ const InputDialogs = () => {
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
   const viewToScreenSpace = useViewStore(s => s.viewToScreenSpace)
+  const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
 
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
@@ -70,7 +71,9 @@ const InputDialogs = () => {
   const saveComment = () => {
     if (value && !/^\s*$/.test(value)) {
       if (dialog.selectedComment === undefined) {
-        useProjectStore.getState().createComment({ x: dialog.x, y: dialog.y, text: value.trim() })
+        const pos = screenToViewSpace(dialog.x, dialog.y)
+        console.log(pos)
+        useProjectStore.getState().createComment({ x: pos[0], y: pos[1], text: value.trim() })
       } else {
         useProjectStore.getState().updateComment({ ...dialog.selectedComment, text: value.trim() })
       }
@@ -82,11 +85,12 @@ const InputDialogs = () => {
   useEvent('editStateName', ({ detail: { id } }) => {
     const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
     setValue(selectedState.name ?? '')
+    const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
     setDialog({
       visible: true,
       selectedState,
-      x: selectedState.x, y: selectedState.y,
+      x: pos[0], y: pos[1],
       type: 'stateName',
     })
     focusInput()
@@ -101,11 +105,12 @@ const InputDialogs = () => {
   useEvent('editStateLabel', ({ detail: { id } }) => {
     const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
     setValue(selectedState.label ?? '')
+    const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
     setDialog({
       visible: true,
       selectedState,
-      x: selectedState.x, y: selectedState.y,
+      x: pos[0], y: pos[1],
       type: 'stateLabel',
     })
     focusInput()
