@@ -82,6 +82,7 @@ const Dropdown = ({
 
   return (
     <Wrapper
+      onContextMenu={e => e.preventDefault()}
       $subMenu={subMenu}
       $visible={visible}
       ref={dropdownRef}
