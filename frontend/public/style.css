@@ -14,7 +14,7 @@
   --primary-h: 38;
   --primary-s: 84%;
   --primary-l: 50%;
-  --primary: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
+  --primary: hsl(var(--primary-h), var(--primary-s), var(--primary-l));
 
   --success-h: 108;
   --success-s: 100%;
@@ -38,18 +38,18 @@
   --grid-dot-light: #DDDDDD;
   --stroke-light: var(--black);
   --selection-fill-light: #00000020;
-  --state-bg-light: hsl(var(--primary-h) var(--primary-s) 75%);
-  --state-bg-selected-light: hsl(var(--primary-h) 70% 65%);
+  --state-bg-light: hsl(var(--primary-h), var(--primary-s), 75%);
+  --state-bg-selected-light: hsl(var(--primary-h), 70%, 65%);
   --comment-text-light: var(--black);
   --grid-pattern-light: radial-gradient(var(--grid-dot-light), var(--grid-dot-light) var(--dot-fraction), var(--grid-bg-light) var(--dot-fraction));
 
   /* Dark */
   --grid-bg-dark: #1B1B1B;
   --grid-dot-dark: #333;
-  --stroke-dark: hsl(var(--primary-h) 85% 93%);
+  --stroke-dark: hsl(var(--primary-h), 85%, 93%);
   --selection-fill-dark: #FFFFFF20;
-  --state-bg-dark: hsl(var(--primary-h) 47% 33%);
-  --state-bg-selected-dark: hsl(var(--primary-h) 65% 23%);
+  --state-bg-dark: hsl(var(--primary-h), 47%, 33%);
+  --state-bg-selected-dark: hsl(var(--primary-h), 65%, 23%);
   --comment-text-dark: var(--white);
   --grid-pattern-dark: radial-gradient(var(--grid-dot-dark), var(--grid-dot-dark) var(--dot-fraction), var(--grid-bg-dark) var(--dot-fraction));
 
