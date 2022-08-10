@@ -1,0 +1,40 @@
+{
+  "name": "frontend",
+  "version": "1.0.0",
+  "schemaVersion": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "parcel public/index.html --no-cache",
+    "build": "rm -rf dist && parcel build public/index.html",
+    "lint": "eslint 'src/**/*.js'",
+    "lint:fix": "eslint --fix 'src/**/*.js'"
+  },
+  "dependencies": {
+    "@automatarium/jflap-translator": "1.0.0",
+    "@automatarium/simulation": "1.0.0",
+    "axios": "^0.26.1",
+    "dayjs": "^1.11.2",
+    "firebase": "^9.6.10",
+    "goober": "^2.1.8",
+    "immer": "^9.0.12",
+    "lodash.clonedeep": "^4.5.0",
+    "lodash.groupby": "^4.6.0",
+    "lodash.isequal": "^4.5.0",
+    "lucide-react": "^0.17.9",
+    "prop-types": "^15.8.1",
+    "react": "^17.0.2",
+    "react-a11y-dialog": "^6.1.5",
+    "react-dom": "^17.0.2",
+    "react-hook-form": "^7.28.1",
+    "react-lottie-player": "^1.4.3",
+    "react-router-dom": "^6.2.2",
+    "zustand": "^3.7.1"
+  },
+  "devDependencies": {
+    "@parcel/transformer-inline-string": "2.5.0",
+    "eslint": "^8.11.0",
+    "eslint-plugin-react": "^7.29.4",
+    "parcel": "^2.3.2",
+    "process": "^0.11.10"
+  }
+}

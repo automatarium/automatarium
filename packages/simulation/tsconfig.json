@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "lib": ["es2019"]
+  },
+  "files": ["global.d.ts"],
+  "include": ["./src/*.ts", "./src/*.d.ts"]
+}

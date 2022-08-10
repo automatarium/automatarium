@@ -1,0 +1,64 @@
+{
+  "_id": "f7ef1ab6-37d6-4e8e-b3ff-41d954366706",
+  "states": [
+    {
+      "isFinal": false,
+      "x": 255,
+      "y": 375,
+      "id": 0
+    },
+    {
+      "isFinal": false,
+      "x": 390,
+      "y": 375,
+      "id": 1
+    },
+    {
+      "isFinal": false,
+      "x": 570,
+      "y": 375,
+      "id": 2
+    },
+    {
+      "isFinal": true,
+      "x": 705,
+      "y": 375,
+      "id": 3
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 0,
+      "read": "a"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "id": 2,
+      "read": "a"
+    }
+  ],
+  "comments": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Spotless Cabbage",
+    "dateCreated": 1656223819391,
+    "dateEdited": 1656223819391,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

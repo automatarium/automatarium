@@ -1,0 +1,123 @@
+@font-face {
+  font-family: 'Rubik Mono One';
+  src: url('RubikMonoOne.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+:root, #automatarium-graph {
+  --font-feature: 'Rubik Mono One', sans-serif;
+
+  --white: #FAFAFA;
+  --black: #111;
+
+  --primary-h: 38;
+  --primary-s: 84%;
+  --primary-l: 50%;
+  --primary: hsl(var(--primary-h) var(--primary-s) var(--primary-l));
+
+  --success-h: 108;
+  --success-s: 100%;
+  --success-l: 34%;
+  --success: hsl(var(--success-h), var(--success-s), var(--success-l));
+
+  --error-h: 0;
+  --error-s: 97%;
+  --error-l: 66%;
+  --error: #FC5353;
+
+  --surface: #2C2C2C;
+  --toolbar: #424242;
+  --disabled-button: #6F6F6F;
+  --input-border: #C4C4C4;
+
+  --dot-fraction: 12.5%;
+
+  /* Light */
+  --grid-bg-light: var(--white);
+  --grid-dot-light: #DDDDDD;
+  --stroke-light: var(--black);
+  --selection-fill-light: #00000020;
+  --state-bg-light: hsl(var(--primary-h) var(--primary-s) 75%);
+  --state-bg-selected-light: hsl(var(--primary-h) 70% 65%);
+  --comment-text-light: var(--black);
+  --grid-pattern-light: radial-gradient(var(--grid-dot-light), var(--grid-dot-light) var(--dot-fraction), var(--grid-bg-light) var(--dot-fraction));
+
+  /* Dark */
+  --grid-bg-dark: #1B1B1B;
+  --grid-dot-dark: #333;
+  --stroke-dark: hsl(var(--primary-h) 85% 93%);
+  --selection-fill-dark: #FFFFFF20;
+  --state-bg-dark: hsl(var(--primary-h) 47% 33%);
+  --state-bg-selected-dark: hsl(var(--primary-h) 65% 23%);
+  --comment-text-dark: var(--white);
+  --grid-pattern-dark: radial-gradient(var(--grid-dot-dark), var(--grid-dot-dark) var(--dot-fraction), var(--grid-bg-dark) var(--dot-fraction));
+
+  --grid-bg: var(--grid-bg-light);
+  --grid-dot: var(--grid-dot-light);
+  --stroke: var(--stroke-light);
+  --selection-fill: var(--selection-fill-light);
+  --state-bg: var(--state-bg-light);
+  --state-bg-selected: var(--state-bg-selected-light);
+  --comment-text: var(--comment-text-light);
+  --grid-pattern: var(--grid-pattern-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root, #automatarium-graph {
+    --grid-bg: var(--grid-bg-dark);
+    --grid-dot: var(--grid-dot-dark);
+    --stroke: var(--stroke-dark);
+    --selection-fill: var(--selection-fill-dark);
+    --state-bg: var(--state-bg-dark);
+    --state-bg-selected: var(--state-bg-selected-dark);
+    --comment-text: var(--comment-text-dark);
+    --grid-pattern: var(--grid-pattern-dark);
+  }
+}
+
+body.light, body.light #automatarium-graph {
+  --grid-bg: var(--grid-bg-light);
+  --grid-dot: var(--grid-dot-light);
+  --stroke: var(--stroke-light);
+  --selection-fill: var(--selection-fill-light);
+  --state-bg: var(--state-bg-light);
+  --state-bg-selected: var(--state-bg-selected-light);
+  --comment-text: var(--comment-text-light);
+  --grid-pattern: var(--grid-pattern-light);
+}
+body.dark, body.dark #automatarium-graph {
+  --grid-bg: var(--grid-bg-dark);
+  --grid-dot: var(--grid-dot-dark);
+  --stroke: var(--stroke-dark);
+  --selection-fill: var(--selection-fill-dark);
+  --state-bg: var(--state-bg-dark);
+  --state-bg-selected: var(--state-bg-selected-dark);
+  --comment-text: var(--comment-text-dark);
+  --grid-pattern: var(--grid-pattern-dark);
+}
+
+html, body {
+  overscroll-behavior: none;
+}
+
+body {
+  color-scheme: light dark;
+  margin: 0;
+  font-family: sans-serif;
+  background: var(--surface);
+  color: var(--white);
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--primary);
+}
+ul li, ol li {
+  margin-block: 1em;
+}

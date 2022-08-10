@@ -1,0 +1,59 @@
+{
+  "_id": "893764c2-ba5b-4079-9524-0e5c27671d9e",
+  "userid": "McpRXdqQi6XAUV7JdoWKU3iZNvc2",
+  "comments": [],
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "",
+    "playbackInterval": 1000
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Accepts empty input (lambda only)",
+    "dateCreated": "2022-06-08T10:00:52.480Z",
+    "dateEdited": "2022-06-08T10:00:53.332Z",
+    "version": "0.0.1",
+    "automatariumVersion": "0.0.1"
+  },
+  "states": [
+    {
+      "x": 594,
+      "y": 224,
+      "id": 0,
+      "isFinal": false
+    },
+    {
+      "x": 825,
+      "y": 225,
+      "id": 1,
+      "isFinal": false
+    },
+    {
+      "x": 1035,
+      "y": 225,
+      "id": 2,
+      "isFinal": true
+    }
+  ],
+  "tests": {
+    "batch": [
+      ""
+    ]
+  },
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 0,
+      "read": ""
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 1,
+      "read": ""
+    }
+  ]
+}
