@@ -1,18 +1,20 @@
-import { FSAGraph, StateID, ReadSymbol, Transition } from './types.d'
+import {FSAGraph, StateID, ReadSymbol, Transition, TMTransition, TMGraph} from './types.d'
 import closureWithPredicate from './closureWithPredicate'
 
-export type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}
+export type ValidTMTransition = { transition: TMTransition, trace: { to: number, read: string }[]}
 
 /**
  * Compute the list of transitions that are directly or indirectly navigable from a given starting state using a specific input symbol.
  * Records the "trace" of all requisite transitions so that a trace output can be produced.
+ *
+ * TO DO. IN DEVELOPMENT TO MOVE FROM FSA TO TM
  *
  * @param graph - The FSA graph object used as input
  * @param currentStateID - The ID of the current state used to compute the valid transitions
  * @param nextRead  - The input symbol to be read next
  * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
  */
-export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
+export const validTMTransitions = (graph: TMGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidTMTransition[] => {
   // Compute lambda closure (states accessible without consuming input)
   const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
 
@@ -52,4 +54,3 @@ export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextR
       trace: [...trace, transition].map(tr => ({ to: tr.to, read: tr.read.length === 0 ? '' : nextRead }))
     }))
 }
-

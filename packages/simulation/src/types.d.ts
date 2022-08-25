@@ -1,4 +1,5 @@
 export type ReadSymbol = string
+export type ReadDirection = string
 export type StateID = number
 export type TransitionID = number
 
@@ -18,6 +19,43 @@ export type FSAGraph = {
   initialState: StateID
   states: State[]
   transitions: Transition[]
+  [other: string]: unknown
+}
+
+export type TMTransition = {
+  id: TransitionID
+  to: StateID
+  from: StateID
+  readSymbol: ReadSymbol[]
+  readDirection: ReadDirection[]
+}
+
+export type UnresolvedTMTransition = {
+  id: TransitionID
+  to: StateID
+  from: StateID
+  readSymbol: ReadSymbol
+  readDirection: ReadDirection
+  [other: string]: unknown
+}
+
+export type Tape = {
+  trace: ReadSymbol[]
+}
+
+export type TMGraph = {
+  initialState: StateID
+  states: State[]
+  transitions: TMTransition[]
+  tape: Tape
+  [other: string]: unknown
+}
+
+export type UnresolvedTMGraph = {
+  initialState: StateID
+  states: State[]
+  transitions: UnresolvedTMTransition[]
+  tape: Tape
   [other: string]: unknown
 }
 
