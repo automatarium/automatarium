@@ -130,6 +130,7 @@ const useActions = (registerHotkeys=false) => {
     DELETE: {
       hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
+        
         const selectionState = useSelectionStore.getState()
         const selectedStateIDs = selectionState.selectedStates
         const selectedTransitionIDs = selectionState.selectedTransitions
@@ -347,6 +348,13 @@ const useActions = (registerHotkeys=false) => {
       hotkey: { key: 'C' },
       handler: () => setTool('comment'),
     },
+    TOOL_DELETE: {
+      hotkey: {key: 'D'},
+      handler: () => {
+        
+        setTool('delete')
+      },
+    }
   }
 
   // Register action hotkeys

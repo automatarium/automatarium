@@ -12,6 +12,7 @@ const useResourceSelection = (makeSelected, makeSetSelected, eventKey) => {
   const select = useCallback(e => {
     let newSelected
     if (tool === 'cursor' || e.detail.originalEvent.button === 2) {
+      console.log('this is me useResourceSelection')
       // Update transition selections
       const id = e.detail[eventKey].id
       newSelected = selected.includes(id)

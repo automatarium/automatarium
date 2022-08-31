@@ -14,6 +14,7 @@ import handAnimation from './animations/hand.json'
 import stateAnimation from './animations/state.json'
 import transitionAnimation from './animations/transition.json'
 import commentAnimation from './animations/comment.json'
+// import deleteAnimation from './animations/delete.json'
 
 const tools = [
   {
@@ -64,6 +65,7 @@ const tools = [
     value: 'delete',
     icon: <Skull />,
     animation: transitionAnimation,
+    //Soon to be deleteAnimation
   },
 ]
 
