@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, Skull } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { useToolStore } from '/src/stores'
@@ -55,6 +55,15 @@ const tools = [
     value: 'comment',
     icon: <MessageSquare />,
     animation: commentAnimation,
+  },
+  //TODO: Delete hotkey not registering
+  {
+    label: 'Delete tool',
+    hotkey: 'D', 
+    description: 'Delete states and transitions from your automaton',
+    value: 'delete',
+    icon: <Skull />,
+    animation: transitionAnimation,
   },
 ]
 
