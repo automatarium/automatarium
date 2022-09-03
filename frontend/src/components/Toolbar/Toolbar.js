@@ -14,7 +14,7 @@ import handAnimation from './animations/hand.json'
 import stateAnimation from './animations/state.json'
 import transitionAnimation from './animations/transition.json'
 import commentAnimation from './animations/comment.json'
-// import deleteAnimation from './animations/delete.json'
+import deleteAnimation from './animations/delete.json'
 
 const tools = [
   {
@@ -61,10 +61,10 @@ const tools = [
   {
     label: 'Delete tool',
     hotkey: 'D', 
-    description: 'Delete states and transitions from your automaton',
+    description: 'Delete states and transitions from your automatarium',
     value: 'delete',
     icon: <Skull />,
-    animation: transitionAnimation,
+    animation: deleteAnimation,
     //Soon to be deleteAnimation
   },
 ]
