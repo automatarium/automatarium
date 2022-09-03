@@ -65,7 +65,6 @@ const tools = [
     value: 'delete',
     icon: <Skull />,
     animation: deleteAnimation,
-    //Soon to be deleteAnimation
   },
 ]
 
