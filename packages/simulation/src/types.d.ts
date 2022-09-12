@@ -21,6 +21,48 @@ export type FSAGraph = {
   [other: string]: unknown
 }
 
+export type PDATransition = {
+  id: TransitionID
+  to: StateID
+  from: StateID
+  readSymbol: ReadSymbol[]
+  // TODO: push and pop
+  popSymbol: PopSymbol[]
+  pushSymbol: PushSymbol[]
+}
+
+export type UnresolvedPDATransition = {
+  id: TransitionID
+  to: StateID
+  from: StateID
+  readSymbol: ReadSymbol
+  // TODO: push and pop
+  popSymbol: PopSymbol[]
+  pushSymbol: PushSymbol[]
+  [other: string]: unknown
+}
+
+// TODO: implement stack
+export type Stack = {
+  stack: Stack[]
+}
+
+export type PDAGraph = {
+  initialState: StateID
+  states: State[]
+  transitions: PDATransition[]
+  stack: Stack
+  [other: string]: unknown
+}
+
+export type UnresolvedPDAGraph = {
+  initialState: StateID
+  states: State[]
+  transitions: UnresolvedPDATransition[]
+  stack: Stack
+  [other: string]: unknown
+}
+
 export type UnresolvedTransition = {
   id: TransitionID
   to: StateID
