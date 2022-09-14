@@ -23,6 +23,7 @@ export type UnparsedTransition = {
 
 export type Successor = {
     state: FSAGraphState;
+    read: ReadSymbol;
     transition: Transition;
 };
 
@@ -49,9 +50,12 @@ export type ExecutionResult = {
     trace: ExecutionTrace[];
 };
 
+/**
+ * A bag of state that uniquely identifies a node
+ */
 export type FSAGraphState = {
     id: StateID;
-    read: ReadSymbol;
+    remaining: ReadSymbol;
     isFinal: boolean;
 };
 
@@ -60,20 +64,23 @@ export class GraphNode {
     private m_transition: Transition | null;
     private m_parent: GraphNode | null;
     private m_depth: number;
+    private m_read: ReadSymbol;
 
     constructor(
         state: FSAGraphState,
         transition: Transition | null = null,
         parent: GraphNode | null = null,
+        read: ReadSymbol = "",
     ) {
         this.m_state = state;
         this.m_transition = transition;
         this.m_parent = parent;
+        this.m_read = read;
         this.m_depth = parent ? parent.m_depth + 1 : 0;
     }
 
     key() {
-        return String(this.m_state.id + this.m_state.read);
+        return String(this.m_state.id + this.m_state.remaining);
     }
 
     get state() {
@@ -86,6 +93,10 @@ export class GraphNode {
 
     get transition() {
         return this.m_transition;
+    }
+
+    get read() {
+        return this.m_read;
     }
 
     get depth() {
@@ -105,14 +116,14 @@ export class FSAGraphProblem {
         }
         const initialState: FSAGraphState = {
             id: state.id,
-            read: this.m_input,
+            remaining: this.m_input,
             isFinal: state.isFinal,
         };
         return initialState;
     }
 
     public isFinalState(state: FSAGraphState) {
-        return state.isFinal && state.read.length === 0;
+        return state.isFinal && state.remaining.length === 0;
     }
 
     public getSuccessors(state: FSAGraphState) {
@@ -125,20 +136,23 @@ export class FSAGraphProblem {
                 (state) => state.id === transition.to,
             );
             const lambdaTransition = transition.read.length === 0;
+            const symbol = state.remaining[0];
             if (
                 nextState === undefined ||
-                !lambdaTransition ||
-                !transition.read.includes(state.read[0])
+                (!lambdaTransition && !transition.read.includes(symbol))
             ) {
                 continue;
             }
             const graphState: FSAGraphState = {
                 id: nextState.id,
-                read: lambdaTransition ? state.read : state.read.slice(1),
+                remaining: lambdaTransition
+                    ? state.remaining
+                    : state.remaining.slice(1),
                 isFinal: nextState.isFinal,
             };
             const successor: Successor = {
                 state: graphState,
+                read: lambdaTransition ? "" : symbol,
                 transition: transition,
             };
             successors.push(successor);

@@ -21,6 +21,7 @@ export const breadthFirstSearch = (problem: FSAGraphProblem) => {
                 successor.state,
                 successor.transition,
                 node,
+                successor.read,
             );
 
             if (!reached.has(successorNode.key())) {
