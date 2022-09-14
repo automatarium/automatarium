@@ -42,21 +42,19 @@ export class Queue<T> extends Collection<T> implements ICollection<T> {
 }
 
 export class Stack<T> extends Collection<T> implements ICollection<T> {
-    private stack: T[];
-
     constructor() {
         super();
     }
     
     add(item: T) {
-        this.stack.push(item);
+        this.items.push(item);
     }
     
     remove() {
-        return this.stack.pop();
+        return this.items.pop();
     }
 
     peek() {
-        return this.stack[this.stack.length - 1];
+        return this.items[this.items.length - 1];
     }
 }
