@@ -1,15 +1,24 @@
+export type ReadSymbol = string
+export type StateID = number
+export type TransitionID = number
+
 export type State = {
-    id: number;
-    x: number;
-    y: number;
+    id: StateID;
     isFinal: boolean;
 }
 
 export type Transition = {
-    id: number;
-    to: number;
-    from: number;
-    read: string;
+    id: TransitionID;
+    to: StateID;
+    from: StateID;
+    read: ReadSymbol[];
+}
+
+export type UnparsedTransition = {
+    id: TransitionID;
+    to: StateID;
+    from: StateID;
+    read: ReadSymbol;
 }
 
 export type Successor = {
@@ -19,26 +28,46 @@ export type Successor = {
 
 export type GraphNode = {
     state: State;
+    read: ReadSymbol | "";
     transition: Transition | null;
     parent: GraphNode | null;
     depth: number;
 }
 
-export type Graph = {
-    initialState: number;
+export type UnparsedFSAGraph = {
+    initialState: StateID;
+    states: State[];
+    transitions: UnparsedTransition[];
+}
+
+export type FSAGraph = {
+    initialState: StateID;
     states: State[];
     transitions: Transition[];
 }
 
-export class GraphProblem {
-    private graph: Graph;
+export type ExecutionTrace = {
+    read: string | null,
+    to: StateID
+}
 
-    constructor(graph: Graph) {
-        this.graph = graph;
+export type ExecutionResult = {
+    accepted: boolean
+    remaining: string
+    trace: ExecutionTrace[]
+}
+
+export class FSAGraphProblem {
+    private m_graph: FSAGraph;
+    private m_input: ReadSymbol;
+
+    constructor(graph: FSAGraph, input: ReadSymbol) {
+        this.m_graph = graph;
+        this.m_input = input;
     }
 
     public getInitialState() {
-        const state = this.graph.states.find(state => state.id === this.graph.initialState);
+        const state = this.m_graph.states.find(state => state.id === this.m_graph.initialState);
         if (state === undefined) {
             throw new Error("Initial state not found");
         }
@@ -50,10 +79,10 @@ export class GraphProblem {
     }
 
     public getSuccessors(state: State) {
-        const transitions = this.graph.transitions.filter(transition => transition.from === state.id);
+        const transitions = this.m_graph.transitions.filter(transition => transition.from === state.id);
         const successors: Successor[] = [];
         for (const transition of transitions) {
-            const nextState = this.graph.states.find(state => state.id === transition.to);
+            const nextState = this.m_graph.states.find(state => state.id === transition.to);
             if (nextState === undefined) {
                 continue;
             }
@@ -64,6 +93,10 @@ export class GraphProblem {
             successors.push(successor);
         }
         return successors;
+    }
+
+    get input() {
+        return this.m_input;
     }
 }
 
