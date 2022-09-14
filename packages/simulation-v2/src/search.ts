@@ -5,9 +5,7 @@ export const breadthFirstSearch = (problem: FSAGraphProblem) => {
     const frontier = new Queue<GraphNode>();
     const reached: Map<string, GraphNode> = new Map();
 
-    let node = new GraphNode(
-        problem.getInitialState()
-    )
+    let node = new GraphNode(problem.getInitialState());
 
     frontier.add(node);
     reached.set(node.key(), node);
@@ -32,4 +30,4 @@ export const breadthFirstSearch = (problem: FSAGraphProblem) => {
         }
     }
     return node;
-}
+};

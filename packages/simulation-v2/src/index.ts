@@ -1,2 +1,2 @@
 export * from "./simulation";
-export { printer as default } from "./simulation";
+export { simulateFSA as default } from "./simulation";

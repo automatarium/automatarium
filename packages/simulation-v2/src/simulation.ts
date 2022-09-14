@@ -1,10 +1,16 @@
-import { ExecutionResult, ExecutionTrace, FSAGraphProblem, GraphNode, UnparsedFSAGraph } from "./graph";
+import {
+    ExecutionResult,
+    ExecutionTrace,
+    FSAGraphProblem,
+    GraphNode,
+    UnparsedFSAGraph,
+} from "./graph";
 import { parseGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
 const generateTrace = (node: GraphNode): ExecutionTrace[] => {
-    return []
-}
+    return [];
+};
 
 export const simulateFSA = (graph: UnparsedFSAGraph, input: string) => {
     const parsedGraph = parseGraph(graph);
@@ -14,8 +20,8 @@ export const simulateFSA = (graph: UnparsedFSAGraph, input: string) => {
     const executionResult: ExecutionResult = {
         accepted: result.state.isFinal,
         remaining: result.state.read,
-        trace: generateTrace(result)
-    }
+        trace: generateTrace(result),
+    };
 
     return executionResult;
-}
+};
