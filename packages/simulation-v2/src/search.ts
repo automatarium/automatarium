@@ -1,41 +1,35 @@
 import { Queue } from "./collection";
-import { GraphProblem, GraphNode, State } from "./graph";
+import { FSAGraphProblem, GraphNode } from "./graph";
 
-export const breadthFirstSearch = (problem: GraphProblem) => {
+export const breadthFirstSearch = (problem: FSAGraphProblem) => {
     const frontier = new Queue<GraphNode>();
-    const reached: Map<number, GraphNode> = new Map();
+    const reached: Map<string, GraphNode> = new Map();
 
-    const firstNode: GraphNode = {
-        state: problem.getInitialState(),
-        transition: null,
-        parent: null,
-        depth: 0,
-    }
+    let node = new GraphNode(
+        problem.getInitialState()
+    )
 
-    frontier.add(firstNode);
-    reached.set(firstNode.state.id, firstNode);
+    frontier.add(node);
+    reached.set(node.key(), node);
 
     while (!frontier.isEmpty()) {
-        const currentNode = frontier.remove();
-        if (!currentNode) {
-            return new Error("Frontier is empty");
+        // Bang is necessary because TS doesn't understand that the frontier is not empty here
+        node = frontier.remove()!;
+        if (problem.isFinalState(node.state)) {
+            return node;
         }
-        if (problem.isFinalState(currentNode.state)) {
-            return currentNode;
-        }
-        for (const successor of problem.getSuccessors(currentNode.state)) {
-            const successorNode: GraphNode = {
-                state: successor.state,
-                transition: successor.transition,
-                parent: currentNode,
-                depth: currentNode.depth + 1,
-            }
+        for (const successor of problem.getSuccessors(node.state)) {
+            const successorNode = new GraphNode(
+                successor.state,
+                successor.transition,
+                node,
+            );
 
-            if (!reached.has(successorNode.state.id)) {
+            if (!reached.has(successorNode.key())) {
                 frontier.add(successorNode);
-                reached.set(successorNode.state.id, successorNode);
+                reached.set(successorNode.key(), successorNode);
             }
         }
     }
-    return null;
+    return node;
 }
