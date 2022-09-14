@@ -112,6 +112,28 @@ const Transition = ({
         </textPath>
       )}
     </text>
+    
+    {/* {(projectType === PDA_PROJECT_TYPE) && 
+      <text
+        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
+        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+        style={{ userSelect: 'none' }}
+        dy={`-${textOffset}`}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        {...isReflexive && {
+          x: control.x,
+          y: control.y + REFLEXIVE_Y_OFFSET/3,
+        }}
+      >
+        {isReflexive ? (text === '' ? 'λ' : text) : (
+          <textPath startOffset="80%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+            {text === '' ? 'λ' : text}
+          </textPath>
+        )}
+      </text>
+    } */}
   </g>
 }
 

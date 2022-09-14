@@ -10,3 +10,4 @@ export const DEFAULT_PROJECT_COLOR = {
   PDA: 'red',
   TM: 'purple',
 }
+export const PDA_PROJECT_TYPE = 'PDA'

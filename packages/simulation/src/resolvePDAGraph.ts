@@ -6,11 +6,13 @@ export const RANGE_VALS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQ
 
 /**
  * Resolve a graph by expanding and de-duping transitions read strings.
- *
- * @param graph - TM Graph object to resolve.
+ * 
+ * // TODO: In development for FSA to PDA
+ * 
+ * @param graph - PDA Graph object to resolve.
  * @returns The resolved graph
  */
-export const resolveTMGraph = (graph: UnresolvedPDAGraph): PDAGraph => {
+export const resolvePDAGraph = (graph: UnresolvedPDAGraph): PDAGraph => {
   // Resolve graph transitions
   const transitions = graph.transitions
     .filter(transition => transition !== undefined && transition.readSymbol !== undefined && transition.readDirection !== undefined)

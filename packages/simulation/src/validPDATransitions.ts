@@ -1,7 +1,7 @@
-import {FSAGraph, StateID, ReadSymbol, Transition, PDATransition, PDAGraph} from './types.d'
+import {PDAGraph, StateID, ReadSymbol, PDATransition, PopSymbol, PushSymbol, Stack} from './types.d'
 import closureWithPredicate from './closureWithPredicate'
 
-export type ValidPDATransition = { transition: PDATransition, trace: { to: number, read: string }[]}
+export type ValidPDATransition = { transition: PDATransition, trace: { to: number, read: string, pop:string, push:string }[]}
 
 /**
  * Compute the list of transitions that are directly or indirectly navigable from a given starting state using a specific input symbol.
@@ -9,12 +9,14 @@ export type ValidPDATransition = { transition: PDATransition, trace: { to: numbe
  *
  * TO DO. IN DEVELOPMENT TO MOVE FROM FSA TO PDA
  *
- * @param graph - The FSA graph object used as input
+ * @param graph - The PDA graph object used as input
  * @param currentStateID - The ID of the current state used to compute the valid transitions
  * @param nextRead  - The input symbol to be read next
+ * @param stack - The PDA stack
  * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
  */
-export const validTMTransitions = (graph: PDAGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidPDATransition[] => {
+export const validPDATransitions = (graph: PDAGraph, currentStateID: StateID, 
+    nextRead: ReadSymbol): ValidPDATransition[] => {
   // Compute lambda closure (states accessible without consuming input)
   const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
 
@@ -36,7 +38,7 @@ export const validTMTransitions = (graph: PDAGraph, currentStateID: StateID, nex
   const finalTransitions = closure
     .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
     .map(([stateID, precedingTransitions]) => ({
-      transition: (graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as Transition),
+      transition: (graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as PDATransition),
       trace: precedingTransitions.slice(0, -1),
     }))
 

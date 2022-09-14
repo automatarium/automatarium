@@ -1,4 +1,6 @@
 export type ReadSymbol = string
+export type PopSymbol = string
+export type PushSymbol = string
 export type StateID = number
 export type TransitionID = number
 
@@ -21,11 +23,13 @@ export type FSAGraph = {
   [other: string]: unknown
 }
 
+// TODO: In development for FSA to PDA
+
 export type PDATransition = {
   id: TransitionID
   to: StateID
   from: StateID
-  readSymbol: ReadSymbol[]
+  read: ReadSymbol[]
   // TODO: push and pop
   popSymbol: PopSymbol[]
   pushSymbol: PushSymbol[]
@@ -37,14 +41,14 @@ export type UnresolvedPDATransition = {
   from: StateID
   readSymbol: ReadSymbol
   // TODO: push and pop
-  popSymbol: PopSymbol[]
-  pushSymbol: PushSymbol[]
+  popSymbol: PopSymbol
+  pushSymbol: PushSymbol
   [other: string]: unknown
 }
 
 // TODO: implement stack
 export type Stack = {
-  stack: Stack[]
+  stack: string[]
 }
 
 export type PDAGraph = {

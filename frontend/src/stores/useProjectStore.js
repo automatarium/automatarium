@@ -13,10 +13,11 @@ import {
   DEFAULT_STATE_PREFIX,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR,
+  PDA_PROJECT_TYPE,
 } from '/src/config/projects'
 
 export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
-  // TODO: use project type
+  projectType: projectType,
   _id: crypto.randomUUID(),
   states: [],
   transitions: [],
