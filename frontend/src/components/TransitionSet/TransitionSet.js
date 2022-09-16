@@ -8,6 +8,8 @@ import { useSelectionStore } from '/src/stores'
 
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
+import { useProjectStore } from '/src/stores'
+
 const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read}, i) => (
     <Transition
@@ -66,6 +68,9 @@ const Transition = ({
   // Calculate text offset (increased for additional reflexive transitions)
   const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
 
+  // Get project type to determine transition type
+  const currentProjectType = useProjectStore(p => p.project.config.type)
+
   return <g>
     {/* The edge itself */}
     {!(isReflexive && i > 0) && <path
@@ -91,29 +96,9 @@ const Transition = ({
       onMouseDown={handleTransitionMouseDown}
       onMouseUp={handleTransitionMouseUp}
     />}
-
-    {/* The label - i.e the accepted symbols */}
-    <text
-      onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
-      onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-      fill={selected ? 'var(--primary)' : 'var(--stroke)'}
-      style={{ userSelect: 'none' }}
-      dy={`-${textOffset}`}
-      textAnchor="middle"
-      alignmentBaseline="central"
-      {...isReflexive && {
-        x: control.x,
-        y: control.y + REFLEXIVE_Y_OFFSET/3,
-      }}
-    >
-      {isReflexive ? (text === '' ? 'λ' : text) : (
-        <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-          {text === '' ? 'λ' : text}
-        </textPath>
-      )}
-    </text>
     
-    {/* {(projectType === PDA_PROJECT_TYPE) && 
+    {/* The label for FSAs - i.e the accepted symbols */}
+    {(currentProjectType == 'FSA') &&   
       <text
         onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
         onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
@@ -128,12 +113,36 @@ const Transition = ({
         }}
       >
         {isReflexive ? (text === '' ? 'λ' : text) : (
-          <textPath startOffset="80%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
             {text === '' ? 'λ' : text}
           </textPath>
         )}
       </text>
-    } */}
+    }
+    
+    {/* The label for PDAs - i.e the accepted symbols */
+     /* TODO: This is currently placeholder logic for when pop/push input dialog boxes are added*/}
+    {(currentProjectType == 'PDA') && 
+      <text
+        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
+        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+        style={{ userSelect: 'none' }}
+        dy={`-${textOffset}`}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        {...isReflexive && {
+          x: control.x,
+          y: control.y + REFLEXIVE_Y_OFFSET/3,
+        }}
+      >
+        {isReflexive ? (text === '' ? 'λ' : text) : (
+          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+            {text === '' ? 'λ' : text}
+          </textPath>
+        )}
+      </text>
+    }
   </g>
 }
 
