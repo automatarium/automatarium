@@ -13,8 +13,13 @@ import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
   const inputRef = useRef()
+  const inputPopRef = useRef()
+  const inputPushRef = useRef()
 
   const [value, setValue] = useState('')
+  const [valuePop, setValuePop] = useState('')
+  const [valuePush, setValuePush] = useState('')
+
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -24,6 +29,8 @@ const InputDialogs = () => {
 
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
+
+  const currentProjectType = useProjectStore(p => p.project.config.type)
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
@@ -151,7 +158,7 @@ const InputDialogs = () => {
           onChange={e => setValue(e.target.value)}
           onKeyUp={e => e.key === 'Enter' && save()}
           placeholder={{
-            transition: 'λ',
+            transition: (currentProjectType === 'PDA') ? 'λ\t(read)' : 'λ',
             comment: 'Comment text...',
             stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
             stateLabel: 'State label...',
@@ -166,6 +173,49 @@ const InputDialogs = () => {
           <CornerDownLeft size="18px" />
         </SubmitButton>
       </InputWrapper>
+      { /* Additional input #1 - PDA pop value */}
+      {currentProjectType === 'PDA' &&
+      <InputWrapper>
+        <Input
+          ref={inputPopRef}
+          value={valuePop}
+          onChange={e => setValue(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(pop)',
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
+        />
+        <SubmitButton onClick={save}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
+      </InputWrapper>}
+      { /* Additional input #2 - PDA push value */}
+      {currentProjectType === 'PDA' &&
+      <InputWrapper>
+        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
+        <Input
+          ref={inputPushRef}
+          value={valuePush}
+          onChange={e => setValue(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(push)',
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
+        />
+        <SubmitButton onClick={save}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
+      </InputWrapper>}
     </Dropdown>
   )
 }
