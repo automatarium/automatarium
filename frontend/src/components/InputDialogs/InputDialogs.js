@@ -66,8 +66,8 @@ const InputDialogs = () => {
     const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
     editTransition(dialog.id, 
       `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`, 
-      `${Array.from(new Set(charsPop)).join('')}${rangesPush ? rangesPush.join('') : ''}`,
-      `${Array.from(new Set(charsPush)).join('')}${rangesPop ? rangesPop.join('') : ''}`)
+      `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
+      `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`)
     commit()
     hideDialog()
   }
