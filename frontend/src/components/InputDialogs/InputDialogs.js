@@ -36,12 +36,13 @@ const InputDialogs = () => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     setValue(transition?.read ?? '')
+    setValuePop(transition?.pop ?? '')
+    setValuePush(transition?.push ?? '')
 
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, .5)
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
-
     setDialog({
       visible: true,
       x: screenMidPoint[0],
@@ -50,6 +51,8 @@ const InputDialogs = () => {
       previousValue: transition?.read,
       type: 'transition',
     })
+    // console.log("Previous read value: ", transition?.read)
+    // console.log("Previous pop value: ", transition?.pop)
     focusInput()
   }, [inputRef.current])
 
@@ -57,7 +60,14 @@ const InputDialogs = () => {
     // Remove duplicate characters
     const ranges = value.match(/\[(.*?)\]/g)
     const chars = value.replace(/\[(.*?)\]/g, '')
-    editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
+    const rangesPop = valuePop.match(/\[(.*?)\]/g)
+    const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
+    const rangesPush = valuePush.match(/\[(.*?)\]/g)
+    const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
+    editTransition(dialog.id, 
+      `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`, 
+      `${Array.from(new Set(charsPop)).join('')}${rangesPush ? rangesPush.join('') : ''}`,
+      `${Array.from(new Set(charsPush)).join('')}${rangesPop ? rangesPop.join('') : ''}`)
     commit()
     hideDialog()
   }
@@ -169,9 +179,10 @@ const InputDialogs = () => {
             paddingRight: '2.5em',
           }}
         />
+        {!currentProjectType === 'PDA' && 
         <SubmitButton onClick={save}>
           <CornerDownLeft size="18px" />
-        </SubmitButton>
+        </SubmitButton>}
       </InputWrapper>
       { /* Additional input #1 - PDA pop value */}
       {currentProjectType === 'PDA' &&
@@ -179,7 +190,7 @@ const InputDialogs = () => {
         <Input
           ref={inputPopRef}
           value={valuePop}
-          onChange={e => setValue(e.target.value)}
+          onChange={e => setValuePop(e.target.value)}
           onKeyUp={e => e.key === 'Enter' && save()}
           placeholder={{
             transition: 'λ\t(pop)',
@@ -190,18 +201,14 @@ const InputDialogs = () => {
             paddingRight: '2.5em',
           }}
         />
-        <SubmitButton onClick={save}>
-          <CornerDownLeft size="18px" />
-        </SubmitButton>
       </InputWrapper>}
       { /* Additional input #2 - PDA push value */}
       {currentProjectType === 'PDA' &&
       <InputWrapper>
-        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
         <Input
           ref={inputPushRef}
           value={valuePush}
-          onChange={e => setValue(e.target.value)}
+          onChange={e => setValuePush(e.target.value)}
           onKeyUp={e => e.key === 'Enter' && save()}
           placeholder={{
             transition: 'λ\t(push)',
@@ -212,6 +219,9 @@ const InputDialogs = () => {
             paddingRight: '2.5em',
           }}
         />
+        {/* {console.log("valueRead is: ", value)}
+        {console.log("valuePop is: ", valuePop)}
+        {console.log("valuePush is: ", valuePush)} */}
         <SubmitButton onClick={save}>
           <CornerDownLeft size="18px" />
         </SubmitButton>

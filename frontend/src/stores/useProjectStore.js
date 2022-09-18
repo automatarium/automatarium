@@ -13,7 +13,6 @@ import {
   DEFAULT_STATE_PREFIX,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR,
-  PDA_PROJECT_TYPE,
 } from '/src/config/projects'
 
 export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
@@ -118,8 +117,10 @@ const useProjectStore = create(persist((set, get) => ({
     }))
     return id
   },
-  editTransition: (id, read) => set(produce(({ project }) => {
+  editTransition: (id, read, pop, push) => set(produce(({ project }) => {
     project.transitions.find(t => t.id === id).read = read
+    project.transitions.find(t => t.id === id).pop = pop
+    project.transitions.find(t => t.id === id).push = push
   })),
 
   /* Create a new comment */
@@ -132,7 +133,7 @@ const useProjectStore = create(persist((set, get) => ({
     project.comments = project.comments.map(cm => cm.id === comment.id ? {...cm, ...comment} : cm)
   })),
 
-  /* Remove a commejt by id */
+  /* Remove a comment by id */
   removeComment: comment => set(produce(({ project }) => {
     project.comments = project.comments.filter(cm => cm.id !== comment.id)
   })),

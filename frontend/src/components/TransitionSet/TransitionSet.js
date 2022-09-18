@@ -11,11 +11,12 @@ import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 import { useProjectStore } from '/src/stores'
 
 const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({id, from, to, read}, i) => (
+  { transitions.map(({id, from, to, read, pop, push}, i) => (
     <Transition
       i={i}
       transitions={transitions}
-      text={read}
+      // for PDA, include pop and push
+      text={pop ? (read + ',' + pop + ';' + push) : read}
       from={from}
       to={to}
       id={id}
@@ -137,9 +138,9 @@ const Transition = ({
           y: control.y + REFLEXIVE_Y_OFFSET/3,
         }}
       >
-        {isReflexive ? (text === '' ? 'λ' : text) : (
+        {isReflexive ? (text === '' ? 'λ,λ;λ' : text) : (
           <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-            {text === '' ? 'λ' : text}
+            {text === '' ? 'λ,λ;λ' : text}
           </textPath>
         )}
       </text>
