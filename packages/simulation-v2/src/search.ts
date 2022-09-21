@@ -32,3 +32,38 @@ export const breadthFirstSearch = (problem: FSAGraphProblem) => {
     }
     return node;
 };
+
+export class StepwiseBFS {
+    private m_frontier: Queue<GraphNode>;
+    private m_node: GraphNode;
+    private m_problem: FSAGraphProblem;
+
+    constructor(problem: FSAGraphProblem) {
+        this.m_frontier = new Queue<GraphNode>();
+        this.m_problem = problem;
+        this.m_node = new GraphNode(problem.getInitialState());
+        this.m_frontier.add(this.m_node);
+    }
+
+    public forward() {
+        const frontierCopy = structuredClone(this.m_frontier);
+        this.m_frontier.clear();
+        while (!frontierCopy.isEmpty()) {
+            this.m_node = this.m_frontier.remove()!;
+            for (const successor of this.m_problem.getSuccessors(
+                this.m_node.state,
+            )) {
+                const successorNode = new GraphNode(
+                    successor.state,
+                    successor.transition,
+                    this.m_node,
+                    successor.read,
+                );
+                this.m_frontier.add(successorNode);
+            }
+        }
+        return this.m_frontier;
+    }
+
+    public backward() {}
+}
