@@ -33,37 +33,55 @@ export const breadthFirstSearch = (problem: FSAGraphProblem) => {
     return node;
 };
 
-export class StepwiseBFS {
-    private m_frontier: Queue<GraphNode>;
-    private m_node: GraphNode;
+// TODO: Freeze, thaw, trace, and remove
+export class GraphStepper {
+    private m_frontier: Array<GraphNode>;
+    private m_initialNode: GraphNode;
     private m_problem: FSAGraphProblem;
 
     constructor(problem: FSAGraphProblem) {
-        this.m_frontier = new Queue<GraphNode>();
+        this.m_frontier = new Array<GraphNode>();
         this.m_problem = problem;
-        this.m_node = new GraphNode(problem.getInitialState());
-        this.m_frontier.add(this.m_node);
+        this.m_initialNode = new GraphNode(problem.getInitialState());
+        this.m_frontier.push(this.m_initialNode);
     }
 
     public forward() {
         const frontierCopy = structuredClone(this.m_frontier);
-        this.m_frontier.clear();
-        while (!frontierCopy.isEmpty()) {
-            this.m_node = this.m_frontier.remove()!;
-            for (const successor of this.m_problem.getSuccessors(
-                this.m_node.state,
-            )) {
+        this.m_frontier = [];
+        while (frontierCopy.length > 0) {
+            const node = this.m_frontier.shift()!;
+            for (const successor of this.m_problem.getSuccessors(node.state)) {
                 const successorNode = new GraphNode(
                     successor.state,
                     successor.transition,
-                    this.m_node,
+                    node,
                     successor.read,
                 );
-                this.m_frontier.add(successorNode);
+                this.m_frontier.push(successorNode);
             }
         }
         return this.m_frontier;
     }
 
-    public backward() {}
+    public backward() {
+        const previousFrontier = new Array<GraphNode>();
+        this.m_frontier.forEach((node) => {
+            if (node.parent && !this.checkForDuplicate(node.parent)) {
+                previousFrontier.push(node.parent);
+            }
+        });
+        this.m_frontier = previousFrontier;
+        return this.m_frontier;
+    }
+
+    private checkForDuplicate(node: GraphNode) {
+        return this.m_frontier.some((n) => n.key() === node.key());
+    }
+
+    public reset() {
+        this.m_frontier = new Array<GraphNode>();
+        this.m_frontier.push(this.m_initialNode);
+        return this.m_frontier;
+    }
 }
