@@ -25,9 +25,19 @@ const generateTrace = (node: GraphNode): ExecutionTrace[] => {
 };
 
 export const simulateFSA = (graph: UnparsedFSAGraph, input: string) => {
+    console.log("Graph: ", graph);
     const parsedGraph = parseGraph(graph);
     const problem = new FSAGraphProblem(parsedGraph, input);
     const result = breadthFirstSearch(problem);
+
+    if (result.state.id === -1) {
+        const emptyExecution: ExecutionResult = {
+            trace: [{ to: 0, read: null }],
+            accepted: false,
+            remaining: input,
+        };
+        return emptyExecution;
+    }
 
     console.log("The result is ...!", result);
 

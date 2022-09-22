@@ -107,12 +107,21 @@ export class GraphNode {
 export class FSAGraphProblem {
     constructor(private m_graph: FSAGraph, private m_input: ReadSymbol) {}
 
+    /**
+     * Search for and return the initial state of the graph
+     * @returns The initial state of the graph. If no state was found, the id of the node is -1.
+     */
     public getInitialState() {
         const state = this.m_graph.states.find(
             (state) => state.id === this.m_graph.initialState,
         );
         if (state === undefined) {
-            throw new Error("Initial state not found");
+            const errorState: FSAGraphState = {
+                id: -1,
+                remaining: "",
+                isFinal: false,
+            };
+            return errorState;
         }
         const initialState: FSAGraphState = {
             id: state.id,

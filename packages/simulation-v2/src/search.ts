@@ -7,6 +7,11 @@ export const breadthFirstSearch = (problem: FSAGraphProblem) => {
 
     let node = new GraphNode(problem.getInitialState());
 
+    // If an initial state was not found
+    if (node.state.id === -1) {
+        return node;
+    }
+
     frontier.add(node);
     reached.set(node.key(), node);
 
