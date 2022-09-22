@@ -20,19 +20,25 @@ import { useMemo, useState } from "react";
 
 const SteppingLab = () => {
   const [frontier, setFrontier] = useState([]);
-  const [graph] = useState({
-    states: useProjectStore((s) => s.project.states),
-    transitions: useProjectStore((s) => s.project.transitions),
-    initialState: useProjectStore((s) => s.project.initialState),
-  });
+
+  const states = useProjectStore((s) => s.project.states);
+  const transitions = useProjectStore((s) => s.project.transitions);
+  const initialState = useProjectStore((s) => s.project.initialState);
+
   const traceInput = useProjectStore((s) => s.project.tests.single);
   const setTraceInput = useProjectStore((s) => s.setSingleTest);
+
+  const graph = useMemo(() => {
+    return {
+      states,
+      transitions,
+      initialState,
+    };
+  }, [states, transitions, initialState]);
 
   const stepper = useMemo(() => {
     return graphStepper(graph, traceInput);
   }, [graph, traceInput]);
-
-  console.log(frontier);
 
   return (
     <>
