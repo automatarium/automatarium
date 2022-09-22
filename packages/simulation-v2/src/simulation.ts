@@ -6,7 +6,7 @@ import {
     UnparsedFSAGraph,
 } from "./graph";
 import { parseGraph } from "./parse-graph";
-import { breadthFirstSearch } from "./search";
+import { breadthFirstSearch, GraphStepper } from "./search";
 
 const generateTrace = (node: GraphNode): ExecutionTrace[] => {
     const trace: ExecutionTrace[] = [];
@@ -25,7 +25,6 @@ const generateTrace = (node: GraphNode): ExecutionTrace[] => {
 };
 
 export const simulateFSA = (graph: UnparsedFSAGraph, input: string) => {
-    console.log("Graph: ", graph);
     const parsedGraph = parseGraph(graph);
     const problem = new FSAGraphProblem(parsedGraph, input);
     const result = breadthFirstSearch(problem);
@@ -48,4 +47,11 @@ export const simulateFSA = (graph: UnparsedFSAGraph, input: string) => {
     };
 
     return executionResult;
+};
+
+export const graphStepper = (graph: UnparsedFSAGraph, input: string) => {
+    const parsedGraph = parseGraph(graph);
+    const problem = new FSAGraphProblem(parsedGraph, input);
+    const stepper = new GraphStepper(problem);
+    return stepper;
 };

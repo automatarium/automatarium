@@ -52,10 +52,10 @@ export class GraphStepper {
     }
 
     public forward() {
-        const frontierCopy = structuredClone(this.m_frontier);
+        const frontierCopy = this.m_frontier.slice();
         this.m_frontier = [];
         while (frontierCopy.length > 0) {
-            const node = this.m_frontier.shift()!;
+            const node = frontierCopy.shift()!;
             for (const successor of this.m_problem.getSuccessors(node.state)) {
                 const successorNode = new GraphNode(
                     successor.state,
@@ -66,13 +66,24 @@ export class GraphStepper {
                 this.m_frontier.push(successorNode);
             }
         }
+        console.log("Frontier in search.ts:", this.m_frontier);
         return this.m_frontier;
     }
 
     public backward() {
+        if (
+            this.m_frontier.length === 1 &&
+            this.m_frontier[0].key() === this.m_initialNode.key()
+        ) {
+            // This is the root node!
+            return this.m_frontier;
+        }
         const previousFrontier = new Array<GraphNode>();
         this.m_frontier.forEach((node) => {
-            if (node.parent && !this.checkForDuplicate(node.parent)) {
+            if (
+                node.parent &&
+                !this.checkForDuplicate(node.parent, previousFrontier)
+            ) {
                 previousFrontier.push(node.parent);
             }
         });
@@ -80,8 +91,8 @@ export class GraphStepper {
         return this.m_frontier;
     }
 
-    private checkForDuplicate(node: GraphNode) {
-        return this.m_frontier.some((n) => n.key() === node.key());
+    private checkForDuplicate(node: GraphNode, frontier: Array<GraphNode>) {
+        return frontier.some((n) => n.key() === node.key());
     }
 
     public reset() {
