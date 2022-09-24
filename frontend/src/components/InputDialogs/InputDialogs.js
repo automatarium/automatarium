@@ -67,7 +67,8 @@ const InputDialogs = () => {
     editTransition(dialog.id, 
       `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`, 
       `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
-      `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`)
+      `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`,
+      currentProjectType)
     commit()
     hideDialog()
   }

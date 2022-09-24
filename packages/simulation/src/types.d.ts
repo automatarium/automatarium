@@ -40,13 +40,11 @@ export type UnresolvedPDATransition = {
   to: StateID
   from: StateID
   readSymbol: ReadSymbol
-  // TODO: push and pop
   popSymbol: PopSymbol
   pushSymbol: PushSymbol
   [other: string]: unknown
 }
 
-// TODO: implement stack
 export type Stack = {
   stack: string[]
 }

@@ -117,10 +117,11 @@ const useProjectStore = create(persist((set, get) => ({
     }))
     return id
   },
-  editTransition: (id, read, pop, push) => set(produce(({ project }) => {
+  editTransition: (id, read, pop, push, currentProjectType) => set(produce(({ project }) => {
     project.transitions.find(t => t.id === id).read = read
     project.transitions.find(t => t.id === id).pop = pop
     project.transitions.find(t => t.id === id).push = push
+    project.transitions.find(t => t.id === id).currentProjectType = currentProjectType
   })),
 
   /* Create a new comment */

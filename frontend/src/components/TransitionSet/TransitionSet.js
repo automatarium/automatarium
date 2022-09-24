@@ -11,12 +11,15 @@ import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 import { useProjectStore } from '/src/stores'
 
 const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({id, from, to, read, pop, push}, i) => (
+  { transitions.map(({id, from, to, read, pop, push, currentProjectType}, i) => (
     <Transition
       i={i}
       transitions={transitions}
       // for PDA, include pop and push
-      text={pop ? (read + ',' + pop + ';' + push) : read}
+      text={currentProjectType=='PDA' ? ((read ? read : 'λ') + ',' + 
+                                        (pop ? pop : 'λ') + ';' + 
+                                        (push ? push : 'λ')) 
+                                      : read}
       from={from}
       to={to}
       id={id}
@@ -58,12 +61,12 @@ const Transition = ({
   const handleTransitionMouseUp = e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: { id, from, to, text },
+      transition: { id, from, to, text},
     })
   const handleTransitionMouseDown = e =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: { id, from, to, text },
+      transition: { id, from, to, text},
     })
 
   // Calculate text offset (increased for additional reflexive transitions)
