@@ -1,6 +1,6 @@
 import { Wrapper, ButtonRow } from "./steppingLabStyle";
 import { SectionLabel, Input, Button } from "/src/components";
-import { useProjectStore } from "/src/stores";
+import { useProjectStore, useSteppingStore } from "/src/stores";
 import {
   SkipBack,
   ChevronRight,
@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 
 import { graphStepper } from "@automatarium/simulation-v2";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 // The initial states and project store calls, along with the display of the current input trace,
 // could be made its own component, and the Testing Lab could switch between the two using a
@@ -28,6 +28,8 @@ const SteppingLab = () => {
   const traceInput = useProjectStore((s) => s.project.tests.single);
   const setTraceInput = useProjectStore((s) => s.setSingleTest);
 
+  const setSteppedStates = useSteppingStore((s) => s.setSteppedStates);
+
   const graph = useMemo(() => {
     return {
       states,
@@ -39,6 +41,11 @@ const SteppingLab = () => {
   const stepper = useMemo(() => {
     return graphStepper(graph, traceInput);
   }, [graph, traceInput]);
+
+  const handleStep = (newFrontier) => {
+    setFrontier(newFrontier);
+    setSteppedStates(newFrontier);
+  };
 
   return (
     <>
@@ -54,21 +61,15 @@ const SteppingLab = () => {
         <ButtonRow>
           <Button
             icon={<SkipBack size={23} />}
-            onClick={() => {
-              setFrontier(stepper.reset());
-            }}
+            onClick={() => handleStep(stepper.reset())}
           />
           <Button
             icon={<ChevronLeft size={25} />}
-            onClick={() => {
-              setFrontier(stepper.backward());
-            }}
+            onClick={() => handleStep(stepper.backward())}
           />
           <Button
             icon={<ChevronRight size={25} />}
-            onClick={() => {
-              setFrontier(stepper.forward());
-            }}
+            onClick={() => handleStep(stepper.forward())}
           />
         </ButtonRow>
         <ButtonRow>
