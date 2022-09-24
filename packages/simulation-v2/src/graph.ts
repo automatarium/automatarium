@@ -2,42 +2,44 @@ export type ReadSymbol = string;
 export type StateID = number;
 export type TransitionID = number;
 
-export type State = {
+type State = {
     id: StateID;
     isFinal: boolean;
 };
 
-export type Transition = {
+export type FSAState = State;
+
+type Transition = {
     id: TransitionID;
     to: StateID;
     from: StateID;
+}
+
+export type FSATransition = Transition & {
     read: ReadSymbol[];
 };
 
-export type UnparsedTransition = {
+export type UnparsedFSATransition = {
     id: TransitionID;
     to: StateID;
     from: StateID;
     read: ReadSymbol;
-};
-
-export type Successor = {
-    state: FSAGraphState;
-    read: ReadSymbol;
-    transition: Transition;
 };
 
 export type UnparsedFSAGraph = {
     initialState: StateID;
     states: State[];
-    transitions: UnparsedTransition[];
+    transitions: UnparsedFSATransition[];
 };
 
-export type FSAGraph = {
+type Graph = {
     initialState: StateID;
     states: State[];
-    transitions: Transition[];
 };
+
+export type FSAGraph = Graph & {
+    transitions: FSATransition[];
+}
 
 export type ExecutionTrace = {
     read: string | null;
@@ -50,61 +52,87 @@ export type ExecutionResult = {
     trace: ExecutionTrace[];
 };
 
-/**
- * A bag of state that uniquely identifies a node
- */
-export type FSAGraphState = {
-    id: StateID;
-    remaining: ReadSymbol;
-    isFinal: boolean;
-};
+export interface GraphNode {
+    depth: number;
+    key(): string;
+}
 
-export class GraphNode {
-    private m_state: FSAGraphState;
-    private m_transition: Transition | null;
-    private m_parent: GraphNode | null;
-    private m_depth: number;
-    private m_read: ReadSymbol;
-
+export class FSAGraphNode implements GraphNode {
+    depth: number;
     constructor(
-        state: FSAGraphState,
-        transition: Transition | null = null,
-        parent: GraphNode | null = null,
-        read: ReadSymbol = "",
+        private m_state: FSAGraphState,
+        private m_transition: FSATransition | null = null,
+        private m_parent: FSAGraphNode | null = null,
     ) {
-        this.m_state = state;
-        this.m_transition = transition;
-        this.m_parent = parent;
-        this.m_read = read;
-        this.m_depth = parent ? parent.m_depth + 1 : 0;
+        console.log("Parent: ", m_parent);
+        this.depth = m_parent ? m_parent.depth + 1 : 0;
     }
 
-    key() {
-        return String(this.m_state.id + this.m_state.remaining);
+    key(): string {
+        return this.m_state.key();
     }
 
     get state() {
         return this.m_state;
     }
 
-    get parent() {
-        return this.m_parent;
+    set state(state: FSAGraphState) {
+        this.state = state;
     }
 
     get transition() {
         return this.m_transition;
     }
 
-    get read() {
-        return this.m_read;
-    }
-
-    get depth() {
-        return this.m_depth;
+    get parent() {
+        return this.m_parent;
     }
 }
 
-export class FSAGraphProblem {
+export abstract class GraphState {
+    constructor(protected id: StateID, protected isFinal: boolean) {}
+
+    abstract key(): string;
+}
+
+export class FSAGraphState extends GraphState {
+    constructor(
+        id: StateID,
+        isFinal: boolean,
+        private remaining: ReadSymbol, // Symbols left to be read
+        private read: ReadSymbol | null = null, // Symbol that was read to when this state was reached
+    ) {
+        super(id, isFinal);
+    }
+
+    key(): string {
+        return String(this.id + this.remaining);
+    }
+
+    get stateID() {
+        return this.id;
+    }
+
+    get isFinalState() {
+        return this.isFinal;
+    }
+
+    get remainingInput() {
+        return this.remaining;
+    }
+
+    get readSymbol() {
+        return this.read;
+    }
+}
+
+export interface IProblem<T extends GraphNode> {
+    getInitialState(): T | null;
+    getSuccessors(node: T): T[];
+    isFinalState(node: T): boolean;
+}
+
+export class FSAGraphProblem implements IProblem<FSAGraphNode> {
     constructor(private m_graph: FSAGraph, private m_input: ReadSymbol) {}
 
     /**
@@ -116,54 +144,48 @@ export class FSAGraphProblem {
             (state) => state.id === this.m_graph.initialState,
         );
         if (state === undefined) {
-            const errorState: FSAGraphState = {
-                id: -1,
-                remaining: "",
-                isFinal: false,
-            };
-            return errorState;
+            return null;
         }
-        const initialState: FSAGraphState = {
-            id: state.id,
-            remaining: this.m_input,
-            isFinal: state.isFinal,
-        };
-        return initialState;
-    }
-
-    public isFinalState(state: FSAGraphState) {
-        return state.isFinal && state.remaining.length === 0;
-    }
-
-    public getSuccessors(state: FSAGraphState) {
-        const transitions = this.m_graph.transitions.filter(
-            (transition) => transition.from === state.id,
+        const initialState = new FSAGraphState(
+            state.id,
+            state.isFinal,
+            this.m_input,
         );
-        const successors: Successor[] = [];
+        return new FSAGraphNode(initialState);
+    }
+
+    public isFinalState(node: FSAGraphNode) {
+        return (
+            node.state.isFinalState && node.state.remainingInput.length === 0
+        );
+    }
+
+    public getSuccessors(node: FSAGraphNode) {
+        const transitions = this.m_graph.transitions.filter(
+            (transition) => transition.from === node.state.stateID,
+        );
+        const successors: FSAGraphNode[] = [];
         for (const transition of transitions) {
             const nextState = this.m_graph.states.find(
                 (state) => state.id === transition.to,
             );
             const lambdaTransition = transition.read.length === 0;
-            const symbol = state.remaining[0];
+            const symbol = node.state.remainingInput[0];
             if (
                 nextState === undefined ||
                 (!lambdaTransition && !transition.read.includes(symbol))
             ) {
                 continue;
             }
-            const graphState: FSAGraphState = {
-                id: nextState.id,
-                remaining: lambdaTransition
-                    ? state.remaining
-                    : state.remaining.slice(1),
-                isFinal: nextState.isFinal,
-            };
-            const successor: Successor = {
-                state: graphState,
-                read: lambdaTransition ? "" : symbol,
-                transition: transition,
-            };
+            const graphState = new FSAGraphState(
+                nextState.id,
+                nextState.isFinal,
+                lambdaTransition
+                    ? node.state.remainingInput
+                    : node.state.remainingInput.slice(1),
+                lambdaTransition ? "" : symbol,
+            );
+            const successor = new FSAGraphNode(graphState, transition, node);
             successors.push(successor);
         }
         return successors;
