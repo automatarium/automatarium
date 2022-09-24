@@ -1,2 +1,2 @@
-export * from "./simulation";
-export { simulateFSA as default } from "./simulation";
+export * from "./simulateFSA";
+export { simulateFSA as default } from "./simulateFSA";

@@ -1,70 +1,13 @@
-export type ReadSymbol = string;
-export type StateID = number;
-export type TransitionID = number;
+import { FSAGraph, FSATransition, ReadSymbol, StateID } from "./graph";
+import { IGraphNode, IGraphState, IProblem } from "./interfaces/graph";
 
-type State = {
-    id: StateID;
-    isFinal: boolean;
-};
-
-export type FSAState = State;
-
-type Transition = {
-    id: TransitionID;
-    to: StateID;
-    from: StateID;
-}
-
-export type FSATransition = Transition & {
-    read: ReadSymbol[];
-};
-
-export type UnparsedFSATransition = {
-    id: TransitionID;
-    to: StateID;
-    from: StateID;
-    read: ReadSymbol;
-};
-
-export type UnparsedFSAGraph = {
-    initialState: StateID;
-    states: State[];
-    transitions: UnparsedFSATransition[];
-};
-
-type Graph = {
-    initialState: StateID;
-    states: State[];
-};
-
-export type FSAGraph = Graph & {
-    transitions: FSATransition[];
-}
-
-export type ExecutionTrace = {
-    read: string | null;
-    to: StateID;
-};
-
-export type ExecutionResult = {
-    accepted: boolean;
-    remaining: string;
-    trace: ExecutionTrace[];
-};
-
-export interface GraphNode {
-    depth: number;
-    key(): string;
-}
-
-export class FSAGraphNode implements GraphNode {
+export class FSAGraphNode implements IGraphNode {
     depth: number;
     constructor(
         private m_state: FSAGraphState,
         private m_transition: FSATransition | null = null,
         private m_parent: FSAGraphNode | null = null,
     ) {
-        console.log("Parent: ", m_parent);
         this.depth = m_parent ? m_parent.depth + 1 : 0;
     }
 
@@ -89,21 +32,13 @@ export class FSAGraphNode implements GraphNode {
     }
 }
 
-export abstract class GraphState {
-    constructor(protected id: StateID, protected isFinal: boolean) {}
-
-    abstract key(): string;
-}
-
-export class FSAGraphState extends GraphState {
+export class FSAGraphState implements IGraphState {
     constructor(
-        id: StateID,
-        isFinal: boolean,
+        public id: StateID,
+        public isFinal: boolean,
         private remaining: ReadSymbol, // Symbols left to be read
         private read: ReadSymbol | null = null, // Symbol that was read to when this state was reached
-    ) {
-        super(id, isFinal);
-    }
+    ) {}
 
     key(): string {
         return String(this.id + this.remaining);
@@ -124,12 +59,6 @@ export class FSAGraphState extends GraphState {
     get readSymbol() {
         return this.read;
     }
-}
-
-export interface IProblem<T extends GraphNode> {
-    getInitialState(): T | null;
-    getSuccessors(node: T): T[];
-    isFinalState(node: T): boolean;
 }
 
 export class FSAGraphProblem implements IProblem<FSAGraphNode> {
