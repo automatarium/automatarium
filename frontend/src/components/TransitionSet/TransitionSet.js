@@ -124,9 +124,7 @@ const Transition = ({
       </text>
     }
     
-    {/* The label for PDAs - i.e the accepted symbols */
-     /* TODO: This is currently placeholder logic for when pop/push input dialog boxes are added*/
-     /*       - implement <read,pop;push> label */ }
+    {/* The label for PDAs - i.e the accepted symbols */}
     {(currentProjectType == 'PDA') && 
       <text
         onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
