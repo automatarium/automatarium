@@ -57,7 +57,6 @@ const tools = [
     icon: <MessageSquare />,
     animation: commentAnimation,
   },
-  //TODO: Delete hotkey not registering
   {
     label: 'Delete tool',
     hotkey: 'D', 
