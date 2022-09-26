@@ -1,4 +1,4 @@
-import { FSAGraph, ReadSymbol, UnparsedFSAGraph } from "./graph";
+import { FSAGraph, PDAGraph, ReadSymbol, PopSymbol, PushSymbol, UnparsedFSAGraph, UnparsedPDAGraph } from "./graph";
 
 const RANGE_REG = /\[(\w-\w)\]/g;
 const LITERAL_REG = /[\S]/;
@@ -11,7 +11,21 @@ export const RANGE_VALS =
  * @param graph - FSA Graph object to resolve.
  * @returns The resolved graph
  */
-export const parseGraph = (graph: UnparsedFSAGraph): FSAGraph => {
+export const parseFSAGraph = (graph: UnparsedFSAGraph): FSAGraph => {
+    // Resolve graph transitions
+    const transitions = graph.transitions
+        .filter(
+            (transition) =>
+                transition !== undefined && transition.read !== undefined,
+        )
+        .map((transition) => ({
+            ...transition,
+            read: expandReadSymbols(transition.read),
+        }));
+    return { ...graph, transitions };
+};
+
+export const parsePDAGraph = (graph: UnparsedPDAGraph): PDAGraph => {
     // Resolve graph transitions
     const transitions = graph.transitions
         .filter(

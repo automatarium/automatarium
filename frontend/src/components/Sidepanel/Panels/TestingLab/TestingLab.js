@@ -4,7 +4,7 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
+import { closureWithPredicate, resolveGraph, simulatePDA } from '@automatarium/simulation'
 import { simulateFSA } from "@automatarium/simulation-v2";
 
 import {
@@ -38,10 +38,13 @@ const TestingLab = () => {
   const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const currentProjectType = useProjectStore(p => p.project.config.type)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
+    const { accepted, trace, remaining } = currentProjectType==='PDA' ? 
+          simulatePDA(graph, traceInput ?? '') 
+        : simulateFSA(graph, traceInput ?? '')
     const result = {
       accepted,
       remaining,
@@ -52,8 +55,10 @@ const TestingLab = () => {
       transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
     setSimulationResult(result)
+    //console.log("Returned result: " + result)
     return result
   }, [graph, traceInput])
+  
 
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
 
@@ -66,6 +71,10 @@ const TestingLab = () => {
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
+      // console.log("Simulating some stuff...")
+      console.log("Trace length: " + trace.length)
+      // console.log("Remaining: " + remaining)
+      console.log("Accepted: " + accepted)
       if (traceIdx > 0)
         return accepted ? 'ACCEPTED' : 'REJECTED'
       return null

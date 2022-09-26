@@ -1,6 +1,8 @@
 export type ReadSymbol = string;
 export type StateID = number;
 export type TransitionID = number;
+export type PopSymbol = string;
+export type PushSymbol = string;
 
 type State = {
     id: StateID;
@@ -8,6 +10,7 @@ type State = {
 };
 
 export type FSAState = State;
+export type PDAState = State;
 
 type Transition = {
     id: TransitionID;
@@ -19,8 +22,20 @@ export type UnparsedFSATransition = Transition & {
     read: ReadSymbol;
 };
 
+export type UnparsedPDATransition = Transition & {
+    read: ReadSymbol;
+    pop: PopSymbol;
+    push: PushSymbol;
+}
+
 export type FSATransition = Transition & {
     read: ReadSymbol[];
+};
+
+export type PDATransition = Transition & {
+    read: ReadSymbol[];
+    pop: PopSymbol[];
+    push: PushSymbol[];
 };
 
 type Graph = {
@@ -32,9 +47,17 @@ export type UnparsedFSAGraph = Graph & {
     transitions: UnparsedFSATransition[];
 };
 
+export type UnparsedPDAGraph = Graph & {
+    transitions: UnparsedPDATransition[];
+}
+
 export type FSAGraph = Graph & {
     transitions: FSATransition[];
 };
+
+export type PDAGraph = Graph & {
+    transitions: PDATransition[];
+}
 
 export type ExecutionTrace = {
     read: string | null;
