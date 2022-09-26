@@ -28,6 +28,7 @@ const useResourceSelection = (makeSelected, makeSetSelected, eventKey) => {
       setSelected(newSelected)
     }
     return newSelected
+    
   }, [tool, selected])
 
   return { select }
