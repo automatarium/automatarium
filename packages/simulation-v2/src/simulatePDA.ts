@@ -4,46 +4,63 @@ import { parsePDAGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
 const generateTrace = (node: PDAGraphNode): ExecutionTrace[] => {
-    console.log("Generating PDA trace...")
     const trace: ExecutionTrace[] = [];
     while (node.parent) {
         trace.push({
-            to: node.state.stateID,
-            read: node.state.readSymbol,
+            to: node.state.id,
+            read: node.state.read,
         });
         node = node.parent;
     }
     trace.push({
-        to: node.state.stateID,
+        to: node.state.id,
         read: null,
     });
     return trace.reverse();
 };
 
-export const simulatePDA = (graph: UnparsedPDAGraph, input: string) => {
+export const simulatePDA = (
+    graph: UnparsedPDAGraph,
+    input: string,
+): ExecutionResult => {
     const parsedGraph = parsePDAGraph(graph);
+
+    // Doing this find here so we don't have to deal with undefined in the class
+    const initialState = parsedGraph.states.find((state) => {
+        return state.id === graph.initialState;
+    });
+
+    if (!initialState) {
+        return {
+            accepted: false,
+            remaining: input,
+            trace: [],
+        };
+    }
+
+    initialState.read = null;
+    initialState.remaining = input;
+
     const problem = new PDAGraph(input, new PDAGraphNode(initialState), parsedGraph.states, parsedGraph.transitions);
     const result = breadthFirstSearch(problem);
-    console.log("Result of PDA simulation is: " + result)
+
+    console.log(result);
+
     if (!result) {
         const emptyExecution: ExecutionResult = {
             trace: [{ to: 0, read: null }],
             accepted: false,
             remaining: input,
         };
-        console.log("Simulating PDA...")
         return emptyExecution;
     }
 
-    console.log("The PDA result is ...!", result);
-
-    const executionResult: ExecutionResult = {
-        accepted: result.state.isFinalState && result.state.remainingInput === "",
-        remaining: result.state.remainingInput,
+    return {
+        accepted:
+            result.state.isFinal && result.state.remaining === "",
+        remaining: result.state.remaining,
         trace: generateTrace(result),
     };
-
-    return executionResult;
 };
 
 // export const graphStepper = (graph: UnparsedPDAGraph, input: string) => {
