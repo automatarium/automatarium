@@ -1,4 +1,4 @@
-import { FSAGraphNode, FSAGraphProblem } from "./FSAGraph";
+import { FSAGraphNode, FSAGraphProblem } from "./FSASearch";
 import { ExecutionResult, ExecutionTrace, UnparsedFSAGraph } from "./graph";
 import { parseGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
