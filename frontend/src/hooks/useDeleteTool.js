@@ -28,6 +28,16 @@ const useDeleteTool = () => {
         }
     })
 
+    //On mouse up deletes the previously selected state
+    useEvent('state:mouseup', e => {
+        if (tool === 'delete') {
+            removeStates(selectedStates)
+            selectNone()
+            commit()
+        }
+    })
+
+    //Uses custom transition event to detect mousedown then stores the selected transition
     useEvent('transition:mousedown', e => {
         const selectedTransitionIDs = selectTransition(e)
         if (tool === 'delete') {
@@ -35,6 +45,7 @@ const useDeleteTool = () => {
         }
     })
 
+    //On mouseup deletes the previously selected (mousedown) transition
     useEvent('transition:mouseup', e => {
         if (tool === 'delete') {
             removeTransitions(selectedTransitions)
@@ -43,10 +54,14 @@ const useDeleteTool = () => {
         }
     })
 
-    //On mouse up deletes the previously selected state
-    useEvent('state:mouseup', e => {
+    useEvent('comment:mousedown', e => {
+        const selectedCommentIDs = selectComment(e)
+        tool === 'delete' ? setSelectedComments(selectedCommentIDs) : false
+    }) 
+
+    useEvent('comment:mouseup', e => {
         if (tool === 'delete') {
-            removeStates(selectedStates)
+            removeComments(selectedComments)
             selectNone()
             commit()
         }
