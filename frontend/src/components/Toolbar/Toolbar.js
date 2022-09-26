@@ -60,7 +60,7 @@ const tools = [
   {
     label: 'Delete tool',
     hotkey: 'D', 
-    description: 'Delete states and transitions from your automatarium',
+    description: 'Delete states, transitions and comments from your automaton',
     value: 'delete',
     icon: <Skull />,
     animation: deleteAnimation,
