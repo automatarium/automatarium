@@ -4,7 +4,8 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph, simulateFSA } from '@automatarium/simulation'
+import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
+import { simulateFSA } from "@automatarium/simulation-v2";
 
 import {
   StepButtons,
