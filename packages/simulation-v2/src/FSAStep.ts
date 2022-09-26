@@ -1,44 +1,62 @@
-// TODO: Freeze, thaw, trace, and remove
-// export class GraphStepper {
-//     private m_frontier: Array<GraphNode>;
-//     private m_initialNode: GraphNode;
-//     private m_problem: FSAGraphProblem;
+// import { FSAGraphNode, FSAGraphProblem } from "./FSASearch";
+// import { IGraphNode, IProblem } from "./interfaces/graph";
 
+// export interface IGraphStep<T extends IGraphNode> {
+//     node: T;
+//     successors: T[];
+//     reached: Map<string, T>;
+// }
+
+// export abstract class GraphStep<T extends IGraphNode> {
+//     protected frontier: T[];
+//     protected initial: T;
+//     protected problem: IProblem<T>;
+
+//     constructor(problem: IProblem<T>) {
+//         this.problem = problem;
+//         this.initial = problem.getInitialState();
+//         this.frontier = [this.initial];
+//     }
+
+//     public abstract forward(): T[];
+//     public abstract backward(): T[];
+//     public abstract reset(): T[];
+// }
+
+// // TODO: Freeze, thaw, trace, and remove
+// export class FSAStepper extends GraphStep<FSAGraphNode> {
 //     constructor(problem: FSAGraphProblem) {
-//         this.m_frontier = new Array<GraphNode>();
-//         this.m_problem = problem;
-//         this.m_initialNode = new GraphNode(problem.getInitialState());
-//         this.m_frontier.push(this.m_initialNode);
+//         super(problem);
 //     }
 
 //     public forward() {
-//         const frontierCopy = this.m_frontier.slice();
-//         this.m_frontier = [];
+//         const frontierCopy = this.frontier.slice();
+//         this.frontier = [];
 //         while (frontierCopy.length > 0) {
 //             const node = frontierCopy.shift()!;
-//             for (const successor of this.m_problem.getSuccessors(node.state)) {
+//             for (const successor of this.problem.getSuccessors(node.state)) {
 //                 const successorNode = new GraphNode(
 //                     successor.state,
 //                     successor.transition,
 //                     node,
 //                     successor.read,
 //                 );
-//                 this.m_frontier.push(successorNode);
+//                 this.frontier.push(successorNode);
 //             }
 //         }
-//         return this.m_frontier;
+//         return this.frontier;
 //     }
 
 //     public backward() {
 //         if (
-//             this.m_frontier.length === 1 &&
-//             this.m_frontier[0].key() === this.m_initialNode.key()
+//             this.frontier.length === 1 &&
+//             this.frontier[0].key() === this.initial.key()
 //         ) {
 //             // This is the root node!
-//             return this.m_frontier;
+//             return this.frontier;
 //         }
 //         const previousFrontier = new Array<GraphNode>();
-//         this.m_frontier.forEach((node) => {
+//         this.frontier.forEach((node) => {
 //             if (
 //                 node.parent &&
 //                 !this.checkForDuplicate(node.parent, previousFrontier)
@@ -46,8 +64,8 @@
 //                 previousFrontier.push(node.parent);
 //             }
 //         });
-//         this.m_frontier = previousFrontier;
-//         return this.m_frontier;
+//         this.frontier = previousFrontier;
+//         return this.frontier;
 //     }
 
 //     private checkForDuplicate(node: GraphNode, frontier: Array<GraphNode>) {
@@ -55,8 +73,8 @@
 //     }
 
 //     public reset() {
-//         this.m_frontier = new Array<GraphNode>();
-//         this.m_frontier.push(this.m_initialNode);
-//         return this.m_frontier;
+//         this.frontier = new Array<GraphNode>();
+//         this.frontier.push(this.initial);
+//         return this.frontier;
 //     }
 // }

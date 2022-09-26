@@ -7,7 +7,10 @@ type State = {
     isFinal: boolean;
 };
 
-export type FSAState = State;
+export type FSAState = State & {
+    remaining: ReadSymbol;
+    read: ReadSymbol | null;
+};
 
 type Transition = {
     id: TransitionID;
@@ -23,16 +26,15 @@ export type FSATransition = Transition & {
     read: ReadSymbol[];
 };
 
-type Graph = {
+export type UnparsedFSAGraph = {
     initialState: StateID;
-    states: State[];
-};
-
-export type UnparsedFSAGraph = Graph & {
+    states: FSAState[];
     transitions: UnparsedFSATransition[];
 };
 
-export type FSAGraph = Graph & {
+export type FSAGraph = {
+    initialState: StateID;
+    states: FSAState[];
     transitions: FSATransition[];
 };
 
