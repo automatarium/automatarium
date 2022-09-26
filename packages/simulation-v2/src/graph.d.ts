@@ -9,8 +9,15 @@ type State = {
     isFinal: boolean;
 };
 
-export type FSAState = State;
-export type PDAState = State;
+export type FSAState = State & {
+    remaining: ReadSymbol;
+    read: ReadSymbol | null;
+};
+
+export type PDAState = State & {
+    remaining: ReadSymbol;
+    read: ReadSymbol | null;
+};
 
 type Transition = {
     id: TransitionID;
@@ -34,28 +41,31 @@ export type FSATransition = Transition & {
 
 export type PDATransition = Transition & {
     read: ReadSymbol[];
-    pop: PopSymbol[];
-    push: PushSymbol[];
+    // pop: PopSymbol[];
+    // push: PushSymbol[];
 };
 
-type Graph = {
+export type UnparsedFSAGraph = {
     initialState: StateID;
-    states: State[];
-};
-
-export type UnparsedFSAGraph = Graph & {
+    states: FSAState[];
     transitions: UnparsedFSATransition[];
 };
 
-export type UnparsedPDAGraph = Graph & {
+export type UnparsedPDAGraph = {
+    initialState: StateID;
+    states: PDAState[];
     transitions: UnparsedPDATransition[];
-}
+};
 
-export type FSAGraph = Graph & {
+export type FSAGraph = {
+    initialState: StateID;
+    states: FSAState[];
     transitions: FSATransition[];
 };
 
-export type PDAGraph = Graph & {
+export type PDAGraph = {
+    initialState: StateID;
+    states: PDAState[];
     transitions: PDATransition[];
 }
 

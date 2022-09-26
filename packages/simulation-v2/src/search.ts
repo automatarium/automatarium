@@ -1,17 +1,14 @@
 import { Queue } from "./collection";
-import { IGraphNode, IProblem } from "./interfaces/graph";
+import { State, Transition } from "./graph";
+import { Graph, Node } from "./interfaces/graph";
 
-export const breadthFirstSearch = <T extends IGraphNode>(
-    problem: IProblem<T>,
+export const breadthFirstSearch = <S extends State, T extends Transition, N extends Node<S>>(
+    graph: Graph<S, T, N>,
 ) => {
-    const frontier = new Queue<T>();
-    const reached: Map<string, T> = new Map();
+    const frontier = new Queue<N>();
+    const reached: Map<string, N> = new Map();
 
-    let node = problem.getInitialState();
-
-    if (!node) {
-        return node;
-    }
+    let node = graph.initial;
 
     frontier.add(node);
     reached.set(node.key(), node);
@@ -19,10 +16,10 @@ export const breadthFirstSearch = <T extends IGraphNode>(
     while (!frontier.isEmpty()) {
         // Bang is necessary because TS doesn't understand that the frontier is not empty here
         node = frontier.remove()!;
-        if (problem.isFinalState(node)) {
+        if (graph.isFinalState(node)) {
             return node;
         }
-        for (const successor of problem.getSuccessors(node)) {
+        for (const successor of graph.getSuccessors(node)) {
             if (!reached.has(successor.key())) {
                 frontier.add(successor);
                 reached.set(successor.key(), successor);

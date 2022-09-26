@@ -1,4 +1,4 @@
-import { PDAGraphNode, PDAGraphProblem } from "./PDAGraph";
+import { PDAGraphNode, PDAGraph } from "./PDAGraph";
 import { ExecutionResult, ExecutionTrace, UnparsedPDAGraph } from "./graph";
 import { parsePDAGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
@@ -22,7 +22,7 @@ const generateTrace = (node: PDAGraphNode): ExecutionTrace[] => {
 
 export const simulatePDA = (graph: UnparsedPDAGraph, input: string) => {
     const parsedGraph = parsePDAGraph(graph);
-    const problem = new PDAGraphProblem(parsedGraph, input);
+    const problem = new PDAGraph(input, new PDAGraphNode(initialState), parsedGraph.states, parsedGraph.transitions);
     const result = breadthFirstSearch(problem);
     console.log("Result of PDA simulation is: " + result)
     if (!result) {
