@@ -5,17 +5,12 @@ export class FSAGraphNode extends Node<FSAState> {
     constructor(
         state: FSAState,
         parent: FSAGraphNode | null = null,
-        private read: ReadSymbol | null = null, // Symbol that was read to when this state was reached
     ) {
         super(state, parent);
     }
 
     key(): string {
         return String(this.state.id + this.state.remaining);
-    }
-
-    get readSymbol() {
-        return this.read;
     }
 
     get state() {
