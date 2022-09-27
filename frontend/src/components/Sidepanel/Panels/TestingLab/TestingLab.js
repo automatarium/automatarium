@@ -6,7 +6,7 @@ import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference,
 import { useProjectStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
 import { simulateFSA } from "@automatarium/simulation-v2";
-import { simulateTM } from "@automatarium/simulation-v2";
+import { simulateTM } from "@automatarium/simulation-v2/src/simulateTM";
 
 import {
   StepButtons,
@@ -44,19 +44,27 @@ const TestingLab = () => {
   // Execute graph
   const simulateGraph = useCallback(() => {
     if (projectType === 'TM'){
-      const { accepted, trace, remaining } = simulateTM(graph, traceInput ?? '')
+      const tapeTrace = traceInput ? traceInput.split("") : [""]
+      const tapePointer = 0 // This is hard coded for now. Future development available
+      console.log("Tape before sim: ", tapeTrace)
+
+      const { halted, trace, tape } = simulateTM(graph, {pointer: tapePointer, trace: tapeTrace}
+          ?? {pointer: 0, trace: []})
       const result = {
-        accepted,
-        remaining,
+        halted,
+        tape,
         trace: trace.map(step => ({
           to: step.to,
-          read: step.read === '' ? 'λ' : step.read
+          read: step.tape
         })),
-        transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+        transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
       }
+
       setSimulationResult(result)
+      console.log(result)
       return result
     }
+
     else {
       const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
       const result = {
@@ -110,8 +118,9 @@ const TestingLab = () => {
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
-    if (projectType=='TM') {setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph, input)))}
-    else {setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))}
+    if (projectType=='TM') {setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
+        {pointer: 0, trace: [input]})))}
+    else if (projectType === 'FSA') {setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))}
   }, [])
 
   useEffect(() => {
@@ -119,6 +128,11 @@ const TestingLab = () => {
     setMultiTraceOutput()
     setTraceIdx(0)
   }, [lastChangeDate])
+
+  // const proxyMultiTraceOnMount = (input) => {
+  //   if input
+  //   setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph, input)))
+  // }
 
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
@@ -244,7 +258,7 @@ const TestingLab = () => {
                   if (e.key === 'Enter' && !e.repeat) {
                     if (e.metaKey || e.ctrlKey) {
                       // Run shortcut
-                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input))) // Need to accomodate TM
                     } else {
                       addMultiTraceInput()
                       window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)

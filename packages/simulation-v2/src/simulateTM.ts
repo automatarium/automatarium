@@ -5,7 +5,6 @@ import {
   TMExecutionResult,
   TMExecutionTrace,
 } from "./graph";
-import { parseGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
 const generateTrace = (node: TMGraphNode): TMExecutionTrace[] => {
@@ -25,15 +24,16 @@ const generateTrace = (node: TMGraphNode): TMExecutionTrace[] => {
 };
 
 export const simulateTM = (
-    graph: TMGraphIn,
-    // This forces front end to hand over tape
-    inputTape: Tape,
+    graphIn: TMGraphIn,
+    // This forces front end to through a tape
+    inputTapeIn: Tape,
 ): TMExecutionResult => {
-
-  // Doing this find here so we don't have to deal with undefined in the class
+  const inputTape = structuredClone(inputTapeIn)
+  const graph = structuredClone(graphIn)
   const initialState = graph.states.find((state) => {
     return state.id === graph.initialState;
-  });
+  })
+
 
   if (!initialState) {
     return {
@@ -42,7 +42,6 @@ export const simulateTM = (
       trace: [],
     };
   }
-
   initialState.tape = inputTape;
 
   const problem = new TMGraph(new TMGraphNode(initialState), graph.states, graph.transitions);

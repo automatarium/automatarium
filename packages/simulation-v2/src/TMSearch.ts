@@ -1,4 +1,4 @@
-import {TMState, TMTransition, ReadSymbol, Tape} from "./graph";
+import {TMState, TMTransition, Tape} from "./graph";
 import { Graph, Node } from "./interfaces/graph";
 import {FSAGraphNode} from "./FSASearch";
 
@@ -11,7 +11,8 @@ export class TMGraphNode extends Node<TMState> {
     }
 
     key(): string {
-        return String(this.state.id + this.state.tape.trace.toString());
+        const traceAdd = this.state.tape.trace.toString()?? ""
+        return String(this.state.id + traceAdd);
     }
 
     get state() {
@@ -56,7 +57,7 @@ export class TMGraph extends Graph<TMState, TMTransition, TMGraphNode> {
                 continue;
             }
 
-            if (transition.read.includes(symbol)) {
+            if (transition.read === symbol) {
                 const graphState: TMState = {
                     id: nextState.id,
                     isFinal: nextState.isFinal,
@@ -74,7 +75,7 @@ export class TMGraph extends Graph<TMState, TMTransition, TMGraphNode> {
 
         const tapeTrace = node.state.tape.trace
         const write = transition.write
-        const direction = transition.Direction
+        const direction = transition.direction
         let newTapePointer = node.state.tape.pointer
         let newTapeTrace = tapeTrace
         // Direction input handled to only be uppercase
@@ -84,7 +85,7 @@ export class TMGraph extends Graph<TMState, TMTransition, TMGraphNode> {
         else if (direction=== 'R'){
             newTapePointer++
         }
-        newTapeTrace[newTapePointer] = write
+        newTapeTrace[node.state.tape.pointer] = write
 
         const newTape: Tape = {
             pointer: newTapePointer,

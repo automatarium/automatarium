@@ -25,7 +25,7 @@ type Transition = {
 type TMTransition = Transition & {
     read: string
     write: string
-    Direction: string
+    direction: string
 }
 
 export type UnparsedFSATransition = Transition & {
