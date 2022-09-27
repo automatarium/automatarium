@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-
+import { useProjectStore } from "../../stores";
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
@@ -9,11 +9,11 @@ import { useSelectionStore } from '/src/stores'
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({id, from, to, read}, i) => (
-    <Transition
+  { transitions.map(({id, from, to, read, write, direction}, i) => (
+      <Transition
       i={i}
       transitions={transitions}
-      text={read}
+      text={useProjectStore(s => s.project.config.type)==='TM' ? ((read?read:'λ') + ',' +  (write ? write : 'λ') + ';' + (direction ? direction : '')): read}
       from={from}
       to={to}
       id={id}

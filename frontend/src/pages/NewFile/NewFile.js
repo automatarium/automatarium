@@ -120,9 +120,9 @@ const NewFile = () => {
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
       />
       <NewProjectCard
-        disabled
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
+        onClick={() => handleNewFile('TM')}
       />
     </CardList>
 

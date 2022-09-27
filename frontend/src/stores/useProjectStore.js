@@ -117,8 +117,14 @@ const useProjectStore = create(persist((set, get) => ({
     }))
     return id
   },
-  editTransition: (id, read) => set(produce(({ project }) => {
+
+  editTransition: (id, read, write = null, direction = null) => set(produce(({ project }) => {
+    if (project.config.type === 'TM') {
+      project.transitions.find(t => t.id === id).write = write
+      project.transitions.find(t => t.id === id).direction = direction
+    }
     project.transitions.find(t => t.id === id).read = read
+    console.log(project.transitions)
   })),
 
   /* Create a new comment */

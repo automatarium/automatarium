@@ -48,7 +48,7 @@ export const simulateFSA = (
     const problem = new FSAGraph(input, new FSAGraphNode(initialState), parsedGraph.states, parsedGraph.transitions);
     const result = breadthFirstSearch(problem);
 
-    console.log(result);
+
 
     if (!result) {
         const emptyExecution: ExecutionResult = {

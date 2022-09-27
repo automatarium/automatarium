@@ -1,4 +1,4 @@
-import { FSAGraph, ReadSymbol, UnparsedFSAGraph } from "./graph";
+import { FSAGraph, ReadSymbol, UnparsedFSAGraph} from "./graph";
 
 const RANGE_REG = /\[(\w-\w)\]/g;
 const LITERAL_REG = /[\S]/;
