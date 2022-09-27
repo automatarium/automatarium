@@ -1,7 +1,7 @@
-import { FSATransition } from "./graph";
+import { PDATransition } from "./graph";
 import { Graph, Node, State } from "./interfaces/graph";
 
-export class FSAState extends State {
+export class PDAState extends State {
     constructor(
         m_id: number,
         m_isFinal: boolean,
@@ -24,23 +24,23 @@ export class FSAState extends State {
     }
 }
 
-export class FSAGraph extends Graph<FSAState, FSATransition> {
+export class PDAGraph extends Graph<PDAState, PDATransition> {
     constructor(
-        initial: Node<FSAState>,
-        states: FSAState[],
-        transitions: FSATransition[],
+        initial: Node<PDAState>,
+        states: PDAState[],
+        transitions: PDATransition[],
     ) {
         super(initial, states, transitions);
     }
-    public isFinalState(node: Node<FSAState>) {
+    public isFinalState(node: Node<PDAState>) {
         return node.state.isFinal && node.state.remaining.length === 0;
     }
 
-    public getSuccessors(node: Node<FSAState>) {
+    public getSuccessors(node: Node<PDAState>) {
         const transitions = this.transitions.filter(
             (transition) => transition.from === node.state.id,
         );
-        const successors: Node<FSAState>[] = [];
+        const successors: Node<PDAState>[] = [];
         for (const transition of transitions) {
             const nextState = this.states.find(
                 (state) => state.id === transition.to,
@@ -53,7 +53,7 @@ export class FSAGraph extends Graph<FSAState, FSATransition> {
             ) {
                 continue;
             }
-            const graphState = new FSAState(
+            const graphState = new PDAState(
                 nextState.id,
                 nextState.isFinal,
                 lambdaTransition ? "" : symbol,

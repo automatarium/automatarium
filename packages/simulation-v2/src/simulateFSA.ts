@@ -1,13 +1,11 @@
-import { FSAGraphNode, FSAGraph } from "./FSASearch";
-import {
-    ExecutionResult,
-    ExecutionTrace,
-    UnparsedFSAGraph,
-} from "./graph";
+import { FSAGraph, FSAState } from "./FSASearch";
+import { GraphStepper } from "./FSAStep";
+import { ExecutionResult, ExecutionTrace, UnparsedFSAGraph } from "./graph";
+import { Node } from "./interfaces/graph";
 import { parseFSAGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
-const generateTrace = (node: FSAGraphNode): ExecutionTrace[] => {
+const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
     const trace: ExecutionTrace[] = [];
     while (node.parent) {
         trace.push({
@@ -42,13 +40,16 @@ export const simulateFSA = (
         };
     }
 
-    initialState.read = null;
-    initialState.remaining = input;
+    const initialNode = new Node<FSAState>(
+        new FSAState(initialState.id, initialState.isFinal, null, input),
+    );
 
-    const problem = new FSAGraph(input, new FSAGraphNode(initialState), parsedGraph.states, parsedGraph.transitions);
+    const states = parsedGraph.states.map(
+        (state) => new FSAState(state.id, state.isFinal),
+    );
+
+    const problem = new FSAGraph(initialNode, states, parsedGraph.transitions);
     const result = breadthFirstSearch(problem);
-
-    console.log(result);
 
     if (!result) {
         const emptyExecution: ExecutionResult = {
@@ -60,16 +61,36 @@ export const simulateFSA = (
     }
 
     return {
-        accepted:
-            result.state.isFinal && result.state.remaining === "",
+        accepted: result.state.isFinal && result.state.remaining === "",
         remaining: result.state.remaining,
         trace: generateTrace(result),
     };
 };
 
-// export const graphStepper = (graph: UnparsedFSAGraph, input: string) => {
-//     const parsedGraph = parseGraph(graph);
-//     const problem = new FSAGraphProblem(parsedGraph, input);
-//     // const stepper = new GraphStepper(problem);
-//     // return stepper;
-// };
+export const graphStepper = (graph: UnparsedFSAGraph, input: string) => {
+    const parsedGraph = parseFSAGraph(graph);
+
+    const initialState = parsedGraph.states.find((state) => {
+        return state.id === graph.initialState;
+    });
+
+    if (!initialState) {
+        return {
+            accepted: false,
+            remaining: input,
+            trace: [],
+        };
+    }
+
+    const initialNode = new Node<FSAState>(
+        new FSAState(initialState.id, initialState.isFinal, null, input),
+    );
+
+    const states = parsedGraph.states.map(
+        (state) => new FSAState(state.id, state.isFinal),
+    );
+
+    const problem = new FSAGraph(initialNode, states, parsedGraph.transitions);
+
+    return new GraphStepper(problem);
+};

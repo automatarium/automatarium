@@ -1,6 +1,20 @@
-import { State, Transition } from "../graph";
+import { Transition } from "../graph";
 
-export abstract class Node<S extends State> {
+export abstract class State {
+    constructor(private m_id: number, private m_isFinal: boolean) {}
+
+    get id() {
+        return this.m_id;
+    }
+
+    get isFinal() {
+        return this.m_isFinal;
+    }
+
+    abstract key(): string;
+}
+
+export class Node<S extends State> {
     private m_depth: number;
     constructor(
         protected m_state: S,
@@ -13,16 +27,26 @@ export abstract class Node<S extends State> {
         return this.m_depth;
     }
 
-    abstract key(): string;
+    get state() {
+        return this.m_state;
+    }
+
+    get parent() {
+        return this.m_parent;
+    }
 }
 
-export abstract class Graph<S extends State, T extends Transition, N extends Node<S>> {
-    constructor(protected input: string, protected m_initial: N, protected states: S[], protected transitions: T[]) {}
+export abstract class Graph<S extends State, T extends Transition> {
+    constructor(
+        protected m_initial: Node<S>,
+        protected states: S[],
+        protected transitions: T[],
+    ) {}
 
     get initial() {
         return this.m_initial;
     }
 
-    abstract getSuccessors(node: N): N[];
-    abstract isFinalState(node: N): boolean;
+    abstract getSuccessors(node: Node<S>): Node<S>[];
+    abstract isFinalState(node: Node<S>): boolean;
 }
