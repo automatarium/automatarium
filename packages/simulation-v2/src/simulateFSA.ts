@@ -1,9 +1,5 @@
 import { FSAGraphNode, FSAGraph } from "./FSASearch";
-import {
-    ExecutionResult,
-    ExecutionTrace,
-    UnparsedFSAGraph,
-} from "./graph";
+import { ExecutionResult, ExecutionTrace, UnparsedFSAGraph } from "./graph";
 import { parseGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
@@ -30,9 +26,12 @@ export const simulateFSA = (
     const parsedGraph = parseGraph(graph);
 
     // Doing this find here so we don't have to deal with undefined in the class
-    const initialState = parsedGraph.states.find((state) => {
-        return state.id === graph.initialState;
-    });
+    // We need to clone it so our modifications aren't reflected in the front end
+    const initialState = structuredClone(
+        parsedGraph.states.find((state) => {
+            return state.id === graph.initialState;
+        }),
+    );
 
     if (!initialState) {
         return {
@@ -45,10 +44,12 @@ export const simulateFSA = (
     initialState.read = null;
     initialState.remaining = input;
 
-    const problem = new FSAGraph(input, new FSAGraphNode(initialState), parsedGraph.states, parsedGraph.transitions);
+    const problem = new FSAGraph(
+        new FSAGraphNode(initialState),
+        parsedGraph.states,
+        parsedGraph.transitions,
+    );
     const result = breadthFirstSearch(problem);
-
-    console.log(result);
 
     if (!result) {
         const emptyExecution: ExecutionResult = {
@@ -60,8 +61,7 @@ export const simulateFSA = (
     }
 
     return {
-        accepted:
-            result.state.isFinal && result.state.remaining === "",
+        accepted: result.state.isFinal && result.state.remaining === "",
         remaining: result.state.remaining,
         trace: generateTrace(result),
     };
