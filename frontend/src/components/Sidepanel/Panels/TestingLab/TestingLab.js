@@ -38,9 +38,13 @@ const TestingLab = () => {
   const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const projectType = useProjectStore(s => s.project.config.type)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
+    console.log('here')
+
+
     const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
     const result = {
       accepted,
@@ -91,7 +95,8 @@ const TestingLab = () => {
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
-    setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+    if (projectType=='TM') {}
+    else {setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))}
   }, [])
 
   useEffect(() => {
