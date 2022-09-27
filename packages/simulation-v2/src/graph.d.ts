@@ -12,11 +12,21 @@ export type FSAState = State & {
     read: ReadSymbol | null;
 };
 
+export type TMState = State & {
+    tape: Tape
+}
+
 type Transition = {
     id: TransitionID;
     to: StateID;
     from: StateID;
 };
+
+type TMTransition = Transition & {
+    read: string
+    write: string
+    Direction: string
+}
 
 export type UnparsedFSATransition = Transition & {
     read: ReadSymbol;
@@ -38,13 +48,36 @@ export type FSAGraph = {
     transitions: FSATransition[];
 };
 
+// Will be used for importing from front end
+export type TMGraphIn = {
+    initialState: StateID
+    states: TMState[]
+    transitions: TMTransition[]
+}
+
 export type ExecutionTrace = {
     read: string | null;
     to: StateID;
 };
+
+export type Tape ={
+    pointer: number
+    trace: string[]
+}
 
 export type ExecutionResult = {
     accepted: boolean;
     remaining: string;
     trace: ExecutionTrace[];
 };
+
+export type TMExecutionTrace = {
+    tape: Tape | null
+    to: StateID
+}
+
+export type TMExecutionResult = {
+    halted: boolean
+    tape: Tape
+    trace: TMExecutionTrace[]
+}

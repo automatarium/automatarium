@@ -17,7 +17,7 @@ export abstract class Node<S extends State> {
 }
 
 export abstract class Graph<S extends State, T extends Transition, N extends Node<S>> {
-    constructor(protected input: string, protected m_initial: N, protected states: S[], protected transitions: T[]) {}
+    constructor(protected m_initial: N, protected states: S[], protected transitions: T[]) {}
 
     get initial() {
         return this.m_initial;

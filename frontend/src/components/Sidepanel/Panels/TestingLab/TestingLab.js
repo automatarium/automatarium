@@ -6,6 +6,7 @@ import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference,
 import { useProjectStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
 import { simulateFSA } from "@automatarium/simulation-v2";
+import { simulateTM } from "@automatarium/simulation-v2";
 
 import {
   StepButtons,
@@ -42,21 +43,35 @@ const TestingLab = () => {
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    console.log('here')
-
-
-    const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
-    const result = {
-      accepted,
-      remaining,
-      trace: trace.map(step => ({
-        to: step.to,
-        read: step.read === '' ? 'λ' : step.read
-      })),
-      transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+    if (projectType === 'TM'){
+      const { accepted, trace, remaining } = simulateTM(graph, traceInput ?? '')
+      const result = {
+        accepted,
+        remaining,
+        trace: trace.map(step => ({
+          to: step.to,
+          read: step.read === '' ? 'λ' : step.read
+        })),
+        transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+      }
+      setSimulationResult(result)
+      return result
     }
-    setSimulationResult(result)
-    return result
+    else {
+      const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
+      const result = {
+        accepted,
+        remaining,
+        trace: trace.map(step => ({
+          to: step.to,
+          read: step.read === '' ? 'λ' : step.read
+        })),
+        transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+      }
+      setSimulationResult(result)
+      return result
+    }
+
   }, [graph, traceInput])
 
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
@@ -95,7 +110,7 @@ const TestingLab = () => {
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
-    if (projectType=='TM') {}
+    if (projectType=='TM') {setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph, input)))}
     else {setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))}
   }, [])
 

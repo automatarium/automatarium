@@ -145,6 +145,7 @@ const InputDialogs = () => {
   }
 
   const saveTMTransition = () => {
+    const lowerDirection = direction
     editTransition(dialog.id, read, write, direction)
     commit()
     hideDialog()
@@ -168,7 +169,7 @@ const InputDialogs = () => {
   }
   function handleDirectionIn(e){
     const input = e.target.value.toString().match(/(R|r|L|l)/g)
-    if (input) {setDirection(input[input.length-1])}
+    if (input) {setDirection(input[input.length-1].toUpperCase())}
   }
 
 
