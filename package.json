@@ -33,6 +33,7 @@
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
   },
   "devDependencies": {
-    "concurrently": "^7.1.0"
+    "concurrently": "^7.1.0",
+    "parcel-bundler": "^1.12.5"
   }
 }

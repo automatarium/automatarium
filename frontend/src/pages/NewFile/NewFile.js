@@ -123,6 +123,8 @@ const NewFile = () => {
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
+        onClick={() => handleNewFile('TM')}
+        /**image={<TM />} CREATE A TM SVG**/
       />
     </CardList>
 

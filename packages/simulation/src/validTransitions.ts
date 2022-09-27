@@ -52,3 +52,4 @@ export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextR
       trace: [...trace, transition].map(tr => ({ to: tr.to, read: tr.read.length === 0 ? '' : nextRead }))
     }))
 }
+
