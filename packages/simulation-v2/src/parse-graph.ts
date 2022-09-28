@@ -30,11 +30,15 @@ export const parsePDAGraph = (graph: UnparsedPDAGraph): PDAGraph => {
     const transitions = graph.transitions
         .filter(
             (transition) =>
-                transition !== undefined && transition.read !== undefined,
+                transition !== undefined && transition.read !== undefined
+                && transition.pop !== undefined 
+                && transition.push !== undefined
         )
         .map((transition) => ({
             ...transition,
             read: expandReadSymbols(transition.read),
+            pop: transition.pop,
+            push: transition.push,
         }));
     return { ...graph, transitions };
 };

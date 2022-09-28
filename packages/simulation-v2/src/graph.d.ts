@@ -17,6 +17,7 @@ export type FSAState = State & {
 export type PDAState = State & {
     remaining: ReadSymbol;
     read: ReadSymbol | null;
+    stack: string[];
 };
 
 type Transition = {
@@ -41,8 +42,8 @@ export type FSATransition = Transition & {
 
 export type PDATransition = Transition & {
     read: ReadSymbol[];
-    // pop: PopSymbol[];
-    // push: PushSymbol[];
+    pop: PopSymbol;
+    push: PushSymbol;
 };
 
 export type UnparsedFSAGraph = {
@@ -79,3 +80,19 @@ export type ExecutionResult = {
     remaining: string;
     trace: ExecutionTrace[];
 };
+
+export type PDAExecutionResult = {
+    accepted: boolean;
+    remaining: string;
+    trace: PDAExecutionTrace[];
+    stack: Stack;
+}
+
+export type PDAExecutionTrace = {
+    read: string | null;
+    to: StateID;
+    pop: string;
+    push: string;
+};
+
+export type Stack = string[];

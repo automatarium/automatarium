@@ -4,8 +4,8 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph, simulatePDA } from '@automatarium/simulation'
-import { simulateFSA } from "@automatarium/simulation-v2";
+import { closureWithPredicate, resolveGraph} from '@automatarium/simulation'
+import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
 
 import {
   StepButtons,
@@ -42,20 +42,29 @@ const TestingLab = () => {
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const { accepted, trace, remaining } = currentProjectType==='PDA' ? 
-          simulatePDA(graph, traceInput ?? '') 
+    const { accepted, trace, remaining, stack } = 
+        currentProjectType==='PDA' ? 
+          simulatePDA(graph, traceInput ?? '')
         : simulateFSA(graph, traceInput ?? '')
+    console.log("Remaining: ", remaining)
+    console.log("Trace input: " + traceInput)
+    console.log("Simulating: " + (currentProjectType==='PDA' ? "PDA" : "FSA"))
+    console.log("Accepted by simulate: ", accepted)
+    console.log("Stack: ", stack)
     const result = {
       accepted,
       remaining,
       trace: trace.map(step => ({
         to: step.to,
-        read: step.read === '' ? 'λ' : step.read
+        read: step.read === '' ? 'λ' : step.read,
+        pop: step.pop === '' ? 'λ' : step.pop,
+        push: step.push === '' ? 'λ' : step.push,
+      stack: stack,
       })),
       transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
+    console.log("Trace result: ", result.trace)
     setSimulationResult(result)
-    //console.log("Returned result: " + result)
     return result
   }, [graph, traceInput])
   
@@ -71,10 +80,6 @@ const TestingLab = () => {
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
-      // console.log("Simulating some stuff...")
-      console.log("Trace length: " + trace.length)
-      // console.log("Remaining: " + remaining)
-      console.log("Accepted: " + accepted)
       if (traceIdx > 0)
         return accepted ? 'ACCEPTED' : 'REJECTED'
       return null

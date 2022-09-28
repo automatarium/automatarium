@@ -1,22 +1,26 @@
 import { PDAGraph, PDAState } from "./PDASearch";
 import { GraphStepper } from "./PDAStep";
-import { ExecutionResult, ExecutionTrace, UnparsedPDAGraph } from "./graph";
+import { PDAExecutionResult, PDAExecutionTrace, UnparsedPDAGraph, Stack } from "./graph";
 import { Node } from "./interfaces/graph";
 import { parsePDAGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
-const generateTrace = (node: Node<PDAState>): ExecutionTrace[] => {
-    const trace: ExecutionTrace[] = [];
+const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
+    const trace: PDAExecutionTrace[] = [];
     while (node.parent) {
         trace.push({
             to: node.state.id,
             read: node.state.read,
+            pop: node.state.pop,
+            push: node.state.push,
         });
         node = node.parent;
     }
     trace.push({
         to: node.state.id,
         read: null,
+        pop: "",
+        push: "",
     });
     return trace.reverse();
 };
@@ -24,9 +28,10 @@ const generateTrace = (node: Node<PDAState>): ExecutionTrace[] => {
 export const simulatePDA = (
     graph: UnparsedPDAGraph,
     input: string,
-): ExecutionResult => {
+): PDAExecutionResult => {
+    
+    const tempStack: Stack = [];
     const parsedGraph = parsePDAGraph(graph);
-
     // Doing this find here so we don't have to deal with undefined in the class
     const initialState = parsedGraph.states.find((state) => {
         return state.id === graph.initialState;
@@ -37,11 +42,12 @@ export const simulatePDA = (
             accepted: false,
             remaining: input,
             trace: [],
+            stack: tempStack,
         };
     }
 
     const initialNode = new Node<PDAState>(
-        new PDAState(initialState.id, initialState.isFinal, null, input),
+        new PDAState(initialState.id, initialState.isFinal, null, input)//, stack ),//, initialState.stack),
     );
 
     const states = parsedGraph.states.map(
@@ -52,22 +58,37 @@ export const simulatePDA = (
     const result = breadthFirstSearch(problem);
 
     if (!result) {
-        const emptyExecution: ExecutionResult = {
-            trace: [{ to: 0, read: null }],
-            accepted: false,
+        const emptyExecution: PDAExecutionResult = {
+            trace: [{ to: 0, read: null, pop: '', push: '', }],
+            accepted: false,  // empty stack is part of accepted condition
             remaining: input,
+            stack: tempStack,
         };
         return emptyExecution;
     }
-
+    // Simulate stack operations
+    const trace = generateTrace(result);
+    for (let i = 0; i < trace.length; i++) {
+        // Pop first if symbol matches top of stack
+        if (trace[i].pop !== '' && trace[i].pop === tempStack[tempStack.length - 1]) {
+            tempStack.pop();
+        }
+        // Push if symbol is not empty
+        if (trace[i].push !== '' && trace[i].push !== null) {
+            tempStack.push(trace[i].push);
+        }
+    }
+    const stack = tempStack;
+    
     return {
-        accepted: result.state.isFinal && result.state.remaining === "",
+        accepted: result.state.isFinal && result.state.remaining === "" && stack.length === 0,
         remaining: result.state.remaining,
-        trace: generateTrace(result),
+        trace,
+        stack,
     };
 };
 
-export const graphStepper = (graph: UnparsedPDAGraph, input: string) => {
+export const graphStepperPDA = (graph: UnparsedPDAGraph, input: string) => {
     const parsedGraph = parsePDAGraph(graph);
 
     const initialState = parsedGraph.states.find((state) => {
@@ -79,18 +100,19 @@ export const graphStepper = (graph: UnparsedPDAGraph, input: string) => {
             accepted: false,
             remaining: input,
             trace: [],
+            //stack: stack,
         };
     }
 
     const initialNode = new Node<PDAState>(
-        new PDAState(initialState.id, initialState.isFinal, null, input),
+        new PDAState(initialState.id, initialState.isFinal, null, input)//, initialState.stack),//, initialState.stack),
     );
 
     const states = parsedGraph.states.map(
-        (state) => new PDAState(state.id, state.isFinal),
+        (state) => new PDAState(state.id, state.isFinal),//, state.stack),
     );
 
-    const problem = new PDAGraph(initialNode, states, parsedGraph.transitions);
+    const problem = new PDAGraph(initialNode, states, parsedGraph.transitions)
 
     return new GraphStepper(problem);
 };

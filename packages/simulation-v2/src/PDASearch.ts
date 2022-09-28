@@ -1,4 +1,4 @@
-import { PDATransition } from "./graph";
+import { PDATransition, Stack } from "./graph";
 import { Graph, Node, State } from "./interfaces/graph";
 
 export class PDAState extends State {
@@ -7,6 +7,9 @@ export class PDAState extends State {
         m_isFinal: boolean,
         private m_read: string | null = null,
         private m_remaining: string = "",
+        // private m_stack: string[] = [],
+        private m_pop: string = "",
+        private m_push: string = "",
     ) {
         super(m_id, m_isFinal);
     }
@@ -17,6 +20,17 @@ export class PDAState extends State {
 
     get remaining() {
         return this.m_remaining;
+    }
+
+    // get stack() {
+    //     return this.m_stack;
+    // }
+    get pop() {
+        return this.m_pop;
+    }
+
+    get push() {
+        return this.m_push;
     }
 
     key() {
@@ -47,12 +61,22 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
             );
             const lambdaTransition = transition.read.length === 0;
             const symbol = node.state.remaining[0];
+            const pop = transition.pop;
+            const push = transition.push;
             if (
                 nextState === undefined ||
                 (!lambdaTransition && !transition.read.includes(symbol))
             ) {
                 continue;
             }
+            // // Perform stack operations
+            // const topOfStack = nextState.stack[nextState.stack.length - 1];
+            // if (topOfStack === pop) {
+            //     nextState.stack.pop();
+            // }
+            // if (push !== "") {
+            //     nextState.stack.push(push);
+            // }
             const graphState = new PDAState(
                 nextState.id,
                 nextState.isFinal,
@@ -60,6 +84,9 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
                 lambdaTransition
                     ? node.state.remaining
                     : node.state.remaining.slice(1),
+                // nextState.stack,
+                pop,
+                push,
             );
             const successor = new Node(graphState, node);
             successors.push(successor);
