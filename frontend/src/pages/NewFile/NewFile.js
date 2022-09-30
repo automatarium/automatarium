@@ -15,6 +15,7 @@ import SignupPage from '/src/pages/Signup/Signup'
 import { NewProjectCard, CardList } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
 import FSA from './images/FSA'
+import TM from "./images/TM";
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -123,8 +124,7 @@ const NewFile = () => {
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
-        onClick={() => handleNewFile('TM')}
-        /**image={<TM />} CREATE A TM SVG**/
+        image={<TM />} CREATE A TM SVG
       />
     </CardList>
 

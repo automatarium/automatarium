@@ -76,8 +76,8 @@ export class TMGraph extends Graph<TMState, TMTransition, TMGraphNode> {
         const tapeTrace = node.state.tape.trace
         const write = transition.write
         const direction = transition.direction
-        let newTapePointer = node.state.tape.pointer
-        let newTapeTrace = tapeTrace
+        let newTapePointer = structuredClone(node.state.tape.pointer)
+        let newTapeTrace = structuredClone(tapeTrace)
         // Direction input handled to only be uppercase
         if (direction === 'L'){
             newTapePointer--
