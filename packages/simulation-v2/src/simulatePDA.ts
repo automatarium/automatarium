@@ -79,7 +79,7 @@ export const simulatePDA = (
             tempStack.push('invalidPop!');
         }
         // Push if symbol is not empty
-        if (trace[i].push !== '' && trace[i].push !== null) {
+        if (trace[i].push !== '') {
             tempStack.push(trace[i].push);
         }
     }
