@@ -73,6 +73,11 @@ export const simulatePDA = (
         if (trace[i].pop !== '' && trace[i].pop === tempStack[tempStack.length - 1]) {
             tempStack.pop();
         }
+        // For invalid pop operations (trying to pop from empty stack)
+        // push a dummy value to the stack
+        else if (trace[i].pop !== '' && tempStack.length === 0) {
+            tempStack.push('invalidPop!');
+        }
         // Push if symbol is not empty
         if (trace[i].push !== '' && trace[i].push !== null) {
             tempStack.push(trace[i].push);
