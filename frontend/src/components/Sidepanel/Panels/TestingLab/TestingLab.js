@@ -55,7 +55,7 @@ const TestingLab = () => {
         tape,
         trace: trace.map(step => ({
           to: step.to,
-          read: step.tape
+          tape: step.tape
         })),
         transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
       }
@@ -118,7 +118,7 @@ const TestingLab = () => {
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
-    if (projectType=='TM') {setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
+    if (projectType==='TM') {setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
         {pointer: 0, trace: [input]})))}
     else if (projectType === 'FSA') {setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))}
   }, [])
@@ -159,6 +159,8 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx+1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
+
+
 
   return (
     <>
@@ -205,7 +207,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0 || noInitialState}
+            disabled={traceIdx === simulationResult?.transitionCount && traceIdx !== 0 || noInitialState}
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
@@ -258,7 +260,7 @@ const TestingLab = () => {
                   if (e.key === 'Enter' && !e.repeat) {
                     if (e.metaKey || e.ctrlKey) {
                       // Run shortcut
-                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input))) // Need to accomodate TM
+                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input))) // Need to accommodate TM
                     } else {
                       addMultiTraceInput()
                       window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)

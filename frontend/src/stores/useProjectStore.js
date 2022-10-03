@@ -21,6 +21,7 @@ export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
   states: [],
   transitions: [],
   comments: [],
+  simResults: [],
   tests: {
     single: '',
     batch: [''],
@@ -214,6 +215,11 @@ const useProjectStore = create(persist((set, get) => ({
   // Change the config
   updateConfig: newConfig => set(produce((state) => {
     state.project.config = { ...state.project.config, ...newConfig }
+    state.lastChangeDate = new Date().getTime()
+  })),
+
+  setSimResults: simResults => set(produce((state) => {
+    state.project.simResults = simResults
     state.lastChangeDate = new Date().getTime()
   })),
 
