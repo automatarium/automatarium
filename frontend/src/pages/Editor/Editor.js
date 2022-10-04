@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
-import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
+import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
 import { ShortcutGuide, ExportImage } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
+import BottomPanel from "../../components/BottomPanel/BottomPanel";
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -90,6 +91,7 @@ const Editor = () => {
         <Toolbar />
         <EditorPanel />
         <Sidepanel />
+        <BottomPanel />
       </Content>
 
       <ShortcutGuide />

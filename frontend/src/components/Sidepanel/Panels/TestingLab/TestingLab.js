@@ -1,13 +1,13 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
-
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
 import { simulateFSA } from "@automatarium/simulation-v2";
 import { simulateTM } from "@automatarium/simulation-v2/src/simulateTM";
-
+import useTMSimResultStore from "../../../../stores/useTMSimResultStore";
+import {dispatchCustomEvent} from "/src/util/events";
 import {
   StepButtons,
   MultiTraceRow,
@@ -17,6 +17,8 @@ import {
   StatusIcon,
   WarningLabel,
 } from './testingLabStyle'
+
+
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
@@ -31,7 +33,9 @@ const TestingLab = () => {
     initialState: useProjectStore(s => s.project.initialState)
   }
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
-
+  const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
+  const clearProjectSimResults = useTMSimResultStore(s => s.clearSimResults)
+  const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const multiTraceInput = useProjectStore(s => s.project.tests.batch)
@@ -41,32 +45,32 @@ const TestingLab = () => {
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const projectType = useProjectStore(s => s.project.config.type)
 
+
   // Execute graph
   const simulateGraph = useCallback(() => {
-    if (projectType === 'TM'){
+    if (projectType === 'TM') {
       const tapeTrace = traceInput ? traceInput.split("") : [""]
       const tapePointer = 0 // This is hard coded for now. Future development available
       console.log("Tape before sim: ", tapeTrace)
 
-      const { halted, trace, tape } = simulateTM(graph, {pointer: tapePointer, trace: tapeTrace}
+      const {halted, trace, tape} = simulateTM(graph, {pointer: tapePointer, trace: tapeTrace}
           ?? {pointer: 0, trace: []})
       const result = {
         halted,
         tape,
         trace: trace.map(step => ({
           to: step.to,
-          tape: step.tape
+          read: step.tape
         })),
         transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
       }
 
       setSimulationResult(result)
+      setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
       console.log(result)
       return result
-    }
-
-    else {
-      const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
+    } else {
+      const {accepted, trace, remaining} = simulateFSA(graph, traceInput ?? '')
       const result = {
         accepted,
         remaining,
@@ -89,7 +93,7 @@ const TestingLab = () => {
     if (!simulationResult)
       return ''
 
-    const { trace, accepted, remaining, transitionCount } = simulationResult
+    const {trace, accepted, remaining, transitionCount} = simulationResult
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
@@ -100,27 +104,30 @@ const TestingLab = () => {
 
     // Represent transitions as strings of form start -> end
     const transitions = trace
-      .slice(0, -1)
-      .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
-      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix+start} -> ${getStateName(end) ?? statePrefix+end}`)
-      .filter((_x, i) => i < traceIdx)
+        .slice(0, -1)
+        .map((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+        .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+        .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
-      ? [...transitions,
-        remaining[0] ?
-          `${remaining[0]}: ${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`
-          : `\n${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`]
-      : transitions
+        ? [...transitions,
+          remaining[0] ?
+              `${remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
+              : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
+        : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
-    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
-    if (projectType==='TM') {setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
-        {pointer: 0, trace: [input]})))}
-    else if (projectType === 'FSA') {setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))}
+    if (projectType === 'TM') {
+      setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
+          {pointer: 0, trace: [input]})))
+    } else if (projectType === 'FSA') {
+      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+    }
   }, [])
 
   useEffect(() => {
@@ -128,6 +135,23 @@ const TestingLab = () => {
     setMultiTraceOutput()
     setTraceIdx(0)
   }, [lastChangeDate])
+
+  // Set the trace IDx to be passed through store to TMTapeLab component
+  useEffect(() => {
+    setProjectSimTraceIDx(traceIdx)
+  }, [traceIdx])
+
+  // Show bottom panel with TM Tape Lab
+  useEffect( () => {
+    if (showTraceTape) {
+      console.log("sending event... ")
+      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape'})
+    }
+    else {
+      dispatchCustomEvent('bottomPanel:close', {})
+    }
+  }, [showTraceTape])
+
 
   // const proxyMultiTraceOnMount = (input) => {
   //   if input
@@ -162,9 +186,10 @@ const TestingLab = () => {
 
 
 
+
   return (
     <>
-      {(showTraceTape && traceInput !== '' && traceInput) && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
+      {(showTraceTape && traceInput !== '' && traceInput && projectType!=='TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>

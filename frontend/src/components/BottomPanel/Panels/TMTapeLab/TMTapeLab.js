@@ -1,23 +1,23 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
-
-import { useDibEgg } from '/src/hooks'
-import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore } from '/src/stores'
-import { testingLab }
-
-import {
-  StepButtons,
-  MultiTraceRow,
-  RemoveButton,
-  Wrapper,
-  TraceConsole,
-  StatusIcon,
-  WarningLabel,
-} from './tmTapeLabStyle'
+import { SectionLabel} from '/src/components'
+import TMTraceStepWindow from '/src/components/TMTraceStepWindow/TMTraceStepWindow'
+import { useTMSimResultStore } from '/src/stores'
+import { Wrapper } from './tmTapeLabStyle'
 
 const TMTapeLab = () => {
-  // const multiTraceOutput = props.multiTraceOutput
+  const traceIDx = useTMSimResultStore(s => s.traceIDx)
+  const simResults = useTMSimResultStore(s => s.simResults)
+  return (
+      <>
+      <SectionLabel>Turing Machine Tapes</SectionLabel>
+          {(simResults.length !==0 ) && (
+          <Wrapper>
+            {simResults.map((result) => (
+                <TMTraceStepWindow trace={result.trace[traceIDx].read.trace} pointer={result.trace[traceIDx].read.pointer} />
+              ))}
+          </Wrapper>
+        )}
+      </>
+  )
 
 }
 

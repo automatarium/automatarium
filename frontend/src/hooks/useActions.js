@@ -188,12 +188,6 @@ const useActions = (registerHotkeys=false) => {
       hotkey: { key: '1', shift: true },
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' }),
     },
-    TRACE_TM_OPEN: {
-      handler: () => dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape'})
-    },
-    TRACE_TM_CLOSE: {
-      handler: () => dispatchCustomEvent('bottomPanel:close', { panel: undefined})
-    },
     FILE_INFO: {
       hotkey: { key: '2', shift: true },
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' }),
