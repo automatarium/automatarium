@@ -28,7 +28,8 @@ const TMTraceStepWindow = ( {trace, pointer} ) => {
 
     // Determine location on screen
     // const position = useMemo(() => targetState && viewToScreenSpace(targetState.x, targetState.y), [targetState, viewPosition, viewScale, viewSize])
-
+    console.log(trace)
+    console.log(pointer)
 
     return createPortal(<>
         {trace.length &&

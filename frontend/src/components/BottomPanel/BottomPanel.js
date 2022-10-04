@@ -11,7 +11,6 @@ const panels = [
         {
         label: 'TMTapeLab',
         value: 'tmTape',
-        // icon: <FlaskConical />,
         element: <TMTapeLab />
         }
     ]
