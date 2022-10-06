@@ -7,7 +7,7 @@ import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
 import { ShortcutGuide, ExportImage } from '/src/pages'
 
-import { Content, LoadingContainer } from './editorStyle'
+import { Content, LoadingContainer, EditorContent } from './editorStyle'
 // import { BottomPanel } from "../../components/BottomPanel/BottomPanel";
 
 const Editor = () => {
@@ -89,8 +89,10 @@ const Editor = () => {
       <Menubar />
       <Content>
         <Toolbar />
-        <EditorPanel />
-        <BottomPanel />
+        <EditorContent>
+          <EditorPanel />
+          <BottomPanel />
+        </EditorContent>
         <Sidepanel />
       </Content>
 

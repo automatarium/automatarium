@@ -11,8 +11,9 @@ const TMTapeLab = () => {
       <SectionLabel>Turing Machine Tapes</SectionLabel>
           {(simResults.length !==0 ) && (
           <Wrapper>
-            {simResults.map((result) => (
-                <TMTraceStepWindow trace={result.trace[traceIDx].read.trace} pointer={result.trace[traceIDx].read.pointer} />
+
+              {simResults.map((result, index) => (
+                <TMTraceStepWindow key={index} trace={result.trace[traceIDx].read.trace} pointer={result.trace[traceIDx].read.pointer} />
               ))}
           </Wrapper>
         )}

@@ -33,6 +33,7 @@ const BottomPanel = () => {
         <Wrapper>
             {activePanel && (
                 <Panel>
+                    HELLO WORLD
                     <div>
                         <Heading>{activePanel?.label}</Heading>
                         {activePanel?.element}
