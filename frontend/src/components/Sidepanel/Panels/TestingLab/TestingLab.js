@@ -102,6 +102,7 @@ const TestingLab = () => {
       return null
     }
 
+
     // Represent transitions as strings of form start -> end
     const transitions = trace
         .slice(0, -1)
@@ -240,7 +241,7 @@ const TestingLab = () => {
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-        {traceOutput && <div>
+        {traceOutput && projectType!=='TM' && <div>
           <TracePreview trace={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states} />
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}

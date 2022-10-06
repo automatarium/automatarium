@@ -2,12 +2,10 @@ import { styled } from 'goober'
 
 export const Container = styled('div')`
   --cell-width: 35px;
-  
-  
   flex: 1;
   position: relative;
   padding-block: .8em;
-  background: var(--surface);
+  background: var(${props => (props.colour ? 'green' : 'black')});
   min-width: calc(var(--cell-width) * 21);
   pointer-events: none;
   border-radius: .3rem;

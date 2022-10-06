@@ -1,6 +1,7 @@
 import { createPortal } from 'react-dom'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useProjectStore, useViewStore } from '/src/stores'
+import { useState } from 'react'
 
 import {
     Container,
@@ -11,23 +12,36 @@ import {
     PointerContainer,
 } from './tmTraceStepWindowStyle'
 
-const TMTraceStepWindow = ( {trace, pointer} ) => {
+const TMTraceStepWindow = ( {trace, pointer, accepted, isEnd} ) => {
+
+    const [colour, setColour] = useState(false)
+
+    useEffect( () => {
+        if (accepted & isEnd) {
+            setColour(true)
+        }
+        else {
+            setColour(false)
+        }
+        console.log(colour)
+    }, [accepted, isEnd])
+
 
     return (
         <>
         {trace.length &&
-        <Container>
+        <Container $colour={colour}>
             <div>
                 <Pointer />
-                    <TickerTapeContainer>
-                        <TickerTape $index={pointer} >
-                            <SerratedEdge />
-                                {trace.map((symbol, i) => <TickerTapeCell key={i}>
-                                    {symbol}
-                                </TickerTapeCell>)}
-                            <SerratedEdge flipped />
-                        </TickerTape>
-                    </TickerTapeContainer>
+                <TickerTapeContainer>
+                    <TickerTape $index={pointer} >
+                        <SerratedEdge />
+                            {trace.map((symbol, i) => <TickerTapeCell key={i}>
+                                {symbol}
+                            </TickerTapeCell>)}
+                        <SerratedEdge flipped />
+                    </TickerTape>
+                </TickerTapeContainer>
             </div>
         </Container>
         }
