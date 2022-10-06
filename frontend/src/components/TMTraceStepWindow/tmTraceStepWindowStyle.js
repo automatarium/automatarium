@@ -1,32 +1,41 @@
 import { styled } from 'goober'
 
 export const Container = styled('div')`
-  --cell-width: 1em;
+  --cell-width: 35px;
   
-  position: fixed;
+  
+  flex: 1;
+  position: relative;
   padding-block: .8em;
   background: var(--surface);
-  width: calc(var(--cell-width) * 5);
+  min-width: calc(var(--cell-width) * 21);
   pointer-events: none;
   border-radius: .3rem;
-
+  background: var(--toolbar);
   &.animate {
     transition: top .2s, left .2s;
   }
-
+  
+  
   & > div {
     overflow: hidden;
   }
 `
 
+export const TickerTapeContainer = styled('div')`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+`
+
+//width: calc(var(--cell-width) * 21);
 export const TickerTape = styled('div')`
   display: flex;
   flex-direction: row;
+  transform: translateX(calc(${p => -p.$index +0.5 } * var(--cell-width)));
   width: max-content;
-  transform: translateX(calc(${p => -p.$index + 1} * var(--cell-width)));
-  transition: transform .1s;
+  transition: transform .2s;
 `
-// May need to change ${p => -p.$index + 1} into ${p => -p.$index + 2}
 
 export const TickerTapeCell = styled('span')`
   display: flex;
@@ -35,7 +44,7 @@ export const TickerTapeCell = styled('span')`
   aspect-ratio: 1;
   min-width: var(--cell-width);
   font-family: monospace;
-  font-size: 1.2rem;
+  font-size: 1.2em;
   box-sizing: border-box;
   background: var(--white);
   color: var(--black);

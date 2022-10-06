@@ -1,9 +1,10 @@
 import { createPortal } from 'react-dom'
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useProjectStore, useViewStore } from '/src/stores'
 
 import {
     Container,
+    TickerTapeContainer,
     TickerTape,
     TickerTapeCell,
     SerratedEdgeContainer,
@@ -11,42 +12,27 @@ import {
 } from './tmTraceStepWindowStyle'
 
 const TMTraceStepWindow = ( {trace, pointer} ) => {
-    const [targetState, setTargetState] = useState()
-    const [transitionsEnabled, setTransitionsEnabled] = useState(false)
-    // const viewToScreenSpace = useViewStore(s => s.viewToScreenSpace)
-    // const [tapeTrace, setTapeTrace] = useState([])
-    // const [pointer, setPointer] = useState()
-    // const viewPosition = useViewStore(s => s.position)
-    // const viewScale = useViewStore(s => s.scale)
-    // const viewSize = useViewStore(s => s.size)
 
-    // Update state from ID
-    // useEffect(() => {
-    //     setTapeTrace(trace)
-    //     setPointer(pointerIn)
-    // }, [trace, pointerIn])
-
-    // Determine location on screen
-    // const position = useMemo(() => targetState && viewToScreenSpace(targetState.x, targetState.y), [targetState, viewPosition, viewScale, viewSize])
-    console.log(trace)
-    console.log(pointer)
-
-    return createPortal(<>
+    return (
+        <>
         {trace.length &&
         <Container>
             <div>
                 <Pointer />
-                <TickerTape $index={pointer}>
-                    <SerratedEdge />
-                        {trace.map((symbol, i) => <TickerTapeCell key={i}>
-                            {symbol}
-                        </TickerTapeCell>)}
-                    <SerratedEdge flipped />
-                </TickerTape>
+                    <TickerTapeContainer>
+                        <TickerTape $index={pointer} >
+                            <SerratedEdge />
+                                {trace.map((symbol, i) => <TickerTapeCell key={i}>
+                                    {symbol}
+                                </TickerTapeCell>)}
+                            <SerratedEdge flipped />
+                        </TickerTape>
+                    </TickerTapeContainer>
             </div>
         </Container>
         }
-    </>, document.querySelector('#editor-panel-wrapper'))
+    </>
+    )
 }
 
 const SerratedEdge = ({ flipped }) => (
