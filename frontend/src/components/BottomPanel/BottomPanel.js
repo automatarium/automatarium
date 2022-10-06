@@ -32,29 +32,15 @@ const BottomPanel = () => {
     return (
         <Wrapper>
             {activePanel && (
-                <>
-                    <Panel>
-                        <div>
-                            <Heading>{activePanel?.label}</Heading>
-                            {activePanel?.element}
-                        </div>
-                    </Panel>
-                </>
+                <Panel>
+                    <div>
+                        <Heading>{activePanel?.label}</Heading>
+                        {activePanel?.element}
+                    </div>
+                </Panel>
             )}
-
-            {/*<Sidebar>*/}
-            {/*    {panels.map(panel => (*/}
-            {/*        <Sidebar.Button*/}
-            {/*            key={panel.value}*/}
-            {/*            onClick={() => setActivePanel(activePanel?.value === panel.value ? undefined : panel)}*/}
-            {/*            $active={activePanel?.value === panel.value}*/}
-            {/*            title={panel.label}*/}
-            {/*        >*/}
-            {/*            {panel.icon}*/}
-            {/*        </Sidebar.Button>*/}
-            {/*    ))}*/}
-            {/*</Sidebar>*/}
         </Wrapper>
+
     )
 }
 

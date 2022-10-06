@@ -8,7 +8,7 @@ import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '
 import { ShortcutGuide, ExportImage } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
-import BottomPanel from "../../components/BottomPanel/BottomPanel";
+// import { BottomPanel } from "../../components/BottomPanel/BottomPanel";
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -90,8 +90,8 @@ const Editor = () => {
       <Content>
         <Toolbar />
         <EditorPanel />
-        <Sidepanel />
         <BottomPanel />
+        <Sidepanel />
       </Content>
 
       <ShortcutGuide />

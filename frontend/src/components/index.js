@@ -5,6 +5,7 @@ export { default as Sidepanel } from './Sidepanel/Sidepanel'
 export { default as ContextMenus } from './ContextMenus/ContextMenus'
 export { default as InputDialogs } from './InputDialogs/InputDialogs'
 export { default as EditorPanel } from './EditorPanel/EditorPanel'
+export { default as BottomPanel } from './BottomPanel/BottomPanel'
 
 export { default as GraphView } from './GraphView/GraphView'
 export { default as GraphContent } from './GraphContent/GraphContent'
