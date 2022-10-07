@@ -5,7 +5,9 @@ import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
-import { TestingLab, Info, Options, StackVisualiser } from './Panels'
+import { TestingLab, Info, Options, StackDisplay } from './Panels'
+
+// import {StackDisplay} from './Panels'
 
 const panels = [
   {
@@ -28,9 +30,9 @@ const panels = [
   },
   {
     label: 'Stack Visualiser',
-    value: 'stackv',
+    value: 'showstack',
     icon: <InfoIcon />,
-    element: <StackVisualiser />,
+    element: <StackDisplay />,
   },
 ]
 

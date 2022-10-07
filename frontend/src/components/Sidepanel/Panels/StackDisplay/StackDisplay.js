@@ -4,9 +4,9 @@ import { validTransitions, resolveGraph, closureWithPredicate } from '@automatar
 import { useProjectStore } from '/src/stores'
 import { Table, SectionLabel } from '/src/components'
 
-import { Wrapper, Symbol, SymbolList } from './stackVisualiserStyle'
+import { Wrapper, Symbol, SymbolList } from './stackDisplayStyle'
 
-const StackVisualiser = () => {
+const StackDisplay = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
@@ -89,4 +89,4 @@ const StackVisualiser = () => {
   </>
 }
 
-export default StackVisualiser
+export default StackDisplay

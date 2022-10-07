@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useState } from "react";
-import './stackVisualiser.css';
+import "./stackVisualiser.css";
 
 const PDAStackVisualiser = () => {
-// const PDAStackVisualiser = ({ elements }) => {
+  // const PDAStackVisualiser = ({ elements }) => {
   let stack = [];
   const [stackSymbols, setStackSymbols] = useState([]);
 
@@ -47,7 +47,12 @@ const PDAStackVisualiser = () => {
 
   return (
     <div className="">
+      {/* TODO: Add a button that closes the stack visualiser div 
+      Perhaps I can add the button on the sidebar panel
+      
+      */}
       <button onClick={() => setShow((s) => !s)}>show stack</button>
+      <h3>Stack</h3>
       <div className="stack-container">{show ? "no show" : displayStack()}</div>
 
       <div className="stack-container">
@@ -55,8 +60,6 @@ const PDAStackVisualiser = () => {
         <button onClick={removeStack}>popStack</button>
         <button onClick={addToStack}>push</button>
       </div>
-
-      hello
     </div>
   );
 };

@@ -20,21 +20,22 @@
   }
   
   .stack-item {
-    width: 100px;
-    height: 50px;
+    width: 80px;
+    height: 35px;
     margin: 0 auto;
+    padding-top: 0.5rem;
     
-    background-color: rgb(187, 88, 88);
+    background-color: rgb(24, 24, 24);
     border-radius: 7px;
-    color: black;
+    color: white;
     border: solid 2px black;
   }
   
   .stack-item:nth-child(odd) {
-    background-color: rgb(88, 162, 187);
+    background-color: rgb(255, 255, 255);
+    color: black;
   }
   /* figure out how to make a box */
   .stack-container {
-    
-    padding: 1rem;
+    padding: 0.5rem;
   }
