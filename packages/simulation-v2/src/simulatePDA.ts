@@ -13,6 +13,7 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
             read: node.state.read,
             pop: node.state.pop,
             push: node.state.push,
+            traceStack: [],
         });
         node = node.parent;
     }
@@ -21,6 +22,7 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
         read: null,
         pop: "",
         push: "",
+        traceStack: [],
     });
     return trace.reverse();
 };
@@ -42,7 +44,7 @@ export const simulatePDA = (
             accepted: false,
             remaining: input,
             trace: [],
-            stack: tempStack,
+            stack: [],
         };
     }
 
@@ -59,10 +61,10 @@ export const simulatePDA = (
 
     if (!result) {
         const emptyExecution: PDAExecutionResult = {
-            trace: [{ to: 0, read: null, pop: '', push: '', }],
+            trace: [{ to: 0, read: null, pop: '', push: '', traceStack: []}],
             accepted: false,  // empty stack is part of accepted condition
             remaining: input,
-            stack: tempStack,
+            stack: [],
         };
         return emptyExecution;
     }
@@ -76,12 +78,13 @@ export const simulatePDA = (
         // For invalid pop operations (trying to pop from empty stack)
         // push a dummy value to the stack
         else if (trace[i].pop !== '' && tempStack.length === 0) {
-            tempStack.push('invalidPop!');
+            tempStack.push('*ERR*!');
         }
         // Push if symbol is not empty
         if (trace[i].push !== '') {
             tempStack.push(trace[i].push);
         }
+        trace[i].traceStack = structuredClone(tempStack);
     }
     const stack = tempStack;
     

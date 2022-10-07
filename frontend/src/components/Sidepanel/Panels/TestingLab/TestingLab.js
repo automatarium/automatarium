@@ -42,15 +42,15 @@ const TestingLab = () => {
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const { accepted, trace, remaining, stack } = 
+    const { accepted, trace, remaining } = 
         currentProjectType==='PDA' ? 
           simulatePDA(graph, traceInput ?? '')
         : simulateFSA(graph, traceInput ?? '')
-    console.log("Remaining: ", remaining)
-    console.log("Trace input: " + traceInput)
-    console.log("Simulating: " + (currentProjectType==='PDA' ? "PDA" : "FSA"))
-    console.log("Accepted by simulate: ", accepted)
-    console.log("Stack: ", stack)
+    // console.log("Remaining: ", remaining)
+    // console.log("Trace input: " + traceInput)
+    // console.log("Simulating: " + (currentProjectType==='PDA' ? "PDA" : "FSA"))
+    // console.log("Accepted by simulate: ", accepted)
+    // console.log("Stack: ", stack)
     const result = {
       accepted,
       remaining,
@@ -59,7 +59,7 @@ const TestingLab = () => {
         read: step.read === '' ? 'λ' : step.read,
         pop: step.pop === '' ? 'λ' : step.pop,
         push: step.push === '' ? 'λ' : step.push,
-      stack: stack,
+        traceStack: step.traceStack,
       })),
       transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
