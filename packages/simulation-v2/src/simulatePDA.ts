@@ -5,6 +5,7 @@ import { Node } from "./interfaces/graph";
 import { parsePDAGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
+
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
     const trace: PDAExecutionTrace[] = [];
     while (node.parent) {
@@ -13,7 +14,7 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
             read: node.state.read,
             pop: node.state.pop,
             push: node.state.push,
-            traceStack: [],
+            currentStack: [],
         });
         node = node.parent;
     }
@@ -22,7 +23,7 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
         read: null,
         pop: "",
         push: "",
-        traceStack: [],
+        currentStack: [],
     });
     return trace.reverse();
 };
@@ -61,7 +62,7 @@ export const simulatePDA = (
 
     if (!result) {
         const emptyExecution: PDAExecutionResult = {
-            trace: [{ to: 0, read: null, pop: '', push: '', traceStack: []}],
+            trace: [{ to: 0, read: null, pop: '', push: '', currentStack: []}],
             accepted: false,  // empty stack is part of accepted condition
             remaining: input,
             stack: [],
@@ -84,7 +85,7 @@ export const simulatePDA = (
         if (trace[i].push !== '') {
             tempStack.push(trace[i].push);
         }
-        trace[i].traceStack = structuredClone(tempStack);
+        trace[i].currentStack = JSON.parse(JSON.stringify(tempStack));
     }
     const stack = tempStack;
     

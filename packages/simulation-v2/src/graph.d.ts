@@ -93,7 +93,7 @@ export type PDAExecutionTrace = {
     to: StateID;
     pop: string;
     push: string;
-    traceStack: Stack;
+    currentStack: Stack;
 };
 
 export type Stack = string[];

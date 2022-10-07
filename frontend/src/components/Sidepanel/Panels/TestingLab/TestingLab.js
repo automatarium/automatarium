@@ -59,7 +59,7 @@ const TestingLab = () => {
         read: step.read === '' ? 'λ' : step.read,
         pop: step.pop === '' ? 'λ' : step.pop,
         push: step.push === '' ? 'λ' : step.push,
-        traceStack: step.traceStack,
+        currentStack: step.currentStack,
       })),
       transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
