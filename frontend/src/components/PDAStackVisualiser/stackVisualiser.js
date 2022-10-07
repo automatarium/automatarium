@@ -46,7 +46,7 @@ const PDAStackVisualiser = () => {
   console.log(stack);
 
   return (
-    <div className="">
+    <div className="content-container">
       {/* TODO: Add a button that closes the stack visualiser div 
       Perhaps I can add the button on the sidebar panel
       

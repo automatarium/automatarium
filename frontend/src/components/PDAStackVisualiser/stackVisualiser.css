@@ -3,14 +3,15 @@
   }
   
   .content-container {
-    margin: auto;
-    width: 500px;
-    height: 500px;
-    padding: 7rem 10rem;
+    bottom: 1rem;
+    left: 5rem;
+    width: 7rem;
+    height: 30rem;
+    padding: 2rem 2rem 0rem;
     background: #282828;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
     border-radius: 25px;
-    font-size: 25px;
+    font-size: 12px;
     position: fixed;
     
   }
@@ -20,8 +21,10 @@
   }
   
   .stack-item {
-    width: 80px;
-    height: 35px;
+    font-weight: bold;
+    font-size: 18px;
+    width: 4.5rem;
+    height: 2rem;
     margin: 0 auto;
     padding-top: 0.5rem;
     

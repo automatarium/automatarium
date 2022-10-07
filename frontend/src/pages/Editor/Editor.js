@@ -91,7 +91,7 @@ const Editor = () => {
       <Content>
         <Toolbar />
         <EditorPanel />
-        {/* <div>hello</div> */}
+        {/* Display the stack */}
         <PDAStackVisualiser/>
         
         <Sidepanel />
