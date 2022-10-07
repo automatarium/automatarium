@@ -2,7 +2,8 @@
 import { useEffect, useState } from "react";
 import './stackVisualiser.css';
 
-const PDAStackVisualiser = ({ elements }) => {
+const PDAStackVisualiser = () => {
+// const PDAStackVisualiser = ({ elements }) => {
   let stack = [];
   const [stackSymbols, setStackSymbols] = useState([]);
 
@@ -45,15 +46,17 @@ const PDAStackVisualiser = ({ elements }) => {
   console.log(stack);
 
   return (
-    <div className="content-container">
-      <button onClick={() => setShow((s) => !s)}>show stack</button>
+    <div className="">
+      {/* <button onClick={() => setShow((s) => !s)}>show stack</button>
       <div className="stack-container">{show ? "no show" : displayStack()}</div>
 
       <div className="stack-container">
         <p>dummy buttons</p>
         <button onClick={removeStack}>popStack</button>
         <button onClick={addToStack}>push</button>
-      </div>
+      </div> */}
+
+      hello
     </div>
   );
 };
