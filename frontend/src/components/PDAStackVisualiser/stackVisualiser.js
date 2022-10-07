@@ -5,6 +5,8 @@ import "./stackVisualiser.css";
 const PDAStackVisualiser = () => {
   // const PDAStackVisualiser = ({ elements }) => {
   let stack = [];
+  // Closes and shows stack
+  const [showStackTab, setShowStackTab] = useState(true);
   const [stackSymbols, setStackSymbols] = useState([]);
 
   stack.push({ element: "a" });
@@ -30,6 +32,7 @@ const PDAStackVisualiser = () => {
     console.log(`pop: ${stack}`);
   }
 
+  // Maybe put a useEffect here and it re renders the 'stack'
   function displayStack() {
     return stack
       .slice(0)
@@ -47,19 +50,27 @@ const PDAStackVisualiser = () => {
 
   return (
     <div className="content-container">
-      {/* TODO: Add a button that closes the stack visualiser div 
-      Perhaps I can add the button on the sidebar panel
-      
-      */}
-      <button onClick={() => setShow((s) => !s)}>show stack</button>
-      <h3>Stack</h3>
-      <div className="stack-container">{show ? "no show" : displayStack()}</div>
+        Display Stack {' '}
+      <button className='close-stack-btn' onClick={() => setShowStackTab((e)=> !e)}>x</button>
+        
+      { showStackTab?
+        <div className="stack-container">
 
-      <div className="stack-container">
-        <p>dummy buttons</p>
-        <button onClick={removeStack}>popStack</button>
-        <button onClick={addToStack}>push</button>
-      </div>
+          {/* <button onClick={() => setShow((s) => !s)}>show stack</button> */}
+          <h3>Stack</h3>
+          <div className="stack-container">
+            {show ? "no show" : displayStack()}
+          </div>
+
+          <div className="stack-container">
+            <p>(temp)dummy buttons</p>
+            <button onClick={removeStack}>popStack</button>
+            <button onClick={addToStack}>push</button>
+          </div>
+        </div>
+        : 
+        null
+      }
     </div>
   );
 };
