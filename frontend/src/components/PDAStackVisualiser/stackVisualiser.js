@@ -47,14 +47,14 @@ const PDAStackVisualiser = () => {
 
   return (
     <div className="">
-      {/* <button onClick={() => setShow((s) => !s)}>show stack</button>
+      <button onClick={() => setShow((s) => !s)}>show stack</button>
       <div className="stack-container">{show ? "no show" : displayStack()}</div>
 
       <div className="stack-container">
         <p>dummy buttons</p>
         <button onClick={removeStack}>popStack</button>
         <button onClick={addToStack}>push</button>
-      </div> */}
+      </div>
 
       hello
     </div>

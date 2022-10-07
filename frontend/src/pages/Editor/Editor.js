@@ -9,7 +9,7 @@ import { ShortcutGuide, ExportImage } from '/src/pages'
 
 import { Content, LoadingContainer } from './editorStyle'
 
-// import  {PDAStackVisualiser} from ''
+import  PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -91,11 +91,18 @@ const Editor = () => {
       <Content>
         <Toolbar />
         <EditorPanel />
+        {/* <div>hello</div> */}
+        <PDAStackVisualiser/>
+        
         <Sidepanel />
+        
       </Content>
+      
 
       <ShortcutGuide />
+      
       <ExportImage />
+      
     </>
   )
 }
