@@ -1,6 +1,6 @@
 # Hooks
 
-This file describes how individual custom hooks work and gives examples of where they are used.
+How individual custom hooks work and gives examples of where they are used.
 
 As an overview: something something something here.
 
@@ -33,6 +33,7 @@ As an overview: something something something here.
   - [useTransitionSelection](#usetransitionselection)
 
 # useActions
+
 
 
 # useAuth
