@@ -13,8 +13,13 @@ const PDAStackVisualiser = () => {
   const [stackSymbols, setStackSymbols] = useState([]);
 
   const stackInfo = usePDAVisualiserStore(s => s.stack);
-  console.log(`this is stack${stackInfo.trace}`)
+  // String
+  const stackList = JSON.stringify(stackInfo)
+  // console.log(`this is current stack info ${stackInfo}`)
+  console.log(`this is current stack with stringify ${stackList}`)
 
+  
+  // console.log(`this is stack ${Object.values(stackInfo)}`)
   stack.push({ element: "a" });
   stack.push({ element: "b" });
   stack.push({ element: "c" });
@@ -59,6 +64,36 @@ const PDAStackVisualiser = () => {
     <div className="content-container">
         Display Stack {' '}
       <button className='close-stack-btn' onClick={() => setShowStackTab((e)=> !e)}>x</button>
+        {/* {stackInfo.map((obj) => {
+            return <p>{obj.trace}</p>
+        })} */}
+        {console.log(`Stack info: ${stackInfo}` )}
+
+        {Object.keys(stackInfo).map((i) =>{
+            // <p> key={stackInfo.trace}</p>
+           
+            let stackValue = i;
+            // <p>This is a value{typeof(stackValue)}</p>
+            // {console.log(`This is the stringified stack value: ${JSON.stringify(stackValue)}`)}
+
+            // {}
+
+            // if (stackValue=='trace') { for (element in stackInfo[i]) { variable add element.currentStack }}
+
+            if(stackValue == 'trace') {
+              for(const e in stackInfo[i]) {
+                console.log('Info for stack: ', stackInfo[i][e])
+              }
+            }
+
+
+            {console.log(`Value: ${stackValue}`)}
+
+            // {stackValue == 'trace' ? console.log(`Trace info for: ${stackInfo[i][2].currentStack}`) : console.log()}
+          
+            // {console.log(`Getting value from object: ${JSON.parse(stackValue)}`)}
+            // {console.log(`Getting value from object: ${stackValue[2]}`)}
+        })}
         
       { showStackTab?
         <div className="stack-container">

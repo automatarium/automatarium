@@ -78,9 +78,12 @@ const TestingLab = () => {
       transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
     console.log("Trace result: ", result.trace)
+    
     setSimulationResult(result)
     // Adds result to PDA visualiser
     setPDAVisualiser(result)
+
+    console.log(`VALUE: ${simulationResult}`)
    
     return result
   }, [graph, traceInput])
