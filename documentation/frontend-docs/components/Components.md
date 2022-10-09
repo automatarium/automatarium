@@ -17,6 +17,7 @@ This file breaks down each component briefly and gives descriptions of its funct
   - [Example](#example)
 - [GraphContent](#graphcontent)
 - [GraphView](#graphview)
+  - [useViewDragging Hook](#useviewdragging-hook)
 - [Header](#header)
 - [InitialStateArrow](#initialstatearrow)
 - [Input](#input)
@@ -118,7 +119,7 @@ These are:
     - useTransitionCreation
     - useStateCreation
 
-To draw the panel itself and the related components, it uses GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus and InputDialogs. For more information on these, view their respective entries in the documentation.
+To draw the panel itself and the related components, it uses GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus and InputDialogs. For more information on these, view their respective entries in the documentation. The box drawn by the select tool is rendered using SelectionBox.
 
 ## Examples
 The editor panel is highlighted in blue in the first image.
@@ -143,11 +144,27 @@ And finally renders the states, comments, and transitions in their appropriate p
 
 # GraphView
 
+Utilises an SVG element to draw inside the browser. GraphView functions within the [EditorPanel](#editorpanel). 
+
+- Dispatches custom mouse events which other components and hooks are able to use (svg:mousedown, svg:mouseup and svg:mousemove)
+- Keeps track of browser resizing
+- Responsible for managing view dragging (useViewDragging hook)
+
+This makes heavy use of various stores, for more information see the documentation on stores.
+
+## useViewDragging Hook
 
 
 # Header
 
+Displays the header on the main page. 
+
+![image of the header](./images/header_example.png)
+
+
 # InitialStateArrow
+
+
 
 # Input
 
