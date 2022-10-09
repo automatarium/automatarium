@@ -4,7 +4,8 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph, simulateFSA } from '@automatarium/simulation'
+import { closureWithPredicate, resolveGraph} from '@automatarium/simulation'
+import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
 
 import {
   StepButtons,
@@ -37,22 +38,36 @@ const TestingLab = () => {
   const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const currentProjectType = useProjectStore(p => p.project.config.type)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
+    const { accepted, trace, remaining } = 
+        currentProjectType==='PDA' ? 
+          simulatePDA(graph, traceInput ?? '')
+        : simulateFSA(graph, traceInput ?? '')
+    // console.log("Remaining: ", remaining)
+    // console.log("Trace input: " + traceInput)
+    // console.log("Simulating: " + (currentProjectType==='PDA' ? "PDA" : "FSA"))
+    // console.log("Accepted by simulate: ", accepted)
+    // console.log("Stack: ", stack)
     const result = {
       accepted,
       remaining,
       trace: trace.map(step => ({
         to: step.to,
-        read: step.read === '' ? 'λ' : step.read
+        read: step.read === '' ? 'λ' : step.read,
+        pop: step.pop === '' ? 'λ' : step.pop,
+        push: step.push === '' ? 'λ' : step.push,
+        currentStack: step.currentStack,
       })),
       transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
     }
+    console.log("Trace result: ", result.trace)
     setSimulationResult(result)
     return result
   }, [graph, traceInput])
+  
 
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
 

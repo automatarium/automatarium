@@ -13,8 +13,13 @@ import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
   const inputRef = useRef()
+  const inputPopRef = useRef()
+  const inputPushRef = useRef()
 
   const [value, setValue] = useState('')
+  const [valuePop, setValuePop] = useState('')
+  const [valuePush, setValuePush] = useState('')
+
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -25,16 +30,19 @@ const InputDialogs = () => {
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
 
+  const currentProjectType = useProjectStore(p => p.project.config.type)
+
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     setValue(transition?.read ?? '')
+    setValuePop(transition?.pop ?? '')
+    setValuePush(transition?.push ?? '')
 
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, .5)
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
-
     setDialog({
       visible: true,
       x: screenMidPoint[0],
@@ -43,6 +51,8 @@ const InputDialogs = () => {
       previousValue: transition?.read,
       type: 'transition',
     })
+    // console.log("Previous read value: ", transition?.read)
+    // console.log("Previous pop value: ", transition?.pop)
     focusInput()
   }, [inputRef.current])
 
@@ -50,7 +60,15 @@ const InputDialogs = () => {
     // Remove duplicate characters
     const ranges = value.match(/\[(.*?)\]/g)
     const chars = value.replace(/\[(.*?)\]/g, '')
-    editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
+    const rangesPop = valuePop.match(/\[(.*?)\]/g)
+    const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
+    const rangesPush = valuePush.match(/\[(.*?)\]/g)
+    const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
+    editTransition(dialog.id, 
+      `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`, 
+      `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
+      `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`,
+      currentProjectType)
     commit()
     hideDialog()
   }
@@ -151,7 +169,7 @@ const InputDialogs = () => {
           onChange={e => setValue(e.target.value)}
           onKeyUp={e => e.key === 'Enter' && save()}
           placeholder={{
-            transition: 'λ',
+            transition: (currentProjectType === 'PDA') ? 'λ\t(read)' : 'λ',
             comment: 'Comment text...',
             stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
             stateLabel: 'State label...',
@@ -162,10 +180,53 @@ const InputDialogs = () => {
             paddingRight: '2.5em',
           }}
         />
+        {!currentProjectType === 'PDA' && 
+        <SubmitButton onClick={save}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>}
+      </InputWrapper>
+      { /* Additional input #1 - PDA pop value */}
+      {currentProjectType === 'PDA' &&
+      <InputWrapper>
+        <Input
+          ref={inputPopRef}
+          value={valuePop}
+          onChange={e => setValuePop(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(pop)',
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
+        />
+      </InputWrapper>}
+      { /* Additional input #2 - PDA push value */}
+      {currentProjectType === 'PDA' &&
+      <InputWrapper>
+        <Input
+          ref={inputPushRef}
+          value={valuePush}
+          onChange={e => setValuePush(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(push)',
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
+        />
+        {/* {console.log("valueRead is: ", value)}
+        {console.log("valuePop is: ", valuePop)}
+        {console.log("valuePush is: ", valuePush)} */}
         <SubmitButton onClick={save}>
           <CornerDownLeft size="18px" />
         </SubmitButton>
-      </InputWrapper>
+      </InputWrapper>}
     </Dropdown>
   )
 }

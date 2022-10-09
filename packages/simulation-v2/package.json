@@ -1,0 +1,17 @@
+{
+  "name": "@automatarium/simulation-v2",
+  "version": "1.0.0",
+  "description": "New automata simulation utilities for Automatarium using graph search algorithms",
+  "license": "MIT",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "module": "dist/module.js",
+  "types": "dist/types.d.ts",
+  "scripts": {
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "parcel": "^2.4.1"
+  }
+}

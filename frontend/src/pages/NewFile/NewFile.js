@@ -15,6 +15,7 @@ import SignupPage from '/src/pages/Signup/Signup'
 import { NewProjectCard, CardList } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
 import FSA from './images/FSA'
+import PDA from './images/PDA'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -115,9 +116,10 @@ const NewFile = () => {
         image={<FSA />}
       />
       <NewProjectCard
-        disabled
         title="Push Down Automaton"
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
+        onClick={() => handleNewFile('PDA')}
+        image={<PDA />}
       />
       <NewProjectCard
         disabled

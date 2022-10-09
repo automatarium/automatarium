@@ -1,4 +1,5 @@
 export * from './simulateFSA'
+export * from './simulatePDA'
 export * from './resolveGraph'
 export * from './validTransitions'
 export * from './parseRead'
