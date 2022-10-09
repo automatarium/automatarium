@@ -1,5 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useState } from "react";
+// import { usePDAVisualiserStore } from "../../stores";
+import { usePDAVisualiserStore } from '/src/stores'
 import "./stackVisualiser.css";
 // import {result} from '../Sidepanel/Panels/TestingLab'
 
@@ -10,6 +12,9 @@ const PDAStackVisualiser = () => {
   const [showStackTab, setShowStackTab] = useState(true);
   const [stackSymbols, setStackSymbols] = useState([]);
 
+  const stackInfo = usePDAVisualiserStore(s => s.stack);
+  console.log(`this is stack${stackInfo.trace}`)
+
   stack.push({ element: "a" });
   stack.push({ element: "b" });
   stack.push({ element: "c" });
@@ -19,6 +24,7 @@ const PDAStackVisualiser = () => {
   //   setStackSymbols(stackSymbols => [...stackSymbols, stack])
 
   console.log(stackSymbols);
+
   // removes first element from the stack
 
   function addToStack() {

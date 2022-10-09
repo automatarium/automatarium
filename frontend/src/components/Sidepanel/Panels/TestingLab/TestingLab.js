@@ -3,7 +3,7 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph} from '@automatarium/simulation'
 import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
 import React from 'react'
@@ -51,6 +51,8 @@ const TestingLab = () => {
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const currentProjectType = useProjectStore(p => p.project.config.type)
+  const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
+  // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
@@ -77,6 +79,9 @@ const TestingLab = () => {
     }
     console.log("Trace result: ", result.trace)
     setSimulationResult(result)
+    // Adds result to PDA visualiser
+    setPDAVisualiser(result)
+   
     return result
   }, [graph, traceInput])
   
