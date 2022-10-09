@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useState } from "react";
 import "./stackVisualiser.css";
+// import {result} from '../Sidepanel/Panels/TestingLab'
 
 const PDAStackVisualiser = () => {
   // const PDAStackVisualiser = ({ elements }) => {

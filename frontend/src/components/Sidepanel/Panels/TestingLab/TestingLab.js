@@ -1,11 +1,12 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
+import { useState, useCallback, useMemo, useEffect, useContext } from 'react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle, CornerDownRight } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph} from '@automatarium/simulation'
 import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
+import React from 'react'
 
 import {
   StepButtons,
@@ -17,12 +18,23 @@ import {
   WarningLabel,
 } from './testingLabStyle'
 
+export const ThemeContext = React.createContext({});
+
+
+
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
   const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
 
+  const ThemeProvider = ({children}) => {
+    return(
+      <ThemeContext.Provider value={{simulationResult, setSimulationResult}}>
+        {children}
+      </ThemeContext.Provider>
+    )
+  }
   // Graph state
   const graph = {
     states: useProjectStore(s => s.project.states),
