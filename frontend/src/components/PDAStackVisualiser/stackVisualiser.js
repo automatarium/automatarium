@@ -8,24 +8,11 @@ import "./stackVisualiser.css";
 const StackContext = createContext();
 
 const PDAStackVisualiser = () => {
-
-    const [popValue, setPopValue] = useState("DOES IT SAVE");
-    const [pushValue, setPushValue] = useState("DOES IT SAVE");
-    function Component1() {
-        
-      
-        return (
-          <StackContext.Provider value={popValue}>
-            <h1>{`Hello ${popValue}!`}</h1>
-            
-          </StackContext.Provider>
-        );
-      }
-  // const PDAStackVisualiser = ({ elements }) => {
-  let stack = [];
-  // Closes and shows stack
+  // Closes and shows the PDA stack visualiser.
   const [showStackTab, setShowStackTab] = useState(true);
-  const [stackSymbols, setStackSymbols] = useState([]);
+  // Variables to save values
+  const [popValue, setPopValue] = useState("DOES IT SAVE");
+  const [pushValue, setPushValue] = useState("DOES IT SAVE");
 
   const stackInfo = usePDAVisualiserStore((s) => s.stack);
   // String
@@ -33,18 +20,32 @@ const PDAStackVisualiser = () => {
   // console.log(`this is current stack info ${stackInfo}`)
   console.log(`this is current stack with stringify ${stackList}`);
 
-  // console.log(`this is stack ${Object.values(stackInfo)}`)
+  Object.keys(stackInfo).map((i) => {
+    let stackValue = i;
+    if (stackValue == "trace") {
+      for (const e in stackInfo[i]) {
+        console.log("VALUES I NEED: ", stackInfo[i][e]);
+      }
+    }
+  });
+
+  // Saved values and then prints it
+  function Component1() {
+    return (
+      <StackContext.Provider value={popValue}>
+        <h1>{`Hello ${popValue}!`}</h1>
+      </StackContext.Provider>
+    );
+  }
+
+  // TEMPORARY: Hardcoded variables for testing.
+  let stack = [];
   stack.push({ element: "g" });
   stack.push({ element: "b" });
   stack.push({ element: "k" });
   stack.push({ element: "k" });
 
-  //   setStackSymbols(stackSymbols => [...stackSymbols, stack])
-
-  console.log(stackSymbols);
-
   // removes first element from the stack
-
   function addToStack() {
     console.log("HELLO");
     stack.push({ element: "a" });
@@ -67,7 +68,7 @@ const PDAStackVisualiser = () => {
       });
   }
 
-  // if button is clicked, I want to change the array and re-render displayStack
+  // if button is clicked, I want to change the array and re-render displayStack, so maybe I need a useEffect
 
   const [show, setShow] = useState();
 
@@ -75,6 +76,7 @@ const PDAStackVisualiser = () => {
 
   return (
     <div className="content-container">
+      {/* =========== Title and Tab button =========== */}
       Display Stack{" "}
       <button
         className="close-stack-btn"
@@ -82,22 +84,11 @@ const PDAStackVisualiser = () => {
       >
         x
       </button>
-      {/* {stackInfo.map((obj) => {
-            return <p>{obj.trace}</p>
-        })} */}
-      
-      <Component1/>
+      {/* =========== TEMPORARY =========== */}
+      <Component1 />
       {console.log(`Stack info: ${stackInfo}`)}
       {Object.keys(stackInfo).map((i) => {
-        // <p> key={stackInfo.trace}</p>
-
         let stackValue = i;
-        // <p>This is a value{typeof(stackValue)}</p>
-        // {console.log(`This is the stringified stack value: ${JSON.stringify(stackValue)}`)}
-
-        // {}
-
-        // if (stackValue=='trace') { for (element in stackInfo[i]) { variable add element.currentStack }}
 
         if (stackValue == "trace") {
           for (const e in stackInfo[i]) {
@@ -114,6 +105,7 @@ const PDAStackVisualiser = () => {
         // {console.log(`Getting value from object: ${JSON.parse(stackValue)}`)}
         // {console.log(`Getting value from object: ${stackValue[2]}`)}
       })}
+      {/* =========== Displays the stack =========== */}
       {showStackTab ? (
         <div className="stack-container">
           {/* <button onClick={() => setShow((s) => !s)}>show stack</button> */}
@@ -134,18 +126,3 @@ const PDAStackVisualiser = () => {
 };
 
 export default PDAStackVisualiser;
-
-{
-  /* <button onClick={() => { 
-                setItems(e => e.length ? stack : stack )}}>
-                {stack.length ? 'hide stack' : 'show stack'}
-                </button>
-            <p>hello</p>
-            <div className="container">
-                {items ? stack.slice(0).reverse().map(x=>{
-                    return (
-                        <div className="stack-item">{x.element}</div>
-                    )
-                }) : ''}
-            </div> */
-}
