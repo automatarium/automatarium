@@ -5,22 +5,22 @@ import { usePDAVisualiserStore } from "/src/stores";
 import "./stackVisualiser.css";
 // import {result} from '../Sidepanel/Panels/TestingLab'
 
-const UserContext = createContext();
-
-function Component1() {
-  const [user, setUser] = useState("DOES IT SAVE");
-
-  return (
-    <UserContext.Provider value={user}>
-      <h1>{`Hello ${user}!`}</h1>
-      
-    </UserContext.Provider>
-  );
-}
-
-
+const StackContext = createContext();
 
 const PDAStackVisualiser = () => {
+
+    const [popValue, setPopValue] = useState("DOES IT SAVE");
+    const [pushValue, setPushValue] = useState("DOES IT SAVE");
+    function Component1() {
+        
+      
+        return (
+          <StackContext.Provider value={popValue}>
+            <h1>{`Hello ${popValue}!`}</h1>
+            
+          </StackContext.Provider>
+        );
+      }
   // const PDAStackVisualiser = ({ elements }) => {
   let stack = [];
   // Closes and shows stack
