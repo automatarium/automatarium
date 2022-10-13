@@ -1,9 +1,24 @@
 /* eslint-disable react/jsx-key */
-import { useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 // import { usePDAVisualiserStore } from "../../stores";
-import { usePDAVisualiserStore } from '/src/stores'
+import { usePDAVisualiserStore } from "/src/stores";
 import "./stackVisualiser.css";
 // import {result} from '../Sidepanel/Panels/TestingLab'
+
+const UserContext = createContext();
+
+function Component1() {
+  const [user, setUser] = useState("DOES IT SAVE");
+
+  return (
+    <UserContext.Provider value={user}>
+      <h1>{`Hello ${user}!`}</h1>
+      
+    </UserContext.Provider>
+  );
+}
+
+
 
 const PDAStackVisualiser = () => {
   // const PDAStackVisualiser = ({ elements }) => {
@@ -12,19 +27,17 @@ const PDAStackVisualiser = () => {
   const [showStackTab, setShowStackTab] = useState(true);
   const [stackSymbols, setStackSymbols] = useState([]);
 
-  const stackInfo = usePDAVisualiserStore(s => s.stack);
+  const stackInfo = usePDAVisualiserStore((s) => s.stack);
   // String
-  const stackList = JSON.stringify(stackInfo)
+  const stackList = JSON.stringify(stackInfo);
   // console.log(`this is current stack info ${stackInfo}`)
-  console.log(`this is current stack with stringify ${stackList}`)
+  console.log(`this is current stack with stringify ${stackList}`);
 
-  
   // console.log(`this is stack ${Object.values(stackInfo)}`)
-  stack.push({ element: "a" });
+  stack.push({ element: "g" });
   stack.push({ element: "b" });
-  stack.push({ element: "c" });
-  stack.push({ element: "d" });
-  stack.push({ element: "e" });
+  stack.push({ element: "k" });
+  stack.push({ element: "k" });
 
   //   setStackSymbols(stackSymbols => [...stackSymbols, stack])
 
@@ -62,57 +75,60 @@ const PDAStackVisualiser = () => {
 
   return (
     <div className="content-container">
-        Display Stack {' '}
-      <button className='close-stack-btn' onClick={() => setShowStackTab((e)=> !e)}>x</button>
-        {/* {stackInfo.map((obj) => {
+      Display Stack{" "}
+      <button
+        className="close-stack-btn"
+        onClick={() => setShowStackTab((e) => !e)}
+      >
+        x
+      </button>
+      {/* {stackInfo.map((obj) => {
             return <p>{obj.trace}</p>
         })} */}
-        {console.log(`Stack info: ${stackInfo}` )}
+      
+      <Component1/>
+      {console.log(`Stack info: ${stackInfo}`)}
+      {Object.keys(stackInfo).map((i) => {
+        // <p> key={stackInfo.trace}</p>
 
-        {Object.keys(stackInfo).map((i) =>{
-            // <p> key={stackInfo.trace}</p>
-           
-            let stackValue = i;
-            // <p>This is a value{typeof(stackValue)}</p>
-            // {console.log(`This is the stringified stack value: ${JSON.stringify(stackValue)}`)}
+        let stackValue = i;
+        // <p>This is a value{typeof(stackValue)}</p>
+        // {console.log(`This is the stringified stack value: ${JSON.stringify(stackValue)}`)}
 
-            // {}
+        // {}
 
-            // if (stackValue=='trace') { for (element in stackInfo[i]) { variable add element.currentStack }}
+        // if (stackValue=='trace') { for (element in stackInfo[i]) { variable add element.currentStack }}
 
-            if(stackValue == 'trace') {
-              for(const e in stackInfo[i]) {
-                console.log('Info for stack: ', stackInfo[i][e])
-              }
-            }
+        if (stackValue == "trace") {
+          for (const e in stackInfo[i]) {
+            console.log("Info for stack: ", stackInfo[i][e]);
+          }
+        }
 
+        {
+          console.log(`Value: ${stackValue}`);
+        }
 
-            {console.log(`Value: ${stackValue}`)}
+        // {stackValue == 'trace' ? console.log(`Trace info for: ${stackInfo[i][2].currentStack}`) : console.log()}
 
-            // {stackValue == 'trace' ? console.log(`Trace info for: ${stackInfo[i][2].currentStack}`) : console.log()}
-          
-            // {console.log(`Getting value from object: ${JSON.parse(stackValue)}`)}
-            // {console.log(`Getting value from object: ${stackValue[2]}`)}
-        })}
-        
-      { showStackTab?
+        // {console.log(`Getting value from object: ${JSON.parse(stackValue)}`)}
+        // {console.log(`Getting value from object: ${stackValue[2]}`)}
+      })}
+      {showStackTab ? (
         <div className="stack-container">
-
           {/* <button onClick={() => setShow((s) => !s)}>show stack</button> */}
           <h3>Stack</h3>
           <div className="stack-container">
             {show ? "no show" : displayStack()}
           </div>
 
-          <div className="stack-container">
+          {/* <div className="stack-container">
             <p>(temp)dummy buttons</p>
             <button onClick={removeStack}>popStack</button>
             <button onClick={addToStack}>push</button>
-          </div>
+          </div> */}
         </div>
-        : 
-        null
-      }
+      ) : null}
     </div>
   );
 };
