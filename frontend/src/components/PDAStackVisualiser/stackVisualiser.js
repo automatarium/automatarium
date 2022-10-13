@@ -20,6 +20,7 @@ const PDAStackVisualiser = () => {
   // console.log(`this is current stack info ${stackInfo}`)
   console.log(`this is current stack with stringify ${stackList}`);
 
+  // I will need to retrieve these values, maybe I can loop through them using a for loop
   Object.keys(stackInfo).map((i) => {
     let stackValue = i;
     if (stackValue == "trace") {
