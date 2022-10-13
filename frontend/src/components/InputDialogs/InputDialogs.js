@@ -145,7 +145,6 @@ const InputDialogs = () => {
   }
 
   const saveTMTransition = () => {
-    const lowerDirection = direction
     editTransition(dialog.id, read, write, direction)
     commit()
     hideDialog()
@@ -168,8 +167,13 @@ const InputDialogs = () => {
     setWrite(input[input.length-1]?? '')
   }
   function handleDirectionIn(e){
-    const input = e.target.value.toString().match(/(R|r|L|l)/g)
-    if (input) {setDirection(input[input.length-1].toUpperCase())}
+    if ((e.target.value.toString() === "") || e.target.value.toString() === " ") {setDirection("S")}
+    else {
+      const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
+      if (input) {
+        setDirection(input[input.length - 1].toUpperCase())
+      }
+    }
   }
 
 
@@ -228,7 +232,7 @@ const InputDialogs = () => {
                 value={direction}
                 onChange={handleDirectionIn}
                 onKeyUp={e => e.key === 'Enter' && save}
-                placeholder={'R'}
+                placeholder={'↔'}
                 style={{
                   width: `8ch`,
                   margin: '0 .4em',
@@ -237,7 +241,7 @@ const InputDialogs = () => {
             />
 
           </InputWrapper>
-          <SubmitButton onClick={save}>
+          <SubmitButton onClick={save} disabled={!direction}>
             <CornerDownLeft size="18px" />
           </SubmitButton>
         </Dropdown>

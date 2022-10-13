@@ -30,7 +30,7 @@ export const TickerTapeContainer = styled('div')`
 export const TickerTape = styled('div')`
   display: flex;
   flex-direction: row;
-  transform: translateX(calc(${p => -p.$index +0.5 } * var(--cell-width)));
+  transform: translateX(calc(${p => -p.$index + 1.5 } * var(--cell-width)));
   width: max-content;
   transition: transform .2s;
 `
