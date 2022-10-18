@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect, useContext } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle, CornerDownRight } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
@@ -28,13 +28,6 @@ const TestingLab = () => {
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
 
-  const ThemeProvider = ({children}) => {
-    return(
-      <ThemeContext.Provider value={{simulationResult, setSimulationResult}}>
-        {children}
-      </ThemeContext.Provider>
-    )
-  }
   // Graph state
   const graph = {
     states: useProjectStore(s => s.project.states),
@@ -82,8 +75,6 @@ const TestingLab = () => {
     setSimulationResult(result)
     // Adds result to PDA visualiser
     setPDAVisualiser(result)
-
-    console.log(`VALUE: ${simulationResult}`)
    
     return result
   }, [graph, traceInput])
