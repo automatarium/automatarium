@@ -14,23 +14,33 @@ import {
 
 const TMTraceStepWindow = ( {trace, pointer, accepted, isEnd} ) => {
 
-    const [colour, setColour] = useState(false)
+    const [green, setGreen] = useState(false)
+    const [red, setRed] = useState(false)
+    const containerRef = useRef()
 
     useEffect( () => {
-        if (accepted & isEnd) {
-            setColour(true)
+        if (accepted && isEnd) {
+            setGreen(true)
+            setRed(false)
+            console.log('IS GREEN')
+        }
+        else if (isEnd && !accepted){
+            setGreen(false)
+            setRed(true)
+            console.log('IS RED')
         }
         else {
-            setColour(false)
+            setGreen(false)
+            setRed(false)
+            console.log('IS GREY')
         }
-        console.log(colour)
     }, [accepted, isEnd])
 
 
     return (
         <>
         {trace.length &&
-        <Container $colour={colour}>
+        <Container style={{background: green ? '#689540' : red ? '#d30303' : 'var(--toolbar)'}} >
             <div>
                 <Pointer />
                 <TickerTapeContainer>

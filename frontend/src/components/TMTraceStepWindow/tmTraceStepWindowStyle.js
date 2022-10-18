@@ -2,24 +2,30 @@ import { styled } from 'goober'
 
 export const Container = styled('div')`
   --cell-width: 35px;
+  --tape-background: var(--toolbar);
   flex: 1;
   position: relative;
   padding-block: .8em;
-  background: var(${props => (props.colour ? 'green' : 'black')});
+  background: var(--toolbar);
   min-width: calc(var(--cell-width) * 21);
   pointer-events: none;
   border-radius: .3rem;
-  background: var(--toolbar);
   &.animate {
     transition: top .2s, left .2s;
   }
-  
-  
+
   & > div {
     overflow: hidden;
   }
 `
+// ${p => p.$green && `
+//   background: #689540
+// `}
+// ${p => p.$red && `
+//   background: #d30303
+// `}
 
+//var(${props => (props.colour ? 'green' : 'black')});
 export const TickerTapeContainer = styled('div')`
   display: flex;
   flex-direction: row;
