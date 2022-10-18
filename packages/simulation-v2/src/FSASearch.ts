@@ -1,45 +1,46 @@
-import { FSAState, FSATransition, ReadSymbol } from "./graph";
-import { Graph, Node } from "./interfaces/graph";
+import { FSATransition } from "./graph";
+import { Graph, Node, State } from "./interfaces/graph";
 
-export class FSAGraphNode extends Node<FSAState> {
+export class FSAState extends State {
     constructor(
-        state: FSAState,
-        parent: FSAGraphNode | null = null,
+        m_id: number,
+        m_isFinal: boolean,
+        private m_read: string | null = null,
+        private m_remaining: string = "",
     ) {
-        super(state, parent);
+        super(m_id, m_isFinal);
     }
 
-    key(): string {
-        return String(this.state.id + this.state.remaining);
+    get read() {
+        return this.m_read;
     }
 
-    get state() {
-        return this.m_state;
+    get remaining() {
+        return this.m_remaining;
     }
 
-    /* For some reason we need to return this.m_parent as an FSAGraphNode because without it
-     * TS thinks it's a Node<FSAState> (which is true, but it isn't specialised)
-     * Since the constructor only takes an FSAGraphNode this cast should be safe. */
-    get parent() {
-        return this.m_parent as FSAGraphNode;
+    key() {
+        return String(this.id + this.remaining);
     }
 }
 
-export class FSAGraph extends Graph<FSAState, FSATransition, FSAGraphNode> {
-    constructor(initial: FSAGraphNode, states: FSAState[], transitions: FSATransition[]) {
+export class FSAGraph extends Graph<FSAState, FSATransition> {
+    constructor(
+        initial: Node<FSAState>,
+        states: FSAState[],
+        transitions: FSATransition[],
+    ) {
         super(initial, states, transitions);
     }
-    public isFinalState(node: FSAGraphNode) {
-        return (
-            node.state.isFinal && node.state.remaining.length === 0
-        );
+    public isFinalState(node: Node<FSAState>) {
+        return node.state.isFinal && node.state.remaining.length === 0;
     }
 
-    public getSuccessors(node: FSAGraphNode) {
+    public getSuccessors(node: Node<FSAState>) {
         const transitions = this.transitions.filter(
             (transition) => transition.from === node.state.id,
         );
-        const successors: FSAGraphNode[] = [];
+        const successors: Node<FSAState>[] = [];
         for (const transition of transitions) {
             const nextState = this.states.find(
                 (state) => state.id === transition.to,
@@ -52,15 +53,15 @@ export class FSAGraph extends Graph<FSAState, FSATransition, FSAGraphNode> {
             ) {
                 continue;
             }
-            const graphState: FSAState = {
-                id: nextState.id,
-                isFinal: nextState.isFinal,
-                remaining: lambdaTransition
+            const graphState = new FSAState(
+                nextState.id,
+                nextState.isFinal,
+                lambdaTransition ? "" : symbol,
+                lambdaTransition
                     ? node.state.remaining
                     : node.state.remaining.slice(1),
-                read: lambdaTransition ? "" : symbol,
-            };
-            const successor = new FSAGraphNode(graphState, node);
+            );
+            const successor = new Node(graphState, node);
             successors.push(successor);
         }
         return successors;
