@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-
+import { useProjectStore } from "../../stores";
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
@@ -8,17 +8,17 @@ import { useSelectionStore } from '/src/stores'
 
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
-import { useProjectStore } from '/src/stores'
 
-const projectType = useProjectStore(s => s.project.config.type)
+
+// const projectType = useProjectStore(s => s.project.config.type)
 
 const TransitionSet = ({ transitions }) => <>
   { transitions.map(({id, from, to, read, write, direction, pop, push}, i) => (
       <Transition
       i={i}
       transitions={transitions}
-      text={projectType==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
-          : projectType==='PDA'? ((read ? read : 'λ') + ',' +
+      text={useProjectStore(s => s.project.config.type)==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
+          : useProjectStore(s => s.project.config.type)==='PDA'? ((read ? read : 'λ') + ',' +
               (pop ? pop : 'λ') + ';' +
               (push ? push : 'λ'))
               : read}
@@ -45,7 +45,7 @@ const Transition = ({
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
-
+  const projectStore = useProjectStore(s => s.project.config.type)
   // Determine how much to bend this path
   const evenCount = count % 2 === 0
   const middleValue = evenCount ? count / 2 + .5 : Math.floor(count / 2)
@@ -101,7 +101,7 @@ const Transition = ({
     />}
 
     {/* The label for FSAs - i.e the accepted symbols */}
-    {(projectType === 'FSA' || projectType === 'TM') &&
+    {(projectStore === 'FSA' || projectStore === 'TM') &&
       <text
         onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
         onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
@@ -124,7 +124,7 @@ const Transition = ({
     }
 
     {/* The label for PDAs - i.e the accepted symbols */}
-    {(projectType === 'PDA') &&
+    {(projectStore === 'PDA') &&
       <text
         onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
         onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}

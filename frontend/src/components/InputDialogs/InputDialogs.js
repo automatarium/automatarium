@@ -34,7 +34,7 @@ const InputDialogs = () => {
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
-  const focusInput = useCallback(() => setTimeout(() => readRef.current['read']?.focus(), 100), [readRef.current])
+  const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [readRef.current, writeRef.current, directionRef.current, inputRef.current]
 
 
@@ -87,11 +87,18 @@ const InputDialogs = () => {
     const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
     const rangesPush = valuePush.match(/\[(.*?)\]/g)
     const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
-    editTransition(dialog.id,
-      `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
-      `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
-      `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`,
-      currentProjectType)
+    editTransition({id: dialog.id,
+      read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
+      pop: `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
+      push: `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`
+    })
+    commit()
+    hideDialog()
+  }
+
+
+  const saveTMTransition = () => {
+    editTransition({id: dialog.id, read: read, write: write, direction: direction})
     commit()
     hideDialog()
   }
@@ -162,11 +169,6 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  const saveTMTransition = () => {
-    editTransition(dialog.id, read, write, direction)
-    commit()
-    hideDialog()
-  }
 
   const save = {
     transition: saveTransition,
@@ -267,8 +269,6 @@ const InputDialogs = () => {
   }
 
   else {
-
-
     return (
         <Dropdown
             visible={dialog.visible}
@@ -292,7 +292,7 @@ const InputDialogs = () => {
                 onChange={e => setValue(e.target.value)}
                 onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={{
-                  transition: (currentProjectType === 'PDA') ? 'λ\t(read)' : 'λ',
+                  transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
                   comment: 'Comment text...',
                   stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
                   stateLabel: 'State label...',
@@ -303,13 +303,13 @@ const InputDialogs = () => {
                   paddingRight: '2.5em',
                 }}
             />
-            {!currentProjectType === 'PDA' &&
+            {!projectType === 'PDA' &&
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px"/>
             </SubmitButton>}
           </InputWrapper>
           { /* Additional input #1 - PDA pop value */}
-          {currentProjectType === 'PDA' &&
+          {projectType === 'PDA' &&
           <InputWrapper>
             <Input
                 ref={inputPopRef}
@@ -327,7 +327,7 @@ const InputDialogs = () => {
             />
           </InputWrapper>}
           { /* Additional input #2 - PDA push value */}
-          {currentProjectType === 'PDA' &&
+          {projectType === 'PDA' &&
           <InputWrapper>
             <Input
                 ref={inputPushRef}

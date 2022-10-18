@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
+import { createContext, useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle, CornerDownRight } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
@@ -9,7 +9,6 @@ import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
 import { simulateTM } from "@automatarium/simulation-v2/src/simulateTM";
 import useTMSimResultStore from "../../../../stores/useTMSimResultStore";
 import {dispatchCustomEvent} from "/src/util/events";
-import React from 'react'
 
 import {
   StepButtons,
@@ -21,7 +20,7 @@ import {
   WarningLabel,
 } from './testingLabStyle'
 
-export const ThemeContext = React.createContext({});
+export const ThemeContext = createContext({});
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
@@ -75,7 +74,7 @@ const TestingLab = () => {
       return result
     } else {
       const { accepted, trace, remaining } =
-          currentProjectType==='PDA' ?
+          projectType==='PDA' ?
               simulatePDA(graph, traceInput ?? '')
               : simulateFSA(graph, traceInput ?? '')
       // console.log("Remaining: ", remaining)
