@@ -1,3 +1,5 @@
+import {TMState} from "./TMSearch";
+
 export type ReadSymbol = string;
 export type StateID = number;
 export type TransitionID = number;
@@ -12,9 +14,9 @@ export type FSAState = State & {
     read: ReadSymbol | null;
 };
 
-export type TMState = State & {
-    tape: Tape
-}
+// export type TMState = State & {
+//     tape: Tape
+// }
 
 type Transition = {
     id: TransitionID;

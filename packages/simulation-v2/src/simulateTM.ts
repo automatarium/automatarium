@@ -1,13 +1,14 @@
-import { TMGraphNode, TMGraph } from "./TMSearch";
+import { TMState, TMGraph } from "./TMSearch";
 import { TMGraphIn } from "./graph"
 import {
   Tape,
   TMExecutionResult,
   TMExecutionTrace,
 } from "./graph";
+import { Node } from "./interfaces/graph";
 import { breadthFirstSearch } from "./search";
 
-const generateTrace = (node: TMGraphNode): TMExecutionTrace[] => {
+const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
   const trace: TMExecutionTrace[] = [];
   while (node.parent) {
     trace.push({
@@ -42,9 +43,13 @@ export const simulateTM = (
       trace: [],
     };
   }
+
+
   initialState.tape = inputTape;
 
-  const problem = new TMGraph(new TMGraphNode(initialState), graph.states, graph.transitions);
+  const initialNode = new Node<TMState>(new TMState(initialState.id, initialState.isFinal, initialState.tape))
+
+  const problem = new TMGraph(initialNode, graph.states, graph.transitions);
   const result = breadthFirstSearch(problem);
 
   if (!result) {

@@ -1,44 +1,46 @@
-import {TMState, TMTransition, Tape} from "./graph";
-import { Graph, Node } from "./interfaces/graph";
-import {FSAGraphNode} from "./FSASearch";
+import {TMTransition, Tape} from "./graph";
+import {Graph, Node, State} from "./interfaces/graph";
 
-export class TMGraphNode extends Node<TMState> {
+
+export class TMState extends State {
     constructor(
-        state: TMState,
-        parent: TMGraphNode | null = null,
+        m_id: number,
+        m_isFinal: boolean,
+        private m_tape: Tape
     ) {
-        super(state, parent);
+        super(m_id, m_isFinal);
+        this.m_tape = m_tape;
     }
 
-    key(): string {
-        const traceAdd = this.state.tape.trace.toString()?? ""
-        return String(this.state.id + traceAdd);
+    key() {
+        const traceAdd = this.m_tape.trace.toString()?? ""
+        return String(this.id + traceAdd);
     }
 
-    get state() {
-        return this.m_state;
+    get tape() {
+        return this.m_tape;
     }
 
-    get parent() {
-        return this.m_parent as TMGraphNode;
+    set tape(tape: Tape) {
+        this.m_tape = tape
     }
 }
 
-export class TMGraph extends Graph<TMState, TMTransition, TMGraphNode> {
-    constructor(initial: TMGraphNode, states: TMState[], transitions: TMTransition[]) {
+export class TMGraph extends Graph<TMState, TMTransition> {
+    constructor(initial: Node<TMState>, states: TMState[], transitions: TMTransition[]) {
         super(initial, states, transitions);
     }
-    public isFinalState(node: TMGraphNode) {
+    public isFinalState(node: Node<TMState>) {
         return (
             node.state.isFinal
         );
     }
 
-    public getSuccessors(node: TMGraphNode) {
+    public getSuccessors(node: Node<TMState>) {
         const transitions = this.transitions.filter(
             (transition) => transition.from === node.state.id,
         );
-        const successors: TMGraphNode[] = [];
+        const successors: Node<TMState>[] = [];
         for (const transition of transitions) {
             const nextState = this.states.find(
                 (state) => state.id === transition.to,
@@ -58,20 +60,20 @@ export class TMGraph extends Graph<TMState, TMTransition, TMGraphNode> {
             }
 
             if (transition.read === symbol) {
-                const graphState: TMState = {
-                    id: nextState.id,
-                    isFinal: nextState.isFinal,
-                    tape: nextTape
+                const graphState = new TMState(
+                    nextState.id,
+                    nextState.isFinal,
+                    nextTape
                     // read: symbol
-                };
-                const successor = new TMGraphNode(graphState, node);
+                );
+                const successor = new Node(graphState, node);
                 successors.push(successor);
             }
         }
         return successors;
     }
 
-    private progressTape(node: TMGraphNode, transition: TMTransition){
+    private progressTape(node: Node<TMState>, transition: TMTransition){
 
         const tapeTrace = node.state.tape.trace
         const write = transition.write
