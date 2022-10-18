@@ -158,6 +158,8 @@ const TestingLab = () => {
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
     if (projectType === 'TM') {setProjectSimTraceIDx(traceIdx)}
+    // Try this for PDA as well - stack display
+    if (projectType === 'PDA') {setProjectSimTraceIDx(traceIdx)}
   }, [traceIdx])
 
   // Show bottom panel with TM Tape Lab

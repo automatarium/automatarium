@@ -2,7 +2,9 @@
 import { createContext, useContext, useEffect, useState } from "react";
 // import { usePDAVisualiserStore } from "../../stores";
 import { usePDAVisualiserStore } from "/src/stores";
+import { useTMSimResultStore } from "/src/stores";
 import "./stackVisualiser.css";
+import { current } from "immer";
 // import {result} from '../Sidepanel/Panels/TestingLab'
 
 const StackContext = createContext();
@@ -10,6 +12,8 @@ const StackContext = createContext();
 const PDAStackVisualiser = () => {
   // Closes and shows the PDA stack visualiser.
   const [showStackTab, setShowStackTab] = useState(true);
+  const traceIDx = useTMSimResultStore(s => s.traceIDx);
+  
   // Variables to save values
   const [popValue, setPopValue] = useState("DOES IT SAVE");
   const [pushValue, setPushValue] = useState("DOES IT SAVE");
@@ -34,17 +38,20 @@ const PDAStackVisualiser = () => {
   function Component1() {
     return (
       <StackContext.Provider value={popValue}>
-        <h1>{`Hello ${popValue}!`}</h1>
+        {/* <h1>{`Hello ${popValue}!`}</h1> */}
       </StackContext.Provider>
     );
   }
 
-  // TEMPORARY: Hardcoded variables for testing.
+  // Push stack values using the current trace ID
   let stack = [];
-  stack.push({ element: "g" });
-  stack.push({ element: "b" });
-  stack.push({ element: "k" });
-  stack.push({ element: "k" });
+  
+  if (stackInfo.trace[traceIDx] != undefined) {
+    currentStack = stackInfo.trace[traceIDx].currentStack;
+    for (let i = 0; i < currentStack.length; i++) {
+      stack.push( { element: currentStack[i], key: i } );
+    }
+  }
 
   // removes first element from the stack
   function addToStack() {
