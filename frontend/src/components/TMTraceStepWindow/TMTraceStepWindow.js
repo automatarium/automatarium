@@ -22,17 +22,14 @@ const TMTraceStepWindow = ( {trace, pointer, accepted, isEnd} ) => {
         if (accepted && isEnd) {
             setGreen(true)
             setRed(false)
-            console.log('IS GREEN')
         }
         else if (isEnd && !accepted){
             setGreen(false)
             setRed(true)
-            console.log('IS RED')
         }
         else {
             setGreen(false)
             setRed(false)
-            console.log('IS GREY')
         }
     }, [accepted, isEnd])
 
