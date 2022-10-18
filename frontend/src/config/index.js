@@ -10,8 +10,8 @@ const config = {
     firebaseConfig: firebaseConfigDev,
   },
   production: {
-    baseUrl: 'https://automatarium.garden',
-    API: 'https://api.automatarium.garden',
+    baseUrl: 'https://automatarium.tdib.xyz',
+    API: 'https://api.automatarium.tdib.xyz',
     documentTitle: 'Automatarium',
     firebaseConfig: firebaseConfigDev,
   }

@@ -2,7 +2,7 @@ import { FSAGraph, FSAState } from "./FSASearch";
 import { GraphStepper } from "./FSAStep";
 import { ExecutionResult, ExecutionTrace, UnparsedFSAGraph } from "./graph";
 import { Node } from "./interfaces/graph";
-import { parseGraph } from "./parse-graph";
+import { parseFSAGraph } from "./parse-graph";
 import { breadthFirstSearch } from "./search";
 
 const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
@@ -25,7 +25,7 @@ export const simulateFSA = (
     graph: UnparsedFSAGraph,
     input: string,
 ): ExecutionResult => {
-    const parsedGraph = parseGraph(graph);
+    const parsedGraph = parseFSAGraph(graph);
 
     // Doing this find here so we don't have to deal with undefined in the class
     const initialState = parsedGraph.states.find((state) => {
@@ -70,7 +70,7 @@ export const simulateFSA = (
 };
 
 export const graphStepper = (graph: UnparsedFSAGraph, input: string) => {
-    const parsedGraph = parseGraph(graph);
+    const parsedGraph = parseFSAGraph(graph);
 
     const initialState = parsedGraph.states.find((state) => {
         return state.id === graph.initialState;

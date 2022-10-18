@@ -1,5 +1,5 @@
 import { useContext } from 'react'
-import { useProjectStore } from "../../stores";
+
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
@@ -8,12 +8,20 @@ import { useSelectionStore } from '/src/stores'
 
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
+import { useProjectStore } from '/src/stores'
+
+const projectType = useProjectStore(s => s.project.config.type)
+
 const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({id, from, to, read, write, direction}, i) => (
+  { transitions.map(({id, from, to, read, write, direction, pop, push}, i) => (
       <Transition
       i={i}
       transitions={transitions}
-      text={useProjectStore(s => s.project.config.type)==='TM' ? ((read?read:'λ') + ',' +  (write ? write : 'λ') + ';' + (direction ? direction : '')): read}
+      text={projectType==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
+          : projectType==='PDA'? ((read ? read : 'λ') + ',' +
+              (pop ? pop : 'λ') + ';' +
+              (push ? push : 'λ'))
+              : read}
       from={from}
       to={to}
       id={id}
@@ -55,12 +63,12 @@ const Transition = ({
   const handleTransitionMouseUp = e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: { id, from, to, text },
+      transition: { id, from, to, text},
     })
   const handleTransitionMouseDown = e =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: { id, from, to, text },
+      transition: { id, from, to, text},
     })
 
   // Calculate text offset (increased for additional reflexive transitions)
@@ -92,26 +100,51 @@ const Transition = ({
       onMouseUp={handleTransitionMouseUp}
     />}
 
-    {/* The label - i.e the accepted symbols */}
-    <text
-      onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
-      onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-      fill={selected ? 'var(--primary)' : 'var(--stroke)'}
-      style={{ userSelect: 'none' }}
-      dy={`-${textOffset}`}
-      textAnchor="middle"
-      alignmentBaseline="central"
-      {...isReflexive && {
-        x: control.x,
-        y: control.y + REFLEXIVE_Y_OFFSET/3,
-      }}
-    >
-      {isReflexive ? (text === '' ? 'λ' : text) : (
-        <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-          {text === '' ? 'λ' : text}
-        </textPath>
-      )}
-    </text>
+    {/* The label for FSAs - i.e the accepted symbols */}
+    {(projectType === 'FSA' || projectType === 'TM') &&
+      <text
+        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
+        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+        style={{ userSelect: 'none' }}
+        dy={`-${textOffset}`}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        {...isReflexive && {
+          x: control.x,
+          y: control.y + REFLEXIVE_Y_OFFSET/3,
+        }}
+      >
+        {isReflexive ? (text === '' ? 'λ' : text) : (
+          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+            {text === '' ? 'λ' : text}
+          </textPath>
+        )}
+      </text>
+    }
+
+    {/* The label for PDAs - i.e the accepted symbols */}
+    {(projectType === 'PDA') &&
+      <text
+        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
+        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+        style={{ userSelect: 'none' }}
+        dy={`-${textOffset}`}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        {...isReflexive && {
+          x: control.x,
+          y: control.y + REFLEXIVE_Y_OFFSET/3,
+        }}
+      >
+        {isReflexive ? (text === '' ? 'λ,λ;λ' : text) : (
+          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+            {text === '' ? 'λ,λ;λ' : text}
+          </textPath>
+        )}
+      </text>
+    }
   </g>
 }
 

@@ -10,6 +10,8 @@ import { ShortcutGuide, ExportImage } from '/src/pages'
 import { Content, LoadingContainer, EditorContent } from './editorStyle'
 // import { BottomPanel } from "../../components/BottomPanel/BottomPanel";
 
+import  PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
+
 const Editor = () => {
   const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
@@ -93,11 +95,16 @@ const Editor = () => {
           <EditorPanel />
           <BottomPanel />
         </EditorContent>
+        <PDAStackVisualiser/>
         <Sidepanel />
+
       </Content>
 
+
       <ShortcutGuide />
+
       <ExportImage />
+
     </>
   )
 }

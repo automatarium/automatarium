@@ -1,13 +1,16 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle, CornerDownRight } from 'lucide-react'
+
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
-import { simulateFSA } from "@automatarium/simulation-v2";
+import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
 import { simulateTM } from "@automatarium/simulation-v2/src/simulateTM";
 import useTMSimResultStore from "../../../../stores/useTMSimResultStore";
 import {dispatchCustomEvent} from "/src/util/events";
+import React from 'react'
+
 import {
   StepButtons,
   MultiTraceRow,
@@ -18,7 +21,7 @@ import {
   WarningLabel,
 } from './testingLabStyle'
 
-
+export const ThemeContext = React.createContext({});
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
@@ -44,7 +47,8 @@ const TestingLab = () => {
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const projectType = useProjectStore(s => s.project.config.type)
-
+  const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
+  // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
@@ -70,17 +74,33 @@ const TestingLab = () => {
       console.log(result)
       return result
     } else {
-      const {accepted, trace, remaining} = simulateFSA(graph, traceInput ?? '')
+      const { accepted, trace, remaining } =
+          currentProjectType==='PDA' ?
+              simulatePDA(graph, traceInput ?? '')
+              : simulateFSA(graph, traceInput ?? '')
+      // console.log("Remaining: ", remaining)
+      // console.log("Trace input: " + traceInput)
+      // console.log("Simulating: " + (currentProjectType==='PDA' ? "PDA" : "FSA"))
+      // console.log("Accepted by simulate: ", accepted)
+      // console.log("Stack: ", stack)
       const result = {
         accepted,
         remaining,
         trace: trace.map(step => ({
           to: step.to,
-          read: step.read === '' ? 'λ' : step.read
+          read: step.read === '' ? 'λ' : step.read,
+          pop: step.pop === '' ? 'λ' : step.pop,
+          push: step.push === '' ? 'λ' : step.push,
+          currentStack: step.currentStack,
         })),
         transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
       }
+      console.log("Trace result: ", result.trace)
+
       setSimulationResult(result)
+      // Adds result to PDA visualiser
+      setPDAVisualiser(result)
+
       return result
     }
 
@@ -102,31 +122,30 @@ const TestingLab = () => {
       return null
     }
 
-
     // Represent transitions as strings of form start -> end
     const transitions = trace
-        .slice(0, -1)
-        .map((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
-        .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-        .filter((_x, i) => i < traceIdx)
+      .slice(0, -1)
+      .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
+      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix+start} -> ${getStateName(end) ?? statePrefix+end}`)
+      .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
-        ? [...transitions,
-          remaining[0] ?
-              `${remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
-              : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
-        : transitions
+      ? [...transitions,
+        remaining[0] ?
+          `${remaining[0]}: ${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`
+          : `\n${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`]
+      : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
-    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
     if (projectType === 'TM') {
       setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
           {pointer: 0, trace: [input]})))
-    } else if (projectType === 'FSA') {
+    } else {
       setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
     }
   }, [])
@@ -139,17 +158,18 @@ const TestingLab = () => {
 
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
-    setProjectSimTraceIDx(traceIdx)
+    if (projectType === 'TM') {setProjectSimTraceIDx(traceIdx)}
   }, [traceIdx])
 
   // Show bottom panel with TM Tape Lab
   useEffect( () => {
-    if (showTraceTape) {
-      console.log("sending event... ")
-      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape'})
-    }
-    else {
-      dispatchCustomEvent('bottomPanel:close', {})
+    if (projectType === 'TM') {
+      if (showTraceTape) {
+        console.log("sending event... ")
+        dispatchCustomEvent('bottomPanel:open', {panel: 'tmTape'})
+      } else {
+        dispatchCustomEvent('bottomPanel:close', {})
+      }
     }
   }, [showTraceTape])
 
@@ -184,9 +204,6 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx+1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
-
-
-
 
   return (
     <>
@@ -286,7 +303,7 @@ const TestingLab = () => {
                   if (e.key === 'Enter' && !e.repeat) {
                     if (e.metaKey || e.ctrlKey) {
                       // Run shortcut
-                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input))) // Need to accommodate TM
+                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
                     } else {
                       addMultiTraceInput()
                       window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)

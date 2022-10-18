@@ -16,6 +16,7 @@ import { NewProjectCard, CardList } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
 import FSA from './images/FSA'
 import TM from "./images/TM";
+import PDA from './images/PDA'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -116,9 +117,10 @@ const NewFile = () => {
         image={<FSA />}
       />
       <NewProjectCard
-        disabled
         title="Push Down Automaton"
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
+        onClick={() => handleNewFile('PDA')}
+        image={<PDA />}
       />
       <NewProjectCard
         title="Turing Machine"
@@ -138,6 +140,7 @@ const NewFile = () => {
           name={p?.meta?.name ?? '<Untitled>'}
           type={p?.config?.type ?? '???'}
           date={dayjs(p?.meta?.dateEdited)}
+          projectId={p._id}
           image={thumbnails[p._id]}
           onClick={() => handleLoadProject(p)}
         />

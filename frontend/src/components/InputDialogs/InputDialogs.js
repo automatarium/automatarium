@@ -10,9 +10,16 @@ import { lerpPoints } from '/src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 
-
 const InputDialogs = () => {
   const [dialog, setDialog] = useState({ visible: false })
+  const inputRef = useRef()
+  const inputPopRef = useRef()
+  const inputPushRef = useRef()
+
+  const [value, setValue] = useState('')
+  const [valuePop, setValuePop] = useState('')
+  const [valuePush, setValuePush] = useState('')
+
   const readRef = useRef()
   const writeRef = useRef()
   const directionRef = useRef()
@@ -28,13 +35,17 @@ const InputDialogs = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => readRef.current['read']?.focus(), 100), [readRef.current])
-  const arr = [readRef.current, writeRef.current, directionRef.current]
+  const arr = [readRef.current, writeRef.current, directionRef.current, inputRef.current]
 
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     setRead(transition?.read ?? '')
+    setValue(transition?.read ?? '')
+    setValuePop(transition?.pop ?? '')
+    setValuePush(transition?.push ?? '')
+
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, .5)
@@ -70,17 +81,24 @@ const InputDialogs = () => {
 
   const saveTransition = () => {
     // Remove duplicate characters
-    const ranges = read.match(/\[(.*?)\]/g)
-    const chars = read.replace(/\[(.*?)\]/g, '')
-    editTransition(dialog.id, `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`)
+    const ranges = value.match(/\[(.*?)\]/g)
+    const chars = value.replace(/\[(.*?)\]/g, '')
+    const rangesPop = valuePop.match(/\[(.*?)\]/g)
+    const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
+    const rangesPush = valuePush.match(/\[(.*?)\]/g)
+    const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
+    editTransition(dialog.id,
+      `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
+      `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
+      `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`,
+      currentProjectType)
     commit()
     hideDialog()
   }
 
-
   useEvent('editComment', ({ detail: { id, x, y } }) => {
     const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === id)
-    setRead(selectedComment?.text ?? '')
+    setValue(selectedComment?.text ?? '')
 
     setDialog({
       visible: true,
@@ -89,15 +107,15 @@ const InputDialogs = () => {
       type: 'comment',
     })
     focusInput()
-  }, arr)
+  }, [inputRef.current])
 
   const saveComment = () => {
-    if (read && !/^\s*$/.test(read)) {
+    if (value && !/^\s*$/.test(value)) {
       if (dialog.selectedComment === undefined) {
         const pos = screenToViewSpace(dialog.x, dialog.y)
-        useProjectStore.getState().createComment({ x: pos[0], y: pos[1], text: read.trim() })
+        useProjectStore.getState().createComment({ x: pos[0], y: pos[1], text: value.trim() })
       } else {
-        useProjectStore.getState().updateComment({ ...dialog.selectedComment, text: read.trim() })
+        useProjectStore.getState().updateComment({ ...dialog.selectedComment, text: value.trim() })
       }
       commit()
     }
@@ -106,7 +124,7 @@ const InputDialogs = () => {
 
   useEvent('editStateName', ({ detail: { id } }) => {
     const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
-    setRead(selectedState.name ?? '')
+    setValue(selectedState.name ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
     setDialog({
@@ -116,17 +134,17 @@ const InputDialogs = () => {
       type: 'stateName',
     })
     focusInput()
-  }, arr)
+  }, [inputRef.current])
 
   const saveStateName = () => {
-    useProjectStore.getState().updateState({ ...dialog.selectedState, name: (!read || /^\s*$/.test(read)) ? undefined : read })
+    useProjectStore.getState().updateState({ ...dialog.selectedState, name: (!value || /^\s*$/.test(value)) ? undefined : value })
     commit()
     hideDialog()
   }
 
   useEvent('editStateLabel', ({ detail: { id } }) => {
     const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
-    setRead(selectedState.label ?? '')
+    setValue(selectedState.label ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
     setDialog({
@@ -136,10 +154,10 @@ const InputDialogs = () => {
       type: 'stateLabel',
     })
     focusInput()
-  }, arr)
+  }, [inputRef.current])
 
   const saveStateLabel = () => {
-    useProjectStore.getState().updateState({ ...dialog.selectedState, label: (!read || /^\s*$/.test(read)) ? undefined : read })
+    useProjectStore.getState().updateState({ ...dialog.selectedState, label: (!value || /^\s*$/.test(value)) ? undefined : value })
     commit()
     hideDialog()
   }
@@ -249,6 +267,8 @@ const InputDialogs = () => {
   }
 
   else {
+
+
     return (
         <Dropdown
             visible={dialog.visible}
@@ -267,12 +287,12 @@ const InputDialogs = () => {
           <InputWrapper>
             {dialog.type === 'comment' && <MessageSquare style={{marginInline: '1em .6em'}}/>}
             <Input
-                ref={readRef}
-                value={read}
-                onChange={e => setRead(e.target.value)}
+                ref={inputRef}
+                value={value}
+                onChange={e => setValue(e.target.value)}
                 onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={{
-                  transition: 'λ',
+                  transition: (currentProjectType === 'PDA') ? 'λ\t(read)' : 'λ',
                   comment: 'Comment text...',
                   stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
                   stateLabel: 'State label...',
@@ -283,10 +303,53 @@ const InputDialogs = () => {
                   paddingRight: '2.5em',
                 }}
             />
+            {!currentProjectType === 'PDA' &&
+            <SubmitButton onClick={save}>
+              <CornerDownLeft size="18px"/>
+            </SubmitButton>}
+          </InputWrapper>
+          { /* Additional input #1 - PDA pop value */}
+          {currentProjectType === 'PDA' &&
+          <InputWrapper>
+            <Input
+                ref={inputPopRef}
+                value={valuePop}
+                onChange={e => setValuePop(e.target.value)}
+                onKeyUp={e => e.key === 'Enter' && save()}
+                placeholder={{
+                  transition: 'λ\t(pop)',
+                }[dialog.type]}
+                style={{
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  margin: '0 .4em',
+                  paddingRight: '2.5em',
+                }}
+            />
+          </InputWrapper>}
+          { /* Additional input #2 - PDA push value */}
+          {currentProjectType === 'PDA' &&
+          <InputWrapper>
+            <Input
+                ref={inputPushRef}
+                value={valuePush}
+                onChange={e => setValuePush(e.target.value)}
+                onKeyUp={e => e.key === 'Enter' && save()}
+                placeholder={{
+                  transition: 'λ\t(push)',
+                }[dialog.type]}
+                style={{
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  margin: '0 .4em',
+                  paddingRight: '2.5em',
+                }}
+            />
+            {/* {console.log("valueRead is: ", value)}
+          {console.log("valuePop is: ", valuePop)}
+          {console.log("valuePush is: ", valuePush)} */}
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px"/>
             </SubmitButton>
-          </InputWrapper>
+          </InputWrapper>}
         </Dropdown>
     )
   }

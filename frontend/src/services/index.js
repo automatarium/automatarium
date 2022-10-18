@@ -36,10 +36,11 @@ const api = {
     },
   }),
 
-  delete: (endpoint, data) =>
-  instance.delete(endpoint, data)
+  delete: (endpoint, config) =>
+  instance.delete(endpoint, config)
 }
 
 export * from './user'
+export * from './project'
 
 export default api
