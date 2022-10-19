@@ -1,13 +1,14 @@
 /* eslint-disable react/jsx-key */
 import { createContext, useContext, useEffect, useState } from "react";
 // import { usePDAVisualiserStore } from "../../stores";
-import { usePDAVisualiserStore } from "/src/stores";
+import { useProjectStore, usePDAVisualiserStore } from "/src/stores";
 import { useTMSimResultStore } from "/src/stores";
 import "./stackVisualiser.css";
 import { current } from "immer";
 // import {result} from '../Sidepanel/Panels/TestingLab'
 
 const StackContext = createContext();
+
 
 const PDAStackVisualiser = () => {
   // Closes and shows the PDA stack visualiser.
@@ -23,6 +24,8 @@ const PDAStackVisualiser = () => {
   const stackList = JSON.stringify(stackInfo);
   // console.log(`this is current stack info ${stackInfo}`)
   console.log(`this is current stack with stringify ${stackList}`);
+
+  const projectType = useProjectStore(s => s.project.config.type)
 
   // I will need to retrieve these values, maybe I can loop through them using a for loop
   Object.keys(stackInfo).map((i) => {
@@ -80,56 +83,56 @@ const PDAStackVisualiser = () => {
 
   const [show, setShow] = useState();
 
-  console.log(stack);
-
   return (
-    <div className="content-container">
-      {/* =========== Title and Tab button =========== */}
-      Display Stack{" "}
-      <button
-        className="close-stack-btn"
-        onClick={() => setShowStackTab((e) => !e)}
-      >
-        x
-      </button>
-      {/* =========== TEMPORARY =========== */}
-      <Component1 />
-      {console.log(`Stack info: ${stackInfo}`)}
-      {Object.keys(stackInfo).map((i) => {
-        let stackValue = i;
+    projectType === "PDA" && (
+      <div className="content-container">
+        {/* =========== Title and Tab button =========== */}
+        Display Stack{" "}
+        <button
+          className="close-stack-btn"
+          onClick={() => setShowStackTab((e) => !e)}
+        >
+          x
+        </button>
+        {/* =========== TEMPORARY =========== */}
+        <Component1 />
+        {console.log(`Stack info: ${stackInfo}`)}
+        {Object.keys(stackInfo).map((i) => {
+          let stackValue = i;
 
-        if (stackValue == "trace") {
-          for (const e in stackInfo[i]) {
-            console.log("Info for stack: ", stackInfo[i][e]);
+          if (stackValue == "trace") {
+            for (const e in stackInfo[i]) {
+              console.log("Info for stack: ", stackInfo[i][e]);
+            }
           }
-        }
 
-        {
-          console.log(`Value: ${stackValue}`);
-        }
+          {
+            console.log(`Value: ${stackValue}`);
+          }
 
-        // {stackValue == 'trace' ? console.log(`Trace info for: ${stackInfo[i][2].currentStack}`) : console.log()}
+          // {stackValue == 'trace' ? console.log(`Trace info for: ${stackInfo[i][2].currentStack}`) : console.log()}
 
-        // {console.log(`Getting value from object: ${JSON.parse(stackValue)}`)}
-        // {console.log(`Getting value from object: ${stackValue[2]}`)}
-      })}
-      {/* =========== Displays the stack =========== */}
-      {showStackTab ? (
-        <div className="stack-container">
-          {/* <button onClick={() => setShow((s) => !s)}>show stack</button> */}
-          <h3>Stack</h3>
+          // {console.log(`Getting value from object: ${JSON.parse(stackValue)}`)}
+          // {console.log(`Getting value from object: ${stackValue[2]}`)}
+        })}
+        {/* =========== Displays the stack =========== */}
+        {showStackTab ? (
           <div className="stack-container">
-            {show ? "no show" : displayStack()}
-          </div>
+            {/* <button onClick={() => setShow((s) => !s)}>show stack</button> */}
+            <h3>Stack</h3>
+            <div className="stack-container">
+              {show ? "no show" : displayStack()}
+            </div>
 
-          {/* <div className="stack-container">
-            <p>(temp)dummy buttons</p>
-            <button onClick={removeStack}>popStack</button>
-            <button onClick={addToStack}>push</button>
-          </div> */}
-        </div>
-      ) : null}
-    </div>
+            {/* <div className="stack-container">
+              <p>(temp)dummy buttons</p>
+              <button onClick={removeStack}>popStack</button>
+              <button onClick={addToStack}>push</button>
+            </div> */}
+          </div>
+        ) : null}
+      </div>
+    )
   );
 };
 

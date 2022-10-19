@@ -29,16 +29,19 @@
     margin: 0 auto;
     padding-top: 0.5rem;
     
-    background-color: rgb(24, 24, 24);
+    /* background-color: rgb(24, 24, 24);
+    color: white; */
+    background-color: rgb(255, 255, 255);
+    color: black;
     border-radius: 7px;
-    color: white;
     border: solid 2px black;
   }
   
-  .stack-item:nth-child(odd) {
+  /* .stack-item:nth-child(n) {
     background-color: rgb(255, 255, 255);
     color: black;
-  }
+  } */
+
   /* figure out how to make a box */
   .stack-container {
     padding: 0.5rem;
