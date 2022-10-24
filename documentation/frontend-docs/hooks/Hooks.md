@@ -50,6 +50,15 @@ As an overview: something something something here.
 
 ## useCommentSelection
 
+Selects the 'comment' object from the  ``store``. It is also set to be referred to as ``'comment'``. 
+
+For example, it can be used with useEvent:
+
+```
+ useEvent('comment:mousedown', event => {
+       // Logic here.
+ })
+```
 
 # useContextMenus
 
@@ -85,6 +94,15 @@ useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except u
 
 ## useStateSelection
 
+Selects the 'state' object from the  ``store``. It is also set to be referred to as ``'state'``. 
+
+For example, it can be used with useEvent:
+
+```
+ useEvent('state:mousedown', event => {
+       // Logic here.
+ })
+```
 
 # useSyncCurrentProject
 
@@ -95,3 +113,13 @@ useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except u
 # useTransition__
 ## useTransitionCreation
 ## useTransitionSelection
+
+Selects the 'transition' object from the  ``store``. It is also set to be referred to as ``'transition'``. 
+
+For example, it can be used with useEvent:
+
+```
+ useEvent('tranisition:mouseup', event => {
+       // Logic here.
+ })
+```
