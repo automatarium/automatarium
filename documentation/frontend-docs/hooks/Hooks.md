@@ -45,6 +45,7 @@ As an overview: something something something here.
 # useComment__
 
 ## useCommentCreation
+When the user equips the comment tool, it displays a comment upon the surface of the editor panel. This hook contains a couple of methods using the ``useEvent`` hook, to recognise the events from the users clicks. When a comment is created, it also retrieves the x and y axis, which these preceding elements are then stored into the ``store`` (``useProjectStore``); 
 
 ## useCommentDragging
 useCommentDragging is a custom hook that contains a selection of comments. The comments were originally selected from the ``useResourceDragging`` custom hook. useCommentDragging is simply a selected area of comments that can be used as reference. 
@@ -73,6 +74,12 @@ These three corresponding hooks retrieve the needed elements to select in order 
 
 Likewise, the delete tool hook contains methods to recognise the users click events and consists of logic for the resembling actions. For example, when the delete tool is selected and used on a state, the ``useEvent`` selects that state and deletes the state from the ``store`` (refer to ``useProjectStore``  for more information on the store). 
 
+**How to use:**
+1. Select the delete tool
+2. Option A. Click on either a state, comment or transition to delete.
+   
+   Option B. Use the **Selection tool** to drag and select a area of the automata, then switch to the delete tool to delete selected area.
+
 # useEvent
 
 useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except useEvent has more to utilise. 
@@ -90,6 +97,10 @@ useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except u
 # useState__
 
 ## useStateCreation
+When the user equips the state tool, it displays a state svg upon the surface of the editor panel. This hook contains a couple of methods using the ``useEvent`` hook, to recognise the events from the users clicks. When a svg state is created, it also retrieves the x and y axis, which these preceding elements are then
+stored into the ``store`` (``useProjectStore``); 
+
+Additionally, upon creating a state, if the user holds down their mouse button, it will create a 'ghost' state. This UI element signifies a guide of placing a state. 
 
 ## useStateDragging
 useStateDragging is a custom hook that contains a selection of states. The states were originally selected from the ``useResourceDragging`` custom hook. useStateDragging is simply a selected  area of states that can be used as reference. 
