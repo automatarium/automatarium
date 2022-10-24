@@ -57,11 +57,10 @@ const tools = [
     icon: <MessageSquare />,
     animation: commentAnimation,
   },
-  //TODO: Delete hotkey not registering
   {
     label: 'Delete tool',
     hotkey: 'D', 
-    description: 'Delete states and transitions from your automatarium',
+    description: 'Delete states, transitions and comments from your automaton',
     value: 'delete',
     icon: <Skull />,
     animation: deleteAnimation,
