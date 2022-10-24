@@ -47,6 +47,7 @@ As an overview: something something something here.
 ## useCommentCreation
 
 ## useCommentDragging
+useCommentDragging is a custom hook that contains a selection of comments. The comments were originally selected from the ``useResourceDragging`` custom hook. useCommentDragging is simply a selected area of comments that can be used as reference. 
 
 ## useCommentSelection
 
@@ -91,6 +92,7 @@ useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except u
 ## useStateCreation
 
 ## useStateDragging
+useStateDragging is a custom hook that contains a selection of states. The states were originally selected from the ``useResourceDragging`` custom hook. useStateDragging is simply a selected  area of states that can be used as reference. 
 
 ## useStateSelection
 
