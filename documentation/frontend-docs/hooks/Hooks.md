@@ -55,10 +55,17 @@ As an overview: something something something here.
 
 
 # useDeleteTool
+The delete tool consists of ultilising the prominent custom hook of ``useEvent``. It follows the default MouseEvent syntax such as 
+mousedown, but specific selects states, comments and transitions.
 
+The states, transistions and comments are selected using the three hooks: ``useStateSelection, useTransitionSelection, useCommentSelection``.
+These three corresponding hooks retrieve the needed elements to select in order for the ``useDeleteTool`` to have element/s to delete. 
+
+Likewise, the delete tool hook contains methods to recognise the users click events and consists of logic for the resembling actions. For example, when the delete tool is selected and used on a state, the ``useEvent`` selects that state and deletes the state from the ``store`` (refer to ``useProjectStore``  for more information on the store). 
 
 # useEvent
 
+useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except useEvent has more to utilise. 
 
 # useImageExport
 
