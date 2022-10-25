@@ -35,7 +35,6 @@ As an overview: something something something here.
 # useActions
 
 
-
 # useAuth
 
 
@@ -102,11 +101,12 @@ Likewise, the delete tool hook contains methods to recognise the users click eve
 useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except useEvent has more to utilise. 
 
 # useImageExport
-
+Exports the svg components of the automata as an image, and saves it to the users local computer. 
 
 # useResource__
 
 ## useResourceDragging
+This hook enables elements to be dragged
 
 ## useResourceSelection
 
@@ -142,6 +142,11 @@ For example, it can be used with useEvent:
 
 # useTransition__
 ## useTransitionCreation
+
+Similar to the ``useStateCreation``, it uses the actions of mouse clicks with ``useEvent`` and creates a svg transition. Although, the user would need to click and hold and drag the transition into another state and enter a symbol to incorporate a tranisition if it was between two states. 
+
+The transition object and the x and y coordinates for that object are then stored into the ``store``.
+
 ## useTransitionSelection
 
 Selects the 'transition' object from the  ``store``. It is also set to be referred to as ``'transition'``. 
