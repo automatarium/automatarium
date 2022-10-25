@@ -6,7 +6,7 @@ import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/sr
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
 import { ShortcutGuide, ExportImage } from '/src/pages'
-
+import {useProjectStore} from "../../stores";
 import { Content, LoadingContainer, EditorContent } from './editorStyle'
 // import { BottomPanel } from "../../components/BottomPanel/BottomPanel";
 
@@ -18,7 +18,7 @@ const Editor = () => {
   const [priorTool, setPriorTool] = useState()
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
-
+  const projectType = useProjectStore(s => s.project.config.type)
   // Syncronize last-opened project with backend before showing it
   const loading = useSyncCurrentProject()
 
@@ -93,7 +93,9 @@ const Editor = () => {
         <Toolbar />
         <EditorContent>
           <EditorPanel />
-          <BottomPanel />
+          {(projectType === 'TM') &&
+            <BottomPanel />
+          }
         </EditorContent>
         <PDAStackVisualiser/>
         <Sidepanel />

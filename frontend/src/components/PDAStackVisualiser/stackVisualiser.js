@@ -52,9 +52,11 @@ const PDAStackVisualiser = () => {
   let currentStack;
 
   if (stackInfo.trace) {
-    currentStack = stackInfo.trace[traceIDx].currentStack;
-    for (let i = 0; i < currentStack.length; i++) {
-      stack.push({element: currentStack[i], key: i});
+    if (stackInfo.trace[traceIDx]) {
+      currentStack = stackInfo.trace[traceIDx].currentStack;
+      for (let i = 0; i < currentStack.length; i++) {
+        stack.push({element: currentStack[i], key: i});
+      }
     }
   }
 
