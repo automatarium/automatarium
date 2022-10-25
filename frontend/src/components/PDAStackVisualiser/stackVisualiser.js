@@ -48,11 +48,13 @@ const PDAStackVisualiser = () => {
 
   // Push stack values using the current trace ID
   let stack = [];
-  
-  if (stackInfo.trace[traceIDx] != undefined) {
+
+  let currentStack;
+
+  if (stackInfo.trace) {
     currentStack = stackInfo.trace[traceIDx].currentStack;
     for (let i = 0; i < currentStack.length; i++) {
-      stack.push( { element: currentStack[i], key: i } );
+      stack.push({element: currentStack[i], key: i});
     }
   }
 
