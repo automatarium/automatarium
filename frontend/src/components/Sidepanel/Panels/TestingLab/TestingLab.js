@@ -77,11 +77,7 @@ const TestingLab = () => {
           projectType==='PDA' ?
               simulatePDA(graph, traceInput ?? '')
               : simulateFSA(graph, traceInput ?? '')
-      // console.log("Remaining: ", remaining)
-      // console.log("Trace input: " + traceInput)
-      // console.log("Simulating: " + (currentProjectType==='PDA' ? "PDA" : "FSA"))
-      // console.log("Accepted by simulate: ", accepted)
-      // console.log("Stack: ", stack)
+   
       const result = {
         accepted,
         remaining,
@@ -94,8 +90,7 @@ const TestingLab = () => {
         })),
         transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
       }
-      console.log("Trace result: ", result.trace)
-
+      
       setSimulationResult(result)
       // Adds result to PDA visualiser
       setPDAVisualiser(result)
