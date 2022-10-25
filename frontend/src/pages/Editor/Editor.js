@@ -6,9 +6,7 @@ import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/sr
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
 import { ShortcutGuide, ExportImage } from '/src/pages'
-import {useProjectStore} from "../../stores";
 import { Content, LoadingContainer, EditorContent } from './editorStyle'
-// import { BottomPanel } from "../../components/BottomPanel/BottomPanel";
 
 import  PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 
@@ -97,7 +95,9 @@ const Editor = () => {
             <BottomPanel />
           }
         </EditorContent>
-        <PDAStackVisualiser/>
+          {(projectType === 'PDA') &&
+            <PDAStackVisualiser/>
+          }
         <Sidepanel />
 
       </Content>
