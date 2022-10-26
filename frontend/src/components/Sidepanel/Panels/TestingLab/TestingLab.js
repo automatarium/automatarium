@@ -54,7 +54,6 @@ const TestingLab = () => {
     if (projectType === 'TM') {
       const tapeTrace = traceInput ? traceInput.split("") : [""]
       const tapePointer = 0 // This is hard coded for now. Future development available
-      console.log("Tape before sim: ", tapeTrace)
 
       const {halted, trace, tape} = simulateTM(graph, {pointer: tapePointer, trace: tapeTrace}
           ?? {pointer: 0, trace: []})
@@ -70,7 +69,6 @@ const TestingLab = () => {
 
       setSimulationResult(result)
       setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
-      console.log(result)
       return result
     } else {
       const { accepted, trace, remaining } =
@@ -94,7 +92,6 @@ const TestingLab = () => {
         })),
         transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
       }
-      console.log("Trace result: ", result.trace)
 
       setSimulationResult(result)
       // Adds result to PDA visualiser
@@ -166,7 +163,6 @@ const TestingLab = () => {
   useEffect( () => {
     if (projectType === 'TM') {
       if (showTraceTape) {
-        console.log("sending event... ")
         dispatchCustomEvent('bottomPanel:open', {panel: 'tmTape'})
       } else {
         dispatchCustomEvent('bottomPanel:close', {})
@@ -230,19 +226,27 @@ const TestingLab = () => {
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={traceIdx <= 0}
+            disabled={traceIdx <= 0
+            || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               setTraceIdx(0)
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={traceIdx <= 0}
+            disabled={traceIdx <= 0
+            || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               setTraceIdx(traceIdx-1)
             }} />
 
           <Button icon={<ChevronRight size={23} />}
-            disabled={traceIdx >= simulationResult?.transitionCount || noInitialState}
+            disabled={
+              (traceIdx >= simulationResult?.transitionCount - (projectType==='TM'? 1 : 0))
+              || noInitialState
+              || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               if (!simulationResult) {
                 simulateGraph()
@@ -251,7 +255,10 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount && traceIdx !== 0 || noInitialState}
+            disabled={traceIdx === simulationResult?.transitionCount - (projectType==='TM'? 1 : 0) && traceIdx !== 0
+            || noInitialState
+            || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
@@ -270,6 +277,7 @@ const TestingLab = () => {
           <Switch
             type="checkbox"
             checked={showTraceTape}
+            disabled={((projectType==='TM')&&(!traceInput))}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>

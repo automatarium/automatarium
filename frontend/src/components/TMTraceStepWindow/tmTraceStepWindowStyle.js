@@ -32,11 +32,11 @@ export const TickerTapeContainer = styled('div')`
   justify-content: center;
 `
 
-//width: calc(var(--cell-width) * 21);
+// Involves spooky math function for transform. Pen and paper type stuff.
 export const TickerTape = styled('div')`
   display: flex;
   flex-direction: row;
-  transform: translateX(calc(${p => -p.$index + 1.5 } * var(--cell-width)));
+  transform: translateX(calc((${p => p.$tapeLength -1}/2) * var(--cell-width) + ${p => -p.$index} * var(--cell-width)));
   width: max-content;
   transition: transform .2s;
 `
