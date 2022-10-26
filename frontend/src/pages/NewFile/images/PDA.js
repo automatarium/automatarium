@@ -13,6 +13,7 @@ const PDA = () => (
       style={{
         backgroundSize: 30,
         backgroundPosition: 0,
+        backgroundColor: "white",
         PrimaryH: "0",
         PrimaryS: "63%",
         PrimaryL: "48%",

@@ -15,6 +15,7 @@ function TM() {
             style={{
                 backgroundSize: 30,
                 backgroundPosition: 0,
+                backgroundColor: "white",
                 PrimaryH: "262",
                 PrimaryS: "60%",
                 PrimaryL: "48%",
