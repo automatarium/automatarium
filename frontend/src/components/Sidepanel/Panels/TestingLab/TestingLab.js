@@ -243,7 +243,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              (traceIdx >= simulationResult?.transitionCount - (projectType==='TM'? 1 : 0))
+              (traceIdx >= simulationResult?.transitionCount - ((projectType==='TM')&&(traceInput.length<=1)? 1 : 0))
               || noInitialState
               || (projectType==='TM' && !showTraceTape)
             }
@@ -255,7 +255,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount - (projectType==='TM'? 1 : 0) && traceIdx !== 0
+            disabled={traceIdx === simulationResult?.transitionCount - ((projectType==='TM')&&(traceInput.length<=1)? 1 : 0) && traceIdx !== 0
             || noInitialState
             || (projectType==='TM' && !showTraceTape)
             }
