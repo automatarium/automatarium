@@ -7,7 +7,7 @@ export class PDAState extends State {
         m_isFinal: boolean,
         private m_read: string | null = null,
         private m_remaining: string = "",
-        // private m_stack: string[] = [],
+        private m_stack: Stack = [],
         private m_pop: string = "",
         private m_push: string = "",
     ) {
@@ -22,9 +22,9 @@ export class PDAState extends State {
         return this.m_remaining;
     }
 
-    // get stack() {
-    //     return this.m_stack;
-    // }
+    get stack() {
+        return this.m_stack;
+    }
     get pop() {
         return this.m_pop;
     }
@@ -55,6 +55,7 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
             (transition) => transition.from === node.state.id,
         );
         const successors: Node<PDAState>[] = [];
+        let invalidPop = false;
         for (const transition of transitions) {
             const nextState = this.states.find(
                 (state) => state.id === transition.to,
@@ -63,33 +64,53 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
             const symbol = node.state.remaining[0];
             const pop = transition.pop;
             const push = transition.push;
+
+            // If there is no next state
             if (
                 nextState === undefined ||
                 (!lambdaTransition && !transition.read.includes(symbol))
             ) {
                 continue;
             }
-            // // Perform stack operations
-            // const topOfStack = nextState.stack[nextState.stack.length - 1];
-            // if (topOfStack === pop) {
-            //     nextState.stack.pop();
-            // }
-            // if (push !== "") {
-            //     nextState.stack.push(push);
-            // }
-            const graphState = new PDAState(
-                nextState.id,
-                nextState.isFinal,
-                lambdaTransition ? "" : symbol,
-                lambdaTransition
-                    ? node.state.remaining
-                    : node.state.remaining.slice(1),
-                // nextState.stack,
-                pop,
-                push,
-            );
-            const successor = new Node(graphState, node);
-            successors.push(successor);
+
+            // Check valid stack operations
+            let nodeStack = node.state.stack; // the stack carries forward to each node
+            // Handle pop symbol first
+            if (pop !== '') {
+                // Pop if symbol matches top of stack
+                if(pop === nodeStack[nodeStack.length - 1]) {
+                    nodeStack.pop();
+                }
+                // Else operation is invalid, so push a dummy value to stack
+                // Empty stack case
+                else if (nodeStack.length === 0) {
+                    invalidPop = true;
+                }
+                // Non-matching symbol case
+                else if (pop !== nodeStack[nodeStack.length - 1]) {
+                    invalidPop = true;
+                }  
+            }
+            // Handle push symbol if it exists
+            if (push !== '') {
+                nodeStack.push(push);
+            }
+            // If stack operations were valid, add the successor
+            if (!invalidPop) {
+                const graphState = new PDAState(
+                    nextState.id,
+                    nextState.isFinal,
+                    lambdaTransition ? "" : symbol,
+                    lambdaTransition
+                        ? node.state.remaining
+                        : node.state.remaining.slice(1),
+                    nodeStack, // the stack carries forward to each node
+                    pop,
+                    push,
+                );
+                const successor = new Node(graphState, node);
+                successors.push(successor);
+            }
         }
         return successors;
     }

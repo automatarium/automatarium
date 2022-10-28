@@ -115,6 +115,7 @@ export type PDAExecutionTrace = {
     pop: string;
     push: string;
     currentStack: Stack;
+    invalidPop: boolean;
 };
 
 export type Stack = string[];

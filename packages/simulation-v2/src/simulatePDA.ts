@@ -15,6 +15,7 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
             pop: node.state.pop,
             push: node.state.push,
             currentStack: [],
+            invalidPop: false,
         });
         node = node.parent;
     }
@@ -24,6 +25,7 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
         pop: "",
         push: "",
         currentStack: [],
+        invalidPop: false,
     });
     return trace.reverse();
 };
@@ -62,7 +64,7 @@ export const simulatePDA = (
 
     if (!result) {
         const emptyExecution: PDAExecutionResult = {
-            trace: [{ to: 0, read: null, pop: '', push: '', currentStack: []}],
+            trace: [{ to: 0, read: null, pop: '', push: '', currentStack: [], invalidPop: false}],
             accepted: false,  // empty stack is part of accepted condition
             remaining: input,
             stack: [],
@@ -70,18 +72,31 @@ export const simulatePDA = (
         return emptyExecution;
     }
     // Simulate stack operations
+    /*
+    *  Note:- this was a workaround for when BFS didn't consider the stack
+    *       - It's a double up now but the PDAStackVisualiser still uses it
+    */
     const trace = generateTrace(result);
     for (let i = 0; i < trace.length; i++) {
-        // Pop first if symbol matches top of stack
-        if (trace[i].pop !== '' && trace[i].pop === tempStack[tempStack.length - 1]) {
-            tempStack.pop();
+        // Handle pop symbol first
+        if (trace[i].pop !== '') {
+            // Pop if symbol matches top of stack
+            if(trace[i].pop === tempStack[tempStack.length - 1]) {
+                tempStack.pop();
+            }
+            // Else operation is invalid
+            // Empty stack case
+            else if (tempStack.length === 0) {
+                // Consider providing feedback to user during the trace
+                trace[i].invalidPop = true;
+            }
+            // Non-matching symbol case
+            else if (trace[i].pop !== tempStack[tempStack.length - 1]) {
+                // Consider providing feedback to user during the trace
+                trace[i].invalidPop = true;
+            }
         }
-        // For invalid pop operations (trying to pop from empty stack)
-        // push a dummy value to the stack
-        else if (trace[i].pop !== '' && tempStack.length === 0) {
-            tempStack.push('*ERR*!');
-        }
-        // Push if symbol is not empty
+        // Handle push symbol if it exists
         if (trace[i].push !== '') {
             tempStack.push(trace[i].push);
         }
