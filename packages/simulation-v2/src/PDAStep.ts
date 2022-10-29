@@ -1,10 +1,11 @@
-import { Transition } from "./graph";
-import { Graph, Node, State } from "./interfaces/graph";
+import { PDATransition } from "./graph";
+import { Node } from "./interfaces/graph";
+import { PDAGraph, PDAState } from "./PDASearch";
 
-export class GraphStepper<S extends State, T extends Transition> {
+export class GraphStepper<S extends PDAState, T extends PDATransition> {
     constructor(
-        private graph: Graph<S, T>,
-        private frontier: Node<S>[] = [graph.initial],
+        private graph: PDAGraph,
+        private frontier: Node<PDAState>[] = [graph.initial],
     ) {}
 
     public forward() {
@@ -27,7 +28,7 @@ export class GraphStepper<S extends State, T extends Transition> {
             // This is the root node!
             return this.frontier;
         }
-        const previousFrontier: Node<S>[] = [];
+        const previousFrontier: Node<PDAState>[] = [];
         this.frontier.forEach((node) => {
             if (
                 node.parent &&
@@ -40,7 +41,7 @@ export class GraphStepper<S extends State, T extends Transition> {
         return this.frontier;
     }
 
-    private checkForDuplicate(node: Node<S>, frontier: Node<S>[]) {
+    private checkForDuplicate(node: Node<PDAState>, frontier: Node<PDAState>[]) {
         return frontier.some((n) => n.state.key() === node.state.key());
     }
 

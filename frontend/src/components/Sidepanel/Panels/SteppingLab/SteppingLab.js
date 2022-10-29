@@ -10,17 +10,16 @@ import {
   XCircle,
 } from "lucide-react";
 
-import { graphStepper } from "@automatarium/simulation-v2";
+import { graphStepper, graphStepperPDA } from "@automatarium/simulation-v2";
 import { useEffect, useMemo, useState } from "react";
 
 // The initial states and project store calls, along with the display of the current input trace,
 // could be made its own component, and the Testing Lab could switch between the two using a
 // Switch component. For demonstrative purposes, I've made this a separate component for now, which
 // means there's some repetition.
-
 const SteppingLab = () => {
   const [frontier, setFrontier] = useState([]);
-
+  const projectType = useProjectStore(s => s.project.config.type);
   const states = useProjectStore((s) => s.project.states);
   const transitions = useProjectStore((s) => s.project.transitions);
   const initialState = useProjectStore((s) => s.project.initialState);
@@ -39,7 +38,15 @@ const SteppingLab = () => {
   }, [states, transitions, initialState]);
 
   const stepper = useMemo(() => {
-    return graphStepper(graph, traceInput);
+    // Graph stepper for PDA currently requires changes to BFS stack logic 
+    // to handle non-determinism so branching stops on the first rejected transition.
+    if(projectType==='PDA') {
+      return graphStepperPDA(graph, traceInput);
+    }
+    // Graph stepper for FSA/NFA
+    else {
+      return graphStepper(graph, traceInput);
+    }
   }, [graph, traceInput]);
 
   const handleStep = (newFrontier) => {
