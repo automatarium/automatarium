@@ -135,10 +135,23 @@ For example, it can be used with useEvent:
 ```
 
 # useSyncCurrentProject
+When the user is editing their autonoma project live, the ``useSyncCurrentProject`` hook ensures that the user is editing the most updated autonoma. This is done to prevent the user from editing a previous save, so that it doesn't create any conflicts within localStorage and the backend data. 
 
+An example of where this was used is in the ``Editor.js`` file. 
+```
+const loading = useSyncCurrentProject()
+```
+This was essentially used to load a previously saved project before the user was able to edit anything on it. 
 
 # useSyncProject
+Updates autonoma projects in both local storage and backend database to makes sure it is matching. 
 
+This hook retrieves both the autonoma projects in localStorage and in the backend, then compares the projects by their corresponding id. If any of those corresponding matching projects do not match with one another, then it syncs and updates either of the projects to ensure the user is working with the most up to date project.
+
+This hook is used in the index file, by simply calling the method:
+```
+useSyncProject()
+```
 
 # useTransition__
 ## useTransitionCreation
