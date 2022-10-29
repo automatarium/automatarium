@@ -36,10 +36,21 @@ As an overview: something something something here.
 
 
 # useAuth
+``useAuth`` is used with fireBase for users that are logged in or sign up. The methods in this hook contains setting up setting a user using firebase, logs in a user using firebase and retrieves the user using firebase. 
 
+Other than logging in and signing up a user, this hook is useful for and has been used for validation in terms of checking if a user exists or if a user is logged in or to load a user. 
+
+Example of usage:
+```
+if (!userLoading && !fetchedProject) {
+  if (!user) {
+    // Logic here.
+  }
+}
+```
 
 # useAutosaveProject
-
+The ``useAutosaveProject`` simply automatically saves a project whenever a change is made. THis is initialised in the ``Editor.js`` file by calling the function.
 
 # useComment__
 
@@ -98,15 +109,41 @@ Likewise, the delete tool hook contains methods to recognise the users click eve
 
 # useEvent
 
-useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except useEvent has more to utilise. 
+useEvent is essentially equivalent to the UI events for ``MouseEvent``. Except useEvent has more to utilise. This has been used in multiple aspects of the project. 
+
+Example of this being used is  in the ``EditorPanel.js``. This method in particular selects the state on the autonoma if the user clicks down on their mouse:
+
+```
+useEvent('state:mousedown', e => {
+    const selectedStateIDs = selectState(e)
+    if (e.detail.originalEvent.button === 0) {
+      startStateDrag(e, selectedStateIDs)
+    }
+  })
+```
 
 # useImageExport
 Exports the svg components of the automata as an image, and saves it to the users local computer. 
 
+This hook contains methods to enable the user to save the autonoma as an image:
+* ``downloadURL``
+  * Download the URL along with the graph name.
+* ``getSvgString``
+  * Renders the autonoma svg onto a canvas that is then exportable as a svg. 
+* ``svgToCanvas``
+  * Extracts the SVG graph as a string.
+
+These above methods are used in ``ExportImage.js``.
+
+Likewise, the method can be simply called: 
+```
+useImageExport()
+```
+
 # useResource__
 
 ## useResourceDragging
-This hook enables elements to be dragged
+This hook enables elements to be dragged. This is applicable to the states and comments. 
 
 ## useResourceSelection
 
@@ -160,6 +197,12 @@ Similar to the ``useStateCreation``, it uses the actions of mouse clicks with ``
 
 The transition object and the x and y coordinates for that object are then stored into the ``store``.
 
+Example of usage (In the EditorPanel.js file):
+```
+const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
+```
+These objects were used to render the transitions on the editor panel.
+
 ## useTransitionSelection
 
 Selects the 'transition' object from the  ``store``. It is also set to be referred to as ``'transition'``. 
@@ -167,7 +210,9 @@ Selects the 'transition' object from the  ``store``. It is also set to be referr
 For example, it can be used with useEvent:
 
 ```
- useEvent('tranisition:mouseup', event => {
-       // Logic here.
- })
+const { select: selectTransition } = useTransitionSelection()
+
+useEvent('transition:mousedown', e => {
+    selectTransition(e)
+  })
 ```
