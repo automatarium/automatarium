@@ -33,7 +33,9 @@ As an overview: something something something here.
   - [useTransitionSelection](#usetransitionselection)
 
 # useActions
+Contains a collection of possible actions that the user can perform. Actions are a list of objects with corresponding properties and methods. 
 
+If a developer wishes to add a new action, for instance a specific tool on the tool bar for example, implementeing the new component would likely be added into the ``useActions.js`` and ``ShortcutGuide.js`` files.
 
 # useAuth
 ``useAuth`` is used with fireBase for users that are logged in or sign up. The methods in this hook contains setting up setting a user using firebase, logs in a user using firebase and retrieves the user using firebase. 
