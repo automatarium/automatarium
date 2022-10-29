@@ -2,7 +2,7 @@
 
 How individual custom hooks work and gives examples of where they are used.
 
-As an overview: something something something here.
+As an overview: Multiple custom hooks within the frontend development were used for this project. This is done in order to develop cleaner and readable code. But most importantly, to reuse stateful logic. This page contains a general explanation of what every custom hook does with some examples. 
 
 ### Table of contents
 
@@ -193,6 +193,7 @@ useSyncProject()
 ```
 
 # useTransition__
+
 ## useTransitionCreation
 
 Similar to the ``useStateCreation``, it uses the actions of mouse clicks with ``useEvent`` and creates a svg transition. Although, the user would need to click and hold and drag the transition into another state and enter a symbol to incorporate a tranisition if it was between two states. 
