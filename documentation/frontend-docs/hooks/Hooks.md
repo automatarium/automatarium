@@ -61,7 +61,7 @@ if (!userLoading && !fetchedProject) {
 ```
 
 # useAutosaveProject
-The ``useAutosaveProject`` simply automatically saves a project whenever a change is made. THis is initialised in the ``Editor.js`` file by calling the function.
+The ``useAutosaveProject`` simply automatically saves a project whenever a change is made. THis is initialised in the ``Editor.js`` file by calling the function. In functionality, the project is saved into the ``store``, aka the ``useProjectStore``.
 
 This hook was used once by calling it as a method:
 ```
@@ -162,6 +162,9 @@ useImageExport()
 This hook enables elements to be dragged. This is applicable to the states and comments. 
 
 ## useResourceSelection
+The useResourceSelection selects elements. The hook is to enable the hooks, ``useCommentSelection``, ``useStateSelection`` and ``useTransitionSlection`` to select their respective elements of comments, states and transitions.  
+
+Usage example:
 
 
 # useState__
