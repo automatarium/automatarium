@@ -37,6 +37,15 @@ Contains a collection of possible actions that the user can perform. Actions are
 
 If a developer wishes to add a new action, for instance a specific tool on the tool bar for example, implementeing the new component would likely be added into the ``useActions.js`` and ``ShortcutGuide.js`` files.
 
+Implementation example for toolbar:
+
+If developer were to add a new tool onto the tool bar, one of the implementations they could do is adding a new tool into the ``actions = {}`` object wihtin ``useActions.js`` as shown:
+```
+NEW_TOOL: {
+      property_name: { key: 'N' },
+      handler: () => setTool('nameOfTool'),
+    },
+```
 # useAuth
 ``useAuth`` is used with fireBase for users that are logged in or sign up. The methods in this hook contains setting up setting a user using firebase, logs in a user using firebase and retrieves the user using firebase. 
 
@@ -53,6 +62,11 @@ if (!userLoading && !fetchedProject) {
 
 # useAutosaveProject
 The ``useAutosaveProject`` simply automatically saves a project whenever a change is made. THis is initialised in the ``Editor.js`` file by calling the function.
+
+This hook was used once by calling it as a method:
+```
+useAutosaveProject()
+```
 
 # useComment__
 
