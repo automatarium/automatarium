@@ -1,5 +1,5 @@
 import { FSAGraph, FSAState } from "./FSASearch";
-import { GraphStepper } from "./FSAStep";
+import { GraphStepper } from "./Step";
 import { ExecutionResult, ExecutionTrace, UnparsedFSAGraph } from "./graph";
 import { Node } from "./interfaces/graph";
 import { parseFSAGraph } from "./parse-graph";

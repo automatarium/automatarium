@@ -55,11 +55,13 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
             (transition) => transition.from === node.state.id,
         );
         const successors: Node<PDAState>[] = [];
-        let invalidPop = false;
+        
         for (const transition of transitions) {
+            
             const nextState = this.states.find(
                 (state) => state.id === transition.to,
             );
+            let invalidPop = false;
             const lambdaTransition = transition.read.length === 0;
             const symbol = node.state.remaining[0];
             const pop = transition.pop;
@@ -81,7 +83,7 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
                 if(pop === nodeStack[nodeStack.length - 1]) {
                     nodeStack.pop();
                 }
-                // Else operation is invalid, so push a dummy value to stack
+                // Else operation is invalid
                 // Empty stack case
                 else if (nodeStack.length === 0) {
                     invalidPop = true;

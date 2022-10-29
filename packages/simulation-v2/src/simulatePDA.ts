@@ -1,5 +1,5 @@
 import { PDAGraph, PDAState } from "./PDASearch";
-import { GraphStepper } from "./PDAStep";
+import { GraphStepper } from "./Step";
 import { PDAExecutionResult, PDAExecutionTrace, UnparsedPDAGraph, Stack } from "./graph";
 import { Node } from "./interfaces/graph";
 import { parsePDAGraph } from "./parse-graph";
@@ -124,7 +124,6 @@ export const graphStepperPDA = (graph: UnparsedPDAGraph, input: string) => {
             accepted: false,
             remaining: input,
             trace: [],
-            //stack: stack,
         };
     }
 
