@@ -95,9 +95,9 @@ const Editor = () => {
             <BottomPanel />
           }
         </EditorContent>
-          {(projectType === 'PDA') &&
+        {(projectType === 'PDA') &&
             <PDAStackVisualiser/>
-          }
+        }
         <Sidepanel />
 
       </Content>

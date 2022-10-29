@@ -41,7 +41,7 @@ const TMTraceStepWindow = ( {trace, pointer, accepted, isEnd} ) => {
             <div>
                 <Pointer />
                 <TickerTapeContainer>
-                    <TickerTape $index={pointer} >
+                    <TickerTape $index={pointer} $tapeLength={trace.length} >
                         <SerratedEdge />
                             {trace.map((symbol, i) => <TickerTapeCell key={i}>
                                 {symbol}
