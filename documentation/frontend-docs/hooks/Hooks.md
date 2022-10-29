@@ -162,9 +162,16 @@ useImageExport()
 This hook enables elements to be dragged. This is applicable to the states and comments. 
 
 ## useResourceSelection
-The useResourceSelection selects elements. The hook is to enable the hooks, ``useCommentSelection``, ``useStateSelection`` and ``useTransitionSlection`` to select their respective elements of comments, states and transitions.  
+The ``useResourceSelection`` selects elements. The hook is to enable the hooks, ``useCommentSelection``, ``useStateSelection`` and ``useTransitionSlection`` to select their respective elements of comments, states and transitions.  
 
 Usage example:
+```
+useResourceSelection(
+    () => useSelectionStore(s => s.selectedStates),
+    () => useSelectionStore(s => s.setStates),
+    'state'
+)
+```
 
 
 # useState__
