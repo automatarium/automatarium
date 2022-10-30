@@ -5,6 +5,7 @@ import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
+import { editTransition } from '../InputDialogs/InputDialogs'
 
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
@@ -75,6 +76,12 @@ const Transition = ({
       transition: { id, from, to, text},
     })
 
+    const handleTransitionDoubleClick = e =>
+    dispatchCustomEvent('transition:mousedoubleclick', {
+      originalEvent: e,
+      transition: { id, from, to, text },
+  },  dispatchCustomEvent('editTransition', { id }))  
+
   // Calculate text offset (increased for additional reflexive transitions)
   const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
 
@@ -102,6 +109,7 @@ const Transition = ({
       strokeWidth={20}
       onMouseDown={handleTransitionMouseDown}
       onMouseUp={handleTransitionMouseUp}
+      onDoubleClick={handleTransitionDoubleClick}
     />}
 
     {/* The label for FSAs - i.e the accepted symbols */}
