@@ -12,23 +12,27 @@ import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
 // const projectType = useProjectStore(s => s.project.config.type)
 
-const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({id, from, to, read, write, direction, pop, push}, i) => (
-      <Transition
-      i={i}
-      transitions={transitions}
-      text={useProjectStore(s => s.project.config.type)==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
-          : useProjectStore(s => s.project.config.type)==='PDA'? ((read ? read : 'λ') + ',' +
-              (pop ? pop : 'λ') + ';' +
-              (push ? push : 'λ'))
-              : read}
-      from={from}
-      to={to}
-      id={id}
-      key={id}
-    />)
-  )}
-</>
+const TransitionSet = ({ transitions }) => {
+    const projectType = useProjectStore(s => s.project.config.type);
+
+    return <>
+    { transitions.map(({id, from, to, read, write, direction, pop, push}, i) => (
+        <Transition
+        i={i}
+        transitions={transitions}
+        text={projectType ==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
+            : projectType ==='PDA'? ((read ? read : 'λ') + ',' +
+                (pop ? pop : 'λ') + ';' +
+                (push ? push : 'λ'))
+                : read}
+        from={from}
+        to={to}
+        id={id}
+        key={id}
+        />)
+    )}
+    </>;
+}
 
 const Transition = ({
   id,
