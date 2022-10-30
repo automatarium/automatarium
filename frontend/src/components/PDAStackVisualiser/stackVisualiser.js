@@ -35,11 +35,12 @@ const PDAStackVisualiser = () => {
 
   // Displays the stack
   function displayStack() {
+    console.log("Stack:", stack);
     return stack
       .slice(0)
       .reverse()
       .map((x) => {
-        return <div className="stack-item">{x.element}</div>;
+        return <div key={x.key} className="stack-item">{x.element}</div>;
       });
   }
 
