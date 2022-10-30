@@ -69,12 +69,24 @@ useAutosaveProject()
 ```
 
 # useComment__
+Below are numerous custom hooks relating to the feature where the user can add comments. Adding comments are done by using the 'comment' tool, then clicking anywhere on the editor to add a comment.
 
 ## useCommentCreation
 When the user equips the comment tool, it displays a comment upon the surface of the editor panel. This hook contains a couple of methods using the ``useEvent`` hook, to recognise the events from the users clicks. When a comment is created, it also retrieves the x and y axis, which these preceding elements are then stored into the ``store`` (``useProjectStore``); 
 
 ## useCommentDragging
 useCommentDragging is a custom hook that contains a selection of comments. The comments were originally selected from the ``useResourceDragging`` custom hook. useCommentDragging is simply a selected area of comments that can be used as reference. 
+
+Example of usage:
+```
+const { startDrag: startCommentDrag } = useCommentDragging()
+
+seEvent('comment:mousedown', e => {
+    const selectedCommentIDs = selectComment(e)
+    if (e.detail.originalEvent.button === 0)
+      startCommentDrag(e, selectedCommentIDs)
+  })
+```
 
 ## useCommentSelection
 
@@ -175,6 +187,7 @@ useResourceSelection(
 
 
 # useState__
+Below are a couple of custom hooks relating to the feature where the user can add states in relation to the autonoma. Adding states are done by using the 'states' tool, then clicking anywhere on the editor panel to add a states.
 
 ## useStateCreation
 When the user equips the state tool, it displays a state svg upon the surface of the editor panel. This hook contains a couple of methods using the ``useEvent`` hook, to recognise the events from the users clicks. When a svg state is created, it also retrieves the x and y axis, which these preceding elements are then
@@ -184,6 +197,18 @@ Additionally, upon creating a state, if the user holds down their mouse button, 
 
 ## useStateDragging
 useStateDragging is a custom hook that contains a selection of states. The states were originally selected from the ``useResourceDragging`` custom hook. useStateDragging is simply a selected  area of states that can be used as reference. 
+
+Example of usage:
+```
+const { startDrag: startStateDrag } = useStateDragging()
+
+  useEvent('state:mousedown', e => {
+    const selectedStateIDs = selectState(e)
+    if (e.detail.originalEvent.button === 0) {
+      startStateDrag(e, selectedStateIDs)
+    }
+  })
+```
 
 ## useStateSelection
 
@@ -217,6 +242,7 @@ useSyncProject()
 ```
 
 # useTransition__
+Below are a couple of custom hooks relating to the feature where the user can add tranisitions in relation to the autonoma. Adding tranisitions are done by using the 'transition' tool, then clicking and/or dragging on or between states to add a transition. 
 
 ## useTransitionCreation
 
