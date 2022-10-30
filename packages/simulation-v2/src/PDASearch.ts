@@ -34,7 +34,7 @@ export class PDAState extends State {
     }
 
     key() {
-        return String(this.id + this.remaining);
+        return String(this.id + this.remaining + this.stack.join(""));
     }
 }
 
@@ -47,7 +47,9 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
         super(initial, states, transitions);
     }
     public isFinalState(node: Node<PDAState>) {
-        return node.state.isFinal && node.state.remaining.length === 0;
+        return node.state.isFinal &&
+               node.state.remaining.length === 0 &&
+               node.state.stack.length === 0 &&;
     }
 
     public getSuccessors(node: Node<PDAState>) {
@@ -76,7 +78,7 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
             }
 
             // Check valid stack operations
-            let nodeStack = node.state.stack; // the stack carries forward to each node
+            let nodeStack = node.state.stack.slice(); // the stack carries forward to each node
             // Handle pop symbol first
             if (pop !== '') {
                 // Pop if symbol matches top of stack
