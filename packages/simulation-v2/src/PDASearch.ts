@@ -49,7 +49,7 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
     public isFinalState(node: Node<PDAState>) {
         return node.state.isFinal &&
                node.state.remaining.length === 0 &&
-               node.state.stack.length === 0 &&;
+               node.state.stack.length === 0;
     }
 
     public getSuccessors(node: Node<PDAState>) {
