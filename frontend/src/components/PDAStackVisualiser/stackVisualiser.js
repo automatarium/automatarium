@@ -35,7 +35,6 @@ const PDAStackVisualiser = () => {
 
   // Displays the stack
   function displayStack() {
-    console.log("Stack:", stack);
     return stack
       .slice(0)
       .reverse()
