@@ -101,8 +101,7 @@ For example, it can be used with useEvent:
 ```
 
 # useContextMenus
-Creates and sets parameter presets for the ``useEvent`` hook. (Will need to explain further)
-
+Creates and sets parameter presets for the ``useEvent`` hook. This hook is only used once in the ``EditorPanel.js``
 **Current presets:**
 ```
 useEvent('svg:mouseup')
@@ -113,13 +112,7 @@ useEvent('transition:mouseup')
 
 useEvent('comment:mouseup')
 ```
-**Example:**
-```
-useEvent('state:mouseup', event => {
-    setShowGhost(false);
-})
 
-```
 # useDeleteTool
 The delete tool consists of ultilising the prominent custom hook of ``useEvent``. It follows the default MouseEvent syntax such as 
 mousedown, but specific selects states, comments and transitions.
