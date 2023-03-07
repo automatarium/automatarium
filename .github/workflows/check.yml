@@ -1,4 +1,4 @@
-name: Notes Application CI Pipeline
+name: CI tests
 on: 
   push:
     branches:
@@ -10,7 +10,7 @@ on:
       - dev
 
 jobs:
-  static-check:
+  checks:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
