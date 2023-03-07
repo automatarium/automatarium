@@ -1,13 +1,13 @@
 name: Notes Application CI Pipeline
 on: 
-  - push:
-      branches:
-        - main
-        - dev
-  - pull_request:
-      branches:
-        - main
-        - dev
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
 
 jobs:
   static-check:
