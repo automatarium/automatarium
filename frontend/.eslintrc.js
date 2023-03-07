@@ -2,7 +2,8 @@
 module.exports = {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node": true // Required because of build system, move to vite
     },
     "extends": [
         "eslint:recommended",
@@ -27,6 +28,7 @@ module.exports = {
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react/display-name": "off",
+      "react/no-unescaped-entities": "off",
       "no-unused-vars": ["warn", { "ignoreRestSiblings": true }]
     }
 }
