@@ -5,7 +5,7 @@
         "node": true
     },
     "extends": [
-        "eslint:recommended",
+        "standard",
         "plugin:react/recommended"
     ],
     "parserOptions": {
@@ -27,7 +27,6 @@
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react/display-name": "off",
-      "react/no-unescaped-entities": "off",
-      "no-unused-vars": ["warn", { "ignoreRestSiblings": true }]
+      "react/no-unescaped-entities": "off"
     }
 }
