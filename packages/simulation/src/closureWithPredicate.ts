@@ -25,7 +25,7 @@ export type ClosureWithPredicateFn = (transition: Transition) => boolean
  * closureWithPredicate(graph, 0, transition => transition.read.length === 0)
  * ```
  */
-export const closureWithPredicate = (graph: FSAGraph, currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, Transition[]]> => {
+export const closureWithPredicate = (graph: (FSAGraph), currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, Transition[]]> => {
   // Setup flood fill sets
   let closed: ClosureNode[] = []
   let open: ClosureNode[] = graph.transitions

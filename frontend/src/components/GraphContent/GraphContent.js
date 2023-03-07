@@ -1,12 +1,13 @@
 import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow, CommentRect } from '/src/components'
-import { useProjectStore, useSelectionStore } from '/src/stores'
+import { useProjectStore, useSelectionStore, useSteppingStore } from '/src/stores'
 import { locateTransition } from '/src/util/states'
 
 const GraphContent = () => {
   const project = useProjectStore(s => s.project)
   const selectedStates = useSelectionStore(s => s.selectedStates)
+  const steppedStateIDs = useSteppingStore(s => s.steppedStates)
 
   // Destructure project to get state
   const states = project?.states ?? []
@@ -42,6 +43,7 @@ const GraphContent = () => {
       cy={s.y}
       isFinal={s.isFinal}
       selected={selectedStates.includes(s.id)}
+      stepped={steppedStateIDs.includes(s.id)}
     />)}
 
     {/* Render all comments */}

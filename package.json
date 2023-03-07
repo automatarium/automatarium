@@ -18,11 +18,13 @@
   ],
   "scripts": {
     "watch:simulation": "yarn workspace @automatarium/simulation watch",
+    "watch:simulation-v2": "yarn workspace @automatarium/simulation-v2 watch",
     "watch:jflap-translator": "yarn workspace @automatarium/jflap-translator watch",
     "build:simulation": "yarn workspace @automatarium/simulation build",
+    "build:simulation-v2": "yarn workspace @automatarium/simulation-v2 build",
     "build:jflap-translator": "yarn workspace @automatarium/jflap-translator build",
-    "watch:packages": "concurrently \"yarn watch:simulation -p 1235\" \"yarn watch:jflap-translator -p 1236\"",
-    "build:packages": "yarn build:simulation && yarn build:jflap-translator",
+    "watch:packages": "concurrently \"yarn watch:simulation -p 1235\" \"yarn watch:jflap-translator -p 1236\" \"yarn watch:simulation-v2 -p 1237\"",
+    "build:packages": "yarn build:simulation && yarn build:simulation-v2 && yarn build:jflap-translator",
     "dev:frontend": "concurrently \"yarn watch:packages\" \"yarn workspace frontend start\"",
     "dev:backend": "yarn workspace backend dev",
     "build:frontend": "yarn workspace frontend build",
@@ -31,6 +33,7 @@
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
   },
   "devDependencies": {
-    "concurrently": "^7.1.0"
+    "concurrently": "^7.1.0",
+    "parcel-bundler": "^1.12.5"
   }
 }

@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
-import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner } from '/src/components'
+import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
 import { ShortcutGuide, ExportImage } from '/src/pages'
+import { Content, LoadingContainer, EditorContent } from './editorStyle'
 
-import { Content, LoadingContainer } from './editorStyle'
+import  PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -15,7 +16,7 @@ const Editor = () => {
   const [priorTool, setPriorTool] = useState()
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
-
+  const projectType = useProjectStore(s => s.project.config.type)
   // Syncronize last-opened project with backend before showing it
   const loading = useSyncCurrentProject()
 
@@ -88,12 +89,24 @@ const Editor = () => {
       <Menubar />
       <Content>
         <Toolbar />
-        <EditorPanel />
+        <EditorContent>
+          <EditorPanel />
+          {(projectType === 'TM') &&
+            <BottomPanel />
+          }
+        </EditorContent>
+        {(projectType === 'PDA') &&
+            <PDAStackVisualiser/>
+        }
         <Sidepanel />
+
       </Content>
 
+
       <ShortcutGuide />
+
       <ExportImage />
+
     </>
   )
 }

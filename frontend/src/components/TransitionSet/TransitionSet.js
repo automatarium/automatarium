@@ -1,26 +1,39 @@
 import { useContext } from 'react'
-
+import { useProjectStore } from "../../stores";
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
+import { editTransition } from '../InputDialogs/InputDialogs'
 
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
-const TransitionSet = ({ transitions }) => <>
-  { transitions.map(({id, from, to, read}, i) => (
-    <Transition
-      i={i}
-      transitions={transitions}
-      text={read}
-      from={from}
-      to={to}
-      id={id}
-      key={id}
-    />)
-  )}
-</>
+
+
+// const projectType = useProjectStore(s => s.project.config.type)
+
+const TransitionSet = ({ transitions }) => {
+    const projectType = useProjectStore(s => s.project.config.type);
+
+    return <>
+    { transitions.map(({id, from, to, read, write, direction, pop, push}, i) => (
+        <Transition
+        i={i}
+        transitions={transitions}
+        text={projectType ==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
+            : projectType ==='PDA'? ((read ? read : 'λ') + ',' +
+                (pop ? pop : 'λ') + ';' +
+                (push ? push : 'λ'))
+                : read}
+        from={from}
+        to={to}
+        id={id}
+        key={id}
+        />)
+    )}
+    </>;
+}
 
 const Transition = ({
   id,
@@ -37,7 +50,7 @@ const Transition = ({
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
-
+  const projectStore = useProjectStore(s => s.project.config.type)
   // Determine how much to bend this path
   const evenCount = count % 2 === 0
   const middleValue = evenCount ? count / 2 + .5 : Math.floor(count / 2)
@@ -55,13 +68,19 @@ const Transition = ({
   const handleTransitionMouseUp = e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: { id, from, to, text },
+      transition: { id, from, to, text},
     })
   const handleTransitionMouseDown = e =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: { id, from, to, text },
+      transition: { id, from, to, text},
     })
+
+    const handleTransitionDoubleClick = e =>
+    dispatchCustomEvent('transition:mousedoubleclick', {
+      originalEvent: e,
+      transition: { id, from, to, text },
+  },  dispatchCustomEvent('editTransition', { id }))  
 
   // Calculate text offset (increased for additional reflexive transitions)
   const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
@@ -90,28 +109,54 @@ const Transition = ({
       strokeWidth={20}
       onMouseDown={handleTransitionMouseDown}
       onMouseUp={handleTransitionMouseUp}
+      onDoubleClick={handleTransitionDoubleClick}
     />}
 
-    {/* The label - i.e the accepted symbols */}
-    <text
-      onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
-      onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-      fill={selected ? 'var(--primary)' : 'var(--stroke)'}
-      style={{ userSelect: 'none' }}
-      dy={`-${textOffset}`}
-      textAnchor="middle"
-      alignmentBaseline="central"
-      {...isReflexive && {
-        x: control.x,
-        y: control.y + REFLEXIVE_Y_OFFSET/3,
-      }}
-    >
-      {isReflexive ? (text === '' ? 'λ' : text) : (
-        <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-          {text === '' ? 'λ' : text}
-        </textPath>
-      )}
-    </text>
+    {/* The label for FSAs - i.e the accepted symbols */}
+    {(projectStore === 'FSA' || projectStore === 'TM') &&
+      <text
+        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
+        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+        style={{ userSelect: 'none' }}
+        dy={`-${textOffset}`}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        {...isReflexive && {
+          x: control.x,
+          y: control.y + REFLEXIVE_Y_OFFSET/3,
+        }}
+      >
+        {isReflexive ? (text === '' ? 'λ' : text) : (
+          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+            {text === '' ? 'λ' : text}
+          </textPath>
+        )}
+      </text>
+    }
+
+    {/* The label for PDAs - i.e the accepted symbols */}
+    {(projectStore === 'PDA') &&
+      <text
+        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
+        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
+        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+        style={{ userSelect: 'none' }}
+        dy={`-${textOffset}`}
+        textAnchor="middle"
+        alignmentBaseline="central"
+        {...isReflexive && {
+          x: control.x,
+          y: control.y + REFLEXIVE_Y_OFFSET/3,
+        }}
+      >
+        {isReflexive ? (text === '' ? 'λ,λ;λ' : text) : (
+          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
+            {text === '' ? 'λ,λ;λ' : text}
+          </textPath>
+        )}
+      </text>
+    }
   </g>
 }
 

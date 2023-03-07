@@ -1,6 +1,6 @@
 import { useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward } from 'lucide-react'
-import { simulateFSA } from '@automatarium/simulation'
+import { simulateFSA } from '@automatarium/simulation-v2'
 
 import { Input, Button, TracePreview } from '/src/components'
 

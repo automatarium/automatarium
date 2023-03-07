@@ -16,11 +16,12 @@ import {
 } from '/src/config/projects'
 
 export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
-  // TODO: use project type
+  projectType: projectType,
   _id: crypto.randomUUID(),
   states: [],
   transitions: [],
   comments: [],
+  simResult: [],
   tests: {
     single: '',
     batch: [''],
@@ -117,7 +118,16 @@ const useProjectStore = create(persist((set, get) => ({
     }))
     return id
   },
-  editTransition: (id, read) => set(produce(({ project }) => {
+
+  editTransition: ({id, read, write = null, direction = null, pop=null, push=null}) => set(produce(({ project }) => {
+    if (project.config.type === 'TM') {
+      project.transitions.find(t => t.id === id).write = write
+      project.transitions.find(t => t.id === id).direction = direction
+    }
+    else if (project.config.type === 'PDA'){
+      project.transitions.find(t => t.id === id).pop = pop
+      project.transitions.find(t => t.id === id).push = push
+    }
     project.transitions.find(t => t.id === id).read = read
   })),
 
@@ -131,7 +141,7 @@ const useProjectStore = create(persist((set, get) => ({
     project.comments = project.comments.map(cm => cm.id === comment.id ? {...cm, ...comment} : cm)
   })),
 
-  /* Remove a commejt by id */
+  /* Remove a comment by id */
   removeComment: comment => set(produce(({ project }) => {
     project.comments = project.comments.filter(cm => cm.id !== comment.id)
   })),

@@ -1,10 +1,14 @@
-import { useState, useCallback, useMemo, useEffect } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
+import { createContext, useState, useCallback, useMemo, useEffect } from 'react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle, CornerDownRight } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph, simulateFSA } from '@automatarium/simulation'
+import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
+import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
+import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
+import { simulateTM } from "@automatarium/simulation-v2/src/simulateTM";
+import useTMSimResultStore from "../../../../stores/useTMSimResultStore";
+import {dispatchCustomEvent} from "/src/util/events";
 
 import {
   StepButtons,
@@ -15,6 +19,8 @@ import {
   StatusIcon,
   WarningLabel,
 } from './testingLabStyle'
+
+export const ThemeContext = createContext({});
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
@@ -29,7 +35,9 @@ const TestingLab = () => {
     initialState: useProjectStore(s => s.project.initialState)
   }
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
-
+  const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
+  const clearProjectSimResults = useTMSimResultStore(s => s.clearSimResults)
+  const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const multiTraceInput = useProjectStore(s => s.project.tests.batch)
@@ -37,21 +45,57 @@ const TestingLab = () => {
   const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const projectType = useProjectStore(s => s.project.config.type)
+  const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
+  // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
   // Execute graph
   const simulateGraph = useCallback(() => {
-    const { accepted, trace, remaining } = simulateFSA(graph, traceInput ?? '')
-    const result = {
-      accepted,
-      remaining,
-      trace: trace.map(step => ({
-        to: step.to,
-        read: step.read === '' ? 'λ' : step.read
-      })),
-      transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+    if (projectType === 'TM') {
+      const tapeTrace = traceInput ? traceInput.split("") : [""]
+      const tapePointer = 0 // This is hard coded for now. Future development available
+
+      const {halted, trace, tape} = simulateTM(graph, {pointer: tapePointer, trace: tapeTrace}
+          ?? {pointer: 0, trace: []})
+      const result = {
+        halted,
+        tape,
+        trace: trace.map(step => ({
+          to: step.to,
+          read: step.tape
+        })),
+        transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
+      }
+
+      setSimulationResult(result)
+      setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
+      return result
+    } else {
+      const { accepted, trace, remaining } =
+          projectType==='PDA' ?
+              simulatePDA(graph, traceInput ?? '')
+              : simulateFSA(graph, traceInput ?? '')
+   
+      const result = {
+        accepted,
+        remaining,
+        trace: trace.map(step => ({
+          to: step.to,
+          read: step.read === '' ? 'λ' : step.read,
+          pop: step.pop === '' ? 'λ' : step.pop,
+          push: step.push === '' ? 'λ' : step.push,
+          currentStack: step.currentStack,
+        })),
+        transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+      }
+
+      setSimulationResult(result)
+      // Adds result to PDA visualiser
+      setPDAVisualiser(result)
+
+      return result
     }
-    setSimulationResult(result)
-    return result
+
   }, [graph, traceInput])
 
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
@@ -61,7 +105,7 @@ const TestingLab = () => {
     if (!simulationResult)
       return ''
 
-    const { trace, accepted, remaining, transitionCount } = simulationResult
+    const {trace, accepted, remaining, transitionCount} = simulationResult
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
@@ -90,7 +134,12 @@ const TestingLab = () => {
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
-    setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+    if (projectType === 'TM') {
+      setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
+          {pointer: 0, trace: [input]})))
+    } else {
+      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+    }
   }, [])
 
   useEffect(() => {
@@ -98,6 +147,30 @@ const TestingLab = () => {
     setMultiTraceOutput()
     setTraceIdx(0)
   }, [lastChangeDate])
+
+  // Set the trace IDx to be passed through store to TMTapeLab component
+  useEffect(() => {
+    if (projectType === 'TM') {setProjectSimTraceIDx(traceIdx)}
+    // Try this for PDA as well - stack display
+    if (projectType === 'PDA') {setProjectSimTraceIDx(traceIdx)}
+  }, [traceIdx])
+
+  // Show bottom panel with TM Tape Lab
+  useEffect( () => {
+    if (projectType === 'TM') {
+      if (showTraceTape) {
+        dispatchCustomEvent('bottomPanel:open', {panel: 'tmTape'})
+      } else {
+        dispatchCustomEvent('bottomPanel:close', {})
+      }
+    }
+  }, [showTraceTape])
+
+
+  // const proxyMultiTraceOnMount = (input) => {
+  //   if input
+  //   setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph, input)))
+  // }
 
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
@@ -127,7 +200,7 @@ const TestingLab = () => {
 
   return (
     <>
-      {(showTraceTape && traceInput !== '' && traceInput) && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
+      {(showTraceTape && traceInput !== '' && traceInput && projectType!=='TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
@@ -149,19 +222,27 @@ const TestingLab = () => {
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={traceIdx <= 0}
+            disabled={traceIdx <= 0
+            || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               setTraceIdx(0)
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={traceIdx <= 0}
+            disabled={traceIdx <= 0
+            || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               setTraceIdx(traceIdx-1)
             }} />
 
           <Button icon={<ChevronRight size={23} />}
-            disabled={traceIdx >= simulationResult?.transitionCount || noInitialState}
+            disabled={
+              (traceIdx >= simulationResult?.transitionCount - ((projectType==='TM')&&(traceInput.length<=1)? 1 : 0))
+              || noInitialState
+              || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               if (!simulationResult) {
                 simulateGraph()
@@ -170,7 +251,10 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount && traceIdx != 0 || noInitialState}
+            disabled={traceIdx === simulationResult?.transitionCount - ((projectType==='TM')&&(traceInput.length<=1)? 1 : 0) && traceIdx !== 0
+            || noInitialState
+            || (projectType==='TM' && !showTraceTape)
+            }
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
@@ -178,7 +262,7 @@ const TestingLab = () => {
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-        {traceOutput && <div>
+        {traceOutput && projectType!=='TM' && <div>
           <TracePreview trace={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states} />
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
@@ -189,6 +273,7 @@ const TestingLab = () => {
           <Switch
             type="checkbox"
             checked={showTraceTape}
+            disabled={((projectType==='TM')&&(!traceInput))}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>
