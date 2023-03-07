@@ -32,10 +32,10 @@
     
     "lint:frontend": "yarn workspace frontend lint",
     "lint:backend": "yarn workspace backend lint",
-    "linkt:simulation": "yarn workspace @automatarium/simulation lint",
+    "lint:simulation": "yarn workspace @automatarium/simulation-v2 lint",
     "lint:frontend:fix": "yarn workspace frontend lint:fix",
     "lint:backend:fix": "yarn workspace backend lint:fix",
-    "linkt:simulation:fix": "yarn workspace @automatarium/simulation lint:fix",
+    "lint:simulation:fix": "yarn workspace @automatarium/simulation-v2 lint:fix",
     "lint": "yarn lint:backend && yarn lint:frontend && yarn lint:simulation",
     "lint:fix": "yarn lint:backend:fix && yarn lint:frontend:fix && yarn lint:simulation:fix",
     
