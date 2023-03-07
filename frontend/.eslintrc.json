@@ -1,9 +1,8 @@
-/* eslint-env node */
-module.exports = {
+{
     "env": {
         "browser": true,
         "es2021": true,
-        "node": true // Required because of build system, move to vite
+        "node": true
     },
     "extends": [
         "eslint:recommended",
