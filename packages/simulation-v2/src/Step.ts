@@ -1,8 +1,13 @@
 import { Transition } from './graph'
-import { Node, State } from './interfaces/graph'
+import { Graph, Node, State } from './interfaces/graph'
 
-// eslint-disable-next-line no-unused-vars
 export class GraphStepper<S extends State, T extends Transition> {
+  // eslint-disable-next-line no-useless-constructor
+  constructor (
+        private graph: Graph<S, T>,
+        private frontier: Node<S>[] = [graph.initial]
+  ) {}
+
   public forward () {
     const frontierCopy = this.frontier.slice()
     this.frontier = []

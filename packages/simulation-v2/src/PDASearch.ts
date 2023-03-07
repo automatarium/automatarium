@@ -3,35 +3,35 @@ import { Graph, Node, State } from './interfaces/graph'
 
 export class PDAState extends State {
   constructor (
-    id: number,
-    isFinal: boolean,
-        private read: string | null = null,
-        private remaining: string = '',
-        private stack: Stack = [],
-        private pop: string = '',
-        private push: string = ''
+    _id: number,
+    _isFinal: boolean,
+    private _read: string | null = null,
+    private _remaining: string = '',
+    private _stack: Stack = [],
+    private _pop: string = '',
+    private _push: string = ''
   ) {
-    super(id, isFinal)
+    super(_id, _isFinal)
   }
 
   get read () {
-    return this.read
+    return this._read
   }
 
   get remaining () {
-    return this.remaining
+    return this._remaining
   }
 
   get stack () {
-    return this.stack
+    return this._stack
   }
 
   get pop () {
-    return this.pop
+    return this._pop
   }
 
   get push () {
-    return this.push
+    return this._push
   }
 
   key () {

@@ -3,20 +3,20 @@ import { Graph, Node, State } from './interfaces/graph'
 
 export class FSAState extends State {
   constructor (
-    id: number,
-    isFinal: boolean,
-        private read: string | null = null,
-        private remaining: string = ''
+    _id: number,
+    _isFinal: boolean,
+    private _read: string | null = null,
+    private _remaining: string = ''
   ) {
-    super(id, isFinal)
+    super(_id, _isFinal)
   }
 
   get read () {
-    return this.read
+    return this._read
   }
 
   get remaining () {
-    return this.remaining
+    return this._remaining
   }
 
   key () {
@@ -25,6 +25,13 @@ export class FSAState extends State {
 }
 
 export class FSAGraph extends Graph<FSAState, FSATransition> {
+  constructor(
+        initial: Node<FSAState>,
+        states: FSAState[],
+        transitions: FSATransition[],
+    ) {
+        super(initial, states, transitions);
+    }
   public isFinalState (node: Node<FSAState>) {
     return node.state.isFinal && node.state.remaining.length === 0
   }
