@@ -1,7 +1,6 @@
 import { createPortal } from 'react-dom'
 import { useState, useEffect, useMemo, useRef } from 'react'
 import { useProjectStore, useViewStore } from '/src/stores'
-import { useState } from 'react'
 
 import {
     Container,
