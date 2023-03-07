@@ -1,38 +1,37 @@
 import { useContext } from 'react'
-import { useProjectStore } from "../../stores";
+import { useProjectStore } from '../../stores'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-import { editTransition } from '../InputDialogs/InputDialogs'
 
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
-
-
 
 // const projectType = useProjectStore(s => s.project.config.type)
 
 const TransitionSet = ({ transitions }) => {
-    const projectType = useProjectStore(s => s.project.config.type);
+  const projectType = useProjectStore(s => s.project.config.type)
 
-    return <>
-    { transitions.map(({id, from, to, read, write, direction, pop, push}, i) => (
+  return <>
+    { transitions.map(({ id, from, to, read, write, direction, pop, push }, i) => (
         <Transition
         i={i}
         transitions={transitions}
-        text={projectType ==='TM' ? ((read?read:'λ')+','+(write?write:'λ')+';'+(direction?direction:''))
-            : projectType ==='PDA'? ((read ? read : 'λ') + ',' +
-                (pop ? pop : 'λ') + ';' +
-                (push ? push : 'λ'))
-                : read}
+        text={projectType === 'TM'
+          ? ((read || 'λ') + ',' + (write || 'λ') + ';' + (direction || ''))
+          : projectType === 'PDA'
+            ? ((read || 'λ') + ',' +
+                (pop || 'λ') + ';' +
+                (push || 'λ'))
+            : read}
         from={from}
         to={to}
         id={id}
         key={id}
         />)
     )}
-    </>;
+    </>
 }
 
 const Transition = ({
@@ -43,8 +42,8 @@ const Transition = ({
   from,
   to,
   text,
-  fullWidth=false,
-  suppressEvents=false,
+  fullWidth = false,
+  suppressEvents = false
 }) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
@@ -53,7 +52,7 @@ const Transition = ({
   const projectStore = useProjectStore(s => s.project.config.type)
   // Determine how much to bend this path
   const evenCount = count % 2 === 0
-  const middleValue = evenCount ? count / 2 + .5 : Math.floor(count / 2)
+  const middleValue = evenCount ? count / 2 + 0.5 : Math.floor(count / 2)
   const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i + (evenCount ? 1 : 0)) : 0) / 2
 
   // Calculate path
@@ -68,22 +67,22 @@ const Transition = ({
   const handleTransitionMouseUp = e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: { id, from, to, text},
+      transition: { id, from, to, text }
     })
   const handleTransitionMouseDown = e =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: { id, from, to, text},
+      transition: { id, from, to, text }
     })
 
-    const handleTransitionDoubleClick = e =>
+  const handleTransitionDoubleClick = e =>
     dispatchCustomEvent('transition:mousedoubleclick', {
       originalEvent: e,
-      transition: { id, from, to, text },
-  },  dispatchCustomEvent('editTransition', { id }))  
+      transition: { id, from, to, text }
+    }, dispatchCustomEvent('editTransition', { id }))
 
   // Calculate text offset (increased for additional reflexive transitions)
-  const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i*20 : TEXT_PATH_OFFSET
+  const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i * 20 : TEXT_PATH_OFFSET
 
   return <g>
     {/* The edge itself */}
@@ -124,14 +123,16 @@ const Transition = ({
         alignmentBaseline="central"
         {...isReflexive && {
           x: control.x,
-          y: control.y + REFLEXIVE_Y_OFFSET/3,
+          y: control.y + REFLEXIVE_Y_OFFSET / 3
         }}
       >
-        {isReflexive ? (text === '' ? 'λ' : text) : (
+        {isReflexive
+          ? (text === '' ? 'λ' : text)
+          : (
           <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
             {text === '' ? 'λ' : text}
           </textPath>
-        )}
+            )}
       </text>
     }
 
@@ -147,21 +148,22 @@ const Transition = ({
         alignmentBaseline="central"
         {...isReflexive && {
           x: control.x,
-          y: control.y + REFLEXIVE_Y_OFFSET/3,
+          y: control.y + REFLEXIVE_Y_OFFSET / 3
         }}
       >
-        {isReflexive ? (text === '' ? 'λ,λ;λ' : text) : (
+        {isReflexive
+          ? (text === '' ? 'λ,λ;λ' : text)
+          : (
           <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
             {text === '' ? 'λ,λ;λ' : text}
           </textPath>
-        )}
+            )}
       </text>
     }
   </g>
 }
 
 const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
-
   // Is this path reflexive
   const isReflexive = from.x === to.x && from.y === to.y
 
@@ -169,9 +171,9 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
   // -- this is determined by moving along the normal to the difference between the states
   // -- with the distance moved controled by the `bend` value
   const [left, right] = from.x < to.x ? [from, to] : [to, from]
-  const center = lerpPoints(left, right, .5)
+  const center = lerpPoints(left, right, 0.5)
   const tangent = { x: left.x - right.x, y: left.y - right.y }
-  const a = Math.PI/2
+  const a = Math.PI / 2
   const orth = { x: tangent.x * Math.cos(a) - tangent.y * Math.sin(a), y: tangent.x * Math.sin(a) + tangent.y * Math.cos(a) }
   const normal = size(orth) > 0 ? { x: orth.x / size(orth), y: orth.y / size(orth) } : { x: 0, y: 0 }
   const control = isReflexive
@@ -180,7 +182,7 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
 
   // Translate control points (Used for reflexive paths)
   const translatedControl1 = !isReflexive ? control : { ...control, x: control.x - REFLEXIVE_X_OFFSET }
-  const translatedControl2= !isReflexive ? control : { ...control, x: control.x + REFLEXIVE_X_OFFSET }
+  const translatedControl2 = !isReflexive ? control : { ...control, x: control.x + REFLEXIVE_X_OFFSET }
 
   // We connect the edge to the closest point on each circle from the control point
   // (If fullWidth is set we move it just far enough to prevent accidental click events)
@@ -201,10 +203,9 @@ const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
   return {
     pathData,
     textPathData: (angle > 90 || angle <= -90) ? pathReversed : pathData,
-    control,
+    control
   }
 }
-
 
 TransitionSet.Transition = Transition
 

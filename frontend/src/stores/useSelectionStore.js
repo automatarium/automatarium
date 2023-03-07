@@ -8,9 +8,9 @@ const useSelectionStore = create(set => ({
   selectedComments: [],
   setComments: selectedComments => set({ selectedComments }),
   setStates: selectedStates => set({ selectedStates }),
-  addState: state => set(s => ({ selectedStates: [...s.selectedStates, state]})),
+  addState: state => set(s => ({ selectedStates: [...s.selectedStates, state] })),
   setTransitions: selectedTransitions => set({ selectedTransitions }),
-  addTransition: transition => set(s => ({ selectedTransitions: [...s.selectedTransitions, transition]})),
+  addTransition: transition => set(s => ({ selectedTransitions: [...s.selectedTransitions, transition] })),
   selectNone: () => set({ selectedStates: [], selectedTransitions: [], selectedComments: [] }),
   selectAll: () => set({
     selectedStates: useProjectStore

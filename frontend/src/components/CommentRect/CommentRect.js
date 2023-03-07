@@ -16,8 +16,8 @@ const CommentRect = ({ id, x, y, text }) => {
       const bounds = containerRef.current.getBoundingClientRect()
       const { scale } = useViewStore.getState()
       setSize({
-        height: bounds.height*scale,
-        width: bounds.width*scale,
+        height: bounds.height * scale,
+        width: bounds.width * scale
       })
     }
   }, [containerRef?.current, text, x, y])
@@ -25,12 +25,12 @@ const CommentRect = ({ id, x, y, text }) => {
   const handleMouseDown = e =>
     dispatchCustomEvent('comment:mousedown', {
       originalEvent: e,
-      comment: { id, text },
+      comment: { id, text }
     })
   const handleMouseUp = e =>
     dispatchCustomEvent('comment:mouseup', {
       originalEvent: e,
-      comment: { id, text },
+      comment: { id, text }
     })
 
   return <foreignObject x={x} y={y} {...size}>

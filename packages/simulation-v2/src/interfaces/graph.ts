@@ -1,7 +1,7 @@
 import { Transition } from '../graph'
 
-export abstract class State {  
-   constructor(private _id: number, private _isFinal: boolean) {}
+export abstract class State {
+  constructor (private _id: number, private _isFinal: boolean) {}
   get id () {
     return this._id
   }
@@ -40,13 +40,13 @@ export abstract class Graph<S extends State, T extends Transition> {
   protected _initial: Node<S>
   protected states: S[]
   protected transitions: T[]
-    
-  constructor(initial: Node<S>, states: S[], transitions: T[]) {
+
+  constructor (initial: Node<S>, states: S[], transitions: T[]) {
     this._initial = initial
     this.states = states
     this.transitions = transitions
   }
-    
+
   get initial () {
     return this._initial
   }

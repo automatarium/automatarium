@@ -2,7 +2,7 @@ import { useEffect, useCallback } from 'react'
 
 const useEvent = (name, handler, dependencies, {
   target = document,
-  options,
+  options
 } = {}) => {
   const callback = useCallback(handler, dependencies)
   useEffect(() => {

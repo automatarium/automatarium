@@ -21,7 +21,7 @@ const GraphContent = () => {
   const locatedTransitions = groupedTransitions
     .map(transitions => transitions
       .map(t => locateTransition(t, states)) // Resolve location of transition states
-      .sort((t1, t2) => t2.from.x < t1.from.x ? 1 : -1 )) // Sort by direction
+      .sort((t1, t2) => t2.from.x < t1.from.x ? 1 : -1)) // Sort by direction
 
   return <>
     {/* Render arrow on initial state */}

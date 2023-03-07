@@ -8,7 +8,7 @@ const useContextMenus = () => {
     if (e.detail.originalEvent.button === 2) {
       dispatchCustomEvent(name, {
         x: e.detail.originalEvent.clientX,
-        y: e.detail.originalEvent.clientY,
+        y: e.detail.originalEvent.clientY
       })
     }
   }, [])

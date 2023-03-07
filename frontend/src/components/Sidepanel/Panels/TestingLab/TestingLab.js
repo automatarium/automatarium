@@ -1,14 +1,14 @@
 import { createContext, useState, useCallback, useMemo, useEffect } from 'react'
-import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle, CornerDownRight } from 'lucide-react'
+import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
 import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
-import { simulateFSA, simulatePDA } from "@automatarium/simulation-v2";
-import { simulateTM } from "@automatarium/simulation-v2/src/simulateTM";
-import useTMSimResultStore from "../../../../stores/useTMSimResultStore";
-import {dispatchCustomEvent} from "/src/util/events";
+import { simulateFSA, simulatePDA } from '@automatarium/simulation-v2'
+import { simulateTM } from '@automatarium/simulation-v2/src/simulateTM'
+import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
+import { dispatchCustomEvent } from '/src/util/events'
 
 import {
   StepButtons,
@@ -17,10 +17,10 @@ import {
   Wrapper,
   TraceConsole,
   StatusIcon,
-  WarningLabel,
+  WarningLabel
 } from './testingLabStyle'
 
-export const ThemeContext = createContext({});
+export const ThemeContext = createContext({})
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState()
@@ -36,6 +36,7 @@ const TestingLab = () => {
   }
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
+  // eslint-disable-next-line no-unused-vars
   const clearProjectSimResults = useTMSimResultStore(s => s.clearSimResults)
   const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
   const traceInput = useProjectStore(s => s.project.tests.single)
@@ -52,11 +53,11 @@ const TestingLab = () => {
   // Execute graph
   const simulateGraph = useCallback(() => {
     if (projectType === 'TM') {
-      const tapeTrace = traceInput ? traceInput.split("") : [""]
+      const tapeTrace = traceInput ? traceInput.split('') : ['']
       const tapePointer = 0 // This is hard coded for now. Future development available
 
-      const {halted, trace, tape} = simulateTM(graph, {pointer: tapePointer, trace: tapeTrace}
-          ?? {pointer: 0, trace: []})
+      const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace } ??
+          { pointer: 0, trace: [] })
       const result = {
         halted,
         tape,
@@ -72,10 +73,10 @@ const TestingLab = () => {
       return result
     } else {
       const { accepted, trace, remaining } =
-          projectType==='PDA' ?
-              simulatePDA(graph, traceInput ?? '')
-              : simulateFSA(graph, traceInput ?? '')
-   
+          projectType === 'PDA'
+            ? simulatePDA(graph, traceInput ?? '')
+            : simulateFSA(graph, traceInput ?? '')
+
       const result = {
         accepted,
         remaining,
@@ -84,7 +85,7 @@ const TestingLab = () => {
           read: step.read === '' ? 'λ' : step.read,
           pop: step.pop === '' ? 'λ' : step.pop,
           push: step.push === '' ? 'λ' : step.push,
-          currentStack: step.currentStack,
+          currentStack: step.currentStack
         })),
         transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
       }
@@ -95,48 +96,45 @@ const TestingLab = () => {
 
       return result
     }
-
   }, [graph, traceInput])
 
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
 
   const traceOutput = useMemo(() => {
     // No output before simulating
-    if (!simulationResult)
-      return ''
+    if (!simulationResult) { return '' }
 
-    const {trace, accepted, remaining, transitionCount} = simulationResult
+    const { trace, accepted, remaining, transitionCount } = simulationResult
 
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
-      if (traceIdx > 0)
-        return accepted ? 'ACCEPTED' : 'REJECTED'
+      if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
       return null
     }
 
     // Represent transitions as strings of form start -> end
     const transitions = trace
       .slice(0, -1)
-      .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
-      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix+start} -> ${getStateName(end) ?? statePrefix+end}`)
+      .map((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
       .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length
       ? [...transitions,
-        remaining[0] ?
-          `${remaining[0]}: ${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`
-          : `\n${getStateName(trace[trace.length-1].to) ?? statePrefix+trace[trace.length-1].to} ->|`]
+          remaining[0]
+            ? `${remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
+            : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
       : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
-    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
     if (projectType === 'TM') {
       setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
-          {pointer: 0, trace: [input]})))
+        { pointer: 0, trace: [input] })))
     } else {
       setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
     }
@@ -150,22 +148,21 @@ const TestingLab = () => {
 
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
-    if (projectType === 'TM') {setProjectSimTraceIDx(traceIdx)}
+    if (projectType === 'TM') { setProjectSimTraceIDx(traceIdx) }
     // Try this for PDA as well - stack display
-    if (projectType === 'PDA') {setProjectSimTraceIDx(traceIdx)}
+    if (projectType === 'PDA') { setProjectSimTraceIDx(traceIdx) }
   }, [traceIdx])
 
   // Show bottom panel with TM Tape Lab
-  useEffect( () => {
+  useEffect(() => {
     if (projectType === 'TM') {
       if (showTraceTape) {
-        dispatchCustomEvent('bottomPanel:open', {panel: 'tmTape'})
+        dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
       } else {
         dispatchCustomEvent('bottomPanel:close', {})
       }
     }
   }, [showTraceTape])
-
 
   // const proxyMultiTraceOnMount = (input) => {
   //   if input
@@ -176,10 +173,8 @@ const TestingLab = () => {
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const noFinalState = !graph?.states.find(s => s.isFinal)
   const warnings = []
-  if (noInitialState)
-    warnings.push('There is no initial state')
-  if (noFinalState)
-    warnings.push('There are no final states')
+  if (noInitialState) { warnings.push('There is no initial state') }
+  if (noFinalState) { warnings.push('There are no final states') }
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
@@ -187,20 +182,19 @@ const TestingLab = () => {
     const closure = closureWithPredicate(resolvedGraph, resolvedGraph.initialState, () => true)
     return Array.from(closure).some(([stateID]) => resolvedGraph.states.find(s => s.id === stateID)?.isFinal)
   }, [graph])
-  if (!pathToFinal && !noInitialState && !noFinalState)
-    warnings.push('There is no path to a final state')
+  if (!pathToFinal && !noInitialState && !noFinalState) { warnings.push('There is no path to a final state') }
 
   // :^)
   const dibEgg = useDibEgg()
 
   // Determine input position
-  const currentTrace = simulationResult?.trace.slice(0, traceIdx+1) ?? []
+  const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
 
   return (
     <>
-      {(showTraceTape && traceInput !== '' && traceInput && projectType!=='TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
+      {(showTraceTape && traceInput !== '' && traceInput && projectType !== 'TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
@@ -222,38 +216,39 @@ const TestingLab = () => {
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={traceIdx <= 0
-            || (projectType==='TM' && !showTraceTape)
+            disabled={traceIdx <= 0 ||
+            (projectType === 'TM' && !showTraceTape)
             }
             onClick={() => {
               setTraceIdx(0)
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={traceIdx <= 0
-            || (projectType==='TM' && !showTraceTape)
+            disabled={traceIdx <= 0 ||
+            (projectType === 'TM' && !showTraceTape)
             }
             onClick={() => {
-              setTraceIdx(traceIdx-1)
+              setTraceIdx(traceIdx - 1)
             }} />
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              (traceIdx >= simulationResult?.transitionCount - ((projectType==='TM')&&(traceInput.length<=1)? 1 : 0))
-              || noInitialState
-              || (projectType==='TM' && !showTraceTape)
+              (traceIdx >= simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0)) ||
+              noInitialState ||
+              (projectType === 'TM' && !showTraceTape)
             }
             onClick={() => {
               if (!simulationResult) {
                 simulateGraph()
               }
-              setTraceIdx(traceIdx+1)
+              setTraceIdx(traceIdx + 1)
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            disabled={traceIdx === simulationResult?.transitionCount - ((projectType==='TM')&&(traceInput.length<=1)? 1 : 0) && traceIdx !== 0
-            || noInitialState
-            || (projectType==='TM' && !showTraceTape)
+            // eslint-disable-next-line no-mixed-operators
+            disabled={traceIdx === simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0) && traceIdx !== 0 ||
+            noInitialState ||
+            (projectType === 'TM' && !showTraceTape)
             }
             onClick={() => {
               // Increment tracer index
@@ -262,18 +257,18 @@ const TestingLab = () => {
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-        {traceOutput && projectType!=='TM' && <div>
+        {traceOutput && projectType !== 'TM' && <div>
           <TracePreview trace={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states} />
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
         <Preference
-          label={useMemo(() => Math.random() < .001 ? "Trace buddy" : "Trace tape", [])}
+          label={useMemo(() => Math.random() < 0.001 ? 'Trace buddy' : 'Trace tape', [])}
           style={{ marginBlock: 0 }}
         >
           <Switch
             type="checkbox"
             checked={showTraceTape}
-            disabled={((projectType==='TM')&&(!traceInput))}
+            disabled={((projectType === 'TM') && (!traceInput))}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>

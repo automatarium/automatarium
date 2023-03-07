@@ -7,7 +7,7 @@ import {
   TickerTape,
   TickerTapeCell,
   SerratedEdgeContainer,
-  PointerContainer,
+  PointerContainer
 } from './traceStepBubbleStyle'
 
 const TraceStepBubble = ({ stateID, input, index }) => {

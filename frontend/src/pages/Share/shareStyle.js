@@ -1,4 +1,4 @@
-import { styled } from "goober";
+import { styled } from 'goober'
 
 export const Container = styled('div')`
   min-height: calc(100vh - 3em);

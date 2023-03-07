@@ -33,7 +33,7 @@ const ContextMenus = () => {
       onClose={() => setContext({ ...context, visible: false })}
       style={{
         top: `${context.y}px`,
-        left: `${context.x}px`,
+        left: `${context.x}px`
       }}
       items={context.items}
     />

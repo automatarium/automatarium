@@ -17,18 +17,20 @@ const Logout = () => {
     doSignout()
   }, [])
 
-  return loading ? (
+  return loading
+    ? (
     <div style={{
       height: '100%',
       width: '100%',
       minHeight: '100vh',
       display: 'flex',
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'center'
     }}>
       <p>test</p>
     </div>
-  ) : <>
+      )
+    : <>
     <p>Signed out</p>
     <Navigate to='/new'/>
   </>

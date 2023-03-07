@@ -12,11 +12,11 @@ import {
   DEFAULT_PROJECT_TYPE,
   DEFAULT_STATE_PREFIX,
   DEFAULT_ACCEPTANCE_CRITERIA,
-  DEFAULT_PROJECT_COLOR,
+  DEFAULT_PROJECT_COLOR
 } from '/src/config/projects'
 
 export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
-  projectType: projectType,
+  projectType,
   _id: crypto.randomUUID(),
   states: [],
   transitions: [],
@@ -24,7 +24,7 @@ export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
   simResult: [],
   tests: {
     single: '',
-    batch: [''],
+    batch: ['']
   },
   initialState: null,
   meta: {
@@ -32,13 +32,13 @@ export const createNewProject = (projectType = DEFAULT_PROJECT_TYPE) => ({
     dateCreated: new Date().getTime(),
     dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,
-    automatariumVersion: APP_VERSION,
+    automatariumVersion: APP_VERSION
   },
   config: {
     type: projectType,
     statePrefix: DEFAULT_STATE_PREFIX,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    color: DEFAULT_PROJECT_COLOR[projectType],
+    color: DEFAULT_PROJECT_COLOR[projectType]
   }
 })
 
@@ -49,14 +49,13 @@ const useProjectStore = create(persist((set, get) => ({
   lastChangeDate: null,
   lastSaveDate: null,
 
-  set: project => { set({ project, history: [ clone(project) ], historyPointer: 0 })},
+  set: project => { set({ project, history: [clone(project)], historyPointer: 0 }) },
 
   /* Add current project state to stored history of project states */
   commit: () => set(produce(state => {
     // Check whether anything changed before committing
     const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
-    if (!didChange)
-      return
+    if (!didChange) { return }
 
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)
@@ -73,8 +72,7 @@ const useProjectStore = create(persist((set, get) => ({
 
   undo: () => set(produce(state => {
     // Can we undo?
-    if (state.historyPointer == 0)
-      return
+    if (state.historyPointer === 0) { return }
 
     // Move pointer
     state.historyPointer--
@@ -88,8 +86,7 @@ const useProjectStore = create(persist((set, get) => ({
 
   redo: () => set(produce(state => {
     // Can we redo?
-    if (state.historyPointer == state.history.length - 1)
-      return
+    if (state.historyPointer === state.history.length - 1) { return }
 
     // Move pointer
     state.historyPointer++
@@ -106,8 +103,8 @@ const useProjectStore = create(persist((set, get) => ({
 
   /* Change the projects name */
   setName: name => set(s => ({
-    project: {...s.project, meta: {...s.project.meta, name }},
-    lastChangeDate: new Date().getTime(),
+    project: { ...s.project, meta: { ...s.project.meta, name } },
+    lastChangeDate: new Date().getTime()
   })),
 
   /* Create a new transition */
@@ -119,12 +116,11 @@ const useProjectStore = create(persist((set, get) => ({
     return id
   },
 
-  editTransition: ({id, read, write = null, direction = null, pop=null, push=null}) => set(produce(({ project }) => {
+  editTransition: ({ id, read, write = null, direction = null, pop = null, push = null }) => set(produce(({ project }) => {
     if (project.config.type === 'TM') {
       project.transitions.find(t => t.id === id).write = write
       project.transitions.find(t => t.id === id).direction = direction
-    }
-    else if (project.config.type === 'PDA'){
+    } else if (project.config.type === 'PDA') {
       project.transitions.find(t => t.id === id).pop = pop
       project.transitions.find(t => t.id === id).push = push
     }
@@ -138,7 +134,7 @@ const useProjectStore = create(persist((set, get) => ({
 
   /* Update a comment by id */
   updateComment: comment => set(produce(({ project }) => {
-    project.comments = project.comments.map(cm => cm.id === comment.id ? {...cm, ...comment} : cm)
+    project.comments = project.comments.map(cm => cm.id === comment.id ? { ...cm, ...comment } : cm)
   })),
 
   /* Remove a comment by id */
@@ -153,7 +149,7 @@ const useProjectStore = create(persist((set, get) => ({
 
   /* Update a state by id */
   updateState: state => set(produce(({ project }) => {
-    project.states = project.states.map(st => st.id === state.id ? {...st, ...state} : st)
+    project.states = project.states.map(st => st.id === state.id ? { ...st, ...state } : st)
   })),
 
   /* Remove a state by id */
@@ -183,17 +179,19 @@ const useProjectStore = create(persist((set, get) => ({
   setStateInitial: stateID => set(s => ({ project: { ...s.project, initialState: stateID } })),
 
   /* Set all provided states as final */
-  toggleStatesFinal: stateIDs => set(produce(({ project}) => {
-    project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal}))
+  toggleStatesFinal: stateIDs => set(produce(({ project }) => {
+    project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal }))
   })),
 
   /* Toggle direction of transitions */
   flipTransitions: transitionIDs => set(produce(({ project }) => {
-    project.transitions = project.transitions.map(t => transitionIDs.includes(t.id) ? ({
-      ...t,
-      from: t.to,
-      to: t.from,
-    }) : t)
+    project.transitions = project.transitions.map(t => transitionIDs.includes(t.id)
+      ? ({
+          ...t,
+          from: t.to,
+          to: t.from
+        })
+      : t)
   })),
 
   /* Remove states by id */

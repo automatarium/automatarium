@@ -8,7 +8,7 @@ import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '
 import { ShortcutGuide, ExportImage } from '/src/pages'
 import { Content, LoadingContainer, EditorContent } from './editorStyle'
 
-import  PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
+import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -32,7 +32,7 @@ const Editor = () => {
       navigate('/new')
     }
     resetExportSettings()
-    setViewPositionAndScale({x: 0, y:0}, 1)
+    setViewPositionAndScale({ x: 0, y: 0 }, 1)
   }, [])
 
   // Change tool when holding certain keys
@@ -64,7 +64,6 @@ const Editor = () => {
     }
   }, [tool, priorTool])
 
-
   // Middle mouse pan
   useEvent('svg:mousedown', e => {
     if (!priorTool && e.detail.originalEvent.button === 1) {
@@ -80,9 +79,11 @@ const Editor = () => {
     }
   }, [tool, priorTool])
 
-  if (loading) return <LoadingContainer>
+  if (loading) {
+    return <LoadingContainer>
     <Spinner />
   </LoadingContainer>
+  }
 
   return (
     <>
@@ -101,7 +102,6 @@ const Editor = () => {
         <Sidepanel />
 
       </Content>
-
 
       <ShortcutGuide />
 

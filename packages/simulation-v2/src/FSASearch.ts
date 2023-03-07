@@ -25,13 +25,6 @@ export class FSAState extends State {
 }
 
 export class FSAGraph extends Graph<FSAState, FSATransition> {
-  constructor(
-        initial: Node<FSAState>,
-        states: FSAState[],
-        transitions: FSATransition[],
-    ) {
-        super(initial, states, transitions);
-    }
   public isFinalState (node: Node<FSAState>) {
     return node.state.isFinal && node.state.remaining.length === 0
   }

@@ -16,7 +16,7 @@ const StackDisplay = () => {
   // Function to get name of state from an id
   const getStateName = useCallback(id =>
     graph.states.find(s => s.id === id)?.name || `${statePrefix ?? 'q'}${id}`,
-    [graph.states, statePrefix]
+  [graph.states, statePrefix]
   )
 
   // Resolve graph
@@ -32,18 +32,18 @@ const StackDisplay = () => {
   , [transitions])
 
   const transitionMap = useMemo(() => {
-    let map = {} // (ID, Symbol) -> ID[]
-    for (let state of states ?? []) {
-      for (let symbol of alphabet) {
+    const map = {} // (ID, Symbol) -> ID[]
+    for (const state of states ?? []) {
+      for (const symbol of alphabet) {
         const transitions = validTransitions(resolvedGraph, state.id, symbol)
-        for (let { transition } of transitions) {
+        for (const { transition } of transitions) {
           // Record accessibility after transition
           map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], transition.to]))
 
           // Record accessibility of states indirectly accessible after transition via lambdas
           if (transition.read.length > 0) {
             const lambdaClosure = closureWithPredicate(resolvedGraph, transition.to, tr => tr.read.length === 0)
-            for (let [stateID] of lambdaClosure) {
+            for (const [stateID] of lambdaClosure) {
               map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], stateID]))
             }
           }
@@ -74,7 +74,7 @@ const StackDisplay = () => {
             <th>{getStateName(state.id)}</th>
             {alphabet.map(symbol => <td key={symbol}>
               {Object.entries(transitionMap)
-                .filter(([key]) => key.split(',')[0] == state.id && key.split(',')[1] == symbol)
+                .filter(([key]) => key.split(',')[0] === state.id && key.split(',')[1] === symbol)
                 .map(([, states]) => states.map(id => getStateName(id)).join(', '))[0] ?? '-'}
             </td>)}
           </tr>)}

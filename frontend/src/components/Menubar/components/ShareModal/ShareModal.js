@@ -25,7 +25,7 @@ const ShareModal = ({ projectId, ...props }) => {
         left: 'initial',
         bottom: 'initial',
         right: '1rem',
-        top: '2rem',
+        top: '2rem'
       }}
       {...props}
     >

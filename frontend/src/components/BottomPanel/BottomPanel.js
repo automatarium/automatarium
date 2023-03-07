@@ -1,39 +1,32 @@
 import { useState } from 'react'
-import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2 } from 'lucide-react'
 
-import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
 
-import { Wrapper, Panel, Heading, CloseButton } from './bottomPanelStyle'
+import { Wrapper, Panel } from './bottomPanelStyle'
 import { TMTapeLab } from './Panels'
 
-
 const panels = [
-        {
-        label: 'TMTapeLab',
-        value: 'tmTape',
-        element: <TMTapeLab />
-        }
-    ]
+  {
+    label: 'TMTapeLab',
+    value: 'tmTape',
+    element: <TMTapeLab />
+  }
+]
 
 const BottomPanel = () => {
-    const [activePanel, setActivePanel] = useState()
+  const [activePanel, setActivePanel] = useState()
 
+  // Open panel via event
+  useEvent('bottomPanel:open', e => {
+    const panel = panels.find(p => p.value === e.detail.panel)
+    setActivePanel(activePanel?.value === panel.value ? undefined : panel)
+  }, [activePanel])
 
-    // Open panel via event
-    useEvent('bottomPanel:open', e => {
-        const panel = panels.find(p => p.value === e.detail.panel)
-        setActivePanel(activePanel?.value === panel.value ? undefined : panel)
+  useEvent('bottomPanel:close', e => {
+    setActivePanel(undefined)
+  }, [activePanel])
 
-    }, [activePanel])
-
-    useEvent('bottomPanel:close', e => {
-        setActivePanel(undefined)
-    }, [activePanel])
-
-
-
-    return (
+  return (
         <Wrapper>
             {activePanel && (
                 <Panel >
@@ -44,7 +37,7 @@ const BottomPanel = () => {
             )}
         </Wrapper>
 
-    )
+  )
 }
 
 export default BottomPanel

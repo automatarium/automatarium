@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react'
 
-function TM() {
-    return (
+function TM () {
+  return (
         <svg
             xmlns="http://www.w3.org/2000/svg"
             xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -13,12 +13,12 @@ function TM() {
             version="1.1"
             viewBox="154 54 362 237"
             style={{
-                backgroundSize: 30,
-                backgroundPosition: 0,
-                backgroundColor: "white",
-                PrimaryH: "262",
-                PrimaryS: "60%",
-                PrimaryL: "48%",
+              backgroundSize: 30,
+              backgroundPosition: 0,
+              backgroundColor: 'white',
+              PrimaryH: '262',
+              PrimaryS: '60%',
+              PrimaryL: '48%'
             }}
         >
             <defs>
@@ -80,10 +80,10 @@ function TM() {
                 dy="-5"
                 textAnchor="middle"
                 style={{
-                    WebkitUserSelect: "none",
-                    MozUserSelect: "none",
-                    MsUserSelect: "none",
-                    userSelect: "none",
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  MsUserSelect: 'none',
+                  userSelect: 'none'
                 }}
             >
                 <textPath startOffset="50%" xlinkHref="#0240120450120-text">
@@ -115,10 +115,10 @@ function TM() {
                 dy="-5"
                 textAnchor="middle"
                 style={{
-                    WebkitUserSelect: "none",
-                    MozUserSelect: "none",
-                    MsUserSelect: "none",
-                    userSelect: "none",
+                  WebkitUserSelect: 'none',
+                  MozUserSelect: 'none',
+                  MsUserSelect: 'none',
+                  userSelect: 'none'
                 }}
             >
                 <textPath startOffset="50%" xlinkHref="#0450120240225-text">
@@ -151,10 +151,10 @@ function TM() {
                     dy="-5"
                     textAnchor="middle"
                     style={{
-                        WebkitUserSelect: "none",
-                        MozUserSelect: "none",
-                        MsUserSelect: "none",
-                        userSelect: "none",
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      MsUserSelect: 'none',
+                      userSelect: 'none'
                     }}
                 >
                     <textPath startOffset="50%" xlinkHref="#0240225450225-text">
@@ -174,10 +174,10 @@ function TM() {
                     alignmentBaseline="central"
                     textAnchor="middle"
                     style={{
-                        WebkitUserSelect: "none",
-                        MozUserSelect: "none",
-                        MsUserSelect: "none",
-                        userSelect: "none",
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      MsUserSelect: 'none',
+                      userSelect: 'none'
                     }}
                 >
                     q0
@@ -195,10 +195,10 @@ function TM() {
                     alignmentBaseline="central"
                     textAnchor="middle"
                     style={{
-                        WebkitUserSelect: "none",
-                        MozUserSelect: "none",
-                        MsUserSelect: "none",
-                        userSelect: "none",
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      MsUserSelect: 'none',
+                      userSelect: 'none'
                     }}
                 >
                     q1
@@ -216,10 +216,10 @@ function TM() {
                     alignmentBaseline="central"
                     textAnchor="middle"
                     style={{
-                        WebkitUserSelect: "none",
-                        MozUserSelect: "none",
-                        MsUserSelect: "none",
-                        userSelect: "none",
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      MsUserSelect: 'none',
+                      userSelect: 'none'
                     }}
                 >
                     q2
@@ -243,17 +243,17 @@ function TM() {
                     alignmentBaseline="central"
                     textAnchor="middle"
                     style={{
-                        WebkitUserSelect: "none",
-                        MozUserSelect: "none",
-                        MsUserSelect: "none",
-                        userSelect: "none",
+                      WebkitUserSelect: 'none',
+                      MozUserSelect: 'none',
+                      MsUserSelect: 'none',
+                      userSelect: 'none'
                     }}
                 >
                     q3
                 </text>
             </g>
         </svg>
-    );
+  )
 }
 
-export default TM;
+export default TM

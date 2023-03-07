@@ -53,7 +53,7 @@ export const ItemWrapper = styled('button')`
   gap: 1em;
   width: 100%;
 
-  &:hover, &:focus ${props => props.$active && `,&`} {
+  &:hover, &:focus ${props => props.$active && ',&'} {
     background: var(--primary);
   }
 

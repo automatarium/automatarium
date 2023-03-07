@@ -25,7 +25,7 @@ export const Container = styled('div')`
 //   background: #d30303
 // `}
 
-//var(${props => (props.colour ? 'green' : 'black')});
+// var(${props => (props.colour ? 'green' : 'black')});
 export const TickerTapeContainer = styled('div')`
   display: flex;
   flex-direction: row;
@@ -36,7 +36,7 @@ export const TickerTapeContainer = styled('div')`
 export const TickerTape = styled('div')`
   display: flex;
   flex-direction: row;
-  transform: translateX(calc((${p => p.$tapeLength -1}/2) * var(--cell-width) + ${p => -p.$index} * var(--cell-width)));
+  transform: translateX(calc((${p => p.$tapeLength - 1}/2) * var(--cell-width) + ${p => -p.$index} * var(--cell-width)));
   width: max-content;
   transition: transform .2s;
 `

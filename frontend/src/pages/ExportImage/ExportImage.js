@@ -31,7 +31,7 @@ const ExportImage = () => {
 
   useEffect(() => {
     if (type === 'svg') {
-      setPreview('data:image/svg+xml,'+encodeURIComponent(svg))
+      setPreview('data:image/svg+xml,' + encodeURIComponent(svg))
     } else {
       svgToCanvas({ ...size, svg })
         .then(canvas => setPreview(canvas.toDataURL(type === 'jpg' && 'image/jpeg')))
@@ -54,7 +54,7 @@ const ExportImage = () => {
 
     // SVG export
     if (type === 'svg') {
-      data = 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
+      data = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg)
     }
 
     // PNG/JPG export
@@ -71,12 +71,12 @@ const ExportImage = () => {
     if (type === 'svg') {
       // TODO: kinda broken, might need to clean the svg at an earlier stage
       const blob = new Blob([svg], { type: 'text/plain' })
-      navigator.clipboard.write([new window.ClipboardItem({'text/plain': blob})])
+      navigator.clipboard.write([new window.ClipboardItem({ 'text/plain': blob })])
     }
 
     if (type === 'png' || type === 'jpg') {
       const canvas = await svgToCanvas({ ...size, svg })
-      canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({[type === 'jpg' ? 'image/jpeg' : 'image/png']: blob})]), type === 'jpg' && 'image/jpeg')
+      canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({ [type === 'jpg' ? 'image/jpeg' : 'image/png']: blob })]), type === 'jpg' && 'image/jpeg')
     }
 
     setExportVisible(false)

@@ -11,13 +11,13 @@ const graph = {
   states: [
     { id: 0, isFinal: false },
     { id: 1, isFinal: false },
-    { id: 2, isFinal: true },
+    { id: 2, isFinal: true }
   ],
   transitions: [
     { id: 0, from: 0, to: 1, read: 'a' },
-    { id: 1, from: 1, to: 2, read: 'b' },
+    { id: 1, from: 1, to: 2, read: 'b' }
   ],
-  initialState: 0,
+  initialState: 0
 }
 
 const TestingLab = () => {
@@ -52,18 +52,18 @@ const TestingLab = () => {
 
     const transitions = trace
       .slice(0, -1)
-      .map((_, i) => [trace[i+1]?.read, trace[i]?.to, trace[i+1]?.to])
+      .map((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
       .map(([read, start, end]) => `${read}: q${start} -> q${end}`)
       .filter((_x, i) => i < idx)
 
     const transitionsWithRejected = !accepted && idx === trace.length
       ? [...transitions,
-        remaining[0] ?
-          `${remaining[0]}: q${trace[trace.length-1].to} ->|`
-          : `\nq${trace[trace.length-1].to} ->|`]
+          remaining[0]
+            ? `${remaining[0]}: q${trace[trace.length - 1].to} ->|`
+            : `\nq${trace[trace.length - 1].to} ->|`]
       : transitions
 
-    return `${transitionsWithRejected.join('\n')}${(idx === transitionCount) ? `\n\n` + (accepted ? 'ACCEPTED' : 'REJECTED' ) : ''}`
+    return `${transitionsWithRejected.join('\n')}${(idx === transitionCount) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [input, result, idx])
 
   useEffect(() => {
@@ -93,7 +93,7 @@ const TestingLab = () => {
         <Button
           icon={<ChevronLeft size={23} />}
           disabled={idx <= 0}
-          onClick={() => setIdx(idx-1)}
+          onClick={() => setIdx(idx - 1)}
         />
 
         <Button
@@ -103,13 +103,13 @@ const TestingLab = () => {
             if (!result) {
               simulateGraph()
             }
-            setIdx(idx+1)
+            setIdx(idx + 1)
           }}
         />
 
         <Button
           icon={<SkipForward size={20} />}
-          disabled={idx === result?.transitionCount && idx != 0}
+          disabled={idx === result?.transitionCount && idx !== 0}
           onClick={() => {
             // Increment tracer index
             const r = result ?? simulateGraph()

@@ -1,5 +1,4 @@
 import { styled } from 'goober'
-import React from 'react'
 
 export const Wrapper = styled('div')`
   display: flex;

@@ -15,7 +15,7 @@ import SignupPage from '/src/pages/Signup/Signup'
 import { NewProjectCard, CardList } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
 import FSA from './images/FSA'
-import TM from "./images/TM";
+import TM from './images/TM'
 import PDA from './images/PDA'
 
 const NewFile = () => {
@@ -47,7 +47,7 @@ const NewFile = () => {
 
   const importProject = () => {
     // Prompt user for file input
-    let input = document.createElement('input')
+    const input = document.createElement('input')
     input.type = 'file'
     input.onchange = () => {
       // Read file data
@@ -58,7 +58,7 @@ const NewFile = () => {
         if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
           const project = {
             ...createNewProject(),
-            ...convertJFLAPXML(reader.result),
+            ...convertJFLAPXML(reader.result)
           }
           setProject({
             ...project,
@@ -72,7 +72,7 @@ const NewFile = () => {
           // Set project (file) in project store
           const project = {
             ...createNewProject(),
-            ...JSON.parse(reader.result),
+            ...JSON.parse(reader.result)
           }
           setProject({
             ...project,
@@ -85,7 +85,6 @@ const NewFile = () => {
         } else {
           window.alert('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
         }
-
       }
       reader.readAsText(input.files[0])
     }
@@ -126,7 +125,7 @@ const NewFile = () => {
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
-        image={<TM />} 
+        image={<TM />}
       />
     </CardList>
 

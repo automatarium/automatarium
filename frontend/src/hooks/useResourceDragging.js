@@ -31,7 +31,7 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
 
   // Listen for mouse move - dragging states
   useEvent('svg:mousemove', e => {
-    if (dragging!== null && toolActive) {
+    if (dragging !== null && toolActive) {
       dragging.forEach((id, i) => {
         const [x, y] = [e.detail.viewX, e.detail.viewY]
         const [dx, dy] = [x - dragOffsets[i][0], y - dragOffsets[i][1]]
@@ -52,7 +52,7 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
           ? [dx, dy]
           : i === 0
             ? [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
-            : [(Math.floor(lx / GRID_SNAP) * GRID_SNAP) + lox, Math.floor(ly / GRID_SNAP) * GRID_SNAP + loy] 
+            : [(Math.floor(lx / GRID_SNAP) * GRID_SNAP) + lox, Math.floor(ly / GRID_SNAP) * GRID_SNAP + loy]
 
         // Update state position
         updateResource({ id, x: sx, y: sy })

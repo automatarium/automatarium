@@ -1,25 +1,22 @@
 import create from 'zustand'
 import produce from 'immer'
 
-
 const screenToCanvasSpace = (x, y, container) => {
   const b = container.getBoundingClientRect()
   return [(x - b.left), (y - b.top)]
 }
-
 
 const canvasToScreenSpace = (x, y, container) => {
   const b = container.getBoundingClientRect()
   return [(x + b.left), (y + b.top)]
 }
 
-
 const useViewStore = create((set, get) => ({
   svgElement: null,
   position: { x: 0, y: 0 },
-  size: { width: 0, height: 0},
+  size: { width: 0, height: 0 },
   scale: 1,
-  moveViewPosition: ({ x=0, y=0 }) => set(produce(state => {
+  moveViewPosition: ({ x = 0, y = 0 }) => set(produce(state => {
     state.position.x += x * state.scale
     state.position.y += y * state.scale
   })),
@@ -35,7 +32,7 @@ const useViewStore = create((set, get) => ({
 
   /* Apply an inverse view transform to a point */
   applyInverseView: (x, y) =>
-    [(x - get().position.x)/get().scale, (y - get().position.y)/get().scale],
+    [(x - get().position.x) / get().scale, (y - get().position.y) / get().scale],
 
   /* Convert from screen mouse coords to view space */
   screenToViewSpace: (clientX, clientY) =>
@@ -43,7 +40,7 @@ const useViewStore = create((set, get) => ({
 
   /* Convert from screen mouse coords to view space */
   viewToScreenSpace: (viewX, viewY) =>
-    canvasToScreenSpace(...get().applyInverseView(viewX, viewY), get().svgElement),
+    canvasToScreenSpace(...get().applyInverseView(viewX, viewY), get().svgElement)
 }))
 
 export default useViewStore

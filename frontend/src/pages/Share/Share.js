@@ -21,7 +21,7 @@ const Share = () => {
   }, [pid])
 
   const handleCopy = useCallback(() => {
-    setProject({...sharedProject, _id: crypto.randomUUID(), userid: null})
+    setProject({ ...sharedProject, _id: crypto.randomUUID(), userid: null })
     navigate('/editor')
   }, [pid, sharedProject])
 
@@ -29,7 +29,9 @@ const Share = () => {
 
   return (
     <Container>
-      {loading ? <Spinner /> : <>
+      {loading
+        ? <Spinner />
+        : <>
         <ProjectCard
           disabled
           key={sharedProject._id}

@@ -3,8 +3,7 @@ import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, 
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { useToolStore } from '/src/stores'
-import { Dropdown } from '/src/components'
-import { Sidebar } from '/src/components'
+import { Dropdown, Sidebar } from '/src/components'
 import useViewStore from '/src/stores/useViewStore'
 
 import { ToolPopup, ToolName, ToolHotkey, Animation } from './toolbarStyle'
@@ -23,7 +22,7 @@ const tools = [
     description: 'Select and move items',
     value: 'cursor',
     icon: <MousePointer2 />,
-    animation: cursorAnimation,
+    animation: cursorAnimation
   },
   {
     label: 'Hand tool',
@@ -31,7 +30,7 @@ const tools = [
     description: 'Drag to pan around your automaton',
     value: 'hand',
     icon: <Hand />,
-    animation: handAnimation,
+    animation: handAnimation
   },
   {
     label: 'State tool',
@@ -39,7 +38,7 @@ const tools = [
     description: 'Create states by clicking',
     value: 'state',
     icon: <Circle />,
-    animation: stateAnimation,
+    animation: stateAnimation
   },
   {
     label: 'Transition tool',
@@ -47,7 +46,7 @@ const tools = [
     description: 'Drag between states to create transitions',
     value: 'transition',
     icon: <ArrowUpRight />,
-    animation: transitionAnimation,
+    animation: transitionAnimation
   },
   {
     label: 'Comment tool',
@@ -55,16 +54,16 @@ const tools = [
     description: 'Add comments to your automaton',
     value: 'comment',
     icon: <MessageSquare />,
-    animation: commentAnimation,
+    animation: commentAnimation
   },
   {
     label: 'Delete tool',
-    hotkey: 'D', 
+    hotkey: 'D',
     description: 'Delete states, transitions and comments from your automaton',
     value: 'delete',
     icon: <Skull />,
-    animation: deleteAnimation,
-  },
+    animation: deleteAnimation
+  }
 ]
 
 const Toolbar = () => {
@@ -120,13 +119,16 @@ const Toolbar = () => {
         style={{
           aspectRatio: 'initial',
           fontSize: '.9em',
-          padding: '.8em 0',
+          padding: '.8em 0'
         }}
         onClick={e => { setZoomMenuOpen(true); e.stopPropagation() }}
-        ref={r => zoomButtonRect.current = r?.getBoundingClientRect()}
+        ref={r => {
+          zoomButtonRect.current = r?.getBoundingClientRect()
+          return zoomButtonRect.current
+        }}
         $active={zoomMenuOpen}
       >
-        <span>{Math.floor(1/viewScale * 100)}%</span>
+        <span>{Math.floor(1 / viewScale * 100)}%</span>
         <ChevronDown size="1.1em" />
       </Sidebar.Button>
 
@@ -134,32 +136,32 @@ const Toolbar = () => {
         visible={zoomMenuOpen}
         style={{
           left: `${zoomButtonRect.current?.x + zoomButtonRect.current?.width + 4}px`,
-          bottom: 0,
+          bottom: 0
         }}
         onClose={() => setZoomMenuOpen(false)}
         items={[
           {
             label: 'Zoom in',
-            action: 'ZOOM_IN',
+            action: 'ZOOM_IN'
           },
           {
             label: 'Zoom out',
-            action: 'ZOOM_OUT',
+            action: 'ZOOM_OUT'
           },
           {
             label: 'Zoom to 100%',
-            action: 'ZOOM_100',
+            action: 'ZOOM_100'
           },
           {
             label: 'Zoom to fit',
-            action: 'ZOOM_FIT',
+            action: 'ZOOM_FIT'
           },
           'hr',
           {
             label: 'Fullscreen',
             shortcut: 'F11',
-            action: 'FULLSCREEN',
-          },
+            action: 'FULLSCREEN'
+          }
         ]}
       />
     </Sidebar>

@@ -199,7 +199,7 @@ export const ADJECTIVES = [
   'Worrisome',
   'Zany',
   'Zealous',
-  'Uncooked', // ;)
+  'Uncooked' // ;)
 ]
 
 export const NOUNS = [
@@ -307,13 +307,13 @@ export const NOUNS = [
   'Marine Iguana',
   'Octopus',
   'Squid',
-  'White Lion',
+  'White Lion'
 ]
 
 export const randomProjectName = () => {
   if (Math.random() < 0.001) return 'James Harland'
 
-  const adj = ADJECTIVES[Math.floor(Math.random()*ADJECTIVES.length)]
-  const noun = NOUNS[Math.floor(Math.random()*NOUNS.length)]
+  const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)]
+  const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)]
   return `${adj} ${noun}`
 }
