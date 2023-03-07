@@ -27,6 +27,12 @@
     "dev:backend": "yarn workspace backend dev",
     "build:frontend": "yarn workspace frontend build",
     "build:backend": "yarn workspace backend build",
+    "lint:frontend": "yarn workspace frontend lint",
+    "lint:backend": "yarn workspace frontend lint",
+    "lint:frontend:fix": "yarn workspace frontend lint:fix",
+    "lint:backend:fix": "yarn workspace frontend lint:fix",
+    "lint": "yarn lint:backend && yarn lint:frontend",
+    "lint:fix": "yarn lint:backend:fix && yarn link:frontend:fix",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
   },
