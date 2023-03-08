@@ -22,9 +22,9 @@ const MarkerProvider = ({ children }) => {
   const arrowBottomLeft = `L${markerRefX - l * Math.cos(-a)} ${markerRefY - l * Math.sin(-a)}`
 
   return <>
-    {/*SVG Definitions*/}
+    {/* SVG Definitions */}
     <defs>
-      {/*Standard Arrowhead Definition*/}
+      {/* Standard Arrowhead Definition */}
       <marker
         id={standardArrowHead}
         markerWidth={markerWidth}
@@ -36,7 +36,7 @@ const MarkerProvider = ({ children }) => {
         <path d={`${arrowStart} ${arrowTopLeft} ${arrowBottomLeft} z`} fill="var(--stroke)" />
       </marker>
 
-      {/*Selected Arrowhead Definition*/}
+      {/* Selected Arrowhead Definition */}
       <marker
         id={selectedArrowHead}
         markerWidth={markerWidth}
@@ -48,7 +48,7 @@ const MarkerProvider = ({ children }) => {
         <path d={`${arrowStart} ${arrowTopLeft} ${arrowBottomLeft} z`} fill="var(--primary)" />
 
       </marker>
-      {/*Line Arrowhead Definition*/}
+      {/* Line Arrowhead Definition */}
       <marker
         id={lineArrowHead}
         markerWidth={markerWidth}
@@ -61,8 +61,7 @@ const MarkerProvider = ({ children }) => {
       </marker>
     </defs>
 
-
-    {/*Provide context to children*/}
+    {/* Provide context to children */}
     <MarkerContext.Provider value={{ standardArrowHead, selectedArrowHead, lineArrowHead }}>
       { children }
     </MarkerContext.Provider>

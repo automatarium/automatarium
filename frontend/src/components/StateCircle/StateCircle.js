@@ -25,17 +25,17 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
   const handleStateMouseUp = e =>
     dispatchCustomEvent('state:mouseup', {
       originalEvent: e,
-      state: { id, name, cx, cy },
+      state: { id, name, cx, cy }
     })
   const handleStateMouseDown = e =>
     dispatchCustomEvent('state:mousedown', {
       originalEvent: e,
-      state: { id, name, cx, cy },
+      state: { id, name, cx, cy }
     })
 
   return <g transform={`translate(${cx}, ${cy})`} onMouseDown={handleStateMouseDown} onMouseUp={handleStateMouseUp} {...props}>
     {/* Filled Circle */}
-    <circle r={STATE_CIRCLE_RADIUS} style={{...circleStyles, ...(stepped ? stepGlowStyle : {})}} className={(selected && circleSelectedClass) || undefined} />
+    <circle r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, ...(stepped ? stepGlowStyle : {}) }} className={(selected && circleSelectedClass) || undefined} />
 
     {/* Extra outline for final states */}
     {isFinal && <circle r={STATE_CIRCLE_RADIUS - FINAL_OUTLINE_OFFSET} style={circleStyles} className={(selected && circleSelectedClass) || undefined} />}
@@ -62,6 +62,6 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
 }
 
 StateCircle.Ghost = ({ cx, cy }) =>
-  <circle cx={cx} cy={cy} r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, opacity: .3, pointerEvents: 'none' }} />
+  <circle cx={cx} cy={cy} r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, opacity: 0.3, pointerEvents: 'none' }} />
 
 export default StateCircle

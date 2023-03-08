@@ -18,18 +18,18 @@ export const downloadURL = ({ filename, extension, data }) => {
 export const svgToCanvas = ({ height, width, svg }) => new Promise(resolve => {
   // Setup canvas
   const canvas = document.createElement('canvas')
-  canvas.height = height*2
-  canvas.width = width*2
+  canvas.height = height * 2
+  canvas.width = width * 2
   const ctx = canvas.getContext('2d')
 
   // Create an image to render
-  const img = new Image
+  const img = new Image()
   img.onload = () => {
     // Draw and save the image
     ctx.drawImage(img, 0, 0)
     resolve(canvas)
   }
-  img.src = 'data:image/svg+xml,'+encodeURIComponent(svg)
+  img.src = 'data:image/svg+xml,' + encodeURIComponent(svg)
 })
 
 // Extract the SVG graph as a string
@@ -37,7 +37,7 @@ export const getSvgString = ({
   margin = 20,
   background = 'none',
   color,
-  darkMode = false,
+  darkMode = false
 } = {}) => {
   // Clone the SVG element
   const svgElement = document.querySelector('#automatarium-graph')
@@ -45,8 +45,8 @@ export const getSvgString = ({
 
   // Set viewbox
   const b = document.querySelector('#automatarium-graph > g').getBBox()
-  margin = Number(margin ?? 0)+1
-  const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin*2, b.height + margin*2]
+  margin = Number(margin ?? 0) + 1
+  const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin * 2, b.height + margin * 2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
 
   // If changing colour, save what is on the actual svg, then change them temporarily
@@ -56,10 +56,10 @@ export const getSvgString = ({
   const prevColor = {
     h: svgElement.style.getPropertyValue('--primary-h'),
     s: svgElement.style.getPropertyValue('--primary-s'),
-    l: svgElement.style.getPropertyValue('--primary-l'),
+    l: svgElement.style.getPropertyValue('--primary-l')
   }
   if (color) {
-    const c = COLORS[color] ?? COLORS['orange']
+    const c = COLORS[color] ?? COLORS.orange
     svgElement.style.setProperty('--primary-h', c.h)
     svgElement.style.setProperty('--primary-s', `${c.s}%`)
     svgElement.style.setProperty('--primary-l', `${c.l}%`)
@@ -122,7 +122,7 @@ const useImageExport = () => {
       return downloadURL({
         filename: project.meta.name,
         extension: 'svg',
-        data: 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg)
+        data: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg)
       })
     }
 
@@ -132,7 +132,7 @@ const useImageExport = () => {
 
       // Export to clipboard
       if (e.detail.clipboard) {
-        return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({'image/png': blob})]))
+        return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({ 'image/png': blob })]))
       }
 
       return downloadURL({
@@ -146,7 +146,7 @@ const useImageExport = () => {
   // Generate thumbnail
   useEffect(() => window.setTimeout(() => {
     const { svg } = getSvgString()
-    setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,'+encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n'+svg))
+    setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg))
   }, 200), [project])
 }
 

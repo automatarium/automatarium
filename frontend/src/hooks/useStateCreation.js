@@ -38,7 +38,6 @@ const positionFromEvent = e => {
   return doSnap ? snapPosition(pos) : pos
 }
 
-
 const snapPosition = ({ x, y }) =>
   ({ x: Math.floor(x / GRID_SNAP) * GRID_SNAP, y: Math.floor(y / GRID_SNAP) * GRID_SNAP })
 

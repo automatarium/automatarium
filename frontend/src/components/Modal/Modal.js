@@ -11,7 +11,7 @@ import {
   Buttons,
   Children,
   Heading,
-  Description,
+  Description
 } from './modalStyle'
 
 const Modal = ({

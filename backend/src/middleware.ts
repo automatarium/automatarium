@@ -30,6 +30,6 @@ export const isAuthenticated = (req: Request, res: Response, next: NextFunction)
     return next()
   }
   return res.status(403).json({
-    error: "User must be authenticated"
+    error: 'User must be authenticated'
   })
 }

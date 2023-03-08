@@ -4,7 +4,7 @@ import COLORS from '/src/config/colors'
 // Store state of easter egg across site instance
 const useDibStore = create((set) => ({
   intervalID: undefined,
-  setIntervalID: intervalID => set({ intervalID }),
+  setIntervalID: intervalID => set({ intervalID })
 }))
 
 // Smoothly change between all colours
@@ -12,7 +12,7 @@ const smoothHue = () => {
   // Get current hue
   const currHue = Number(document.documentElement.style.getPropertyValue('--primary-h'))
   // Set colour to new hue
-  document.documentElement.style.setProperty('--primary-h', (currHue+1)%360)
+  document.documentElement.style.setProperty('--primary-h', (currHue + 1) % 360)
   document.documentElement.style.setProperty('--primary-s', '63%')
   document.documentElement.style.setProperty('--primary-l', '48%')
 }
@@ -26,7 +26,7 @@ const rainbowRoadHue = () => {
   if (hueIndex === -1) {
     hueIndex = 0
   } else {
-    hueIndex = (hueIndex+1) % hues.length
+    hueIndex = (hueIndex + 1) % hues.length
   }
   // Set colour
   document.documentElement.style.setProperty('--primary-h', hues[hueIndex].h)
@@ -46,7 +46,7 @@ const useDibEgg = () => {
         setIntervalID(setInterval(smoothHue, 200))
       }
     // User types rainbowroad and automaton accepts
-    } else if (input == 'rainbowroad' && accepted) {
+    } else if (input === 'rainbowroad' && accepted) {
       if (intervalID) {
         clearInterval(intervalID)
         setIntervalID(undefined)

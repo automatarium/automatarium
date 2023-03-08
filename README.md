@@ -33,6 +33,8 @@ There are also other yarn commands, for example you can run `yarn dev:frontend` 
 
 This project is set up using yarn workspaces. To install a new dependency, run `yarn workspace <folder> add <package>`, where `folder` is frontend, backend, @automatarium/simulation, or @automatarium/jflap-translator, and `package` is the package you wish to add.
 
+Before making PR, check your code with `yarn lint`
+
 ## Deployment
 
 1. Ensure dependencies are installed by running `yarn`

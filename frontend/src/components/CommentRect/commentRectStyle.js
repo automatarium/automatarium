@@ -11,7 +11,7 @@ export const commentStyles = {
   userSelect: 'none',
   width: 'max-content',
   maxWidth: '255px',
-  boxSizing: 'border-box',
+  boxSizing: 'border-box'
 }
 
 export const commentSelectedClass = css`

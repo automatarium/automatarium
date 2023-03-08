@@ -20,7 +20,7 @@ const useSyncProjects = () => {
           const isolatedBackendProjects = backendProjects.filter(bp => !projects.find(lp => lp._id === bp._id))
           const isolatedLocalProjects = projects.filter(lp => !backendProjects.find(bp => lp._id === bp._id))
           const isolatedProjects = [...isolatedBackendProjects, ...isolatedLocalProjects]
-          
+
           // Find and resolve projects that exist on both backend and local storage
           const resolvedProjects = backendProjects
             .filter(bp => !isolatedProjects.find(ip => ip._id === bp._id))

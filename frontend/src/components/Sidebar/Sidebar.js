@@ -35,7 +35,7 @@ Sidebar.Button = styled('button', forwardRef)`
     background: var(--surface);
   }
 
-  &:active ${props => props.$active && `,&,&:hover`} {
+  &:active ${props => props.$active && ',&,&:hover'} {
     background: var(--primary);
   }
 `

@@ -11,7 +11,7 @@ const useThumbnailStore = create(persist(set => ({
     const { [id]: removed, ...thumbnails } = state.thumbnails
     return { thumbnails }
   }),
-  clearThumbnails: () => set({ thumbnails: {} }),
+  clearThumbnails: () => set({ thumbnails: {} })
 }), {
   name: 'automatarium-thumbnails'
 }))

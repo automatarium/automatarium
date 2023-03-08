@@ -6,7 +6,7 @@ const menus = [
     items: [
       {
         label: 'New...',
-        action: 'NEW_FILE',
+        action: 'NEW_FILE'
       },
       // TODO: Support dynamic menu items to show recent files
       // {
@@ -29,27 +29,27 @@ const menus = [
           {
             label: 'Import JFLAP file',
             action: 'IMPORT_JFLAP_PROJECT'
-          },
-        ],
+          }
+        ]
       },
       {
         label: 'Export',
         items: [
           {
             label: 'Export image...',
-            action: 'EXPORT',
+            action: 'EXPORT'
           },
           {
             label: 'Quick export as PNG',
-            action: 'EXPORT_AS_PNG',
+            action: 'EXPORT_AS_PNG'
           },
           {
             label: 'Quick export as SVG',
-            action: 'EXPORT_AS_SVG',
+            action: 'EXPORT_AS_SVG'
           },
           {
             label: 'Quick copy to clipboard',
-            action: 'EXPORT_TO_CLIPBOARD',
+            action: 'EXPORT_TO_CLIPBOARD'
           },
           'hr',
           {
@@ -59,14 +59,14 @@ const menus = [
           {
             label: 'Export as a JFLAP file',
             action: 'EXPORT_AS_JFLAP'
-          },
-        ],
+          }
+        ]
       },
       'hr',
       {
         label: 'Preferences',
-        action: 'OPEN_PREFERENCES',
-      },
+        action: 'OPEN_PREFERENCES'
+      }
     ]
   },
   {
@@ -74,35 +74,35 @@ const menus = [
     items: [
       {
         label: 'Undo',
-        action: 'UNDO',
+        action: 'UNDO'
       },
       {
         label: 'Redo',
-        action: 'REDO',
+        action: 'REDO'
       },
       'hr',
       {
         label: 'Copy',
-        action: 'COPY',
+        action: 'COPY'
       },
       {
         label: 'Paste',
-        action: 'PASTE',
+        action: 'PASTE'
       },
       {
         label: 'Select All',
-        action: 'SELECT_ALL',
+        action: 'SELECT_ALL'
       },
       {
         label: 'Clear Selection',
-        action: 'SELECT_NONE',
+        action: 'SELECT_NONE'
       },
       'hr',
       {
         label: 'Delete',
         shortcut: '⌫',
-        action: 'DELETE',
-      },
+        action: 'DELETE'
+      }
     ]
   },
   {
@@ -110,39 +110,39 @@ const menus = [
     items: [
       {
         label: 'Zoom in',
-        action: 'ZOOM_IN',
+        action: 'ZOOM_IN'
       },
       {
         label: 'Zoom out',
-        action: 'ZOOM_OUT',
+        action: 'ZOOM_OUT'
       },
       {
         label: 'Zoom to 100%',
-        action: 'ZOOM_100',
+        action: 'ZOOM_100'
       },
       {
         label: 'Zoom to fit',
-        action: 'ZOOM_FIT',
+        action: 'ZOOM_FIT'
       },
       'hr',
       {
         label: 'Fullscreen',
         shortcut: 'F11',
-        action: 'FULLSCREEN',
+        action: 'FULLSCREEN'
       },
       'hr',
       {
         label: 'Testing lab',
-        action: 'TESTING_LAB',
+        action: 'TESTING_LAB'
       },
       {
         label: 'File info',
-        action: 'FILE_INFO',
+        action: 'FILE_INFO'
       },
       {
         label: 'File options',
-        action: 'FILE_OPTIONS',
-      },
+        action: 'FILE_OPTIONS'
+      }
     ]
   },
   {
@@ -154,13 +154,13 @@ const menus = [
       },
       {
         label: 'Minimize DFA',
-        action: 'MINIMIZE_DFA',
+        action: 'MINIMIZE_DFA'
       },
       'hr',
       {
         label: 'Auto layout',
-        action: 'AUTO_LAYOUT',
-      },
+        action: 'AUTO_LAYOUT'
+      }
     ]
   },
   {
@@ -172,7 +172,7 @@ const menus = [
       },
       {
         label: 'Keyboard shortcuts',
-        action: 'KEYBOARD_SHORTCUTS',
+        action: 'KEYBOARD_SHORTCUTS'
       },
       'hr',
       {
@@ -185,10 +185,10 @@ const menus = [
       },
       'hr',
       {
-        label: `Version ${APP_VERSION}`,
-      },
+        label: `Version ${APP_VERSION}`
+      }
     ]
-  },
+  }
 ]
 
 export default menus

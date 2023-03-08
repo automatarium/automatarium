@@ -31,7 +31,8 @@ const GraphView = ({ children, ...props }) => {
     dispatchCustomEvent('svg:mousedown', {
       originalEvent: e,
       didTargetSVG: e.target === svgRef?.current,
-      viewX, viewY
+      viewX,
+      viewY
     })
   }, [])
 
@@ -40,7 +41,8 @@ const GraphView = ({ children, ...props }) => {
     dispatchCustomEvent('svg:mouseup', {
       originalEvent: e,
       didTargetSVG: e.target === svgRef?.current,
-      viewX, viewY
+      viewX,
+      viewY
     })
   }, [])
 
@@ -49,7 +51,8 @@ const GraphView = ({ children, ...props }) => {
     dispatchCustomEvent('svg:mousemove', {
       originalEvent: e,
       didTargetSVG: e.target === svgRef?.current,
-      viewX, viewY
+      viewX,
+      viewY
     })
   }, [])
 
@@ -101,7 +104,7 @@ const GraphView = ({ children, ...props }) => {
   const backgroundSize = `${1 / scale * GRID_SNAP * 2}px ${1 / scale * GRID_SNAP * 2}px`
   const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
-  const viewBox = `${position.x} ${position.y} ${scale*size.width} ${scale*size.height}`
+  const viewBox = `${position.x} ${position.y} ${scale * size.width} ${scale * size.height}`
   return (
     <Wrapper ref={wrapperRef} id='editor-panel-wrapper'>
       <Svg
@@ -122,7 +125,7 @@ const GraphView = ({ children, ...props }) => {
           strokeWidth: '2px',
           backgroundSize,
           backgroundPosition,
-          ...props.style,
+          ...props.style
         }}>
         <MarkerProvider>
           <g>{children}</g>

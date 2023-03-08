@@ -37,7 +37,6 @@ const InputDialogs = () => {
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [readRef.current, writeRef.current, directionRef.current, inputRef.current]
 
-
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
@@ -48,7 +47,7 @@ const InputDialogs = () => {
 
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
-    const midPoint = lerpPoints(pos.from, pos.to, .5)
+    const midPoint = lerpPoints(pos.from, pos.to, 0.5)
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
     if (projectType === 'TM') {
       setWrite(transition?.write ?? '')
@@ -56,7 +55,7 @@ const InputDialogs = () => {
 
       setDialog({
         visible: true,
-        x: screenMidPoint[0]-100, //Hack. Not Nice.
+        x: screenMidPoint[0] - 100, // Hack. Not Nice.
         y: screenMidPoint[1],
         id,
         previousReadValue: transition?.read,
@@ -64,15 +63,14 @@ const InputDialogs = () => {
         previousDirectionValue: transition?.direction,
         type: 'TMtransition'
       })
-    }
-    else {
+    } else {
       setDialog({
         visible: true,
         x: screenMidPoint[0],
         y: screenMidPoint[1],
         id,
         previousValue: transition?.read,
-        type: 'transition',
+        type: 'transition'
       })
     }
 
@@ -87,7 +85,8 @@ const InputDialogs = () => {
     const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
     const rangesPush = valuePush.match(/\[(.*?)\]/g)
     const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
-    editTransition({id: dialog.id,
+    editTransition({
+      id: dialog.id,
       read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
       pop: `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
       push: `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`
@@ -96,9 +95,8 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-
   const saveTMTransition = () => {
-    editTransition({id: dialog.id, read: read, write: write, direction: direction})
+    editTransition({ id: dialog.id, read, write, direction })
     commit()
     hideDialog()
   }
@@ -110,8 +108,9 @@ const InputDialogs = () => {
     setDialog({
       visible: true,
       selectedComment,
-      x, y,
-      type: 'comment',
+      x,
+      y,
+      type: 'comment'
     })
     focusInput()
   }, [inputRef.current])
@@ -137,8 +136,9 @@ const InputDialogs = () => {
     setDialog({
       visible: true,
       selectedState,
-      x: pos[0], y: pos[1],
-      type: 'stateName',
+      x: pos[0],
+      y: pos[1],
+      type: 'stateName'
     })
     focusInput()
   }, [inputRef.current])
@@ -157,8 +157,9 @@ const InputDialogs = () => {
     setDialog({
       visible: true,
       selectedState,
-      x: pos[0], y: pos[1],
-      type: 'stateLabel',
+      x: pos[0],
+      y: pos[1],
+      type: 'stateLabel'
     })
     focusInput()
   }, [inputRef.current])
@@ -169,34 +170,30 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-
   const save = {
     transition: saveTransition,
     TMtransition: saveTMTransition,
     comment: saveComment,
     stateName: saveStateName,
-    stateLabel: saveStateLabel,
+    stateLabel: saveStateLabel
   }[dialog.type]
 
-  function handleReadIn(e){
+  function handleReadIn (e) {
     const input = e.target.value.toString()
-    setRead(input[input.length-1]?? '')
+    setRead(input[input.length - 1] ?? '')
   }
-  function handleWriteIn(e){
+  function handleWriteIn (e) {
     const input = e.target.value.toString()
-    setWrite(input[input.length-1]?? '')
+    setWrite(input[input.length - 1] ?? '')
   }
-  function handleDirectionIn(e){
-    if ((e.target.value.toString() === "") || e.target.value.toString() === " ") {setDirection("S")}
-    else {
+  function handleDirectionIn (e) {
+    if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { setDirection('S') } else {
       const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
       if (input) {
         setDirection(input[input.length - 1].toUpperCase())
       }
     }
   }
-
-
 
   if (projectType === 'TM') {
     return (
@@ -224,9 +221,9 @@ const InputDialogs = () => {
                 onKeyUp={e => e.key === 'Enter' && save}
                 placeholder={'λ'}
                 style={{
-                  width: `8ch`,
+                  width: '8ch',
                   margin: '0 .4em',
-                  paddingRight: '2.5em',
+                  paddingRight: '2.5em'
                 }}
             />
           </InputWrapper>
@@ -238,15 +235,15 @@ const InputDialogs = () => {
                 onKeyUp={e => e.key === 'Enter' && save}
                 placeholder={'λ'}
                 style={{
-                  width: `8ch`,
+                  width: '8ch',
                   margin: '0 .4em',
-                  paddingRight: '2.5em',
+                  paddingRight: '2.5em'
                 }}
             />
 
           </InputWrapper>
           <InputWrapper>
-            {/*{dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}*/}
+            {/* {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />} */}
             <Input
                 ref={directionRef}
                 value={direction}
@@ -254,9 +251,9 @@ const InputDialogs = () => {
                 onKeyUp={e => e.key === 'Enter' && save}
                 placeholder={'↔'}
                 style={{
-                  width: `8ch`,
+                  width: '8ch',
                   margin: '0 .4em',
-                  paddingRight: '2.5em',
+                  paddingRight: '2.5em'
                 }}
             />
 
@@ -266,9 +263,7 @@ const InputDialogs = () => {
           </SubmitButton>
         </Dropdown>
     )
-  }
-
-  else {
+  } else {
     return (
         <Dropdown
             visible={dialog.visible}
@@ -281,11 +276,11 @@ const InputDialogs = () => {
             }}
             style={{
               top: `${dialog.y}px`,
-              left: `${dialog.x}px`,
+              left: `${dialog.x}px`
             }}
         >
           <InputWrapper>
-            {dialog.type === 'comment' && <MessageSquare style={{marginInline: '1em .6em'}}/>}
+            {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
             <Input
                 ref={inputRef}
                 value={value}
@@ -295,12 +290,12 @@ const InputDialogs = () => {
                   transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
                   comment: 'Comment text...',
                   stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-                  stateLabel: 'State label...',
+                  stateLabel: 'State label...'
                 }[dialog.type]}
                 style={{
                   width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
                   margin: '0 .4em',
-                  paddingRight: '2.5em',
+                  paddingRight: '2.5em'
                 }}
             />
             {!projectType === 'PDA' &&
@@ -317,12 +312,12 @@ const InputDialogs = () => {
                 onChange={e => setValuePop(e.target.value)}
                 onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={{
-                  transition: 'λ\t(pop)',
+                  transition: 'λ\t(pop)'
                 }[dialog.type]}
                 style={{
                   width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
                   margin: '0 .4em',
-                  paddingRight: '2.5em',
+                  paddingRight: '2.5em'
                 }}
             />
           </InputWrapper>}
@@ -335,12 +330,12 @@ const InputDialogs = () => {
                 onChange={e => setValuePush(e.target.value)}
                 onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={{
-                  transition: 'λ\t(push)',
+                  transition: 'λ\t(push)'
                 }[dialog.type]}
                 style={{
                   width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
                   margin: '0 .4em',
-                  paddingRight: '2.5em',
+                  paddingRight: '2.5em'
                 }}
             />
             {/* {console.log("valueRead is: ", value)}

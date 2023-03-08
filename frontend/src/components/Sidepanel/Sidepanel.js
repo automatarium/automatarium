@@ -12,26 +12,26 @@ const panels = [
     label: 'Testing Lab',
     value: 'test',
     icon: <FlaskConical />,
-    element: <TestingLab />,
+    element: <TestingLab />
   },
   {
     label: 'Stepping Lab',
     value: 'step',
     icon: <Pause />,
-    element: <SteppingLab />,
+    element: <SteppingLab />
   },
   {
     label: 'About Your Automaton',
     value: 'about',
     icon: <InfoIcon />,
-    element: <Info />,
+    element: <Info />
   },
   {
     label: 'File Options',
     value: 'options',
     icon: <Settings2 />,
-    element: <Options />,
-  },
+    element: <Options />
+  }
 ]
 
 const Sidepanel = () => {

@@ -7,15 +7,15 @@ import { getUser } from '/src/services/user'
 const useUserStore = create(set => ({
   user: null,
   signingUp: false,
-  fireState: {fireLoaded: false, fireUser: null},
+  fireState: { fireLoaded: false, fireUser: null },
   setFireState: fireState => set(() => ({ fireState })),
   setSigningUp: signingUp => set(() => ({ signingUp })),
-  setUser: user => set({ user }),
+  setUser: user => set({ user })
 }))
 
 const useAuth = () => {
   const { fireState, setFireState, signingUp, setSigningUp, user, setUser } = useUserStore()
-  const {fireLoaded, fireUser} = fireState
+  const { fireLoaded, fireUser } = fireState
   const [fetching, setFetching] = useState(false)
 
   // Log user in w/ firebase
@@ -50,7 +50,7 @@ const useAuth = () => {
     loading: fetching || !fireLoaded || (fireUser && !user),
     signIn,
     signOut,
-    setSigningUp,
+    setSigningUp
   }
 }
 

@@ -8,6 +8,6 @@ export const DEFAULT_ACCEPTANCE_CRITERIA = 'both'
 export const DEFAULT_PROJECT_COLOR = {
   FSA: 'orange',
   PDA: 'red',
-  TM: 'purple',
+  TM: 'purple'
 }
 export const PDA_PROJECT_TYPE = 'PDA'

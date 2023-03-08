@@ -6,8 +6,8 @@
   "scripts": {
     "start": "parcel public/index.html --no-cache",
     "build": "rm -rf dist && parcel build public/index.html",
-    "lint": "eslint 'src/**/*.js'",
-    "lint:fix": "eslint --fix 'src/**/*.js'"
+    "lint": "eslint . --ext .js,.ts",
+    "lint:fix": "eslint . --ext .js,.ts --fix"
   },
   "dependencies": {
     "@automatarium/jflap-translator": "1.0.0",

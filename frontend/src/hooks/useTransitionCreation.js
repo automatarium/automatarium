@@ -54,7 +54,7 @@ const useTransitionCreation = () => {
     },
     createTransitionEnd: createTransitionEnd && {
       x: createTransitionEnd[0],
-      y: createTransitionEnd[1],
+      y: createTransitionEnd[1]
     }
   }
 }

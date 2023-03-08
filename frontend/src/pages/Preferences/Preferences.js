@@ -11,7 +11,7 @@ const defaultValues = {
   theme: 'system',
   color: 'match',
   showGrid: true,
-  ctrlZoom: true,
+  ctrlZoom: true
 }
 
 const Preferences = () => {

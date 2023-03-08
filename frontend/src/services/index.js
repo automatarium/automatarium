@@ -6,8 +6,8 @@ export const instance = axios.create({
   baseURL: config.API,
   timeout: 1000 * 300,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 })
 
 instance.interceptors.request.use(async (config) => {
@@ -25,19 +25,19 @@ const api = {
   post: (endpoint, data, type = 'application/json') =>
     instance.post(endpoint, data, {
       headers: {
-        'Content-Type': type,
-      },
+        'Content-Type': type
+      }
     }),
 
   patch: (endpoint, data, type = 'application/json') =>
-  instance.patch(endpoint, data, {
-    headers: {
-      'Content-Type': type,
-    },
-  }),
+    instance.patch(endpoint, data, {
+      headers: {
+        'Content-Type': type
+      }
+    }),
 
   delete: (endpoint, config) =>
-  instance.delete(endpoint, config)
+    instance.delete(endpoint, config)
 }
 
 export * from './user'

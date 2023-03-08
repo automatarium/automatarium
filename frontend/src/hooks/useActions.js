@@ -13,10 +13,10 @@ export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) =>
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   alt && (isWindows ? 'Alt' : '⌥'),
   shift && (isWindows ? 'Shift' : '⇧'),
-  key?.toUpperCase(),
+  key?.toUpperCase()
 ].filter(Boolean)
 
-const useActions = (registerHotkeys=false) => {
+const useActions = (registerHotkeys = false) => {
   const undo = useProjectStore(s => s.undo)
   const redo = useProjectStore(s => s.redo)
   const selectNone = useSelectionStore(s => s.selectNone)
@@ -41,30 +41,28 @@ const useActions = (registerHotkeys=false) => {
   // TODO: memoize
   const actions = {
     NEW_FILE: {
-      handler: () => navigate('/new'),
+      handler: () => navigate('/new')
     },
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkey: { key: 'i', meta: true },
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?'))
-          promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project')
-     },
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project') }
+      }
     },
     IMPORT_JFLAP_PROJECT: {
       hotkey: { key: 'i', meta: true, shift: true },
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?'))
-          promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project')
-     },
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project') }
+      }
     },
     SAVE_FILE: {
       hotkey: { key: 's', meta: true },
       handler: () => {
         const project = useProjectStore.getState().project
-        const toSave = {...project, meta: { ...project.meta, dateEdited: new Date().getTime() }}
+        const toSave = { ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } }
         upsertProject(toSave)
         setLastSaveDate(new Date().getTime())
-      },
+      }
     },
     SAVE_FILE_AS: {
       hotkey: { key: 's', shift: true, meta: true },
@@ -74,63 +72,62 @@ const useActions = (registerHotkeys=false) => {
 
         // Create a download link and use it
         const a = document.createElement('a')
-        const file = new Blob([JSON.stringify(project, null, 2)], {type: 'application/json'})
+        const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
         a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')
         a.click()
-      },
+      }
     },
     EXPORT: {
-      hotkey: { key: 'e', meta: true},
-      handler: () => dispatchCustomEvent('exportImage'),
+      hotkey: { key: 'e', meta: true },
+      handler: () => dispatchCustomEvent('exportImage')
     },
     EXPORT_AS_PNG: {
       hotkey: { key: 'e', shift: true, meta: true },
-      handler: () => dispatchCustomEvent('exportImage', { type: 'png' }),
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png' })
     },
     EXPORT_AS_SVG: {
-      hotkey: { key: 'e', shift: true, alt: true, meta: true},
-      handler: () => dispatchCustomEvent('exportImage', { type: 'svg' }),
+      hotkey: { key: 'e', shift: true, alt: true, meta: true },
+      handler: () => dispatchCustomEvent('exportImage', { type: 'svg' })
     },
     EXPORT_TO_CLIPBOARD: {
-      hotkey: { key: 'c', shift: true, meta: true},
-      handler: () => dispatchCustomEvent('exportImage', { type: 'png', clipboard: true }),
+      hotkey: { key: 'c', shift: true, meta: true },
+      handler: () => dispatchCustomEvent('exportImage', { type: 'png', clipboard: true })
     },
     EXPORT_AS_JFLAP: {
-      //handler: () => console.log('Export JFLAP'),
+      // handler: () => console.log('Export JFLAP'),
     },
     OPEN_PREFERENCES: {
       hotkey: { key: ',', meta: true },
-      handler: () => dispatchCustomEvent('modal:preferences'),
+      handler: () => dispatchCustomEvent('modal:preferences')
     },
     UNDO: {
       hotkey: { key: 'z', meta: true },
-      handler: undo,
+      handler: undo
     },
     REDO: {
       hotkey: { key: 'y', meta: true },
-      handler: redo,
+      handler: redo
     },
     COPY: {
-      hotkey: { key: 'c', meta: true },
-      //handler: () => console.log('Copy'),
+      hotkey: { key: 'c', meta: true }
+      // handler: () => console.log('Copy'),
     },
     PASTE: {
-      hotkey: { key: 'v', meta: true },
-      //handler: () => console.log('Paste'),
+      hotkey: { key: 'v', meta: true }
+      // handler: () => console.log('Paste'),
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
-      handler: selectAll,
+      handler: selectAll
     },
     SELECT_NONE: {
       hotkey: { key: 'd', meta: true },
-      handler: selectNone,
+      handler: selectNone
     },
     DELETE: {
       hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
-        
         const selectionState = useSelectionStore.getState()
         const selectedStateIDs = selectionState.selectedStates
         const selectedTransitionIDs = selectionState.selectedTransitions
@@ -142,19 +139,19 @@ const useActions = (registerHotkeys=false) => {
           selectNone()
           commit()
         }
-      },
+      }
     },
     ZOOM_IN: {
       hotkey: { key: '=', meta: true },
-      handler: () => zoomViewTo(useViewStore.getState().scale - .1),
+      handler: () => zoomViewTo(useViewStore.getState().scale - 0.1)
     },
     ZOOM_OUT: {
       hotkey: { key: '-', meta: true },
-      handler: () => zoomViewTo(useViewStore.getState().scale + .1),
+      handler: () => zoomViewTo(useViewStore.getState().scale + 0.1)
     },
     ZOOM_100: {
       hotkey: { key: '0', meta: true },
-      handler: () => { zoomViewTo(1) },
+      handler: () => { zoomViewTo(1) }
     },
     ZOOM_FIT: {
       hotkey: { key: 'f', shift: true },
@@ -168,56 +165,56 @@ const useActions = (registerHotkeys=false) => {
         // Get the bounding box of the SVG group
         const b = document.querySelector('#automatarium-graph > g').getBBox()
         if (Math.max(b.width, b.height) < border) return // Bail if the bounding box is too small
-        const [x, y, width, height] = [b.x - border, b.y - border, b.width + border*2, b.height + border*2]
+        const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
 
         // Calculate fit region
         const desiredScale = Math.max(width / view.size.width, height / view.size.height)
         view.setViewScale(desiredScale)
         // Calculate x and y to centre graph
         view.setViewPosition({
-          x: x + (width - view.size.width * desiredScale)/2,
-          y: y + (height - view.size.height * desiredScale)/2,
+          x: x + (width - view.size.width * desiredScale) / 2,
+          y: y + (height - view.size.height * desiredScale) / 2
         })
-      },
+      }
     },
     FULLSCREEN: {
       handler: () => document.fullscreenElement
         ? document.exitFullscreen()
-        : document.documentElement.requestFullscreen(),
+        : document.documentElement.requestFullscreen()
     },
     TESTING_LAB: {
       hotkey: { key: '1', shift: true },
-      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' }),
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' })
     },
     FILE_INFO: {
       hotkey: { key: '2', shift: true },
-      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' }),
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' })
     },
     FILE_OPTIONS: {
       hotkey: { key: '3', shift: true },
-      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' }),
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      //handler: () => console.log('Convert to DFA'),
+      // handler: () => console.log('Convert to DFA'),
     },
     MINIMIZE_DFA: {
-      //handler: () => console.log('Minimize DFA'),
+      // handler: () => console.log('Minimize DFA'),
     },
     AUTO_LAYOUT: {
-      //handler: () => console.log('Auto Layout'),
+      // handler: () => console.log('Auto Layout'),
     },
     OPEN_DOCS: {
-      handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank'),
+      handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
     },
     KEYBOARD_SHORTCUTS: {
       hotkey: { key: '/', meta: true },
-      handler: () => dispatchCustomEvent('modal:shortcuts'),
+      handler: () => dispatchCustomEvent('modal:shortcuts')
     },
     PRIVACY_POLICY: {
-      handler: () => window.open('/privacy', '_blank'),
+      handler: () => window.open('/privacy', '_blank')
     },
     OPEN_ABOUT: {
-      handler: () => window.open('/about', '_blank'),
+      handler: () => window.open('/about', '_blank')
     },
     MOVE_VIEW_LEFT: {
       hotkey: { key: 'ArrowLeft' },
@@ -279,21 +276,21 @@ const useActions = (registerHotkeys=false) => {
       }
     },
     CREATE_COMMENT: {
-      handler: e => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100),
+      handler: e => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100)
     },
     SET_STATE_NAME: {
       handler: () => {
         const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
         if (selectedStateID === undefined) return
         window.setTimeout(() => dispatchCustomEvent('editStateName', { id: selectedStateID }), 100)
-      },
+      }
     },
     SET_STATE_LABEL: {
       handler: () => {
         const selectedStateID = useSelectionStore.getState().selectedStates?.[0]
         if (selectedStateID === undefined) return
         window.setTimeout(() => dispatchCustomEvent('editStateLabel', { id: selectedStateID }), 100)
-      },
+      }
     },
     CREATE_STATE: {
       handler: e => {
@@ -330,30 +327,29 @@ const useActions = (registerHotkeys=false) => {
     },
     TOOL_CURSOR: {
       hotkey: { key: 'V' },
-      handler: () => setTool('cursor'),
+      handler: () => setTool('cursor')
     },
     TOOL_HAND: {
       hotkey: { key: 'H' },
-      handler: () => setTool('hand'),
+      handler: () => setTool('hand')
     },
     TOOL_STATE: {
       hotkey: { key: 'S' },
-      handler: () => setTool('state'),
+      handler: () => setTool('state')
     },
     TOOL_TRANSITION: {
       hotkey: { key: 'T' },
-      handler: () => setTool('transition'),
+      handler: () => setTool('transition')
     },
     TOOL_COMMENT: {
       hotkey: { key: 'C' },
-      handler: () => setTool('comment'),
+      handler: () => setTool('comment')
     },
     TOOL_DELETE: {
-      hotkey: {key: 'D'},
+      hotkey: { key: 'D' },
       handler: () => {
-        
         setTool('delete')
-      },
+      }
     }
   }
 
@@ -365,14 +361,12 @@ const useActions = (registerHotkeys=false) => {
         if (haveInputFocused(e)) return
 
         // Check hotkeys
-        for (let action of Object.values(actions)) {
+        for (const action of Object.values(actions)) {
           // Skip if no hotkey
-          if (!action.hotkey)
-            continue
+          if (!action.hotkey) { continue }
 
           // Skip if disabled
-          if (action.disabled && action.disabled())
-            continue
+          if (action.disabled && action.disabled()) { continue }
 
           const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey]
           const activeHotkey = hotkeys.find(hotkey => {
@@ -380,16 +374,12 @@ const useActions = (registerHotkeys=false) => {
             const letterMatch = e.code === `Key${hotkey.key.toUpperCase()}`
             const digitMatch = e.code === `Digit${hotkey.key}`
             const keyMatch = e.key === hotkey.key
-            if (!(letterMatch || digitMatch || keyMatch))
-                return false
+            if (!(letterMatch || digitMatch || keyMatch)) { return false }
 
             // Check augmenting keys
-            if ((hotkey.meta || false) !== (e.metaKey || e.ctrlKey))
-              return false
-            if ((hotkey.alt || false) !== e.altKey)
-              return false
-            if ((hotkey.shift || false) !== e.shiftKey)
-              return false
+            if ((hotkey.meta || false) !== (e.metaKey || e.ctrlKey)) { return false }
+            if ((hotkey.alt || false) !== e.altKey) { return false }
+            if ((hotkey.shift || false) !== e.shiftKey) { return false }
 
             return true
           })
@@ -421,24 +411,21 @@ const useActions = (registerHotkeys=false) => {
 
 const zoomViewTo = to => {
   const view = useViewStore.getState()
-  if (view.scale === to)
-    return
+  if (view.scale === to) { return }
   const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, to))
   const scrollAmount = newScale - view.scale
   if (Math.abs(scrollAmount) < 1e-3) {
     view.setViewScale(to < 1 ? SCROLL_MIN : SCROLL_MAX)
-    return
   } else {
     view.setViewPosition({
-      x: view.position.x - view.size.width/2 * scrollAmount,
-      y: view.position.y - view.size.height/2 * scrollAmount,
+      x: view.position.x - view.size.width / 2 * scrollAmount,
+      y: view.position.y - view.size.height / 2 * scrollAmount
     })
     view.setViewScale(newScale)
   }
 }
 
-
-const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
+const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
@@ -450,7 +437,7 @@ const promptLoadFile = (parse, onData, errorMessage='Failed to parse file') => {
         const fileData = parse(reader.result)
         const project = {
           ...createNewProject(),
-          ...fileData,
+          ...fileData
         }
         onData({
           ...project,

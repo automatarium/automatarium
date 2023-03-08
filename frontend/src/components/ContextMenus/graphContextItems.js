@@ -1,22 +1,22 @@
 const graphContextItems = [
   {
     label: 'Add comment',
-    action: 'CREATE_COMMENT',
+    action: 'CREATE_COMMENT'
   },
   'hr',
   {
     label: 'Create state here',
-    action: 'CREATE_STATE',
+    action: 'CREATE_STATE'
   },
   'hr',
   {
     label: 'Select all',
-    action: 'SELECT_ALL',
+    action: 'SELECT_ALL'
   },
   {
     label: 'Paste',
-    action: 'PASTE',
-  },
+    action: 'PASTE'
+  }
 ]
 
 export default graphContextItems

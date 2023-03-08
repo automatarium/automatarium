@@ -43,19 +43,18 @@ const useViewDragging = containerRef => {
       const desiredScrollAmount = Math.max(Math.min(e.deltaY, 50), -50) * SCROLL_SPEED * viewScale
       const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, viewScale + desiredScrollAmount))
       const scrollAmount = newScale - viewScale
-      if (scrollAmount === 0)
-        return
+      if (scrollAmount === 0) { return }
 
       const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
       setViewPositionAndScale({
         x: viewPosition.x - mx * scrollAmount,
-        y: viewPosition.y - my * scrollAmount,
+        y: viewPosition.y - my * scrollAmount
       }, newScale)
     } else {
       // Pan
       setViewPosition({
         x: viewPosition.x + e.deltaX * viewScale,
-        y: viewPosition.y + e.deltaY * viewScale,
+        y: viewPosition.y + e.deltaY * viewScale
       })
     }
   }, [viewScale, viewPosition, ctrlZoom], {
@@ -82,7 +81,7 @@ const useViewDragging = containerRef => {
         const [mx, my] = relativeMousePosition(e.clientX, e.clientY)
         setViewPosition({
           x: dragStartViewPosition.x + (sx - mx) * viewScale,
-          y: dragStartViewPosition.y + (sy - my) * viewScale,
+          y: dragStartViewPosition.y + (sy - my) * viewScale
         })
       }
     } else {

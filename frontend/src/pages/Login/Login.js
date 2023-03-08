@@ -6,7 +6,7 @@ import { useAuth } from '/src/hooks'
 
 const defaultValues = {
   email: '',
-  password: '',
+  password: ''
 }
 
 const Login = {}
@@ -19,8 +19,8 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   const {
     register,
     handleSubmit,
-    formState: { errors, isDirty },
-  } = useForm({ defaultValues})
+    formState: { errors, isDirty }
+  } = useForm({ defaultValues })
 
   // Were there errors from fire / from signing in?
   const error = fireError || authError?.message

@@ -7,13 +7,13 @@ const config = {
     baseUrl: 'http://localhost:1234',
     API: 'http://localhost:3001',
     documentTitle: '[Dev] Automatarium',
-    firebaseConfig: firebaseConfigDev,
+    firebaseConfig: firebaseConfigDev
   },
   production: {
     baseUrl: 'https://automatarium.tdib.xyz',
     API: 'https://api.automatarium.tdib.xyz',
     documentTitle: 'Automatarium',
-    firebaseConfig: firebaseConfigDev,
+    firebaseConfig: firebaseConfigDev
   }
 }
 

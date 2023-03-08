@@ -11,7 +11,7 @@ import {
   useStateSelection,
   useTransitionSelection,
   useContextMenus,
-  useDeleteTool,
+  useDeleteTool
 } from '/src/hooks'
 
 const EditorPanel = () => {
@@ -24,7 +24,7 @@ const EditorPanel = () => {
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
 
-  useDeleteTool();
+  useDeleteTool()
   useCommentCreation()
   useContextMenus()
 
@@ -37,8 +37,7 @@ const EditorPanel = () => {
 
   useEvent('comment:mousedown', e => {
     const selectedCommentIDs = selectComment(e)
-    if (e.detail.originalEvent.button === 0)
-      startCommentDrag(e, selectedCommentIDs)
+    if (e.detail.originalEvent.button === 0) { startCommentDrag(e, selectedCommentIDs) }
   })
 
   useEvent('transition:mousedown', e => {

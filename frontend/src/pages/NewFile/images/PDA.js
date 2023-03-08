@@ -13,10 +13,10 @@ const PDA = () => (
       style={{
         backgroundSize: 30,
         backgroundPosition: 0,
-        backgroundColor: "white",
-        PrimaryH: "0",
-        PrimaryS: "63%",
-        PrimaryL: "48%",
+        backgroundColor: 'white',
+        PrimaryH: '0',
+        PrimaryS: '63%',
+        PrimaryL: '48%'
       }}
     >
       <defs>
@@ -77,10 +77,10 @@ const PDA = () => (
         dy="-5"
         textAnchor="middle"
         style={{
-          WebkitUserSelect: "none",
-          MozUserSelect: "none",
-          MsUserSelect: "none",
-          userSelect: "none",
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          MsUserSelect: 'none',
+          userSelect: 'none'
         }}
       >
         <textPath startOffset="50%" xlinkHref="#0105120285120-text">
@@ -112,10 +112,10 @@ const PDA = () => (
         dy="-5"
         textAnchor="middle"
         style={{
-          WebkitUserSelect: "none",
-          MozUserSelect: "none",
-          MsUserSelect: "none",
-          userSelect: "none",
+          WebkitUserSelect: 'none',
+          MozUserSelect: 'none',
+          MsUserSelect: 'none',
+          userSelect: 'none'
         }}
       >
         a,λ;X
@@ -146,10 +146,10 @@ const PDA = () => (
           dy="-5"
           textAnchor="middle"
           style={{
-            WebkitUserSelect: "none",
-            MozUserSelect: "none",
-            MsUserSelect: "none",
-            userSelect: "none",
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            MsUserSelect: 'none',
+            userSelect: 'none'
           }}
         >
           b,X;λ
@@ -162,10 +162,10 @@ const PDA = () => (
           alignmentBaseline="central"
           textAnchor="middle"
           style={{
-            WebkitUserSelect: "none",
-            MozUserSelect: "none",
-            MsUserSelect: "none",
-            userSelect: "none",
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            MsUserSelect: 'none',
+            userSelect: 'none'
           }}
         >
           q0
@@ -179,10 +179,10 @@ const PDA = () => (
           alignmentBaseline="central"
           textAnchor="middle"
           style={{
-            WebkitUserSelect: "none",
-            MozUserSelect: "none",
-            MsUserSelect: "none",
-            userSelect: "none",
+            WebkitUserSelect: 'none',
+            MozUserSelect: 'none',
+            MsUserSelect: 'none',
+            userSelect: 'none'
           }}
         >
           q1
@@ -191,4 +191,4 @@ const PDA = () => (
     </svg>
 )
 
-export default PDA;
+export default PDA

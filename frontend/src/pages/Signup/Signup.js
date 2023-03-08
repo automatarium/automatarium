@@ -24,8 +24,8 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
     handleSubmit,
     watch,
     setError: setFieldError,
-    formState: { errors, isDirty },
-  } = useForm({ defaultValues})
+    formState: { errors, isDirty }
+  } = useForm({ defaultValues })
 
   useEffect(() => {
     if (setFormActions) {
@@ -51,7 +51,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
       const res = await createUser({
         uid: fireUserRecord.user.uid,
         email: values.email,
-        preferences: {},
+        preferences: {}
       })
 
       if (res?.user) {
@@ -64,7 +64,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
       if (error.code && error.code === 'auth/email-already-in-use') {
         setFieldError('email', {
           type: 'manual',
-          message: 'This email is already in use',
+          message: 'This email is already in use'
         })
         values.email = ''
       } else if (error.response && error.response.status === 400) {
@@ -76,7 +76,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
         error.response.data.fieldErrors.forEach(fieldError => {
           setFieldError(fieldError.name, {
             type: 'manual',
-            message: fieldError.message,
+            message: fieldError.message
           })
         })
       } else {
@@ -106,7 +106,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
     <Label htmlFor='passwordAgain'>Confirm Password</Label>
     <Input type='password' {...register('passwordAgain', {
       validate: value =>
-      value === watchPassword || 'Passwords must match',
+        value === watchPassword || 'Passwords must match'
     })} />
     <p>{errors.passwordAgain?.message}</p>
   </form>

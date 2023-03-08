@@ -45,7 +45,7 @@ export const StyledTransition = styled('svg')`
   path {
     fill: none;
     stroke: var(--success);
-    ${props => props.$error && `stroke: var(--error);`}
+    ${props => props.$error && 'stroke: var(--error);'}
     stroke-width: 2px;
     stroke-linecap: round;
   }

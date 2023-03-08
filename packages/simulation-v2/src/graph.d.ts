@@ -1,4 +1,4 @@
-import {TMState} from "./TMSearch";
+import { TMState } from './TMSearch'
 
 export type ReadSymbol = string;
 export type StateID = number;
@@ -85,7 +85,6 @@ export type TMGraphIn = {
     transitions: TMTransition[]
 }
 
-
 export type ExecutionTrace = {
     read: string | null;
     to: StateID;
@@ -102,12 +101,7 @@ export type ExecutionResult = {
     trace: ExecutionTrace[];
 };
 
-export type PDAExecutionResult = {
-    accepted: boolean;
-    remaining: string;
-    trace: PDAExecutionTrace[];
-    stack: Stack;
-}
+export type Stack = string[];
 
 export type PDAExecutionTrace = {
     read: string | null;
@@ -118,7 +112,12 @@ export type PDAExecutionTrace = {
     invalidPop: boolean;
 };
 
-export type Stack = string[];
+export type PDAExecutionResult = {
+    accepted: boolean;
+    remaining: string;
+    trace: PDAExecutionTrace[];
+    stack: Stack;
+}
 
 export type TMExecutionTrace = {
     tape: Tape | null

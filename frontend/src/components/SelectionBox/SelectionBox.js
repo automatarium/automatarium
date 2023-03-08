@@ -23,7 +23,7 @@ const SelectionBox = () => {
   const [mousePos, setMousePos] = useState(null)
 
   useEvent('mousemove', e => {
-      setMousePos(screenToViewSpace(e.clientX, e.clientY))
+    setMousePos(screenToViewSpace(e.clientX, e.clientY))
   }, [])
 
   // TODO: use custom events nistead
@@ -51,7 +51,7 @@ const SelectionBox = () => {
 
       // Determine selected transitions
       const selectedTransitions = transitions.map(t => locateTransition(t, states)).filter(transition =>
-        transition.from.x  >= startX &&
+        transition.from.x >= startX &&
         transition.from.x <= endX &&
         transition.from.y >= startY &&
         transition.from.y <= endY &&
@@ -64,7 +64,7 @@ const SelectionBox = () => {
       const selectedComments = comments.filter(comment =>
         comment.x >= startX &&
         comment.y >= startY &&
-        comment.x <= endX && 
+        comment.x <= endX &&
         comment.y <= endY).map(c => c.id)
 
       // Update state
@@ -75,8 +75,7 @@ const SelectionBox = () => {
     }
   }, [toolActive, dragStart, mousePos, states])
 
-  if (!dragStart || !mousePos || !toolActive)
-    return null
+  if (!dragStart || !mousePos || !toolActive) { return null }
 
   const startX = Math.min(dragStart[0], mousePos[0])
   const startY = Math.min(dragStart[1], mousePos[1])

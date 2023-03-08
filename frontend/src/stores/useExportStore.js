@@ -6,7 +6,7 @@ const defaultOptions = {
   margin: 20,
   color: '',
   darkMode: false,
-  background: 'solid',
+  background: 'solid'
 }
 
 const useExportStore = create(set => ({
@@ -15,7 +15,7 @@ const useExportStore = create(set => ({
 
   setExportVisible: exportVisible => set({ exportVisible }),
   setOptions: options => set(state => ({ options: { ...state.options, ...options } })),
-  reset: () => set({ options: { ...defaultOptions } }),
+  reset: () => set({ options: { ...defaultOptions } })
 }))
 
 export default useExportStore

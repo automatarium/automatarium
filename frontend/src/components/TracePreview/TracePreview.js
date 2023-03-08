@@ -45,13 +45,13 @@ const TracePreview = ({
   ...props
 }) => (
   <Wrapper {...props}>
-    {trace.trace.slice(0, step+1).map((item, i) => <Fragment key={i}>
+    {trace.trace.slice(0, step + 1).map((item, i) => <Fragment key={i}>
       {item.read === null && i === 0 && <InitialArrow />}
-      <State final={i+1 === trace.trace.length && trace.accepted}>
-        {states?.find(s => s.id === item.to)?.name ?? statePrefix+item.to}
+      <State final={i + 1 === trace.trace.length && trace.accepted}>
+        {states?.find(s => s.id === item.to)?.name ?? statePrefix + item.to}
       </State>
       {((i < step || (!trace.accepted && trace.transitionCount === step)) && (trace.trace.length > 1 || !trace.accepted)) && <Transition
-        error={i+1 === trace.trace.length}
+        error={i + 1 === trace.trace.length}
       />}
     </Fragment>)}
   </Wrapper>

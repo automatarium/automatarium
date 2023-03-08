@@ -1,6 +1,6 @@
 import { Label } from './sectionLabelStyle'
 
-const SectionLabel = ({children, ...props}) =>
+const SectionLabel = ({ children, ...props }) =>
   <Label {...props}>
     {children}
   </Label>

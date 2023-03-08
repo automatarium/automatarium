@@ -109,7 +109,7 @@ export const deleteProject = async ( req: Request, res: Response) => {
     // Ensure project belongs to authenticated user
     if (project?.userid !== uid) {
       return res.status(403).json({
-        error: "You cannot delete this project as it does not belong to you."
+        error: 'You cannot delete this project as it does not belong to you.'
       })
     }
 

@@ -96,7 +96,7 @@ export const DropdownButtonWrapper = styled('button', forwardRef)`
   font-size: .95em;
   border-radius: .2em;
 
-  &:hover ${props => props.$active && `,&`} {
+  &:hover ${props => props.$active && ',&'} {
     background: var(--surface);
   }
 `

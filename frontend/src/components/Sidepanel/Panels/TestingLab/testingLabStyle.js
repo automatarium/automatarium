@@ -45,7 +45,6 @@ export const MultiTraceRow = styled('div')`
   }
 `
 
-
 export const RemoveButton = styled('button')`
   background: none;
   border: 0;

@@ -1,11 +1,11 @@
-/* eslint-env node */
-module.exports = {
+{
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node": true
     },
     "extends": [
-        "eslint:recommended",
+        "standard",
         "plugin:react/recommended"
     ],
     "parserOptions": {
@@ -27,6 +27,7 @@ module.exports = {
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react/display-name": "off",
-      "no-unused-vars": ["warn", { "ignoreRestSiblings": true }]
+      "react/no-unescaped-entities": "off",
+      "import/no-absolute-path": "off"
     }
 }
