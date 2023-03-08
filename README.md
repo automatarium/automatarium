@@ -16,6 +16,11 @@ Automatarium was built by RMIT students
 - [Benji Grant](https://github.com/GRA0007)
 - [Tim Tran](https://github.com/spacediscotqtt)
 
+Automatarium was also then extended by RMIT students
+
+- [Lachlan Van Der Klift]
+- [Jake Leahy]
+
 ## Project Structure
 
 Automatarium is a React project with a Node JS backend (that connects to a MongoDB database). We have two packages for automata simulation and jflap to automatarium file conversion.
