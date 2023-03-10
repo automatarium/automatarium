@@ -1,13 +1,7 @@
 name: CI tests
 on: 
   push:
-    branches:
-      - main
-      - dev
   pull_request:
-    branches:
-      - main
-      - dev
 
 jobs:
   checks:
@@ -15,8 +9,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install modules
+      - name: Install Yarn Dependencies
         run: yarn
 
-      - name: Run linter
+      - name: Run Linter
         run: yarn lint
