@@ -50,15 +50,19 @@ const TestingLab = () => {
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
   // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
-  // Execute graph
-  const simulateGraph = useCallback(() => {
+  /**
+   * Runs the correct simulation result for a trace input and returns the result.
+   * The simulation function to use depends on the project name
+   */
+  const runSimulation = (input) => {
     if (projectType === 'TM') {
-      const tapeTrace = traceInput ? traceInput.split('') : ['']
+      const tapeTrace = input ? input.split('') : ['']
       const tapePointer = 0 // This is hard coded for now. Future development available
 
       const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace } ??
-          { pointer: 0, trace: [] })
-      const result = {
+            { pointer: 0, trace: [] })
+
+      return {
         halted,
         tape,
         trace: trace.map(step => ({
@@ -67,17 +71,13 @@ const TestingLab = () => {
         })),
         transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
       }
-
-      setSimulationResult(result)
-      setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
-      return result
-    } else {
+    } else if (['PDA', 'FSA'].includes(projectType)) {
       const { accepted, trace, remaining } =
-          projectType === 'PDA'
-            ? simulatePDA(graph, traceInput ?? '')
-            : simulateFSA(graph, traceInput ?? '')
+            projectType === 'PDA'
+              ? simulatePDA(graph, input ?? '')
+              : simulateFSA(graph, input ?? '')
 
-      const result = {
+      return {
         accepted,
         remaining,
         trace: trace.map(step => ({
@@ -89,13 +89,23 @@ const TestingLab = () => {
         })),
         transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
       }
+    } else {
+      throw new Error(`${projectType} is not supported`)
+    }
+  }
 
+  // Execute graph
+  const simulateGraph = useCallback(() => {
+    const result = runSimulation(traceInput)
+    if (projectType === 'TM') {
+      setSimulationResult(result)
+      setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
+    } else {
       setSimulationResult(result)
       // Adds result to PDA visualiser
       setPDAVisualiser(result)
-
-      return result
     }
+    return result
   }, [graph, traceInput])
 
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
@@ -352,7 +362,7 @@ const TestingLab = () => {
             icon={<Plus />}
           />
           <Button onClick={() => {
-            setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+            setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
           }}>Run</Button>
       </Wrapper>
     </>
