@@ -85,9 +85,17 @@ const Menubar = () => {
     setEditingTitle(true)
     window.setTimeout(() => titleRef.current?.select(), 50)
   }
+
+  const saveProject = () => {
+    const project = useProjectStore.getState().project
+    upsertProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
+    setLastSaveDate(new Date().getTime())
+  }
+
   const handleSaveProjectName = () => {
     if (titleValue && !/^\s*$/.test(titleValue)) {
       setProjectName(titleValue)
+      saveProject()
     }
     setEditingTitle(false)
   }
@@ -106,9 +114,7 @@ const Menubar = () => {
             e.preventDefault()
             if (isSaving) {
               // If there are unsaved changes, save and then navigate
-              const project = useProjectStore.getState().project
-              upsertProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
-              setLastSaveDate(new Date().getTime())
+              saveProject()
             }
             navigate('/new')
           }}>
