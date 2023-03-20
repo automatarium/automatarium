@@ -59,8 +59,7 @@ const TestingLab = () => {
       const tapeTrace = input ? input.split('') : ['']
       const tapePointer = 0 // This is hard coded for now. Future development available
 
-      const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace } ??
-            { pointer: 0, trace: [] })
+      const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace })
 
       return {
         halted,
