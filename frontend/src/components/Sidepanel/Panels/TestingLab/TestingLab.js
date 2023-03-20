@@ -141,20 +141,16 @@ const TestingLab = () => {
     return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
-  useEffect(() => {
-    if (projectType === 'TM') {
-      setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph,
-        { pointer: 0, trace: [input] })))
-    } else {
-      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
-    }
-  }, [])
 
   useEffect(() => {
     simulateGraph()
     setMultiTraceOutput()
     setTraceIdx(0)
   }, [lastChangeDate])
+  
+  useEffect(() => {
+    setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
+  }, [])
 
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
