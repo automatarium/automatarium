@@ -94,6 +94,11 @@ const TestingLab = () => {
     }
   }
 
+  /** Runs all multi trace inputs and updates the output */
+  const rerunMultiTraceInput = () => {
+    setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
+  }
+
   // Execute graph
   const simulateGraph = useCallback(() => {
     const result = runSimulation(traceInput)
@@ -141,15 +146,14 @@ const TestingLab = () => {
     return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
-
   useEffect(() => {
     simulateGraph()
     setMultiTraceOutput()
     setTraceIdx(0)
   }, [lastChangeDate])
-  
+
   useEffect(() => {
-    setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
+    rerunMultiTraceInput()
   }, [])
 
   // Set the trace IDx to be passed through store to TMTapeLab component
@@ -309,7 +313,7 @@ const TestingLab = () => {
                   if (e.key === 'Enter' && !e.repeat) {
                     if (e.metaKey || e.ctrlKey) {
                       // Run shortcut
-                      setMultiTraceOutput(multiTraceInput.map(input => simulateFSA(graph, input)))
+                      rerunMultiTraceInput()
                     } else {
                       addMultiTraceInput()
                       window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)
@@ -358,7 +362,7 @@ const TestingLab = () => {
             icon={<Plus />}
           />
           <Button onClick={() => {
-            setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
+            rerunMultiTraceInput()
           }}>Run</Button>
       </Wrapper>
     </>
