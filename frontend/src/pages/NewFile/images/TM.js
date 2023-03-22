@@ -1,4 +1,4 @@
-import React from 'react'
+// Used https://svg2jsx.com/ for SVG conversion and manually deleted unncecessary parts/made inline to make similar to FSA.js
 
 const TM = () => (
   <svg viewBox="454 384 362 192">
