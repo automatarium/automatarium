@@ -293,7 +293,7 @@ if (projectType === 'TM') {
                   stateLabel: 'State label...'
                 }[dialog.type]}
                 style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
@@ -315,7 +315,7 @@ if (projectType === 'TM') {
                   transition: 'λ\t(pop)'
                 }[dialog.type]}
                 style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
@@ -333,7 +333,7 @@ if (projectType === 'TM') {
                   transition: 'λ\t(push)'
                 }[dialog.type]}
                 style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
