@@ -8,13 +8,33 @@ Automatarium is a modern take on the useful [JFLAP](https://www.jflap.org/), but
 
 ## Contributors
 
-Automatarium was built by RMIT students
+Automatarium is built by RMIT students with the original members being
 
 - [Max Reid](https://github.com/Prydeton)
 - [Thomas Dib](https://github.com/tdib)
 - [Ewan Breakey](https://github.com/giraugh)
 - [Benji Grant](https://github.com/GRA0007)
 - [Tim Tran](https://github.com/spacediscotqtt)
+
+It was then expanded on by more capstone groups
+
+<details>
+    <summary>Group 2</summary>
+    - [Conor Christensen](https://github.com/ConorChristensen-RMIT)
+    - [Jessani Linsangan](https://github.com/s3844703)
+    - [Lachlan Blennerhassett](https://github.com/Canni6)
+    - [Tomas Haddad](https://github.com/tomashaddad)
+    - [Oliver Hale](https://github.com/s3781403)
+</details>
+
+<details>
+    <summary>Group 3</summary>
+    - [Ope Abbas](https://github.com/OpeAbbas)
+    - [Sidhra Fernando-Plant](https://github.com/SidhraFernando-Plant)
+    - [Jake Leahy](https://github.com/ire4ever1190)
+    - [Aung Pyae Sone](https://github.com/eddie7788)
+    - [Lachlan Van Der Klift](https://github.com/LvandoApps)
+</details>
 
 ## Project Structure
 
