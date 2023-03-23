@@ -209,71 +209,66 @@ const InputDialogs = () => {
 
   if (projectType === 'TM') {
     return (
-        <Dropdown
-            visible={dialog.visible}
-            onClose={() => {
-              hideDialog()
-              // Delete transitions if not new
-              if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
-                removeTransitions([dialog.id])
-              }
-            }}
+      <Dropdown
+        visible={dialog.visible}
+        onClose={() => {
+          hideDialog()
+          // Delete transitions if not new
+          if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
+            removeTransitions([dialog.id])
+          }
+        }}
+        style={{
+          top: `${dialog.y}px`,
+          left: `${dialog.x}px`
+        }}
+      >
+        <InputWrapper>
+          <Input
+            ref={readRef}
+            value={read}
+            onChange={handleReadIn}
+            onKeyUp={e => e.key === 'Enter' && save()}
+            placeholder={'λ'}
             style={{
-              top: `${dialog.y}px`,
-              left: `${dialog.x}px`,
-              display: 'flex',
-              flexDirection: 'row'
+              width: '8ch',
+              margin: '0 .4em',
+              paddingRight: '2.5em'
             }}
-        >
-          <InputWrapper>
-            <Input
-                ref={readRef}
-                value={read}
-                onChange={handleReadIn}
-                onKeyUp={e => e.key === 'Enter' && save()}
-                placeholder={'λ'}
-                style={{
-                  width: '8ch',
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <Input
-                ref={writeRef}
-                value={write}
-                onChange={handleWriteIn}
-                onKeyUp={e => e.key === 'Enter' && save()}
-                placeholder={'λ'}
-                style={{
-                  width: '8ch',
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-            />
-
-          </InputWrapper>
-          <InputWrapper>
-            {/* {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />} */}
-            <Input
-                ref={directionRef}
-                value={direction}
-                onChange={handleDirectionIn}
-                onKeyUp={e => e.key === 'Enter' && save()}
-                placeholder={'↔'}
-                style={{
-                  width: '8ch',
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-            />
-
-          </InputWrapper>
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            ref={writeRef}
+            value={write}
+            onChange={handleWriteIn}
+            onKeyUp={e => e.key === 'Enter' && save()}
+            placeholder={'λ'}
+            style={{
+              width: '8ch',
+              margin: '0 .4em',
+              paddingRight: '2.5em'
+            }}
+          />
+        </InputWrapper>
+        <InputWrapper>
+          <Input
+            ref={directionRef}
+            value={direction}
+            onChange={handleDirectionIn}
+            onKeyUp={e => e.key === 'Enter' && save()}
+            placeholder={'↔\t(push)'}
+            style={{
+              width: '8ch',
+              margin: '0 .4em',
+              paddingRight: '2.5em'
+            }}
+          />
           <SubmitButton onClick={save} disabled={!direction}>
             <CornerDownLeft size="18px" />
           </SubmitButton>
-        </Dropdown>
+        </InputWrapper>
+      </Dropdown>
     )
   } else {
     return (
