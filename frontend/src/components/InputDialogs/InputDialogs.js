@@ -179,25 +179,20 @@ const InputDialogs = () => {
 
 function handleReadIn (e) {
   const input = e.target.value.toString();
-  const value = input ? input[input.length - 1] : 'λ';
+  const value = input[input.length - 1];
   setRead(value);
 }
 
 function handleWriteIn (e) {
   const input = e.target.value.toString();
-  const value = input ? input[input.length - 1] : 'λ';
+  const value = input[input.length - 1];
   setWrite(value);
 }
 
 function handleDirectionIn (e) {
-  if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { 
-    setDirection('R');
-  } else {
-    const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g);
-    if (input) {
-      setDirection(input[input.length - 1].toUpperCase());
-    }
-  }
+  const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g);
+  const value = input[input.length - 1].toUpperCase();
+  setDirection(value);
 }
 
 if (projectType === 'TM') {
