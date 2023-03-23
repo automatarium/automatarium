@@ -20,7 +20,6 @@ const InputDialogs = () => {
   const [valuePop, setValuePop] = useState('')
   const [valuePush, setValuePush] = useState('')
 
-  const readRef = useRef()
   const inputWriteRef = useRef()
   const inputDirectionRef = useRef()
   const [read, setRead] = useState('')
@@ -35,7 +34,7 @@ const InputDialogs = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
-  const arr = [readRef.current, inputWriteRef.current, inputDirectionRef.current, inputRef.current]
+  const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
