@@ -31,7 +31,12 @@ const NewFile = () => {
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
-  const stylingVals = { stateFill: `var(--state-bg-${preferences.theme})`, strokeColor: `var(--stroke-${preferences.theme})` }
+  // If matching system theme, don't append a theme to css vars
+  const theme = preferences.theme === 'system' ? '' : `-${preferences.theme}`
+  const stylingVals = {
+    stateFill: `var(--state-bg${theme})`,
+    strokeColor: `var(--stroke${theme})`
+  }
 
   // Remove old thumbnails
   useEffect(() => {
