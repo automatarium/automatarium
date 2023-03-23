@@ -19,7 +19,7 @@ const TransitionSet = ({ transitions }) => {
         i={i}
         transitions={transitions}
         text={projectType === 'TM'
-          ? ((read || 'λ') + ',' + (write || 'λ') + ';' + (direction || ''))
+          ? ((read || 'λ') + ',' + (write || 'λ') + ';' + (direction || 'R'))
           : projectType === 'PDA'
             ? ((read || 'λ') + ',' +
                 (pop || 'λ') + ';' +

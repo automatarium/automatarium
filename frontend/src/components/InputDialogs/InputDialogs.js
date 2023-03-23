@@ -20,9 +20,8 @@ const InputDialogs = () => {
   const [valuePop, setValuePop] = useState('')
   const [valuePush, setValuePush] = useState('')
 
-  const readRef = useRef()
-  const writeRef = useRef()
-  const directionRef = useRef()
+  const inputWriteRef = useRef()
+  const inputDirectionRef = useRef()
   const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
   const [direction, setDirection] = useState('')
@@ -35,7 +34,7 @@ const InputDialogs = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
-  const arr = [readRef.current, writeRef.current, directionRef.current, inputRef.current]
+  const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
@@ -182,86 +181,80 @@ const InputDialogs = () => {
     const input = e.target.value.toString()
     setRead(input[input.length - 1] ?? '')
   }
+
   function handleWriteIn (e) {
     const input = e.target.value.toString()
     setWrite(input[input.length - 1] ?? '')
   }
+
   function handleDirectionIn (e) {
-    if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { setDirection('S') } else {
-      const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
-      if (input) {
-        setDirection(input[input.length - 1].toUpperCase())
-      }
-    }
+    const input = e.target.value.toString().match(/[rls]/gi)
+    const value = input[input.length - 1].toUpperCase()
+    setDirection(value)
   }
 
   if (projectType === 'TM') {
     return (
-        <Dropdown
-            visible={dialog.visible}
-            onClose={() => {
-              hideDialog()
-              // Delete transitions if not new
-              if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
-                removeTransitions([dialog.id])
-              }
-            }}
-            style={{
-              top: `${dialog.y}px`,
-              left: `${dialog.x}px`,
-              display: 'flex',
-              flexDirection: 'row'
-            }}
-        >
-          <InputWrapper>
-            <Input
-                ref={readRef}
-                value={read}
-                onChange={handleReadIn}
-                onKeyUp={e => e.key === 'Enter' && save}
-                placeholder={'λ'}
-                style={{
-                  width: '8ch',
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <Input
-                ref={writeRef}
-                value={write}
-                onChange={handleWriteIn}
-                onKeyUp={e => e.key === 'Enter' && save}
-                placeholder={'λ'}
-                style={{
-                  width: '8ch',
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-            />
-
-          </InputWrapper>
-          <InputWrapper>
-            {/* {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />} */}
-            <Input
-                ref={directionRef}
-                value={direction}
-                onChange={handleDirectionIn}
-                onKeyUp={e => e.key === 'Enter' && save}
-                placeholder={'↔'}
-                style={{
-                  width: '8ch',
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-            />
-
-          </InputWrapper>
-          <SubmitButton onClick={save} disabled={!direction}>
-            <CornerDownLeft size="18px" />
-          </SubmitButton>
-        </Dropdown>
+    <Dropdown
+      visible={dialog.visible}
+      onClose={() => {
+        hideDialog()
+        // Delete transitions if not new
+        if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
+          removeTransitions([dialog.id])
+        }
+      }}
+      style={{
+        top: `${dialog.y}px`,
+        left: `${dialog.x}px`
+      }}
+    >
+      <InputWrapper>
+        <Input
+          ref={inputRef}
+          value={read}
+          onChange={handleReadIn}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={'λ\t(read)'}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Input
+          ref={inputWriteRef}
+          value={write}
+          onChange={handleWriteIn}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={'λ\t(write)'}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Input
+          ref={inputDirectionRef}
+          value={direction}
+          onChange={handleDirectionIn}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={'↔\t(direction)'}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+        <SubmitButton onClick={save} disabled={!direction}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
+      </InputWrapper>
+    </Dropdown>
     )
   } else {
     return (
@@ -293,7 +286,7 @@ const InputDialogs = () => {
                   stateLabel: 'State label...'
                 }[dialog.type]}
                 style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
@@ -315,7 +308,7 @@ const InputDialogs = () => {
                   transition: 'λ\t(pop)'
                 }[dialog.type]}
                 style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
@@ -333,7 +326,7 @@ const InputDialogs = () => {
                   transition: 'λ\t(push)'
                 }[dialog.type]}
                 style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 2.5em)`,
+                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
