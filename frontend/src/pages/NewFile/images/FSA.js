@@ -1,10 +1,6 @@
 import { usePreferencesStore } from '/src/stores'
 
-const FSA = () => {
-  const preferences = usePreferencesStore(state => state.preferences)
-  const theme = preferences.theme;
-  const stateFill = `var(--state-bg-${theme})`;
-  const strokeColor = `var(--stroke-${theme})`;
+const FSA = ({stateFill, strokeColor}) => {
   return (
     <svg viewBox="0 0 600 300">
       <g>

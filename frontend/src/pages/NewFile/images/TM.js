@@ -1,11 +1,6 @@
 // Used https://svg2jsx.com/ for SVG conversion and manually deleted unncecessary parts/made inline to make similar to FSA.js
-import { usePreferencesStore } from '/src/stores'
 
-const TM = () => {
-    const preferences = usePreferencesStore(state => state.preferences)
-    const theme = preferences.theme;
-    const stateFill = `var(--state-bg-${theme})`;
-    const strokeColor = `var(--stroke-${theme})`;
+const TM = ({stateFill, strokeColor}) => {
     return (
         <svg viewBox="454 384 362 192">
             <defs>
