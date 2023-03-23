@@ -213,7 +213,6 @@ const InputDialogs = () => {
       >
         <InputWrapper>
           <Input
-            autoFocus
             ref={inputRef}
             value={read}
             onChange={handleReadIn}
