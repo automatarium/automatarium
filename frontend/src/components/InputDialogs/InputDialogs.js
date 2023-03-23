@@ -180,14 +180,26 @@ const InputDialogs = () => {
 
   function handleReadIn (e) {
     const input = e.target.value.toString()
-    setRead(input[input.length - 1] ?? '')
+    setRead(input[input.length - 1] ?? 'λ')
+    if (e.key === 'Enter') {
+      if (!input) {
+        setRead('λ');
+        save();
+      }
+    }
   }
   function handleWriteIn (e) {
     const input = e.target.value.toString()
-    setWrite(input[input.length - 1] ?? '')
+    setWrite(input[input.length - 1] ?? 'λ')
+    if (e.key === 'Enter') {
+      if (!input) {
+        setWrite('λ');
+        save();
+      }
+    }
   }
   function handleDirectionIn (e) {
-    if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { setDirection('S') } else {
+    if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { setDirection('R') } else {
       const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
       if (input) {
         setDirection(input[input.length - 1].toUpperCase())
