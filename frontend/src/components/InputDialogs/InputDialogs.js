@@ -214,7 +214,7 @@ const InputDialogs = () => {
         <InputWrapper>
           <Input
             autoFocus
-            ref={readRef}
+            ref={inputRef}
             value={read}
             onChange={handleReadIn}
             onKeyUp={e => e.key === 'Enter' && save()}
