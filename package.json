@@ -39,6 +39,7 @@
     "lint": "yarn lint:backend && yarn lint:frontend && yarn lint:simulation",
     "lint:fix": "yarn lint:backend:fix && yarn lint:frontend:fix && yarn lint:simulation:fix",
     
+    "test": "yarn workspace @automatarium/simulation test",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
   },
