@@ -1,6 +1,4 @@
-import { usePreferencesStore } from '/src/stores'
-
-const FSA = ({stateFill, strokeColor}) => {
+const FSA = ({ stateFill, strokeColor }) => {
   return (
     <svg viewBox="0 0 600 300">
       <g>

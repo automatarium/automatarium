@@ -1,6 +1,6 @@
 // Used https://svg2jsx.com/ for SVG conversion and manually deleted unncecessary parts/made inline to make similar to FSA.js
 
-const PDA = ({stateFill, strokeColor}) => {
+const PDA = ({ stateFill, strokeColor }) => {
   return (
     <svg viewBox="364 324 347 192">
       <defs>
@@ -25,13 +25,13 @@ const PDA = ({stateFill, strokeColor}) => {
       <path fill="none" stroke={strokeColor} markerEnd="url(#standard-arrow-head)" d="M462.854 453.858l169.292-67.716" strokeWidth="2"/>
       <path id="0435465660375-text" fill="none" stroke="none" d="M462.854 453.858l169.292-67.716"/>
       <path fill="none" stroke="transparent" strokeWidth="20" d="M462.854 453.858l169.292-67.716"/>
-      <text fill={strokeColor} alignmentBaseline="central" dy="-12" textAnchor="middle" font-size="1.5em">
+      <text fill={strokeColor} alignmentBaseline="central" dy="-12" textAnchor="middle" fontSize="1.5em">
         <textPath startOffset="50%" xlinkHref="#0435465660375-text">
           a,b;c
         </textPath>
       </text>
     </svg>
   )
-};
+}
 
 export default PDA
