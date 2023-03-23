@@ -177,23 +177,23 @@ const InputDialogs = () => {
     stateLabel: saveStateLabel
   }[dialog.type]
 
-function handleReadIn (e) {
-  const input = e.target.value.toString();
-  const value = input[input.length - 1];
-  setRead(value);
-}
+  function handleReadIn (e) {
+    const input = e.target.value.toString();
+    const value = input[input.length - 1];
+    setRead(value);
+  }
 
-function handleWriteIn (e) {
-  const input = e.target.value.toString();
-  const value = input[input.length - 1];
-  setWrite(value);
-}
+  function handleWriteIn (e) {
+    const input = e.target.value.toString();
+    const value = input[input.length - 1];
+    setWrite(value);
+  }
 
-function handleDirectionIn (e) {
-  const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g);
-  const value = input[input.length - 1].toUpperCase();
-  setDirection(value);
-}
+  function handleDirectionIn (e) {
+    const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g);
+    const value = input[input.length - 1].toUpperCase();
+    setDirection(value);
+  }
 
 if (projectType === 'TM') {
   return (
