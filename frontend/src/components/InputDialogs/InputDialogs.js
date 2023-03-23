@@ -178,25 +178,25 @@ const InputDialogs = () => {
   }[dialog.type]
 
   function handleReadIn (e) {
-    const input = e.target.value.toString();
-    const value = input[input.length - 1];
+    const input = e.target.value.toString()
+    const value = input[input.length - 1]
     setRead(value);
   }
 
   function handleWriteIn (e) {
-    const input = e.target.value.toString();
-    const value = input[input.length - 1];
+    const input = e.target.value.toString()
+    const value = input[input.length - 1]
     setWrite(value);
   }
 
   function handleDirectionIn (e) {
-    const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g);
-    const value = input[input.length - 1].toUpperCase();
-    setDirection(value);
+    const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
+    const value = input[input.length - 1].toUpperCase()
+    setDirection(value)
   }
 
-if (projectType === 'TM') {
-  return (
+  if (projectType === 'TM') {
+    return (
     <Dropdown
       visible={dialog.visible}
       onClose={() => {
@@ -257,8 +257,8 @@ if (projectType === 'TM') {
         </SubmitButton>
       </InputWrapper>
     </Dropdown>
-  );
-} else {
+    )
+  } else {
     return (
         <Dropdown
             visible={dialog.visible}
