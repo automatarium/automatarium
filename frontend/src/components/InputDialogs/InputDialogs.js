@@ -190,7 +190,7 @@ const InputDialogs = () => {
   }
 
   function handleDirectionIn (e) {
-    const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
+    const input = e.target.value.toString().match(/[rls]/gi)
     const value = input[input.length - 1].toUpperCase()
     setDirection(value)
   }
