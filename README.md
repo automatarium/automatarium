@@ -19,21 +19,23 @@ Automatarium is built by RMIT students with the original members being
 It was then expanded on by more capstone groups
 
 <details>
-    <summary>Group 2</summary>
-    - [Conor Christensen](https://github.com/ConorChristensen-RMIT)
-    - [Jessani Linsangan](https://github.com/s3844703)
-    - [Lachlan Blennerhassett](https://github.com/Canni6)
-    - [Tomas Haddad](https://github.com/tomashaddad)
-    - [Oliver Hale](https://github.com/s3781403)
+<summary>Group 2</summary>
+
+- [Conor Christensen](https://github.com/ConorChristensen-RMIT)
+- [Jessani Linsangan](https://github.com/s3844703)
+- [Lachlan Blennerhassett](https://github.com/Canni6)
+- [Tomas Haddad](https://github.com/tomashaddad)
+- [Oliver Hale](https://github.com/s3781403)
 </details>
 
 <details>
-    <summary>Group 3</summary>
-    - [Ope Abbas](https://github.com/OpeAbbas)
-    - [Sidhra Fernando-Plant](https://github.com/SidhraFernando-Plant)
-    - [Jake Leahy](https://github.com/ire4ever1190)
-    - [Aung Pyae Sone](https://github.com/eddie7788)
-    - [Lachlan Van Der Klift](https://github.com/LvandoApps)
+<summary>Group 3</summary>
+
+- [Ope Abbas](https://github.com/OpeAbbas)
+- [Sidhra Fernando-Plant](https://github.com/SidhraFernando-Plant)
+- [Jake Leahy](https://github.com/ire4ever1190)
+- [Aung Pyae Sone](https://github.com/eddie7788)
+- [Lachlan Van Der Klift](https://github.com/LvandoApps)
 </details>
 
 ## Project Structure
