@@ -179,14 +179,12 @@ const InputDialogs = () => {
 
   function handleReadIn (e) {
     const input = e.target.value.toString()
-    const value = input[input.length - 1]
-    setRead(value)
+    setRead(input[input.length - 1] ?? '')
   }
 
   function handleWriteIn (e) {
     const input = e.target.value.toString()
-    const value = input[input.length - 1]
-    setWrite(value)
+    setWrite(input[input.length - 1] ?? '')
   }
 
   function handleDirectionIn (e) {
