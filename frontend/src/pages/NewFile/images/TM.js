@@ -1,258 +1,45 @@
-import React from 'react'
+// Used https://svg2jsx.com/ for SVG conversion and manually deleted unncecessary parts/made inline to make similar to FSA.js
 
-function TM () {
+const TM = ({ stateFill, strokeColor }) => {
   return (
-        <svg
-            xmlns="http://www.w3.org/2000/svg"
-            xmlnsXlink="http://www.w3.org/1999/xlink"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="2"
-            className="go1061815559"
-            fontFamily="sans-serif"
-            version="1.1"
-            viewBox="154 54 362 237"
-            style={{
-              backgroundSize: 30,
-              backgroundPosition: 0,
-              backgroundColor: 'white',
-              PrimaryH: '262',
-              PrimaryS: '60%',
-              PrimaryL: '48%'
-            }}
-        >
-            <defs>
-                <marker
-                    markerHeight="30"
-                    markerUnits="strokeWidth"
-                    markerWidth="30"
-                    orient="auto"
-                    refX="29"
-                    refY="15"
-                >
-                    <path fill="#111" d="M29 15l-7.208-3.471v6.942z"></path>
-                </marker>
-                <marker
-                    id="selected-arrow-head"
-                    markerHeight="30"
-                    markerUnits="strokeWidth"
-                    markerWidth="30"
-                    orient="auto"
-                    refX="29"
-                    refY="15"
-                >
-                    <path fill="#111" d="M29 15l-7.208-3.471v6.942z"></path>
-                </marker>
-                <marker
-                    markerHeight="30"
-                    markerUnits="strokeWidth"
-                    markerWidth="30"
-                    orient="auto"
-                    refX="29"
-                    refY="15"
-                >
-                    <path stroke="#111" d="M29 15l-7.208-3.471M29 15l-7.208 3.471"></path>
-                </marker>
-            </defs>
-            <path fill="none" stroke="#111" d="M210 120L190 95 190 145z"></path>
-            <path
-                fill="none"
-                stroke="#111"
-                markerEnd="url(#selected-arrow-head)"
-                d="M270 120h150"
-                className="go191901123"
-            ></path>
-            <path
-                id="0240120450120-text"
-                fill="none"
-                stroke="none"
-                d="M270 120h150"
-            ></path>
-            <path
-                fill="none"
-                stroke="transparent"
-                strokeWidth="20"
-                d="M270 120h150"
-            ></path>
-            <text
-                fill="#111"
-                alignmentBaseline="central"
-                dy="-5"
-                textAnchor="middle"
-                style={{
-                  WebkitUserSelect: 'none',
-                  MozUserSelect: 'none',
-                  MsUserSelect: 'none',
-                  userSelect: 'none'
-                }}
-            >
-                <textPath startOffset="50%" xlinkHref="#0240120450120-text">
-                    a,b;R
-                </textPath>
-            </text>
-            <path
-                fill="none"
-                stroke="#111"
-                markerEnd="url(#selected-arrow-head)"
-                d="M423.167 133.416l-156.334 78.168"
-                className="go191901123"
-            ></path>
-            <path
-                id="0450120240225-text"
-                fill="none"
-                stroke="none"
-                d="M266.833 211.584l156.334-78.168"
-            ></path>
-            <path
-                fill="none"
-                stroke="transparent"
-                strokeWidth="20"
-                d="M423.167 133.416l-156.334 78.168"
-            ></path>
-            <text
-                fill="#111"
-                alignmentBaseline="central"
-                dy="-5"
-                textAnchor="middle"
-                style={{
-                  WebkitUserSelect: 'none',
-                  MozUserSelect: 'none',
-                  MsUserSelect: 'none',
-                  userSelect: 'none'
-                }}
-            >
-                <textPath startOffset="50%" xlinkHref="#0450120240225-text">
-                    b,a;L
-                </textPath>
-            </text>
-            <g>
-                <path
-                    fill="none"
-                    stroke="#111"
-                    markerEnd="url(#selected-arrow-head)"
-                    d="M270 225h150"
-                    className="go191901123"
-                ></path>
-                <path
-                    id="0240225450225-text"
-                    fill="none"
-                    stroke="none"
-                    d="M270 225h150"
-                ></path>
-                <path
-                    fill="none"
-                    stroke="transparent"
-                    strokeWidth="20"
-                    d="M270 225h150"
-                ></path>
-                <text
-                    fill="#111"
-                    alignmentBaseline="central"
-                    dy="-5"
-                    textAnchor="middle"
-                    style={{
-                      WebkitUserSelect: 'none',
-                      MozUserSelect: 'none',
-                      MsUserSelect: 'none',
-                      userSelect: 'none'
-                    }}
-                >
-                    <textPath startOffset="50%" xlinkHref="#0240225450225-text">
-                        b,b;R
-                    </textPath>
-                </text>
-            </g>
-            <g transform="translate(240 120)">
-                <circle
-                    r="30"
-                    fill="hsl(262, 60%, 75%)"
-                    stroke="#111"
-                    className="go929019229"
-                ></circle>
-                <text
-                    fill="#111"
-                    alignmentBaseline="central"
-                    textAnchor="middle"
-                    style={{
-                      WebkitUserSelect: 'none',
-                      MozUserSelect: 'none',
-                      MsUserSelect: 'none',
-                      userSelect: 'none'
-                    }}
-                >
-                    q0
-                </text>
-            </g>
-            <g transform="translate(450 120)">
-                <circle
-                    r="30"
-                    fill="hsl(262, 60%, 75%)"
-                    stroke="#111"
-                    className="go929019229"
-                ></circle>
-                <text
-                    fill="#111"
-                    alignmentBaseline="central"
-                    textAnchor="middle"
-                    style={{
-                      WebkitUserSelect: 'none',
-                      MozUserSelect: 'none',
-                      MsUserSelect: 'none',
-                      userSelect: 'none'
-                    }}
-                >
-                    q1
-                </text>
-            </g>
-            <g transform="translate(240 225)">
-                <circle
-                    r="30"
-                    fill="hsl(262, 60%, 75%)"
-                    stroke="#111"
-                    className="go929019229"
-                ></circle>
-                <text
-                    fill="#111"
-                    alignmentBaseline="central"
-                    textAnchor="middle"
-                    style={{
-                      WebkitUserSelect: 'none',
-                      MozUserSelect: 'none',
-                      MsUserSelect: 'none',
-                      userSelect: 'none'
-                    }}
-                >
-                    q2
-                </text>
-            </g>
-            <g transform="translate(450 225)">
-                <circle
-                    r="30"
-                    fill="hsl(262, 60%, 75%)"
-                    stroke="#111"
-                    className="go929019229"
-                ></circle>
-                <circle
-                    r="25"
-                    fill="hsl(262, 60%, 75%)"
-                    stroke="#111"
-                    className="go929019229"
-                ></circle>
-                <text
-                    fill="#111"
-                    alignmentBaseline="central"
-                    textAnchor="middle"
-                    style={{
-                      WebkitUserSelect: 'none',
-                      MozUserSelect: 'none',
-                      MsUserSelect: 'none',
-                      userSelect: 'none'
-                    }}
-                >
-                    q3
-                </text>
-            </g>
-        </svg>
+    <svg viewBox="454 384 362 192">
+      <defs>
+        <marker id="standard-arrow-head" strokeWidth="2" markerHeight="30" markerUnits="2" markerWidth="30" orient="auto" refX="29" refY="15">
+          <path fill={strokeColor} d="M29 15l-7.208-3.471v6.942z" strokeWidth="2"></path>
+        </marker>
+        <marker strokeWidth="2" markerHeight="30" markerUnits="strokeWidth" markerWidth="30" orient="auto" refX="29" refY="15" >
+          <path strokeWidth="2" fill={strokeColor} d="M29 15l-7.208-3.471v6.942z"></path>
+        </marker>
+        <marker strokeWidth="2" markerHeight="30" markerUnits="strokeWidth" markerWidth="30" orient="auto" refX="29" refY="15" >
+          <path stroke={strokeColor} strokeWidth="2" d="M29 15l-7.208-3.471M29 15l-7.208 3.471"></path>
+        </marker>
+      </defs>
+      <g transform="translate(525 525)">
+        <circle r="30" fill={stateFill} stroke={strokeColor} strokeWidth="2.5"></circle>
+      </g>
+      <g transform="translate(645 435)">
+        <circle r="30" fill={stateFill} stroke={strokeColor} strokeWidth="2.5"></circle>
+      </g>
+      <g transform="translate(765 525)" strokeWidth="2.5">
+        <circle r="30" fill={stateFill} stroke={strokeColor}></circle>
+        <circle r="25" fill={stateFill} stroke={strokeColor}></circle>
+      </g>
+      <path fill="none" stroke={strokeColor} strokeWidth="2.5" d="M495 525L475 500 475 550z" strokeLinejoin="round"/>
+      <path fill="none" stroke={strokeColor} strokeWidth="2" markerEnd="url(#standard-arrow-head)" d="M549 507l72-54"/>
+      <path id="0525525645435-text" fill="none" stroke="none" d="M549 507l72-54"/>
+      <text fill={strokeColor} alignmentBaseline="central" dy="-12" textAnchor="middle" fontSize="1.2em">
+        <textPath startOffset="50%" xlinkHref="#0525525645435-text">
+          a,a;L
+        </textPath>
+      </text>
+      <path fill="none" stroke={strokeColor} strokeWidth="2" markerEnd="url(#standard-arrow-head)" d="M669 453l72 54"/>
+      <path id="0645435765525-text" fill="none" stroke="none" d="M669 453l72 54"/>
+      <text fill={strokeColor} alignmentBaseline="central" dy="-12" textAnchor="middle" fontSize="1.2em">
+        <textPath startOffset="50%" xlinkHref="#0645435765525-text">
+          b,b;R
+        </textPath>
+      </text>
+    </svg>
   )
 }
 

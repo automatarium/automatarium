@@ -5,7 +5,7 @@ import dayjs from 'dayjs'
 import { Settings } from 'lucide-react'
 
 import { Main, Button, Header, ProjectCard } from '/src/components'
-import { useProjectsStore, useProjectStore, useThumbnailStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useThumbnailStore, usePreferencesStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useAuth } from '/src/hooks'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
@@ -24,9 +24,19 @@ const NewFile = () => {
   const setProject = useProjectStore(s => s.set)
   const thumbnails = useThumbnailStore(s => s.thumbnails)
   const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
+  const preferences = usePreferencesStore(state => state.preferences)
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const { user, userLoading } = useAuth()
+
+  // Dynamic styling values for new project thumbnails
+  // Will likely be extended to 'Your Projects' list
+  // If matching system theme, don't append a theme to css vars
+  const theme = preferences.theme === 'system' ? '' : `-${preferences.theme}`
+  const stylingVals = {
+    stateFill: `var(--state-bg${theme})`,
+    strokeColor: `var(--stroke${theme})`
+  }
 
   // Remove old thumbnails
   useEffect(() => {
@@ -113,19 +123,19 @@ const NewFile = () => {
         title="Finite State Automaton"
         description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
         onClick={() => handleNewFile('FSA')}
-        image={<FSA />}
+        image={<FSA {...stylingVals}/>}
       />
       <NewProjectCard
         title="Push Down Automaton"
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
         onClick={() => handleNewFile('PDA')}
-        image={<PDA />}
+        image={<PDA {...stylingVals}/>}
       />
       <NewProjectCard
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
-        image={<TM />}
+        image={<TM {...stylingVals}/>}
       />
     </CardList>
 
