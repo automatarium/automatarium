@@ -33,9 +33,9 @@ It was then expanded on by more capstone groups
 
 - [Ope Abbas](https://github.com/OpeAbbas)
 - [Sidhra Fernando-Plant](https://github.com/SidhraFernando-Plant)
+- [Lachlan Van Der Klift](https://github.com/LvandoApps)
 - [Jake Leahy](https://github.com/ire4ever1190)
 - [Aung Pyae Sone](https://github.com/eddie7788)
-- [Lachlan Van Der Klift](https://github.com/LvandoApps)
 </details>
 
 ## Project Structure
