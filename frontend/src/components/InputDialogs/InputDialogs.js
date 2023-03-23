@@ -177,87 +177,93 @@ const InputDialogs = () => {
     stateLabel: saveStateLabel
   }[dialog.type]
 
-  function handleReadIn (e) {
-    const input = e.target.value.toString()
-    setRead(input[input.length - 1] ?? 'λ')
-  }
-  function handleWriteIn (e) {
-    const input = e.target.value.toString()
-    setWrite(input[input.length - 1] ?? 'λ')
-  }
-  function handleDirectionIn (e) {
-    if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { setDirection('R') } else {
-      const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g)
-      if (input) {
-        setDirection(input[input.length - 1].toUpperCase())
-      }
+function handleReadIn (e) {
+  const input = e.target.value.toString();
+  const value = input ? input[input.length - 1] : 'λ';
+  setRead(value);
+}
+
+function handleWriteIn (e) {
+  const input = e.target.value.toString();
+  const value = input ? input[input.length - 1] : 'λ';
+  setWrite(value);
+}
+
+function handleDirectionIn (e) {
+  if ((e.target.value.toString() === '') || e.target.value.toString() === ' ') { 
+    setDirection('R');
+  } else {
+    const input = e.target.value.toString().match(/(R|r|L|l|S|s)/g);
+    if (input) {
+      setDirection(input[input.length - 1].toUpperCase());
     }
   }
+}
 
-  if (projectType === 'TM') {
-    return (
-      <Dropdown
-        visible={dialog.visible}
-        onClose={() => {
-          hideDialog()
-          // Delete transitions if not new
-          if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
-            removeTransitions([dialog.id])
-          }
-        }}
-        style={{
-          top: `${dialog.y}px`,
-          left: `${dialog.x}px`
-        }}
-      >
-        <InputWrapper>
-          <Input
-            ref={inputRef}
-            value={read}
-            onChange={handleReadIn}
-            onKeyUp={e => e.key === 'Enter' && save()}
-            placeholder={'λ\t(read)'}
-            style={{
-              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-              margin: '0 .4em',
-              paddingRight: '2.5em'
-            }}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Input
-            ref={inputWriteRef}
-            value={write}
-            onChange={handleWriteIn}
-            onKeyUp={e => e.key === 'Enter' && save()}
-            placeholder={'λ\t(write)'}
-            style={{
-              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-              margin: '0 .4em',
-              paddingRight: '2.5em'
-            }}
-          />
-        </InputWrapper>
-        <InputWrapper>
-          <Input
-            ref={inputDirectionRef}
-            value={direction}
-            onChange={handleDirectionIn}
-            onKeyUp={e => e.key === 'Enter' && save()}
-            placeholder={'↔\t(direction)'}
-            style={{
-              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-              margin: '0 .4em',
-              paddingRight: '2.5em'
-            }}
-          />
-          <SubmitButton onClick={save} disabled={!direction}>
-            <CornerDownLeft size="18px" />
-          </SubmitButton>
-        </InputWrapper>
-      </Dropdown>
-    )
-  } else {
+if (projectType === 'TM') {
+  return (
+    <Dropdown
+      visible={dialog.visible}
+      onClose={() => {
+        hideDialog()
+        // Delete transitions if not new
+        if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
+          removeTransitions([dialog.id])
+        }
+      }}
+      style={{
+        top: `${dialog.y}px`,
+        left: `${dialog.x}px`
+      }}
+    >
+      <InputWrapper>
+        <Input
+          ref={inputRef}
+          value={read}
+          onChange={handleReadIn}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={'λ\t(read)'}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Input
+          ref={inputWriteRef}
+          value={write}
+          onChange={handleWriteIn}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={'λ\t(write)'}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Input
+          ref={inputDirectionRef}
+          value={direction}
+          onChange={handleDirectionIn}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={'↔\t(direction)'}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+        <SubmitButton onClick={save} disabled={!direction}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
+      </InputWrapper>
+    </Dropdown>
+  );
+} else {
     return (
         <Dropdown
             visible={dialog.visible}
