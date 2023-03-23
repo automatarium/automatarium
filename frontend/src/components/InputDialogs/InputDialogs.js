@@ -218,7 +218,7 @@ const InputDialogs = () => {
                 ref={readRef}
                 value={read}
                 onChange={handleReadIn}
-                onKeyUp={e => e.key === 'Enter' && save}
+                onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={'λ'}
                 style={{
                   width: '8ch',
@@ -232,7 +232,7 @@ const InputDialogs = () => {
                 ref={writeRef}
                 value={write}
                 onChange={handleWriteIn}
-                onKeyUp={e => e.key === 'Enter' && save}
+                onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={'λ'}
                 style={{
                   width: '8ch',
@@ -248,7 +248,7 @@ const InputDialogs = () => {
                 ref={directionRef}
                 value={direction}
                 onChange={handleDirectionIn}
-                onKeyUp={e => e.key === 'Enter' && save}
+                onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={'↔'}
                 style={{
                   width: '8ch',
