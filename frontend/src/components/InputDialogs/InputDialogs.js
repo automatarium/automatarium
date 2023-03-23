@@ -21,8 +21,8 @@ const InputDialogs = () => {
   const [valuePush, setValuePush] = useState('')
 
   const readRef = useRef()
-  const writeRef = useRef()
-  const directionRef = useRef()
+  const inputWriteRef = useRef()
+  const inputDirectionRef = useRef()
   const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
   const [direction, setDirection] = useState('')
@@ -35,7 +35,7 @@ const InputDialogs = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
-  const arr = [readRef.current, writeRef.current, directionRef.current, inputRef.current]
+  const arr = [readRef.current, inputWriteRef.current, inputDirectionRef.current, inputRef.current]
 
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
@@ -227,7 +227,7 @@ const InputDialogs = () => {
         </InputWrapper>
         <InputWrapper>
           <Input
-            ref={writeRef}
+            ref={inputWriteRef}
             value={write}
             onChange={handleWriteIn}
             onKeyUp={e => e.key === 'Enter' && save()}
@@ -241,7 +241,7 @@ const InputDialogs = () => {
         </InputWrapper>
         <InputWrapper>
           <Input
-            ref={directionRef}
+            ref={inputDirectionRef}
             value={direction}
             onChange={handleDirectionIn}
             onKeyUp={e => e.key === 'Enter' && save()}
