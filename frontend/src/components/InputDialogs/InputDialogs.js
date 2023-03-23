@@ -216,9 +216,9 @@ const InputDialogs = () => {
             value={read}
             onChange={handleReadIn}
             onKeyUp={e => e.key === 'Enter' && save()}
-            placeholder={'λ'}
+            placeholder={'λ\t(read)'}
             style={{
-              width: '8ch',
+              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
               margin: '0 .4em',
               paddingRight: '2.5em'
             }}
@@ -230,9 +230,9 @@ const InputDialogs = () => {
             value={write}
             onChange={handleWriteIn}
             onKeyUp={e => e.key === 'Enter' && save()}
-            placeholder={'λ'}
+            placeholder={'λ\t(write)'}
             style={{
-              width: '8ch',
+              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
               margin: '0 .4em',
               paddingRight: '2.5em'
             }}
@@ -244,9 +244,9 @@ const InputDialogs = () => {
             value={direction}
             onChange={handleDirectionIn}
             onKeyUp={e => e.key === 'Enter' && save()}
-            placeholder={'↔\t(push)'}
+            placeholder={'↔\t(direction)'}
             style={{
-              width: '8ch',
+              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
               margin: '0 .4em',
               paddingRight: '2.5em'
             }}
