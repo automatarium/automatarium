@@ -5,22 +5,6 @@ import { FSAGraph, FSAState } from '../src/FSASearch'
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import { FSATransition, StateID, UnparsedFSAGraph } from '../src/graph'
 
-type SimpleTransition = {
-  from: StateID,
-  to: StateID
-}
-
-/**
- * Converts a list of node transitions into a simple from-to pair.
- * The returned transitions always have ID of 0
- */
-function toTransition (x: Node<FSAState>[]): SimpleTransition[] {
-  return x.map(it => ({
-    from: it.parent.state.id,
-    to: it.state.id
-  }))
-}
-
 /**
  * Checks if a graph running a single step returns some transitions
  * @param g Graph to test
@@ -29,7 +13,7 @@ function toTransition (x: Node<FSAState>[]): SimpleTransition[] {
  * @param transitions Transitions to expect
  */
 function doesTransitions (g: FSAGraph, fromID: StateID, has: string, transitions: FSATransition[]) {
-  const valid = g.getSuccessors(new Node(new FSAState(0, false, null, has))).map(it => ({
+  const valid = g.getSuccessors(new Node(new FSAState(fromID, false, null, has))).map(it => ({
     from: it.parent.state.id,
     to: it.state.id
   }))

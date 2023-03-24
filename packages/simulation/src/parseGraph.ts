@@ -4,10 +4,8 @@ import {
   ReadSymbol,
   UnparsedFSAGraph,
   UnparsedPDAGraph,
-  UnresolvedGraph,
-  UnresolvedTransition
+  UnresolvedGraph
 } from './graph'
-import { Graph } from './interfaces/graph'
 
 const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/

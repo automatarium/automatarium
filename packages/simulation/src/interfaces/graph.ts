@@ -1,4 +1,4 @@
-import { StateID, Transition } from '../graph'
+import { Transition } from '../graph'
 
 export abstract class State {
   constructor (private _id: number, private _isFinal: boolean) {}
