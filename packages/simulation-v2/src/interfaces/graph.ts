@@ -1,4 +1,4 @@
-import { Transition } from '../graph'
+import { StateID, Transition } from '../graph'
 
 export abstract class State {
   constructor (private _id: number, private _isFinal: boolean) {}
@@ -39,7 +39,7 @@ export class Node<S extends State> {
 export abstract class Graph<S extends State, T extends Transition> {
   protected _initial: Node<S>
   protected states: S[]
-  protected transitions: T[]
+  public transitions: T[]
 
   constructor (initial: Node<S>, states: S[], transitions: T[]) {
     this._initial = initial
@@ -52,5 +52,6 @@ export abstract class Graph<S extends State, T extends Transition> {
   }
 
   abstract getSuccessors(node: Node<S>): Node<S>[];
+
   abstract isFinalState(node: Node<S>): boolean;
 }

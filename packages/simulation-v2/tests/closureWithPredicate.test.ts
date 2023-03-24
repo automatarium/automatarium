@@ -1,6 +1,5 @@
 /// <reference types="jest-extended" />
-
-import { closureWithPredicate, State } from '../src'
+import { closureWithPredicate } from '../src'
 import dib from './graphs/dib.json'
 import dibMultipart from './graphs/dib-multipath.json'
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
@@ -39,7 +38,7 @@ describe('Automata dib', () => {
 })
 
 describe('Automata dib-multipath', () => {
-  const graph = resolveGraph(dibMultipart)
+  const graph = parseFSAGraph(dibMultipart as unknown as UnparsedFSAGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -70,7 +69,7 @@ describe('Automata dib-multipath', () => {
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
-  const graph = resolveGraph(dibDipLambdaloop)
+  const graph = parseFSAGraph(dibDipLambdaloop as unknown as UnparsedFSAGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -82,16 +81,16 @@ describe('Automata dib_dip-lambdaloop', () => {
 
 describe('Reachability', () => {
   test('Unreachable final states', () => {
-    const graph = resolveGraph(disconnected)
+    const graph = parseFSAGraph(disconnected as unknown as UnparsedFSAGraph)
     const closure = closureWithPredicate(graph, 0, () => true)
-    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID) as State)
+    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 
   test('Unreachable final states due to predicate', () => {
-    const graph = resolveGraph(abba)
+    const graph = parseFSAGraph(abba as unknown as UnparsedFSAGraph)
     const closure = closureWithPredicate(graph, 0, transition => !transition.read.includes('b'))
-    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID) as State)
+    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 })
