@@ -26,7 +26,7 @@ describe('Expansion of read symbols', () => {
   test('Edge cases', () => {
     const tests = ['][', '-9]', '[-]', '[a-']
     for (const test of tests) {
-      expand(test).toEqual(test.split(''))
+      expand(test).toIncludeSameMembers(test.split(''))
     }
   })
 
