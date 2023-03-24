@@ -6,7 +6,7 @@ const useSteppingStore = create((set) => ({
 
   /* Update graph step state */
   setSteppedStates: (steppedStates) => {
-    const ids = steppedStates.map((s) => s.m_state.id)
+    const ids = steppedStates.map((s) => s._state.id)
     set({ steppedStates: ids })
   }
 }))
