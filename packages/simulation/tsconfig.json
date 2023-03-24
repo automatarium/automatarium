@@ -5,6 +5,8 @@
     "moduleResolution": "node",
     "lib": ["es2019"]
   },
-  "files": ["global.d.ts"],
+  "files": [
+    "../simulation-v2/global.d.ts"
+  ],
   "include": ["./src/*.ts", "./src/*.d.ts"]
 }

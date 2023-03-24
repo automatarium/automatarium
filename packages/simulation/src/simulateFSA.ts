@@ -1,5 +1,5 @@
 import { UnresolvedFSAGraph, FSAGraph, ExecutionResult, ExecutionTrace, StateID } from './types'
-import { validTransitions } from './validTransitions'
+import { validTransitions } from '../../simulation-v2/src/validTransitions'
 import { resolveGraph } from './resolveGraph'
 
 /**

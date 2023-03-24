@@ -4,19 +4,7 @@ const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/
 export const RANGE_VALS = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
-/**
- * Resolve a graph by expanding and de-duping transitions read strings.
- *
- * @param graph - FSA Graph object to resolve.
- * @returns The resolved graph
- */
-export const resolveGraph = (graph: UnresolvedFSAGraph): FSAGraph => {
-  // Resolve graph transitions
-  const transitions = graph.transitions
-    .filter(transition => transition !== undefined && transition.read !== undefined)
-    .map(transition => ({...transition, read: expandReadSymbols(transition.read)}))
-  return { ...graph, transitions }
-}
+
 
 /**
  * Create an array of characters in between the two characters. Uses 0-9a-zA-Z ordering.
