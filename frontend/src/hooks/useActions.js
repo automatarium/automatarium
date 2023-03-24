@@ -69,12 +69,14 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         // Pull project state
         const { project: { _id, userid, ...project } } = useProjectStore.getState()
+        console.log(project);
 
         // Create a download link and use it
         const a = document.createElement('a')
         const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
+        console.log(a);
         a.click()
       }
     },
