@@ -1,0 +1,25 @@
+{
+  "id": "4576b153-78ce-475e-a923-585631205ca6",
+  "states": [
+    { "id": 0, "x": 105, "y": 165, "isFinal": false },
+    { "id": 1, "x": 240, "y": 165, "isFinal": false },
+    { "id": 2, "x": 390, "y": 165, "isFinal": false },
+    { "id": 3, "x": 540, "y": 165, "isFinal": true }
+  ],
+  "transitions": [
+    { "id": 0, "from": 0, "to": 1, "read": "d" },
+    { "id": 1, "from": 1, "to": 2, "read": "i" },
+    { "id": 2, "from": 2, "to": 3, "read": "b" }
+  ],
+  "comments": [],
+  "tests": { "single": "", "batch": [""] },
+  "initialState": 0,
+  "meta": {
+    "name": "Accepts dib",
+    "dateCreated": "2022-04-28T15:11:51.121Z",
+    "dateEdited": "2022-04-28T15:11:51.121Z",
+    "version": "0.0.1",
+    "automatariumVersion": "0.0.1"
+  },
+  "config": { "type": "FSA", "statePrefix": "q", "acceptanceCriteria": "both", "color": "", "playbackInterval": 1000 }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "7ddb31d4-c2a9-4c7c-baae-6c1615fa1c48",
+  "states": [
+    { "id": 0, "x": 90, "y": 180, "isFinal": false },
+    { "id": 1, "x": 225, "y": 180, "isFinal": false },
+    { "id": 2, "x": 375, "y": 180, "isFinal": false },
+    { "id": 3, "x": 510, "y": 180, "isFinal": true }
+  ],
+  "transitions": [
+    { "id": 0, "from": 0, "to": 1, "read": "d" },
+    { "id": 1, "from": 1, "to": 2, "read": "i" },
+    { "id": 2, "from": 2, "to": 3, "read": "b" },
+    { "id": 3, "from": 2, "to": 1, "read": "i" }
+  ],
+  "comments": [],
+  "tests": { "single": "", "batch": [""] },
+  "initialState": 0,
+  "meta": {
+    "name": "Accepts dib (odd number of i's)",
+    "dateCreated": "2022-04-28T15:13:12.057Z",
+    "dateEdited": "2022-04-28T15:13:12.057Z",
+    "version": "0.0.1",
+    "automatariumVersion": "0.0.1"
+  },
+  "config": { "type": "FSA", "statePrefix": "q", "acceptanceCriteria": "both", "color": "", "playbackInterval": 1000 }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "932aede0-53a3-4ea5-a193-2537f8cd4416",
+  "states": [
+    { "id": 0, "x": 105, "y": 165, "isFinal": false },
+    { "id": 1, "x": 225, "y": 165, "isFinal": false },
+    { "id": 2, "x": 360, "y": 75, "isFinal": false },
+    { "id": 3, "x": 510, "y": 75, "isFinal": true },
+    { "id": 4, "x": 360, "y": 225, "isFinal": false },
+    { "id": 5, "x": 510, "y": 225, "isFinal": false },
+    { "id": 6, "x": 660, "y": 225, "isFinal": true }
+  ],
+  "transitions": [
+    { "id": 0, "from": 0, "to": 1, "read": "d" },
+    { "id": 1, "from": 1, "to": 2, "read": "i" },
+    { "id": 2, "from": 1, "to": 4, "read": "i" },
+    { "id": 3, "from": 2, "to": 3, "read": "b" },
+    { "id": 4, "from": 4, "to": 5, "read": "" },
+    { "id": 5, "from": 5, "to": 4, "read": "" },
+    { "id": 6, "from": 5, "to": 6, "read": "p" }
+  ],
+  "comments": [],
+  "tests": { "single": "", "batch": [""] },
+  "initialState": 0,
+  "meta": {
+    "name": "Accepts dib or dip (implicit lambda loop on p path)",
+    "dateCreated": "2022-04-28T15:07:50.685Z",
+    "dateEdited": "2022-04-28T15:07:50.685Z",
+    "version": "0.0.1",
+    "automatariumVersion": "0.0.1"
+  },
+  "config": { "type": "FSA", "statePrefix": "q", "acceptanceCriteria": "both", "color": "", "playbackInterval": 1000 }
+}

@@ -1,4 +1,5 @@
 import { FSAGraph, PDAGraph, ReadSymbol, UnparsedFSAGraph, UnparsedPDAGraph } from './graph'
+import { UnresolvedFSAGraph } from '@automatarium/simulation/src'
 
 const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/
