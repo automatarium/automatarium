@@ -1,10 +1,35 @@
-import { FSAGraph, PDAGraph, ReadSymbol, UnparsedFSAGraph, UnparsedPDAGraph } from './graph'
-import { UnresolvedFSAGraph } from '@automatarium/simulation/src'
+import {
+  FSAGraph,
+  PDAGraph,
+  ReadSymbol,
+  UnparsedFSAGraph,
+  UnparsedPDAGraph,
+  UnresolvedGraph,
+  UnresolvedTransition
+} from './graph'
+import { Graph } from './interfaces/graph'
 
 const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/
 export const RANGE_VALS =
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
+
+/**
+ * This is used by JS with graphs. It does the resolving like the other parse functions.
+ * DO NOT USE THIS WITH TYPESCRIPT
+ *
+ * @param graph - FSA Graph object to resolve.
+ * @see parseFSAGraph
+ * @see parsePDAGraph
+ * @returns The resolved graph
+ */
+export const resolveGraph = (graph: UnresolvedGraph): any => {
+  // Resolve graph transitions
+  const transitions = graph.transitions
+    .filter(transition => transition !== undefined && transition.read !== undefined)
+    .map(transition => ({ ...transition, read: expandReadSymbols(transition.read) }))
+  return { ...graph, transitions }
+}
 
 /**
  * Resolve a graph by expanding and de-duping transitions read strings.

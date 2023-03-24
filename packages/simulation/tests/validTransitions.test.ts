@@ -1,5 +1,5 @@
-import { validTransitions, Node } from '../src'
-import { parseFSAGraph } from '../src/parse-graph'
+import { Node } from '../src'
+import { parseFSAGraph } from '../src/parseGraph'
 import { FSAGraph, FSAState } from '../src/FSASearch'
 
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
@@ -137,12 +137,24 @@ describe('Lambda transitions', () => {
 
 describe('Automata dib_dip-lambdaloop', () => {
   test('Valid states from q4', () => {
-    const graph = parseFSAGraph(dibDipLambdaloop as unknown as UnparsedFSAGraph)
-    const valid = validTransitions(graph, 4, 'p')
-    expect(valid).toEqual([
+    const fullGraph = parseFSAGraph(dibDipLambdaloop as unknown as UnparsedFSAGraph)
+    const graph = new FSAGraph(
+      new Node<FSAState>(new FSAState(fullGraph.initialState, false)),
+      fullGraph.states.map(it => new FSAState(it.id, it.isFinal)),
+      fullGraph.transitions
+    )
+    doesTransitions(graph, 4, 'p', [
       {
-        transition: graph.transitions.find(tr => tr.id === 6),
-        trace: [{ to: 5, read: '' }, { to: 6, read: 'p' }]
+        id: 0,
+        from: 4,
+        to: 5,
+        read: ['']
+      },
+      {
+        id: 0,
+        from: 5,
+        to: 6,
+        read: ['p']
       }
     ])
   })

@@ -28,6 +28,27 @@ type Transition = {
     from: StateID;
 };
 
+/**
+ * Generic transition that could be anything. This is done for JS interop at the moment
+ */
+export type UnresolvedTransition = {
+    id: TransitionID
+    to: StateID
+    from: StateID
+    read: string
+    [other: string]: unknown
+}
+
+/**
+ * Generic graph that could be anything. This is done for JS interop at the moment
+ */
+export type UnresolvedGraph = {
+    initialState: StateID
+    states: State[]
+    transitions: UnresolvedTransition[]
+    [other: string]: unknown
+}
+
 type TMTransition = Transition & {
     read: string
     write: string

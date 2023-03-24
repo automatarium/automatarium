@@ -2,7 +2,7 @@ import { PDAGraph, PDAState } from './PDASearch'
 import { GraphStepper } from './Step'
 import { PDAExecutionResult, PDAExecutionTrace, UnparsedPDAGraph, Stack } from './graph'
 import { Node } from './interfaces/graph'
-import { parsePDAGraph } from './parse-graph'
+import { parsePDAGraph } from './parseGraph'
 import { breadthFirstSearch } from './search'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {

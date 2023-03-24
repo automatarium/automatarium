@@ -1,4 +1,4 @@
-import { FSAGraph, StateID, Transition } from '../../simulation/src/types'
+import { FSAGraph, StateID, Transition } from './graph'
 
 export type ClosureNode = { transition: Transition, parents: Transition[] }
 export type ClosureWithPredicateFn = (transition: Transition) => boolean

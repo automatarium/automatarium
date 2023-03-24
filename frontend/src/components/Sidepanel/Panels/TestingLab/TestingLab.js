@@ -4,9 +4,9 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph } from '@automatarium/simulation'
-import { simulateFSA, simulatePDA } from '@automatarium/simulation-v2'
-import { simulateTM } from '@automatarium/simulation-v2/src/simulateTM'
+import { closureWithPredicate, resolveGraph, simulateFSA, simulatePDA } from '@automatarium/simulation'
+
+import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
 import { dispatchCustomEvent } from '/src/util/events'
 

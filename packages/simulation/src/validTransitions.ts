@@ -1,4 +1,4 @@
-import { FSAGraph, StateID, ReadSymbol, Transition } from '../../simulation/src/types'
+import { FSAGraph, ReadSymbol, StateID, Transition } from './graph'
 import closureWithPredicate from './closureWithPredicate'
 
 export type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}

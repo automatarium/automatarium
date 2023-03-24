@@ -10,7 +10,7 @@ import {
   XCircle
 } from 'lucide-react'
 
-import { graphStepper, graphStepperPDA } from '@automatarium/simulation-v2'
+import { graphStepper, graphStepperPDA } from '@automatarium/simulation'
 import { useMemo, useState } from 'react'
 
 // The initial states and project store calls, along with the display of the current input trace,

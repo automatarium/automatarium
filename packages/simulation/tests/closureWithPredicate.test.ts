@@ -5,7 +5,7 @@ import dibMultipart from './graphs/dib-multipath.json'
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import abba from './graphs/abba.json'
 import disconnected from './graphs/disconnected.json'
-import { parseFSAGraph } from '../src/parse-graph'
+import { parseFSAGraph } from '../src/parseGraph'
 import { UnparsedFSAGraph } from '../src/graph'
 
 describe('Automata dib', () => {
