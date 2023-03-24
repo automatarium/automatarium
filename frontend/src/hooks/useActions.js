@@ -74,7 +74,8 @@ const useActions = (registerHotkeys = false) => {
         const a = document.createElement('a')
         const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')
+        // File extension explicitly added to allow for file names with dots
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
         a.click()
       }
     },
