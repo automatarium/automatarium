@@ -1,9 +1,9 @@
 import { Node } from '../src'
-import { parseFSAGraph } from '../src/parseGraph'
+import { resolveGraph } from '../src/parseGraph'
 import { FSAGraph, FSAState } from '../src/FSASearch'
 
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
-import { FSATransition, StateID, UnparsedFSAGraph } from '../src/graph'
+import { FSATransition, StateID, UnparsedGraph } from '../src/graph'
 
 /**
  * Checks if a graph running a single step returns some transitions
@@ -115,13 +115,14 @@ describe('Lambda transitions', () => {
       }]
     )
     doesTransitions(testGraph, 0, 'a', [testGraph.transitions[0]])
-    doesTransitions(testGraph, 1, 'b', [testGraph.transitions[2]])
+    // Shouldn't skip past lambdas
+    doesTransitions(testGraph, 1, 'b', [testGraph.transitions[1]])
   })
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
   test('Valid states from q4', () => {
-    const fullGraph = parseFSAGraph(dibDipLambdaloop as unknown as UnparsedFSAGraph)
+    const fullGraph = resolveGraph(dibDipLambdaloop as UnparsedGraph)
     const graph = new FSAGraph(
       new Node<FSAState>(new FSAState(fullGraph.initialState, false)),
       fullGraph.states.map(it => new FSAState(it.id, it.isFinal)),
@@ -133,12 +134,6 @@ describe('Automata dib_dip-lambdaloop', () => {
         from: 4,
         to: 5,
         read: ['']
-      },
-      {
-        id: 0,
-        from: 5,
-        to: 6,
-        read: ['p']
       }
     ])
   })

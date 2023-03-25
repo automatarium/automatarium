@@ -5,11 +5,11 @@ import dibMultipart from './graphs/dib-multipath.json'
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import abba from './graphs/abba.json'
 import disconnected from './graphs/disconnected.json'
-import { parseFSAGraph } from '../src/parseGraph'
-import { UnparsedFSAGraph } from '../src/graph'
+import { resolveGraph } from '../src/parseGraph'
+import { UnparsedGraph } from '../src/graph'
 
 describe('Automata dib', () => {
-  const graph = parseFSAGraph(dib as unknown as UnparsedFSAGraph)
+  const graph = resolveGraph(dib as UnparsedGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -38,7 +38,7 @@ describe('Automata dib', () => {
 })
 
 describe('Automata dib-multipath', () => {
-  const graph = parseFSAGraph(dibMultipart as unknown as UnparsedFSAGraph)
+  const graph = resolveGraph(dibMultipart as UnparsedGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -69,7 +69,7 @@ describe('Automata dib-multipath', () => {
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
-  const graph = parseFSAGraph(dibDipLambdaloop as unknown as UnparsedFSAGraph)
+  const graph = resolveGraph(dibDipLambdaloop as UnparsedGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -81,14 +81,14 @@ describe('Automata dib_dip-lambdaloop', () => {
 
 describe('Reachability', () => {
   test('Unreachable final states', () => {
-    const graph = parseFSAGraph(disconnected as unknown as UnparsedFSAGraph)
+    const graph = resolveGraph(disconnected as UnparsedGraph)
     const closure = closureWithPredicate(graph, 0, () => true)
     const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 
   test('Unreachable final states due to predicate', () => {
-    const graph = parseFSAGraph(abba as unknown as UnparsedFSAGraph)
+    const graph = resolveGraph(abba as UnparsedGraph)
     const closure = closureWithPredicate(graph, 0, transition => !transition.read.includes('b'))
     const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()

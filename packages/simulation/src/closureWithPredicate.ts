@@ -7,6 +7,8 @@ export type ClosureWithPredicateFn = (transition: FSATransition) => boolean
  * Compute the set of states accessible from a given state using only transitions that meet the conditions
  * as defined by the given predicate.
  *
+ * TODO: Have this properly typed using Graph classes. Then transitions and everything will be correct
+ *
  * @param graph - Graph object used as input
  * @param currentStateID - ID of state used to seed the closure
  * @param predicate - Predicate function
@@ -25,7 +27,7 @@ export type ClosureWithPredicateFn = (transition: FSATransition) => boolean
  * closureWithPredicate(graph, 0, transition => transition.read.length === 0)
  * ```
  */
-export const closureWithPredicate = (graph: (FSAGraphIn), currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, Transition[]]> => {
+export const closureWithPredicate = (graph: (FSAGraphIn), currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, FSATransition[]]> => {
   // Setup flood fill sets
   const closed: ClosureNode[] = []
   const open: ClosureNode[] = graph.transitions
@@ -47,7 +49,7 @@ export const closureWithPredicate = (graph: (FSAGraphIn), currentStateID: StateI
     }
   }
 
-  return new Set(closed.map(node => [node.transition.to, [...node.parents, node.transition]]))
+  return new Set(closed.map(node => [node.transition.to, [...node.parents as FSATransition[], node.transition as FSATransition]]))
 }
 
 export default closureWithPredicate
