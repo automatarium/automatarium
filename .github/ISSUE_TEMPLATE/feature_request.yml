@@ -1,0 +1,31 @@
+name: Feature request
+description: Suggest an idea for Automatarium
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        - Before you create an issue please read the [contributing guide](https://github.com/automatarium/automatarium/blob/dev/CONTRIBUTING.md).
+        - Check to make sure someone hasn't already opened a similar [issue](https://github.com/github/docs/issues).
+
+  - type: textarea
+    attributes:
+      label: Proposed feature or solution
+      description: A clear and concise description of what you want to happen and why.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Alternatives
+      description: Give a clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: Add any other context or screenshots about the feature request here.
+    validations:
+      required: false
