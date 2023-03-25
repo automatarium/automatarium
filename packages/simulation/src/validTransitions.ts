@@ -1,4 +1,4 @@
-import { FSAGraph, ReadSymbol, StateID, Transition } from './graph'
+import { FSAGraphIn, FSATransition, ReadSymbol, StateID, Transition } from './graph'
 import closureWithPredicate from './closureWithPredicate'
 
 export type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}
@@ -12,9 +12,9 @@ export type ValidTransition = { transition: Transition, trace: { to: number, rea
  * @param nextRead  - The input symbol to be read next
  * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
  */
-export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
+export const validTransitions = (graph: FSAGraphIn, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
   // Compute lambda closure (states accessible without consuming input)
-  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
+  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => (tr as FSATransition).read.length === 0))
 
   // Find direct non-lambda transitions
   const directTransitions = graph.transitions

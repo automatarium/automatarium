@@ -1,9 +1,9 @@
-import { NextFunction, Request, Response } from 'express'
+import { Request, Response } from 'express'
 
 import User from 'models/user'
 import { RequestUser } from 'types'
 
-export const getUser = async ( req: Request, res: Response, next: NextFunction ) => {
+export const getUser = async ( req: Request, res: Response) => {
   const { uid } = req.user as RequestUser
 
   // Retrieve user by id
@@ -19,7 +19,7 @@ export const getUser = async ( req: Request, res: Response, next: NextFunction )
   }
 }
 
-export const createUser = async ( req: Request, res: Response, next: NextFunction ) => {  
+export const createUser = async ( req: Request, res: Response) => {
   const { uid, email, preferences } = req.body
   
   // Create new user

@@ -27,7 +27,6 @@
     "dev:backend": "yarn workspace backend dev",
     "build:frontend": "yarn workspace frontend build",
     "build:backend": "yarn workspace backend build",
-    
     "lint:frontend": "yarn workspace frontend lint",
     "lint:backend": "yarn workspace backend lint",
     "lint:simulation": "yarn workspace @automatarium/simulation lint",
@@ -36,12 +35,13 @@
     "lint:simulation:fix": "yarn workspace @automatarium/simulation lint:fix",
     "lint": "yarn lint:backend && yarn lint:frontend && yarn lint:simulation",
     "lint:fix": "yarn lint:backend:fix && yarn lint:frontend:fix && yarn lint:simulation:fix",
-    
     "test": "yarn workspace @automatarium/simulation test",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
   },
   "devDependencies": {
+    "@parcel/packager-ts": "2.8.3",
+    "@parcel/transformer-typescript-types": "2.8.3",
     "concurrently": "^7.1.0",
     "parcel-bundler": "^1.12.5"
   }

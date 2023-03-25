@@ -1,7 +1,7 @@
-import { FSAGraph, StateID, Transition } from './graph'
+import { FSAGraphIn, FSATransition, StateID, Transition } from './graph'
 
 export type ClosureNode = { transition: Transition, parents: Transition[] }
-export type ClosureWithPredicateFn = (transition: Transition) => boolean
+export type ClosureWithPredicateFn = (transition: FSATransition) => boolean
 
 /**
  * Compute the set of states accessible from a given state using only transitions that meet the conditions
@@ -25,7 +25,7 @@ export type ClosureWithPredicateFn = (transition: Transition) => boolean
  * closureWithPredicate(graph, 0, transition => transition.read.length === 0)
  * ```
  */
-export const closureWithPredicate = (graph: (FSAGraph), currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, Transition[]]> => {
+export const closureWithPredicate = (graph: (FSAGraphIn), currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, Transition[]]> => {
   // Setup flood fill sets
   const closed: ClosureNode[] = []
   const open: ClosureNode[] = graph.transitions

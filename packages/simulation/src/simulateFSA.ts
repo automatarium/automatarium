@@ -1,8 +1,8 @@
 import { FSAGraph, FSAState } from './FSASearch'
 import { GraphStepper } from './Step'
-import { ExecutionResult, ExecutionTrace, UnparsedFSAGraph } from './graph'
+import { ExecutionResult, ExecutionTrace, FSAGraphIn, UnparsedGraph } from './graph'
 import { Node } from './interfaces/graph'
-import { parseFSAGraph } from './parseGraph'
+import { resolveGraph } from './parseGraph'
 import { breadthFirstSearch } from './search'
 
 const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
@@ -21,11 +21,12 @@ const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
   return trace.reverse()
 }
 
+// TODO: Like PDA, Make this take a FSAGraph instead
 export const simulateFSA = (
-  graph: UnparsedFSAGraph,
+  graph: UnparsedGraph,
   input: string
 ): ExecutionResult => {
-  const parsedGraph = parseFSAGraph(graph)
+  const parsedGraph = resolveGraph(graph) as FSAGraphIn
 
   // Doing this find here so we don't have to deal with undefined in the class
   const initialState = parsedGraph.states.find((state) => {
@@ -52,12 +53,11 @@ export const simulateFSA = (
   const result = breadthFirstSearch(problem)
 
   if (!result) {
-    const emptyExecution: ExecutionResult = {
+    return {
       trace: [{ to: 0, read: null }],
       accepted: false,
       remaining: input
     }
-    return emptyExecution
   }
 
   return {
@@ -67,8 +67,8 @@ export const simulateFSA = (
   }
 }
 
-export const graphStepper = (graph: UnparsedFSAGraph, input: string) => {
-  const parsedGraph = parseFSAGraph(graph)
+export const graphStepper = (graph: UnparsedGraph, input: string) => {
+  const parsedGraph = resolveGraph(graph)
 
   const initialState = parsedGraph.states.find((state) => {
     return state.id === graph.initialState
