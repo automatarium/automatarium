@@ -74,7 +74,7 @@ const Info = () => {
             <th>{getStateName(state.id)}</th>
             {alphabet.map(symbol => <td key={symbol}>
               {Object.entries(transitionMap)
-                .filter(([key]) => key.split(',')[0] === state.id && key.split(',')[1] === symbol)
+                .filter(([key]) => key.split(',')[0] === state.id toString() && key.split(',')[1] === symbol)
                 .map(([, states]) => states.map(id => getStateName(id)).join(', '))[0] ?? '-'}
             </td>)}
           </tr>)}
