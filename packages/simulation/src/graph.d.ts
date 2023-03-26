@@ -7,13 +7,16 @@
  * TODO: Remove the need for `In` types and just the `Graph` type in frontend
  */
 
-import { TMState } from './TMSearch'
-
 export type ReadSymbol = string;
 export type StateID = number;
 export type TransitionID = number;
 export type PopSymbol = string;
 export type PushSymbol = string;
+
+export type Tape ={
+    pointer: number
+    trace: string[]
+}
 
 type State = {
     id: StateID;
@@ -97,11 +100,6 @@ export type ExecutionTrace = {
     read: string | null;
     to: StateID;
 };
-
-export type Tape ={
-    pointer: number
-    trace: string[]
-}
 
 export type ExecutionResult = {
     accepted: boolean;
