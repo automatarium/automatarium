@@ -31,6 +31,10 @@ export type PDAState = State & {
     stack: string[];
 };
 
+export type TMStateIn = State & {
+  tape?: Tape // tape is set during execution of simulateTM
+}
+
 /**
  * Defines
  */
@@ -85,7 +89,7 @@ export type PDAGraphIn = {
 // Will be used for importing from front end
 export type TMGraphIn = {
     initialState: StateID
-    states: TMState[]
+    states: TMStateIn[]
     transitions: TMTransition[]
 }
 

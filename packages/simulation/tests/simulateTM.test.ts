@@ -5,10 +5,10 @@ import { TMExecutionResult, TMGraphIn } from '../src/graph'
 function simulate (graph: TMGraphIn, input: string): TMExecutionResult {
   return simulateTM(graph, { pointer: 0, trace: input ? input.split('') : [''] })
 }
+const result = simulate(a2b2a, 'AA')
 
 describe('Turing machine that converts A to B then resets tape', () => {
   test('Accepts AA', () => {
-    const result = simulate(a2b2a, 'AA')
     expect(result.halted).toBeTrue()
   })
 })
