@@ -1,4 +1,7 @@
-import { FSAGraph, PDAGraph, ReadSymbol, UnparsedFSAGraph, UnparsedPDAGraph } from './graph'
+import {
+  ReadSymbol,
+  UnparsedGraph
+} from './graph'
 
 const RANGE_REG = /\[(\w-\w)\]/g
 const LITERAL_REG = /[\S]/
@@ -6,40 +9,18 @@ export const RANGE_VALS =
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
 
 /**
- * Resolve a graph by expanding and de-duping transitions read strings.
+ * This is used by JS with graphs. It expands all read symbols (Even for turing machines)
+ * Reason for any return is that making the types was becoming a weird sandwich
+ * TODO: Remove once we start properly typing the frontend
  *
  * @param graph - FSA Graph object to resolve.
- * @returns The resolved graph
+ * @see expandReadSymbols
  */
-export const parseFSAGraph = (graph: UnparsedFSAGraph): FSAGraph => {
+export const resolveGraph = (graph: UnparsedGraph): any => {
   // Resolve graph transitions
   const transitions = graph.transitions
-    .filter(
-      (transition) =>
-        transition !== undefined && transition.read !== undefined
-    )
-    .map((transition) => ({
-      ...transition,
-      read: expandReadSymbols(transition.read)
-    }))
-  return { ...graph, transitions }
-}
-
-export const parsePDAGraph = (graph: UnparsedPDAGraph): PDAGraph => {
-  // Resolve graph transitions
-  const transitions = graph.transitions
-    .filter(
-      (transition) =>
-        transition !== undefined && transition.read !== undefined &&
-                transition.pop !== undefined &&
-                transition.push !== undefined
-    )
-    .map((transition) => ({
-      ...transition,
-      read: expandReadSymbols(transition.read),
-      pop: transition.pop,
-      push: transition.push
-    }))
+    .filter(transition => transition !== undefined && transition.read !== undefined)
+    .map(transition => ({ ...transition, read: expandReadSymbols(transition.read) }))
   return { ...graph, transitions }
 }
 

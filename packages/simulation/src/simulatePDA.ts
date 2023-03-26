@@ -1,8 +1,8 @@
 import { PDAGraph, PDAState } from './PDASearch'
 import { GraphStepper } from './Step'
-import { PDAExecutionResult, PDAExecutionTrace, UnparsedPDAGraph, Stack } from './graph'
+import { PDAExecutionResult, PDAExecutionTrace, PDAGraphIn, Stack, UnparsedGraph } from './graph'
 import { Node } from './interfaces/graph'
-import { parsePDAGraph } from './parse-graph'
+import { resolveGraph } from './parseGraph'
 import { breadthFirstSearch } from './search'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
@@ -29,12 +29,13 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   return trace.reverse()
 }
 
+// TODO: Make this take a PDAGraph instead of UnparsedGraph
 export const simulatePDA = (
-  graph: UnparsedPDAGraph,
+  graph: UnparsedGraph,
   input: string
 ): PDAExecutionResult => {
   const tempStack: Stack = []
-  const parsedGraph = parsePDAGraph(graph)
+  const parsedGraph = resolveGraph(graph) as PDAGraphIn
   // Doing this find here so we don't have to deal with undefined in the class
   const initialState = parsedGraph.states.find((state) => {
     return state.id === graph.initialState
@@ -61,13 +62,12 @@ export const simulatePDA = (
   const result = breadthFirstSearch(problem)
 
   if (!result) {
-    const emptyExecution: PDAExecutionResult = {
+    return {
       trace: [{ to: 0, read: null, pop: '', push: '', currentStack: [], invalidPop: false }],
       accepted: false, // empty stack is part of accepted condition
       remaining: input,
       stack: []
     }
-    return emptyExecution
   }
   // Simulate stack operations
   /*
@@ -108,8 +108,8 @@ export const simulatePDA = (
   }
 }
 
-export const graphStepperPDA = (graph: UnparsedPDAGraph, input: string) => {
-  const parsedGraph = parsePDAGraph(graph)
+export const graphStepperPDA = (graph: UnparsedGraph, input: string) => {
+  const parsedGraph = resolveGraph(graph)
 
   const initialState = parsedGraph.states.find((state) => {
     return state.id === graph.initialState

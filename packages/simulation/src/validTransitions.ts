@@ -1,4 +1,4 @@
-import { FSAGraph, StateID, ReadSymbol, Transition } from './types.d'
+import { FSAGraphIn, FSATransition, ReadSymbol, StateID, Transition } from './graph'
 import closureWithPredicate from './closureWithPredicate'
 
 export type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}
@@ -12,9 +12,9 @@ export type ValidTransition = { transition: Transition, trace: { to: number, rea
  * @param nextRead  - The input symbol to be read next
  * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
  */
-export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
+export const validTransitions = (graph: FSAGraphIn, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
   // Compute lambda closure (states accessible without consuming input)
-  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
+  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => (tr as FSATransition).read.length === 0))
 
   // Find direct non-lambda transitions
   const directTransitions = graph.transitions
@@ -35,14 +35,14 @@ export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextR
     .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
     .map(([stateID, precedingTransitions]) => ({
       transition: (graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as Transition),
-      trace: precedingTransitions.slice(0, -1),
+      trace: precedingTransitions.slice(0, -1)
     }))
 
   // Combine transitions
   const allTransitions = [
     ...directTransitions,
     ...indirectTransitions,
-    ...finalTransitions,
+    ...finalTransitions
   ]
 
   // Format trace, add final transition to trace and return
@@ -52,4 +52,3 @@ export const validTransitions = (graph: FSAGraph, currentStateID: StateID, nextR
       trace: [...trace, transition].map(tr => ({ to: tr.to, read: tr.read.length === 0 ? '' : nextRead }))
     }))
 }
-

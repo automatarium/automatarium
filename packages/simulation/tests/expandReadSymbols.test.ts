@@ -1,6 +1,6 @@
 /// <reference types="jest-extended" />
 
-import { expandReadSymbols } from '../src'
+import { expandReadSymbols } from '../../simulation/src'
 
 describe('Expand literals', () => {
   test('Should pass through abc', () => {
@@ -28,9 +28,9 @@ describe('Expand literals', () => {
 
 describe('Expand ranges', () => {
   test('Should expand [a-z]', () => {
-      const expectedSymbols = 'abcdefghijklmnopqrstuvwxyz'.split('')
-      const symbols = expandReadSymbols('[a-z]')
-      expect(symbols).toIncludeSameMembers(expectedSymbols)
+    const expectedSymbols = 'abcdefghijklmnopqrstuvwxyz'.split('')
+    const symbols = expandReadSymbols('[a-z]')
+    expect(symbols).toIncludeSameMembers(expectedSymbols)
   })
 
   test('Should expand [a-Z]', () => {

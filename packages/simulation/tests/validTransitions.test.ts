@@ -1,132 +1,139 @@
-import { validTransitions, resolveGraph } from '../src'
-import { FSAGraph } from '../src/types.d'
+import { Node } from '../src'
+import { resolveGraph } from '../src/parseGraph'
+import { FSAGraph, FSAState } from '../src/FSASearch'
 
-import dib_dip_lambdaloop from './graphs/dib_dip-lambdaloop.json'
+import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
+import { FSATransition, StateID, UnparsedGraph } from '../src/graph'
+
+/**
+ * Checks if a graph running a single step returns some transitions
+ * @param g Graph to test
+ * @param fromID The initial state to be in
+ * @param has Input string that you want to feed
+ * @param transitions Transitions to expect
+ */
+function doesTransitions (g: FSAGraph, fromID: StateID, has: string, transitions: FSATransition[]) {
+  const valid = g.getSuccessors(new Node(new FSAState(fromID, false, null, has))).map(it => ({
+    from: it.parent.state.id,
+    to: it.state.id
+  }))
+
+  expect(valid).toEqual(transitions.map(it => ({
+    from: it.from,
+    to: it.to
+  })))
+}
 
 describe('Non-lambda transitions', () => {
   test('Identify single transition', () => {
-    const testGraph: FSAGraph = {
-      initialState: 0,
-      states: [{
-        id: 0,
-        isFinal: false
-      }, {
-        id: 1,
-        isFinal: true
-      }],
-      transitions: [{
+    const testGraph = new FSAGraph(
+      new Node(new FSAState(0, false)),
+      [
+        new FSAState(0, false),
+        new FSAState(1, true)
+      ],
+      [{
         id: 0,
         from: 0,
         to: 1,
-        read: ['a'],
-      }],
-    }
-    const valid = validTransitions(testGraph, 0, 'a').map(v => v.transition)
-    expect(valid).toEqual([testGraph.transitions[0]])
+        read: ['a']
+      }]
+    )
+    doesTransitions(testGraph, 0, 'a', [testGraph.transitions[0]])
   })
 
   test('Identify two possible transitions', () => {
-    const testGraph: FSAGraph = {
-      initialState: 0,
-      states: [{
-        id: 0,
-        isFinal: false
-      }, {
-        id: 1,
-        isFinal: true
-      }],
-      transitions: [{
+    const testGraph = new FSAGraph(
+      new Node(new FSAState(0, false)),
+      [
+        new FSAState(0, false),
+        new FSAState(1, true)
+      ],
+      [{
         id: 0,
         from: 0,
         to: 1,
-        read: ['a'],
+        read: ['a']
       }, {
-        id: 1,
+        id: 0,
         from: 0,
         to: 1,
         read: ['a', 'b']
-      }],
-    }
-    const valid = validTransitions(testGraph, 0, 'a').map(v => v.transition)
-    expect(valid).toEqual(testGraph.transitions)
+      }]
+    )
+    doesTransitions(testGraph, 0, 'a', testGraph.transitions)
   })
 
   test('Identify one of two possible transitions', () => {
-    const testGraph: FSAGraph = {
-      initialState: 0,
-      states: [{
-        id: 0,
-        isFinal: false
-      }, {
-        id: 1,
-        isFinal: true
-      }],
-      transitions: [{
+    const testGraph = new FSAGraph(
+      new Node<FSAState>(new FSAState(0, false)),
+      [
+        new FSAState(0, false),
+        new FSAState(1, true)
+      ],
+      [{
         id: 0,
         from: 0,
         to: 1,
-        read: ['a'],
+        read: ['a']
       }, {
-        id: 1,
+        id: 0,
         from: 0,
         to: 1,
         read: ['b']
-      }],
-    }
-    const valid = validTransitions(testGraph, 0, 'a').map(v => v.transition)
-    expect(valid).toEqual([testGraph.transitions[0]])
+      }]
+    )
+    doesTransitions(testGraph, 0, 'a', [testGraph.transitions[0]])
   })
 })
 
 describe('Lambda transitions', () => {
   test('Identify single indirect transition', () => {
-    const testGraph: FSAGraph = {
-      initialState: 0,
-      states: [{
-        id: 0,
-        isFinal: false,
-      }, {
-        id: 1,
-        isFinal: false,
-      }, { 
-        id: 2,
-        isFinal: false,
-      }, {
-        id: 3,
-        isFinal: true,
-      }],
-      transitions: [{
+    const testGraph = new FSAGraph(
+      new Node<FSAState>(new FSAState(0, false)),
+      [
+        new FSAState(0, false),
+        new FSAState(1, false),
+        new FSAState(2, false),
+        new FSAState(3, true)
+      ],
+      [{
         id: 0,
         from: 0,
         to: 1,
-        read: ['a'],
+        read: ['a']
       }, {
-        id: 1,
+        id: 0,
         from: 1,
         to: 2,
-        read: [],
+        read: []
       }, {
-        id: 2,
+        id: 0,
         from: 2,
         to: 3,
-        read: ['b'],
-      }],
-    }
-    const valid_0 = validTransitions(testGraph, 0, 'a').map(v => v.transition)
-    const valid_1 = validTransitions(testGraph, 1, 'b').map(v => v.transition)
-    expect(valid_0).toEqual([testGraph.transitions[0]])
-    expect(valid_1).toEqual([testGraph.transitions[2]])
+        read: ['b']
+      }]
+    )
+    doesTransitions(testGraph, 0, 'a', [testGraph.transitions[0]])
+    // Shouldn't skip past lambdas
+    doesTransitions(testGraph, 1, 'b', [testGraph.transitions[1]])
   })
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
   test('Valid states from q4', () => {
-    const graph = resolveGraph(dib_dip_lambdaloop)
-    const valid = validTransitions(graph, 4, 'p')
-    expect(valid).toEqual([
+    const fullGraph = resolveGraph(dibDipLambdaloop as UnparsedGraph)
+    const graph = new FSAGraph(
+      new Node<FSAState>(new FSAState(fullGraph.initialState, false)),
+      fullGraph.states.map(it => new FSAState(it.id, it.isFinal)),
+      fullGraph.transitions
+    )
+    doesTransitions(graph, 4, 'p', [
       {
-        transition: graph.transitions.find(tr => tr.id === 6),
-        trace: [{ to: 5, read: '' }, { to: 6, read: 'p' }]
+        id: 0,
+        from: 4,
+        to: 5,
+        read: ['']
       }
     ])
   })

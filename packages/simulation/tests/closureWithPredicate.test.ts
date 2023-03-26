@@ -1,15 +1,16 @@
 /// <reference types="jest-extended" />
-
-import { closureWithPredicate, resolveGraph, State } from '../src'
+import { closureWithPredicate } from '../src'
 import dib from './graphs/dib.json'
-import dib_multipath from './graphs/dib-multipath.json'
-import dib_dip_lambdaloop from './graphs/dib_dip-lambdaloop.json'
+import dibMultipart from './graphs/dib-multipath.json'
+import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import abba from './graphs/abba.json'
 import disconnected from './graphs/disconnected.json'
+import { resolveGraph } from '../src/parseGraph'
+import { UnparsedGraph } from '../src/graph'
 
 describe('Automata dib', () => {
-  const graph = resolveGraph(dib)
-  
+  const graph = resolveGraph(dib as UnparsedGraph)
+
   test('Include all transitions', () => {
     const startID = 0
     const closure = closureWithPredicate(graph, startID, () => true)
@@ -27,7 +28,7 @@ describe('Automata dib', () => {
       [3, 'dib']
     ])
   })
-  
+
   test('Restrict by specific read value', () => {
     const startID = 0
     const closure = closureWithPredicate(graph, startID, transition => transition.read.includes('d'))
@@ -37,8 +38,8 @@ describe('Automata dib', () => {
 })
 
 describe('Automata dib-multipath', () => {
-  const graph = resolveGraph(dib_multipath)
-  
+  const graph = resolveGraph(dibMultipart as UnparsedGraph)
+
   test('Include all transitions', () => {
     const startID = 0
     const closure = closureWithPredicate(graph, startID, () => true)
@@ -62,14 +63,14 @@ describe('Automata dib-multipath', () => {
       [2, 'di'],
       [3, 'dib'],
       [4, 'di'],
-      [5, 'dib'],
+      [5, 'dib']
     ])
   })
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
-  const graph = resolveGraph(dib_dip_lambdaloop)
-  
+  const graph = resolveGraph(dibDipLambdaloop as UnparsedGraph)
+
   test('Include all transitions', () => {
     const startID = 0
     const closure = closureWithPredicate(graph, startID, () => true)
@@ -80,16 +81,16 @@ describe('Automata dib_dip-lambdaloop', () => {
 
 describe('Reachability', () => {
   test('Unreachable final states', () => {
-    const graph = resolveGraph(disconnected)
+    const graph = resolveGraph(disconnected as UnparsedGraph)
     const closure = closureWithPredicate(graph, 0, () => true)
-    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID) as State)
+    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 
   test('Unreachable final states due to predicate', () => {
-    const graph = resolveGraph(abba) 
+    const graph = resolveGraph(abba as UnparsedGraph)
     const closure = closureWithPredicate(graph, 0, transition => !transition.read.includes('b'))
-    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID) as State)
+    const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 })

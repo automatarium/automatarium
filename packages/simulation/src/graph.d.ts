@@ -1,3 +1,12 @@
+/**
+ * This file defines most types used
+ *
+ * If the type has the `In` suffix then it means it is used when passing data from the frontend
+ * to the simulator. These types shouldn't be used in other places. These `In` types are a lot simplier compared
+ * to the `Graph` class which is used for simulations
+ * TODO: Remove the need for `In` types and just the `Graph` type in frontend
+ */
+
 import { TMState } from './TMSearch'
 
 export type ReadSymbol = string;
@@ -22,6 +31,9 @@ export type PDAState = State & {
     stack: string[];
 };
 
+/**
+ * Defines
+ */
 type Transition = {
     id: TransitionID;
     to: StateID;
@@ -34,16 +46,6 @@ type TMTransition = Transition & {
     direction: string
 }
 
-export type UnparsedFSATransition = Transition & {
-    read: ReadSymbol;
-};
-
-export type UnparsedPDATransition = Transition & {
-    read: ReadSymbol;
-    pop: PopSymbol;
-    push: PushSymbol;
-}
-
 export type FSATransition = Transition & {
     read: ReadSymbol[];
 };
@@ -54,25 +56,27 @@ export type PDATransition = Transition & {
     push: PushSymbol;
 };
 
-export type UnparsedFSAGraph = {
-    initialState: StateID;
-    states: FSAState[];
-    transitions: UnparsedFSATransition[];
-};
+export type UnparsedTransition = {
+    read: string
+}
 
-export type UnparsedPDAGraph = {
-    initialState: StateID;
-    states: PDAState[];
-    transitions: UnparsedPDATransition[];
-};
+/**
+ * Generic graph that could be anything. This is done for JS interop where `parseGraph` will be called
+ * to expand read symbols (If needed, turing machines don't have symbols expanded)
+ *
+ */
+export type UnparsedGraph = {
+    initialState: StateID
+    transitions: UnparsedTransition[]
+}
 
-export type FSAGraph = {
+export type FSAGraphIn = {
     initialState: StateID;
     states: FSAState[];
     transitions: FSATransition[];
 };
 
-export type PDAGraph = {
+export type PDAGraphIn = {
     initialState: StateID;
     states: PDAState[];
     transitions: PDATransition[];
