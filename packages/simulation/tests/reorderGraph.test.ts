@@ -5,7 +5,8 @@ import dibDipLambdaLoop from './graphs/dib_dip-lambdaloop.json'
 
 describe('Reordering graph', () => {
   test('Simple graph can be rearranged', () => {
-    // Only two state graph, didn't see reason for making JSON file
+    // Only two state graph, didn't see reason for making JSON file.
+    // We are still using full properties just to check they don't cause any problems
     const graph = {
       states: [
         {
@@ -96,5 +97,26 @@ describe('Reordering graph', () => {
     expect(testVer.states[6].id).toBe(4)
     expect(testVer.states[2].id).toBe(5)
     expect(testVer.states[3].id).toBe(6)
+  })
+
+  test('Disconnected components are sorted also', () => {
+    const graph = {
+      states: [
+        {
+          isFinal: true,
+          id: 0
+        },
+        {
+          isFinal: false,
+          id: 1
+        }
+      ],
+      transitions: [],
+      initialState: 1
+    } as unknown as UnparsedGraph
+    reorderStates(graph)
+
+    expect(graph.states[0].id).toBe(1)
+    expect(graph.states[1].id).toBe(0)
   })
 })
