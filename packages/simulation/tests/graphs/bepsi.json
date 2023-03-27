@@ -1,0 +1,71 @@
+{
+  "projectType": "TM",
+  "states": [
+    {
+      "isFinal": false,
+      "x": 315,
+      "y": 285,
+      "id": 0
+    },
+    {
+      "isFinal": false,
+      "x": 495,
+      "y": 270,
+      "id": 1
+    },
+    {
+      "isFinal": true,
+      "x": 720,
+      "y": 240,
+      "id": 2
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "write": "B",
+      "direction": "R",
+      "read": "B"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 2,
+      "write": "A",
+      "direction": "R",
+      "read": "B"
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "id": 3,
+      "write": "C",
+      "direction": "R",
+      "read": "C"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "BCB",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Nervous Gravel",
+    "dateCreated": 1679305311849,
+    "dateEdited": 1679305311849,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "TM",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "purple"
+  }
+}
