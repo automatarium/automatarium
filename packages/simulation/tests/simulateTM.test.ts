@@ -45,6 +45,12 @@ describe('Machine that must have Bs either side and can have Cs in the middle', 
   test('Tracing is correct for BCB', () => {
     const result = simulate(bepsi, 'BCB')
     expect(result.tape).toMatchObject({ pointer: 3, trace: ['B', 'C', 'A'] })
+    expect(result.trace).toMatchObject([
+      { to: 0, tape: { pointer: 0, trace: ['B', 'C', 'B'] } },
+      { to: 1, tape: { pointer: 1, trace: ['B', 'C', 'B'] } },
+      { to: 1, tape: { pointer: 2, trace: ['B', 'C', 'B'] } },
+      { to: 2, tape: { pointer: 3, trace: ['B', 'C', 'A'] } }
+    ])
     expect(result.halted).toBeTrue()
   })
 })
