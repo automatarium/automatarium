@@ -1,0 +1,47 @@
+{
+  "projectType": "FSA",
+  "states": [
+    {
+      "isFinal": true,
+      "x": 525,
+      "y": 330,
+      "id": 0
+    },
+    {
+      "isFinal": false,
+      "x": 765,
+      "y": 360,
+      "id": 1
+    }
+  ],
+  "transitions": [
+    {
+      "from": 1,
+      "to": 0,
+      "id": 0,
+      "read": "h"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 1,
+  "meta": {
+    "name": "Bewildered Greenhouse",
+    "dateCreated": 1680433522446,
+    "dateEdited": 1680433522446,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

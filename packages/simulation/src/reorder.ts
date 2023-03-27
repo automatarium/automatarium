@@ -46,6 +46,7 @@ export const reorderStates = (graph: UnparsedGraph) => {
         mappings[currID] = nextID++
       }
     }
+    console.log(mappings);
     // For multiple path options, we just add them to the queue and process later
     // We only add them if we haven't seen them
     (graphList[currID] ?? []).forEach(x => !seen(x) && frontier.add(x))

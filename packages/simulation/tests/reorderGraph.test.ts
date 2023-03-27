@@ -2,6 +2,7 @@ import { describe } from 'node:test'
 import { UnparsedGraph } from '../src/graph'
 import { reorderStates } from '../src/reorder'
 import dibDipLambdaLoop from './graphs/dib_dip-lambdaloop.json'
+import war from './graphs/warIsTheHWord.json'
 
 describe('Reordering graph', () => {
   test('Simple graph can be rearranged', () => {
@@ -118,5 +119,13 @@ describe('Reordering graph', () => {
 
     expect(graph.states[0].id).toBe(1)
     expect(graph.states[1].id).toBe(0)
+  })
+
+  test('Project causing problems', () => {
+    const testVer = JSON.parse(JSON.stringify(war)) as UnparsedGraph
+    reorderStates(testVer)
+
+    expect(testVer.states[0].id).toBe(1)
+    expect(testVer.states[1].id).toBe(0)
   })
 })
