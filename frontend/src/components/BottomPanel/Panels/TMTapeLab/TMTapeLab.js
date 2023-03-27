@@ -6,16 +6,19 @@ import { Wrapper } from './tmTapeLabStyle'
 const TMTapeLab = () => {
   const traceIDx = useTMSimResultStore(s => s.traceIDx)
   const simResults = useTMSimResultStore(s => s.simResults)
-
+  console.log(traceIDx)
+  console.log(simResults)
   return (
       <>
       <SectionLabel>Turing Machine Tapes</SectionLabel>
           {(simResults.length !== 0) && (
           <Wrapper >
-              {simResults.map((result, index) => (
-                <TMTraceStepWindow key={index} trace={result.trace[traceIDx].read.trace}
-                                   pointer={result.trace[traceIDx].read.pointer} accepted={result.halted} isEnd={traceIDx === result.trace.length - 1} />
-              ))}
+              {simResults.map((result, index) => {
+                const trace = result.trace[Math.min(traceIDx, result.trace.length - 1)]
+                return <TMTraceStepWindow key={index} trace={trace.read.trace}
+                                     pointer={trace.read.pointer} accepted={result.halted}
+                                     isEnd={traceIDx === result.trace.length - 1}/>
+              })}
           </Wrapper>
           )}
       </>

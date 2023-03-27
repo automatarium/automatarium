@@ -62,7 +62,7 @@ const TestingLab = () => {
       const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace })
 
       return {
-        halted,
+        accepted: halted,
         tape,
         trace: trace.map(step => ({
           to: step.to,
@@ -119,7 +119,7 @@ const TestingLab = () => {
     if (!simulationResult) { return '' }
 
     const { trace, accepted, remaining, transitionCount } = simulationResult
-
+    console.log(simulationResult)
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
       if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
