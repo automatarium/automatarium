@@ -134,7 +134,7 @@ const TestingLab = () => {
       .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
-    const transitionsWithRejected = !accepted && traceIdx === trace.length
+    const transitionsWithRejected = !accepted && traceIdx === trace.length && remaining !== undefined
       ? [...transitions,
           remaining[0]
             ? `${remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
@@ -251,9 +251,10 @@ const TestingLab = () => {
 
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
-            disabled={traceIdx === simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0) && traceIdx !== 0 ||
-            noInitialState ||
-            (projectType === 'TM' && !showTraceTape)
+            disabled={
+                (traceIdx >= simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0)) ||
+                noInitialState ||
+                (projectType === 'TM' && !showTraceTape)
             }
             onClick={() => {
               // Increment tracer index

@@ -14,9 +14,9 @@ const TMTapeLab = () => {
           {(simResults.length !== 0) && (
           <Wrapper >
               {simResults.map((result, index) => {
-                const trace = result.trace[Math.min(traceIDx, result.trace.length - 1)]
+                const trace = result.trace[traceIDx]
                 return <TMTraceStepWindow key={index} trace={trace.read.trace}
-                                     pointer={trace.read.pointer} accepted={result.halted}
+                                     pointer={trace.read.pointer} accepted={result.accepted}
                                      isEnd={traceIDx === result.trace.length - 1}/>
               })}
           </Wrapper>
