@@ -63,7 +63,7 @@ export type PDATransition = Transition & {
     push: PushSymbol;
 };
 
-export type UnparsedTransition = {
+export type UnparsedTransition = Transition & {
     read: string
 }
 
@@ -75,6 +75,7 @@ export type UnparsedTransition = {
 export type UnparsedGraph = {
     initialState: StateID
     transitions: UnparsedTransition[]
+    states: State[]
 }
 
 export type FSAGraphIn = {
