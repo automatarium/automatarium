@@ -45,17 +45,17 @@ export class TMGraph extends Graph<TMState, TMTransition> {
       const tapePointer = node.state.tape.pointer
       const tapeTrace = node.state.tape.trace
 
-      const symbol = tapeTrace[tapePointer]
+      // Undefined means its out of tape bounds, so we treat that has a lambda transition
+      const symbol = tapeTrace[tapePointer] ?? ''
       const nextTape = this.progressTape(node, transition)
 
       // If there is no next state
       if (
-        nextState === undefined || (!transition.read.includes(symbol) && symbol !== undefined) || nextTape.pointer < 0
+        nextState === undefined || (!transition.read.includes(symbol)) || nextTape.pointer < 0
       ) {
         continue
       }
-      // Either the transition has same symbol or its a lambda transition
-      if (transition.read === symbol || (transition.read === '' && symbol === undefined)) {
+      if (transition.read === symbol) {
         const graphState = new TMState(
           nextState.id,
           nextState.isFinal,
