@@ -151,10 +151,6 @@ const TestingLab = () => {
     setTraceIdx(0)
   }, [lastChangeDate])
 
-  useEffect(() => {
-    rerunMultiTraceInput()
-  }, [])
-
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
     if (projectType === 'TM') { setProjectSimTraceIDx(traceIdx) }
