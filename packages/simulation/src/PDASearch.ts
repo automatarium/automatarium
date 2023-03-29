@@ -35,7 +35,10 @@ export class PDAState extends State {
   }
 
   key () {
-    return String(this.id + this.remaining + this.stack.join(''))
+    // It is important that the key values are seperated or else collisions could occur
+    // e.g. if the remaining is A and the stack is A, that would be the same as remaining AA with empty stack.
+    // They are divided by the ID so that collisions won't occur if a dividing character appears
+    return String(this.remaining + this.id.toString() + this.stack.join(''))
   }
 }
 

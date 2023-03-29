@@ -15,6 +15,8 @@
     "lint:fix": "eslint . --ext .js,.ts --fix"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^18.15.10",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "eslint": "^8.0.1",
@@ -28,7 +30,5 @@
     "ts-jest": "^29.0.5",
     "typescript": "^4.7.3"
   },
-  "dependencies": {
-    "@types/jest": "^29.5.0"
-  }
+  "dependencies": {}
 }

@@ -13,7 +13,7 @@ export class TMState extends State {
 
   key () {
     const traceAdd = this._tape.trace.toString() ?? ''
-    return String(this.id + traceAdd)
+    return String(this.id + ',' + this._tape.pointer + ',' + traceAdd)
   }
 
   get tape () {
@@ -45,7 +45,8 @@ export class TMGraph extends Graph<TMState, TMTransition> {
       const tapePointer = node.state.tape.pointer
       const tapeTrace = node.state.tape.trace
 
-      const symbol = tapeTrace[tapePointer]
+      // Undefined means its out of tape bounds, so we treat that has a lambda transition
+      const symbol = tapeTrace[tapePointer] ?? ''
       const nextTape = this.progressTape(node, transition)
 
       // If there is no next state
@@ -54,7 +55,6 @@ export class TMGraph extends Graph<TMState, TMTransition> {
       ) {
         continue
       }
-
       if (transition.read === symbol) {
         const graphState = new TMState(
           nextState.id,

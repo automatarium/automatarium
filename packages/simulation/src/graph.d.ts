@@ -7,13 +7,16 @@
  * TODO: Remove the need for `In` types and just the `Graph` type in frontend
  */
 
-import { TMState } from './TMSearch'
-
 export type ReadSymbol = string;
 export type StateID = number;
 export type TransitionID = number;
 export type PopSymbol = string;
 export type PushSymbol = string;
+
+export type Tape ={
+    pointer: number
+    trace: string[]
+}
 
 type State = {
     id: StateID;
@@ -30,6 +33,10 @@ export type PDAState = State & {
     read: ReadSymbol | null;
     stack: string[];
 };
+
+export type TMStateIn = State & {
+  tape?: Tape // tape is set during execution of simulateTM
+}
 
 /**
  * Defines
@@ -85,7 +92,7 @@ export type PDAGraphIn = {
 // Will be used for importing from front end
 export type TMGraphIn = {
     initialState: StateID
-    states: TMState[]
+    states: TMStateIn[]
     transitions: TMTransition[]
 }
 
@@ -93,11 +100,6 @@ export type ExecutionTrace = {
     read: string | null;
     to: StateID;
 };
-
-export type Tape ={
-    pointer: number
-    trace: string[]
-}
 
 export type ExecutionResult = {
     accepted: boolean;
