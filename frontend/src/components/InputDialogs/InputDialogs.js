@@ -273,82 +273,86 @@ const InputDialogs = () => {
           left: `${dialog.x}px`
         }}
       >
-          {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
-          {dialog.type === 'transition' && isPDA ? (
-            <>
-              <Input
-                ref={inputRef}
-                value={value}
-                onChange={e => setValue(e.target.value)}
-                onKeyUp={e => e.key === 'Enter' && save()}
-                placeholder={{
-                  transition: 'λ\t(read)'
-                }[dialog.type]}
-                style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-              />
-              <Input
-                ref={inputPopRef}
-                value={valuePop}
-                onChange={e => setValuePop(e.target.value)}
-                onKeyUp={e => e.key === 'Enter' && save()}
-                placeholder={{
-                  transition: 'λ\t(pop)'
-                }[dialog.type]}
-                style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-              />
-              <InputWrapper>
-              <Input
-                ref={inputPushRef}
-                value={valuePush}
-                onChange={e => setValuePush(e.target.value)}
-                onKeyUp={e => e.key === 'Enter' && save()}
-                placeholder={{
-                  transition: 'λ\t(push)'
-                }[dialog.type]}
-                style={{
-                  width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-                  margin: '0 .4em',
-                  paddingRight: '2.5em'
-                }}
-              />
-              <SubmitButton onClick={save}>
-                <CornerDownLeft size="18px" />
-              </SubmitButton>
-              </InputWrapper>
-            </>
-            
-          ) : (
-            <Input
-              ref={inputRef}
-              value={value}
-              onChange={(e) => setValue(e.target.value)}
-              onKeyUp={(e) => e.key === 'Enter' && save()}
-              placeholder={{
-                transition: 'λ',
-                comment: 'Comment text...',
-                stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-                stateLabel: 'State label...',
-              }[dialog.type]}
-              style={{
-                width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-                margin: '0 .4em',
-                paddingRight: '2.5em',
-              }}
-            />
-          )}
-          {!isPDA && (
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px"/>
-            </SubmitButton>
-          )}
+          {dialog.type === 'transition' && isPDA && (
+      <>
+        <Input
+          ref={inputRef}
+          value={value}
+          onChange={e => setValue(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(read)'
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+        <Input
+          ref={inputPopRef}
+          value={valuePop}
+          onChange={e => setValuePop(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(pop)'
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+        <InputWrapper>
+        <Input
+          ref={inputPushRef}
+          value={valuePush}
+          onChange={e => setValuePush(e.target.value)}
+          onKeyUp={e => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ\t(push)'
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em'
+          }}
+        />
+        <SubmitButton onClick={save}>
+          <CornerDownLeft size="18px" />
+        </SubmitButton>
+        </InputWrapper>
+      </>
+    )}
+    {dialog.type !== 'transition' && (
+      <>
+        <InputWrapper>
+        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
+        <Input
+          ref={inputRef}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyUp={(e) => e.key === 'Enter' && save()}
+          placeholder={{
+            transition: 'λ',
+            comment: 'Comment text...',
+            stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+            stateLabel: 'State label...',
+          }[dialog.type]}
+          style={{
+            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+            margin: '0 .4em',
+            paddingRight: '2.5em',
+          }}
+        />
+        {(
+          <SubmitButton onClick={save}>
+            <CornerDownLeft size="18px"/>
+          </SubmitButton>
+        )}
+        </InputWrapper>
+      </>
+    )}
       </Dropdown>
     );
   }
