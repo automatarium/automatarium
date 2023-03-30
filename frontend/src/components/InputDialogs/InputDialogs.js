@@ -278,8 +278,7 @@ const InputDialogs = () => {
       )}
     </Dropdown>
     )
-  }
- else {
+  } else {
     const isPDA = projectType === 'PDA'
     return (
       <Dropdown
