@@ -295,11 +295,10 @@ const InputDialogs = () => {
             }}
           />
           {!isPDA || dialog.type !== 'transition'
-            ?
-              (
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px" />
-            </SubmitButton>
+            ? (
+              <SubmitButton onClick={save}>
+                <CornerDownLeft size="18px" />
+              </SubmitButton>
               ) : null}
         </InputWrapper>
       </>
