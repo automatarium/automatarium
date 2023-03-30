@@ -276,31 +276,29 @@ const InputDialogs = () => {
         {(
       <>
         <InputWrapper>
-        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
-        <Input
-          ref={inputRef}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyUp={(e) => e.key === 'Enter' && save()}
-          placeholder={{
-            transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
-            comment: 'Comment text...',
-            stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-            stateLabel: 'State label...'
-          }[dialog.type]}
-          style={{
-            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-            margin: '0 .4em',
-            paddingRight: '2.5em'
-          }}
-        />
-        {!isPDA || dialog.type !== 'transition' 
-        ? 
-            (
-        <SubmitButton onClick={save}>
-          <CornerDownLeft size="18px"/>
-        </SubmitButton>
-            ) : null}
+          {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
+          <Input
+            ref={inputRef}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyUp={(e) => e.key === 'Enter' && save()}
+            placeholder={{
+              transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
+              comment: 'Comment text...',
+              stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+              stateLabel: 'State label...'
+            }[dialog.type]}
+            style={{
+              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+              margin: '0 .4em',
+              paddingRight: '2.5em'
+            }}
+          />
+          {!isPDA || dialog.type !== 'transition' ? (
+            <SubmitButton onClick={save}>
+              <CornerDownLeft size="18px" />
+            </SubmitButton>
+          ) : null}
         </InputWrapper>
       </>
     )}
