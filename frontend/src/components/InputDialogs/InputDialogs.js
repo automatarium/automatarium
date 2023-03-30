@@ -273,15 +273,20 @@ const InputDialogs = () => {
           left: `${dialog.x}px`
         }}
       >
-          {dialog.type === 'transition' && isPDA && (
+        {(
       <>
+        <InputWrapper>
+        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
         <Input
           ref={inputRef}
           value={value}
-          onChange={e => setValue(e.target.value)}
-          onKeyUp={e => e.key === 'Enter' && save()}
+          onChange={(e) => setValue(e.target.value)}
+          onKeyUp={(e) => e.key === 'Enter' && save()}
           placeholder={{
-            transition: 'λ\t(read)'
+            transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
+            comment: 'Comment text...',
+            stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+            stateLabel: 'State label...'
           }[dialog.type]}
           style={{
             width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
@@ -289,6 +294,16 @@ const InputDialogs = () => {
             paddingRight: '2.5em'
           }}
         />
+        {!isPDA || dialog.type !== 'transition' ? (
+    <SubmitButton onClick={save}>
+      <CornerDownLeft size="18px"/>
+    </SubmitButton>
+  ) : null}
+        </InputWrapper>
+      </>
+    )}
+          {dialog.type === 'transition' && isPDA && (
+      <>
         <Input
           ref={inputPopRef}
           value={valuePop}
@@ -324,35 +339,6 @@ const InputDialogs = () => {
         </InputWrapper>
       </>
           )}
-    {dialog.type !== 'transition' && (
-      <>
-        <InputWrapper>
-        {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
-        <Input
-          ref={inputRef}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onKeyUp={(e) => e.key === 'Enter' && save()}
-          placeholder={{
-            transition: 'λ',
-            comment: 'Comment text...',
-            stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-            stateLabel: 'State label...'
-          }[dialog.type]}
-          style={{
-            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-            margin: '0 .4em',
-            paddingRight: '2.5em'
-          }}
-        />
-        {(
-          <SubmitButton onClick={save}>
-            <CornerDownLeft size="18px"/>
-          </SubmitButton>
-        )}
-        </InputWrapper>
-      </>
-    )}
       </Dropdown>
     )
   }
