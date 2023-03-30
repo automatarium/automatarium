@@ -273,7 +273,6 @@ const InputDialogs = () => {
           left: `${dialog.x}px`
         }}
       >
-        <InputWrapper>
           {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
           {dialog.type === 'transition' && isPDA ? (
             <>
@@ -305,6 +304,7 @@ const InputDialogs = () => {
                   paddingRight: '2.5em'
                 }}
               />
+              <InputWrapper>
               <Input
                 ref={inputPushRef}
                 value={valuePush}
@@ -319,7 +319,12 @@ const InputDialogs = () => {
                   paddingRight: '2.5em'
                 }}
               />
+              <SubmitButton onClick={save}>
+                <CornerDownLeft size="18px" />
+              </SubmitButton>
+              </InputWrapper>
             </>
+            
           ) : (
             <Input
               ref={inputRef}
@@ -344,7 +349,6 @@ const InputDialogs = () => {
               <CornerDownLeft size="18px"/>
             </SubmitButton>
           )}
-        </InputWrapper>
       </Dropdown>
     );
   }
