@@ -257,49 +257,41 @@ const InputDialogs = () => {
     </Dropdown>
     )
   } else {
+    const isPDA = projectType === 'PDA';
     return (
-        <Dropdown
-            visible={dialog.visible}
-            onClose={() => {
-              hideDialog()
-              // Delete transitions if not new
-              if (dialog.type === 'transition' && dialog.previousValue === undefined) {
-                removeTransitions([dialog.id])
-              }
-            }}
-            style={{
-              top: `${dialog.y}px`,
-              left: `${dialog.x}px`
-            }}
-        >
-          <InputWrapper>
-            {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
-            <Input
+      <Dropdown
+        visible={dialog.visible}
+        onClose={() => {
+          hideDialog();
+          // Delete transitions if not new
+          if (dialog.type === 'transition' && dialog.previousValue === undefined) {
+            removeTransitions([dialog.id])
+          }
+        }}
+        style={{
+          top: `${dialog.y}px`,
+          left: `${dialog.x}px`
+        }}
+      >
+        <InputWrapper>
+          {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
+          {dialog.type === 'transition' && isPDA ? (
+            <>
+              <Input
                 ref={inputRef}
                 value={value}
                 onChange={e => setValue(e.target.value)}
                 onKeyUp={e => e.key === 'Enter' && save()}
                 placeholder={{
-                  transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
-                  comment: 'Comment text...',
-                  stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-                  stateLabel: 'State label...'
+                  transition: 'λ\t(read)'
                 }[dialog.type]}
                 style={{
                   width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
-            />
-            {!projectType === 'PDA' &&
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px"/>
-            </SubmitButton>}
-          </InputWrapper>
-          { /* Additional input #1 - PDA pop value */}
-          {projectType === 'PDA' &&
-          <InputWrapper>
-            <Input
+              />
+              <Input
                 ref={inputPopRef}
                 value={valuePop}
                 onChange={e => setValuePop(e.target.value)}
@@ -312,12 +304,8 @@ const InputDialogs = () => {
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
-            />
-          </InputWrapper>}
-          { /* Additional input #2 - PDA push value */}
-          {projectType === 'PDA' &&
-          <InputWrapper>
-            <Input
+              />
+              <Input
                 ref={inputPushRef}
                 value={valuePush}
                 onChange={e => setValuePush(e.target.value)}
@@ -330,17 +318,36 @@ const InputDialogs = () => {
                   margin: '0 .4em',
                   paddingRight: '2.5em'
                 }}
+              />
+            </>
+          ) : (
+            <Input
+              ref={inputRef}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
+              onKeyUp={(e) => e.key === 'Enter' && save()}
+              placeholder={{
+                transition: 'λ',
+                comment: 'Comment text...',
+                stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+                stateLabel: 'State label...',
+              }[dialog.type]}
+              style={{
+                width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+                margin: '0 .4em',
+                paddingRight: '2.5em',
+              }}
             />
-            {/* {console.log("valueRead is: ", value)}
-          {console.log("valuePop is: ", valuePop)}
-          {console.log("valuePush is: ", valuePush)} */}
+          )}
+          {!isPDA && (
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px"/>
             </SubmitButton>
-          </InputWrapper>}
-        </Dropdown>
-    )
+          )}
+        </InputWrapper>
+      </Dropdown>
+    );
   }
-}
+  }
 
 export default InputDialogs
