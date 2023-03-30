@@ -193,7 +193,8 @@ const InputDialogs = () => {
     setDirection(value)
   }
 
-  if (projectType === 'TM') {
+  const isTM = projectType === 'TM'
+  if (isTM) {
     return (
     <Dropdown
       visible={dialog.visible}
@@ -209,51 +210,72 @@ const InputDialogs = () => {
         left: `${dialog.x}px`
       }}
     >
+        {(
+      <>
       <InputWrapper>
-        <Input
-          ref={inputRef}
-          value={read}
-          onChange={handleReadIn}
-          onKeyUp={e => e.key === 'Enter' && save()}
-          placeholder={'λ\t(read)'}
-          style={{
-            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-            margin: '0 .4em',
-            paddingRight: '2.5em'
-          }}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <Input
-          ref={inputWriteRef}
-          value={write}
-          onChange={handleWriteIn}
-          onKeyUp={e => e.key === 'Enter' && save()}
-          placeholder={'λ\t(write)'}
-          style={{
-            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-            margin: '0 .4em',
-            paddingRight: '2.5em'
-          }}
-        />
-      </InputWrapper>
-      <InputWrapper>
-        <Input
-          ref={inputDirectionRef}
-          value={direction}
-          onChange={handleDirectionIn}
-          onKeyUp={e => e.key === 'Enter' && save()}
-          placeholder={'↔\t(direction)'}
-          style={{
-            width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-            margin: '0 .4em',
-            paddingRight: '2.5em'
-          }}
-        />
-        <SubmitButton onClick={save} disabled={!direction}>
-          <CornerDownLeft size="18px" />
-        </SubmitButton>
-      </InputWrapper>
+          {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
+          <Input
+            ref={inputRef}
+            value={dialog.type === 'comment' ? value : read}
+            onChange={(e) => dialog.type === 'comment' ? setValue(e.target.value) : handleReadIn(e)}
+            onKeyUp={(e) => e.key === 'Enter' && save()}
+            placeholder={{
+              TMtransition: 'λ\t(read)',
+              comment: 'Comment text...',
+              stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+              stateLabel: 'State label...'
+            }[dialog.type]}
+            style={{
+              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+              margin: '0 .4em',
+              paddingRight: '2.5em'
+            }}
+          />
+          {!isTM || dialog.type !== 'TMtransition'
+            ? (
+              <SubmitButton onClick={save}>
+                <CornerDownLeft size="18px" />
+              </SubmitButton>
+              )
+            : null}
+        </InputWrapper>
+        </>
+        )}
+      {dialog.type === 'TMtransition' && (
+  <>
+    <InputWrapper>
+      <Input
+        ref={inputWriteRef}
+        value={write}
+        onChange={handleWriteIn}
+        onKeyUp={e => e.key === 'Enter' && save()}
+        placeholder={'λ\t(write)'}
+        style={{
+          width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+          margin: '0 .4em',
+          paddingRight: '2.5em'
+        }}
+      />
+    </InputWrapper>
+    <InputWrapper>
+      <Input
+        ref={inputDirectionRef}
+        value={direction}
+        onChange={handleDirectionIn}
+        onKeyUp={e => e.key === 'Enter' && save()}
+        placeholder={'↔\t(direction)'}
+        style={{
+          width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+          margin: '0 .4em',
+          paddingRight: '2.5em'
+        }}
+      />
+      <SubmitButton onClick={save}>
+        <CornerDownLeft size="18px" />
+      </SubmitButton>
+    </InputWrapper>
+  </>
+      )}
     </Dropdown>
     )
   } else {
