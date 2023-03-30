@@ -257,12 +257,12 @@ const InputDialogs = () => {
     </Dropdown>
     )
   } else {
-    const isPDA = projectType === 'PDA';
+    const isPDA = projectType === 'PDA'
     return (
       <Dropdown
         visible={dialog.visible}
         onClose={() => {
-          hideDialog();
+          hideDialog()
           // Delete transitions if not new
           if (dialog.type === 'transition' && dialog.previousValue === undefined) {
             removeTransitions([dialog.id])
@@ -323,7 +323,7 @@ const InputDialogs = () => {
         </SubmitButton>
         </InputWrapper>
       </>
-    )}
+          )}
     {dialog.type !== 'transition' && (
       <>
         <InputWrapper>
@@ -337,12 +337,12 @@ const InputDialogs = () => {
             transition: 'λ',
             comment: 'Comment text...',
             stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-            stateLabel: 'State label...',
+            stateLabel: 'State label...'
           }[dialog.type]}
           style={{
             width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
             margin: '0 .4em',
-            paddingRight: '2.5em',
+            paddingRight: '2.5em'
           }}
         />
         {(
@@ -354,8 +354,8 @@ const InputDialogs = () => {
       </>
     )}
       </Dropdown>
-    );
+    )
   }
-  }
+}
 
 export default InputDialogs
