@@ -300,8 +300,7 @@ const InputDialogs = () => {
                 <CornerDownLeft size="18px" />
               </SubmitButton>
               )
-            :
-            null}
+            : null}
         </InputWrapper>
       </>
     )}
