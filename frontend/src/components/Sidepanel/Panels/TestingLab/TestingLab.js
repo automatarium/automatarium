@@ -119,7 +119,6 @@ const TestingLab = () => {
     if (!simulationResult) { return '' }
 
     const { trace, accepted, remaining, transitionCount } = simulationResult
-    console.log(simulationResult)
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
       if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
@@ -197,7 +196,7 @@ const TestingLab = () => {
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
   const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - 1
-    
+
   return (
     <>
       {(showTraceTape && traceInput !== '' && traceInput && projectType !== 'TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
@@ -239,7 +238,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              traceIdx >= lastTraceIdx||
+              traceIdx >= lastTraceIdx ||
               noInitialState ||
               (projectType === 'TM' && !showTraceTape)
             }
