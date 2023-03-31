@@ -153,9 +153,9 @@ const TestingLab = () => {
 
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
-    if (projectType === 'TM') { setProjectSimTraceIDx(traceIdx) }
+    if (projectType === 'TM') setProjectSimTraceIDx(traceIdx)
+    else if (projectType === 'PDA') setProjectSimTraceIDx(traceIdx)
     // Try this for PDA as well - stack display
-    if (projectType === 'PDA') { setProjectSimTraceIDx(traceIdx) }
   }, [traceIdx])
 
   // Show bottom panel with TM Tape Lab
@@ -196,7 +196,8 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
-
+  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - 1
+    
   return (
     <>
       {(showTraceTape && traceInput !== '' && traceInput && projectType !== 'TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
@@ -238,7 +239,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              (traceIdx >= simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0)) ||
+              traceIdx >= lastTraceIdx||
               noInitialState ||
               (projectType === 'TM' && !showTraceTape)
             }
@@ -252,7 +253,7 @@ const TestingLab = () => {
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
             disabled={
-                (traceIdx >= simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0)) ||
+                traceIdx >= lastTraceIdx ||
                 noInitialState ||
                 (projectType === 'TM' && !showTraceTape)
             }
