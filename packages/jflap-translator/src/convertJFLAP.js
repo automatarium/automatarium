@@ -16,8 +16,8 @@ export const convertJFLAPProject = jflapProject => {
   let {
     structure: {
       type,
-      automaton: { state: states, transition: transitions, note: notes },
-    },
+      automaton: { state: states, transition: transitions, note: notes }
+    }
   } = jflapProject
 
   // Check if format is unsupported
@@ -41,7 +41,7 @@ export const convertJFLAPProject = jflapProject => {
     label: state.label ? state.label._text : '',
     x: Number(state.x._text),
     y: Number(state.y._text),
-    isFinal: state.final !== undefined,
+    isFinal: state.final !== undefined
   }))
 
   // Convert transitions
@@ -49,7 +49,7 @@ export const convertJFLAPProject = jflapProject => {
     id: idx,
     from: Number(transition.from._text),
     to: Number(transition.to._text),
-    read: transition.read._text ? transition.read._text : '',
+    read: transition.read._text ? transition.read._text : ''
   }))
 
   // Convert comments
@@ -57,17 +57,17 @@ export const convertJFLAPProject = jflapProject => {
     id: idx,
     text: note.text._text,
     x: Number(note.x._text),
-    y: Number(note.y._text),
+    y: Number(note.y._text)
   }))
 
   return {
     config: {
       type: PROJECT_TYPE_MAP[type._text],
-      statePrefix: 'q',
+      statePrefix: 'q'
     },
     initialState: initialStateID,
     states: automatariumStates,
     transitions: automatariumTransitions,
-    comments: automatariumComments,
+    comments: automatariumComments
   }
 }
