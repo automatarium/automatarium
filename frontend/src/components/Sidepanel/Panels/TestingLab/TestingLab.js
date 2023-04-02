@@ -62,7 +62,7 @@ const TestingLab = () => {
       const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace })
 
       return {
-        halted,
+        accepted: halted,
         tape,
         trace: trace.map(step => ({
           to: step.to,
@@ -119,7 +119,6 @@ const TestingLab = () => {
     if (!simulationResult) { return '' }
 
     const { trace, accepted, remaining, transitionCount } = simulationResult
-
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
       if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
@@ -134,7 +133,7 @@ const TestingLab = () => {
       .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
-    const transitionsWithRejected = !accepted && traceIdx === trace.length
+    const transitionsWithRejected = !accepted && traceIdx === trace.length && remaining !== undefined
       ? [...transitions,
           remaining[0]
             ? `${remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
@@ -153,9 +152,9 @@ const TestingLab = () => {
 
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
-    if (projectType === 'TM') { setProjectSimTraceIDx(traceIdx) }
+    if (projectType === 'TM') setProjectSimTraceIDx(traceIdx)
+    else if (projectType === 'PDA') setProjectSimTraceIDx(traceIdx)
     // Try this for PDA as well - stack display
-    if (projectType === 'PDA') { setProjectSimTraceIDx(traceIdx) }
   }, [traceIdx])
 
   // Show bottom panel with TM Tape Lab
@@ -196,6 +195,7 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
+  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - 1
 
   return (
     <>
@@ -238,7 +238,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              (traceIdx >= simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0)) ||
+              traceIdx >= lastTraceIdx ||
               noInitialState ||
               (projectType === 'TM' && !showTraceTape)
             }
@@ -251,9 +251,10 @@ const TestingLab = () => {
 
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
-            disabled={traceIdx === simulationResult?.transitionCount - ((projectType === 'TM') && (traceInput.length <= 1) ? 1 : 0) && traceIdx !== 0 ||
-            noInitialState ||
-            (projectType === 'TM' && !showTraceTape)
+            disabled={
+                traceIdx >= lastTraceIdx ||
+                noInitialState ||
+                (projectType === 'TM' && !showTraceTape)
             }
             onClick={() => {
               // Increment tracer index
