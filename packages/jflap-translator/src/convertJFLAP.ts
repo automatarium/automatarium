@@ -23,6 +23,11 @@ export type Transition = {
   read: string
 }
 
+export type PDATransition = Transition & {
+  push: string
+  pop: string
+}
+
 /**
  * Stores a state in a graph. Modeled after the frontend
  */
@@ -73,6 +78,7 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
       automaton: { state: states, transition: transitions, note: notes }
     }
   } = jflapProject
+  const projectType = PROJECT_TYPE_MAP[type._text]
 
   // Check if format is unsupported
   if (!Object.keys(PROJECT_TYPE_MAP).includes(type._text)) {
@@ -80,9 +86,10 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
   }
 
   // Convert attributes to arrays if they are not already
-  states = states === undefined ? [] : (Array.isArray(states) ? states : [states])
-  transitions = transitions === undefined ? [] : (Array.isArray(transitions) ? transitions : [transitions])
-  notes = notes === undefined ? [] : (Array.isArray(notes) ? notes : [notes])
+  const toArray = (x: any[]) => x === undefined ? [] : (Array.isArray(x) ? x : [x])
+  states = toArray(states)
+  transitions = toArray(transitions)
+  notes = toArray(notes)
 
   // Find initial state
   const initialState = states.find(s => s.initial)
@@ -99,12 +106,24 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
   }))
 
   // Convert transitions
-  const automatariumTransitions = transitions.map((transition, idx) => ({
-    id: idx,
-    from: Number(transition.from._text),
-    to: Number(transition.to._text),
-    read: transition.read._text ? transition.read._text : ''
-  }))
+  const automatariumTransitions = transitions.map((transition, idx) => {
+    const convTrans = {
+      id: idx,
+      from: Number(transition.from._text),
+      to: Number(transition.to._text),
+      read: transition.read._text ? transition.read._text : ''
+    }
+    // Add any extra fields if needed
+    if (projectType === 'PDA') {
+      // Copy is needed to please type checker
+      const pdaTrans = convTrans as PDATransition
+      pdaTrans.push = transition.push._text ?? ''
+      pdaTrans.pop = transition.pop._text ?? ''
+      return pdaTrans
+    } else {
+      return convTrans
+    }
+  })
 
   // Convert comments
   const automatariumComments = notes.map((note, idx) => ({
@@ -116,7 +135,7 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
 
   return {
     config: {
-      type: PROJECT_TYPE_MAP[type._text],
+      type: projectType,
       statePrefix: 'q'
     },
     initialState: initialStateID,
