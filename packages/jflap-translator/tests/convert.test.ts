@@ -138,6 +138,10 @@ describe('Import a PDA', function () {
       }
     ])
   })
+
+  test('Error when importing multi character PDA', () => {
+    expect(() => readProject('multicharacter-pda')).toThrow(Error)
+  })
 })
 
 describe('Import a TM', () => {

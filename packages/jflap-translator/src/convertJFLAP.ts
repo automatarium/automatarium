@@ -124,6 +124,10 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
       const pdaTrans = convTrans as PDATransition
       pdaTrans.push = transition.push._text ?? ''
       pdaTrans.pop = transition.pop._text ?? ''
+      // We don't support multi character input at the moment
+      if (pdaTrans.push.length > 1 || pdaTrans.pop.length > 1) {
+        throw new Error("Automatarium doesn't support multi character input")
+      }
       return pdaTrans
     } else if (projectType === 'TM') {
       const tmTrans = convTrans as TMTransition
