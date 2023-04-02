@@ -5,7 +5,7 @@ import { xml2json } from 'xml-js'
 const PROJECT_TYPE_MAP = {
   fa: 'FSA',
   pda: 'PDA',
-  tm: 'TM'
+  turing: 'TM'
 }
 
 export type GraphConfig = {
@@ -26,6 +26,11 @@ export type Transition = {
 export type PDATransition = Transition & {
   push: string
   pop: string
+}
+
+export type TMTransition = Transition & {
+  write: string
+  direction: string
 }
 
 /**
@@ -120,6 +125,11 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
       pdaTrans.push = transition.push._text ?? ''
       pdaTrans.pop = transition.pop._text ?? ''
       return pdaTrans
+    } else if (projectType === 'TM') {
+      const tmTrans = convTrans as TMTransition
+      tmTrans.write = transition.write._text ?? ''
+      tmTrans.direction = transition.move._text ?? ''
+      return tmTrans
     } else {
       return convTrans
     }

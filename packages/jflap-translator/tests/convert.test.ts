@@ -1,4 +1,4 @@
-import { convertJFLAPXML } from '../src/index'
+import { convertJFLAPXML } from '../src'
 import { readFileSync } from 'fs'
 import { FrontendGraph } from '../src/convertJFLAP'
 
@@ -135,6 +135,38 @@ describe('Import a PDA', function () {
         read: 'B',
         push: '',
         pop: 'A'
+      }
+    ])
+  })
+})
+
+describe('Import a TM', () => {
+  const machine = readProject('simple-tm')
+
+  test('Config is correct', () => {
+    expect(machine.config).toMatchObject({
+      type: 'TM',
+      statePrefix: 'q'
+    })
+  })
+
+  test('Transitions are imported', () => {
+    expect(machine.transitions).toMatchObject([
+      {
+        id: 0,
+        from: 0,
+        to: 0,
+        read: 'A',
+        write: 'A',
+        direction: 'S'
+      },
+      {
+        id: 1,
+        from: 0,
+        to: 0,
+        read: 'A',
+        write: 'B',
+        direction: 'L'
       }
     ])
   })
