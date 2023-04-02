@@ -1,17 +1,71 @@
-import XMLConverter from 'xml-js'
 
 // Define accepted project types
-const PROJECT_TYPE_MAP = { fa: 'FSA' }
+import { xml2json } from 'xml-js'
+
+const PROJECT_TYPE_MAP = {
+  fa: 'FSA',
+  pda: 'PDA',
+  tm: 'TM'
+}
+
+export type GraphConfig = {
+  type: 'FSA' | 'tm' | 'pda'
+  statePrefix: string
+}
+
+/**
+ * Basic transition that stores common properties of other transition types
+ */
+export type Transition = {
+  id: number
+  from: number
+  to: number
+  read: string
+}
+
+/**
+ * Stores a state in a graph. Modeled after the frontend
+ */
+export type State = {
+  id: number
+  name: string
+  label: string
+  x: number
+  y: number
+  isFinal: boolean
+}
+
+/**
+ * Comment that is placed somewhere on the project
+ */
+export type Comment = {
+  id: number
+  x: number
+  y: number
+  text: string
+}
+
+// TODO: Replace with whatever type the frontenders come up with for the typescript conversion
+/**
+ * Stores data about a graph. This models how it is stored in the frontend
+ */
+export type FrontendGraph = {
+  config: GraphConfig
+  initialState: number
+  states: State[]
+  transitions: Transition[]
+  comments: Comment[]
+}
 
 // Convert JFLAP XML to Automatarium format
-export const convertJFLAPXML = xml => {
-  const json = XMLConverter.xml2json(xml, { compact: true, ignoreComment: true, ignoreDeclaration: true })
+export const convertJFLAPXML = (xml: string): FrontendGraph => {
+  const json = xml2json(xml, { compact: true, ignoreComment: true, ignoreDeclaration: true })
   const jflapProject = JSON.parse(json)
   return convertJFLAPProject(jflapProject)
 }
 
 // Convert JFLAP JSON to Automatarium format
-export const convertJFLAPProject = jflapProject => {
+export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
   // Pull out necessary values from jflap project
   let {
     structure: {
