@@ -380,8 +380,7 @@ const InputDialogs = () => {
       </>
           )}
       </Dropdown>
-    )
-  }
+    )}
   // Else we assume the project type is a FSA, if we're adding more automaton then we will have to make more if statements, one for each automaton to define the logic and formatting of transitions and comments.
   else {
     return (
