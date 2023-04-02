@@ -194,6 +194,8 @@ const InputDialogs = () => {
   }
 
   const isTM = projectType === 'TM'
+  const isPDA = projectType === 'PDA'
+  // If the project type if a TM, then do the following
   if (isTM) {
     return (
     <Dropdown
@@ -215,6 +217,7 @@ const InputDialogs = () => {
       <InputWrapper>
           {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
           <Input
+            // The above puts a message icon in any comment box
             ref={inputRef}
             value={dialog.type === 'comment' ? value : read}
             onChange={(e) => dialog.type === 'comment' ? setValue(e.target.value) : handleReadIn(e)}
@@ -225,13 +228,19 @@ const InputDialogs = () => {
               stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
               stateLabel: 'State label...'
             }[dialog.type]}
+            // Common styling. This can be changed later if needed, however it looks good like this. Ensure all other templates and boxes
+            // follow this formatting for consistency, or if it is changed, ensure everything is changed (I will be watching)
             style={{
               width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
               margin: '0 .4em',
               paddingRight: '2.5em'
             }}
+            // We check if the dialog type is not a TMtransition, if it is then we don't include a 2nd submit button, if it isnt
+            // then it must be a comment, so we do include the submit button. This is because the first input box and the comment box
+            // must be defined at the same time (there is obviously a way around this, however the logic is understandable to the point where refactoring
+            // massively to change this isn't really worth it). Similar logic applies to the submit buttons for PDA and FSA.
           />
-          {!isTM || dialog.type !== 'TMtransition'
+          {dialog.type !== 'TMtransition'
             ? (
               <SubmitButton onClick={save}>
                 <CornerDownLeft size="18px" />
@@ -245,6 +254,7 @@ const InputDialogs = () => {
   <>
     <InputWrapper>
       <Input
+        // Now we define the remainder of the transition inputs
         ref={inputWriteRef}
         value={write}
         onChange={handleWriteIn}
@@ -269,6 +279,8 @@ const InputDialogs = () => {
           margin: '0 .4em',
           paddingRight: '2.5em'
         }}
+        // This will be the submit button defined at the bottom of the transitions (in line with the final input).
+        // If this is not the case, call halil.
       />
       <SubmitButton onClick={save}>
         <CornerDownLeft size="18px" />
@@ -278,8 +290,8 @@ const InputDialogs = () => {
       )}
     </Dropdown>
     )
-  } else {
-    const isPDA = projectType === 'PDA'
+    // Else if the project type is a PDA, do the following
+  } else if (isPDA) {
     return (
       <Dropdown
         visible={dialog.visible}
@@ -305,7 +317,7 @@ const InputDialogs = () => {
             onChange={(e) => setValue(e.target.value)}
             onKeyUp={(e) => e.key === 'Enter' && save()}
             placeholder={{
-              transition: (projectType === 'PDA') ? 'λ\t(read)' : 'λ',
+              transition: 'λ\t(read)',
               comment: 'Comment text...',
               stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
               stateLabel: 'State label...'
@@ -315,8 +327,10 @@ const InputDialogs = () => {
               margin: '0 .4em',
               paddingRight: '2.5em'
             }}
+            // Again, this distinguishes the first transition input box from the first comment input box. If this check is removed, there will be a submit button in the first input box
+            // for both transition and comment (looks better being at the bottom)
           />
-          {!isPDA || dialog.type !== 'transition'
+          {dialog.type !== 'transition'
             ? (
               <SubmitButton onClick={save}>
                 <CornerDownLeft size="18px" />
@@ -326,9 +340,10 @@ const InputDialogs = () => {
         </InputWrapper>
       </>
     )}
-          {dialog.type === 'transition' && isPDA && (
+          {dialog.type === 'transition' && (
       <>
         <Input
+          // Define rest of the transition input boxes
           ref={inputPopRef}
           value={valuePop}
           onChange={e => setValuePop(e.target.value)}
@@ -356,6 +371,7 @@ const InputDialogs = () => {
             margin: '0 .4em',
             paddingRight: '2.5em'
           }}
+          // The submit button in line with the final transition input box
         />
         <SubmitButton onClick={save}>
           <CornerDownLeft size="18px" />
@@ -364,6 +380,54 @@ const InputDialogs = () => {
       </>
           )}
       </Dropdown>
+    )
+  }
+  // Else we assume the project type is a FSA, if we're adding more automaton then we will have to make more if statements, one for each automaton to define the logic and formatting of transitions and comments.
+  else {
+    return (
+      <Dropdown
+        visible={dialog.visible}
+        onClose={() => {
+          hideDialog()
+          // Delete transitions if not new
+          if (dialog.type === 'transition' && dialog.previousValue === undefined) {
+            removeTransitions([dialog.id])
+          }
+        }}
+        style={{
+          top: `${dialog.y}px`,
+          left: `${dialog.x}px`
+        }}
+      >
+        {(
+      <>
+        <InputWrapper>
+          {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
+          <Input
+            ref={inputRef}
+            value={value}
+            onChange={(e) => setValue(e.target.value)}
+            onKeyUp={(e) => e.key === 'Enter' && save()}
+            placeholder={{
+              transition: 'λ',
+              comment: 'Comment text...',
+              stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+              stateLabel: 'State label...'
+            }[dialog.type]}
+            style={{
+              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
+              margin: '0 .4em',
+              paddingRight: '2.5em'
+            }}
+            // No need to distinguish between comment and transition here, as there is only 1 of each.
+          />
+              <SubmitButton onClick={save}>
+                <CornerDownLeft size="18px" />
+              </SubmitButton>
+        </InputWrapper>
+      </>
+    )}
+    </Dropdown>
     )
   }
 }
