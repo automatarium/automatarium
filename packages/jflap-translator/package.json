@@ -2,7 +2,7 @@
   "name": "@automatarium/jflap-translator",
   "version": "1.0.0",
   "description": "",
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "dist/index.js",
   "scripts": {
     "build": "parcel build",
