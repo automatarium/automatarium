@@ -3,7 +3,7 @@ export interface ProjectConfig {
     // Could be made into enum
     color: string,
     statePrefix: string,
-    // Make enulater
+    // Make enum later
     type: string
 }
 
@@ -39,7 +39,6 @@ export interface AutomataState {
 }
 
 export interface AutomataTests {
-    // Not sure about type of array
     batch: string[],
     single: string
 }
@@ -58,7 +57,6 @@ export interface AutomataTransition {
 }
 
 export interface Project {
-    // Not sure about type of array
     comments: ProjectComment[],
     config: ProjectConfig,
     initialState: number | null,
