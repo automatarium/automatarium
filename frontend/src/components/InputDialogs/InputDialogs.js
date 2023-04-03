@@ -261,8 +261,7 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else if (dialog.type === 'comment') {
+    } else if (dialog.type === 'comment') {
       return (
         <Dropdown
           visible={dialog.visible}
@@ -294,8 +293,7 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else if (dialog.type === 'state') {
+    } else if (dialog.type === 'state') {
       return (
         <Dropdown
           visible={dialog.visible}
@@ -308,7 +306,6 @@ const InputDialogs = () => {
           }}
         >
           <InputWrapper>
-            <Type style={{ marginInline: '1em .6em' }} />
             <Input
               ref={inputRef}
               value={value}
@@ -330,9 +327,8 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else {
-      return null;
+    } else {
+      return null
     }
     // Else if the project type is a PDA, do the following
   } else if (isPDA) {
@@ -400,8 +396,7 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else if (dialog.type === 'comment') {
+    } else if (dialog.type === 'comment') {
       return (
         <Dropdown
           visible={dialog.visible}
@@ -433,8 +428,7 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else if (dialog.type === 'state') {
+    } else if (dialog.type === 'state') {
       return (
         <Dropdown
           visible={dialog.visible}
@@ -447,7 +441,6 @@ const InputDialogs = () => {
           }}
         >
           <InputWrapper>
-            <Type style={{ marginInline: '1em .6em' }} />
             <Input
               ref={inputRef}
               value={value}
@@ -469,9 +462,8 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else {
-      return null;
+    } else {
+      return null
     }
     // Else we assume the project type is a FSA, if we're adding more automaton then we will have to make more if statements, one for each automaton to define the logic and formatting of transitions and comments.
   } else {
@@ -509,8 +501,7 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else if (dialog.type === 'comment') {
+    } else if (dialog.type === 'comment') {
       return (
         <Dropdown
           visible={dialog.visible}
@@ -542,8 +533,7 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else if (dialog.type === 'state') {
+    } else if (dialog.type === 'state') {
       return (
         <Dropdown
           visible={dialog.visible}
@@ -556,7 +546,6 @@ const InputDialogs = () => {
           }}
         >
           <InputWrapper>
-            <Type style={{ marginInline: '1em .6em' }} />
             <Input
               ref={inputRef}
               value={value}
@@ -578,9 +567,8 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    }
-    else {
-      return null;
+    } else {
+      return null
     }
   }
 }
