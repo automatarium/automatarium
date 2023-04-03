@@ -46,7 +46,7 @@ const PDAStackVisualiser = () => {
           className="close-stack-btn"
           onClick={() => setShowStackTab((e) => !e)}
         >
-          x
+          {showStackTab ? '-' : '+' }
         </button>
         {/* =========== Displays the stack =========== */}
         {showStackTab
