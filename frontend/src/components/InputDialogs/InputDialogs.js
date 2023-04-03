@@ -197,100 +197,141 @@ const InputDialogs = () => {
   const isPDA = projectType === 'PDA'
   // If the project type if a TM, then do the following
   if (isTM) {
-    return (
-    <Dropdown
-      visible={dialog.visible}
-      onClose={() => {
-        hideDialog()
-        // Delete transitions if not new
-        if (dialog.type === 'TMtransition' && dialog.previousValue === undefined) {
-          removeTransitions([dialog.id])
-        }
-      }}
-      style={{
-        top: `${dialog.y}px`,
-        left: `${dialog.x}px`
-      }}
-    >
-        {(
-      <>
-      <InputWrapper>
-          {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }} />}
-          <Input
-            // The above puts a message icon in any comment box
-            ref={inputRef}
-            value={dialog.type === 'comment' ? value : read}
-            onChange={(e) => dialog.type === 'comment' ? setValue(e.target.value) : handleReadIn(e)}
-            onKeyUp={(e) => e.key === 'Enter' && save()}
-            placeholder={{
-              TMtransition: 'λ\t(read)',
-              comment: 'Comment text...',
-              stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-              stateLabel: 'State label...'
-            }[dialog.type]}
-            // Common styling. This can be changed later if needed, however it looks good like this. Ensure all other templates and boxes
-            // follow this formatting for consistency, or if it is changed, ensure everything is changed (I will be watching)
-            style={{
-              width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-              margin: '0 .4em',
-              paddingRight: '2.5em'
-            }}
-            // We check if the dialog type is not a TMtransition, if it is then we don't include a 2nd submit button, if it isnt
-            // then it must be a comment, so we do include the submit button. This is because the first input box and the comment box
-            // must be defined at the same time (there is obviously a way around this, however the logic is understandable to the point where refactoring
-            // massively to change this isn't really worth it). Similar logic applies to the submit buttons for PDA and FSA.
-          />
-          {dialog.type !== 'TMtransition'
-            ? (
-              <SubmitButton onClick={save}>
-                <CornerDownLeft size="18px" />
-              </SubmitButton>
-              )
-            : null}
-        </InputWrapper>
-        </>
-        )}
-      {dialog.type === 'TMtransition' && (
-  <>
-    <InputWrapper>
-      <Input
-        // Now we define the remainder of the transition inputs
-        ref={inputWriteRef}
-        value={write}
-        onChange={handleWriteIn}
-        onKeyUp={e => e.key === 'Enter' && save()}
-        placeholder={'λ\t(write)'}
-        style={{
-          width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-          margin: '0 .4em',
-          paddingRight: '2.5em'
-        }}
-      />
-    </InputWrapper>
-    <InputWrapper>
-      <Input
-        ref={inputDirectionRef}
-        value={direction}
-        onChange={handleDirectionIn}
-        onKeyUp={e => e.key === 'Enter' && save()}
-        placeholder={'↔\t(direction)'}
-        style={{
-          width: `calc(${dialog.type === 'comment' ? '20ch' : '12ch'} + 3.5em)`,
-          margin: '0 .4em',
-          paddingRight: '2.5em'
-        }}
-        // This will be the submit button defined at the bottom of the transitions (in line with the final input).
-        // If this is not the case, call halil.
-      />
-      <SubmitButton onClick={save}>
-        <CornerDownLeft size="18px" />
-      </SubmitButton>
-    </InputWrapper>
-  </>
-      )}
-    </Dropdown>
-    )
-    // Else if the project type is a PDA, do the following
+    if (dialog.type === 'TMtransition') {
+      return (
+        <Dropdown
+          visible={dialog.visible}
+          onClose={() => {
+            hideDialog()
+            if (dialog.previousValue === undefined) {
+              removeTransitions([dialog.id])
+            }
+          }}
+          style={{
+            top: `${dialog.y}px`,
+            left: `${dialog.x}px`
+          }}
+        >
+          <InputWrapper>
+            <Input
+              ref={inputRef}
+              value={read}
+              onChange={e => handleReadIn(e)}
+              onKeyUp={e => e.key === 'Enter' && save()}
+              placeholder={'λ\t(read)'}
+              style={{
+                width: 'calc(12ch + 3.5em)',
+                margin: '0 .4em',
+                paddingRight: '2.5em'
+              }}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <Input
+              ref={inputWriteRef}
+              value={write}
+              onChange={handleWriteIn}
+              onKeyUp={e => e.key === 'Enter' && save()}
+              placeholder={'λ\t(write)'}
+              style={{
+                width: 'calc(12ch + 3.5em)',
+                margin: '0 .4em',
+                paddingRight: '2.5em'
+              }}
+            />
+          </InputWrapper>
+          <InputWrapper>
+            <Input
+              ref={inputDirectionRef}
+              value={direction}
+              onChange={handleDirectionIn}
+              onKeyUp={e => e.key === 'Enter' && save()}
+              placeholder={'↔\t(direction)'}
+              style={{
+                width: 'calc(12ch + 3.5em)',
+                margin: '0 .4em',
+                paddingRight: '2.5em'
+              }}
+            />
+            <SubmitButton onClick={save}>
+              <CornerDownLeft size="18px" />
+            </SubmitButton>
+          </InputWrapper>
+        </Dropdown>
+      )
+    }
+    else if (dialog.type === 'comment') {
+      return (
+        <Dropdown
+          visible={dialog.visible}
+          onClose={() => {
+            hideDialog()
+          }}
+          style={{
+            top: `${dialog.y}px`,
+            left: `${dialog.x}px`
+          }}
+        >
+          <InputWrapper>
+            <MessageSquare style={{ marginInline: '1em .6em' }} />
+            <Input
+              ref={inputRef}
+              value={value}
+              onChange={e => setValue(e.target.value)}
+              onKeyUp={e => e.key === 'Enter' && save()}
+              placeholder={'Comment text...'}
+              style={{
+                width: 'calc(20ch + 3.5em)',
+                margin: '0 .4em',
+                paddingRight: '2.5em'
+              }}
+            />
+            <SubmitButton onClick={save}>
+              <CornerDownLeft size="18px" />
+            </SubmitButton>
+          </InputWrapper>
+        </Dropdown>
+      )
+    }
+    else if (dialog.type === 'state') {
+      return (
+        <Dropdown
+          visible={dialog.visible}
+          onClose={() => {
+            hideDialog()
+          }}
+          style={{
+            top: `${dialog.y}px`,
+            left: `${dialog.x}px`
+          }}
+        >
+          <InputWrapper>
+            <Type style={{ marginInline: '1em .6em' }} />
+            <Input
+              ref={inputRef}
+              value={value}
+              onChange={e => setValue(e.target.value)}
+              onKeyUp={e => e.key === 'Enter' && save()}
+              placeholder={{
+                stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
+                stateLabel: 'State label...'
+              }[dialog.placeholderType]}
+              style={{
+                width: 'calc(20ch + 3.5em)',
+                margin: '0 .4em',
+                paddingRight: '2.5em'
+              }}
+            />
+            <SubmitButton onClick={save}>
+              <CornerDownLeft size="18px" />
+            </SubmitButton>
+          </InputWrapper>
+        </Dropdown>
+      )
+    }
+    else {
+      return null;
+    }
   } else if (isPDA) {
     return (
       <Dropdown
