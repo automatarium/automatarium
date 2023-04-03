@@ -3,39 +3,49 @@ export interface ProjectConfig {
     // Could be made into enum
     color: string,
     statePrefix: string,
-    type: ProjectType
+    // Make enulater
+    type: string
 }
 
 export interface ProjectMetaData {
     automatariumVersion: string,
-    dateCreated: Date,
-    dateEdited: Date,
+    dateCreated: number,
+    dateEdited: number,
     name: string,
     version: string
 }
 
+// Add this in later, breaks too many things rn
 export enum ProjectType {
-    FSA = 1,
-    PDA,
-    TM
+    FSA = 'FSA',
+    PDA = 'PDA',
+    TM = 'TM'
+}
+
+export interface ProjectComment {
+    x: number,
+    y: number,
+    text: string,
+    id?: number
 }
 
 export interface AutomataState {
     isFinal: boolean,
     x: number,
     y: number,
-    id: number
+    id: number,
+    name?: string,
+    label?: string
 }
 
-export interface AutomataTest {
+export interface AutomataTests {
     // Not sure about type of array
     batch: string[],
-    // Not sure about type here
     single: string
 }
 
 // May be different types for each automata
-interface AutomataTransition {
+export interface AutomataTransition {
     // Not sure about types of direction, need to see possible vals could be enum
     from: number,
     id: number,
@@ -49,15 +59,15 @@ interface AutomataTransition {
 
 export interface Project {
     // Not sure about type of array
-    comments: string[],
+    comments: ProjectComment[],
     config: ProjectConfig,
     initialState: number | null,
     meta: ProjectMetaData,
-    projectType: ProjectType,
+    projectType: string,
     // Not sure about type of array
     simResult: string[],
     states: AutomataState[],
-    tests: AutomataTest,
+    tests: AutomataTests,
     transitions: AutomataTransition[],
     _id: string
 }

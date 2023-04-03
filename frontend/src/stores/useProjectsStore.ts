@@ -1,6 +1,6 @@
 import create, { SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Project } from './ProjectTypes'
+import { Project } from '../types/ProjectTypes'
 
 interface ProjectsStore {
   projects: Project[],
@@ -10,10 +10,8 @@ interface ProjectsStore {
   deleteProject: (pid: string) => void,
 }
 
-let emptyProjectsArray = new Array<Project>();
-
 const useProjectsStore = create<ProjectsStore>(persist((set: SetState<ProjectsStore>) => ({
-  projects: emptyProjectsArray,
+  projects: new Array<Project>(),
   setProjects: (projects: Project[]) => set({ projects }),
   clearProjects: () => set({ projects: [] }),
   upsertProject: project => set(s => ({
