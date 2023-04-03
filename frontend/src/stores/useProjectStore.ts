@@ -6,17 +6,18 @@ import isEqual from 'lodash.isequal'
 
 import { randomProjectName } from '../util/projectName'
 
-import { Project, ProjectType, AutomataTransition, AutomataState, ProjectConfig, ProjectComment } from '../types/ProjectTypes'
+import { Project, AutomataTransition, AutomataState, ProjectConfig, ProjectComment } from '../types/ProjectTypes'
 
 import {
   APP_VERSION,
   SCHEMA_VERSION,
   DEFAULT_STATE_PREFIX,
+  DEFAULT_PROJECT_TYPE,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
 } from '../config/projects'
 
-export const createNewProject = (projectType: string = ProjectType.FSA): Project => ({
+export const createNewProject = (projectType: string = DEFAULT_PROJECT_TYPE): Project => ({
   projectType,
   _id: crypto.randomUUID(),
   states: [],
@@ -158,11 +159,11 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
 
   editTransition: (newTransition: AutomataTransition) => set(produce(({ project }) => {
     // Refactor types to enums later
-    if (project.config.type === ProjectType.TM) {
+    if (project.config.type === 'TM') {
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).write = newTransition.write
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).read = newTransition.read
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).direction = newTransition.direction
-    } else if (project.config.type === ProjectType.PDA) {
+    } else if (project.config.type === 'PDA') {
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).pop = newTransition.pop
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).push = newTransition.push
     }
