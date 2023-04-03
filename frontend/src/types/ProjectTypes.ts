@@ -16,11 +16,11 @@ export interface ProjectMetaData {
 }
 
 // Add this in later, breaks too many things rn
-export enum ProjectType {
-    FSA = 'FSA',
-    PDA = 'PDA',
-    TM = 'TM'
-}
+// export enum ProjectType {
+//     FSA = 'FSA',
+//     PDA = 'PDA',
+//     TM = 'TM'
+// }
 
 export interface ProjectComment {
     x: number,

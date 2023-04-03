@@ -11,7 +11,7 @@ interface ProjectsStore {
 }
 
 const useProjectsStore = create<ProjectsStore>(persist((set: SetState<ProjectsStore>) => ({
-  projects: new Array<Project>(),
+  projects: [] as Project[],
   setProjects: (projects: Project[]) => set({ projects }),
   clearProjects: () => set({ projects: [] }),
   upsertProject: project => set(s => ({

@@ -4,15 +4,13 @@ import produce, { current } from 'immer'
 import clone from 'lodash.clonedeep'
 import isEqual from 'lodash.isequal'
 
-
 import { randomProjectName } from '../util/projectName'
 
-import { Project,ProjectType, AutomataTransition, AutomataState, ProjectConfig, ProjectComment } from '../types/ProjectTypes'
+import { Project, ProjectType, AutomataTransition, AutomataState, ProjectConfig, ProjectComment } from '../types/ProjectTypes'
 
 import {
   APP_VERSION,
   SCHEMA_VERSION,
-  DEFAULT_PROJECT_TYPE,
   DEFAULT_STATE_PREFIX,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
@@ -209,7 +207,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   })),
 
   addBatchTest: (value: string) => set(produce((state) => {
-    value = value ?? '';
+    value = value ?? ''
     state.project.tests.batch.push(value)
     state.lastChangeDate = new Date().getTime()
   })),
@@ -218,7 +216,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
     state.project.tests.batch[index] = value
     state.lastChangeDate = new Date().getTime()
   })),
-  
+
   removeBatchTest: index => set(produce((state) => {
     state.project.tests.batch.splice(index, 1)
     state.lastChangeDate = new Date().getTime()
