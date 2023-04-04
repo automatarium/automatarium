@@ -1,10 +1,17 @@
+/**
+ * Possible types of a project
+ * - FSA: Finite state automata
+ * - PDA: Push down automata
+ * - TM: Turing machine
+ */
+export type ProjectType = 'FSA' | 'PDA' | 'TM'
+
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum
     color: string,
     statePrefix: string,
-    // Make enum later
-    type: string
+    type: ProjectType
 }
 
 export interface ProjectMetaData {
@@ -43,14 +50,21 @@ export interface AutomataTests {
     single: string
 }
 
+/**
+ * Possible directions that a TM transitions can move
+ * - Left
+ * - Right
+ * - Stay
+ */
+export type TMDirection = 'L' | 'R' | 'S'
+
 // May be different types for each automata
 export interface AutomataTransition {
-    // Not sure about types of direction, need to see possible vals could be enum
     from: number,
     id: number,
     read: string,
     to: number,
-    direction?: string,
+    direction?: TMDirection,
     write?: string,
     push?: string,
     pop?: string,
