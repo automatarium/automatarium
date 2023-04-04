@@ -1,11 +1,11 @@
 import { useState, useRef, useCallback } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
-import { Dropdown, Input } from 'src/components'
-import { useProjectStore, useViewStore } from 'src/stores'
-import { useEvent } from 'src/hooks'
-import { locateTransition } from 'src/util/states'
-import { lerpPoints } from 'src/util/points'
+import { Dropdown, Input } from '/src/components'
+import { useProjectStore, useViewStore } from '/src/stores'
+import { useEvent } from '/src/hooks'
+import { locateTransition } from '/src/util/states'
+import { lerpPoints } from '/src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import { AutomataState, ProjectComment, TMDirection } from '../../types/ProjectTypes'
@@ -13,7 +13,7 @@ import { AutomataState, ProjectComment, TMDirection } from '../../types/ProjectT
 /**
  * All types that a dialog could be
  */
-type DialogType = 'TMTransition' | 'PDATransition' | 'FSATransition' | 'comment' | 'stateName' | 'stateLabel' | 'state'
+type DialogType = 'TMTransition' | 'PDATransition' | 'FSATransition' | 'comment' | 'stateName' | 'stateLabel' | 'state' | 'none'
 
 /**
  * Represents a dialog modal that is shown on the page
@@ -104,13 +104,13 @@ const InputDialogs = () => {
   useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
-    setRead(transition?.read ?? '')
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, 0.5)
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
     switch (projectType) {
       case 'TM':
+        setRead(transition?.read ?? '')
         setWrite(transition?.write ?? '')
         setDirection(transition?.direction ?? 'R')
         setDialog({
@@ -125,6 +125,7 @@ const InputDialogs = () => {
         } as TMTransitionDialog)
         break
       case 'PDA':
+        setValue(transition?.value ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
         setDialog({
@@ -172,7 +173,8 @@ const InputDialogs = () => {
   }
 
   const savePDATransition = () => {
-    // TODO: Find out if the ranges actually work
+    // NOTE: This seems related to #310
+    // Looks like the UI supports multiple characters but gets stripped off somewhere
     const ranges = value.match(/\[(.*?)\]/g)
     const chars = value.replace(/\[(.*?)\]/g, '')
 
@@ -275,7 +277,7 @@ const InputDialogs = () => {
     stateName: saveStateName,
     stateLabel: saveStateLabel
     // eslint-disable-next-line no-unused-vars
-  } as {[key in DialogType]: () => void})[dialog.type]
+  } as {[key in DialogType]: () => void})[dialog?.type]
 
   function handleReadIn (e) {
     const input = e.target.value.toString()
@@ -294,16 +296,14 @@ const InputDialogs = () => {
   }
 
   // Show the dialog depending on the type created
-  switch (dialog.type) {
+  switch (dialog?.type) {
     case 'FSATransition':
       return (
         <Dropdown
           visible={dialog.visible}
           onClose={() => {
             hideDialog()
-            if (dialog.previousValue === undefined) {
-              removeTransitions([dialog.id])
-            }
+            removeTransitions([dialog.id])
           }}
           style={{
             top: `${dialog.y}px`,
@@ -335,10 +335,7 @@ const InputDialogs = () => {
           visible={dialog.visible}
           onClose={() => {
             hideDialog()
-            // TODO: See TM notes
-            // if (dialog.previousValue === undefined) {
-            //   removeTransitions([dialog.id])
-            // }
+            removeTransitions([dialog.id])
           }}
           style={{
             top: `${dialog.y}px`,
@@ -398,10 +395,7 @@ const InputDialogs = () => {
           visible={dialog.visible}
           onClose={() => {
             hideDialog()
-            // TODO: Check how this is meant to be used
-            // if (dialog.previousValue === undefined) {
-            //   removeTransitions([dialog.id])
-            // }
+            removeTransitions([dialog.id])
           }}
           style={{
             top: `${dialog.y}px`,
@@ -495,6 +489,8 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
+    default:
+      return null
   }
 }
 
