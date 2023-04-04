@@ -12,7 +12,7 @@ import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
 const TransitionSet = ({ transitions }) => {
   const projectType = useProjectStore(s => s.project.config.type)
-
+  // TODO: Refactor how it makes the text
   return <>
     { transitions.map(({ id, from, to, read, write, direction, pop, push }, i) => (
         <Transition
@@ -24,7 +24,7 @@ const TransitionSet = ({ transitions }) => {
             ? ((read || 'λ') + ',' +
                 (pop || 'λ') + ';' +
                 (push || 'λ'))
-            : read}
+            : read || 'λ'}
         from={from}
         to={to}
         id={id}
@@ -32,6 +32,13 @@ const TransitionSet = ({ transitions }) => {
         />)
     )}
     </>
+}
+
+/**
+ * @return True if transition b is to the right of a
+ */
+const toRightOf = (a, b) => {
+  return a.x < b.x
 }
 
 const Transition = ({
@@ -50,15 +57,21 @@ const Transition = ({
   const selected = selectedTransitions?.includes(id)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
   const projectStore = useProjectStore(s => s.project.config.type)
-  // Determine how much to bend this path
-  const evenCount = count % 2 === 0
-  const middleValue = evenCount ? count / 2 + 0.5 : Math.floor(count / 2)
-  const bendValue = TRANSITION_SEPERATION * (count > 1 ? middleValue - (i + (evenCount ? 1 : 0)) : 0) / 2
 
+  // Test if the transitions go in both directions. The transitions are sorted by direction so we only need to check
+  // if first and last transition aren't in the same direction
+  const bothDirections = count > 1 && [transitions[0].from, transitions[0].to] !== [transitions[1].from, transitions[1].to]
+  const directionRight = toRightOf(from, to)
+  // Only bend if there are transitions in both directions.
+  // We want transitions going from left to right to be bending like a hill and in the other direction bending like
+  // a valley
+  const bendValue = bothDirections ? (TRANSITION_SEPERATION * (directionRight ? 1 : -1)) : 0
+  // We want to draw a new transition if the direction has changed from last transition
+  // The count can be 1 while i > 0 if drawing a transition
+  const directionChanged = count === 1 || i === 0 || toRightOf(transitions[i - 1].from, transitions[i - 1].to) !== directionRight
   // Calculate path
-  const isReflexive = from.x === to.x && from.y === to.y
   const { pathData, textPathData, control } = calculateTransitionPath({ from, to, bendValue, fullWidth, i })
-
+  const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
   // -- used to place the text on the same path
   const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
@@ -82,11 +95,11 @@ const Transition = ({
     }, dispatchCustomEvent('editTransition', { id }))
 
   // Calculate text offset (increased for additional reflexive transitions)
-  const textOffset = (isReflexive && i > 0) ? TEXT_PATH_OFFSET + i * 20 : TEXT_PATH_OFFSET
+  const textOffset = ((isReflexive && i > 0) || (!directionChanged)) ? TEXT_PATH_OFFSET + i * 20 : TEXT_PATH_OFFSET
 
   return <g>
     {/* The edge itself */}
-    {!(isReflexive && i > 0) && <path
+    {directionChanged && <path
       id={pathID}
       d={pathData}
       key={pathID}
@@ -111,8 +124,7 @@ const Transition = ({
       onDoubleClick={handleTransitionDoubleClick}
     />}
 
-    {/* The label for FSAs - i.e the accepted symbols */}
-    {(projectStore === 'FSA' || projectStore === 'TM') &&
+    {/* The label for the transition */}
       <text
         onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
         onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
@@ -121,45 +133,13 @@ const Transition = ({
         dy={`-${textOffset}`}
         textAnchor="middle"
         alignmentBaseline="central"
-        {...isReflexive && {
+        {...{
           x: control.x,
           y: control.y + REFLEXIVE_Y_OFFSET / 3
         }}
       >
-        {isReflexive
-          ? (text === '' ? 'λ' : text)
-          : (
-          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-            {text === '' ? 'λ' : text}
-          </textPath>
-            )}
+        {text}
       </text>
-    }
-
-    {/* The label for PDAs - i.e the accepted symbols */}
-    {(projectStore === 'PDA') &&
-      <text
-        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
-        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
-        style={{ userSelect: 'none' }}
-        dy={`-${textOffset}`}
-        textAnchor="middle"
-        alignmentBaseline="central"
-        {...isReflexive && {
-          x: control.x,
-          y: control.y + REFLEXIVE_Y_OFFSET / 3
-        }}
-      >
-        {isReflexive
-          ? (text === '' ? 'λ,λ;λ' : text)
-          : (
-          <textPath startOffset="50%" textAnchor="middle" xlinkHref={`#${pathID}-text`}>
-            {text === '' ? 'λ,λ;λ' : text}
-          </textPath>
-            )}
-      </text>
-    }
   </g>
 }
 
