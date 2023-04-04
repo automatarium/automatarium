@@ -36,30 +36,10 @@ interface BaseDialog {
 }
 
 /**
- * Shown when creating/editing transitions in an FSA
+ * Any dialog that is making a transition
  */
-interface FSATransitionDialog extends BaseDialog {
-  type: 'FSATransition'
-  previousValue: string
-}
-
-/**
- * Shown when creating/editing transitions in a PDA
- */
-interface PDATransitionDialog extends BaseDialog {
-  type: 'PDATransition'
-  previousPush: string,
-  previousPop: string
-}
-
-/**
- * Shown when creating/editing transitions in a TM
- */
-interface TMTransitionDialog extends BaseDialog {
-  type: 'TMTransition'
-  previousReadValue: string
-  previousWriteValue: string
-  previousDirectionValue: string
+interface TransitionDialog extends BaseDialog {
+  type: 'FSATransition' | 'PDATransition' | 'TMTransition'
 }
 
 /**
@@ -81,7 +61,7 @@ interface StateDialog extends BaseDialog {
 /**
  * All possible dialogs. This allows for a tagged union using `type` field
  */
-type Dialog = CommentDialog | PDATransitionDialog | FSATransitionDialog | TMTransitionDialog | StateDialog
+type Dialog = TransitionDialog | CommentDialog | StateDialog
 
 const InputDialogs = () => {
   const [dialog, setDialog] = useState<Dialog | undefined>()
@@ -127,11 +107,8 @@ const InputDialogs = () => {
           x: screenMidPoint[0] - 100, // Hack. Not Nice.
           y: screenMidPoint[1],
           id,
-          previousReadValue: transition?.read,
-          previousWriteValue: transition?.write,
-          previousDirectionValue: transition?.direction,
           type: 'TMTransition'
-        } as TMTransitionDialog)
+        })
         break
       case 'PDA':
         setValue(transition?.value ?? '')
@@ -142,10 +119,8 @@ const InputDialogs = () => {
           x: screenMidPoint[0],
           y: screenMidPoint[1],
           id,
-          previousPush: transition?.push,
-          previousPop: transition?.pop,
           type: 'PDATransition'
-        } as PDATransitionDialog)
+        })
         break
       case 'FSA':
         setValue(transition?.read ?? '')
@@ -154,9 +129,8 @@ const InputDialogs = () => {
           x: screenMidPoint[0],
           y: screenMidPoint[1],
           id,
-          previousValue: transition?.read,
           type: 'FSATransition'
-        } as FSATransitionDialog)
+        })
     }
 
     focusInput()
