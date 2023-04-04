@@ -11,6 +11,15 @@ import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import { AutomataState, ProjectComment, TMDirection } from '../../types/ProjectTypes'
 
 /**
+ * The default input styling for transition inputs
+ */
+const TRANSITION_INPUT_STYLE = {
+  width: 'calc(12ch + 3.5em)',
+  margin: '0 .4em',
+  paddingRight: '2.5em'
+}
+
+/**
  * All types that a dialog could be
  */
 type DialogType = 'TMTransition' | 'PDATransition' | 'FSATransition' | 'comment' | 'stateName' | 'stateLabel' | 'state' | 'none'
@@ -295,21 +304,30 @@ const InputDialogs = () => {
     setDirection(value)
   }
 
+  if (!dialog) return null
+
+  /**
+   * Common properties of the parent dropdown
+   */
+  const DROPDOWN_PROPS = {
+    visible: dialog.visible,
+    onClose: () => {
+      hideDialog()
+      if (['FSATransition', 'PDATransition', 'TMTransition'].includes(dialog.type)) {
+        removeTransitions([dialog.id])
+      }
+    },
+    style: {
+      top: `${dialog.y}px`,
+      left: `${dialog.x}px`
+    }
+  }
+
   // Show the dialog depending on the type created
-  switch (dialog?.type) {
+  switch (dialog.type) {
     case 'FSATransition':
       return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-            removeTransitions([dialog.id])
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
+        <Dropdown {...DROPDOWN_PROPS}>
           <InputWrapper>
             <Input
               ref={inputRef}
@@ -317,11 +335,7 @@ const InputDialogs = () => {
               onChange={e => setValue(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'λ'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -331,17 +345,7 @@ const InputDialogs = () => {
       )
     case 'PDATransition':
       return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-            removeTransitions([dialog.id])
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
+        <Dropdown {...DROPDOWN_PROPS}>
           <InputWrapper>
             <Input
               ref={inputRef}
@@ -349,11 +353,7 @@ const InputDialogs = () => {
               onChange={e => setValue(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'λ\t(read)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
           </InputWrapper>
           <InputWrapper>
@@ -363,11 +363,7 @@ const InputDialogs = () => {
               onChange={e => setValuePop(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'λ\t(pop)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
           </InputWrapper>
           <InputWrapper>
@@ -377,11 +373,7 @@ const InputDialogs = () => {
               onChange={e => setValuePush(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'λ\t(push)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -391,17 +383,7 @@ const InputDialogs = () => {
       )
     case 'TMTransition':
       return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-            removeTransitions([dialog.id])
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
+        <Dropdown {...DROPDOWN_PROPS}>
           <InputWrapper>
             <Input
               ref={inputRef}
@@ -409,11 +391,7 @@ const InputDialogs = () => {
               onChange={e => handleReadIn(e)}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'λ\t(read)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
           </InputWrapper>
           <InputWrapper>
@@ -423,11 +401,7 @@ const InputDialogs = () => {
               onChange={handleWriteIn}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'λ\t(write)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
           </InputWrapper>
           <InputWrapper>
@@ -437,11 +411,7 @@ const InputDialogs = () => {
               onChange={handleDirectionIn}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={'↔\t(direction)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
+              style={TRANSITION_INPUT_STYLE}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -455,17 +425,8 @@ const InputDialogs = () => {
       // Both comment and state altering modals are basically the same so we can stick
       // them in the same branch
       return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
-          <InputWrapper>
+        <Dropdown {...DROPDOWN_PROPS}>
+         <InputWrapper>
             {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
             <Input
               ref={inputRef}
