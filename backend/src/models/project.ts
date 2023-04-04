@@ -12,7 +12,7 @@ const ProjectSchema: Schema = new Schema({
       dateCreated: { type: Number, required: true },
       dateEdited: { type: Number, required: true },
       version: { type: String, required: true },
-      automatariumVersion: { type: String, required: true },
+      automatariumVersion: { type: String, required: true }
     },
     _id: false
   },
@@ -20,16 +20,22 @@ const ProjectSchema: Schema = new Schema({
   initialState: { type: Number, required: true },
   states: { type: Object, _id: false },
   transitions: { type: Object, _id: false },
-  comments: { type: [{
-    id: { type: Number, required: true },
-    text: { type: String, required: true },
-    x: { type: Number, required: true },
-    y: { type: Number, required: true },
-  }], _id: false},
-  tests: { type: {
-    trace: { type: String, required: true },
-    batch: { type: [String], required: true }
-  }, _id: false}
+  comments: {
+    type: [{
+      id: { type: Number, required: true },
+      text: { type: String, required: true },
+      x: { type: Number, required: true },
+      y: { type: Number, required: true }
+    }],
+    _id: false
+  },
+  tests: {
+    type: {
+      trace: { type: String, required: true },
+      batch: { type: [String], required: true }
+    },
+    _id: false
+  }
 }, { versionKey: false, _id: false })
 
 export default mongoose.model<IProject>('Project', ProjectSchema)

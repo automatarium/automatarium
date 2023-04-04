@@ -16,7 +16,7 @@ export class FSAState extends State {
   }
 
   get remaining () {
-    return this._remaining;
+    return this._remaining
   }
 
   key () {
