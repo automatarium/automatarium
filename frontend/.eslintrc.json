@@ -1,19 +1,16 @@
 {
     "env": {
         "browser": true,
-        "es2021": true,
         "node": true
     },
     "extends": [
-        "standard",
+        "../eslintConfig.json",
         "plugin:react/recommended"
     ],
     "parserOptions": {
         "ecmaFeatures": {
             "jsx": true
-        },
-        "ecmaVersion": "latest",
-        "sourceType": "module"
+        }
     },
     "plugins": [
         "react"
@@ -27,7 +24,6 @@
       "react/react-in-jsx-scope": "off",
       "react/prop-types": "off",
       "react/display-name": "off",
-      "react/no-unescaped-entities": "off",
-      "import/no-absolute-path": "off"
+      "react/no-unescaped-entities": "off"
     }
 }
