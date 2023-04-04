@@ -28,7 +28,6 @@ const NewFile = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const { user, userLoading } = useAuth()
-  console.log(projects)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
