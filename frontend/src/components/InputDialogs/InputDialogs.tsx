@@ -1,17 +1,81 @@
 import { useState, useRef, useCallback } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
-import { Dropdown, Input } from '/src/components'
-
-import { useProjectStore, useViewStore } from '/src/stores'
-import { useEvent } from '/src/hooks'
-import { locateTransition } from '/src/util/states'
-import { lerpPoints } from '/src/util/points'
+import { Dropdown, Input } from 'src/components'
+import { useProjectStore, useViewStore } from 'src/stores'
+import { useEvent } from 'src/hooks'
+import { locateTransition } from 'src/util/states'
+import { lerpPoints } from 'src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
+import { AutomataState, ProjectComment, TMDirection } from '../../types/ProjectTypes'
+
+/**
+ * All types that a dialog could be
+ */
+type DialogType = 'TMTransition' | 'PDATransition' | 'FSATransition' | 'comment' | 'stateName' | 'stateLabel' | 'state'
+
+/**
+ * Represents a dialog modal that is shown on the page
+ */
+interface BaseDialog {
+  visible: boolean
+  x: number
+  y: number
+  id: number
+  type: DialogType
+}
+
+/**
+ * Shown when creating/editing transitions in an FSA
+ */
+interface FSATransitionDialog extends BaseDialog {
+  type: 'FSATransition'
+  previousValue: string
+}
+
+/**
+ * Shown when creating/editing transitions in a PDA
+ */
+interface PDATransitionDialog extends BaseDialog {
+  type: 'PDATransition'
+  previousPush: string,
+  previousPop: string
+}
+
+/**
+ * Shown when creating/editing transitions in a TM
+ */
+interface TMTransitionDialog extends BaseDialog {
+  type: 'TMTransition'
+  previousReadValue: string
+  previousWriteValue: string
+  previousDirectionValue: string
+}
+
+/**
+ * Shown when creating a comment
+ */
+interface CommentDialog extends BaseDialog {
+  type: 'comment'
+  selectedComment: ProjectComment
+}
+
+/**
+ * Used for creating and modifying states
+ */
+interface StateDialog extends BaseDialog {
+  type: 'stateName' | 'stateLabel'
+  selectedState: AutomataState
+}
+
+/**
+ * All possible dialogs. This allows for a tagged union using `type` field
+ */
+type Dialog = CommentDialog | PDATransitionDialog | FSATransitionDialog | TMTransitionDialog | StateDialog
 
 const InputDialogs = () => {
-  const [dialog, setDialog] = useState({ visible: false })
+  const [dialog, setDialog] = useState<Dialog | undefined>()
   const inputRef = useRef()
   const inputPopRef = useRef()
   const inputPushRef = useRef()
@@ -24,7 +88,7 @@ const InputDialogs = () => {
   const inputDirectionRef = useRef()
   const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
-  const [direction, setDirection] = useState('')
+  const [direction, setDirection] = useState<TMDirection>('R')
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -33,6 +97,7 @@ const InputDialogs = () => {
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
+  // @ts-ignore
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
 
@@ -40,37 +105,48 @@ const InputDialogs = () => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     setRead(transition?.read ?? '')
-    setValue(transition?.read ?? '')
-    setValuePop(transition?.pop ?? '')
-    setValuePush(transition?.push ?? '')
-
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, 0.5)
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
-    if (projectType === 'TM') {
-      setWrite(transition?.write ?? '')
-      setDirection(transition?.direction ?? '')
-
-      setDialog({
-        visible: true,
-        x: screenMidPoint[0] - 100, // Hack. Not Nice.
-        y: screenMidPoint[1],
-        id,
-        previousReadValue: transition?.read,
-        previousWriteValue: transition?.write,
-        previousDirectionValue: transition?.direction,
-        type: 'TMtransition'
-      })
-    } else {
-      setDialog({
-        visible: true,
-        x: screenMidPoint[0],
-        y: screenMidPoint[1],
-        id,
-        previousValue: transition?.read,
-        type: 'transition'
-      })
+    switch (projectType) {
+      case 'TM':
+        setWrite(transition?.write ?? '')
+        setDirection(transition?.direction ?? 'R')
+        setDialog({
+          visible: true,
+          x: screenMidPoint[0] - 100, // Hack. Not Nice.
+          y: screenMidPoint[1],
+          id,
+          previousReadValue: transition?.read,
+          previousWriteValue: transition?.write,
+          previousDirectionValue: transition?.direction,
+          type: 'TMTransition'
+        } as TMTransitionDialog)
+        break
+      case 'PDA':
+        setValuePush(transition?.push ?? '')
+        setValuePop(transition?.pop ?? '')
+        setDialog({
+          visible: true,
+          x: screenMidPoint[0],
+          y: screenMidPoint[1],
+          id,
+          previousPush: transition?.push,
+          previousPop: transition?.pop,
+          type: 'PDATransition'
+        } as PDATransitionDialog)
+        break
+      case 'FSA':
+        setValue(transition?.read ?? '')
+        setDialog({
+          visible: true,
+          x: screenMidPoint[0],
+          y: screenMidPoint[1],
+          id,
+          previousValue: transition?.read,
+          type: 'FSATransition'
+        } as FSATransitionDialog)
     }
 
     focusInput()
@@ -80,15 +156,10 @@ const InputDialogs = () => {
     // Remove duplicate characters
     const ranges = value.match(/\[(.*?)\]/g)
     const chars = value.replace(/\[(.*?)\]/g, '')
-    const rangesPop = valuePop.match(/\[(.*?)\]/g)
-    const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
-    const rangesPush = valuePush.match(/\[(.*?)\]/g)
-    const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
+
     editTransition({
       id: dialog.id,
-      read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
-      pop: `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
-      push: `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`
+      read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
     })
     commit()
     hideDialog()
@@ -96,6 +167,27 @@ const InputDialogs = () => {
 
   const saveTMTransition = () => {
     editTransition({ id: dialog.id, read, write, direction })
+    commit()
+    hideDialog()
+  }
+
+  const savePDATransition = () => {
+    // TODO: Find out if the ranges actually work
+    const ranges = value.match(/\[(.*?)\]/g)
+    const chars = value.replace(/\[(.*?)\]/g, '')
+
+    const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
+    const rangesPush = valuePush.match(/\[(.*?)\]/g)
+
+    const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
+    const rangesPop = valuePop.match(/\[(.*?)\]/g)
+
+    editTransition({
+      id: dialog.id,
+      read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
+      pop: `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
+      push: `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`
+    })
     commit()
     hideDialog()
   }
@@ -110,12 +202,12 @@ const InputDialogs = () => {
       x,
       y,
       type: 'comment'
-    })
+    } as CommentDialog)
     focusInput()
   }, [inputRef.current])
 
   const saveComment = () => {
-    if (value && !/^\s*$/.test(value)) {
+    if (value && !/^\s*$/.test(value) && dialog.type === 'comment') {
       if (dialog.selectedComment === undefined) {
         const pos = screenToViewSpace(dialog.x, dialog.y)
         useProjectStore.getState().createComment({ x: pos[0], y: pos[1], text: value.trim() })
@@ -138,12 +230,15 @@ const InputDialogs = () => {
       x: pos[0],
       y: pos[1],
       type: 'stateName'
-    })
+    } as StateDialog)
     focusInput()
   }, [inputRef.current])
 
   const saveStateName = () => {
-    useProjectStore.getState().updateState({ ...dialog.selectedState, name: (!value || /^\s*$/.test(value)) ? undefined : value })
+    useProjectStore.getState().updateState({
+      ...(dialog as StateDialog).selectedState,
+      name: (!value || /^\s*$/.test(value)) ? undefined : value
+    })
     commit()
     hideDialog()
   }
@@ -159,23 +254,28 @@ const InputDialogs = () => {
       x: pos[0],
       y: pos[1],
       type: 'stateLabel'
-    })
+    } as StateDialog)
     focusInput()
   }, [inputRef.current])
 
   const saveStateLabel = () => {
-    useProjectStore.getState().updateState({ ...dialog.selectedState, label: (!value || /^\s*$/.test(value)) ? undefined : value })
+    useProjectStore.getState().updateState({
+      ...(dialog as StateDialog).selectedState,
+      label: (!value || /^\s*$/.test(value)) ? undefined : value
+    })
     commit()
     hideDialog()
   }
 
-  const save = {
-    transition: saveTransition,
-    TMtransition: saveTMTransition,
+  const save = ({
+    FSATransition: saveTransition,
+    TMTransition: saveTMTransition,
+    PDATransition: savePDATransition,
     comment: saveComment,
     stateName: saveStateName,
     stateLabel: saveStateLabel
-  }[dialog.type]
+    // eslint-disable-next-line no-unused-vars
+  } as {[key in DialogType]: () => void})[dialog.type]
 
   function handleReadIn (e) {
     const input = e.target.value.toString()
@@ -193,13 +293,9 @@ const InputDialogs = () => {
     setDirection(value)
   }
 
-  const isTM = projectType === 'TM'
-  const isPDA = projectType === 'PDA'
-  // If the project type if a TM, then do the following
-  if (isTM) {
-    // Determine whether dialog type is TMtransition, comment, or state, and act accordingly.
-    // If it is none of these just return null.
-    if (dialog.type === 'TMtransition') {
+  // Show the dialog depending on the type created
+  switch (dialog.type) {
+    case 'FSATransition':
       return (
         <Dropdown
           visible={dialog.visible}
@@ -217,72 +313,12 @@ const InputDialogs = () => {
           <InputWrapper>
             <Input
               ref={inputRef}
-              value={read}
-              onChange={e => handleReadIn(e)}
-              onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'λ\t(read)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <Input
-              ref={inputWriteRef}
-              value={write}
-              onChange={handleWriteIn}
-              onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'λ\t(write)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
-            />
-          </InputWrapper>
-          <InputWrapper>
-            <Input
-              ref={inputDirectionRef}
-              value={direction}
-              onChange={handleDirectionIn}
-              onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'↔\t(direction)'}
-              style={{
-                width: 'calc(12ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
-            />
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px" />
-            </SubmitButton>
-          </InputWrapper>
-        </Dropdown>
-      )
-    } else if (dialog.type === 'comment') {
-      return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
-          <InputWrapper>
-            <MessageSquare style={{ marginInline: '1em .6em' }} />
-            <Input
-              ref={inputRef}
               value={value}
               onChange={e => setValue(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'Comment text...'}
+              placeholder={'λ'}
               style={{
-                width: 'calc(20ch + 3.5em)',
+                width: 'calc(12ch + 3.5em)',
                 margin: '0 .4em',
                 paddingRight: '2.5em'
               }}
@@ -293,56 +329,16 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    } else if (dialog.type === 'state') {
+    case 'PDATransition':
       return (
         <Dropdown
           visible={dialog.visible}
           onClose={() => {
             hideDialog()
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
-          <InputWrapper>
-            <Input
-              ref={inputRef}
-              value={value}
-              onChange={e => setValue(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={{
-                stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-                stateLabel: 'State label...'
-              }[dialog.placeholderType]}
-              style={{
-                width: 'calc(20ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
-            />
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px" />
-            </SubmitButton>
-          </InputWrapper>
-        </Dropdown>
-      )
-    } else {
-      return null
-    }
-    // Else if the project type is a PDA, do the following
-  } else if (isPDA) {
-    // Determine whether dialog type is transition, comment, or state, and act accordingly.
-    // If it is none of these just return null.
-    if (dialog.type === 'transition') {
-      return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-            if (dialog.previousValue === undefined) {
-              removeTransitions([dialog.id])
-            }
+            // TODO: See TM notes
+            // if (dialog.previousValue === undefined) {
+            //   removeTransitions([dialog.id])
+            // }
           }}
           style={{
             top: `${dialog.y}px`,
@@ -396,12 +392,16 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    } else if (dialog.type === 'comment') {
+    case 'TMTransition':
       return (
         <Dropdown
           visible={dialog.visible}
           onClose={() => {
             hideDialog()
+            // TODO: Check how this is meant to be used
+            // if (dialog.previousValue === undefined) {
+            //   removeTransitions([dialog.id])
+            // }
           }}
           style={{
             top: `${dialog.y}px`,
@@ -409,86 +409,40 @@ const InputDialogs = () => {
           }}
         >
           <InputWrapper>
-            <MessageSquare style={{ marginInline: '1em .6em' }} />
             <Input
               ref={inputRef}
-              value={value}
-              onChange={e => setValue(e.target.value)}
+              value={read}
+              onChange={e => handleReadIn(e)}
               onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'Comment text...'}
+              placeholder={'λ\t(read)'}
               style={{
-                width: 'calc(20ch + 3.5em)',
+                width: 'calc(12ch + 3.5em)',
                 margin: '0 .4em',
                 paddingRight: '2.5em'
               }}
             />
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px" />
-            </SubmitButton>
           </InputWrapper>
-        </Dropdown>
-      )
-    } else if (dialog.type === 'state') {
-      return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
           <InputWrapper>
             <Input
-              ref={inputRef}
-              value={value}
-              onChange={e => setValue(e.target.value)}
+              ref={inputWriteRef}
+              value={write}
+              onChange={handleWriteIn}
               onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={{
-                stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-                stateLabel: 'State label...'
-              }[dialog.placeholderType]}
+              placeholder={'λ\t(write)'}
               style={{
-                width: 'calc(20ch + 3.5em)',
+                width: 'calc(12ch + 3.5em)',
                 margin: '0 .4em',
                 paddingRight: '2.5em'
               }}
             />
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px" />
-            </SubmitButton>
           </InputWrapper>
-        </Dropdown>
-      )
-    } else {
-      return null
-    }
-    // Else we assume the project type is a FSA, if we're adding more automaton then we will have to make more if statements, one for each automaton to define the logic and formatting of transitions and comments.
-  } else {
-    if (dialog.type === 'transition') {
-      return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-            if (dialog.previousValue === undefined) {
-              removeTransitions([dialog.id])
-            }
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
           <InputWrapper>
             <Input
-              ref={inputRef}
-              value={value}
-              onChange={e => setValue(e.target.value)}
+              ref={inputDirectionRef}
+              value={direction}
+              onChange={handleDirectionIn}
               onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'λ'}
+              placeholder={'↔\t(direction)'}
               style={{
                 width: 'calc(12ch + 3.5em)',
                 margin: '0 .4em',
@@ -501,7 +455,11 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    } else if (dialog.type === 'comment') {
+    case 'comment':
+    case 'stateName':
+    case 'stateLabel':
+      // Both comment and state altering modals are basically the same so we can stick
+      // them in the same branch
       return (
         <Dropdown
           visible={dialog.visible}
@@ -514,47 +472,17 @@ const InputDialogs = () => {
           }}
         >
           <InputWrapper>
-            <MessageSquare style={{ marginInline: '1em .6em' }} />
-            <Input
-              ref={inputRef}
-              value={value}
-              onChange={e => setValue(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
-              placeholder={'Comment text...'}
-              style={{
-                width: 'calc(20ch + 3.5em)',
-                margin: '0 .4em',
-                paddingRight: '2.5em'
-              }}
-            />
-            <SubmitButton onClick={save}>
-              <CornerDownLeft size="18px" />
-            </SubmitButton>
-          </InputWrapper>
-        </Dropdown>
-      )
-    } else if (dialog.type === 'state') {
-      return (
-        <Dropdown
-          visible={dialog.visible}
-          onClose={() => {
-            hideDialog()
-          }}
-          style={{
-            top: `${dialog.y}px`,
-            left: `${dialog.x}px`
-          }}
-        >
-          <InputWrapper>
+            {dialog.type === 'comment' && <MessageSquare style={{ marginInline: '1em .6em' }}/>}
             <Input
               ref={inputRef}
               value={value}
               onChange={e => setValue(e.target.value)}
               onKeyUp={e => e.key === 'Enter' && save()}
               placeholder={{
-                stateName: `${statePrefix ?? 'q'}${dialog.selectedState?.id ?? '0'}`,
-                stateLabel: 'State label...'
-              }[dialog.placeholderType]}
+                stateName: `${statePrefix ?? 'q'}${(dialog as StateDialog).selectedState?.id ?? '0'}`,
+                stateLabel: 'State label...',
+                comment: 'Comment text...'
+              }[dialog.type]}
               style={{
                 width: 'calc(20ch + 3.5em)',
                 margin: '0 .4em',
@@ -567,9 +495,6 @@ const InputDialogs = () => {
           </InputWrapper>
         </Dropdown>
       )
-    } else {
-      return null
-    }
   }
 }
 

@@ -13,6 +13,7 @@
   "dependencies": {
     "@automatarium/jflap-translator": "1.0.0",
     "@automatarium/simulation": "2.0.0",
+    "@types/react": "^18.0.33",
     "axios": "^0.26.1",
     "dayjs": "^1.11.2",
     "firebase": "^9.6.10",
