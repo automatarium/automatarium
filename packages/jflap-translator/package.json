@@ -15,9 +15,11 @@
   "license": "MIT",
   "devDependencies": {
     "jest": "^27.5.1",
-    "parcel": "^2.4.1"
+    "parcel": "^2.4.1",
+    "ts-jest": "^29.1.0"
   },
   "dependencies": {
+    "frontend": "1.0.0",
     "xml-js": "^1.6.11"
   }
 }

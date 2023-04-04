@@ -2,6 +2,8 @@
 // Define accepted project types
 import { xml2json } from 'xml-js'
 
+import { DEFAULT_PROJECT_COLOR } from 'frontend/src/config'
+
 const PROJECT_TYPE_MAP = {
   fa: 'FSA',
   pda: 'PDA',
@@ -11,6 +13,7 @@ const PROJECT_TYPE_MAP = {
 export type GraphConfig = {
   type: 'FSA' | 'tm' | 'pda'
   statePrefix: string
+  color: string
 }
 
 /**
@@ -150,7 +153,8 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
   return {
     config: {
       type: projectType,
-      statePrefix: 'q'
+      statePrefix: 'q',
+      color: DEFAULT_PROJECT_COLOR[projectType]
     },
     initialState: initialStateID,
     states: automatariumStates,
