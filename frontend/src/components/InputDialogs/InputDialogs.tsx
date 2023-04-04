@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, FormEvent } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'
@@ -297,6 +297,12 @@ const InputDialogs = () => {
     }
   }
 
+  /**
+   * Calls `save` if the enter key is hit
+   * @param e
+   */
+  const handleSave = (e: FormEvent<HTMLInputElement>) => e.key === 'Enter' && save()
+
   // Show the dialog depending on the type created
   switch (dialog.type) {
     case 'FSATransition':
@@ -307,7 +313,7 @@ const InputDialogs = () => {
               ref={inputRef}
               value={value}
               onChange={e => setValue(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={'λ'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -325,7 +331,7 @@ const InputDialogs = () => {
               ref={inputRef}
               value={value}
               onChange={e => setValue(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -335,7 +341,7 @@ const InputDialogs = () => {
               ref={inputPopRef}
               value={valuePop}
               onChange={e => setValuePop(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={'λ\t(pop)'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -345,7 +351,7 @@ const InputDialogs = () => {
               ref={inputPushRef}
               value={valuePush}
               onChange={e => setValuePush(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={'λ\t(push)'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -362,8 +368,8 @@ const InputDialogs = () => {
             <Input
               ref={inputRef}
               value={read}
-              onChange={e => handleReadIn(e)}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onChange={handleReadIn}
+              onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -373,7 +379,7 @@ const InputDialogs = () => {
               ref={inputWriteRef}
               value={write}
               onChange={handleWriteIn}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={'λ\t(write)'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -383,7 +389,7 @@ const InputDialogs = () => {
               ref={inputDirectionRef}
               value={direction}
               onChange={handleDirectionIn}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={'↔\t(direction)'}
               style={TRANSITION_INPUT_STYLE}
             />
@@ -406,7 +412,7 @@ const InputDialogs = () => {
               ref={inputRef}
               value={value}
               onChange={e => setValue(e.target.value)}
-              onKeyUp={e => e.key === 'Enter' && save()}
+              onKeyUp={handleSave}
               placeholder={{
                 stateName: `${statePrefix ?? 'q'}${(dialog as StateDialog).selectedState?.id ?? '0'}`,
                 stateLabel: 'State label...',
