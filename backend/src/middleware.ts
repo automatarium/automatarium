@@ -6,8 +6,7 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
   // Expect a token
   const header = req.headers.authorization
 
-  if (!header || header === 'Bearer null' || !header.startsWith('Bearer '))
-    return next()
+  if (!header || header === 'Bearer null' || !header.startsWith('Bearer ')) { return next() }
 
   // Decode token
   const idToken = header.replace('Bearer ', '')
@@ -18,7 +17,7 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
     req.user = userInfo
   } catch ({ message }) {
     return res.status(500).json({
-      error: message,
+      error: message
     })
   }
 

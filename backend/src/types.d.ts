@@ -21,9 +21,3 @@ export type Meta = {
 export type RequestUser = {
   uid: string
 }
-
-declare module 'express-serve-static-core' {
-  interface Request {
-    user?: RequestUser
-  }
-}

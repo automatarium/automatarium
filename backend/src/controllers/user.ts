@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import User from 'models/user'
 import { RequestUser } from 'types'
 
-export const getUser = async ( req: Request, res: Response) => {
+export const getUser = async (req: Request, res: Response) => {
   const { uid } = req.user as RequestUser
 
   // Retrieve user by id
@@ -19,9 +19,9 @@ export const getUser = async ( req: Request, res: Response) => {
   }
 }
 
-export const createUser = async ( req: Request, res: Response) => {
+export const createUser = async (req: Request, res: Response) => {
   const { uid, email, preferences } = req.body
-  
+
   // Create new user
   const user = new User({
     _id: uid,

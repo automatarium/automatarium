@@ -29,6 +29,5 @@
     "parcel": "^2.4.1",
     "ts-jest": "^29.0.5",
     "typescript": "^4.7.3"
-  },
-  "dependencies": {}
+  }
 }

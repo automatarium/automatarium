@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import Project from 'models/project'
 import { RequestUser } from 'types'
 
-export const getProject = async ( req: Request, res: Response ) => {
+export const getProject = async (req: Request, res: Response) => {
   const { pid } = req.params
 
   // Retrieve project by id
@@ -19,7 +19,7 @@ export const getProject = async ( req: Request, res: Response ) => {
   }
 }
 
-export const createProject = async ( req: Request, res: Response ) => {
+export const createProject = async (req: Request, res: Response) => {
   const { id, isPublic, meta, initialState, states, transitions, comments, tests, config } = req.body
   const { uid } = req.user as RequestUser
 
@@ -44,7 +44,6 @@ export const createProject = async ( req: Request, res: Response ) => {
       project
     })
   } catch (error) {
-
     return res.status(500).json({
       error: error?.message ?? error
     })
@@ -52,7 +51,7 @@ export const createProject = async ( req: Request, res: Response ) => {
   // Save project
 }
 
-export const getProjects = async ( req: Request, res: Response ) => {
+export const getProjects = async (req: Request, res: Response) => {
   const { uid } = req.user as RequestUser
 
   // Retrieve project by id
@@ -68,7 +67,7 @@ export const getProjects = async ( req: Request, res: Response ) => {
   }
 }
 
-export const updateProject = async ( req: Request, res: Response ) => {
+export const updateProject = async (req: Request, res: Response) => {
   const { pid } = req.params
   const { uid } = req.user as RequestUser
   const { isPublic, meta, initialState, states, transitions, comments, tests, config } = req.body
@@ -99,7 +98,7 @@ export const updateProject = async ( req: Request, res: Response ) => {
   }
 }
 
-export const deleteProject = async ( req: Request, res: Response) => {
+export const deleteProject = async (req: Request, res: Response) => {
   const { pid } = req.params
   const { uid } = req.user as RequestUser
 
@@ -114,7 +113,6 @@ export const deleteProject = async ( req: Request, res: Response) => {
     }
 
     return res.status(200).json()
-
   } catch (error) {
     return res.status(500).json({
       error: error?.message ?? error
