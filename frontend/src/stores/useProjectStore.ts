@@ -94,13 +94,11 @@ interface ProjectStore {
 }
 
 const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
-  // Need to refactor to do this in a better way
-  project: {} as StoredProject,
+  project: null as StoredProject,
   history: [],
-  // yucky initial vals for numbers also need to refactor later on
-  historyPointer: 0,
-  lastChangeDate: -1,
-  lastSaveDate: -1,
+  historyPointer: null,
+  lastChangeDate: null,
+  lastSaveDate: null,
 
   set: (project: StoredProject) => { set({ project, history: [clone(project)], historyPointer: 0 }) },
 
