@@ -9,6 +9,7 @@ import { lerpPoints } from '/src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import { AutomataState, ProjectComment, TMDirection } from '/src/types/ProjectTypes'
+import React from 'react'
 
 /**
  * The default input styling for transition inputs
