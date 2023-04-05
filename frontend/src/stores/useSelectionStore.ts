@@ -1,8 +1,21 @@
-import create from 'zustand'
-
+import create, { SetState } from 'zustand'
 import { useProjectStore } from '/src/stores'
+import {AutomataState, AutomataTransition, ProjectComment } from 'src/types/ProjectTypes'
 
-const useSelectionStore = create(set => ({
+type SelectionStore = {
+  selectedStates: AutomataState[],
+  selectedTransitions: AutomataTransition[],
+  selectedComments: ProjectComment[],
+  setComments: (selectedComments: ProjectComment[]) => void,
+  setStates: (selectedStates: AutomataState[]) => void,
+  addState: (state: AutomataState) => void,
+  setTransitions: (selectedTransitions: AutomataTransition[]) => void,
+  addTransition: (transition: AutomataTransition) => void,
+  selectNone: () => void,
+  selectAll: () => void,
+}
+
+const useSelectionStore = create<SelectionStore>((set: SetState<SelectionStore>) => ({
   selectedStates: [],
   selectedTransitions: [],
   selectedComments: [],
@@ -17,17 +30,17 @@ const useSelectionStore = create(set => ({
       .getState()
       .project
       ?.states
-      ?.map(s => s.id) ?? [],
+      ?.map((s: AutomataState) => s.id) ?? [],
     selectedTransitions: useProjectStore
       .getState()
       .project
       ?.transitions
-      ?.map(t => t.id) ?? [],
+      ?.map((t: AutomataTransition) => t.id) ?? [],
     selectedComments: useProjectStore
       .getState()
       .project
       ?.comments
-      ?.map(c => c.id) ?? []
+      ?.map((c: ProjectComment) => c.id) ?? []
   })
 }))
 
