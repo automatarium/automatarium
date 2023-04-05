@@ -10,9 +10,9 @@
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
-    "lint": "eslint . --ext .js,.ts",
     "test": "jest",
-    "lint:fix": "eslint . --ext .js,.ts --fix"
+    "lint": "eslint . --ext .js,.ts --cache --cache-location '../../.eslintcache'",
+    "lint:fix": "yarn lint --fix"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
