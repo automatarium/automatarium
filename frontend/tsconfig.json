@@ -6,7 +6,10 @@
     "baseUrl": "./",
     "rootDir": "./",
     "jsx": "react-jsx",
-    "sourceMap": true
+    "sourceMap": true,
+    "paths": {
+      "/src/*": ["./src/*"]
+    }
   },
   "include": [
     "src/**/*"

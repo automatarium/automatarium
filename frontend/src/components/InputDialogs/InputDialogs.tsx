@@ -8,7 +8,7 @@ import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
-import { AutomataState, ProjectComment, TMDirection } from '../../types/ProjectTypes'
+import { AutomataState, ProjectComment, TMDirection } from '/src/types/ProjectTypes'
 
 /**
  * The default input styling for transition inputs
@@ -114,7 +114,7 @@ const InputDialogs = () => {
         })
         break
       case 'PDA':
-        setValue(transition?.value ?? '')
+        setValue(transition?.read ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
         setDialog({
