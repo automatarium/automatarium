@@ -58,6 +58,9 @@ interface StateDialog extends BaseDialog {
   selectedState: AutomataState
 }
 
+/** Small alias so I don't need to keep typing it **/
+type InputEvent = FormEvent<HTMLInputElement>
+
 /**
  * All possible dialogs. This allows for a tagged union using `type` field
  */
@@ -90,7 +93,7 @@ const InputDialogs = () => {
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
 
-  useEvent('editTransition', ({ detail: { id } }) => {
+  useEvent('editTransition', ({ detail: { id } }: { detail: { id: number }}) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     // Find midpoint of transition in screen space
@@ -177,7 +180,7 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  useEvent('editComment', ({ detail: { id, x, y } }) => {
+  useEvent('editComment', ({ detail: { id, x, y } }: { detail: {id: number, x: number, y: number }}) => {
     const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === id)
     setValue(selectedComment?.text ?? '')
 
@@ -187,7 +190,7 @@ const InputDialogs = () => {
       x,
       y,
       type: 'comment'
-    } as CommentDialog)
+    })
     focusInput()
   }, [inputRef.current])
 
@@ -204,8 +207,8 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  useEvent('editStateName', ({ detail: { id } }) => {
-    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
+  useEvent('editStateName', ({ detail: { id } }: { detail: { id: number }}) => {
+    const selectedState = useProjectStore.getState().project?.states.find((s: AutomataState) => s.id === id)
     setValue(selectedState.name ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
@@ -228,8 +231,8 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  useEvent('editStateLabel', ({ detail: { id } }) => {
-    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
+  useEvent('editStateLabel', ({ detail: { id } }: { detail: { id: number }}) => {
+    const selectedState = useProjectStore.getState().project?.states.find((s: AutomataState) => s.id === id)
     setValue(selectedState.label ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
@@ -262,17 +265,17 @@ const InputDialogs = () => {
     // eslint-disable-next-line no-unused-vars
   } as {[key in DialogType]: () => void})[dialog?.type]
 
-  function handleReadIn (e) {
+  const handleReadIn = (e: InputEvent) => {
     const input = e.target.value.toString()
     setRead(input[input.length - 1] ?? '')
   }
 
-  function handleWriteIn (e) {
+  const handleWriteIn = (e: InputEvent) => {
     const input = e.target.value.toString()
     setWrite(input[input.length - 1] ?? '')
   }
 
-  function handleDirectionIn (e) {
+  const handleDirectionIn = (e: InputEvent) => {
     const input = e.target.value.toString().match(/[rls]/gi)
     const value = input[input.length - 1].toUpperCase()
     setDirection(value)
@@ -301,7 +304,7 @@ const InputDialogs = () => {
    * Calls `save` if the enter key is hit
    * @param e
    */
-  const handleSave = (e: FormEvent<HTMLInputElement>) => e.key === 'Enter' && save()
+  const handleSave = (e: InputEvent) => e.key === 'Enter' && save()
 
   // Show the dialog depending on the type created
   switch (dialog.type) {
