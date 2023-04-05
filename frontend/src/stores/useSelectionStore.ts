@@ -1,6 +1,6 @@
 import create, { SetState } from 'zustand'
 import { useProjectStore } from '/src/stores'
-import {AutomataState, AutomataTransition, ProjectComment } from 'src/types/ProjectTypes'
+import { AutomataState, AutomataTransition, ProjectComment } from 'src/types/ProjectTypes'
 
 type SelectionStore = {
   selectedStates: AutomataState[],
