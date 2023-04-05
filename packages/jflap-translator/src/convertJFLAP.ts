@@ -1,82 +1,23 @@
 import { xml2json } from 'xml-js'
 
-import { DEFAULT_PROJECT_COLOR } from 'frontend/src/config/projects'
+import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config/projects'
+import { ProjectType, Project, AutomataTransition } from 'frontend/src/types/ProjectTypes'
 
-const PROJECT_TYPE_MAP = {
+const PROJECT_TYPE_MAP: Record<string, ProjectType> = {
   fa: 'FSA',
   pda: 'PDA',
   turing: 'TM'
 }
 
-export type GraphConfig = {
-  type: 'FSA' | 'tm' | 'pda'
-  statePrefix: string
-  color: string
-}
-
-/**
- * Basic transition that stores common properties of other transition types
- */
-export type Transition = {
-  id: number
-  from: number
-  to: number
-  read: string
-}
-
-export type PDATransition = Transition & {
-  push: string
-  pop: string
-}
-
-export type TMTransition = Transition & {
-  write: string
-  direction: string
-}
-
-/**
- * Stores a state in a graph. Modeled after the frontend
- */
-export type State = {
-  id: number
-  name: string
-  label: string
-  x: number
-  y: number
-  isFinal: boolean
-}
-
-/**
- * Comment that is placed somewhere on the project
- */
-export type Comment = {
-  id: number
-  x: number
-  y: number
-  text: string
-}
-
-// TODO: Replace with whatever type the frontenders come up with for the typescript conversion
-/**
- * Stores data about a graph. This models how it is stored in the frontend
- */
-export type FrontendGraph = {
-  config: GraphConfig
-  initialState: number
-  states: State[]
-  transitions: Transition[]
-  comments: Comment[]
-}
-
 // Convert JFLAP XML to Automatarium format
-export const convertJFLAPXML = (xml: string): FrontendGraph => {
+export const convertJFLAPXML = (xml: string): Project => {
   const json = xml2json(xml, { compact: true, ignoreComment: true, ignoreDeclaration: true })
   const jflapProject = JSON.parse(json)
   return convertJFLAPProject(jflapProject)
 }
 
 // Convert JFLAP JSON to Automatarium format
-export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
+export const convertJFLAPProject = (jflapProject: any): Project => {
   // Pull out necessary values from jflap project
   let {
     structure: {
@@ -113,31 +54,26 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
 
   // Convert transitions
   const automatariumTransitions = transitions.map((transition, idx) => {
-    const convTrans = {
+    const trans = {
       id: idx,
       from: Number(transition.from._text),
       to: Number(transition.to._text),
       read: transition.read._text ? transition.read._text : ''
-    }
+    } as AutomataTransition
     // Add any extra fields if needed
     if (projectType === 'PDA') {
       // Copy is needed to please type checker
-      const pdaTrans = convTrans as PDATransition
-      pdaTrans.push = transition.push._text ?? ''
-      pdaTrans.pop = transition.pop._text ?? ''
+      trans.push = transition.push._text ?? ''
+      trans.pop = transition.pop._text ?? ''
       // We don't support multi character input at the moment
-      if (pdaTrans.push.length > 1 || pdaTrans.pop.length > 1) {
+      if (trans.push.length > 1 || trans.pop.length > 1) {
         throw new Error("Automatarium doesn't support multi character input")
       }
-      return pdaTrans
     } else if (projectType === 'TM') {
-      const tmTrans = convTrans as TMTransition
-      tmTrans.write = transition.write._text ?? ''
-      tmTrans.direction = transition.move._text ?? ''
-      return tmTrans
-    } else {
-      return convTrans
+      trans.write = transition.write._text ?? ''
+      trans.direction = transition.move._text ?? ''
     }
+    return trans
   })
 
   // Convert comments
@@ -151,8 +87,22 @@ export const convertJFLAPProject = (jflapProject: any): FrontendGraph => {
   return {
     config: {
       type: projectType,
-      statePrefix: 'q',
-      color: DEFAULT_PROJECT_COLOR[projectType]
+      statePrefix: DEFAULT_STATE_PREFIX,
+      color: DEFAULT_PROJECT_COLOR[projectType],
+      acceptanceCriteria: projectType === 'PDA' ? DEFAULT_ACCEPTANCE_CRITERIA : undefined
+    },
+    meta: {
+      name: '', // Name will be changed to filename by frontend
+      dateCreated: new Date().getTime(),
+      dateEdited: new Date().getTime(),
+      version: SCHEMA_VERSION,
+      automatariumVersion: APP_VERSION
+    },
+    projectType,
+    simResult: [],
+    tests: {
+      batch: [''],
+      single: ''
     },
     initialState: initialStateID,
     states: automatariumStates,
