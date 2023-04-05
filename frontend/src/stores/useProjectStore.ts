@@ -24,7 +24,12 @@ import {
   DEFAULT_PROJECT_COLOR
 } from '../config/projects'
 
-export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): Project => ({
+/**
+ * A stored project has an extra `_id` field which is used to tell identify it
+ */
+type StoredProject = Project & {_id: string}
+
+export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): StoredProject => ({
   projectType,
   _id: crypto.randomUUID(),
   states: [],
@@ -52,9 +57,9 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
 })
 
 interface ProjectStore {
-  project: Project,
+  project: StoredProject,
   // Can't work this one out
-  history: Project[],
+  history: StoredProject[],
   historyPointer: number,
   lastChangeDate: number,
   lastSaveDate: number,
@@ -90,14 +95,14 @@ interface ProjectStore {
 
 const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
   // Need to refactor to do this in a better way
-  project: {} as Project,
+  project: {} as StoredProject,
   history: [],
   // yucky initial vals for numbers also need to refactor later on
   historyPointer: 0,
   lastChangeDate: -1,
   lastSaveDate: -1,
 
-  set: (project: Project) => { set({ project, history: [clone(project)], historyPointer: 0 }) },
+  set: (project: StoredProject) => { set({ project, history: [clone(project)], historyPointer: 0 }) },
 
   /* Add current project state to stored history of project states */
   commit: () => set(produce((state: ProjectStore) => {
@@ -163,7 +168,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
     return id
   },
 
-  editTransition: (newTransition: AutomataTransition) => set(produce(({ project }: { project: Project }) => {
+  editTransition: (newTransition: AutomataTransition) => set(produce(({ project }: { project: StoredProject }) => {
     // Refactor types to enums later
     if (project.config.type === 'TM') {
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).write = newTransition.write
@@ -177,33 +182,33 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   })),
 
   /* Create a new comment */
-  createComment: (comment: ProjectComment) => set(produce(({ project }: { project: Project }) => {
+  createComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
     project.comments.push({ ...comment, id: 1 + Math.max(-1, ...project.comments.map((c: ProjectComment) => c.id)) })
   })),
 
   /* Update a comment by id */
-  updateComment: (comment: ProjectComment) => set(produce(({ project }: { project: Project }) => {
+  updateComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
     project.comments = project.comments.map((cm: ProjectComment) => cm.id === comment.id ? { ...cm, ...comment } : cm)
   })),
 
   /* Remove a comment by id */
-  removeComment: (comment: ProjectComment) => set(produce(({ project }: { project: Project }) => {
+  removeComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
     project.comments = project.comments.filter((cm: ProjectComment) => cm.id !== comment.id)
   })),
 
   /* Create a new state */
-  createState: (state: AutomataState) => set(produce(({ project }: { project: Project }) => {
+  createState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
     state.isFinal = false
     project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
   })),
 
   /* Update a state by id */
-  updateState: (state: AutomataState) => set(produce(({ project }: { project: Project }) => {
+  updateState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
     project.states = project.states.map((st: AutomataState) => st.id === state.id ? { ...st, ...state } : st)
   })),
 
   /* Remove a state by id */
-  removeState: (state: AutomataState) => set(produce(({ project }: { project: Project }) => {
+  removeState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
     project.states = project.states.filter((st: AutomataState) => st.id !== state.id)
   })),
 
@@ -233,12 +238,12 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   setStateInitial: (stateID: number) => set((s: ProjectStore) => ({ project: { ...s.project, initialState: stateID } })),
 
   /* Set all provided states as final */
-  toggleStatesFinal: (stateIDs: number[]) => set(produce(({ project }: {project: Project}) => {
+  toggleStatesFinal: (stateIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
     project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal }))
   })),
 
   /* Toggle direction of transitions */
-  flipTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: Project}) => {
+  flipTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
     project.transitions = project.transitions.map(t => transitionIDs.includes(t.id)
       ? ({
           ...t,
@@ -249,7 +254,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   })),
 
   /* Remove states by id */
-  removeStates: (stateIDs: number[]) => set(produce(({ project }: {project: Project}) => {
+  removeStates: (stateIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
     // Remove states
     project.states = project.states.filter((st: AutomataState) => !stateIDs.includes(st.id))
 
@@ -258,12 +263,12 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   })),
 
   /* Remove transitions by id */
-  removeTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: Project}) => {
+  removeTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
     project.transitions = project.transitions.filter((t: AutomataTransition) => !transitionIDs.includes(t.id))
   })),
 
   /* Remove comments by id */
-  removeComments: (commentIDs: number[]) => set(produce(({ project }: {project: Project}) => {
+  removeComments: (commentIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
     project.comments = project.comments.filter(c => !commentIDs.includes(c.id))
   })),
 

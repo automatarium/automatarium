@@ -74,5 +74,4 @@ export interface Project {
     states: AutomataState[],
     tests: AutomataTests,
     transitions: AutomataTransition[],
-    _id: string
 }
