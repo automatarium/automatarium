@@ -7,8 +7,8 @@
   "scripts": {
     "build": "parcel build",
     "watch": "parcel watch",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint . --ext .js,.ts --fix",
+    "lint": "eslint . --ext .js,.ts --cache --cache-location '../../.eslintcache'",
+    "lint:fix": "yarn lint --fix",
     "test": "jest"
   },
   "author": "",
