@@ -208,7 +208,7 @@ const InputDialogs = () => {
   }
 
   useEvent('editStateName', ({ detail: { id } }: { detail: { id: number }}) => {
-    const selectedState = useProjectStore.getState().project?.states.find((s: AutomataState) => s.id === id)
+    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
     setValue(selectedState.name ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
@@ -232,7 +232,7 @@ const InputDialogs = () => {
   }
 
   useEvent('editStateLabel', ({ detail: { id } }: { detail: { id: number }}) => {
-    const selectedState = useProjectStore.getState().project?.states.find((s: AutomataState) => s.id === id)
+    const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
     setValue(selectedState.label ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
 
