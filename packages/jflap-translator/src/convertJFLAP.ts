@@ -1,8 +1,6 @@
-
-// Define accepted project types
 import { xml2json } from 'xml-js'
 
-import { DEFAULT_PROJECT_COLOR } from 'frontend/src/config'
+import { DEFAULT_PROJECT_COLOR } from 'frontend/src/config/projects'
 
 const PROJECT_TYPE_MAP = {
   fa: 'FSA',
