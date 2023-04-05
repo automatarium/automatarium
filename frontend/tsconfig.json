@@ -3,7 +3,13 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "rootDir": "./",
+    "jsx": "react-jsx",
+    "sourceMap": true,
+    "paths": {
+      "/src/*": ["./src/*"]
+    }
   },
   "include": [
     "src/**/*"

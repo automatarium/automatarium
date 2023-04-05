@@ -70,7 +70,7 @@ interface ProjectStore {
   setLastSaveDate: (lastSaveDate: number) => void,
   setName: (name: string) => void,
   createTransition: (transition: AutomataTransition) => number,
-  editTransition: (transition: AutomataTransition) => void,
+  editTransition: (transition: Partial<AutomataTransition>) => void,
   createComment: (comment: ProjectComment) => void,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
@@ -168,7 +168,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
     return id
   },
 
-  editTransition: (newTransition: AutomataTransition) => set(produce(({ project }: { project: StoredProject }) => {
+  editTransition: (newTransition: Partial<AutomataTransition>) => set(produce(({ project }: { project: StoredProject }) => {
     // Refactor types to enums later
     if (project.config.type === 'TM') {
       project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).write = newTransition.write
