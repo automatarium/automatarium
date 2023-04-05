@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, FormEvent } from 'react'
+import { useState, useRef, useCallback, ChangeEvent, KeyboardEvent } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'
@@ -59,7 +59,7 @@ interface StateDialog extends BaseDialog {
 }
 
 /** Small alias so I don't need to keep typing it **/
-type InputEvent = FormEvent<HTMLInputElement>
+type InputEvent = ChangeEvent<HTMLInputElement>
 
 /**
  * All possible dialogs. This allows for a tagged union using `type` field
@@ -190,7 +190,7 @@ const InputDialogs = () => {
       x,
       y,
       type: 'comment'
-    })
+    } as CommentDialog)
     focusInput()
   }, [inputRef.current])
 
@@ -278,7 +278,7 @@ const InputDialogs = () => {
   const handleDirectionIn = (e: InputEvent) => {
     const input = e.target.value.toString().match(/[rls]/gi)
     const value = input[input.length - 1].toUpperCase()
-    setDirection(value)
+    setDirection(value as TMDirection)
   }
 
   if (!dialog) return null
@@ -304,7 +304,7 @@ const InputDialogs = () => {
    * Calls `save` if the enter key is hit
    * @param e
    */
-  const handleSave = (e: InputEvent) => e.key === 'Enter' && save()
+  const handleSave = (e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && save()
 
   // Show the dialog depending on the type created
   switch (dialog.type) {
