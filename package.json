@@ -29,6 +29,7 @@
     "build:backend": "yarn workspace backend build",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint:fix",
+    "check:types": "yarn workspaces run check:types",
     "test": "yarn workspace @automatarium/simulation test",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"

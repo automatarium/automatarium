@@ -18,6 +18,9 @@ jobs:
       - name: Install Yarn Dependencies
         run: yarn
 
+      - name: Check TS types
+        run: yarn check:types
+
       - name: Run Linter
         run: yarn lint
 
