@@ -81,7 +81,7 @@ const InputDialogs = () => {
   const inputDirectionRef = useRef()
   const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
-  const [direction, setDirection] = useState<TMDirection>('R')
+  const [direction, setDirection] = useState<TMDirection | ''>('R')
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -105,7 +105,7 @@ const InputDialogs = () => {
       case 'TM':
         setRead(transition?.read ?? '')
         setWrite(transition?.write ?? '')
-        setDirection(transition?.direction ?? 'R')
+        setDirection(transition?.direction)
         setDialog({
           visible: true,
           x: screenMidPoint[0] - 100, // Hack. Not Nice.
@@ -154,7 +154,7 @@ const InputDialogs = () => {
   }
 
   const saveTMTransition = () => {
-    editTransition({ id: dialog.id, read, write, direction })
+    editTransition({ id: dialog.id, read, write, direction: direction || 'R' })
     commit()
     hideDialog()
   }
@@ -277,7 +277,9 @@ const InputDialogs = () => {
   }
 
   const handleDirectionIn = (e: InputEvent) => {
-    const input = e.target.value.toString().match(/[rls]/gi)
+    // ^$ is regex for empty string, essentially allowing user to backspace input on top of
+    // the 'r', 'l', and 's' characters
+    const input = e.target.value.toString().match(/[rls]|^$/gi)
     const value = input[input.length - 1].toUpperCase()
     setDirection(value as TMDirection)
   }
