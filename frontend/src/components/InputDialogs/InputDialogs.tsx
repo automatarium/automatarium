@@ -277,7 +277,8 @@ const InputDialogs = () => {
   }
 
   const handleDirectionIn = (e: InputEvent) => {
-    // |^* is regex for empty string, essentially allowing user to backspace input
+    // ^$ is regex for empty string, essentially allowing user to backspace input on top of
+    // the 'r', 'l', and 's' characters
     const input = e.target.value.toString().match(/[rls]|^$/gi)
     const value = input[input.length - 1].toUpperCase()
     setDirection(value as TMDirection)
