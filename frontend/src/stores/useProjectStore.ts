@@ -27,7 +27,7 @@ import {
 /**
  * A stored project has an extra `_id` field which is used to tell identify it
  */
-type StoredProject = Project & {_id: string}
+export type StoredProject = Project & {_id: string}
 
 export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): StoredProject => ({
   projectType,
