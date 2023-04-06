@@ -2,14 +2,7 @@ import { Transition } from '../graph'
 
 export abstract class State {
   // eslint-disable-next-line no-useless-constructor
-  protected constructor (private _id: number, private _isFinal: boolean) {}
-  get id () {
-    return this._id
-  }
-
-  get isFinal () {
-    return this._isFinal
-  }
+  protected constructor (readonly id: number, readonly isFinal: boolean) {}
 
     abstract key(): string;
 }
