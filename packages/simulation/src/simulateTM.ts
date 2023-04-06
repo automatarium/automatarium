@@ -47,7 +47,7 @@ export const simulateTM = (
 
   const initialNode = new Node<TMState>(new TMState(initialState.id, initialState.isFinal, initialState.tape))
 
-  const problem = new TMGraph(initialNode, graph.states, graph.transitions)
+  const problem = new TMGraph(initialNode, graph.states.map(s => new TMState(s.id, s.isFinal, s.tape)), graph.transitions)
   const result = breadthFirstSearch(problem)
 
   if (!result) {

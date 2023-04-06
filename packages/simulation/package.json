@@ -12,7 +12,8 @@
     "build": "parcel build",
     "test": "jest",
     "lint": "eslint . --ext .js,.ts --cache --cache-location '../../.eslintcache'",
-    "lint:fix": "yarn lint --fix"
+    "lint:fix": "yarn lint --fix",
+    "check:types": "tsc --noemit"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

@@ -3,25 +3,16 @@ import { Graph, Node, State } from './interfaces/graph'
 
 export class TMState extends State {
   constructor (
-    _id: number,
-    _isFinal: boolean,
-        private _tape: Tape
+    id: number,
+    isFinal: boolean,
+    public tape: Tape
   ) {
-    super(_id, _isFinal)
-    this._tape = _tape
+    super(id, isFinal)
   }
 
   key () {
-    const traceAdd = this._tape.trace.toString() ?? ''
-    return String(this.id + ',' + this._tape.pointer + ',' + traceAdd)
-  }
-
-  get tape () {
-    return this._tape
-  }
-
-  set tape (tape: Tape) {
-    this._tape = tape
+    const traceAdd = this.tape.trace.toString() ?? ''
+    return String(this.id + ',' + this.tape.pointer + ',' + traceAdd)
   }
 }
 

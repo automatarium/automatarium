@@ -9,7 +9,8 @@
     "watch": "parcel watch",
     "lint": "eslint . --ext .js,.ts --cache --cache-location '../../.eslintcache'",
     "lint:fix": "yarn lint --fix",
-    "test": "jest"
+    "test": "jest",
+    "check:types": "tsc --noemit"
   },
   "author": "",
   "license": "MIT",
