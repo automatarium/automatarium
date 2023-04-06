@@ -13,8 +13,7 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
 
   // Verify token
   try {
-    const userInfo = await admin.auth().verifyIdToken(idToken)
-    req.user = userInfo
+    req.user = await admin.auth().verifyIdToken(idToken)
   } catch ({ message }) {
     return res.status(500).json({
       error: message
