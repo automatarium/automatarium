@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useAutosaveProject, useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
+import { useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
@@ -9,6 +9,7 @@ import { ShortcutGuide, ExportImage } from '/src/pages'
 import { Content, LoadingContainer, EditorContent } from './editorStyle'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
+import { useAutosaveProject } from '../../hooks'
 
 const Editor = () => {
   const navigate = useNavigate()

@@ -64,6 +64,11 @@ interface ProjectStore {
   lastChangeDate: number,
   lastSaveDate: number,
   set: (project: Project) => void,
+  /**
+   * Updates the current project. This doesn't reset the history like `set`
+   * @param project
+   */
+  update: (project: StoredProject) => void,
   commit: () => void,
   undo: () => void,
   redo: () => void,
@@ -90,7 +95,7 @@ interface ProjectStore {
   removeTransitions: (transitionIDs: number[]) => void,
   removeComments: (commentIDs: number[]) => void,
   updateConfig: (newConfig: ProjectConfig) => void,
-  reset: () => void,
+  reset: () => void
 }
 
 const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
@@ -102,12 +107,15 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
 
   set: (project: StoredProject) => { set({ project, history: [clone(project)], historyPointer: 0 }) },
 
+  update: (project: StoredProject) => set(produce((state: ProjectStore) => {
+    state.project = project
+  })),
+
   /* Add current project state to stored history of project states */
   commit: () => set(produce((state: ProjectStore) => {
     // Check whether anything changed before committing
     const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
     if (!didChange) { return }
-
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)
 
