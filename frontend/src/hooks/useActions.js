@@ -1,12 +1,13 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectStore, useProjectsStore, useSelectionStore, useViewStore, useToolStore } from '/src/stores'
-import { VIEW_MOVE_STEP, SCROLL_MAX, SCROLL_MIN } from '/src/config/interactions'
+import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore } from '/src/stores'
+import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
+import { reorderStates } from '@automatarium/simulation/src/reorder'
 
 const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -35,6 +36,8 @@ const useActions = (registerHotkeys = false) => {
   const createState = useProjectStore(s => s.createState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
+  const project = useProjectStore(s => s.project)
+  const updateProject = useProjectStore(s => s.update)
 
   const navigate = useNavigate()
 
@@ -351,6 +354,12 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         setTool('delete')
       }
+    },
+    REORDER_GRAPH: {
+      handler: () => {
+        updateProject(reorderStates(project))
+        commit()
+      }
     }
   }
 
@@ -402,12 +411,10 @@ const useActions = (registerHotkeys = false) => {
   }, [actions])
 
   // Add formatted hotkeys to actions
-  const actionsWithLabels = useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
+  return useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
     ...action,
     label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey).join(isWindows ? '+' : ' ') : null
   }]))), [actions])
-
-  return actionsWithLabels
 }
 
 const zoomViewTo = to => {

@@ -1,0 +1,161 @@
+{
+  "projectType": "FSA",
+  "states": [
+    {
+      "x": 540,
+      "y": 285,
+      "isFinal": false,
+      "id": 0
+    },
+    {
+      "x": 435,
+      "y": 495,
+      "isFinal": false,
+      "id": 1
+    },
+    {
+      "x": 675,
+      "y": 345,
+      "isFinal": false,
+      "id": 8
+    },
+    {
+      "x": 915,
+      "y": 360,
+      "isFinal": false,
+      "id": 7
+    },
+    {
+      "x": 675,
+      "y": 180,
+      "isFinal": false,
+      "id": 3
+    },
+    {
+      "x": 870,
+      "y": 180,
+      "isFinal": false,
+      "id": 4
+    },
+    {
+      "x": 1065,
+      "y": 225,
+      "isFinal": false,
+      "id": 5
+    },
+    {
+      "x": 990,
+      "y": 660,
+      "isFinal": false,
+      "id": 9
+    },
+    {
+      "x": 570,
+      "y": 660,
+      "isFinal": false,
+      "id": 2
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 0,
+      "read": "G"
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "id": 1,
+      "read": "A"
+    },
+    {
+      "from": 0,
+      "to": 3,
+      "id": 2,
+      "read": "A"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "id": 3,
+      "read": "B"
+    },
+    {
+      "from": 0,
+      "to": 8,
+      "id": 4,
+      "read": "C"
+    },
+    {
+      "from": 8,
+      "to": 7,
+      "id": 6,
+      "read": "E"
+    },
+    {
+      "from": 7,
+      "to": 5,
+      "id": 7,
+      "read": "H"
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "id": 8,
+      "read": ""
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 9,
+      "read": "A"
+    },
+    {
+      "from": 2,
+      "to": 8,
+      "id": 10,
+      "read": "G"
+    },
+    {
+      "from": 9,
+      "to": 8,
+      "id": 11,
+      "read": "A"
+    },
+    {
+      "from": 9,
+      "to": 5,
+      "id": 12,
+      "read": "9"
+    },
+    {
+      "from": 2,
+      "to": 9,
+      "id": 13,
+      "read": "1"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Outrageous Tulip",
+    "dateCreated": 1681031922925,
+    "dateEdited": 1681031922925,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}
