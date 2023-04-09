@@ -36,6 +36,7 @@ export const reorderStates = (graph: UnparsedGraph): UnparsedGraph => {
 
   while (!frontier.isEmpty()) {
     let currID = frontier.remove()
+    if (seen(currID)) continue
     mappings[currID] = nextID++
     // Continue down straight paths, so they have a continuous counting of ID's
     while (currID in graphList && graphList[currID].filter(x => !seen(x)).length === 1) {
@@ -46,7 +47,6 @@ export const reorderStates = (graph: UnparsedGraph): UnparsedGraph => {
         mappings[currID] = nextID++
       }
     }
-    console.log(mappings);
     // For multiple path options, we just add them to the queue and process later
     // We only add them if we haven't seen them
     (graphList[currID] ?? []).forEach(x => !seen(x) && frontier.add(x))

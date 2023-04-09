@@ -2,7 +2,7 @@ import { describe } from 'node:test'
 import { UnparsedGraph } from '../src/graph'
 import { reorderStates } from '../src/reorder'
 import dibDipLambdaLoop from './graphs/dib_dip-lambdaloop.json'
-import war from './graphs/warIsTheHWord.json'
+import spiggy from './graphs/spiggy.json'
 
 describe('Reordering graph', () => {
   test('Simple graph can be rearranged', () => {
@@ -120,10 +120,9 @@ describe('Reordering graph', () => {
     expect(graph.states[1].id).toBe(0)
   })
 
-  test('Project causing problems', () => {
-    const testVer = reorderStates(JSON.parse(JSON.stringify(war)) as UnparsedGraph)
-
-    expect(testVer.states[0].id).toBe(1)
-    expect(testVer.states[1].id).toBe(0)
+  test("Mildly complex graph doesn't lose states", () => {
+    const graph = reorderStates(spiggy as UnparsedGraph)
+    // Check that the state numbers are continuous
+    expect(graph.states.map(it => it.id).sort()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8])
   })
 })
