@@ -9,6 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
+import { calculateZoomFit } from '../../hooks/useActions'
 
 const GraphView = ({ children, ...props }) => {
   const wrapperRef = useRef()
@@ -17,13 +18,21 @@ const GraphView = ({ children, ...props }) => {
   const projectColor = useProjectStore(state => state.project?.config.color)
   const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
+  const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
+
   useViewDragging(svgRef)
   useImageExport()
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
     const b = wrapperRef.current?.getBoundingClientRect()
-    b && setViewSize({ width: b.width, height: b.height })
+    if (b) {
+      setViewSize({ width: b.width, height: b.height })
+      // Also fit the project into the viewing port
+      const { scale, x, y } = calculateZoomFit()
+      // Set a minimum scale so it doesn't zoom out too much (Smaller scale means more zoomed in)
+      setViewPositionAndScale({ x, y }, Math.min(scale, 1))
+    }
   }, [])
 
   const onContainerMouseDown = useCallback(e => {
