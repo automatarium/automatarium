@@ -79,7 +79,7 @@ const Dropdown = ({
   }, [visible, subMenu, onClose, handleClick, handleKey])
 
   useEffect(() => dropdownRef.current && getRef && getRef(dropdownRef.current), [dropdownRef.current])
-
+  if (!visible) return null
   return (
     <Wrapper
       onContextMenu={e => e.preventDefault()}

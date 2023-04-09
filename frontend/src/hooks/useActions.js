@@ -37,8 +37,9 @@ const useActions = (registerHotkeys = false) => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const appendHistory = useProjectStore(s => s.set)
-  const graph = useProjectStore(s => s.project)
+  const project = useProjectStore(s => s.project)
   const navigate = useNavigate()
+
   // TODO: memoize
   const actions = {
     NEW_FILE: {
@@ -355,7 +356,7 @@ const useActions = (registerHotkeys = false) => {
     },
     REORDER_GRAPH: {
       handler: () => {
-        const g = reorderStates(graph)
+        const g = reorderStates(project)
         reorderStates(g)
         console.log(g)
         appendHistory(g)

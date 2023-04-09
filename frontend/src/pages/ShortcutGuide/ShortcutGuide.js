@@ -190,6 +190,7 @@ const shortcuts = [
 const ShortcutGuide = () => {
   const [isOpen, setIsOpen] = useState(false)
   useEvent('modal:shortcuts', () => setIsOpen(true), [])
+  if (!isOpen) return null
 
   const actions = useActions()
 
