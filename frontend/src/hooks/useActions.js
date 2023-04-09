@@ -16,6 +16,32 @@ export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) =>
   key?.toUpperCase()
 ].filter(Boolean)
 
+/**
+ * Calculates the coodinates and scale in order to zoom the viewing window to the project
+ */
+export const calculateZoomFit = () => {
+  // Get state
+  const view = useViewStore.getState()
+
+  // Margin around view
+  const border = 40
+
+  // Get the bounding box of the SVG group
+  const b = document.querySelector('#automatarium-graph > g').getBBox()
+  // Bail if the bounding box is too small
+  if (Math.max(Math.abs(b.width), Math.abs(b.height)) < border) return
+  console.log(b)
+  const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
+  console.log(view.size)
+  // Calculate fit region
+  const desiredScale = Math.max(width / view.size.width, height / view.size.height)
+  return {
+    scale: desiredScale,
+    x: x + (width - view.size.width * desiredScale) / 2,
+    y: y + (height - view.size.height * desiredScale) / 2
+  }
+}
+
 const useActions = (registerHotkeys = false) => {
   const undo = useProjectStore(s => s.undo)
   const redo = useProjectStore(s => s.redo)
@@ -157,25 +183,13 @@ const useActions = (registerHotkeys = false) => {
     ZOOM_FIT: {
       hotkey: { key: 'f', shift: true },
       handler: () => {
-        // Get state
         const view = useViewStore.getState()
-
-        // Margin around view
-        const border = 40
-
-        // Get the bounding box of the SVG group
-        const b = document.querySelector('#automatarium-graph > g').getBBox()
-        if (Math.max(b.width, b.height) < border) return // Bail if the bounding box is too small
-        const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
-
-        // Calculate fit region
-        const desiredScale = Math.max(width / view.size.width, height / view.size.height)
-        view.setViewScale(desiredScale)
-        // Calculate x and y to centre graph
-        view.setViewPosition({
-          x: x + (width - view.size.width * desiredScale) / 2,
-          y: y + (height - view.size.height * desiredScale) / 2
-        })
+        const values = calculateZoomFit()
+        if (values) {
+          view.setViewScale(values.scale)
+          // Calculate x and y to centre graph
+          view.setViewPosition({ x: values.x, y: values.y })
+        }
       }
     },
     FULLSCREEN: {
