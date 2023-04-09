@@ -12,7 +12,7 @@ import { Queue } from './collection'
  * i.e. This is a fancy floodfill
  * @param graph Graph to reorder. This is performed in-place
  */
-export const reorderStates = (graph: UnparsedGraph) => {
+export const reorderStates = (graph: UnparsedGraph): UnparsedGraph => {
   // Convert the graph into an adjacency list of transitions
   const graphList: {[key: number]: number[]} = {}
   graph.transitions.forEach(x => {
@@ -62,11 +62,14 @@ export const reorderStates = (graph: UnparsedGraph) => {
     }
     return result
   }
+  // Clone the graph
+  const output = JSON.parse(JSON.stringify(graph))
   // Update the initial graph using the mappings
-  graph.states.forEach(state => (state.id = getMapping(state.id)))
-  graph.transitions.forEach(t => {
+  output.states.forEach(state => (state.id = getMapping(state.id)))
+  output.transitions.forEach(t => {
     t.from = getMapping(t.from)
     t.to = getMapping(t.to)
   })
-  graph.initialState = 0
+  output.initialState = 0
+  return output
 }

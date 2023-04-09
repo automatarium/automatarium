@@ -8,7 +8,7 @@ describe('Reordering graph', () => {
   test('Simple graph can be rearranged', () => {
     // Only two state graph, didn't see reason for making JSON file.
     // We are still using full properties just to check they don't cause any problems
-    const graph = {
+    const graph = reorderStates({
       states: [
         {
           isFinal: true,
@@ -34,8 +34,8 @@ describe('Reordering graph', () => {
         }
       ],
       initialState: 1
-    } as unknown as UnparsedGraph
-    reorderStates(graph)
+    } as unknown as UnparsedGraph)
+
     expect(graph.initialState).toBe(0)
 
     expect(graph.states[0].id).toBe(1)
@@ -54,13 +54,13 @@ describe('Reordering graph', () => {
   })
 
   test('Cycles are handled', () => {
-    const testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
-    reorderStates(testVer)
+    let testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
+    testVer = reorderStates(testVer)
     expect(testVer).toMatchObject(dibDipLambdaLoop)
   })
 
   test('Lower ID path is taken first', () => {
-    const testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
+    let testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
     // We have to update both states and transitions. We will apply this mapping
     const mapping = {
       0: 2,
@@ -90,7 +90,7 @@ describe('Reordering graph', () => {
     testVer.states[3].id = 7
     testVer.states[5].id = 100
     testVer.states[6].id = 200
-    reorderStates(testVer)
+    testVer = reorderStates(testVer)
 
     expect(testVer.states[1].id).toBe(1)
     expect(testVer.states[4].id).toBe(2)
@@ -101,7 +101,7 @@ describe('Reordering graph', () => {
   })
 
   test('Disconnected components are sorted also', () => {
-    const graph = {
+    const graph = reorderStates({
       states: [
         {
           isFinal: true,
@@ -114,16 +114,14 @@ describe('Reordering graph', () => {
       ],
       transitions: [],
       initialState: 1
-    } as unknown as UnparsedGraph
-    reorderStates(graph)
+    } as unknown as UnparsedGraph)
 
     expect(graph.states[0].id).toBe(1)
     expect(graph.states[1].id).toBe(0)
   })
 
   test('Project causing problems', () => {
-    const testVer = JSON.parse(JSON.stringify(war)) as UnparsedGraph
-    reorderStates(testVer)
+    const testVer = reorderStates(JSON.parse(JSON.stringify(war)) as UnparsedGraph)
 
     expect(testVer.states[0].id).toBe(1)
     expect(testVer.states[1].id).toBe(0)
