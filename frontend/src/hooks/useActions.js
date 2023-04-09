@@ -30,11 +30,10 @@ export const calculateZoomFit = () => {
   const b = document.querySelector('#automatarium-graph > g').getBBox()
   // Bail if the bounding box is too small
   if (Math.max(Math.abs(b.width), Math.abs(b.height)) < border) return
-  console.log(b)
   const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
-  console.log(view.size)
   // Calculate fit region
   const desiredScale = Math.max(width / view.size.width, height / view.size.height)
+  // Calculate x and y to centre graph
   return {
     scale: desiredScale,
     x: x + (width - view.size.width * desiredScale) / 2,
@@ -61,6 +60,7 @@ const useActions = (registerHotkeys = false) => {
   const createState = useProjectStore(s => s.createState)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
+  const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
 
   const navigate = useNavigate()
 
@@ -183,12 +183,9 @@ const useActions = (registerHotkeys = false) => {
     ZOOM_FIT: {
       hotkey: { key: 'f', shift: true },
       handler: () => {
-        const view = useViewStore.getState()
         const values = calculateZoomFit()
         if (values) {
-          view.setViewScale(values.scale)
-          // Calculate x and y to centre graph
-          view.setViewPosition({ x: values.x, y: values.y })
+          setViewPositionAndScale({ x: values.x, y: values.y }, values.scale)
         }
       }
     },
