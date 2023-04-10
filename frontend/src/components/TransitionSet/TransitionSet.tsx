@@ -7,38 +7,64 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 import isEqual from 'lodash.isequal'
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
+import { PositionedTransition } from '/src/util/states'
+import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 
 // const projectType = useProjectStore(s => s.project.config.type)
 
-const TransitionSet = ({ transitions }) => {
+/**
+ * Creates the transition text depending on the project type. Uses the following notation
+ * - TM:  read,write;direction
+ * - PDA: read,pop;direction
+ * - FSA: read
+ */
+const makeTransitionText = (type: ProjectType, t: PositionedTransition): string => {
+  switch (type) {
+    case 'TM':
+      return `${t.read || 'λ'},${t.write || 'λ'};${t.direction || 'λ'}`
+    case 'PDA':
+      return `${t.read || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
+    case 'FSA':
+      return t.read || 'λ'
+  }
+}
+
+const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) => {
   const projectType = useProjectStore(s => s.project.config.type)
-  // TODO: Refactor how it makes the text
   return <>
-    { transitions.map(({ id, from, to, read, write, direction, pop, push }, i) => (
+    { transitions.map((t, i) => (
         <Transition
         i={i}
         transitions={transitions}
-        text={projectType === 'TM'
-          ? ((read || 'λ') + ',' + (write || 'λ') + ';' + (direction || 'R'))
-          : projectType === 'PDA'
-            ? ((read || 'λ') + ',' +
-                (pop || 'λ') + ';' +
-                (push || 'λ'))
-            : read || 'λ'}
-        from={from}
-        to={to}
-        id={id}
-        key={id}
+        text={makeTransitionText(projectType, t)}
+        from={t.from}
+        to={t.to}
+        id={t.id}
+        key={t.id}
         />)
     )}
     </>
 }
 
 /**
- * @return True if transition b is to the right of a
+ * Return if transition b is to the right of a.
+ * It is considered "to the right" if the a.x < b.x but if they are equal then it compares y coordinates
+ * (It solved a lot of edge cases having it this way)
  */
-const toRightOf = (a, b) => {
-  return a.x < b.x
+const toRightOf = (a: Coordinate, b: Coordinate) => {
+  return a.x === b.x ? a.y < b.y : a.x < b.x
+}
+
+type TransitionProps = {
+  id: number,
+  i: number,
+  transitions: PositionedTransition[],
+  count?: number,
+  from: Coordinate,
+  to: Coordinate,
+  text: string,
+  fullWidth?: boolean,
+  suppressEvents?: boolean
 }
 
 const Transition = ({
@@ -51,7 +77,7 @@ const Transition = ({
   text,
   fullWidth = false,
   suppressEvents = false
-}) => {
+} : TransitionProps) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
 
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
@@ -60,7 +86,8 @@ const Transition = ({
 
   // Test if the transitions go in both directions. The transitions are sorted by direction, so we only need to check
   // if first and last transition aren't in the same direction
-  const bothDirections = count > 1 && isEqual([transitions[0].from, transitions[0].to], [transitions[1].from, transitions[1].to])
+  const lastTransition = transitions[transitions.length - 1]
+  const bothDirections = count > 1 && !isEqual([transitions[0].from, transitions[0].to], [lastTransition.from, lastTransition.to])
   const directionRight = toRightOf(from, to)
   // Only bend if there are transitions in both directions.
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
@@ -70,7 +97,7 @@ const Transition = ({
   // The count can be 1 while i > 0 if drawing a transition
   const directionChanged = count === 1 || i === 0 || toRightOf(transitions[i - 1].from, transitions[i - 1].to) !== directionRight
   // Calculate path
-  const { pathData, textPathData, control } = calculateTransitionPath({ from, to, bendValue, fullWidth })
+  const { pathData, textPathData, control } = calculateTransitionPath(from, to, bendValue, fullWidth)
   const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
   // -- used to place the text on the same path
@@ -95,7 +122,10 @@ const Transition = ({
     }, dispatchCustomEvent('editTransition', { id }))
 
   // Calculate text offset (increased for additional reflexive transitions)
-  const textOffset = ((isReflexive && i > 0) || (!directionChanged)) ? TEXT_PATH_OFFSET + i * 20 : TEXT_PATH_OFFSET
+  const textOffset = TEXT_PATH_OFFSET + ((isReflexive && i > 0) || (!directionChanged)) ? i * 20 : 0
+  // if (bothDirections && directionChanged) {
+  //   textOffset *=
+  // }
 
   return <g>
     {/* The edge itself */}
@@ -143,14 +173,16 @@ const Transition = ({
   </g>
 }
 
-const calculateTransitionPath = ({ from, to, bendValue, fullWidth }) => {
+const calculateTransitionPath = (
+  from: Coordinate, to: Coordinate,
+  bendValue: number, fullWidth: boolean): {pathData: string, textPathData: string, control: Coordinate} => {
   // Is this path reflexive
   const isReflexive = from.x === to.x && from.y === to.y
 
   // Determine control position
   // -- this is determined by moving along the normal to the difference between the states
-  // -- with the distance moved controled by the `bend` value
-  const [left, right] = from.x < to.x ? [from, to] : [to, from]
+  // -- with the distance moved controlled by the `bend` value
+  const [left, right] = toRightOf(from, to) ? [from, to] : [to, from]
   const center = lerpPoints(left, right, 0.5)
   const tangent = { x: left.x - right.x, y: left.y - right.y }
   const a = Math.PI / 2

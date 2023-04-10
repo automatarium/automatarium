@@ -2,7 +2,7 @@ import groupBy from 'lodash.groupby'
 
 import { StateCircle, TransitionSet, InitialStateArrow, CommentRect } from '/src/components'
 import { useProjectStore, useSelectionStore, useSteppingStore } from '/src/stores'
-import { locateTransition } from '/src/util/states'
+import { locateTransition, PositionedTransition } from '/src/util/states'
 import { AutomataTransition } from '/src/types/ProjectTypes'
 
 const GraphContent = () => {
@@ -21,8 +21,9 @@ const GraphContent = () => {
   const groupedTransitions = Object.values(groupBy(transitions, t => [t.from, t.to].sort((a, b) => b - a))) as AutomataTransition[][]
   const locatedTransitions = groupedTransitions
     .map(transitions => transitions
-      .map(t => locateTransition(t, states)) // Resolve location of transition states
-      .sort((t1, t2) => t2.from.x < t1.from.x ? 1 : -1)) // Sort by direction
+      .map((t): PositionedTransition => locateTransition(t, states)) // Resolve location of transition states
+      // Sort by direction. If the x coordinates are the same then compare by Y axis
+      .sort((t1, t2) => (t2.from.x === t1.from.x ? t2.from.y < t1.from.y : t2.from.x < t1.from.x) ? 1 : -1))
 
   return <>
     {/* Render arrow on initial state */}
