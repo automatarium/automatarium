@@ -2,7 +2,11 @@ import { createContext } from 'react'
 
 import { ARROWHEAD_ANGLE as a, ARROWHEAD_LENGTH as l } from '/src/config/rendering'
 
-export const MarkerContext = createContext('marker')
+export const MarkerContext = createContext({
+  standardArrowHead: 'marker',
+  selectedArrowHead: 'marker',
+  lineArrowHead: 'marker'
+})
 
 const MarkerProvider = ({ children }) => {
   // Define marker ids

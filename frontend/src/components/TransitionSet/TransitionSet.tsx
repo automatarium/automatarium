@@ -5,7 +5,7 @@ import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-
+import isEqual from 'lodash.isequal'
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 
 // const projectType = useProjectStore(s => s.project.config.type)
@@ -53,14 +53,14 @@ const Transition = ({
   suppressEvents = false
 }) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
+
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const selected = selectedTransitions?.includes(id)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
-  const projectStore = useProjectStore(s => s.project.config.type)
 
-  // Test if the transitions go in both directions. The transitions are sorted by direction so we only need to check
+  // Test if the transitions go in both directions. The transitions are sorted by direction, so we only need to check
   // if first and last transition aren't in the same direction
-  const bothDirections = count > 1 && [transitions[0].from, transitions[0].to] !== [transitions[1].from, transitions[1].to]
+  const bothDirections = count > 1 && isEqual([transitions[0].from, transitions[0].to], [transitions[1].from, transitions[1].to])
   const directionRight = toRightOf(from, to)
   // Only bend if there are transitions in both directions.
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
@@ -70,7 +70,7 @@ const Transition = ({
   // The count can be 1 while i > 0 if drawing a transition
   const directionChanged = count === 1 || i === 0 || toRightOf(transitions[i - 1].from, transitions[i - 1].to) !== directionRight
   // Calculate path
-  const { pathData, textPathData, control } = calculateTransitionPath({ from, to, bendValue, fullWidth, i })
+  const { pathData, textPathData, control } = calculateTransitionPath({ from, to, bendValue, fullWidth })
   const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
   // -- used to place the text on the same path
