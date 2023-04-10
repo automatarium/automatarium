@@ -8,6 +8,7 @@ import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
+import { convertNFAtoDFA } from '@automatarium/simulation/src/convertNFAtoDFA'
 
 const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -38,6 +39,7 @@ const useActions = (registerHotkeys = false) => {
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
   const updateProject = useProjectStore(s => s.update)
+  const projectType = useProjectStore(s => s.project.config.type)
 
   const navigate = useNavigate()
 
@@ -199,7 +201,7 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      // handler: () => console.log('Convert to DFA'),
+      handler: projectType === 'FSA' ? () => convertNFAtoDFA : undefined,
     },
     MINIMIZE_DFA: {
       // handler: () => console.log('Minimize DFA'),
