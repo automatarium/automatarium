@@ -5,7 +5,6 @@ import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-import isEqual from 'lodash.isequal'
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
@@ -29,11 +28,32 @@ const makeTransitionText = (type: ProjectType, t: PositionedTransition): string 
   }
 }
 
+/**
+ * Return if transition b is to the right of a.
+ * It is considered "to the right" if the a.x > b.x but if they are equal then it compares y coordinates
+ * (It solved a lot of edge cases having it this way)
+ */
+const toRightOf = (a: Coordinate, b: Coordinate) => {
+  return a.x === b.x ? a.y < b.y : a.x > b.x
+}
+
+// Direction that a transition can bend
+type BendDirection = 'over' | 'under' | 'straight'
+
 const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) => {
   const projectType = useProjectStore(s => s.project.config.type)
-  return <>
-    { transitions.map((t, i) => (
-        <Transition
+  // Split the transitions into the two directions (left->right and right->left)
+  // This makes the code easier since we don't need to handle direction changes
+  // Named over and under since
+  const over = [] as PositionedTransition[]
+  const under = [] as PositionedTransition[]
+  transitions.forEach(t => {
+    if (toRightOf(t.from, t.to)) under.push(t)
+    else over.push(t)
+  })
+
+  const renderTransition = (t: PositionedTransition, i: number, bend: BendDirection) =>
+    <Transition
         i={i}
         transitions={transitions}
         text={makeTransitionText(projectType, t)}
@@ -41,18 +61,15 @@ const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) 
         to={t.to}
         id={t.id}
         key={t.id}
-        />)
-    )}
-    </>
-}
-
-/**
- * Return if transition b is to the right of a.
- * It is considered "to the right" if the a.x < b.x but if they are equal then it compares y coordinates
- * (It solved a lot of edge cases having it this way)
- */
-const toRightOf = (a: Coordinate, b: Coordinate) => {
-  return a.x === b.x ? a.y < b.y : a.x < b.x
+        bendDirection={bend}
+    />
+  // We don't bend the transition if only rendering in one direction
+  const isStraight = (over.length === 0 && under.length > 0) || (over.length > 0 && under.length === 0) ? 'straight' : ''
+  // Now render both over and under sets of transitions
+  return <>
+    {over.map((t, i) => renderTransition(t, i, isStraight || 'over'))}
+    {under.map((t, i) => renderTransition(t, i, isStraight || 'under'))}
+  </>
 }
 
 type TransitionProps = {
@@ -64,6 +81,7 @@ type TransitionProps = {
   to: Coordinate,
   text: string,
   fullWidth?: boolean,
+  bendDirection?: BendDirection,
   suppressEvents?: boolean
 }
 
@@ -75,6 +93,7 @@ const Transition = ({
   from,
   to,
   text,
+  bendDirection = 'straight',
   fullWidth = false,
   suppressEvents = false
 } : TransitionProps) => {
@@ -86,16 +105,14 @@ const Transition = ({
 
   // Test if the transitions go in both directions. The transitions are sorted by direction, so we only need to check
   // if first and last transition aren't in the same direction
-  const lastTransition = transitions[transitions.length - 1]
-  const bothDirections = count > 1 && !isEqual([transitions[0].from, transitions[0].to], [lastTransition.from, lastTransition.to])
-  const directionRight = toRightOf(from, to)
-  // Only bend if there are transitions in both directions.
+
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
-  const bendValue = bothDirections ? (TRANSITION_SEPERATION * (directionRight ? 1 : -1)) : 0
-  // We want to draw a new transition if the direction has changed from last transition
-  // The count can be 1 while i > 0 if drawing a transition
-  const directionChanged = count === 1 || i === 0 || toRightOf(transitions[i - 1].from, transitions[i - 1].to) !== directionRight
+  const bendValue = {
+    straight: 0,
+    over: -0.5,
+    under: 0.5
+  }[bendDirection] * TRANSITION_SEPERATION
   // Calculate path
   const { pathData, textPathData, control } = calculateTransitionPath(from, to, bendValue, fullWidth)
   const isReflexive = from.x === to.x && from.y === to.y
@@ -121,15 +138,13 @@ const Transition = ({
       transition: { id, from, to, text }
     }, dispatchCustomEvent('editTransition', { id }))
 
-  // Calculate text offset (increased for additional reflexive transitions)
-  const textOffset = TEXT_PATH_OFFSET + ((isReflexive && i > 0) || (!directionChanged)) ? i * 20 : 0
-  // if (bothDirections && directionChanged) {
-  //   textOffset *=
-  // }
-
+  // Calculate text offset. We want extra transitions to place their letters above each other
+  const offsetDirection = bendDirection === 'under' ? 1 : -1
+  const textOffset = (TEXT_PATH_OFFSET * offsetDirection + i * 20) * offsetDirection
   return <g>
-    {/* The edge itself */}
-    {directionChanged && <path
+    {/* The edge itself. We only render the first transition or if there is only one item (i can be > 0 when drawing
+    a transition) */}
+    {(i === 0 || count === 1) && <path
       id={pathID}
       d={pathData}
       key={pathID}
@@ -160,12 +175,11 @@ const Transition = ({
         onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
         fill={selected ? 'var(--primary)' : 'var(--stroke)'}
         style={{ userSelect: 'none' }}
-        dy={`-${textOffset}`}
         textAnchor="middle"
         alignmentBaseline="central"
         {...{
           x: control.x,
-          y: control.y + REFLEXIVE_Y_OFFSET / 3
+          y: control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0) + textOffset
         }}
       >
         {text}
