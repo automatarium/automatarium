@@ -1,11 +1,20 @@
 import { useEffect, useCallback, DependencyList } from 'react'
 
 /**
- * Mapping of events to what the handler should look like.
- * Add another item into here when making an event
+ * Specifies what a function should look like that handles an event.
+ * This saves us specifying the `detail` parameter everywhere and makes some logic simplier
+ */
+type EventHandler<T> = (arg: {detail: T}) => void
+
+/**
+ * Mapping of events to what data the event accepts.
+ * If making a custom event just add it here first
  */
 export interface Events {
-  'test': (a: number) => void
+  'editTransition': {id: number},
+  'editComment': {id: number, x: number, y: number},
+  'editStateName': {id: number},
+  'editStateLabel': {id: number},
 }
 
 interface EventOptions {
@@ -13,10 +22,11 @@ interface EventOptions {
   options?: any // boolean | AddEventListenerOptions
 }
 
-const useEvent = <T extends keyof Events>(name: T, handler: Events[T], dependencies?: DependencyList, {
-  target = document,
-  options
-} = {} as EventOptions) => {
+const useEvent = <T extends keyof Events>(name: T, handler: EventHandler<Events[T]>,
+  dependencies?: DependencyList, {
+    target = document,
+    options
+  } = {} as EventOptions) => {
   const callback = useCallback(handler, dependencies)
   useEffect(() => {
     // Callbacks need to be converted to 'any' since we are using our own events, not browser defined ones

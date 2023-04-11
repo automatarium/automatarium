@@ -1,15 +1,14 @@
-import { useState, useRef, useCallback, ChangeEvent, KeyboardEvent } from 'react'
+import React, { useState, useRef, useCallback, ChangeEvent, KeyboardEvent } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'
 import { useProjectStore, useViewStore } from '/src/stores'
-import { useEvent } from '/src/hooks'
+import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import { AutomataState, ProjectComment, TMDirection } from '/src/types/ProjectTypes'
-import React from 'react'
 
 /**
  * The default input styling for transition inputs
@@ -93,8 +92,7 @@ const InputDialogs = () => {
   // @ts-ignore
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
-
-  useEvent('editTransition', ({ detail: { id } }: { detail: { id: number }}) => {
+  useEvent('editTransition', ({ detail: { id } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     // Find midpoint of transition in screen space
@@ -181,7 +179,7 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  useEvent('editComment', ({ detail: { id, x, y } }: { detail: {id: number, x: number, y: number }}) => {
+  useEvent('editComment', ({ detail: { id, x, y } }) => {
     const selectedComment = useProjectStore.getState().project?.comments.find(cm => cm.id === id)
     setValue(selectedComment?.text ?? '')
 
@@ -208,7 +206,7 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  useEvent('editStateName', ({ detail: { id } }: { detail: { id: number }}) => {
+  useEvent('editStateName', ({ detail: { id } }) => {
     const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
     setValue(selectedState.name ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
@@ -232,7 +230,7 @@ const InputDialogs = () => {
     hideDialog()
   }
 
-  useEvent('editStateLabel', ({ detail: { id } }: { detail: { id: number }}) => {
+  useEvent('editStateLabel', ({ detail: { id } }) => {
     const selectedState = useProjectStore.getState().project?.states.find(s => s.id === id)
     setValue(selectedState.label ?? '')
     const pos = viewToScreenSpace(selectedState.x, selectedState.y)
