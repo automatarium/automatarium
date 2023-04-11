@@ -1,5 +1,6 @@
 import StateCircle from '../StateCircle/StateCircle'
 import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs } from '/src/components'
+import { useSelectionStore } from '/src/stores'
 import {
   useEvent,
   useStateDragging,
@@ -24,6 +25,8 @@ const EditorPanel = () => {
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
 
+  // const selections = useSelectionStore(s => s.selectedStates);
+
   useDeleteTool()
   useCommentCreation()
   useContextMenus()
@@ -34,6 +37,12 @@ const EditorPanel = () => {
       startStateDrag(e, selectedStateIDs)
     }
   })
+
+  // useEvent('keydown', e => {
+  //   if (e.key === 'c' && (e.ctrlKey || e.metaKey)) {
+  //     console.log('hello')
+  //   }
+  // })
 
   useEvent('comment:mousedown', e => {
     const selectedCommentIDs = selectComment(e)

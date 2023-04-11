@@ -22,6 +22,9 @@ const useActions = (registerHotkeys = false) => {
   const redo = useProjectStore(s => s.redo)
   const selectNone = useSelectionStore(s => s.selectNone)
   const selectAll = useSelectionStore(s => s.selectAll)
+  const selectedStatesIds = useSelectionStore(s => s.selectedStates)
+  const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
+  const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
   const flipTransitions = useProjectStore(s => s.flipTransitions)
@@ -114,12 +117,35 @@ const useActions = (registerHotkeys = false) => {
       handler: redo
     },
     COPY: {
-      hotkey: { key: 'c', meta: true }
-      // handler: () => console.log('Copy'),
+      hotkey: { key: 'c', meta: true },
+      handler: () => {
+        const selectedStates = selectedStatesIds.map((stateId) => {
+          return project.states.find((state) => {
+            return state.id === stateId
+          })
+        })
+        const selectedComments = selectedCommentsIds.map((commentId) => {
+          return project.comments.find((comment) => {
+            return comment.id === commentId
+          })
+        })
+        const selectedTransitions = selectedTransitionsIds.map((transitionId) => {
+          return project.transitions.find((transition) => {
+            return transition.id === transitionId
+          })
+        })
+        const copyData = {
+          states: selectedStates,
+          comments: selectedComments,
+          transitions: selectedTransitions
+        }
+        navigator.clipboard.writeText(JSON.stringify(copyData));
+      },
     },
     PASTE: {
-      hotkey: { key: 'v', meta: true }
-      // handler: () => console.log('Paste'),
+      hotkey: { key: 'v', meta: true },
+      // Paste to console for now
+      handler: async () => console.log(JSON.parse(await navigator.clipboard.readText())),
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
@@ -380,6 +406,7 @@ const useActions = (registerHotkeys = false) => {
 
           const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey]
           const activeHotkey = hotkeys.find(hotkey => {
+            // console.log('finding hotkey')
             // Guard against other keys
             const letterMatch = e.code === `Key${hotkey.key.toUpperCase()}`
             const digitMatch = e.code === `Digit${hotkey.key}`
