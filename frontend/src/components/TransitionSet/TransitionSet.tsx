@@ -52,34 +52,34 @@ const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) 
     else over.push(t)
   })
 
-  const renderTransition = (t: PositionedTransition, i: number, bend: BendDirection) =>
-    <Transition
-        i={i}
-        transitions={transitions}
-        text={makeTransitionText(projectType, t)}
-        from={t.from}
-        to={t.to}
-        id={t.id}
-        key={t.id}
-        bendDirection={bend}
+  const renderTransition = (toRender: PositionedTransition[], bend: BendDirection) => {
+    // The transitions sent should all start and end the same, so we only need to get the values
+    // from the first transition
+    const first = toRender[0]
+    return <Transition
+      transitions={toRender}
+      from={first.from}
+      to={first.to}
+      id={first.id}
+      key={first.id}
+      bendDirection={bend}
     />
+  }
   // We don't bend the transition if only rendering in one direction
   const isStraight = (over.length === 0 && under.length > 0) || (over.length > 0 && under.length === 0) ? 'straight' : ''
   // Now render both over and under sets of transitions
   return <>
-    {over.map((t, i) => renderTransition(t, i, isStraight || 'over'))}
-    {under.map((t, i) => renderTransition(t, i, isStraight || 'under'))}
+    {over.length > 0 && renderTransition(over, isStraight || 'over')}
+    {under.length > 0 && renderTransition(under, isStraight || 'under')}
   </>
 }
 
 type TransitionProps = {
   id: number,
-  i: number,
   transitions: PositionedTransition[],
   count?: number,
   from: Coordinate,
   to: Coordinate,
-  text: string,
   fullWidth?: boolean,
   bendDirection?: BendDirection,
   suppressEvents?: boolean
@@ -87,12 +87,9 @@ type TransitionProps = {
 
 const Transition = ({
   id,
-  i,
   transitions = [],
-  count = transitions.length,
   from,
   to,
-  text,
   bendDirection = 'straight',
   fullWidth = false,
   suppressEvents = false
@@ -118,7 +115,7 @@ const Transition = ({
   const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
   // -- used to place the text on the same path
-  const pathID = `${i}${from.x}${from.y}${to.x}${to.y}`
+  const pathID = `${from.x}${from.y}${to.x}${to.y}`
 
   // TODO: useCallback
   const handleTransitionMouseUp = e =>
@@ -132,26 +129,29 @@ const Transition = ({
       transition: { id, from, to, text }
     })
 
-  const handleTransitionDoubleClick = e =>
-    dispatchCustomEvent('transition:mousedoubleclick', {
-      originalEvent: e,
-      transition: { id, from, to, text }
-    }, dispatchCustomEvent('editTransition', { id }))
+  const handleTransitionDoubleClick = e => {
+    // dispatchCustomEvent('transition:mousedoubleclick', {
+    //   originalEvent: e,
+    //   transition: { id, from, to, text }
+    // })
+    // TODO: Test double click to edit still works
+    dispatchCustomEvent('editTransition', { id })
+  }
 
   // Calculate text offset. We want extra transitions to place their letters above each other
   const offsetDirection = bendDirection === 'under' ? 1 : -1
-  const textOffset = (TEXT_PATH_OFFSET * offsetDirection + i * 20) * offsetDirection
+  const textOffset = TEXT_PATH_OFFSET * offsetDirection
   return <g>
     {/* The edge itself. We only render the first transition or if there is only one item (i can be > 0 when drawing
     a transition) */}
-    {(i === 0 || count === 1) && <path
+    <path
       id={pathID}
       d={pathData}
       key={pathID}
       markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
       style={pathStyles}
       className={((selected || (isReflexive && setSelected)) && pathSelectedClass) || undefined}
-    />}
+    />
 
     {/* Invisible path used to place text */}
     <path id={`${pathID}-text`} d={textPathData} key={`${pathID}-text`} stroke='none' fill='none' />
