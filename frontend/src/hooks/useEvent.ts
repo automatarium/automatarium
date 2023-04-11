@@ -4,7 +4,7 @@ import { useEffect, useCallback, DependencyList } from 'react'
  * Specifies what a function should look like that handles an event.
  * This saves us specifying the `detail` parameter everywhere and makes some logic simplier
  */
-type EventHandler<T> = (arg: {detail: T}) => void
+type EventHandler<T> = (arg: CustomEvent<T>) => void
 
 /**
  * Mapping of events to what data the event accepts.
@@ -18,8 +18,9 @@ export interface Events {
 }
 
 interface EventOptions {
-  target: Document,
-  options?: any // boolean | AddEventListenerOptions
+  target?: Document,
+  // eslint-disable-next-line no-undef
+  options?: boolean | AddEventListenerOptions
 }
 
 const useEvent = <T extends keyof Events>(name: T, handler: EventHandler<Events[T]>,
@@ -29,9 +30,8 @@ const useEvent = <T extends keyof Events>(name: T, handler: EventHandler<Events[
   } = {} as EventOptions) => {
   const callback = useCallback(handler, dependencies)
   useEffect(() => {
-    // Callbacks need to be converted to 'any' since we are using our own events, not browser defined ones
-    target.addEventListener(name, callback as any, options)
-    return () => target.removeEventListener(name, callback as any, options)
+    target.addEventListener(name, callback, options)
+    return () => target.removeEventListener(name, callback, options)
   }, [callback])
 }
 
