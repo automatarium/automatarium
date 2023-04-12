@@ -37,11 +37,30 @@ export const initialStateIsPresent = (nfaGraphInitialState: StateID): boolean =>
     }
 }
 
+// This will create a transition table such that the DFA can be constructed from it. It will return a transitionTable that consists of keys of arrays of key value pairs, where
+// the number of keys is equal to the number of states (each key equal to a StateID), where each key will then consist of an array of key value pairs, where the key in this case
+// is a StateID of the state the original key (or state in this case) transitions to, and the value is the ReadSymbol for this transition.
+export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitions: number, numberOfNFAStates: number): {[key: StateID]: [StateID, ReadSymbol][]} {
+    let transitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {}
+    for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
+        transitionTable[curElem] = [];
+        for (let curStateID = 0; curStateID < numberOfNFATransitions; curStateID++) {
+            if (nfaGraph.transitions[curStateID].from == curElem) {
+                transitionTable[curElem].push([nfaGraph.transitions[curStateID].to, nfaGraph.transitions[curStateID].read[0]])
+            }
+        }
+    }
+    return transitionTable;
+}
+
 // This will create the DFA and return it by updating a passed in DFA template from a passed in NFA
 export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: FSAGraphIn): FSAGraphIn => {
   const numberOfNFATransitions: number = nfaGraph.transitions.length;
+  const numberOfNFAStates: number = nfaGraph.states.length;
   let numberOfDFATransitions: number;
-  console.log(numberOfDFATransitions);
+
+  let transitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = createTransitionTable(nfaGraph, numberOfNFATransitions, numberOfNFAStates);
+  console.log(transitionTable);
   return dfaGraph;
 }
 
