@@ -210,7 +210,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   createState: (state: AutomataState) => {
     const id = 1 + Math.max(-1, ...get().project.states.map(s => s.id))
     set(produce(({ project }: { project: StoredProject }) => {
-      state.isFinal = false
+      state.isFinal = state.isFinal ?? false
       project.states.push({ ...state, id })
     }))
     return id

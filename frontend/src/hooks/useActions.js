@@ -191,6 +191,12 @@ const useActions = (registerHotkeys = false) => {
           }
           state.id = newId
         })
+        // Error if trying to paste transition without its to and from states
+        if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
+          alert('Sorry, there was an error while pasting')
+          removeStates(pasteData.states.map(state => state.id))
+          return
+        }
         pasteData.transitions = newTransitions
         selectStates(pasteData.states.map(state => state.id))
         pasteData.comments.forEach(comment => {
