@@ -72,7 +72,10 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
         for (let curStateID = 0; curStateID < numberOfNFATransitions; curStateID++) {
             if (nfaGraph.transitions[curStateID].from == curElem) {
                 initialTransitionTable[curElem].push([nfaGraph.transitions[curStateID].to, nfaGraph.transitions[curStateID].read[0]]);
-                symbolsPresent.add(nfaGraph.transitions[curStateID].read[0]);
+                // Don't add the lambda symbol as it won't exist in the DFA anyway
+                if (nfaGraph.transitions[curStateID].read[0] != undefined) {
+                    symbolsPresent.add(nfaGraph.transitions[curStateID].read[0]);
+                }
             }
         }
     }
