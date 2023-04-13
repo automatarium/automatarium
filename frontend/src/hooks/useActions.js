@@ -125,10 +125,6 @@ const useActions = (registerHotkeys = false) => {
       hotkey: { key: 'a', meta: true },
       handler: selectAll
     },
-    SELECT_NONE: {
-      hotkey: { key: 'd', meta: true },
-      handler: selectNone
-    },
     DELETE: {
       hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
