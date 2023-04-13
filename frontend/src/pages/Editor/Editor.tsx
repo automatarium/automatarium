@@ -39,9 +39,8 @@ const Editor = () => {
     resetExportSettings()
     setViewPositionAndScale({ x: 0, y: 0 }, 1)
   }, [])
-
   // Change tool when holding certain keys
-  useEvent('keydown', e => {
+  useEvent('keydown', (e) => {
     // Hotkeys are disabled if an input is focused
     if (haveInputFocused(e)) return
 
