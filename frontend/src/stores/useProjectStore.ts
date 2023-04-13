@@ -188,9 +188,13 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   })),
 
   /* Create a new comment */
-  createComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
-    project.comments.push({ ...comment, id: 1 + Math.max(-1, ...project.comments.map((c: ProjectComment) => c.id)) })
-  })),
+  createComment: (comment: ProjectComment) => {
+    const id = 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
+    set(produce(({ project }: { project: StoredProject }) => {
+      project.comments.push({ ...comment, id})
+    }))
+    return id
+  },
 
   /* Update a comment by id */
   updateComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
@@ -203,10 +207,14 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   })),
 
   /* Create a new state */
-  createState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
-    state.isFinal = false
-    project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
-  })),
+  createState: (state: AutomataState) => {
+    const id = 1 + Math.max(-1, ...get().project.states.map(s => s.id))
+    set(produce(({ project }: { project: StoredProject }) => {
+      state.isFinal = false
+      project.states.push({ ...state, id })
+    }))
+    return id
+  },
 
   /* Update a state by id */
   updateState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {

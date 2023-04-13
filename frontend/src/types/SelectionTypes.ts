@@ -3,5 +3,7 @@ import { AutomataState, AutomataTransition, ProjectComment } from 'src/types/Pro
 export type CopyData = {
     states: AutomataState[],
     transitions: AutomataTransition[],
-    comments: ProjectComment[]
+    comments: ProjectComment[],
+    projectSource: string,
+    initialStateId: number | null
 }

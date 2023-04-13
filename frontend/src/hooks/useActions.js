@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore } from '/src/stores'
 import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
+import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
@@ -25,6 +26,9 @@ const useActions = (registerHotkeys = false) => {
   const selectedStatesIds = useSelectionStore(s => s.selectedStates)
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
   const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
+  const selectStates = useSelectionStore(s => s.setStates)
+  const selectTransitions = useSelectionStore(s => s.setTransitions)
+  const selectComments = useSelectionStore(s => s.setComments)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
   const flipTransitions = useProjectStore(s => s.flipTransitions)
@@ -36,7 +40,12 @@ const useActions = (registerHotkeys = false) => {
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
+  const viewPosition = useViewStore(s => s.position)
+  const viewSize = useViewStore(s => s.size)
+  const viewScale = useViewStore(s => s.scale)
   const createState = useProjectStore(s => s.createState)
+  const createComment = useProjectStore(s => s.createComment)
+  const createTransition = useProjectStore(s => s.createTransition)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
@@ -119,6 +128,7 @@ const useActions = (registerHotkeys = false) => {
     COPY: {
       hotkey: { key: 'c', meta: true },
       handler: () => {
+        const isInitialSelected = selectedStatesIds.includes(project.initialState)
         const selectedStates = selectedStatesIds.map((stateId) => {
           return project.states.find((state) => {
             return state.id === stateId
@@ -134,18 +144,63 @@ const useActions = (registerHotkeys = false) => {
             return transition.id === transitionId
           })
         })
+        // This will use the CopyData type defined in ProjectTypes
         const copyData = {
           states: selectedStates,
           comments: selectedComments,
-          transitions: selectedTransitions
+          transitions: selectedTransitions,
+          projectSource: project._id,
+          projectType: project.projectType,
+          initialStateId: isInitialSelected ? project.initialState : null
         }
         navigator.clipboard.writeText(JSON.stringify(copyData));
       },
     },
     PASTE: {
       hotkey: { key: 'v', meta: true },
-      // Paste to console for now
-      handler: async () => console.log(JSON.parse(await navigator.clipboard.readText())),
+      handler: async () => {
+        const pasteData = JSON.parse(await navigator.clipboard.readText())
+        if (pasteData.projectType !== project.projectType) {
+          alert(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
+          return
+        }
+        const isNewProject = pasteData.projectSource !== project._id
+        // Add and select states, comments, and transitions
+        pasteData.states.forEach(state => {
+          // TODO: ensure position isn't out of window
+          state.x += PASTE_POSITION_OFFSET
+          state.y += PASTE_POSITION_OFFSET
+          const newId = createState(state)
+          // Update transitions to new state id
+          pasteData.transitions.forEach(transition => {
+            if (transition.from === state.id) {transition.from = newId}
+            if (transition.to === state.id) {transition.to = newId}
+          })
+          // Update initial state id if applicable
+          if (pasteData.initialStateId === state.id) { pasteData.initialStateId = newId }
+          state.id = newId
+        })
+        selectStates(pasteData.states.map(state => state.id))
+        pasteData.comments.forEach(comment => {
+          // TODO: ensure position isn't out of window
+          comment.x += PASTE_POSITION_OFFSET
+          comment.y += PASTE_POSITION_OFFSET
+          const newId = createComment(comment)
+          comment.id = newId
+        })
+        selectComments(pasteData.comments.map(comment => comment.id))
+        pasteData.transitions.forEach(transition => {
+          const newId = createTransition(transition);
+          transition.id = newId
+        })
+        selectTransitions(pasteData.transitions.map(transition => transition.id))
+        // TODO: Prevent from overriding and existing initial state
+        // TODO: Make initial state with updated ID
+        if (isNewProject && pasteData.initialStateId!==null && project.initialState===null) {
+          setStateInitial(pasteData.initialStateId)
+        }
+      },
+      
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
