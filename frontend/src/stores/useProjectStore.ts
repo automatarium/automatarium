@@ -191,7 +191,7 @@ const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore
   createComment: (comment: ProjectComment) => {
     const id = 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
     set(produce(({ project }: { project: StoredProject }) => {
-      project.comments.push({ ...comment, id})
+      project.comments.push({ ...comment, id })
     }))
     return id
   },

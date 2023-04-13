@@ -83,6 +83,6 @@ export type CopyData = {
     transitions: AutomataTransition[],
     comments: ProjectComment[],
     projectSource: string,
+    projectType: ProjectType,
     initialStateId: number | null
 }
-
