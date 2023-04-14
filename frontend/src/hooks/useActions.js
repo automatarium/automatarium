@@ -2,7 +2,7 @@ import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore } from '/src/stores'
-import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
+import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
@@ -150,13 +150,17 @@ const useActions = (registerHotkeys = false) => {
           projectType: project.projectType,
           initialStateId: isInitialSelected ? project.initialState : null
         }
-        navigator.clipboard.writeText(JSON.stringify(copyData))
+        sessionStorage.setItem(COPY_DATA_KEY, JSON.stringify(copyData))
       }
     },
     PASTE: {
       hotkey: { key: 'v', meta: true },
-      handler: async () => {
-        const pasteData = JSON.parse(await navigator.clipboard.readText())
+      handler: () => {
+        const pasteData = JSON.parse(sessionStorage.getItem(COPY_DATA_KEY))
+        if (pasteData === null) {
+          // Copy has not been executed
+          return
+        }
         let isInitialStateUpdated = false
         if (pasteData.projectType !== project.projectType) {
           alert(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
@@ -215,6 +219,7 @@ const useActions = (registerHotkeys = false) => {
         if (isNewProject && pasteData.initialStateId !== null && project.initialState === null) {
           setStateInitial(pasteData.initialStateId)
         }
+        commit()
       }
 
     },
