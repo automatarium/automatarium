@@ -168,86 +168,77 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
     for (let curElem = 0; curElem < removeTheseStates.length; curElem++) {
         delete initialTransitionTable[removeTheseStates[curElem]];
     }
-    console.log(numberOfNFAStates);
     // This will update the transition table so that the keys are still consecutive and the values are updated accordingly
     if (removeTheseStates.length > 0) {
+        // This will update the transition table so that the keys are still consecutive and the values are updated accordingly
         let newTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {};
+        let removeIndex = removeTheseStates[0];
         let removeIndexSet = new Set(removeTheseStates);
-        let newTotalStates = 0;
-        let curRemoveIndex = removeTheseStates[0];
         let betweenIndexesBuffer = 1;
+        let newIndex = 0;
 
-        // Go through each state and do the following
         for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
-            // If the state has been removed, first check if this is the very first state removed. If it is, reset the buffer
-            // to 0 temporarily. Buffer is initially set to 1 so that stateID's that come before the removed state can still
-            // update their stateID object values. After this, set the current remove index and increase the buffer again so it
-            // is at its default. We do not need to subtract again once the buffer has been deducted once, as next time it will account for
-            // another removed state.
             if (removeIndexSet.has(curElem)) {
-                if (curElem == removeTheseStates[0]) {
+                if (curElem === removeTheseStates[0]) {
                     betweenIndexesBuffer--;
                 }
-                curRemoveIndex = curElem;
+                removeIndex = curElem;
                 betweenIndexesBuffer++;
                 continue;
             }
-            // Add the mapped object to the newTransitionTable for the current element and updating the stateID if needed
-            newTransitionTable[curElem] = initialTransitionTable[curElem].map(([stateID, symbol]) => {
-                return [stateID > curRemoveIndex ? stateID - betweenIndexesBuffer : stateID, symbol];
-            });
-            newTotalStates++;
+            newTransitionTable[newIndex] = initialTransitionTable[curElem].map(([stateID, symbol]) => [stateID > removeIndex ? stateID - betweenIndexesBuffer : stateID, symbol]);
+            newIndex++;
         }
-        
+
         initialTransitionTable = newTransitionTable;
-        numberOfNFAStates = newTotalStates;
+        // Update numberOfNFAStates to be the new length now that a state has been deleted
+        numberOfNFAStates = Object.keys(initialTransitionTable).length;
     }
 
-    console.log(numberOfNFAStates);
     console.log("Table after Step 1 and 1.5");
     console.log(initialTransitionTable);
 
-    // STEP 2: Create transitions for every symbol from every state.
-    // This will ensure that all states that do not have a transition for all symbols do, which will lead to a "trap state". This is required to be a DFA
-    let symbolsArray = Array.from(symbolsPresent);
-    let nextAvailableStateID = numberOfNFAStates;
-    // Go through all the original states defined and see if new states need to be created
-    for (let stateID = 0; stateID < numberOfNFAStates; stateID++) {
-        // If there isn't a transition going from a particular state, a new state isn't required, it can just transition to itself and still be
-        // a trap state. Not strictly required but it will make everything look nicer.
-        let hasTransitions = initialTransitionTable[stateID].length > 0;
-        if (!hasTransitions && !nfaGraph.states[stateID].isFinal) {
-            for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
-                initialTransitionTable[stateID].push([stateID, symbolsArray[curElem]]);
-            }
-        }
-        // Else go each transition and if a symbol is not found, make a new state for it and transition to that state with the given symbol.
-        else {
-            for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
-                let symbolFound = false;
-                for (let [toStateID, readSymbol] of initialTransitionTable[stateID]) {
-                    if (readSymbol === symbolsArray[curElem]) {
-                        symbolFound = true;
-                        break;
-                    }
-                }
-                if (!symbolFound) {
-                    initialTransitionTable[stateID].push([nextAvailableStateID, symbolsArray[curElem]]);
-                    nextAvailableStateID++;
-                }
-            }
-            // With this new state, since it is a trap state, just transition to itself for every possible symbol.
-            initialTransitionTable[nextAvailableStateID] = [];
-            for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
-                initialTransitionTable[nextAvailableStateID-1].push([nextAvailableStateID-1, symbolsArray[curElem]]);
-            }
-        }
-    }
+    // // STEP 2: Create transitions for every symbol from every state.
+    // // This will ensure that all states that do not have a transition for all symbols do, which will lead to a "trap state". This is required to be a DFA
+    // let symbolsArray = Array.from(symbolsPresent);
+    // let nextAvailableStateID = numberOfNFAStates;
+    // // Go through all the original states defined and see if new states need to be created
+    // for (let stateID = 0; stateID < numberOfNFAStates; stateID++) {
+    //     // If there isn't a transition going from a particular state, a new state isn't required, it can just transition to itself and still be
+    //     // a trap state. Not strictly required but it will make everything look nicer.
+    //     let hasTransitions = initialTransitionTable[stateID].length > 0;
+    //     if (!hasTransitions && !nfaGraph.states[stateID].isFinal) {
+    //         for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
+    //             initialTransitionTable[stateID].push([stateID, symbolsArray[curElem]]);
+    //         }
+    //     }
+    //     // Else go each transition and if a symbol is not found, make a new state for it and transition to that state with the given symbol.
+    //     else {
+    //         for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
+    //             let symbolFound = false;
+    //             for (let [toStateID, readSymbol] of initialTransitionTable[stateID]) {
+    //                 if (readSymbol === symbolsArray[curElem]) {
+    //                     symbolFound = true;
+    //                     break;
+    //                 }
+    //             }
+    //             if (!symbolFound) {
+    //                 initialTransitionTable[stateID].push([nextAvailableStateID, symbolsArray[curElem]]);
+    //                 nextAvailableStateID++;
+    //             }
+    //         }
+    //         // With this new state, since it is a trap state, just transition to itself for every possible symbol.
+    //         initialTransitionTable[nextAvailableStateID] = [];
+    //         for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
+    //             initialTransitionTable[nextAvailableStateID-1].push([nextAvailableStateID-1, symbolsArray[curElem]]);
+    //         }
+    //     }
+    // }
 
-    // STEP 3: Create new states for the states that contain two or more "to" transitions for a given symbol, as there can only be one symbol from each transition.
-    // could potentailly put this in a for loop that continues to loop and add states to the DFA if needed, while keeping track of how many states there were before the loop so as to
-    // not repeat
-    symbolToStatesMap = createSymbolsToStateMap(initialTransitionTable, numberOfNFAStates);
+    // // STEP 3: Create new states for the states that contain two or more "to" transitions for a given symbol, as there can only be one symbol from each transition.
+    // // could potentailly put this in a for loop that continues to loop and add states to the DFA if needed, while keeping track of how many states there were before the loop so as to
+    // // not repeat
+    // symbolToStatesMap = createSymbolsToStateMap(initialTransitionTable, numberOfNFAStates);
 
     console.log("Common Symbol States");
     console.log(symbolToStatesMap);
