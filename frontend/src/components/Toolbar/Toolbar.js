@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, Skull } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { useToolStore } from '/src/stores'
@@ -13,7 +13,6 @@ import handAnimation from './animations/hand.json'
 import stateAnimation from './animations/state.json'
 import transitionAnimation from './animations/transition.json'
 import commentAnimation from './animations/comment.json'
-import deleteAnimation from './animations/delete.json'
 
 const tools = [
   {
@@ -55,14 +54,6 @@ const tools = [
     value: 'comment',
     icon: <MessageSquare />,
     animation: commentAnimation
-  },
-  {
-    label: 'Delete tool',
-    hotkey: 'D',
-    description: 'Delete states, transitions and comments from your automaton',
-    value: 'delete',
-    icon: <Skull />,
-    animation: deleteAnimation
   }
 ]
 
