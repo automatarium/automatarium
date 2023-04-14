@@ -1,6 +1,11 @@
 import { start } from 'repl';
 import { FSAGraphIn, FSAState, FSATransition, StateID, ReadSymbol } from './graph'
 
+// EXTREMELY IMPORTANT NOTE:
+// The NFA to DFA conversion relies on sequential StateID's such that each state is ordered from 0 onwards without skipping a number.
+// Accounting for anything else gets extremely complicated, as such if non-sequential states can be formed, this should be changed
+// rather than this accomodating for that.
+
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
 export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
     if (nfaGraph.states.length == 0 && nfaGraph.transitions.length == 0) {
@@ -163,24 +168,44 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
     for (let curElem = 0; curElem < removeTheseStates.length; curElem++) {
         delete initialTransitionTable[removeTheseStates[curElem]];
     }
+    console.log(numberOfNFAStates);
+    // This will update the transition table so that the keys are still consecutive and the values are updated accordingly
     if (removeTheseStates.length > 0) {
-        // This will update the transition table so that the keys are still consecutive and the values are updated accordingly
         let newTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {};
-        let removeIndex = removeTheseStates[0];
+        let removeIndexSet = new Set(removeTheseStates);
+        let newTotalStates = 0;
+        let curRemoveIndex = removeTheseStates[0];
+        let betweenIndexesBuffer = 1;
 
-        let newIndex = 0;
-        for (let i = 0; i < Object.keys(initialTransitionTable).length; i++) {
-            if (i === removeIndex) {
+        // Go through each state and do the following
+        for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
+            // If the state has been removed, first check if this is the very first state removed. If it is, reset the buffer
+            // to 0 temporarily. Buffer is initially set to 1 so that stateID's that come before the removed state can still
+            // update their stateID object values. After this, set the current remove index and increase the buffer again so it
+            // is at its default. We do not need to subtract again once the buffer has been deducted once, as next time it will account for
+            // another removed state.
+            if (removeIndexSet.has(curElem)) {
+                if (curElem == removeTheseStates[0]) {
+                    betweenIndexesBuffer--;
+                }
+                curRemoveIndex = curElem;
+                betweenIndexesBuffer++;
                 continue;
             }
-            newTransitionTable[newIndex] = initialTransitionTable[i].map(([stateID, symbol]) => [stateID > removeIndex ? stateID - 1 : stateID, symbol]);
-            newIndex++;
+            // Add the mapped object to the newTransitionTable for the current element and updating the stateID if needed
+            newTransitionTable[curElem] = initialTransitionTable[curElem].map(([stateID, symbol]) => {
+                return [stateID > curRemoveIndex ? stateID - betweenIndexesBuffer : stateID, symbol];
+            });
+            newTotalStates++;
         }
-
+        
         initialTransitionTable = newTransitionTable;
-        // Update numberOfNFAStates to be the new length now that a state has been deleted
-        numberOfNFAStates = Object.keys(initialTransitionTable).length;
+        numberOfNFAStates = newTotalStates;
     }
+
+    console.log(numberOfNFAStates);
+    console.log("Table after Step 1 and 1.5");
+    console.log(initialTransitionTable);
 
     // STEP 2: Create transitions for every symbol from every state.
     // This will ensure that all states that do not have a transition for all symbols do, which will lead to a "trap state". This is required to be a DFA
