@@ -203,7 +203,7 @@ const useActions = (registerHotkeys = false) => {
     },
     CONVERT_TO_DFA: {
       handler: projectType === 'FSA' ? () => {
-        updateProject(convertNFAtoDFA(project))
+        updateProject(convertNFAtoDFA(reorderStates(project)))
         commit()
       } : undefined,
     },

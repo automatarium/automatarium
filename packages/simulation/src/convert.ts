@@ -3,8 +3,8 @@ import { FSAGraphIn, FSAState, FSATransition, StateID, ReadSymbol } from './grap
 
 // EXTREMELY IMPORTANT NOTE:
 // The NFA to DFA conversion relies on sequential StateID's such that each state is ordered from 0 onwards without skipping a number.
-// Accounting for anything else gets extremely complicated, as such if non-sequential states can be formed, this should be changed
-// rather than this accomodating for that.
+// Accounting for anything else gets extremely complicated, as such if non-sequential states can be formed, as such make sure
+// that reorder is called before working with this file
 
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
 export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
@@ -101,6 +101,13 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
     let symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]} = {};
     let symbolsPresent = new Set<ReadSymbol>();
     let mergedStates: {[key: string]: StateID[]} = {};
+    let curInitialState = nfaGraph.initialState;
+    let curFinalState: StateID;
+    for (let i = 0; i < numberOfNFAStates; i++) {
+        if (nfaGraph.states[i].isFinal) {
+            curFinalState = i;
+        }
+    }
 
     // This will create the initial transition table. Note that this is not the final transition table as this is still in NFA form.
     for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
@@ -158,6 +165,19 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
         }
     }
 
+    // Find the new initial state and final state based on the merged states
+    let newInitialState = null;
+    let newFinalState = null;
+    console.log(mergedStates);
+    for (let key in mergedStates) {
+        if (mergedStates[key].includes(curInitialState)) {
+            newInitialState = Math.min(...mergedStates[key]);
+        }
+        if (mergedStates[key].includes(curFinalState)) {
+            newFinalState = Math.min(...mergedStates[key]);
+        }
+    }
+
     // Merge the states in tempTransitionTable and initialTransitionTable based on the mergedStates array. Go top down so that states that are valid states are also
     // able to transition to the last state in the chain
     for (let curElem = numberOfNFAStates - 1; curElem >= 0; curElem--) {
@@ -203,6 +223,12 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
         }
     }
 
+    // Set the new initial state and final state
+    curInitialState = newInitialState;
+    curFinalState = newFinalState;
+
+    console.log(curInitialState);
+    console.log(curFinalState);
     // STEP 1.5: Remove all lambda transitions and for the "to states" that contain this transition, remove that state and all its transitions
     // if it does not contain any transitions that go into itself, otherwise do nothing. If changes were made, then update the initialTransitionTable
     // accordingly
