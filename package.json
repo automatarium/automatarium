@@ -18,32 +18,25 @@
   ],
   "scripts": {
     "watch:simulation": "yarn workspace @automatarium/simulation watch",
-    "watch:simulation-v2": "yarn workspace @automatarium/simulation-v2 watch",
     "watch:jflap-translator": "yarn workspace @automatarium/jflap-translator watch",
     "build:simulation": "yarn workspace @automatarium/simulation build",
-    "build:simulation-v2": "yarn workspace @automatarium/simulation-v2 build",
     "build:jflap-translator": "yarn workspace @automatarium/jflap-translator build",
-    "watch:packages": "concurrently \"yarn watch:simulation -p 1235\" \"yarn watch:jflap-translator -p 1236\" \"yarn watch:simulation-v2 -p 1237\"",
-    "build:packages": "yarn build:simulation && yarn build:simulation-v2 && yarn build:jflap-translator",
+    "watch:packages": "concurrently \"yarn watch:simulation -p 1235\" \"yarn watch:jflap-translator -p 1236\"",
+    "build:packages": "yarn build:simulation && yarn build:jflap-translator",
     "dev:frontend": "concurrently \"yarn watch:packages\" \"yarn workspace frontend start\"",
     "dev:backend": "yarn workspace backend dev",
     "build:frontend": "yarn workspace frontend build",
     "build:backend": "yarn workspace backend build",
-    
-    "lint:frontend": "yarn workspace frontend lint",
-    "lint:backend": "yarn workspace backend lint",
-    "lint:simulation": "yarn workspace @automatarium/simulation-v2 lint",
-    "lint:frontend:fix": "yarn workspace frontend lint:fix",
-    "lint:backend:fix": "yarn workspace backend lint:fix",
-    "lint:simulation:fix": "yarn workspace @automatarium/simulation-v2 lint:fix",
-    "lint": "yarn lint:backend && yarn lint:frontend && yarn lint:simulation",
-    "lint:fix": "yarn lint:backend:fix && yarn lint:frontend:fix && yarn lint:simulation:fix",
-    
+    "lint": "yarn workspaces run lint",
+    "lint:fix": "yarn workspaces run lint:fix",
+    "check:types": "yarn workspaces run check:types",
     "test": "yarn workspace @automatarium/simulation test",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
     "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
   },
   "devDependencies": {
+    "@parcel/packager-ts": "2.8.3",
+    "@parcel/transformer-typescript-types": "2.8.3",
     "concurrently": "^7.1.0",
     "parcel-bundler": "^1.12.5"
   }

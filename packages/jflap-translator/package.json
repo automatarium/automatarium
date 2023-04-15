@@ -2,20 +2,27 @@
   "name": "@automatarium/jflap-translator",
   "version": "1.0.0",
   "description": "",
-  "source": "src/index.js",
+  "source": "src/index.ts",
   "main": "dist/index.js",
   "scripts": {
     "build": "parcel build",
     "watch": "parcel watch",
-    "test": "jest"
+    "lint": "eslint . --ext .js,.ts --cache --cache-location '../../.eslintcache'",
+    "lint:fix": "yarn lint --fix",
+    "test": "jest",
+    "check:types": "tsc --noemit"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "jest": "^27.5.1",
-    "parcel": "^2.4.1"
+    "jest": "^29.5.0",
+    "@types/jest": "^29.5.0",
+    "parcel": "^2.4.1",
+    "ts-jest": "^29.1.0",
+    "ts-node": "^10.9.1"
   },
   "dependencies": {
+    "frontend": "1.0.0",
     "xml-js": "^1.6.11"
   }
 }

@@ -2,3 +2,5 @@ node_modules
 .DS_Store
 .parcel-cache
 dist
+**/yarn-error.log
+.eslintcache

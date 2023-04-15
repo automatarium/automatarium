@@ -25,7 +25,6 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }) => {
       setRed(false)
     }
   }, [accepted, isEnd])
-
   return (
         <>
         {trace.length &&

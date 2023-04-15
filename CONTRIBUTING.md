@@ -27,6 +27,43 @@ This project is set up using yarn workspaces. To install a new dependency, run `
 
 Before making PR, check your code with `yarn lint`
 
+## Git Conventions
+
+### Branches
+🏠 `main`
+Production branch. Do not commit directly to this branch.
+
+⚙️ `dev`
+Development branch. Try not to commit directly to this branch
+
+✨ `feat/branch`
+Prefix new feature branches with feat. When complete, submit a PR into dev.
+
+🔧 `fix/branch`
+When fixing a bug, prefix branches with bug. When complete, submit a PR into dev.
+
+🔮 `refactor/branch`
+For refactoring code. When complete, submit a PR into dev.
+
+🔥 `hotfix/branch`
+For fixing breaking bugs on the main branch. When finished, submit a PR into main.
+
+🧹 `chore/branch`
+For chores like adding type checking, adding README text, fixing typos etc. When finished, submit a PR into dev.
+
+### Pull Requests
+> **Warning**
+> Make sure you merge into dev not main!
+
+Mention the issue you are closing at the top of your PR like so:
+```
+Closes #6
+
+[describe your PR...]
+```
+
+Make sure the title and body of the PR is descriptive
+
 ## Deployment
 
 1. Ensure dependencies are installed by running `yarn`

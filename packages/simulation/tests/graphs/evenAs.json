@@ -1,0 +1,65 @@
+{
+  "projectType": "PDA",
+  "states": [
+    {
+      "isFinal": false,
+      "x": 420,
+      "y": 450,
+      "id": 0
+    },
+    {
+      "isFinal": true,
+      "x": 585,
+      "y": 450,
+      "id": 1
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 0,
+      "id": 0,
+      "pop": "",
+      "push": "A",
+      "read": "A"
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "id": 1,
+      "pop": "A",
+      "push": "",
+      "read": "A"
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "id": 2,
+      "pop": "",
+      "push": "",
+      "read": ""
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "AAAA",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "evenAs",
+    "dateCreated": 1679742139962,
+    "dateEdited": 1679742139962,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "PDA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "red"
+  }
+}

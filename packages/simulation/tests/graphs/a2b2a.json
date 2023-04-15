@@ -1,0 +1,101 @@
+{
+  "projectType": "TM",
+  "states": [
+    {
+      "isFinal": false,
+      "x": 420,
+      "y": 420,
+      "id": 0
+    },
+    {
+      "isFinal": false,
+      "x": 675,
+      "y": 420,
+      "id": 1
+    },
+    {
+      "isFinal": false,
+      "x": 870,
+      "y": 420,
+      "id": 2
+    },
+    {
+      "isFinal": true,
+      "x": 1020,
+      "y": 420,
+      "id": 3
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 0,
+      "id": 0,
+      "write": "B",
+      "direction": "R",
+      "read": "A"
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "write": "",
+      "direction": "L",
+      "read": ""
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "id": 2,
+      "write": "A",
+      "direction": "L",
+      "read": "B"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 3,
+      "write": "A",
+      "direction": "L",
+      "read": "A"
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "id": 4,
+      "write": "A",
+      "direction": "S",
+      "read": "B"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "id": 5,
+      "write": "A",
+      "direction": "S",
+      "read": "B"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "a2b2a",
+    "dateCreated": 1679870186759,
+    "dateEdited": 1679870251655,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "TM",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "purple"
+  }
+}

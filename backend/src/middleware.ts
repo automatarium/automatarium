@@ -6,19 +6,17 @@ export const decodeToken = async (req: Request, res: Response, next: NextFunctio
   // Expect a token
   const header = req.headers.authorization
 
-  if (!header || header === 'Bearer null' || !header.startsWith('Bearer '))
-    return next()
+  if (!header || header === 'Bearer null' || !header.startsWith('Bearer ')) { return next() }
 
   // Decode token
   const idToken = header.replace('Bearer ', '')
 
   // Verify token
   try {
-    const userInfo = await admin.auth().verifyIdToken(idToken)
-    req.user = userInfo
+    req.user = await admin.auth().verifyIdToken(idToken)
   } catch ({ message }) {
     return res.status(500).json({
-      error: message,
+      error: message
     })
   }
 

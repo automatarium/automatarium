@@ -4,4 +4,5 @@ module.exports = {
   testEnvironment: 'node',
   setupFilesAfterEnv: ['jest-extended/all'],
   moduleFileExtensions: ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'json', 'node'],
-};
+  testMatch: ['**/tests/?(*.)(spec|test).ts']
+}

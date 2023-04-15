@@ -5,14 +5,16 @@
   "private": true,
   "scripts": {
     "start": "parcel public/index.html --no-cache",
-    "build": "rm -rf dist && parcel build public/index.html",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint . --ext .js,.ts --fix"
+    "prebuild": "rm -rf dist",
+    "build": "parcel build public/index.html",
+    "lint": "eslint . --ext .js,.ts --cache --cache-location '../.eslintcache'",
+    "lint:fix": "yarn lint --fix",
+    "check:types": "tsc --noemit"
   },
   "dependencies": {
     "@automatarium/jflap-translator": "1.0.0",
-    "@automatarium/simulation": "1.0.0",
-    "@automatarium/simulation-v2": "1.0.0",
+    "@automatarium/simulation": "2.0.0",
+    "@types/react": "^18.0.33",
     "axios": "^0.26.1",
     "dayjs": "^1.11.2",
     "firebase": "^9.6.10",
@@ -32,10 +34,10 @@
     "zustand": "^3.7.1"
   },
   "devDependencies": {
-    "@parcel/transformer-inline-string": "2.5.0",
+    "@parcel/transformer-inline-string": "^2.8.3",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.29.4",
-    "parcel": "^2.3.2",
+    "parcel": "^2.8.3",
     "process": "^0.11.10"
   }
 }

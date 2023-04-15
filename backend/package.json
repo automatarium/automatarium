@@ -8,8 +8,9 @@
   "scripts": {
     "start": "ts-node -r tsconfig-paths/register src/app.ts",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts --ext .ts,.js --watch src",
-    "lint": "eslint . --ext .js,.ts",
-    "lint:fix": "eslint . --ext .js,.ts --fix"
+    "lint": "eslint . --ext .js,.ts --cache --cache-location '../.eslintcache'",
+    "lint:fix": "yarn lint --fix",
+    "check:types": "tsc --noemit"
   },
   "repository": {
     "type": "git",

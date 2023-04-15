@@ -48,7 +48,8 @@ export const getSvgString = ({
   margin = Number(margin ?? 0) + 1
   const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin * 2, b.height + margin * 2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
-
+  clonedSvgElement.setAttribute('width', width * 2 + 'px')
+  clonedSvgElement.setAttribute('height', height * 2 + 'px')
   // If changing colour, save what is on the actual svg, then change them temporarily
   // This is done because we need to recompute the variables below, and we can't
   // change the variables on the cloned element, as it's not attached to the DOM

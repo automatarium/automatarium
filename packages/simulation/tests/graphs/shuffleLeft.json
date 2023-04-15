@@ -1,0 +1,57 @@
+{
+  "projectType": "TM",
+  "states": [
+    {
+      "isFinal": false,
+      "x": 420,
+      "y": 420,
+      "id": 0
+    },
+    {
+      "isFinal": true,
+      "x": 585,
+      "y": 420,
+      "id": 1
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 0,
+      "id": 0,
+      "write": "A",
+      "direction": "R",
+      "read": "A"
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "write": "Z",
+      "direction": "S",
+      "read": "Z"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "shuffleLeft",
+    "dateCreated": 1679870186759,
+    "dateEdited": 1679870251655,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "TM",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "purple"
+  }
+}

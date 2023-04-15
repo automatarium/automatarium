@@ -1,50 +1,41 @@
-import { parseRead } from '../src'
+import { expandReadSymbols, RANGE_VALS } from '../src'
 
-test('Parse literals', () => {
-  expect(parseRead("abc")).toEqual([{
-    kind: 'literal', value: 'a'
-  }, {
-    kind: 'literal', value: 'b'
-  }, {
-    kind: 'literal', value: 'c'
-  }])
-})
+const ALPHABET = RANGE_VALS.slice(10, 36)
 
-test('Parse range', () => {
-  expect(parseRead("[a-z]")).toEqual([{
-    kind: 'range',
-    start: 'a',
-    stop: 'z'
-  }])
-})
+function expand (input: string): jest.JestMatchers<string[]> {
+  return expect(expandReadSymbols(input))
+}
 
-test('Parse range and literals', () => {
-  expect(parseRead("a[b-z]")).toEqual([{
-    kind: 'literal',
-    value: 'a',
-  }, {
-    kind: 'range',
-    start: 'b',
-    stop: 'z'
-  }])
-})
+describe('Expansion of read symbols', () => {
+  test('Literals dont get expanded', () => {
+    expand('abc').toEqual(['a', 'b', 'c'])
+  })
 
-test('Parse empty', () => {
-  expect(parseRead("")).toEqual([])
-})
+  test('Parse range', () => {
+    expand('[a-z]').toEqual(ALPHABET)
+  })
 
-test('Invalid range syntax', () => {
-  expect(() => parseRead("][")).toThrow()
-  expect(() => parseRead("-9]")).toThrow()
-  expect(() => parseRead("[-]")).toThrow()
-  expect(() => parseRead("[a-")).toThrow()
-})
+  test('Parse range and literals', () => {
+    expand('a[b-z]').toEqual(ALPHABET)
+  })
 
-test('Invalid range order', () => {
-  expect(() => parseRead("[z-a]")).toThrow()
-  expect(() => parseRead("[9-0]")).toThrow()
-})
+  test('Parse empty', () => {
+    expand('').toBeEmpty()
+  })
 
-test('Invalid duplicated symbols in range', () => {
-  expect(() => parseRead("[a-a]")).toThrow()
+  test('Edge cases', () => {
+    const tests = ['][', '-9]', '[-]', '[a-']
+    for (const test of tests) {
+      expand(test).toIncludeSameMembers(test.split(''))
+    }
+  })
+
+  test('Invalid order', () => {
+    expand('[z-a]').toBeEmpty()
+    expand('[9-0]').toBeEmpty()
+  })
+
+  test('Invalid duplicated symbols in range', () => {
+    expand('[a-a]').toEqual(['a'])
+  })
 })

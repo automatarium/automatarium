@@ -18,7 +18,7 @@ if (process.env.NODE_ENV === 'production') {
   admin.initializeApp()
 } else {
   admin.initializeApp({
-    credential: admin.credential.cert(require(config.firebaseAccountPath)),
+    credential: admin.credential.cert(require(config.firebaseAccountPath))
   })
 }
 
