@@ -15,11 +15,16 @@ export interface Events {
 }
 
 /**
- * We need to account for the two types of events that can be handled.
- * Depending on which event map it comes from we need to change the paramter type to that
+ * The mapping of all available events.
+ * It is a combination of our custom events along with DOM events
  */
 // eslint-disable-next-line no-undef
-type EventHandler<T> = (e: T extends keyof Events ? CustomEvent<Events[T]> : T extends keyof DocumentEventMap ? DocumentEventMap[T]: never) => void
+type AllEvents = {[K in keyof Events]: CustomEvent<Events[K]>} & DocumentEventMap
+
+/**
+ * What a function that handles an event should look like
+ */
+type EventHandler<T extends keyof AllEvents> = (e: AllEvents[T]) => void
 
 interface EventOptions {
   target?: Document,
@@ -28,7 +33,7 @@ interface EventOptions {
 }
 
 // eslint-disable-next-line no-undef
-const useEvent = <T extends keyof HTMLElementEventMap | keyof Events>(name: T, handler: EventHandler<T>,
+const useEvent = <T extends keyof AllEvents>(name: T, handler: EventHandler<T>,
   dependencies?: DependencyList, {
     target = document,
     options

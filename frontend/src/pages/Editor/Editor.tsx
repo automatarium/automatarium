@@ -18,8 +18,7 @@ const Editor = () => {
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
-  // Check the user has selected a project, navigate to creation
-  // page if not
+  // Check the user has selected a project, navigate to creation page if not
   if (!project) {
     navigate('/new')
     return null
