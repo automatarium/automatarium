@@ -9,7 +9,6 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
-import { resolveGraph } from '@automatarium/simulation/src/parseGraph'
 
 const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -202,10 +201,12 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      handler: projectType === 'FSA' ? () => {
-        updateProject(convertNFAtoDFA(reorderStates(project)))
-        commit()
-      } : undefined,
+      handler: projectType === 'FSA'
+        ? () => {
+            updateProject(convertNFAtoDFA(reorderStates(project)))
+            commit()
+          }
+        : undefined
     },
     MINIMIZE_DFA: {
       // handler: () => console.log('Minimize DFA'),
