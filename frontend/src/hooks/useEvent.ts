@@ -4,7 +4,7 @@ import { useEffect, useCallback, DependencyList } from 'react'
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
  */
-export interface Events {
+export interface CustomEvents {
   'editTransition': {id: number},
   'editComment': {id: number, x: number, y: number},
   'editStateName': {id: number},
@@ -19,12 +19,12 @@ export interface Events {
  * It is a combination of our custom events along with DOM events
  */
 // eslint-disable-next-line no-undef
-type AllEvents = {[K in keyof Events]: CustomEvent<Events[K]>} & DocumentEventMap
+export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} & DocumentEventMap
 
 /**
  * What a function that handles an event should look like
  */
-type EventHandler<T extends keyof AllEvents> = (e: AllEvents[T]) => void
+type EventHandler<T extends keyof Events> = (e: Events[T]) => void
 
 interface EventOptions {
   target?: Document,
@@ -33,15 +33,15 @@ interface EventOptions {
 }
 
 // eslint-disable-next-line no-undef
-const useEvent = <T extends keyof AllEvents>(name: T, handler: EventHandler<T>,
+const useEvent = <T extends keyof Events>(name: T, handler: EventHandler<T>,
   dependencies?: DependencyList, {
     target = document,
     options
   } = {} as EventOptions) => {
   const callback = useCallback(handler, dependencies)
   useEffect(() => {
-    target.addEventListener(name as string, callback, options)
-    return () => target.removeEventListener(name as string, callback, options)
+    target.addEventListener(name, callback, options)
+    return () => target.removeEventListener(name, callback, options)
   }, [callback])
 }
 
