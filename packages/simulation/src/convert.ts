@@ -6,6 +6,11 @@ import { FSAGraphIn, FSAState, FSATransition, StateID, ReadSymbol } from './grap
 // Accounting for anything else gets extremely complicated, as such if non-sequential states can be formed, as such make sure
 // that reorder is called before working with this file
 
+// Essentially the graph cant be too heavily spaghetti (I.E states completely out of order and not in sequence, initial state in random
+// location, etc) or else this will not work. Perhaps some error handling could be done in the future but it will be quite difficult. I think
+// instead there should be a file that checks to ensure the flow of the graph makes logical sense before allowing it to do any
+// operations (future enhancement)
+
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
 export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
     if (nfaGraph.states.length == 0 && nfaGraph.transitions.length == 0) {
@@ -102,10 +107,10 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
     let symbolsPresent = new Set<ReadSymbol>();
     let mergedStates: {[key: string]: StateID[]} = {};
     let curInitialState = nfaGraph.initialState;
-    let curFinalState: StateID;
+    let curFinalStates: StateID[] = [];
     for (let i = 0; i < numberOfNFAStates; i++) {
         if (nfaGraph.states[i].isFinal) {
-            curFinalState = i;
+            curFinalStates.push(i);
         }
     }
 
@@ -166,15 +171,31 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
     }
 
     // Find the new initial state and final state based on the merged states
-    let newInitialState = null;
-    let newFinalState = null;
-    console.log(mergedStates);
+    let foundInitial = false;
+    let foundFinals = false;
+    let newFinalStates: StateID[] = [];
+
     for (let key in mergedStates) {
-        if (mergedStates[key].includes(curInitialState)) {
-            newInitialState = Math.min(...mergedStates[key]);
+        if (!foundInitial && mergedStates[key].includes(curInitialState)) {
+            curInitialState = Math.min(...mergedStates[key]);
+            foundInitial = true;
         }
-        if (mergedStates[key].includes(curFinalState)) {
-            newFinalState = Math.min(...mergedStates[key]);
+        if (!foundFinals) {
+            for (let curKey in mergedStates) {
+                // Check if any final states are present in mergedStates
+                let mergedFinalStates = curFinalStates.filter(state => mergedStates[curKey].includes(state));
+                if (mergedFinalStates.length > 0) {
+                    // Remove merged final states from curFinalStates
+                    curFinalStates = curFinalStates.filter(state => !mergedFinalStates.includes(state));
+                    // Add lowest state ID of mergedStates with the current key to curFinalStates
+                    curFinalStates.push(Math.min(...mergedStates[curKey]));
+                }
+            }
+            foundFinals = true;
+        }
+        if (foundInitial && foundFinals) {
+            // Exit loop if both new initial and final states have been found
+            break;
         }
     }
 
@@ -223,12 +244,6 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
         }
     }
 
-    // Set the new initial state and final state
-    curInitialState = newInitialState;
-    curFinalState = newFinalState;
-
-    console.log(curInitialState);
-    console.log(curFinalState);
     // STEP 1.5: Remove all lambda transitions and for the "to states" that contain this transition, remove that state and all its transitions
     // if it does not contain any transitions that go into itself, otherwise do nothing. If changes were made, then update the initialTransitionTable
     // accordingly
@@ -319,14 +334,11 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
         }
     }
 
-
     // // STEP 3: Create new states for the states that contain two or more "to" transitions for a given symbol, as there can only be one symbol from each transition.
     // // could potentailly put this in a for loop that continues to loop and add states to the DFA if needed, while keeping track of how many states there were before the loop so as to
     // // not repeat
     // symbolToStatesMap = createSymbolsToStateMap(initialTransitionTable, numberOfNFAStates);
 
-    console.log("Common Symbol States");
-    console.log(symbolToStatesMap);
     // This will create the tempTransitionTable from the initial one, which will represent the transition table of the new DFA.
     console.log("Initial Transition Table");
     console.log(initialTransitionTable);
@@ -360,15 +372,15 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn => {
             states: [] as FSAState[],
             transitions: [] as FSATransition[]
         }
-
+        // Sort the states so that they're ordered
+        nfaGraph.states.sort((a, b) => a.id - b.id);
         // Create a DFA from the given NFA
         dfaGraph = createDFA(nfaGraph, dfaGraph);
 
-        console.log("Ignore below");
+        console.log("NFA States");
         console.log(nfaGraph.states);
+        console.log("NFA Transitions");
         console.log(nfaGraph.transitions);
-        console.log(nfaGraph.initialState);
-        console.log(nfaGraph.transitions[0].read)
         return nfaGraph;
     }
 }
