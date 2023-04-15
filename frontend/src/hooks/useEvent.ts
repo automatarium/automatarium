@@ -17,7 +17,14 @@ export interface Events {
   'editStateName': {id: number},
   'editStateLabel': {id: number},
   'transition:mouseup': {originalEvent: MouseEvent, transition: PositionedTransition},
-  'transition:mousedown': {originalEvent: MouseEvent, transition: PositionedTransition}
+  'transition:mousedown': {originalEvent: MouseEvent, transition: PositionedTransition},
+  /**
+   * Called when an edge (The line joining two states) is called. It contains
+   * all the transitions that use that edge
+   */
+  'edge:mousedown': {originalEvent: MouseEvent, transitions: PositionedTransition[]},
+  'state:mousedown': {originalEvent: MouseEvent},
+  'comment:mousedown': {originalEvent: MouseEvent}
 }
 
 interface EventOptions {

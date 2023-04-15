@@ -1,7 +1,7 @@
 import { useContext } from 'react'
 import { useProjectStore } from '../../stores'
 import { MarkerContext } from '/src/providers'
-import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, TEXT_PATH_OFFSET, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
+import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
@@ -107,7 +107,6 @@ const Transition = ({
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
 
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
-  const selected = selectedTransitions?.includes(id)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
 
   // Test if the transitions go in both directions. The transitions are sorted by direction, so we only need to check
@@ -129,40 +128,38 @@ const Transition = ({
   // -- used to place the text on the same path
   const pathID = `${from.x}${from.y}${to.x}${to.y}`
 
-  // TODO: useCallback
-  const handleTransitionMouseUp = e =>
+  // Callbacks for individual transitions
+  const handleTransitionMouseUp = (t: PositionedTransition) => e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: transitions[0]
+      transition: t
     })
-  const handleTransitionMouseDown = e =>
+  const handleTransitionMouseDown = (t: PositionedTransition) => e =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: transitions[0]
+      transition: t
     })
+  const handleTransitionDoubleClick = (t: PositionedTransition) => e =>
+    dispatchCustomEvent('editTransition', { id: t.id })
 
-  const handleTransitionDoubleClick = e => {
-    // dispatchCustomEvent('transition:mousedoubleclick', {
-    //   originalEvent: e,
-    //   transition: { id, from, to, text }
-    // })
-    // TODO: Test double click to edit still works
-    dispatchCustomEvent('editTransition', { id })
-  }
+  // Callbacks for the edge
 
-  // Calculate text offset. We want extra transitions to place their letters above each other
+  const handleEdgeMouseDown = e =>
+    dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
+
+  // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend
+  // upwards.
   const offsetDirection = bendDirection === 'under' ? 1 : -1
   const textOffset = (1.2 * offsetDirection) + 'em'
   return <g>
-    {/* The edge itself. We only render the first transition or if there is only one item (i can be > 0 when drawing
-    a transition) */}
+    {/* The edge itself */}
     <path
       id={pathID}
       d={pathData}
       key={pathID}
-      markerEnd={`url(#${selected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
+      markerEnd={`url(#${setSelected || (isReflexive && setSelected) ? selectedArrowHead : standardArrowHead})`}
       style={pathStyles}
-      className={((selected || (isReflexive && setSelected)) && pathSelectedClass) || undefined}
+      className={((setSelected || (isReflexive && setSelected)) && pathSelectedClass) || undefined}
     />
 
     {/* Invisible path used to place text */}
@@ -175,44 +172,32 @@ const Transition = ({
       key={`${pathID}-selection`}
       stroke='transparent'
       fill='none'
+      onMouseDown={handleEdgeMouseDown}
       strokeWidth={20}
-      onMouseDown={handleTransitionMouseDown}
-      onMouseUp={handleTransitionMouseUp}
-      onDoubleClick={handleTransitionDoubleClick}
     />}
 
-    {/* Create the text for each transition. We have it grouped under one element to make rotation easier */}
+    {/*
+      Create the text for each transition. We have it grouped under one element to make rotation easier.
+      The Y coordinate needs to be lowered to the edge since by default it would appear very high
+     */}
     <text
       x={control.x}
       transform={rotate(degrees, control)}
       textAnchor="middle"
-      y={control.y}>
+      y={control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0)}>
       {transitions.map((t, i) => {
         return <tspan
-          dy={bendDirection !== 'under' && i === 0 ? '0em' : textOffset}
+          dy={bendDirection === 'over' && i === 0 ? '0em' : textOffset}
           key={t.id}
-          fill={selected ? 'var(--primary)' : 'var(--stroke)'}
-          onClick={() => console.log(t.id)}
+          fill={selectedTransitions.includes(t.id) ? 'var(--primary)' : 'var(--stroke)'}
+          onMouseDown={handleTransitionMouseDown(t)}
+          onMouseUp={handleTransitionMouseUp(t)}
+          onDoubleClick={handleTransitionDoubleClick(t)}
           x={control.x}>
             {makeTransitionText(projectType, t)}
         </tspan>
       })}
-
     </text>
-      {/* <text */}
-      {/*  onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined} */}
-      {/*  onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined} */}
-      {/*  fill={selected ? 'var(--primary)' : 'var(--stroke)'} */}
-      {/*  style={{ userSelect: 'none' }} */}
-      {/*  textAnchor="middle" */}
-      {/*  alignmentBaseline="central" */}
-      {/*  {...{ */}
-      {/*    x: control.x, */}
-      {/*    y: control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0) + textOffset */}
-      {/*  }} */}
-      {/* > */}
-      {/*  {transitions.map(t => makeTransitionText(projectType, t)).join('\n')} */}
-      {/* </text> */}
   </g>
 }
 
