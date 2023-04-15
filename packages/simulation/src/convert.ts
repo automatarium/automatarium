@@ -119,8 +119,6 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
 
     // STEP 1: Merge lambda transitions so that they do not exist.
     // This will ensure that lambda transitions don't exist in the DFA by merging the states together that use them.
-    // merge states with undefined transitions
-
     // Initialize mergedStates array with each state in its own set
     for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
         mergedStates[curElem] = [curElem];
@@ -160,15 +158,16 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
         }
     }
 
-    // Merge the states in tempTransitionTable and initialTransitionTable based on the mergedStates array
-    for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
+    // Merge the states in tempTransitionTable and initialTransitionTable based on the mergedStates array. Go top down so that states that are valid states are also
+    // able to transition to the last state in the chain
+    for (let curElem = numberOfNFAStates - 1; curElem >= 0; curElem--) {
         let mergedWith = mergedStates[curElem][0];
         for (let i = 1; i < mergedStates[curElem].length; i++) {
             let curState = mergedStates[curElem][i];
             for (let j = 0; j < initialTransitionTable[curState].length; j++) {
                 let toState = initialTransitionTable[curState][j][0];
                 let symbol = initialTransitionTable[curState][j][1];
-
+        
                 // If the transition symbol is undefined, find it from the mergedWith state
                 if (symbol === undefined) {
                     for (let k = 0; k < initialTransitionTable[mergedWith].length; k++) {
@@ -179,7 +178,7 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
                         }
                     }
                 }
-
+        
                 // If a transition with the same symbol and toState doesn't already exist, add it to the tempTransitionTable and initialTransitionTable
                 if (symbol !== undefined) {
                     let transitionExists = false;
@@ -194,9 +193,13 @@ export function createTransitionTable(nfaGraph: FSAGraphIn, numberOfNFATransitio
                         initialTransitionTable[mergedWith].push([toState, symbol]);
                     }
                 }
-                // Merge the curState's merged state with the mergedWith state
-                mergedStates[curState] = mergedStates[mergedWith];
             }
+        }
+    
+        // Merge all the mergedStates that have been merged into the current state
+        for (let i = 1; i < mergedStates[curElem].length; i++) {
+            let curState = mergedStates[curElem][i];
+            mergedStates[curState] = mergedStates[mergedWith];
         }
     }
 
