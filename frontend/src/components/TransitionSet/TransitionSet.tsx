@@ -63,6 +63,7 @@ const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) 
       id={first.id}
       key={first.id}
       bendDirection={bend}
+      projectType={projectType}
     />
   }
   // We don't bend the transition if only rendering in one direction
@@ -80,16 +81,25 @@ type TransitionProps = {
   count?: number,
   from: Coordinate,
   to: Coordinate,
+  projectType: ProjectType,
   fullWidth?: boolean,
   bendDirection?: BendDirection,
   suppressEvents?: boolean
 }
+
+/**
+ * Returns the transform text to rotate an SVG element
+ */
+const rotate = (degrees: number, centre: Coordinate): string => `rotate(${degrees}, ${centre.x}, ${centre.y})`
+
+const RAD2DEG = 180 / Math.PI
 
 const Transition = ({
   id,
   transitions = [],
   from,
   to,
+  projectType,
   bendDirection = 'straight',
   fullWidth = false,
   suppressEvents = false
@@ -111,7 +121,9 @@ const Transition = ({
     under: 0.5
   }[bendDirection] * TRANSITION_SEPERATION
   // Calculate path
-  const { pathData, textPathData, control } = calculateTransitionPath(from, to, bendValue, fullWidth)
+  const { pathData, textPathData, control, normal } = calculateTransitionPath(from, to, bendValue, fullWidth)
+  // Convert the normal to degrees
+  const degrees = Math.acos(normal.x) * RAD2DEG - 90
   const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
   // -- used to place the text on the same path
@@ -121,12 +133,12 @@ const Transition = ({
   const handleTransitionMouseUp = e =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: { id, from, to, text }
+      transition: transitions[0]
     })
   const handleTransitionMouseDown = e =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: { id, from, to, text }
+      transition: transitions[0]
     })
 
   const handleTransitionDoubleClick = e => {
@@ -140,7 +152,7 @@ const Transition = ({
 
   // Calculate text offset. We want extra transitions to place their letters above each other
   const offsetDirection = bendDirection === 'under' ? 1 : -1
-  const textOffset = TEXT_PATH_OFFSET * offsetDirection
+  const textOffset = (1.2 * offsetDirection) + 'em'
   return <g>
     {/* The edge itself. We only render the first transition or if there is only one item (i can be > 0 when drawing
     a transition) */}
@@ -169,27 +181,44 @@ const Transition = ({
       onDoubleClick={handleTransitionDoubleClick}
     />}
 
-    {/* The label for the transition */}
-      <text
-        onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined}
-        onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined}
-        fill={selected ? 'var(--primary)' : 'var(--stroke)'}
-        style={{ userSelect: 'none' }}
-        textAnchor="middle"
-        alignmentBaseline="central"
-        {...{
-          x: control.x,
-          y: control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0) + textOffset
-        }}
-      >
-        {text}
-      </text>
+    {/* Create the text for each transition. We have it grouped under one element to make rotation easier */}
+    <text
+      x={control.x}
+      transform={rotate(degrees, control)}
+      textAnchor="middle"
+      y={control.y}>
+      {transitions.map((t, i) => {
+        return <tspan
+          dy={bendDirection !== 'under' && i === 0 ? '0em' : textOffset}
+          key={t.id}
+          fill={selected ? 'var(--primary)' : 'var(--stroke)'}
+          onClick={() => console.log(t.id)}
+          x={control.x}>
+            {makeTransitionText(projectType, t)}
+        </tspan>
+      })}
+
+    </text>
+      {/* <text */}
+      {/*  onMouseDown={!suppressEvents ? handleTransitionMouseDown : undefined} */}
+      {/*  onMouseUp={!suppressEvents ? handleTransitionMouseUp : undefined} */}
+      {/*  fill={selected ? 'var(--primary)' : 'var(--stroke)'} */}
+      {/*  style={{ userSelect: 'none' }} */}
+      {/*  textAnchor="middle" */}
+      {/*  alignmentBaseline="central" */}
+      {/*  {...{ */}
+      {/*    x: control.x, */}
+      {/*    y: control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0) + textOffset */}
+      {/*  }} */}
+      {/* > */}
+      {/*  {transitions.map(t => makeTransitionText(projectType, t)).join('\n')} */}
+      {/* </text> */}
   </g>
 }
 
 const calculateTransitionPath = (
   from: Coordinate, to: Coordinate,
-  bendValue: number, fullWidth: boolean): {pathData: string, textPathData: string, control: Coordinate} => {
+  bendValue: number, fullWidth: boolean): {pathData: string, textPathData: string, control: Coordinate, normal: Coordinate} => {
   // Is this path reflexive
   const isReflexive = from.x === to.x && from.y === to.y
 
@@ -229,7 +258,8 @@ const calculateTransitionPath = (
   return {
     pathData,
     textPathData: (angle > 90 || angle <= -90) ? pathReversed : pathData,
-    control
+    control,
+    normal
   }
 }
 

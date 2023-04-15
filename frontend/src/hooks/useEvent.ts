@@ -1,4 +1,5 @@
 import { useEffect, useCallback, DependencyList } from 'react'
+import { PositionedTransition } from '/src/util/states'
 
 /**
  * Specifies what a function should look like that handles an event.
@@ -15,6 +16,8 @@ export interface Events {
   'editComment': {id: number, x: number, y: number},
   'editStateName': {id: number},
   'editStateLabel': {id: number},
+  'transition:mouseup': {originalEvent: MouseEvent, transition: PositionedTransition},
+  'transition:mousedown': {originalEvent: MouseEvent, transition: PositionedTransition}
 }
 
 interface EventOptions {
