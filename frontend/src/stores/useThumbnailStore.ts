@@ -1,7 +1,13 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-const useThumbnailStore = create()(persist(set => ({
+interface ThumbnailStore {
+  thumbnails: Record<string, string>,
+  setThumbnail: (id: string, thumbnail: string) => void,
+  removeThumbnail: (id: string) => void
+}
+
+const useThumbnailStore = create<ThumbnailStore>()(persist(set => ({
   thumbnails: {},
 
   setThumbnail: (id, thumbnail) => set(state => ({

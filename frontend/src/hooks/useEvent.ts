@@ -15,6 +15,7 @@ export interface Events {
   'editComment': {id: number, x: number, y: number},
   'editStateName': {id: number},
   'editStateLabel': {id: number},
+  'modal:preferences': null
 }
 
 interface EventOptions {
