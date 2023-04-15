@@ -1,4 +1,4 @@
-import create, { SetState, GetState } from 'zustand'
+import { create, SetState, GetState } from 'zustand'
 import { persist } from 'zustand/middleware'
 import produce, { current } from 'immer'
 import clone from 'lodash.clonedeep'
@@ -98,7 +98,7 @@ interface ProjectStore {
   reset: () => void
 }
 
-const useProjectStore = create<ProjectStore>(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
+const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
   project: null as StoredProject,
   history: [],
   historyPointer: null,

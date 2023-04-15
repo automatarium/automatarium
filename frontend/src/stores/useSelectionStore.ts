@@ -1,4 +1,4 @@
-import create, { SetState } from 'zustand'
+import { create, SetState } from 'zustand'
 import { useProjectStore } from '/src/stores'
 
 type SelectionStore = {
