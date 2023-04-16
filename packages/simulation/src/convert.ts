@@ -1,4 +1,3 @@
-import { FSAGraph } from './FSASearch'
 import { FSAGraphIn, FSAState, FSATransition, StateID, ReadSymbol } from './graph'
 
 // EXTREMELY IMPORTANT NOTE:
@@ -14,27 +13,27 @@ import { FSAGraphIn, FSAState, FSATransition, StateID, ReadSymbol } from './grap
 // Graph traversal algorithm starting from the initial state that removes unreachable states and transitions
 export const removeUnreachableStates = (nfaGraph: FSAGraphIn): FSAGraphIn => {
   // Keep track of all the reachable states from the initial state
-  const reachableStates = new Set<StateID>([nfaGraph.initialState]);
+  const reachableStates = new Set<StateID>([nfaGraph.initialState])
   // Traverse the graph starting from the initial state
-  const stack = [nfaGraph.initialState];
+  const stack = [nfaGraph.initialState]
   while (stack.length > 0) {
-    const currentState = stack.pop() as StateID;
+    const currentState = stack.pop() as StateID
     for (const transition of nfaGraph.transitions) {
       if (transition.from === currentState) {
         // If the transition leads to a new state, add it to the reachable states
         if (!reachableStates.has(transition.to)) {
-          reachableStates.add(transition.to);
-          stack.push(transition.to);
+          reachableStates.add(transition.to)
+          stack.push(transition.to)
         }
       }
     }
   }
   // Remove any states that are not in the set of reachable states
-  nfaGraph.states = nfaGraph.states.filter((state) => reachableStates.has(state.id));
+  nfaGraph.states = nfaGraph.states.filter((state) => reachableStates.has(state.id))
   // Remove any transitions that are not connected to reachable states
-  nfaGraph.transitions = nfaGraph.transitions.filter((transition) => reachableStates.has(transition.from) && reachableStates.has(transition.to));
-  return nfaGraph;
-};
+  nfaGraph.transitions = nfaGraph.transitions.filter((transition) => reachableStates.has(transition.from) && reachableStates.has(transition.to))
+  return nfaGraph
+}
 
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
 export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
@@ -119,7 +118,7 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
 }
 
 // This will mimic STEP 1 of the procedure by ensuring that for every DFA state, there are no lambda transitions and the states are merged correctly
-export function removeLambdaTransitions(initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, mergedStates: {[key: string]: StateID[]}, numberOfNFAStates: StateID, curInitialState: StateID, curFinalStates: StateID[], tempTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}): [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] {
+export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, mergedStates: {[key: string]: StateID[]}, numberOfNFAStates: StateID, curInitialState: StateID, curFinalStates: StateID[], tempTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}): [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] {
   for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
     mergedStates[curElem] = [curElem]
   }
@@ -317,7 +316,7 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
       }
     }
   }
-  return initialTransitionTable;
+  return initialTransitionTable
 }
 
 // This will create a transition table such that the DFA can be constructed from it. It will return a transitionTable that consists of keys of arrays of key value pairs, where
@@ -356,13 +355,13 @@ export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFATransiti
   // This will ensure that lambda transitions don't exist in the DFA by merging the states together that use them.
   // Initialize mergedStates array with each state in its own set
   const result: [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] = removeLambdaTransitions(initialTransitionTable, mergedStates, numberOfNFAStates, curInitialState, curFinalStates, tempTransitionTable)
-  initialTransitionTable = result[0];
-  curInitialState = result[1];
-  curFinalStates = result[2];
+  initialTransitionTable = result[0]
+  curInitialState = result[1]
+  curFinalStates = result[2]
 
   // STEP 2: Create transitions for every symbol from every state.
   // This will ensure that all states that do not have a transition for all symbols do, which will lead to a "trap state". This is required to be a DFA
-  initialTransitionTable = createSymbolFromEveryState(initialTransitionTable, symbolsPresent, numberOfNFAStates, nfaGraph);
+  initialTransitionTable = createSymbolFromEveryState(initialTransitionTable, symbolsPresent, numberOfNFAStates, nfaGraph)
 
   // // STEP 3: Create new states for the states that contain two or more "to" transitions for a given symbol, as there can only be one symbol from each transition.
   // // could potentailly put this in a for loop that continues to loop and add states to the DFA if needed, while keeping track of how many states there were before the loop so as to
@@ -398,11 +397,10 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn => {
     return nfaGraph
   } else {
     // Remove unreachable states and check to make sure final state is still present
-    nfaGraph = removeUnreachableStates(nfaGraph);
+    nfaGraph = removeUnreachableStates(nfaGraph)
     if (!finalStateIsPresent(nfaGraph.states)) {
       return nfaGraph
-    }
-    else {
+    } else {
       let dfaGraph = {
         initialState: undefined as StateID,
         states: [] as FSAState[],
@@ -412,7 +410,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn => {
       nfaGraph.states.sort((a, b) => a.id - b.id)
       // Create a DFA from the given NFA
       dfaGraph = createDFA(nfaGraph, dfaGraph)
-  
+
       console.log('NFA States')
       console.log(nfaGraph.states)
       console.log('NFA Transitions')
