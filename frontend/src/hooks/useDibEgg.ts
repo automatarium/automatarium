@@ -1,10 +1,17 @@
 import { create } from 'zustand'
 import COLORS from '/src/config/colors'
 
+type Timer = ReturnType<typeof setInterval>
+
+interface DibStore {
+  intervalID: Timer
+  setIntervalID: (id: Timer) => void
+}
+
 // Store state of easter egg across site instance
-const useDibStore = create((set) => ({
+const useDibStore = create<DibStore>((set) => ({
   intervalID: undefined,
-  setIntervalID: intervalID => set({ intervalID })
+  setIntervalID: id => set({ intervalID: id })
 }))
 
 // Smoothly change between all colours
@@ -12,7 +19,7 @@ const smoothHue = () => {
   // Get current hue
   const currHue = Number(document.documentElement.style.getPropertyValue('--primary-h'))
   // Set colour to new hue
-  document.documentElement.style.setProperty('--primary-h', (currHue + 1) % 360)
+  document.documentElement.style.setProperty('--primary-h', ((currHue + 1) % 360).toString())
   document.documentElement.style.setProperty('--primary-s', '63%')
   document.documentElement.style.setProperty('--primary-l', '48%')
 }
@@ -29,7 +36,7 @@ const rainbowRoadHue = () => {
     hueIndex = (hueIndex + 1) % hues.length
   }
   // Set colour
-  document.documentElement.style.setProperty('--primary-h', hues[hueIndex].h)
+  document.documentElement.style.setProperty('--primary-h', hues[hueIndex].h.toString())
   document.documentElement.style.setProperty('--primary-s', `${hues[hueIndex].s}%`)
   document.documentElement.style.setProperty('--primary-l', `${hues[hueIndex].l}%`)
 }
@@ -51,7 +58,7 @@ const useDibEgg = () => {
         clearInterval(intervalID)
         setIntervalID(undefined)
       } else {
-        setIntervalID(setInterval(() => rainbowRoadHue(), 300))
+        setIntervalID(setInterval(rainbowRoadHue, 300))
       }
     }
   }
