@@ -1,4 +1,4 @@
-const FSA = ({ stateFill, strokeColor }) => {
+const FSA = ({ stateFill, strokeColor }: { stateFill: string, strokeColor: string }) => {
   return (
     <svg viewBox="0 0 600 300">
       <g>

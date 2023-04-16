@@ -17,6 +17,7 @@ import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFi
 import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
+import { Project, ProjectType } from '/src/types/ProjectTypes'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -45,12 +46,12 @@ const NewFile = () => {
     }
   }, [projects, thumbnails])
 
-  const handleNewFile = projectType => {
-    setProject(createNewProject(projectType))
+  const handleNewFile = (type: ProjectType) => {
+    setProject(createNewProject(type))
     navigate('/editor')
   }
 
-  const handleLoadProject = project => {
+  const handleLoadProject = (project: Project) => {
     setProject(project)
     navigate('/editor')
   }
@@ -82,7 +83,7 @@ const NewFile = () => {
           // Set project (file) in project store
           const project = {
             ...createNewProject(),
-            ...JSON.parse(reader.result)
+            ...JSON.parse(reader.result as string)
           }
           setProject({
             ...project,
@@ -111,7 +112,7 @@ const NewFile = () => {
           <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
         </>}
         {user && <Button secondary onClick={() => navigate('/logout')}>Logout</Button>}
-        <PreferencesButton title="Preferences" type="button" onClick={() => dispatchCustomEvent('modal:preferences')}><Settings /></PreferencesButton>
+        <PreferencesButton title="Preferences" type="button" onClick={() => dispatchCustomEvent('modal:preferences', null)}><Settings /></PreferencesButton>
       </ButtonGroup>
     </HeaderRow>
 

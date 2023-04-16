@@ -4,7 +4,7 @@ import produce from 'immer'
 /**
  * 2D x, y coordinate pair
  */
-type Coordinate = {x: 0, y: 0}
+type Coordinate = {x: number, y: number}
 
 /**
  * Stores width/height of a 2D object
@@ -16,7 +16,7 @@ interface ViewStore {
   position: Coordinate
   size: Size
   scale: number
-  moveViewPosition: (pos: Coordinate) => void
+  moveViewPosition: (pos: Partial<Coordinate>) => void
   setViewPosition: (pos: Coordinate) => void
   setViewSize: (size: Size) => void
   setViewScale: (scale: number) => void

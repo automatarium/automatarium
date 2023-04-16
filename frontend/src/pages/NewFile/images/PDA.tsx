@@ -1,6 +1,6 @@
 // Used https://svg2jsx.com/ for SVG conversion and manually deleted unncecessary parts/made inline to make similar to FSA.js
 
-const PDA = ({ stateFill, strokeColor }) => {
+const PDA = ({ stateFill, strokeColor }: { stateFill: string, strokeColor: string }) => {
   return (
     <svg viewBox="364 324 347 192">
       <defs>

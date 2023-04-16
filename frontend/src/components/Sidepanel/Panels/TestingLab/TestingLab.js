@@ -36,8 +36,6 @@ const TestingLab = () => {
   }
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
-  // eslint-disable-next-line no-unused-vars
-  const clearProjectSimResults = useTMSimResultStore(s => s.clearSimResults)
   const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
@@ -48,7 +46,6 @@ const TestingLab = () => {
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
-  // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
   /**
    * Runs the correct simulation result for a trace input and returns the result.

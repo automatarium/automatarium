@@ -79,7 +79,7 @@ interface ProjectStore {
   createComment: (comment: ProjectComment) => void,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
-  createState: (state: AutomataState) => void,
+  createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => void,
   updateState: (state: AutomataState) => void,
   removeState: (state: AutomataState) => void,
   // still not sure what's going on with the tests
@@ -203,9 +203,8 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Create a new state */
-  createState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
-    state.isFinal = false
-    project.states.push({ ...state, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
+  createState: state => set(produce(({ project }: { project: StoredProject }) => {
+    project.states.push({ ...state, isFinal: false, id: 1 + Math.max(-1, ...project.states.map(s => s.id)) })
   })),
 
   /* Update a state by id */

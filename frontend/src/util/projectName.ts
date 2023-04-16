@@ -310,7 +310,7 @@ export const NOUNS = [
   'White Lion'
 ]
 
-export const randomProjectName = () => {
+export const randomProjectName = (): string => {
   if (Math.random() < 0.001) return 'James Harland'
 
   const adj = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)]

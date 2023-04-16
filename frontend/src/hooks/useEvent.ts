@@ -1,4 +1,5 @@
 import { useEffect, useCallback, DependencyList } from 'react'
+import { SidePanelKey } from '/src/components/Sidepanel/Panels'
 
 /**
  * Specifies what a function should look like that handles an event.
@@ -12,10 +13,17 @@ type EventHandler<T> = (arg: CustomEvent<T>) => void
  */
 export interface Events {
   'editTransition': {id: number},
-  'editComment': {id: number, x: number, y: number},
+  'editComment': {id?: number, x: number, y: number},
   'editStateName': {id: number},
   'editStateLabel': {id: number},
-  'modal:preferences': null
+  'modal:preferences': null,
+  'exportImage': {type: string, clipboard?: boolean} | null,
+  /**
+   * Event to open a side panel.
+   * @see SidePanelKey for available panels
+   */
+  'sidepanel:open': {panel: SidePanelKey},
+  'modal:shortcuts': null
 }
 
 interface EventOptions {

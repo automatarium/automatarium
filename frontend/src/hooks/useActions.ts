@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react'
+import { MouseEvent, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore } from '/src/stores'
@@ -9,12 +9,26 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 
-const isWindows = navigator.platform?.match(/Win/)
-export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
-  meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
-  alt && (isWindows ? 'Alt' : '⌥'),
-  shift && (isWindows ? 'Shift' : '⇧'),
-  key?.toUpperCase()
+/**
+ * Combination of keys. Used to call an action
+ */
+type HotKey = {key: string, meta?: boolean, shift?: boolean, alt?: boolean}
+
+/**
+ * Represents an action handler
+ */
+interface Handler {
+  handler: (e?: KeyboardEvent | MouseEvent) => void
+  hotkey?: HotKey | HotKey[]
+  disabled?: () => boolean
+}
+
+const isWindows = /Win/.test(navigator.platform)
+export const formatHotkey = (hotkey: HotKey) => [
+  hotkey.meta && (isWindows ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
+  hotkey.alt && (isWindows ? 'Alt' : '⌥'),
+  hotkey.shift && (isWindows ? 'Shift' : '⇧'),
+  hotkey.key?.toUpperCase()
 ].filter(Boolean)
 
 const useActions = (registerHotkeys = false) => {
@@ -42,7 +56,7 @@ const useActions = (registerHotkeys = false) => {
   const navigate = useNavigate()
 
   // TODO: memoize
-  const actions = {
+  const actions: Record<string, Handler> = {
     NEW_FILE: {
       handler: () => navigate('/new')
     },
@@ -71,7 +85,7 @@ const useActions = (registerHotkeys = false) => {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
         // Pull project state
-        const { project: { _id, userid, ...project } } = useProjectStore.getState()
+        const { project: { _id, ...project } } = useProjectStore.getState()
 
         // Create a download link and use it
         const a = document.createElement('a')
@@ -84,7 +98,7 @@ const useActions = (registerHotkeys = false) => {
     },
     EXPORT: {
       hotkey: { key: 'e', meta: true },
-      handler: () => dispatchCustomEvent('exportImage')
+      handler: () => dispatchCustomEvent('exportImage', null)
     },
     EXPORT_AS_PNG: {
       hotkey: { key: 'e', shift: true, meta: true },
@@ -99,11 +113,12 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('exportImage', { type: 'png', clipboard: true })
     },
     EXPORT_AS_JFLAP: {
-      // handler: () => console.log('Export JFLAP'),
+      disabled: () => true,
+      handler: () => console.log('Export JFLAP')
     },
     OPEN_PREFERENCES: {
       hotkey: { key: ',', meta: true },
-      handler: () => dispatchCustomEvent('modal:preferences')
+      handler: () => dispatchCustomEvent('modal:preferences', null)
     },
     UNDO: {
       hotkey: { key: 'z', meta: true },
@@ -114,12 +129,14 @@ const useActions = (registerHotkeys = false) => {
       handler: redo
     },
     COPY: {
-      hotkey: { key: 'c', meta: true }
-      // handler: () => console.log('Copy'),
+      hotkey: { key: 'c', meta: true },
+      disabled: () => true,
+      handler: () => console.log('Copy')
     },
     PASTE: {
-      hotkey: { key: 'v', meta: true }
-      // handler: () => console.log('Paste'),
+      hotkey: { key: 'v', meta: true },
+      disabled: () => true,
+      handler: () => console.log('Paste')
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
@@ -163,7 +180,7 @@ const useActions = (registerHotkeys = false) => {
         const border = 40
 
         // Get the bounding box of the SVG group
-        const b = document.querySelector('#automatarium-graph > g').getBBox()
+        const b = (document.querySelector('#automatarium-graph > g') as SVGGraphicsElement).getBBox()
         if (Math.max(b.width, b.height) < border) return // Bail if the bounding box is too small
         const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
 
@@ -195,20 +212,23 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      // handler: () => console.log('Convert to DFA'),
+      disabled: () => true,
+      handler: () => console.log('Convert to DFA')
     },
     MINIMIZE_DFA: {
-      // handler: () => console.log('Minimize DFA'),
+      disabled: () => true,
+      handler: () => console.log('Minimize DFA')
     },
     AUTO_LAYOUT: {
-      // handler: () => console.log('Auto Layout'),
+      disabled: () => true,
+      handler: () => console.log('Auto Layout')
     },
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
     },
     KEYBOARD_SHORTCUTS: {
       hotkey: { key: '/', meta: true },
-      handler: () => dispatchCustomEvent('modal:shortcuts')
+      handler: () => dispatchCustomEvent('modal:shortcuts', null)
     },
     PRIVACY_POLICY: {
       handler: () => window.open('/privacy', '_blank')
@@ -253,7 +273,7 @@ const useActions = (registerHotkeys = false) => {
     },
     EDIT_COMMENT: {
       disabled: () => useSelectionStore.getState()?.selectedComments?.length !== 1,
-      handler: e => {
+      handler: (e: MouseEvent) => {
         const selectedCommentID = useSelectionStore.getState().selectedComments?.[0]
         if (selectedCommentID === undefined) return
         window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY, id: selectedCommentID }), 100)
@@ -276,7 +296,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     CREATE_COMMENT: {
-      handler: e => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100)
+      handler: (e: MouseEvent) => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100)
     },
     SET_STATE_NAME: {
       handler: () => {
@@ -293,7 +313,8 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     CREATE_STATE: {
-      handler: e => {
+      handler: (e: MouseEvent) => {
+        console.log(e)
         const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
         createState({ x: viewX, y: viewY })
         commit()
@@ -353,6 +374,8 @@ const useActions = (registerHotkeys = false) => {
     },
     REORDER_GRAPH: {
       handler: () => {
+        // I'll fix in #301 - Jake
+        // @ts-ignore
         updateProject(reorderStates(project))
         commit()
       }
@@ -362,7 +385,7 @@ const useActions = (registerHotkeys = false) => {
   // Register action hotkeys
   useEffect(() => {
     if (registerHotkeys) {
-      const handleKeyDown = e => {
+      const handleKeyDown = (e: KeyboardEvent) => {
         // Hotkeys are disabled if an input is focused
         if (haveInputFocused(e)) return
 
@@ -383,11 +406,9 @@ const useActions = (registerHotkeys = false) => {
             if (!(letterMatch || digitMatch || keyMatch)) { return false }
 
             // Check augmenting keys
-            if ((hotkey.meta || false) !== (e.metaKey || e.ctrlKey)) { return false }
-            if ((hotkey.alt || false) !== e.altKey) { return false }
-            if ((hotkey.shift || false) !== e.shiftKey) { return false }
-
-            return true
+            if (hotkey.meta !== (e.metaKey || e.ctrlKey)) { return false }
+            if (hotkey.alt !== e.altKey) { return false }
+            return hotkey.shift === e.shiftKey
           })
 
           // Prevent default and exec callback
