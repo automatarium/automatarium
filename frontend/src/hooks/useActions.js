@@ -150,13 +150,13 @@ const useActions = (registerHotkeys = false) => {
           projectType: project.projectType,
           initialStateId: isInitialSelected ? project.initialState : null
         }
-        sessionStorage.setItem(COPY_DATA_KEY, JSON.stringify(copyData))
+        localStorage.setItem(COPY_DATA_KEY, JSON.stringify(copyData))
       }
     },
     PASTE: {
       hotkey: { key: 'v', meta: true },
       handler: () => {
-        const pasteData = JSON.parse(sessionStorage.getItem(COPY_DATA_KEY))
+        const pasteData = JSON.parse(localStorage.getItem(COPY_DATA_KEY))
         if (pasteData === null) {
           // Copy has not been executed
           return
