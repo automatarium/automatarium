@@ -10,8 +10,7 @@ import {
   useCommentCreation,
   useStateSelection,
   useTransitionSelection,
-  useContextMenus,
-  useDeleteTool
+  useContextMenus
 } from '/src/hooks'
 
 const EditorPanel = () => {
@@ -24,7 +23,6 @@ const EditorPanel = () => {
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
 
-  useDeleteTool()
   useCommentCreation()
   useContextMenus()
 

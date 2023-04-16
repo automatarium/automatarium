@@ -1,15 +1,6 @@
 import { create } from 'zustand'
 import produce from 'immer'
-
-/**
- * 2D x, y coordinate pair
- */
-type Coordinate = {x: number, y: number}
-
-/**
- * Stores width/height of a 2D object
- */
-type Size = {width: number, height: number}
+import { Coordinate, Size } from '../types/ProjectTypes'
 
 interface ViewStore {
   svgElement: Element

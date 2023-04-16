@@ -6,6 +6,15 @@
  */
 export type ProjectType = 'FSA' | 'PDA' | 'TM'
 
+/**
+ * 2D x, y coordinate pair
+ */
+export type Coordinate = {x: number, y: number}
+
+/**
+ * Stores width/height of a 2D object
+ */
+export type Size = {width: number, height: number}
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum

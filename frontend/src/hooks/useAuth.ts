@@ -3,8 +3,21 @@ import { create } from 'zustand'
 
 import { firebase } from '/src/auth'
 import { getUser } from '/src/services/user'
+import IUser from 'backend/src/interfaces/user'
 
-const useUserStore = create(set => ({
+type User = IUser & {uid: string}
+type FireState = {fireLoaded: boolean, fireUser: User}
+
+interface UserStore {
+  user: User
+  signingUp: boolean
+  fireState: FireState
+  setFireState: (fireState: FireState) => void
+  setSigningUp: (singingUp: boolean) => void
+  setUser: (user: User) => void
+}
+
+const useUserStore = create<UserStore>(set => ({
   user: null,
   signingUp: false,
   fireState: { fireLoaded: false, fireUser: null },
@@ -19,7 +32,7 @@ const useAuth = () => {
   const [fetching, setFetching] = useState(false)
 
   // Log user in w/ firebase
-  const signIn = (email, password) => {
+  const signIn = (email: string, password: string) => {
     return firebase.auth().signInWithEmailAndPassword(email, password)
   }
 

@@ -2,7 +2,7 @@ import { useProjectStore } from '/src/stores'
 
 import useResourceDragging from './useResourceDragging'
 
-const commentsFromIDs = IDs => {
+const commentsFromIDs = (IDs: number[]) => {
   const comments = useProjectStore.getState()?.project?.comments ?? []
   return IDs
     .map(id => comments.find(comment => comment.id === id))

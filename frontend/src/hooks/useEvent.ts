@@ -23,7 +23,8 @@ export interface Events {
    * @see SidePanelKey for available panels
    */
   'sidepanel:open': {panel: SidePanelKey},
-  'modal:shortcuts': null
+  'modal:shortcuts': null,
+  'svg:mouseup': {didTargetSVG: boolean, originalEvent: MouseEvent}
 }
 
 interface EventOptions {
