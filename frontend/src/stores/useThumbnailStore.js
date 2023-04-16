@@ -1,7 +1,7 @@
-import create from 'zustand'
+import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
-const useThumbnailStore = create(persist(set => ({
+const useThumbnailStore = create()(persist(set => ({
   thumbnails: {},
 
   setThumbnail: (id, thumbnail) => set(state => ({

@@ -80,3 +80,14 @@ export interface Project {
     tests: AutomataTests,
     transitions: AutomataTransition[],
 }
+
+// This is for copy/paste function which isn't TS converted yet
+// Leaving it here so its ready for when its converted, so as not to clutter useActions
+export type CopyData = {
+    states: AutomataState[],
+    transitions: AutomataTransition[],
+    comments: ProjectComment[],
+    projectSource: string,
+    projectType: ProjectType,
+    initialStateId: number | null
+}

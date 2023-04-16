@@ -8,3 +8,4 @@ export const DOT_GRID_RADIUS = 2.4
 export const TEXT_PATH_OFFSET = 5
 export const REFLEXIVE_Y_OFFSET = 130
 export const REFLEXIVE_X_OFFSET = 75
+export const PASTE_POSITION_OFFSET = 10

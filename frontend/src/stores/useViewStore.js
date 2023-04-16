@@ -1,4 +1,4 @@
-import create from 'zustand'
+import { create } from 'zustand'
 import produce from 'immer'
 
 const screenToCanvasSpace = (x, y, container) => {
