@@ -86,3 +86,8 @@ export type CopyData = {
     projectType: ProjectType,
     initialStateId: number | null
 }
+
+export type Template = CopyData & {
+    _id: string,
+    name: string
+}

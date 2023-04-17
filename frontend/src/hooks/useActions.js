@@ -52,6 +52,12 @@ const useActions = (registerHotkeys = false) => {
 
   // TODO: memoize
   const actions = {
+    TEMPLATE: {
+      hotkey: { key: 'j', meta: true },
+      handler: () => {
+        console.log('template testing')
+      }
+    },
     NEW_FILE: {
       handler: () => navigate('/new')
     },
