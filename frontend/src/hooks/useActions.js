@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore } from '/src/stores'
 import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
@@ -48,6 +48,22 @@ const useActions = (registerHotkeys = false) => {
   const project = useProjectStore(s => s.project)
   const updateProject = useProjectStore(s => s.update)
 
+  const template = useTemplateStore(s => s.template)
+  const setTemplate = useTemplateStore(s => s.set)
+  const templates = useTemplatesStore(s => s.templates)
+
+  const myTemplate = {
+    states: [''],
+    transitions: [''],
+    comments: [''],
+    projectSource: 'a project',
+    projectType: 'FSA',
+    initialStateId: null,
+    _id: 'template id',
+    name: 'my template'
+  }
+
+
   const navigate = useNavigate()
 
   // TODO: memoize
@@ -55,7 +71,9 @@ const useActions = (registerHotkeys = false) => {
     TEMPLATE: {
       hotkey: { key: 'j', meta: true },
       handler: () => {
-        console.log('template testing')
+        setTemplate(myTemplate)
+        console.log(template)
+        console.log(templates)
       }
     },
     NEW_FILE: {

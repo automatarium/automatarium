@@ -397,10 +397,10 @@ const InputDialogs = () => {
               placeholder={'↔\t(direction)'}
               style={TRANSITION_INPUT_STYLE}
             />
-            <SubmitButton onClick={save}>
+          </InputWrapper>
+          <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
             </SubmitButton>
-          </InputWrapper>
         </Dropdown>
       )
     case 'comment':
