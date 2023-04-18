@@ -2,16 +2,10 @@ import { useEffect, useCallback, DependencyList } from 'react'
 import { PositionedTransition } from '/src/util/states'
 
 /**
- * Specifies what a function should look like that handles an event.
- * This saves us specifying the `detail` parameter everywhere and makes some logic simplier
- */
-type EventHandler<T> = (arg: CustomEvent<T>) => void
-
-/**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
  */
-export interface Events {
+export interface CustomEvents {
   'editTransition': {id: number},
   'editComment': {id: number, x: number, y: number},
   'editStateName': {id: number},
@@ -25,7 +19,22 @@ export interface Events {
   'edge:mousedown': {originalEvent: MouseEvent, transitions: PositionedTransition[]},
   'state:mousedown': {originalEvent: MouseEvent},
   'comment:mousedown': {originalEvent: MouseEvent}
+  'svg:mousedown': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+  'svg:mouseup': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+
 }
+
+/**
+ * The mapping of all available events.
+ * It is a combination of our custom events along with DOM events
+ */
+// eslint-disable-next-line no-undef
+export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} & DocumentEventMap
+
+/**
+ * What a function that handles an event should look like
+ */
+type EventHandler<T extends keyof Events> = (e: Events[T]) => void
 
 interface EventOptions {
   target?: Document,
@@ -33,7 +42,8 @@ interface EventOptions {
   options?: boolean | AddEventListenerOptions
 }
 
-const useEvent = <T extends keyof Events>(name: T, handler: EventHandler<Events[T]>,
+// eslint-disable-next-line no-undef
+const useEvent = <T extends keyof Events>(name: T, handler: EventHandler<T>,
   dependencies?: DependencyList, {
     target = document,
     options
