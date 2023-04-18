@@ -401,7 +401,7 @@ const InputDialogs = () => {
             <option value="L">L</option>
             <option value="S">S</option>
             <option value="R">R</option>
-            </select>
+            
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
             </SubmitButton>
