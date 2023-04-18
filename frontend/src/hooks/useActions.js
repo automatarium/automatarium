@@ -2,7 +2,8 @@ import { useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore } from '/src/stores'
-import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
+import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
+import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
@@ -22,6 +23,12 @@ const useActions = (registerHotkeys = false) => {
   const redo = useProjectStore(s => s.redo)
   const selectNone = useSelectionStore(s => s.selectNone)
   const selectAll = useSelectionStore(s => s.selectAll)
+  const selectedStatesIds = useSelectionStore(s => s.selectedStates)
+  const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
+  const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
+  const selectStates = useSelectionStore(s => s.setStates)
+  const selectTransitions = useSelectionStore(s => s.setTransitions)
+  const selectComments = useSelectionStore(s => s.setComments)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const toggleStatesFinal = useProjectStore(s => s.toggleStatesFinal)
   const flipTransitions = useProjectStore(s => s.flipTransitions)
@@ -34,6 +41,8 @@ const useActions = (registerHotkeys = false) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
   const createState = useProjectStore(s => s.createState)
+  const createComment = useProjectStore(s => s.createComment)
+  const createTransition = useProjectStore(s => s.createTransition)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
@@ -114,12 +123,105 @@ const useActions = (registerHotkeys = false) => {
       handler: redo
     },
     COPY: {
-      hotkey: { key: 'c', meta: true }
-      // handler: () => console.log('Copy'),
+      hotkey: { key: 'c', meta: true },
+      handler: () => {
+        const selectedStates = selectedStatesIds.map((stateId) => {
+          return project.states.find((state) => {
+            return state.id === stateId
+          })
+        })
+        const selectedComments = selectedCommentsIds.map((commentId) => {
+          return project.comments.find((comment) => {
+            return comment.id === commentId
+          })
+        })
+        const selectedTransitions = selectedTransitionsIds.map((transitionId) => {
+          return project.transitions.find((transition) => {
+            return transition.id === transitionId
+          })
+        })
+        const isInitialSelected = selectedStatesIds.includes(project.initialState)
+        // This will use the CopyData type defined in ProjectTypes
+        const copyData = {
+          states: selectedStates,
+          comments: selectedComments,
+          transitions: selectedTransitions,
+          projectSource: project._id,
+          projectType: project.projectType,
+          initialStateId: isInitialSelected ? project.initialState : null
+        }
+        localStorage.setItem(COPY_DATA_KEY, JSON.stringify(copyData))
+      }
     },
     PASTE: {
-      hotkey: { key: 'v', meta: true }
-      // handler: () => console.log('Paste'),
+      hotkey: { key: 'v', meta: true },
+      handler: () => {
+        const pasteData = JSON.parse(localStorage.getItem(COPY_DATA_KEY))
+        if (pasteData === null) {
+          // Copy has not been executed
+          return
+        }
+        let isInitialStateUpdated = false
+        if (pasteData.projectType !== project.projectType) {
+          alert(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
+          return
+        }
+        const isNewProject = pasteData.projectSource !== project._id
+        // Track which transitions have been updated with new state ids
+        const newTransitions = structuredClone(pasteData.transitions)
+        newTransitions.forEach(transition => {
+          transition.from = null
+          transition.to = null
+        })
+        // Add and select states, comments, and transitions
+        pasteData.states.forEach(state => {
+          // TODO: ensure position isn't out of window
+          state.x += PASTE_POSITION_OFFSET
+          state.y += PASTE_POSITION_OFFSET
+          const newId = createState(state)
+          // Update transitions to new state id
+          pasteData.transitions.forEach((transition, i) => {
+            if (transition.from === state.id && newTransitions[i].from === null) {
+              newTransitions[i].from = newId
+            }
+            if (transition.to === state.id && newTransitions[i].to === null) {
+              newTransitions[i].to = newId
+            }
+          })
+          // Update initial state id if applicable
+          if (pasteData.initialStateId === state.id && !isInitialStateUpdated) {
+            pasteData.initialStateId = newId
+            isInitialStateUpdated = true
+          }
+          state.id = newId
+        })
+        // Error if trying to paste transition without its to and from states
+        if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
+          alert('Sorry, there was an error while pasting')
+          removeStates(pasteData.states.map(state => state.id))
+          return
+        }
+        pasteData.transitions = newTransitions
+        selectStates(pasteData.states.map(state => state.id))
+        pasteData.comments.forEach(comment => {
+          // TODO: ensure position isn't out of window
+          comment.x += PASTE_POSITION_OFFSET
+          comment.y += PASTE_POSITION_OFFSET
+          const newId = createComment(comment)
+          comment.id = newId
+        })
+        selectComments(pasteData.comments.map(comment => comment.id))
+        pasteData.transitions.forEach(transition => {
+          const newId = createTransition(transition)
+          transition.id = newId
+        })
+        selectTransitions(pasteData.transitions.map(transition => transition.id))
+        if (isNewProject && pasteData.initialStateId !== null && project.initialState === null) {
+          setStateInitial(pasteData.initialStateId)
+        }
+        commit()
+      }
+
     },
     SELECT_ALL: {
       hotkey: { key: 'a', meta: true },
@@ -376,6 +478,7 @@ const useActions = (registerHotkeys = false) => {
 
           const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey]
           const activeHotkey = hotkeys.find(hotkey => {
+            // console.log('finding hotkey')
             // Guard against other keys
             const letterMatch = e.code === `Key${hotkey.key.toUpperCase()}`
             const digitMatch = e.code === `Digit${hotkey.key}`
