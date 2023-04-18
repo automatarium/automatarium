@@ -9,8 +9,6 @@ import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 
-// const projectType = useProjectStore(s => s.project.config.type)
-
 /**
  * Creates the transition text depending on the project type. Uses the following notation
  * - TM:  read,write;direction
@@ -178,13 +176,16 @@ const Transition = ({
 
     {/*
       Create the text for each transition. We have it grouped under one element to make rotation easier.
-      The Y coordinate needs to be lowered to the edge since by default it would appear very high
+      The Y coordinate needs to be lowered to the edge since by default it would appear very high.
+
+      I apologise for the funky ass offset math for setting the y coordinate. There is a better solution but this was
+      easiest - Jake
      */}
     <text
       x={control.x}
       transform={rotate(degrees, control)}
       textAnchor="middle"
-      y={control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0)}>
+      y={control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0) - (13 * offsetDirection) - (bendDirection === 'under' ? 5 : 0)}>
       {transitions.map((t, i) => {
         return <tspan
           dy={bendDirection === 'over' && i === 0 ? '0em' : textOffset}
