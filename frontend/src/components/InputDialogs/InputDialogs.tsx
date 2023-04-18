@@ -396,7 +396,7 @@ const InputDialogs = () => {
             //  onKeyUp={handleSave}
               placeholder={'↔\t(direction)'}
               style={{...TRANSITION_INPUT_STYLE, width: '155px'}}
-            >
+            />
             <option value="">↔ (direction)</option>
             <option value="L">L</option>
             <option value="S">S</option>
