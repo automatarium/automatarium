@@ -274,7 +274,7 @@ const InputDialogs = () => {
     setWrite(input[input.length - 1] ?? '')
   }
 
-  const handleDirectionIn = (e: ChangeEvent<HTMLSelectElement>) => {
+  const handleDirectionIn = (e: InputEvent) => {
     // ^$ is regex for empty string, essentially allowing user to backspace input on top of
     // the 'r', 'l', and 's' characters
     const input = e.target.value.toString().match(/[rls]|^$/gi)
@@ -389,7 +389,7 @@ const InputDialogs = () => {
             />
           </InputWrapper>
           <InputWrapper>
-            <select
+            <Input type="select"
               ref={inputDirectionRef}
               value={direction}
               onChange={handleDirectionIn}
@@ -397,7 +397,7 @@ const InputDialogs = () => {
               placeholder={'↔\t(direction)'}
               style={{...TRANSITION_INPUT_STYLE, width: '155px'}}
             >
-            <option value="">↔ (move)</option>
+            <option value="">↔ (direction)</option>
             <option value="L">L</option>
             <option value="S">S</option>
             <option value="R">R</option>
