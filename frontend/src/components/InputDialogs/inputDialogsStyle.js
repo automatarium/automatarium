@@ -10,7 +10,7 @@ export const SubmitButton = styled('button')`
   position: absolute;
   padding: 0;
   margin: 0;
-  right: .4em;
+  right: .8em;
   top: 0;
   bottom: 0;
   border: 0;

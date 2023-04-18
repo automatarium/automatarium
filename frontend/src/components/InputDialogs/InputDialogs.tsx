@@ -389,14 +389,20 @@ const InputDialogs = () => {
             />
           </InputWrapper>
           <InputWrapper>
-            <Input
+            <select
               ref={inputDirectionRef}
               value={direction}
               onChange={handleDirectionIn}
               onKeyUp={handleSave}
               placeholder={'↔\t(direction)'}
-              style={TRANSITION_INPUT_STYLE}
-            />
+              style={{...TRANSITION_INPUT_STYLE, width: '155px'}}
+            >
+            <option value="">↔ (direction)</option>
+            <option value="L">L</option>
+            <option value="S">S</option>
+            <option value="R">R</option>
+            </select>
+            
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
             </SubmitButton>
