@@ -99,24 +99,6 @@ function hasAllSymbols (transitions, symbols) {
   return true
 }
 
-// This will create a mapping of the symbols and the common "to" states, this will enable new states to be created if needed for the DFA
-export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, numberOfNFAStates: number): {[key: ReadSymbol]: [StateID, StateID][]} {
-  const symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]} = {}
-  for (let fromStateID = 0; fromStateID < numberOfNFAStates; fromStateID++) {
-    const transitions = initialTransitionTable[fromStateID]
-    for (let curElem = 0; curElem < transitions.length; curElem++) {
-      const toStateID = transitions[curElem][0]
-      const symbol = transitions[curElem][1]
-      if (symbol in symbolToStatesMap) {
-        symbolToStatesMap[symbol].push([fromStateID, toStateID])
-      } else {
-        symbolToStatesMap[symbol] = [[fromStateID, toStateID]]
-      }
-    }
-  }
-  return symbolToStatesMap
-}
-
 // This will mimic STEP 1 of the procedure by ensuring that for every DFA state, there are no lambda transitions and the states are merged correctly
 export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, mergedStates: {[key: string]: StateID[]}, numberOfNFAStates: StateID, curInitialState: StateID, curFinalStates: StateID[], tempTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}): [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] {
   for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
@@ -179,8 +161,8 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
       }
       foundFinals = true
     }
+    // Exit loop if both new initial and final states have been found
     if (foundInitial && foundFinals) {
-      // Exit loop if both new initial and final states have been found
       break
     }
   }
@@ -319,13 +301,88 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
   return initialTransitionTable
 }
 
+// This will mimic STEP 3 of the procedure by creating a mapping of the symbols and the common "to" states, then if needed, create new states for the DFA using the merging of similar mappings
+export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, numberOfNFAStates: number, symbolsPresent: Set<ReadSymbol>): {[key: ReadSymbol]: [StateID, StateID][]} {
+  const symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]} = {}
+  const newCombinedStates: {[key: string]: {symbol: ReadSymbol, tostates: StateID[]}[]} = {}
+  const symbolsArray = Array.from(symbolsPresent)
+  for (let fromStateID = 0; fromStateID < numberOfNFAStates; fromStateID++) {
+    // If the state is not present then it has been removed and we just ignore it
+    if (initialTransitionTable[fromStateID] === undefined) {
+      continue
+    } else {
+      const transitions = initialTransitionTable[fromStateID]
+      for (let curElem = 0; curElem < transitions.length; curElem++) {
+        const toStateID = transitions[curElem][0]
+        const symbol = transitions[curElem][1]
+        if (symbol in symbolToStatesMap) {
+          symbolToStatesMap[symbol].push([fromStateID, toStateID])
+        } else {
+          symbolToStatesMap[symbol] = [[fromStateID, toStateID]]
+        }
+      }
+    }
+  }
+
+  // Step 3.5, create the new states from the states that have two transitions for one symbol, and make the "to" and "from" states for this equal to a combination of the two other states. Continue this
+  // until no new states can be made
+  function combineStates (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, symbolsArray: ReadSymbol[], curTransitionElem: number, symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]}, symbol: ReadSymbol): [string, { symbol: ReadSymbol, tostates: StateID[] }[]] {
+    const filteredTransitions = symbolToStatesMap[symbol].filter(trans => trans[0] === curTransitionElem)
+    if (filteredTransitions.length <= 1) {
+      return [null, null]
+    }
+
+    filteredTransitions.sort((a, b) => a[1] - b[1])
+
+    const curKeyCombination = filteredTransitions.map(trans => trans[1]).join(',')
+    const curStateCombination = curKeyCombination.split(',').map(Number)
+
+    const combinedState = symbolsArray.map(symbol => {
+      const tostates = curStateCombination.flatMap(curState => {
+        return initialTransitionTable[curState]
+          .filter(trans => trans[1] === symbol)
+          .map(trans => trans[0])
+      }).sort()
+
+      return { symbol, tostates }
+    })
+
+    return [curKeyCombination, combinedState]
+  }
+
+  const keySet = new Set<string>()
+  let newKeyAdded = true
+
+  while (newKeyAdded) {
+    newKeyAdded = false
+
+    for (const symbol of Object.keys(symbolToStatesMap)) {
+      symbolToStatesMap[symbol].forEach(([curTransitionElem]) => {
+        const [curKeyCombination, combinedState] = combineStates(initialTransitionTable, symbolsArray, curTransitionElem, symbolToStatesMap, symbol)
+        if (combinedState) {
+          if (!keySet.has(curKeyCombination)) {
+            newCombinedStates[curKeyCombination] = combinedState
+            keySet.add(curKeyCombination)
+            newKeyAdded = true
+          }
+        }
+      })
+    }
+  }
+
+  console.log('Combined States')
+  console.log(newCombinedStates)
+
+  return symbolToStatesMap
+}
+
 // This will create a transition table such that the DFA can be constructed from it. It will return a transitionTable that consists of keys of arrays of key value pairs, where
 // the number of keys is equal to the number of states (each key equal to a StateID), where each key will then consist of an array of key value pairs, where the key in this case
 // is a StateID of the state the original key (or state in this case) transitions to, and the value is the ReadSymbol for this transition.
 export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFATransitions: number, numberOfNFAStates: number): {[key: StateID]: [StateID, ReadSymbol][]} {
   let initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {}
   const tempTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {}
-  // const symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]} = {}
+  let symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]} = {}
   const symbolsPresent = new Set<ReadSymbol>()
   const mergedStates: {[key: string]: StateID[]} = {}
   let curInitialState = nfaGraph.initialState
@@ -363,11 +420,12 @@ export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFATransiti
   // This will ensure that all states that do not have a transition for all symbols do, which will lead to a "trap state". This is required to be a DFA
   initialTransitionTable = createSymbolFromEveryState(initialTransitionTable, symbolsPresent, numberOfNFAStates, nfaGraph)
 
-  // // STEP 3: Create new states for the states that contain two or more "to" transitions for a given symbol, as there can only be one symbol from each transition.
-  // // could potentailly put this in a for loop that continues to loop and add states to the DFA if needed, while keeping track of how many states there were before the loop so as to
-  // // not repeat
-  // symbolToStatesMap = createSymbolsToStateMap(initialTransitionTable, numberOfNFAStates);
-
+  // STEP 3: Create new states for the states that contain two or more "to" transitions for a given symbol, as there can only be one symbol from each transition.
+  // could potentailly put this in a for loop that continues to loop and add states to the DFA if needed, while keeping track of how many states there were before the loop so as to
+  // not repeat
+  symbolToStatesMap = createSymbolsToStateMap(initialTransitionTable, numberOfNFAStates, symbolsPresent)
+  console.log('Symbol Mapping')
+  console.log(symbolToStatesMap)
   // This will create the tempTransitionTable from the initial one, which will represent the transition table of the new DFA.
   console.log('Initial Transition Table')
   console.log(initialTransitionTable)
@@ -406,7 +464,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn => {
         states: [] as FSAState[],
         transitions: [] as FSATransition[]
       }
-      // Sort the states so that they're ordered
+      // Sort the states so that they're ordered. This is important as the keys of the objects is used in the conversion algorithm
       nfaGraph.states.sort((a, b) => a.id - b.id)
       // Create a DFA from the given NFA
       dfaGraph = createDFA(nfaGraph, dfaGraph)
