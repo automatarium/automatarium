@@ -1,5 +1,5 @@
-import { FSAGraphIn, FSAState, FSATransition, StateID, ReadSymbol } from './graph'
-import { AutomataState } from 'frontend/src/types/ProjectTypes'
+import { FSAGraphIn, FSAState, StateID, ReadSymbol } from './graph'
+import { AutomataState, AutomataTransition } from 'frontend/src/types/ProjectTypes'
 
 // EXTREMELY IMPORTANT NOTE:
 // The NFA to DFA conversion relies on sequential StateID's such that each state is ordered from 0 onwards without skipping a number.
@@ -15,7 +15,7 @@ import { AutomataState } from 'frontend/src/types/ProjectTypes'
 type DFAGraph = {
   initialState: StateID;
   states: AutomataState[];
-  transitions: FSATransition[];
+  transitions: AutomataTransition[];
 }
 
 // Graph traversal algorithm starting from the initial state that removes unreachable states and transitions
@@ -428,8 +428,6 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
 
   // Step 3.5, where the merged states will be added to the initialTransitionTable and current transitions will be modified accordingly. Everything below will do just that
   // by using reference points to the first combined state
-  console.log('Combined States')
-  console.log(newCombinedStates)
   const lastKey = Object.keys(initialTransitionTable)[Object.keys(initialTransitionTable).length - 1]
   let lastKeyNumber = parseInt(lastKey)
   const lastKeyArray = []
@@ -575,27 +573,15 @@ export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph =>
   let transID = 0
   for (let curFromState = 0; curFromState < Object.keys(transitionTable).length; curFromState++) {
     for (let curTrans = 0; curTrans < transitionTable[Object.keys(transitionTable)[curFromState]].length; curTrans++) {
-      console.log('test')
-      console.log(Object.keys(transitionTable)[curFromState])
-      console.log(transitionTable[Object.keys(transitionTable)[curFromState]])
-      console.log(transitionTable[Object.keys(transitionTable)[curFromState]].length)
       dfaGraph.transitions[transID] = { from: undefined, id: undefined, read: undefined, to: undefined }
       dfaGraph.transitions[transID].from = Object.keys(transitionTable).map(Number)[curFromState]
       dfaGraph.transitions[transID].id = transID
-      const symbol = []
-      symbol.push(transitionTable[Object.keys(transitionTable)[curFromState]][curTrans][1])
-      dfaGraph.transitions[transID].read = symbol
+      dfaGraph.transitions[transID].read = transitionTable[Object.keys(transitionTable)[curFromState]][curTrans][1]
       dfaGraph.transitions[transID].to = transitionTable[Object.keys(transitionTable)[curFromState]][curTrans][0]
       transID++
     }
   }
 
-  console.log('Transition Table')
-  console.log(transitionTable)
-  console.log('Initial State')
-  console.log(curInitialState)
-  console.log('Final States')
-  console.log(curFinalStates)
   return dfaGraph
 }
 
@@ -616,7 +602,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
       let dfaGraph = {
         initialState: undefined as StateID,
         states: [] as AutomataState[],
-        transitions: [] as FSATransition[]
+        transitions: [] as AutomataTransition[]
       }
 
       // Sort the states so that they're ordered. This is important as the keys of the objects is used in the conversion algorithm
@@ -625,21 +611,12 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
       dfaGraph = createDFA(nfaGraph, dfaGraph)
       // Remove unreachable states from this new dfaGraph
       dfaGraph = removeUnreachableDFAStates(dfaGraph)
-      // Need to reorder states and transitions so everything is sequential
+      // Need to reorder states and transitions so everything is sequential. Do later
 
-      console.log('NFA Graph')
-      console.log(nfaGraph)
-      console.log('NFA States')
-      console.log(nfaGraph.states)
-      console.log('NFA Transitions')
-      console.log(nfaGraph.transitions)
-      console.log('DFA Graph')
-      console.log(dfaGraph)
-      console.log('DFA States')
-      console.log(dfaGraph.states)
-      console.log('DFA Transitions')
-      console.log(dfaGraph.transitions)
-      return nfaGraph
+      // Finally copy over the required elements from nfaGraph
+      const { initialState, states, transitions, ...dfaGraphCopy } = nfaGraph
+      const dfaGraphFinal = { ...dfaGraph, ...dfaGraphCopy }
+      return dfaGraphFinal
     }
   }
 }
