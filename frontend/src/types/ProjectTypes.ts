@@ -54,10 +54,10 @@ export type TMDirection = 'L' | 'R' | 'S'
 /**
  * Basic transition type shared across every transition
  */
-export interface AutomataTransition {
+export interface BaseAutomataTransition {
     from: number,
     id: number,
-    read: string | string[], // Expanded FSA has multiple read symbols. The access is still the same so shouldn't be a problem
+    read: string
     to: number,
 
 }
@@ -65,7 +65,7 @@ export interface AutomataTransition {
 /**
  * Transition used by PDA projects
  */
-export interface PDAAutomataTransition extends AutomataTransition{
+export interface PDAAutomataTransition extends BaseAutomataTransition{
     push: string
     pop: string
 }
@@ -73,43 +73,37 @@ export interface PDAAutomataTransition extends AutomataTransition{
 /**
  * Transition used by TM projects
  */
-export interface TMAutomataTransition extends AutomataTransition {
+export interface TMAutomataTransition extends BaseAutomataTransition {
     write: string
+    direction: TMDirection
 }
+
+export type AutomataTransition = BaseAutomataTransition | PDAAutomataTransition | TMAutomataTransition
 
 /**
  * What the graph used by the frontend looks like.
  * This is the base type, with variants for the other project types defined later
  */
-type BaseProjectGraph = {
-    projectType: ProjectType
+type BaseProjectGraph<PT extends ProjectType, T extends BaseAutomataTransition> = {
+    projectType: PT
     states: AutomataState[]
-    transitions: AutomataTransition[]
+    transitions: T[]
     initialState: number | null
 }
 
 /**
  * Graph for FSA project. There isn't any different in types but this is just for completion’s sake
  */
-type FSAProjectGraph = BaseProjectGraph & {
-    projectType: 'FSA'
-}
-
+type FSAProjectGraph = BaseProjectGraph<'FSA', BaseAutomataTransition>
 /**
  * Graph for PDA project. The transitions need push/pop properties
  */
-type PDAProjectGraph = BaseProjectGraph & {
-    projectType: 'PDA'
-    transitions: PDAAutomataTransition
-}
+type PDAProjectGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
 
 /**
  * Graph for TM project. The transitions need read/write properties
  */
-type TMProjectGraph = BaseProjectGraph & {
-    projectType: 'TM'
-    transitions: TMAutomataTransition
-}
+type TMProjectGraph = BaseProjectGraph<'TM', TMAutomataTransition>
 
 /**
  * All the different types a project can be.
@@ -134,9 +128,17 @@ export type Project = ProjectGraph & {
 // Leaving it here so its ready for when its converted, so as not to clutter useActions
 export type CopyData = {
     states: AutomataState[],
-    transitions: AutomataTransition[],
+    transitions: BaseAutomataTransition[],
     comments: ProjectComment[],
     projectSource: string,
     projectType: ProjectType,
     initialStateId: number | null
+}
+
+/**
+ * Small helper function to change the value of a type at block level.
+ * Use this with care since it does override the type system.
+ */
+export function assertType<T> (value: unknown): asserts value is T {
+
 }

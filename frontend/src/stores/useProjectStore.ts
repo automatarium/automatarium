@@ -8,7 +8,7 @@ import { randomProjectName } from '../util/projectName'
 
 import {
   Project,
-  AutomataTransition,
+  BaseAutomataTransition,
   AutomataState,
   ProjectConfig,
   ProjectComment,
@@ -74,8 +74,8 @@ interface ProjectStore {
   redo: () => void,
   setLastSaveDate: (lastSaveDate: number) => void,
   setName: (name: string) => void,
-  createTransition: (transition: AutomataTransition) => number,
-  editTransition: (transition: Partial<AutomataTransition>) => void,
+  createTransition: (transition: BaseAutomataTransition) => number,
+  editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
   createComment: (comment: ProjectComment) => void,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
@@ -166,7 +166,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Create a new transition */
-  createTransition: (transition: AutomataTransition) => {
+  createTransition: (transition: BaseAutomataTransition) => {
     const id = 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
     set(produce(({ project }) => {
       project.transitions.push({ ...transition, id })
@@ -174,17 +174,11 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     return id
   },
 
-  editTransition: (newTransition: Partial<AutomataTransition>) => set(produce(({ project }: { project: StoredProject }) => {
+  editTransition: newTransition => set(produce(({ project }: { project: StoredProject }) => {
     // Refactor types to enums later
-    if (project.config.type === 'TM') {
-      project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).write = newTransition.write
-      project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).read = newTransition.read
-      project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).direction = newTransition.direction
-    } else if (project.config.type === 'PDA') {
-      project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).pop = newTransition.pop
-      project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).push = newTransition.push
-    }
-    project.transitions.find((t: AutomataTransition) => t.id === newTransition.id).read = newTransition.read
+    const ti = project.transitions.findIndex(t => t.id === newTransition.id)
+    // Merge the new transition info with existing transition info
+    project.transitions[ti] = { ...project.transitions[ti], ...newTransition }
   })),
 
   /* Create a new comment */
@@ -273,12 +267,12 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     project.states = project.states.filter((st: AutomataState) => !stateIDs.includes(st.id))
 
     // Remove associated transitions
-    project.transitions = project.transitions.filter((t: AutomataTransition) => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
+    project.transitions = project.transitions.filter((t: BaseAutomataTransition) => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
   })),
 
   /* Remove transitions by id */
   removeTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
-    project.transitions = project.transitions.filter((t: AutomataTransition) => !transitionIDs.includes(t.id))
+    project.transitions = project.transitions.filter((t: BaseAutomataTransition) => !transitionIDs.includes(t.id))
   })),
 
   /* Remove comments by id */
