@@ -12,7 +12,9 @@ import {
   AutomataState,
   ProjectConfig,
   ProjectComment,
-  ProjectType
+  ProjectType,
+  CopyData,
+  Template
 } from '../types/ProjectTypes'
 
 import {
@@ -23,6 +25,8 @@ import {
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
 } from '../config/projects'
+
+import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 
 /**
  * A stored project has an extra `_id` field which is used to tell identify it
@@ -76,19 +80,17 @@ interface ProjectStore {
   setName: (name: string) => void,
   createTransition: (transition: AutomataTransition) => number,
   editTransition: (transition: Partial<AutomataTransition>) => void,
-  createComment: (comment: ProjectComment) => void,
+  createComment: (comment: ProjectComment) => number,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
-  createState: (state: AutomataState) => void,
+  createState: (state: AutomataState) => number,
   updateState: (state: AutomataState) => void,
   removeState: (state: AutomataState) => void,
-  // still not sure what's going on with the tests
   setSingleTest: (value: string) => void,
   addBatchTest: (value: string) => void,
   updateBatchTest: (index: number, value: string) => void,
   removeBatchTest: (index: number) => void,
   setStateInitial: (stateID: number) => void,
-  // not sure if arrays
   toggleStatesFinal: (stateIDs: number[]) => void,
   flipTransitions: (transitionIDs: number[]) => void,
   removeStates: (stateIDs: number[]) => void,

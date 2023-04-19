@@ -6,6 +6,7 @@ import {
   useCommentDragging,
   useCommentSelection,
   useStateCreation,
+  useTemplateInsert,
   useTransitionCreation,
   useCommentCreation,
   useStateSelection,
@@ -23,6 +24,7 @@ const EditorPanel = () => {
   const { startDrag: startCommentDrag } = useCommentDragging()
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
+  useTemplateInsert()
 
   useDeleteTool()
   useCommentCreation()

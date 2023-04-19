@@ -8,6 +8,7 @@ import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
+import { useCreateBatch } from './index'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 
 const isWindows = navigator.platform?.match(/Win/)
@@ -51,6 +52,69 @@ const useActions = (registerHotkeys = false) => {
   const template = useTemplateStore(s => s.template)
   const setTemplate = useTemplateStore(s => s.set)
   const templates = useTemplatesStore(s => s.templates)
+
+  const createBatch = (createData, project) => {
+    console.log(createData)
+    let isInitialStateUpdated = false
+    if (createData.projectType !== project.projectType) {
+      alert(`Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`)
+      return
+    }
+    // Perhaps this will be passed through
+    const isNewProject = createData.projectSource !== project._id
+    const newTransitions = structuredClone(createData.transitions)
+    newTransitions.forEach(transition => {
+      transition.from = null
+      transition.to = null
+    })
+    createData.states.forEach(state => {
+      // TODO: ensure position isn't out of window
+      // Probably will have to take adjusting position out of this function
+      state.x += PASTE_POSITION_OFFSET
+      state.y += PASTE_POSITION_OFFSET
+      const newId = createState(state)
+      // Update transitions to new state id
+      createData.transitions.forEach((transition, i) => {
+        if (transition.from === state.id && newTransitions[i].from === null) {
+          newTransitions[i].from = newId
+        }
+        if (transition.to === state.id && newTransitions[i].to === null) {
+          newTransitions[i].to = newId
+        }
+      })
+      // Update initial state id if applicable
+      if (createData.initialStateId === state.id && !isInitialStateUpdated) {
+        createData.initialStateId = newId
+        isInitialStateUpdated = true
+      }
+      state.id = newId
+    })
+    // TODO: Improve this error handling
+    if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
+      alert('Sorry, there was an error')
+      removeStates(createData.states.map(state => state.id))
+      return
+    }
+    createData.transitions = newTransitions
+    selectStates(createData.states.map(state => state.id))
+    createData.comments.forEach(comment => {
+      // TODO: ensure position isn't out of window
+      comment.x += PASTE_POSITION_OFFSET
+      comment.y += PASTE_POSITION_OFFSET
+      const newId = createComment(comment)
+      comment.id = newId
+    })
+    selectComments(createData.comments.map(comment => comment.id))
+    createData.transitions.forEach(transition => {
+      const newId = createTransition(transition)
+      transition.id = newId
+    })
+    selectTransitions(createData.transitions.map(transition => transition.id))
+    if (isNewProject && createData.initialStateId !== null && project.initialState === null) {
+      setStateInitial(createData.initialStateId)
+    }
+    commit()
+  }
 
   const myTemplate = {
     states: [''],
@@ -185,65 +249,67 @@ const useActions = (registerHotkeys = false) => {
           // Copy has not been executed
           return
         }
-        let isInitialStateUpdated = false
-        if (pasteData.projectType !== project.projectType) {
-          alert(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
-          return
-        }
-        const isNewProject = pasteData.projectSource !== project._id
-        // Track which transitions have been updated with new state ids
-        const newTransitions = structuredClone(pasteData.transitions)
-        newTransitions.forEach(transition => {
-          transition.from = null
-          transition.to = null
-        })
-        // Add and select states, comments, and transitions
-        pasteData.states.forEach(state => {
-          // TODO: ensure position isn't out of window
-          state.x += PASTE_POSITION_OFFSET
-          state.y += PASTE_POSITION_OFFSET
-          const newId = createState(state)
-          // Update transitions to new state id
-          pasteData.transitions.forEach((transition, i) => {
-            if (transition.from === state.id && newTransitions[i].from === null) {
-              newTransitions[i].from = newId
-            }
-            if (transition.to === state.id && newTransitions[i].to === null) {
-              newTransitions[i].to = newId
-            }
-          })
-          // Update initial state id if applicable
-          if (pasteData.initialStateId === state.id && !isInitialStateUpdated) {
-            pasteData.initialStateId = newId
-            isInitialStateUpdated = true
-          }
-          state.id = newId
-        })
-        // Error if trying to paste transition without its to and from states
-        if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
-          alert('Sorry, there was an error while pasting')
-          removeStates(pasteData.states.map(state => state.id))
-          return
-        }
-        pasteData.transitions = newTransitions
-        selectStates(pasteData.states.map(state => state.id))
-        pasteData.comments.forEach(comment => {
-          // TODO: ensure position isn't out of window
-          comment.x += PASTE_POSITION_OFFSET
-          comment.y += PASTE_POSITION_OFFSET
-          const newId = createComment(comment)
-          comment.id = newId
-        })
-        selectComments(pasteData.comments.map(comment => comment.id))
-        pasteData.transitions.forEach(transition => {
-          const newId = createTransition(transition)
-          transition.id = newId
-        })
-        selectTransitions(pasteData.transitions.map(transition => transition.id))
-        if (isNewProject && pasteData.initialStateId !== null && project.initialState === null) {
-          setStateInitial(pasteData.initialStateId)
-        }
-        commit()
+        createBatch(pasteData, project)
+        // let isInitialStateUpdated = false
+        // if (pasteData.projectType !== project.projectType) {
+        //   alert(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
+        //   return
+        // }
+        // const isNewProject = pasteData.projectSource !== project._id
+        // // Track which transitions have been updated with new state ids
+        // const newTransitions = structuredClone(pasteData.transitions)
+        // newTransitions.forEach(transition => {
+        //   transition.from = null
+        //   transition.to = null
+        // })
+        // // Add and select states, comments, and transitions
+        // pasteData.states.forEach(state => {
+        //   // TODO: ensure position isn't out of window
+        //   state.x += PASTE_POSITION_OFFSET
+        //   state.y += PASTE_POSITION_OFFSET
+        //   const newId = createState(state)
+        //   // Update transitions to new state id
+        //   pasteData.transitions.forEach((transition, i) => {
+        //     if (transition.from === state.id && newTransitions[i].from === null) {
+        //       newTransitions[i].from = newId
+        //     }
+        //     if (transition.to === state.id && newTransitions[i].to === null) {
+        //       newTransitions[i].to = newId
+        //     }
+        //   })
+        //   // Update initial state id if applicable
+        //   if (pasteData.initialStateId === state.id && !isInitialStateUpdated) {
+        //     pasteData.initialStateId = newId
+        //     isInitialStateUpdated = true
+        //   }
+        //   state.id = newId
+        // })
+        // // Error if trying to paste transition without its to and from states
+        // // This will not be covered in the general function
+        // if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
+        //   alert('Sorry, there was an error while pasting')
+        //   removeStates(pasteData.states.map(state => state.id))
+        //   return
+        // }
+        // pasteData.transitions = newTransitions
+        // selectStates(pasteData.states.map(state => state.id))
+        // pasteData.comments.forEach(comment => {
+        //   // TODO: ensure position isn't out of window
+        //   comment.x += PASTE_POSITION_OFFSET
+        //   comment.y += PASTE_POSITION_OFFSET
+        //   const newId = createComment(comment)
+        //   comment.id = newId
+        // })
+        // selectComments(pasteData.comments.map(comment => comment.id))
+        // pasteData.transitions.forEach(transition => {
+        //   const newId = createTransition(transition)
+        //   transition.id = newId
+        // })
+        // selectTransitions(pasteData.transitions.map(transition => transition.id))
+        // if (isNewProject && pasteData.initialStateId !== null && project.initialState === null) {
+        //   setStateInitial(pasteData.initialStateId)
+        // }
+        // commit()
       }
 
     },
