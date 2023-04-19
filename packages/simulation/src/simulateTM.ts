@@ -1,10 +1,5 @@
-import { TMState, TMGraph } from './TMSearch'
-import {
-  TMGraphIn,
-  Tape,
-  TMExecutionResult,
-  TMExecutionTrace
-} from './graph'
+import { TMGraph, TMState } from './TMSearch'
+import { Tape, TMExecutionResult, TMExecutionTrace, TMGraphIn } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
 
@@ -51,12 +46,11 @@ export const simulateTM = (
   const result = breadthFirstSearch(problem)
 
   if (!result) {
-    const emptyExecution: TMExecutionResult = {
+    return {
       trace: [{ to: 0, tape: null }],
       halted: false,
       tape: inputTape
     }
-    return emptyExecution
   }
   return {
     halted: result.state.isFinal,

@@ -84,12 +84,6 @@ export type FSAGraphIn = {
     transitions: FSATransition[];
 };
 
-export type PDAGraphIn = {
-    initialState: StateID;
-    states: PDAState[];
-    transitions: PDATransition[];
-}
-
 // Will be used for importing from front end
 export type TMGraphIn = {
     initialState: StateID

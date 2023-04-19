@@ -94,22 +94,23 @@ type BaseProjectGraph<PT extends ProjectType, T extends BaseAutomataTransition> 
 /**
  * Graph for FSA project. There isn't any different in types but this is just for completion’s sake
  */
-type FSAProjectGraph = BaseProjectGraph<'FSA', BaseAutomataTransition>
+export type FSAProjectGraph = BaseProjectGraph<'FSA', BaseAutomataTransition>
+
 /**
  * Graph for PDA project. The transitions need push/pop properties
  */
-type PDAProjectGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
+export type PDAProjectGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
 
 /**
  * Graph for TM project. The transitions need read/write properties
  */
-type TMProjectGraph = BaseProjectGraph<'TM', TMAutomataTransition>
+export type TMProjectGraph = BaseProjectGraph<'TM', TMAutomataTransition>
 
 /**
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
+export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
 
 /**
  * What a project for the frontend looks like.
