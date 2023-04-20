@@ -1,12 +1,15 @@
 import { FSAGraphIn, FSAState, StateID, ReadSymbol } from './graph'
 import { AutomataState, AutomataTransition } from 'frontend/src/types/ProjectTypes'
 
-// Define a type for the DFAGraph
+// Define useful types
 type DFAGraph = {
   initialState: StateID;
   states: AutomataState[];
   transitions: AutomataTransition[];
 }
+type TransitionTable = Record<StateID, [StateID, ReadSymbol][]>
+type CombinedStateArray = [string, { symbol: ReadSymbol, tostates: StateID[] }[]]
+type CombinedStates = {[key: string]: {symbol: ReadSymbol, tostates: StateID[] }[]}
 
 // Graph traversal algorithm starting from the initial state that removes unreachable states and transitions (NFA)
 export const removeUnreachableNFAStates = (nfaGraph: FSAGraphIn): FSAGraphIn => {
@@ -65,14 +68,7 @@ export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
 
 // This will check to ensure that the graph passed in has a final state before continuing
 export const finalStateIsPresent = (nfaGraphStates: FSAState[]): boolean => {
-  const numberOfNFAStates: number = nfaGraphStates.length
-  let doesFinalExist: boolean = false
-  for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
-    if (nfaGraphStates[curElem].isFinal) {
-      doesFinalExist = true
-    }
-  }
-  return doesFinalExist
+  return nfaGraphStates.some(state => state.isFinal)
 }
 
 // This will check to ensure that the graph passed in has an initial state before continuing
@@ -92,7 +88,7 @@ function hasAllSymbols (transitions: [StateID, ReadSymbol][], symbols: ReadSymbo
 }
 
 // This function will handle the logic for combining states when necessary
-function combineStates (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, symbolsArray: ReadSymbol[], curTransitionElem: number, symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]}, symbol: ReadSymbol): [string, { symbol: ReadSymbol, tostates: StateID[] }[]] {
+function combineStates (initialTransitionTable: TransitionTable, symbolsArray: ReadSymbol[], curTransitionElem: number, symbolToStatesMap: TransitionTable, symbol: ReadSymbol): CombinedStateArray {
   const filteredTransitions = symbolToStatesMap[symbol].filter(trans => trans[0] === curTransitionElem)
   if (filteredTransitions.length <= 1) {
     return [null, null]
@@ -112,7 +108,7 @@ function combineStates (initialTransitionTable: {[key: StateID]: [StateID, ReadS
 }
 
 // This will mimic STEP 1 of the procedure by ensuring that for every DFA state, there are no lambda transitions and the states are merged correctly
-export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, mergedStates: {[key: string]: StateID[]}, numberOfNFAStates: StateID, curInitialState: StateID, curFinalStates: StateID[], tempTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}): [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] {
+export function removeLambdaTransitions (initialTransitionTable: TransitionTable, mergedStates: {[key: string]: StateID[]}, numberOfNFAStates: StateID, curInitialState: StateID, curFinalStates: StateID[], tempTransitionTable: TransitionTable): [TransitionTable, StateID, StateID[]] {
   for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
     mergedStates[curElem] = [curElem]
   }
@@ -125,7 +121,7 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
       // Traverse lambda transitions until no more states can be reached
       for (let j = 0; j < visitedStates.size; j++) {
         const curState = Array.from(visitedStates)[j]
-        const curTransitions = initialTransitionTable[curState] || []
+        const curTransitions = initialTransitionTable[curState]
         for (const [toState, symbol] of curTransitions) {
           if (symbol === undefined && !visitedStates.has(toState)) {
             visitedStates.add(toState)
@@ -173,17 +169,12 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
   // able to transition to the last state in the chain
   for (let curElem = numberOfNFAStates - 1; curElem >= 0; curElem--) {
     const mergedWith = mergedStates[curElem][0]
-    for (let i = 1; i < mergedStates[curElem].length; i++) {
-      const curState = mergedStates[curElem][i]
-      for (let j = 0; j < initialTransitionTable[curState].length; j++) {
-        const toState = initialTransitionTable[curState][j][0]
-        let symbol = initialTransitionTable[curState][j][1]
-        // If the transition symbol is undefined, find it from the mergedWith state
+    for (const curState of mergedStates[curElem].slice(1)) {
+      for (let [toState, symbol] of initialTransitionTable[curState]) {
         if (symbol === undefined) {
-          for (let k = 0; k < initialTransitionTable[mergedWith].length; k++) {
-            const existingTransition = initialTransitionTable[mergedWith][k]
-            if (existingTransition[0] === toState) {
-              symbol = existingTransition[1]
+          for (const [existingToState, existingSymbol] of initialTransitionTable[mergedWith]) {
+            if (existingToState === toState) {
+              symbol = existingSymbol
               break
             }
           }
@@ -191,8 +182,8 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
         // If a transition with the same symbol and toState doesn't already exist, add it to the tempTransitionTable and initialTransitionTable
         if (symbol !== undefined) {
           let transitionExists = false
-          for (let k = 0; k < tempTransitionTable[mergedWith].length; k++) {
-            if (tempTransitionTable[mergedWith][k][0] === toState && tempTransitionTable[mergedWith][k][1] === symbol) {
+          for (const [existingToState, existingSymbol] of tempTransitionTable[mergedWith]) {
+            if (existingToState === toState && existingSymbol === symbol) {
               transitionExists = true
               break
             }
@@ -203,21 +194,24 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
           }
         }
       }
-    }
-
-    // Merge all the mergedStates that have been merged into the current state
-    for (let i = 1; i < mergedStates[curElem].length; i++) {
-      const curState = mergedStates[curElem][i]
-      mergedStates[curState] = mergedStates[mergedWith]
+      // Merge all the mergedStates that have been merged into the current state
+      for (const mergedState of mergedStates[curElem].slice(1)) {
+        mergedStates[mergedState] = mergedStates[mergedWith]
+      }
     }
   }
+
   // STEP 1.5: Remove all lambda transitions and for the "to states" that contain this transition, remove that state and all its transitions
   // if it does not contain any transitions that go into itself, otherwise do nothing. If changes were made, then update the initialTransitionTable
   // accordingly
   const removeTheseStates: StateID[] = []
+
+  // Iterate over all the NFA states and their transitions
   for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
     for (let curStateID = 0; curStateID < initialTransitionTable[curElem].length; curStateID++) {
+    // The transition is a lambda transition if its symbol is undefined
       if (initialTransitionTable[curElem][curStateID][1] === undefined) {
+      // Check if the state transition to contains a transition to itself
         let sameStateTransitionExists = false
         const checkStateID = initialTransitionTable[curElem][curStateID][0]
         for (let i = 0; i < initialTransitionTable[checkStateID].length; i++) {
@@ -225,13 +219,16 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
             sameStateTransitionExists = true
           }
         }
+        // If there is no transition to itself, mark it for removal
         if (!sameStateTransitionExists) {
           removeTheseStates.push(checkStateID)
         }
+        // Remove the lambda transition
         initialTransitionTable[curElem].splice(curStateID, 1)
       }
     }
   }
+  // Remove all states marked for removal and update the transition table accordingly
   for (let curElem = 0; curElem < removeTheseStates.length; curElem++) {
     delete initialTransitionTable[removeTheseStates[curElem]]
   }
@@ -239,7 +236,7 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
 }
 
 // This will mimic STEP 2 of the procedure by ensuring that for every DFA state, there is a symbol transition coming from it
-export function createSymbolFromEveryState (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, symbolsPresent: Set<ReadSymbol>, numberOfNFAStates: StateID, nfaGraph: FSAGraphIn) {
+export function createSymbolFromEveryState (initialTransitionTable: TransitionTable, symbolsPresent: Set<ReadSymbol>, numberOfNFAStates: StateID, nfaGraph: FSAGraphIn) {
   const symbolsArray = Array.from(symbolsPresent)
   let nextAvailableStateID = numberOfNFAStates
   // Go through all the original states defined and see if new states need to be created
@@ -279,18 +276,14 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
         } else {
         // Else go each transition and if a symbol is not found, make a new state for it and transition to that state with the given symbol.
           for (const symbol of symbolsArray) {
-            let symbolFound = false
-            for (const [, readSymbol] of initialTransitionTable[stateID]) {
-              if (readSymbol === symbol) {
-                symbolFound = true
-                break
-              }
-            }
+            const symbolFound = initialTransitionTable[stateID].some(([, readSymbol]) => readSymbol === symbol)
             if (!symbolFound) {
               // Check if a transition already exists for this symbol
               const existingTransition = initialTransitionTable[stateID].find(([toStateID, readSymbol]) => readSymbol === symbol)
+              // If not, then make a transition to the next state for this symbol for the current state
               if (!existingTransition) {
                 initialTransitionTable[stateID].push([nextAvailableStateID, symbol])
+                // The next state must be a trap state, so make all the transitions for each symbol go back into it
                 initialTransitionTable[nextAvailableStateID] = []
                 for (const tempSymbol of symbolsArray) {
                   initialTransitionTable[nextAvailableStateID].push([nextAvailableStateID, tempSymbol])
@@ -306,8 +299,8 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
           if (initialTransitionTable[nextAvailableStateID - 1] === undefined) {
             initialTransitionTable[nextAvailableStateID - 1] = []
             // With this new state, since it is a trap state, just transition to itself for every possible symbol.
-            for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
-              initialTransitionTable[nextAvailableStateID - 1].push([nextAvailableStateID - 1, symbolsArray[curElem]])
+            for (const symbol of symbolsArray) {
+              initialTransitionTable[nextAvailableStateID - 1].push([nextAvailableStateID - 1, symbol])
             }
             nextAvailableStateID++
           }
@@ -319,17 +312,17 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
 }
 
 // This will mimic STEP 3 of the procedure by creating a mapping of the symbols and the common "to" states, then if needed, create new states for the DFA using the merging of similar mappings
-export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]}, numberOfNFAStates: number, symbolsPresent: Set<ReadSymbol>, curInitialState: StateID, curFinalStates: StateID[]): [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] {
-  let symbolToStatesMap: {[key: ReadSymbol]: [StateID, StateID][]} = {}
-  const newCombinedStates: {[key: string]: {symbol: ReadSymbol, tostates: StateID[]}[]} = {}
+export function createSymbolsToStateMap (initialTransitionTable: TransitionTable, numberOfNFAStates: number, symbolsPresent: Set<ReadSymbol>, curInitialState: StateID, curFinalStates: StateID[]): [TransitionTable, StateID, StateID[]] {
+  let symbolToStatesMap: TransitionTable = {}
+  // Contains information about the combined states, where the key will be the states combined, for example if state 2 and 5 are combined the key will be {2,5}
+  const newCombinedStates: CombinedStates = {}
   const symbolsArray = Array.from(symbolsPresent)
   for (let fromStateID = 0; fromStateID < numberOfNFAStates; fromStateID++) {
     // If the state is not present then it has been removed and we just ignore it
     if (initialTransitionTable[fromStateID] !== undefined) {
       const transitions = initialTransitionTable[fromStateID]
-      for (let curElem = 0; curElem < transitions.length; curElem++) {
-        const toStateID = transitions[curElem][0]
-        const symbol = transitions[curElem][1]
+      // Create a mapping of all transitions that use a given symbol so it will be easier to find transitions for given symbols later
+      for (const [toStateID, symbol] of transitions) {
         if (symbol in symbolToStatesMap) {
           symbolToStatesMap[symbol].push([fromStateID, toStateID])
         } else {
@@ -339,43 +332,41 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
     }
   }
 
+  // This while loop ensures that once states are merged, their to states are merged and checked to see if they exist. If they all do, then there are no new combinations to be made and just exit, otherwise
+  // the states need to be merged
   // Now we will continue to create new states to represent merged states until no new states can be created
   const keySet = new Set<string>()
   let newKeyAdded = true
-  let tempFromState = 0
-
-  // This while loop ensures that once states are merged, their to states are merged and checked to see if they exist. If they all do, then there are no new combinations to be made and just exit, otherwise
-  // the states need to be merged
   while (newKeyAdded) {
     newKeyAdded = false
+    // Iterate over each symbol in the alphabet
     for (const symbol of Object.keys(symbolToStatesMap)) {
-      symbolToStatesMap[symbol].forEach(([curTransitionElem]) => {
+      // Iterate over each transition element for the current symbol
+      for (const [curTransitionElem] of symbolToStatesMap[symbol]) {
+        // Combine the states that the current transition leads from and to
         const [curKeyCombination, combinedState] = combineStates(initialTransitionTable, symbolsArray, curTransitionElem, symbolToStatesMap, symbol)
-        if (combinedState) {
-          if (!keySet.has(curKeyCombination)) {
-            newCombinedStates[curKeyCombination] = combinedState
-            keySet.add(curKeyCombination)
-            newKeyAdded = true
-          }
+        // If a new combined state is created and it hasn't been added to the key set yet, add it to the key set and mark that a new key has been added
+        if (combinedState && !keySet.has(curKeyCombination)) {
+          newCombinedStates[curKeyCombination] = combinedState
+          keySet.add(curKeyCombination)
+          newKeyAdded = true
         }
-      })
+      }
     }
+    // Clear the symbol to states mapping
     symbolToStatesMap = {}
-    // The from state is just temporary and is not important, so use to identify the sequences
-    tempFromState = 0
-    for (const [key, value] of Object.entries(newCombinedStates)) {
-      for (let transElem = 0; transElem < value.length; transElem++) {
-        if (newCombinedStates[key][transElem].symbol in symbolToStatesMap) {
-          for (let toStateElem = 0; toStateElem < newCombinedStates[key][transElem].tostates.length; toStateElem++) {
-            symbolToStatesMap[newCombinedStates[key][transElem].symbol].push([tempFromState, newCombinedStates[key][transElem].tostates[toStateElem]])
+    let tempFromState = 0
+    // Iterate over each transition in the new combined states
+    for (const [, transition] of Object.entries(newCombinedStates)) {
+      for (const { symbol, tostates } of transition) {
+        // Add the transition to the symbol to states mapping
+        if (symbol in symbolToStatesMap) {
+          for (const toState of tostates) {
+            symbolToStatesMap[symbol].push([tempFromState, toState])
           }
           tempFromState++
         } else {
-          // Equal just one state for initialisation, then push the rest
-          symbolToStatesMap[newCombinedStates[key][transElem].symbol] = [[tempFromState, newCombinedStates[key][transElem].tostates[0]]]
-          for (let toStateElem = 1; toStateElem < newCombinedStates[key][transElem].tostates.length; toStateElem++) {
-            symbolToStatesMap[newCombinedStates[key][transElem].symbol].push([tempFromState, newCombinedStates[key][transElem].tostates[toStateElem]])
-          }
+          symbolToStatesMap[symbol] = tostates.map((toState) => [tempFromState, toState])
           tempFromState++
         }
       }
@@ -387,29 +378,26 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
   const lastKey = Object.keys(initialTransitionTable)[Object.keys(initialTransitionTable).length - 1]
   let lastKeyNumber = parseInt(lastKey)
   const lastKeyArray = []
-  // Increase by one to get to next key (the new key for initial table)
+
+  // Increment the last key number by 1 as it will now represent the first merged state, if this is not done then it will overwrite the last state
   lastKeyNumber += 1
-  // Go through and look through the initial transition table for a specific pattern of transitions that match the state combination.
-  // If found, remove those transitions from the initial transition table and replaces them with a single transition that goes to a new state represented by a new state id
-  for (let mergedElem = 0; mergedElem < Object.keys(newCombinedStates).length; mergedElem++) {
-    const stateArray = Object.keys(newCombinedStates)[mergedElem].split(',').map(Number)
+
+  for (const mergedElem of Object.keys(newCombinedStates)) {
+    // Split the key by comma, therefore something like {2,3,4} (which represents the merging of those 3 states) which now be individual numbers to get information from
+    const stateArray = mergedElem.split(',').map(Number)
     for (let curState = 0; curState < numberOfNFAStates; curState++) {
       if (initialTransitionTable[curState] !== undefined) {
-        for (let curSymbolElem = 0; curSymbolElem < symbolsArray.length; curSymbolElem++) {
-          const filtered = initialTransitionTable[curState].filter(obj => obj[1] === symbolsArray[curSymbolElem])
-          // In this case there is a chance that these transitions are what need to be deleted as they have been merged
+        for (const curSymbolElem of symbolsArray) {
+          // Checks if the filtered entries have the same transitions as the current merged state array, if it does then this must be one of the merged states, so remove
+          // the old transitions and replace it with a transition to the new merged state
+          const filtered = initialTransitionTable[curState].filter(obj => obj[1] === curSymbolElem)
           if (filtered.length > 1 && filtered.length === stateArray.length) {
             filtered.sort((a, b) => a[0] - b[0])
-            let sameTransitions = true
-            for (let checkElem = 0; checkElem < filtered.length; checkElem++) {
-              if (filtered[checkElem][0] !== stateArray[checkElem]) {
-                sameTransitions = false
-              }
-            }
-            // If sameTransitions is still true, then these transitions are what need to be deleted
+            // Check if the filtered and merged states are exactly the same, if they are then this state must be a merged state and so should be updated accordingly, otherwise do nothing
+            const sameTransitions = !filtered.some((item, i) => item[0] !== stateArray[i])
             if (sameTransitions) {
-              initialTransitionTable[curState] = initialTransitionTable[curState].filter(obj => obj[1] !== symbolsArray[curSymbolElem])
-              initialTransitionTable[curState].push([lastKeyNumber, symbolsArray[curSymbolElem]])
+              initialTransitionTable[curState] = initialTransitionTable[curState].filter(obj => obj[1] !== curSymbolElem)
+              initialTransitionTable[curState].push([lastKeyNumber, curSymbolElem])
               lastKeyArray.push(lastKeyNumber)
               lastKeyNumber++
             }
@@ -418,21 +406,30 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
       }
     }
   }
+
   // We can use lastKeyNumber as a reference point to start adding the combined states
   lastKeyNumber = lastKeyArray[0]
   const firstCombinedStateNumber = lastKeyNumber
   const keyArray = Object.keys(newCombinedStates)
+
   // Go through and add the combined states as well as their transitions based on other combined states (inherent behavior of DFA)
-  for (let curElem = 0; curElem < keyArray.length; curElem++) {
-    for (let trans = 0; trans < newCombinedStates[keyArray[curElem]].length; trans++) {
-      const curSymbol = newCombinedStates[keyArray[curElem]][trans].symbol
-      const curToState = newCombinedStates[keyArray[curElem]][trans].tostates.join(',')
-      for (let tempElem = 0; tempElem < keyArray.length; tempElem++) {
-        if (keyArray[tempElem] === curToState) {
+  for (const key of keyArray) {
+    // Iterate over each transition in the current combined state
+    for (const trans of newCombinedStates[key]) {
+      // Get the input symbol and the state(s) that the transition leads to
+      const curSymbol = trans.symbol
+      const curToState = trans.tostates.join(',')
+
+      // Check whether each of the tostates is also a combined state in the DFA
+      for (const tempElem of keyArray) {
+        if (tempElem === curToState) {
+          // Add the transition to the transition table
           if (initialTransitionTable[lastKeyNumber] === undefined) {
-            initialTransitionTable[lastKeyNumber] = [[firstCombinedStateNumber + tempElem, curSymbol]]
+            // If there is no entry for the current key number, create a new entry with the transition
+            initialTransitionTable[lastKeyNumber] = [[firstCombinedStateNumber + keyArray.indexOf(tempElem), curSymbol]]
           } else {
-            initialTransitionTable[lastKeyNumber].push([firstCombinedStateNumber + tempElem, curSymbol])
+            // If there is already an entry for the current key number, add the transition to the existing entry
+            initialTransitionTable[lastKeyNumber].push([firstCombinedStateNumber + keyArray.indexOf(tempElem), curSymbol])
           }
         }
       }
@@ -441,14 +438,14 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
   }
 
   // Update initial and final states if needed. This will be checked later to ensure that the states present in here still exist
-  for (let curKeyElem = 0; curKeyElem < keyArray.length; curKeyElem++) {
-    const keySplitArray = keyArray[curKeyElem].split(',').map(Number)
-    for (let keySplitElem = 0; keySplitElem < keySplitArray.length; keySplitElem++) {
-      if (curInitialState === keySplitArray[keySplitElem]) {
-        curInitialState = firstCombinedStateNumber + curKeyElem
+  for (const key of keyArray) {
+    const keySplitArray = key.split(',').map(Number)
+    for (const keySplitElem of keySplitArray) {
+      if (curInitialState === keySplitElem) {
+        curInitialState = firstCombinedStateNumber + keyArray.indexOf(key)
       }
-      if (curFinalStates.includes(keySplitArray[keySplitElem])) {
-        curFinalStates.push(firstCombinedStateNumber + curKeyElem)
+      if (curFinalStates.includes(keySplitElem)) {
+        curFinalStates.push(firstCombinedStateNumber + keyArray.indexOf(key))
       }
     }
   }
@@ -458,29 +455,30 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
 // This will create a transition table such that the DFA can be constructed from it. It will return a transitionTable that consists of keys of arrays of key value pairs, where
 // the number of keys is equal to the number of states (each key equal to a StateID), where each key will then consist of an array of key value pairs, where the key in this case
 // is a StateID of the state the original key (or state in this case) transitions to, and the value is the ReadSymbol for this transition.
-export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFATransitions: number, numberOfNFAStates: number): [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] {
-  let initialTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {}
-  const tempTransitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = {}
+export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFAStates: number): [TransitionTable, StateID, StateID[]] {
+  let initialTransitionTable: TransitionTable = {}
+  const tempTransitionTable: TransitionTable = {}
   const symbolsPresent = new Set<ReadSymbol>()
   const mergedStates: {[key: string]: StateID[]} = {}
   let curInitialState = nfaGraph.initialState
   let curFinalStates: StateID[] = []
-  for (let i = 0; i < numberOfNFAStates; i++) {
-    if (nfaGraph.states[i].isFinal) {
-      curFinalStates.push(i)
+
+  for (const state of nfaGraph.states) {
+    if (state.isFinal) {
+      curFinalStates.push(state.id)
     }
   }
 
   // This will create the initial transition table. Note that this is not the final transition table as this is still in NFA form.
-  for (let curElem = 0; curElem < numberOfNFAStates; curElem++) {
+  for (const [curElem] of Object.entries(nfaGraph.states)) {
     initialTransitionTable[curElem] = []
     tempTransitionTable[curElem] = []
-    for (let curStateID = 0; curStateID < numberOfNFATransitions; curStateID++) {
-      if (nfaGraph.transitions[curStateID].from === curElem) {
-        initialTransitionTable[curElem].push([nfaGraph.transitions[curStateID].to, nfaGraph.transitions[curStateID].read[0]])
+    for (const transition of nfaGraph.transitions) {
+      if (transition.from === Number(curElem)) {
+        initialTransitionTable[curElem].push([transition.to, transition.read[0]])
         // Don't add the lambda symbol as it won't exist in the DFA anyway
-        if (nfaGraph.transitions[curStateID].read[0] !== undefined) {
-          symbolsPresent.add(nfaGraph.transitions[curStateID].read[0])
+        if (transition.read[0] !== undefined) {
+          symbolsPresent.add(transition.read[0])
         }
       }
     }
@@ -489,7 +487,7 @@ export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFATransiti
   // STEP 1: Merge lambda transitions so that they do not exist and the states are merged accordingly
   // This will ensure that lambda transitions don't exist in the DFA by merging the states together that use them.
   // Initialize mergedStates array with each state in its own set
-  let result: [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] = removeLambdaTransitions(initialTransitionTable, mergedStates, numberOfNFAStates, curInitialState, curFinalStates, tempTransitionTable)
+  let result: [TransitionTable, StateID, StateID[]] = removeLambdaTransitions(initialTransitionTable, mergedStates, numberOfNFAStates, curInitialState, curFinalStates, tempTransitionTable)
   initialTransitionTable = result[0]
   curInitialState = result[1]
   curFinalStates = result[2]
@@ -508,34 +506,36 @@ export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFATransiti
 
 // This will create the DFA and return it by updating a passed in DFA template from a passed in NFA
 export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph => {
-  const numberOfNFATransitions: number = nfaGraph.transitions.length
   const numberOfNFAStates: number = nfaGraph.states.length
-
-  const result: [{[key: StateID]: [StateID, ReadSymbol][]}, StateID, StateID[]] = createTransitionTable(nfaGraph, numberOfNFATransitions, numberOfNFAStates)
-  const transitionTable: {[key: StateID]: [StateID, ReadSymbol][]} = result[0]
+  const result: [TransitionTable, StateID, StateID[]] = createTransitionTable(nfaGraph, numberOfNFAStates)
+  const transitionTable: TransitionTable = result[0]
   const curInitialState: StateID = result[1]
   const curFinalStates: StateID[] = result[2]
+
   // Initial state
   dfaGraph.initialState = curInitialState
+
   // States
-  for (let curObject = 0; curObject < Object.keys(transitionTable).length; curObject++) {
+  for (const curObject of Object.keys(transitionTable)) {
     dfaGraph.states[curObject] = { id: undefined, isFinal: undefined, x: 765, y: 330 }
-    dfaGraph.states[curObject].id = parseInt(Object.keys(transitionTable)[curObject])
+    dfaGraph.states[curObject].id = parseInt(curObject)
     dfaGraph.states[curObject].isFinal = curFinalStates.includes(dfaGraph.states[curObject].id)
     // Add coordinates here when figured out
   }
+
   // Transitions
   let transID = 0
-  for (let curFromState = 0; curFromState < Object.keys(transitionTable).length; curFromState++) {
-    for (let curTrans = 0; curTrans < transitionTable[Object.keys(transitionTable)[curFromState]].length; curTrans++) {
+  for (const curFromState of Object.keys(transitionTable)) {
+    for (const transition of transitionTable[curFromState]) {
       dfaGraph.transitions[transID] = { from: undefined, id: undefined, read: undefined, to: undefined }
-      dfaGraph.transitions[transID].from = Object.keys(transitionTable).map(Number)[curFromState]
+      dfaGraph.transitions[transID].from = parseInt(curFromState)
       dfaGraph.transitions[transID].id = transID
-      dfaGraph.transitions[transID].read = transitionTable[Object.keys(transitionTable)[curFromState]][curTrans][1]
-      dfaGraph.transitions[transID].to = transitionTable[Object.keys(transitionTable)[curFromState]][curTrans][0]
+      dfaGraph.transitions[transID].read = transition[1]
+      dfaGraph.transitions[transID].to = transition[0]
       transID++
     }
   }
+
   return dfaGraph
 }
 
@@ -556,7 +556,6 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
         states: [] as AutomataState[],
         transitions: [] as AutomataTransition[]
       }
-
       // Sort the states so that they're ordered. This is important as the keys of the objects is used in the conversion algorithm
       nfaGraph.states.sort((a, b) => a.id - b.id)
       // Create a DFA from the given NFA
