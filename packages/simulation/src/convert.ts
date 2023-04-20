@@ -70,7 +70,7 @@ export const removeUnreachableDFAStates = (dfaGraph: DFAGraph): DFAGraph => {
 
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
 export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
-  if (nfaGraph.states.length === 0 && nfaGraph.transitions.length === 0) {
+  if (nfaGraph.states.length === 0 || nfaGraph.transitions.length === 0) {
     return false
   } else {
     return true
@@ -313,32 +313,33 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
         // If there isn't a transition going from a particular state, a new state isn't required, it can just transition to itself and still be
         // a trap state. Not strictly required but it will make everything look nicer.
         const hasTransitions = initialTransitionTable[stateID].length > 0
-        if (!hasTransitions && !nfaGraph.states[stateID].isFinal) {
+        if ((!hasTransitions && !nfaGraph.states[stateID].isFinal)) {
           for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
             initialTransitionTable[stateID].push([stateID, symbolsArray[curElem]])
           }
         } else if (!hasTransitions && nfaGraph.states[stateID].isFinal) {
         // Else if the state is a final state but still needs transitions, it can just put all those transitions into one trap state
           initialTransitionTable[nextAvailableStateID] = []
+          // New trap state
           for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
             initialTransitionTable[nextAvailableStateID].push([nextAvailableStateID, symbolsArray[curElem]])
           }
-          for (let curState = 0; curState < nextAvailableStateID; curState++) {
-            for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
-              let symbolFound = false
-              for (const [, readSymbol] of initialTransitionTable[curState]) {
-                if (readSymbol === symbolsArray[curElem]) {
-                  symbolFound = true
-                  break
-                }
+          // Transitions to the trap state
+          for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
+            let symbolFound = false
+            for (const [, readSymbol] of initialTransitionTable[stateID]) {
+              if (readSymbol === symbolsArray[curElem]) {
+                symbolFound = true
+                break
               }
-              if (!symbolFound) {
-                const existingTransition = initialTransitionTable[curState].find(([toStateID, readSymbol]) => readSymbol === symbolsArray[curElem])
-                if (!existingTransition) {
-                  initialTransitionTable[curState].push([nextAvailableStateID, symbolsArray[curElem]])
-                } else {
-                  existingTransition[0] = nextAvailableStateID
-                }
+            }
+            // If symbol isn't found then transition to the defined trap state
+            if (!symbolFound) {
+              const existingTransition = initialTransitionTable[stateID].find(([toStateID, readSymbol]) => readSymbol === symbolsArray[curElem])
+              if (!existingTransition) {
+                initialTransitionTable[stateID].push([nextAvailableStateID, symbolsArray[curElem]])
+              } else {
+                existingTransition[0] = nextAvailableStateID
               }
             }
           }
@@ -611,7 +612,7 @@ export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph =>
 }
 
 export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => {
-  // Do some error checking
+  // Do some error checking (could add proper authentic error messaging)
   if (!statesAndTransitionsPresent(nfaGraph)) {
     return nfaGraph
   } else if (!initialStateIsPresent(nfaGraph.initialState)) {
@@ -620,8 +621,9 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
     return nfaGraph
   } else {
     // Remove unreachable states and check to make sure final state is still present
-    nfaGraph = removeUnreachableNFAStates(nfaGraph)
-    if (!finalStateIsPresent(nfaGraph.states)) {
+    let testGraph = { ...nfaGraph }
+    testGraph = removeUnreachableNFAStates(testGraph)
+    if (!finalStateIsPresent(testGraph.states)) {
       return nfaGraph
     } else {
       let dfaGraph = {

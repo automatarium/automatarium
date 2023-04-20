@@ -204,6 +204,7 @@ const useActions = (registerHotkeys = false) => {
       handler: projectType === 'FSA'
         ? () => {
             updateProject(reorderStates(convertNFAtoDFA(reorderStates(project))))
+            console.log(reorderStates(convertNFAtoDFA(reorderStates(project))))
             commit()
           }
         : undefined
