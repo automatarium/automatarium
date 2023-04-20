@@ -202,11 +202,11 @@ const useActions = (registerHotkeys = false) => {
     },
     CONVERT_TO_DFA: {
       handler: () => {
-            if (projectType !== 'FSA') return
-            updateProject(reorderStates(convertNFAtoDFA(reorderStates(project))))
-            console.log(reorderStates(convertNFAtoDFA(reorderStates(project))))
-            commit()
-          }
+        if (projectType !== 'FSA') return
+        updateProject(reorderStates(convertNFAtoDFA(reorderStates(project))))
+        console.log(reorderStates(convertNFAtoDFA(reorderStates(project))))
+        commit()
+      }
     },
     MINIMIZE_DFA: {
       // handler: () => console.log('Minimize DFA'),
