@@ -52,6 +52,8 @@ const useActions = (registerHotkeys = false) => {
   const template = useTemplateStore(s => s.template)
   const setTemplate = useTemplateStore(s => s.set)
   const templates = useTemplatesStore(s => s.templates)
+  const addTemplate = useTemplatesStore(s => s.upsertTemplate)
+  const clearTemplates = useTemplatesStore(s => s.clearTemplates)
 
   const createBatch = (createData, project) => {
     console.log(createData)
@@ -115,28 +117,48 @@ const useActions = (registerHotkeys = false) => {
     }
     commit()
   }
-
-  const myTemplate = {
-    states: [''],
-    transitions: [''],
-    comments: [''],
-    projectSource: 'a project',
-    projectType: 'FSA',
-    initialStateId: null,
-    _id: 'template id',
-    name: 'my template'
-  }
-
-
   const navigate = useNavigate()
 
   // TODO: memoize
   const actions = {
     TEMPLATE: {
-      hotkey: { key: 'j', meta: true },
+      hotkey: { key: 't', meta: true },
       handler: () => {
-        setTemplate(myTemplate)
-        console.log(template)
+        console.log(selectedStatesIds.length)
+        console.log(selectedCommentsIds.length)
+        console.log(selectTransitions.length)
+        if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
+          clearTemplates()
+          return
+        }
+        const selectedStates = selectedStatesIds.map((stateId) => {
+          return project.states.find((state) => {
+            return state.id === stateId
+          })
+        })
+        const selectedComments = selectedCommentsIds.map((commentId) => {
+          return project.comments.find((comment) => {
+            return comment.id === commentId
+          })
+        })
+        const selectedTransitions = selectedTransitionsIds.map((transitionId) => {
+          return project.transitions.find((transition) => {
+            return transition.id === transitionId
+          })
+        })
+        const isInitialSelected = selectedStatesIds.includes(project.initialState)
+        // This will use the CopyData type defined in ProjectTypes
+        const newTemplate = {
+          states: selectedStates,
+          comments: selectedComments,
+          transitions: selectedTransitions,
+          projectSource: project._id,
+          projectType: project.projectType,
+          initialStateId: isInitialSelected ? project.initialState : null,
+          _id: crypto.randomUUID(),
+          name: 'a template'
+        }
+        addTemplate(newTemplate)
         console.log(templates)
       }
     },

@@ -21,7 +21,7 @@ const useTemplatesStore = create<TemplatesStore>()(persist((set: SetState<Templa
       ? s.templates.map(t => t._id === template._id ? template : t)
       : [...s.templates, template]
   })),
-  deleteTemplate: (tid: string) => set(s => ({ templates: s.templates.filter(t => t._id !== tid) }))
+  deleteTemplate: (tid: string) => set(s => ({ templates: s.templates.filter(t => t._id !== tid) })),
 }), {
   name: 'automatarium-templates'
 }))

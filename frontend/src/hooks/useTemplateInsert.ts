@@ -1,11 +1,23 @@
 import { useState } from 'react'
 
 import { useEvent } from '/src/hooks'
-import { useProjectStore, useToolStore, useTemplatesStore, useSelectionStore } from '/src/stores'
+import { useProjectStore, useToolStore, useTemplatesStore, useSelectionStore, useTemplateStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
-import { Template, CopyData, Project } from '/src/types/ProjectTypes'
+import { Template, CopyData, Project, AutomataState } from '/src/types/ProjectTypes'
 import { StoredProject } from '/src/stores/useProjectStore'
 import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
+
+interface TemplateStore {
+    template: Template,
+    set: (template: Template) => void,
+    /**
+     * Updates the current project. This doesn't reset the history like `set`
+     * @param project
+     */
+    update: (template: Template) => void,
+    setName: (newName: string) => void
+  }
+  
 
 const useTemplateInsert = () => {
   const tool = useToolStore(s => s.tool)
@@ -23,7 +35,8 @@ const useTemplateInsert = () => {
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const commit = useProjectStore(s => s.commit)
   // Which template to insert  
-  const [currentTemplate, setCurrentTemplate] = useState<Template>()
+  const template = useTemplateStore((s: TemplateStore) => s.template)
+//   const setTemplate = useTemplateStore(s => s.set)
   const createBatch = (createData: CopyData | Template) => {
     let isInitialStateUpdated = false
     if (createData.projectType !== project.projectType) {
@@ -40,10 +53,12 @@ const useTemplateInsert = () => {
     createData.states.forEach(state => {
       // TODO: ensure position isn't out of window
       // Probably will have to take adjusting position out of this function
+      console.log(`this state is ${state.id}`)
       state.x += PASTE_POSITION_OFFSET
       state.y += PASTE_POSITION_OFFSET
       const newId = createState(state)
       // Update transitions to new state id
+      console.log(`replacing ${state.id} with ${newId}`)
       createData.transitions.forEach((transition, i) => {
         if (transition.from === state.id && newTransitions[i].from === null) {
           newTransitions[i].from = newId
@@ -60,6 +75,7 @@ const useTemplateInsert = () => {
       state.id = newId
     })
     // TODO: Improve this error handling
+    console.log(newTransitions)
     if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
       alert('Sorry, there was an error')
       removeStates(createData.states.map(state => state.id))
@@ -109,11 +125,12 @@ const useTemplateInsert = () => {
 
   useEvent('svg:mousedown', e => {
     // Make sure we are in the template tool
-    if (tool === 'state' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+    if (tool === 'hand' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
         // Track mousedown event
         console.log('mouse down')
     }
     console.log('mouse down')
+    
   })
 
   useEvent('svg:mouseup', e => {
@@ -123,7 +140,15 @@ const useTemplateInsert = () => {
     // //   createState(positionFromEvent(e))
     //   commit()
     // }
+    if (tool === 'hand' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+        // Track mousedown event
+        // createBatch(currentTemplate)
+        // console.log(currentTemplate)
+    }
+    // moveStatesToMouse(positionFromEvent(e), template.states)
+    // createBatch(template)
     console.log('mouseup')
+    console.log(template)
     
   }, [tool])
 
@@ -134,6 +159,19 @@ const positionFromEvent = e => {
   const doSnap = !e.detail.originalEvent.altKey
   const pos = { x: e.detail.viewX, y: e.detail.viewY }
   return doSnap ? snapPosition(pos) : pos
+}
+
+const moveStatesToMouse = (mousePos: {x: number, y: number}, states: AutomataState[]) => {
+    // Find the leftmost state (lowest x val)
+    const originState = states.reduce((previous, current) => {
+        return current.x < previous.x ? current : previous
+    })
+    const offsetX = mousePos.x - originState.x
+    const offsetY = mousePos.y - originState.y
+    states.forEach((state) => {
+        state.x += offsetX
+        state.y += offsetY
+    })
 }
 
 const snapPosition = ({ x, y }) =>
