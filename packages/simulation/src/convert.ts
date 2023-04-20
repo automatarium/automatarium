@@ -117,23 +117,23 @@ export function removeLambdaTransitions (initialTransitionTable: {[key: StateID]
     mergedStates[curElem] = [curElem]
   }
   // Merge states until no more merges can be made
-  let isMerged = true;
+  let isMerged = true
   while (isMerged) {
-    isMerged = false;
+    isMerged = false
     for (let i = 0; i < numberOfNFAStates; i++) {
-      const visitedStates = new Set(mergedStates[i]);
+      const visitedStates = new Set(mergedStates[i])
       // Traverse lambda transitions until no more states can be reached
       for (let j = 0; j < visitedStates.size; j++) {
-        const curState = Array.from(visitedStates)[j];
-        const curTransitions = initialTransitionTable[curState] || [];
+        const curState = Array.from(visitedStates)[j]
+        const curTransitions = initialTransitionTable[curState] || []
         for (const [toState, symbol] of curTransitions) {
           if (symbol === undefined && !visitedStates.has(toState)) {
-            visitedStates.add(toState);
+            visitedStates.add(toState)
           }
         }
       }
       // Merge the visited states
-      const mergedState = Array.from(visitedStates).sort((a, b) => a - b);
+      const mergedState = Array.from(visitedStates).sort((a, b) => a - b)
       // If the arrays are not equal then merge
       if (!(mergedStates[i].length === mergedState.length && mergedStates[i].every((element, index) => element === mergedState[index]))) {
         mergedStates[i] = mergedState
