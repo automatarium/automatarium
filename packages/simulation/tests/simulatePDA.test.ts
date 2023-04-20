@@ -4,12 +4,12 @@ import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 describe('Automata that accepts an even number of A', () => {
   test('Accepts lambda', () => {
-    const result = simulatePDA(evenAs as unknown as PDAProjectGraph, '')
+    const result = simulatePDA(evenAs as PDAProjectGraph, '')
     expect(result.accepted).toBeTrue()
   })
 
   test('Accepts AA', () => {
-    const result = simulatePDA(evenAs as unknown as PDAProjectGraph, 'AA')
+    const result = simulatePDA(evenAs as PDAProjectGraph, 'AA')
     expect(result.trace.map(it => it.currentStack)).toEqual([
       [], // Initial
       ['A'], // First A read
@@ -20,7 +20,7 @@ describe('Automata that accepts an even number of A', () => {
   })
 
   test('Rejects AAA', () => {
-    const result = simulatePDA(evenAs as unknown as PDAProjectGraph, 'AAA')
+    const result = simulatePDA(evenAs as PDAProjectGraph, 'AAA')
     expect(result.accepted).toBeFalse()
   })
 })

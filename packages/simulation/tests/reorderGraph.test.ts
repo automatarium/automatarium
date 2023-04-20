@@ -1,14 +1,15 @@
 import { describe } from 'node:test'
-import { UnparsedGraph } from '../src/graph'
 import { reorderStates } from '../src/reorder'
 import dibDipLambdaLoop from './graphs/dib_dip-lambdaloop.json'
 import spiggy from './graphs/spiggy.json'
+import { FSAProjectGraph, TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 describe('Reordering graph', () => {
   test('Simple graph can be rearranged', () => {
     // Only two state graph, didn't see reason for making JSON file.
     // We are still using full properties just to check they don't cause any problems
     const graph = reorderStates({
+      projectType: 'TM',
       states: [
         {
           isFinal: true,
@@ -34,7 +35,7 @@ describe('Reordering graph', () => {
         }
       ],
       initialState: 1
-    } as unknown as UnparsedGraph)
+    } as TMProjectGraph)
 
     expect(graph.initialState).toBe(0)
 
@@ -43,7 +44,6 @@ describe('Reordering graph', () => {
 
     expect(graph.states[1].id).toBe(0)
     expect(graph.states[1].isFinal).toBeFalse()
-
     expect(graph.transitions[0]).toMatchObject({
       from: 0,
       to: 1,
@@ -85,13 +85,11 @@ describe('Reordering graph', () => {
   })
 
   test('Cycles are handled', () => {
-    let testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
-    testVer = reorderStates(testVer)
-    expect(testVer).toMatchObject(dibDipLambdaLoop)
+    expect(reorderStates(dibDipLambdaLoop as FSAProjectGraph)).toMatchObject(dibDipLambdaLoop)
   })
 
   test('Lower ID path is taken first', () => {
-    let testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
+    let testVer = dibDipLambdaLoop as FSAProjectGraph
     // We have to update both states and transitions. We will apply this mapping
     const mapping = {
       0: 2,
@@ -145,14 +143,14 @@ describe('Reordering graph', () => {
       ],
       transitions: [],
       initialState: 1
-    } as unknown as UnparsedGraph)
+    } as FSAProjectGraph)
 
     expect(graph.states[0].id).toBe(1)
     expect(graph.states[1].id).toBe(0)
   })
 
   test("Mildly complex graph doesn't lose states", () => {
-    const graph = reorderStates(spiggy as UnparsedGraph)
+    const graph = reorderStates(spiggy as FSAProjectGraph)
     // Check that the state numbers are continuous
     expect(graph.states.map(it => it.id).sort()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8])
   })

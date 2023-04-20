@@ -1,14 +1,14 @@
 import { expandReadSymbols, RANGE_VALS } from '../src'
 
-const ALPHABET = RANGE_VALS.slice(10, 36)
+const ALPHABET = RANGE_VALS.slice(10, 36).join('')
 
-function expand (input: string): jest.JestMatchers<string[]> {
+function expand (input: string): jest.JestMatchers<string> {
   return expect(expandReadSymbols(input))
 }
 
 describe('Expansion of read symbols', () => {
   test('Literals dont get expanded', () => {
-    expand('abc').toEqual(['a', 'b', 'c'])
+    expand('abc').toEqual('abc')
   })
 
   test('Parse range', () => {
@@ -26,7 +26,7 @@ describe('Expansion of read symbols', () => {
   test('Edge cases', () => {
     const tests = ['][', '-9]', '[-]', '[a-']
     for (const test of tests) {
-      expand(test).toIncludeSameMembers(test.split(''))
+      expand(test).toEqual(test)
     }
   })
 
@@ -36,6 +36,6 @@ describe('Expansion of read symbols', () => {
   })
 
   test('Invalid duplicated symbols in range', () => {
-    expand('[a-a]').toEqual(['a'])
+    expand('[a-a]').toEqual('a')
   })
 })

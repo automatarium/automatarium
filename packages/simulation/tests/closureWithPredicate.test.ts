@@ -1,15 +1,17 @@
 /// <reference types="jest-extended" />
+
 import { closureWithPredicate } from '../src'
 import dib from './graphs/dib.json'
 import dibMultipart from './graphs/dib-multipath.json'
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import abba from './graphs/abba.json'
 import disconnected from './graphs/disconnected.json'
-import { resolveGraph } from '../src/parseGraph'
-import { UnparsedGraph } from '../src/graph'
+import { expandGraph } from '../src/utils'
+import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
+console.log(dib.projectType)
 describe('Automata dib', () => {
-  const graph = resolveGraph(dib as UnparsedGraph)
+  const graph = expandGraph(dib as FSAProjectGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -38,7 +40,7 @@ describe('Automata dib', () => {
 })
 
 describe('Automata dib-multipath', () => {
-  const graph = resolveGraph(dibMultipart as UnparsedGraph)
+  const graph = expandGraph(dibMultipart as FSAProjectGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -69,7 +71,7 @@ describe('Automata dib-multipath', () => {
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
-  const graph = resolveGraph(dibDipLambdaloop as UnparsedGraph)
+  const graph = expandGraph(dibDipLambdaloop as FSAProjectGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -81,14 +83,14 @@ describe('Automata dib_dip-lambdaloop', () => {
 
 describe('Reachability', () => {
   test('Unreachable final states', () => {
-    const graph = resolveGraph(disconnected as UnparsedGraph)
+    const graph = expandGraph(disconnected as FSAProjectGraph)
     const closure = closureWithPredicate(graph, 0, () => true)
     const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 
   test('Unreachable final states due to predicate', () => {
-    const graph = resolveGraph(abba as UnparsedGraph)
+    const graph = expandGraph(abba as FSAProjectGraph)
     const closure = closureWithPredicate(graph, 0, transition => !transition.read.includes('b'))
     const states = Array.from(closure).map(([stateID, path]) => graph.states.find(s => s.id === stateID))
     expect(states.some(s => s.isFinal)).toBeFalse()

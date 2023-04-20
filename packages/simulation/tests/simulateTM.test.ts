@@ -4,7 +4,7 @@ import bepsi from './graphs/bepsi.json'
 import { simulateTM } from '../src/simulateTM'
 import { TMExecutionResult } from '../src/graph'
 import { describe } from 'node:test'
-import { Project } from 'frontend/src/types/ProjectTypes'
+import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 // Shim to allow for structuredClone alternative (See https://github.com/jsdom/jsdom/issues/3363)
 // This should work for our cases
@@ -13,7 +13,7 @@ global.structuredClone = jest.fn(val => {
 })
 
 function simulate (graph, input: string): TMExecutionResult {
-  return simulateTM(graph as Project, { pointer: 0, trace: input ? input.split('') : [''] })
+  return simulateTM(graph as TMProjectGraph, input)
 }
 
 describe('Machine that moves left', () => {
