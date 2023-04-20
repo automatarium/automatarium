@@ -317,6 +317,32 @@ export function createSymbolFromEveryState (initialTransitionTable: {[key: State
           for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
             initialTransitionTable[stateID].push([stateID, symbolsArray[curElem]])
           }
+        } else if (!hasTransitions && nfaGraph.states[stateID].isFinal) {
+        // Else if the state is a final state but still needs transitions, it can just put all those transitions into one trap state
+          initialTransitionTable[nextAvailableStateID] = []
+          for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
+            initialTransitionTable[nextAvailableStateID].push([nextAvailableStateID, symbolsArray[curElem]])
+          }
+          for (let curState = 0; curState < nextAvailableStateID; curState++) {
+            for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
+              let symbolFound = false
+              for (const [, readSymbol] of initialTransitionTable[curState]) {
+                if (readSymbol === symbolsArray[curElem]) {
+                  symbolFound = true
+                  break
+                }
+              }
+              if (!symbolFound) {
+                const existingTransition = initialTransitionTable[curState].find(([toStateID, readSymbol]) => readSymbol === symbolsArray[curElem])
+                if (!existingTransition) {
+                  initialTransitionTable[curState].push([nextAvailableStateID, symbolsArray[curElem]])
+                } else {
+                  existingTransition[0] = nextAvailableStateID
+                }
+              }
+            }
+          }
+          nextAvailableStateID++
         } else {
         // Else go each transition and if a symbol is not found, make a new state for it and transition to that state with the given symbol.
           for (let curElem = 0; curElem < symbolsArray.length; curElem++) {
@@ -495,7 +521,6 @@ export function createSymbolsToStateMap (initialTransitionTable: {[key: StateID]
       }
     }
   }
-
   return [initialTransitionTable, curInitialState, curFinalStates]
 }
 
@@ -611,9 +636,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
       dfaGraph = createDFA(nfaGraph, dfaGraph)
       // Remove unreachable states from this new dfaGraph
       dfaGraph = removeUnreachableDFAStates(dfaGraph)
-      // Need to reorder states and transitions so everything is sequential. Do later
-
-      // Finally copy over the required elements from nfaGraph
+      // Finally copy over the required elements from nfaGraph and return the final dfaGraph
       const { initialState, states, transitions, ...dfaGraphCopy } = nfaGraph
       const dfaGraphFinal = { ...dfaGraph, ...dfaGraphCopy }
       return dfaGraphFinal
