@@ -35,8 +35,8 @@ const useTemplateInsert = () => {
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const commit = useProjectStore(s => s.commit)
   // Which template to insert  
-  const template = useTemplateStore((s: TemplateStore) => s.template)
-//   const setTemplate = useTemplateStore(s => s.set)
+  const template = useTemplateStore(s => s.template)
+  const setTemplate = useTemplateStore(s => s.set)
   const createBatch = (createData: CopyData | Template) => {
     let isInitialStateUpdated = false
     if (createData.projectType !== project.projectType) {
@@ -101,22 +101,6 @@ const useTemplateInsert = () => {
     }
     commit()
   }
-  
-  const myTemplate: Template = {
-    states: [{
-        "x": 265,
-        "y": 160,
-        "isFinal": false,
-        "id": 5
-    }],
-    transitions: [],
-    comments: [],
-    projectSource: '5e1250b2-bee4-48a1-88f1-ef3540b13df1',
-    projectType: 'FSA',
-    initialStateId: null,
-    _id: 'template_id',
-    name: 'my template'
-  }
 
   useEvent('svg:mousemove', e => {
     // Keep track of the mouse position
@@ -140,16 +124,14 @@ const useTemplateInsert = () => {
     // //   createState(positionFromEvent(e))
     //   commit()
     // }
-    if (tool === 'hand' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
-        // Track mousedown event
-        // createBatch(currentTemplate)
-        // console.log(currentTemplate)
+    if (tool === 'template' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+        moveStatesToMouse(positionFromEvent(e), template.states)
+        createBatch(template)
+        const aTemplate = templates[Math.floor(Math.random()*templates.length)]
+        setTemplate(aTemplate)
+        console.log(template)
+        console.log(templates)
     }
-    // moveStatesToMouse(positionFromEvent(e), template.states)
-    // createBatch(template)
-    console.log('mouseup')
-    console.log(template)
-    
   }, [tool])
 
   return { ghostState: tool === 'state' && showGhost && mousePos }

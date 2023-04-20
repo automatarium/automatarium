@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2 } from 'lucide-react'
+import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2, Star } from 'lucide-react'
 
 import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
@@ -30,6 +30,12 @@ const panels = [
     label: 'File Options',
     value: 'options',
     icon: <Settings2 />,
+    element: <Options />
+  },
+  {
+    label: 'Templates',
+    value: 'templates',
+    icon: <Star />,
     element: <Options />
   }
 ]

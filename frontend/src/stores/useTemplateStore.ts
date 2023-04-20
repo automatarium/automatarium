@@ -104,9 +104,18 @@ interface TemplateStore {
   setName: (newName: string) => void
 }
 
-const useTemplateStore = create(set => ({
+const useTemplateStore = create<TemplateStore>((set: SetState<TemplateStore>) => ({
   template: myTemplate,
-  setTemplate: template => set({ template })
+  set: template => {
+    console.log('changing template')
+    set({ template })
+  },
+  update: (template) => {
+
+  },
+  setName: (newName) => {
+
+  }
 }))
 
 export default useTemplateStore
