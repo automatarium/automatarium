@@ -95,21 +95,22 @@ const myTemplate: Template = {
 
 interface TemplateStore {
   template: Template,
-  set: (template: Template) => void,
-  /**
-   * Updates the current project. This doesn't reset the history like `set`
-   * @param project
-   */
+  isInserting: boolean,
+  setTemplate: (template: Template) => void,
+  setIsInserting: (isInserting: boolean) => void,
   update: (template: Template) => void,
   setName: (newName: string) => void
 }
 
 const useTemplateStore = create<TemplateStore>((set: SetState<TemplateStore>) => ({
   template: myTemplate,
-  set: template => {
+  isInserting: false,
+  setTemplate: template => {
     console.log('changing template')
+    console.log(template)
     set({ template })
   },
+  setIsInserting: isInserting => set({ isInserting }),
   update: (template) => {
 
   },

@@ -6,17 +6,6 @@ import { GRID_SNAP } from '/src/config/interactions'
 import { Template, CopyData, Project, AutomataState } from '/src/types/ProjectTypes'
 import { StoredProject } from '/src/stores/useProjectStore'
 import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
-
-interface TemplateStore {
-    template: Template,
-    set: (template: Template) => void,
-    /**
-     * Updates the current project. This doesn't reset the history like `set`
-     * @param project
-     */
-    update: (template: Template) => void,
-    setName: (newName: string) => void
-  }
   
 
 const useTemplateInsert = () => {
@@ -36,7 +25,7 @@ const useTemplateInsert = () => {
   const commit = useProjectStore(s => s.commit)
   // Which template to insert  
   const template = useTemplateStore(s => s.template)
-  const setTemplate = useTemplateStore(s => s.set)
+  const isInserting = useTemplateStore(s => s.isInserting)
   const createBatch = (createData: CopyData | Template) => {
     let isInitialStateUpdated = false
     if (createData.projectType !== project.projectType) {
@@ -124,15 +113,12 @@ const useTemplateInsert = () => {
     // //   createState(positionFromEvent(e))
     //   commit()
     // }
-    if (tool === 'template' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+    console.log('here' + isInserting)
+    if (isInserting && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
         moveStatesToMouse(positionFromEvent(e), template.states)
         createBatch(template)
-        const aTemplate = templates[Math.floor(Math.random()*templates.length)]
-        setTemplate(aTemplate)
-        console.log(template)
-        console.log(templates)
     }
-  }, [tool])
+  }, [isInserting])
 
   return { ghostState: tool === 'state' && showGhost && mousePos }
 }

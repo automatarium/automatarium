@@ -122,11 +122,8 @@ const useActions = (registerHotkeys = false) => {
   // TODO: memoize
   const actions = {
     TEMPLATE: {
-      hotkey: { key: 't', meta: true },
+      hotkey: { key: 'j', meta: true },
       handler: () => {
-        console.log(selectedStatesIds.length)
-        console.log(selectedCommentsIds.length)
-        console.log(selectTransitions.length)
         if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
           clearTemplates()
           return
@@ -159,7 +156,7 @@ const useActions = (registerHotkeys = false) => {
           name: 'a template'
         }
         addTemplate(newTemplate)
-        console.log(templates)
+        alert('New template created from your selection')
       }
     },
     NEW_FILE: {

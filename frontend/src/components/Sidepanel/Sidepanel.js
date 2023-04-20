@@ -5,7 +5,7 @@ import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
-import { TestingLab, SteppingLab, Info, Options } from './Panels'
+import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
 
 const panels = [
   {
@@ -36,7 +36,7 @@ const panels = [
     label: 'Templates',
     value: 'templates',
     icon: <Star />,
-    element: <Options />
+    element: <Templates />
   }
 ]
 
