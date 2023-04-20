@@ -1,7 +1,7 @@
-import { Transition } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
+import { BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 
-export class GraphStepper<S extends State, T extends Transition> {
+export class GraphStepper<S extends State, T extends BaseAutomataTransition> {
   // eslint-disable-next-line no-useless-constructor
   constructor (
         private graph: Graph<S, T>,

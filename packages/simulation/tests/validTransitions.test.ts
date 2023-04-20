@@ -3,7 +3,8 @@ import { resolveGraph } from '../src/parseGraph'
 import { FSAGraph, FSAState } from '../src/FSASearch'
 
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
-import { FSATransition, StateID, UnparsedGraph } from '../src/graph'
+import { StateID } from '../src/graph'
+import { AutomataTransition, Project } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Checks if a graph running a single step returns some transitions
@@ -12,7 +13,7 @@ import { FSATransition, StateID, UnparsedGraph } from '../src/graph'
  * @param has Input string that you want to feed
  * @param transitions Transitions to expect
  */
-function doesTransitions (g: FSAGraph, fromID: StateID, has: string, transitions: FSATransition[]) {
+function doesTransitions (g: FSAGraph, fromID: StateID, has: string, transitions: AutomataTransition[]) {
   const valid = g.getSuccessors(new Node(new FSAState(fromID, false, null, has))).map(it => ({
     from: it.parent.state.id,
     to: it.state.id
@@ -122,7 +123,7 @@ describe('Lambda transitions', () => {
 
 describe('Automata dib_dip-lambdaloop', () => {
   test('Valid states from q4', () => {
-    const fullGraph = resolveGraph(dibDipLambdaloop as UnparsedGraph)
+    const fullGraph = resolveGraph(dibDipLambdaloop as unknown as Project)
     const graph = new FSAGraph(
       new Node<FSAState>(new FSAState(fullGraph.initialState, false)),
       fullGraph.states.map(it => new FSAState(it.id, it.isFinal)),
@@ -133,7 +134,7 @@ describe('Automata dib_dip-lambdaloop', () => {
         id: 0,
         from: 4,
         to: 5,
-        read: ['']
+        read: ''
       }
     ])
   })

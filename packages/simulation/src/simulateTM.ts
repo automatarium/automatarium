@@ -1,7 +1,9 @@
 import { TMGraph, TMState } from './TMSearch'
-import { Tape, TMExecutionResult, TMExecutionTrace, TMGraphIn } from './graph'
+import { TMExecutionResult, TMExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
+import { newTape } from './utils'
+import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
   const trace: TMExecutionTrace[] = []
@@ -20,11 +22,11 @@ const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
 }
 
 export const simulateTM = (
-  graphIn: TMGraphIn,
+  graphIn: TMProjectGraph,
   // This forces front end to through a tape
-  inputTapeIn: Tape
+  input: string
 ): TMExecutionResult => {
-  const inputTape = structuredClone(inputTapeIn)
+  const inputTape = newTape(input)
   const graph = structuredClone(graphIn)
   const initialState = graph.states.find((state) => {
     return state.id === graph.initialState
@@ -38,11 +40,11 @@ export const simulateTM = (
     }
   }
 
-  initialState.tape = inputTape
+  const initialNode = new Node<TMState>(new TMState(initialState.id, initialState.isFinal))
 
-  const initialNode = new Node<TMState>(new TMState(initialState.id, initialState.isFinal, initialState.tape))
+  initialNode.state.tape = inputTape
 
-  const problem = new TMGraph(initialNode, graph.states.map(s => new TMState(s.id, s.isFinal, s.tape)), graph.transitions)
+  const problem = new TMGraph(initialNode, graph.states.map(s => new TMState(s.id, s.isFinal)), graph.transitions)
   const result = breadthFirstSearch(problem)
 
   if (!result) {

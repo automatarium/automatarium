@@ -1,8 +1,8 @@
 import { Queue } from './collection'
-import { Transition } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
+import { BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 
-export const breadthFirstSearch = <S extends State, T extends Transition>(
+export const breadthFirstSearch = <S extends State, T extends BaseAutomataTransition>(
   graph: Graph<S, T>
 ) => {
   const frontier = new Queue<Node<S>>()

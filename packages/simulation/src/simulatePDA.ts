@@ -1,10 +1,10 @@
 import { PDAGraph, PDAState } from './PDASearch'
 import { GraphStepper } from './Step'
-import { PDAExecutionResult, PDAExecutionTrace, Stack, UnparsedGraph } from './graph'
+import { PDAExecutionResult, PDAExecutionTrace, Stack } from './graph'
 import { Node } from './interfaces/graph'
-import { expandReadSymbols, resolveGraph } from './parseGraph'
 import { breadthFirstSearch } from './search'
-import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { PDAAutomataTransition, PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { buildProblem, expandTransitions, findInitialState } from './utils'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   const trace: PDAExecutionTrace[] = []
@@ -37,9 +37,7 @@ export const simulatePDA = (
 ): PDAExecutionResult => {
   const tempStack: Stack = []
   // Doing this find here so we don't have to deal with undefined in the class
-  const initialState = graph.states.find((state) => {
-    return state.id === graph.initialState
-  })
+  const initialState = findInitialState(graph)
 
   if (!initialState) {
     return {
@@ -62,7 +60,7 @@ export const simulatePDA = (
     initialNode,
     states,
     // We need to expand the read symbols in the transitions
-    graph.transitions.map(t => ({ ...t, read: expandReadSymbols(t.read) }))
+    expandTransitions(graph.transitions)
   )
   const result = breadthFirstSearch(problem)
 
@@ -113,30 +111,6 @@ export const simulatePDA = (
   }
 }
 
-export const graphStepperPDA = (graph: UnparsedGraph, input: string) => {
-  const parsedGraph = resolveGraph(graph)
-
-  const initialState = parsedGraph.states.find((state) => {
-    return state.id === graph.initialState
-  })
-
-  if (!initialState) {
-    return {
-      accepted: false,
-      remaining: input,
-      trace: []
-    }
-  }
-
-  const initialNode = new Node<PDAState>(
-    new PDAState(initialState.id, initialState.isFinal, null, input)//, initialState.stack),//, initialState.stack),
-  )
-
-  const states = parsedGraph.states.map(
-    (state) => new PDAState(state.id, state.isFinal)//, state.stack),
-  )
-
-  const problem = new PDAGraph(initialNode, states, parsedGraph.transitions)
-
-  return new GraphStepper(problem)
+export const graphStepperPDA = (graph: PDAProjectGraph, input: string): GraphStepper<PDAState, PDAAutomataTransition> => {
+  return new GraphStepper(buildProblem(graph, input))
 }

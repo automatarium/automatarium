@@ -2,8 +2,9 @@ import a2b2a from './graphs/a2b2a.json'
 import shuffleLeft from './graphs/shuffleLeft.json'
 import bepsi from './graphs/bepsi.json'
 import { simulateTM } from '../src/simulateTM'
-import { TMExecutionResult, TMGraphIn } from '../src/graph'
+import { TMExecutionResult } from '../src/graph'
 import { describe } from 'node:test'
+import { Project } from 'frontend/src/types/ProjectTypes'
 
 // Shim to allow for structuredClone alternative (See https://github.com/jsdom/jsdom/issues/3363)
 // This should work for our cases
@@ -11,8 +12,8 @@ global.structuredClone = jest.fn(val => {
   return JSON.parse(JSON.stringify(val))
 })
 
-function simulate (graph: TMGraphIn, input: string): TMExecutionResult {
-  return simulateTM(graph, { pointer: 0, trace: input ? input.split('') : [''] })
+function simulate (graph, input: string): TMExecutionResult {
+  return simulateTM(graph as Project, { pointer: 0, trace: input ? input.split('') : [''] })
 }
 
 describe('Machine that moves left', () => {

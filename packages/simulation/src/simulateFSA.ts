@@ -1,10 +1,10 @@
 import { FSAGraph, FSAState } from './FSASearch'
 import { GraphStepper } from './Step'
-import { ExecutionResult, ExecutionTrace, UnparsedGraph } from './graph'
+import { ExecutionResult, ExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
-import { expandReadSymbols, resolveGraph } from './parseGraph'
 import { breadthFirstSearch } from './search'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { buildProblem, expandTransitions, findInitialState } from './utils'
 
 const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
   const trace: ExecutionTrace[] = []
@@ -22,15 +22,12 @@ const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
   return trace.reverse()
 }
 
-// TODO: Like PDA, Make this take a FSAGraph instead
 export const simulateFSA = (
   graph: FSAProjectGraph,
   input: string
 ): ExecutionResult => {
   // Doing this find here so we don't have to deal with undefined in the class
-  const initialState = graph.states.find((state) => {
-    return state.id === graph.initialState
-  })
+  const initialState = findInitialState(graph)
 
   if (!initialState) {
     return {
@@ -52,7 +49,7 @@ export const simulateFSA = (
     initialNode,
     states,
     // We need to expand the read symbols in the transitions
-    graph.transitions.map(t => ({ ...t, read: expandReadSymbols(t.read) }))
+    expandTransitions(graph.transitions)
   )
   const result = breadthFirstSearch(problem)
 
@@ -71,30 +68,8 @@ export const simulateFSA = (
   }
 }
 
-export const graphStepper = (graph: UnparsedGraph, input: string) => {
-  const parsedGraph = resolveGraph(graph)
-
-  const initialState = parsedGraph.states.find((state) => {
-    return state.id === graph.initialState
-  })
-
-  if (!initialState) {
-    return {
-      accepted: false,
-      remaining: input,
-      trace: []
-    }
-  }
-
-  const initialNode = new Node<FSAState>(
-    new FSAState(initialState.id, initialState.isFinal, null, input)
-  )
-
-  const states = parsedGraph.states.map(
-    (state) => new FSAState(state.id, state.isFinal)
-  )
-
-  const problem = new FSAGraph(initialNode, states, parsedGraph.transitions)
+export const graphStepper = (graph: FSAProjectGraph, input: string) => {
+  const problem = buildProblem(graph, input)
 
   return new GraphStepper(problem)
 }

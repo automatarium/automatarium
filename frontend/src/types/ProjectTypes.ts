@@ -63,6 +63,11 @@ export interface BaseAutomataTransition {
 }
 
 /**
+ * Alias to make FSA seem like the rest
+ */
+export type FSAAutomataTransition = BaseAutomataTransition
+
+/**
  * Transition used by PDA projects
  */
 export interface PDAAutomataTransition extends BaseAutomataTransition{
@@ -94,7 +99,7 @@ type BaseProjectGraph<PT extends ProjectType, T extends BaseAutomataTransition> 
 /**
  * Graph for FSA project. There isn't any different in types but this is just for completion’s sake
  */
-export type FSAProjectGraph = BaseProjectGraph<'FSA', BaseAutomataTransition>
+export type FSAProjectGraph = BaseProjectGraph<'FSA', FSAAutomataTransition>
 
 /**
  * Graph for PDA project. The transitions need push/pop properties
