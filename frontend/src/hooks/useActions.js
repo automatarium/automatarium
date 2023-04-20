@@ -201,13 +201,12 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      handler: projectType === 'FSA'
-        ? () => {
+      handler: () => {
+            if (projectType !== 'FSA') return
             updateProject(reorderStates(convertNFAtoDFA(reorderStates(project))))
             console.log(reorderStates(convertNFAtoDFA(reorderStates(project))))
             commit()
           }
-        : undefined
     },
     MINIMIZE_DFA: {
       // handler: () => console.log('Minimize DFA'),
