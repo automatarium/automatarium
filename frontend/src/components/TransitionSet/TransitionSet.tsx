@@ -174,7 +174,7 @@ const Transition = ({
   const textOffset = (1.2 * offsetDirection) + 'em'
   // Offset of the first transition label from the edge.
   // 'under' transitions require more spacing
-  const initialOffset = ((bendDirection === 'under' ? 0.9 : 0.2) * offsetDirection) + 'em'
+  const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
   return <g>
     {/* The edge itself */}
@@ -203,7 +203,7 @@ const Transition = ({
 
     <text
       {...midPoint}
-      transform={rotate(degrees, control)}
+      transform={rotate(degrees, midPoint)}
       textAnchor="middle">
         {transitions.map((t, i) => {
           return <tspan
@@ -213,7 +213,7 @@ const Transition = ({
             onMouseDown={handleTransitionMouseDown(t)}
             onMouseUp={handleTransitionMouseUp(t)}
             onDoubleClick={handleTransitionDoubleClick(t)}
-            x={control.x}>
+            x={midPoint.x}>
               {makeTransitionText(projectType, t)}
           </tspan>
         })}
