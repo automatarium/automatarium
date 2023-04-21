@@ -1,0 +1,65 @@
+{
+  "projectType": "FSA",
+  "states": [
+    {
+      "x": 180,
+      "y": 375,
+      "isFinal": false,
+      "id": 0
+    },
+    {
+      "x": 330,
+      "y": 300,
+      "isFinal": false,
+      "id": 1
+    },
+    {
+      "x": 495,
+      "y": 225,
+      "isFinal": true,
+      "id": 3
+    },
+    {
+      "x": 375,
+      "y": 510,
+      "isFinal": false,
+      "id": 2
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 2,
+      "id": 0,
+      "read": "A"
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "read": ""
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Muddy Giraffe",
+    "dateCreated": 1681973831853,
+    "dateEdited": 1681973831853,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}
