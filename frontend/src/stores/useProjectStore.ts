@@ -12,9 +12,7 @@ import {
   AutomataState,
   ProjectConfig,
   ProjectComment,
-  ProjectType,
-  CopyData,
-  Template
+  ProjectType
 } from '../types/ProjectTypes'
 
 import {
@@ -25,8 +23,6 @@ import {
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
 } from '../config/projects'
-
-import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 
 /**
  * A stored project has an extra `_id` field which is used to tell identify it

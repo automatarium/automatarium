@@ -1,5 +1,5 @@
-import { useProjectStore, useTemplatesStore, useTemplateStore } from '/src/stores'
-import { SectionLabel, Preference, Input, Button } from '/src/components'
+import { useTemplatesStore, useTemplateStore } from '/src/stores'
+import { SectionLabel, Input } from '/src/components'
 
 import { Wrapper } from './templatesStyle'
 
@@ -18,7 +18,7 @@ const Templates = () => {
       <Wrapper>
       <Input type="select" onChange={(e) => pickTemplate(e)}>
         {templates.map((temp, key) => (
-          <option value={temp._id}>{temp._id}</option>
+          <option value={temp._id} key={key}>{temp._id}</option>
         ))}
       </Input>
       </Wrapper>
