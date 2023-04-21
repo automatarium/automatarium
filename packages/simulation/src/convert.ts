@@ -542,6 +542,7 @@ export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph =>
 export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => {
   // Do some error checking (could add proper authentic error messaging)
   if (!statesAndTransitionsPresent(nfaGraph) || !initialStateIsPresent(nfaGraph.initialState) || !finalStateIsPresent(nfaGraph.states)) {
+    window.alert('Error: Graph is not suitable for conversion. Please ensure you have states and transitions, and that an initial state and at least one final state is declared.')
     return nfaGraph
   } else {
     // Remove unreachable states and check to make sure final state is still present. Test graph is used otherwise states are deleted
@@ -549,6 +550,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
     let testGraph = { ...nfaGraph }
     testGraph = removeUnreachableNFAStates(testGraph)
     if (!finalStateIsPresent(testGraph.states)) {
+      window.alert('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
       return nfaGraph
     } else {
       // DFA doesn't need unreachable states, so remove the unreachable states then proceed
