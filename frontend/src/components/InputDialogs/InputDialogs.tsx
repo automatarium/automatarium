@@ -398,8 +398,8 @@ const InputDialogs = () => {
               style={TRANSITION_INPUT_STYLE}
             />
             <SubmitButton onClick={save}>
-                <CornerDownLeft size="18px" />
-              </SubmitButton>
+              <CornerDownLeft size="18px" />
+            </SubmitButton>
           </InputWrapper>
         </Dropdown>
       )

@@ -228,7 +228,6 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   insertGroup: (createData) => {
-    
     return 'foo'
   },
 
