@@ -545,12 +545,13 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
     return nfaGraph
   } else {
     // Remove unreachable states and check to make sure final state is still present. Test graph is used otherwise states are deleted
-    // in nfaGraph before returning
+    // in nfaGraph before returning, which may not be desired
     let testGraph = { ...nfaGraph }
     testGraph = removeUnreachableNFAStates(testGraph)
     if (!finalStateIsPresent(testGraph.states)) {
       return nfaGraph
     } else {
+      nfaGraph = removeUnreachableNFAStates(nfaGraph)
       let dfaGraph = {
         initialState: undefined as StateID,
         states: [] as AutomataState[],
