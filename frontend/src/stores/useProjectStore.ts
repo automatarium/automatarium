@@ -12,7 +12,7 @@ import {
   AutomataState,
   ProjectConfig,
   ProjectComment,
-  ProjectType
+  ProjectType, ProjectGraph
 } from '../types/ProjectTypes'
 
 import {
@@ -23,6 +23,7 @@ import {
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
 } from '../config/projects'
+import { expandTransitions } from '@automatarium/simulation/src/utils'
 
 /**
  * A stored project has an extra `_id` field which is used to tell identify it
@@ -95,6 +96,15 @@ interface ProjectStore {
   removeTransitions: (transitionIDs: number[]) => void,
   removeComments: (commentIDs: number[]) => void,
   updateConfig: (newConfig: ProjectConfig) => void,
+  /**
+   * Returns just a copy of the project graph.
+   * This expands transitions if needed
+   */
+  getGraph: () => ProjectGraph,
+  /**
+   * Updates the current project graph with the graph passed
+   */
+  updateGraph: (graph: ProjectGraph) => void,
   reset: () => void
 }
 
@@ -284,6 +294,22 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   updateConfig: (newConfig: ProjectConfig) => set(produce((state: ProjectStore) => {
     state.project.config = { ...state.project.config, ...newConfig }
     state.lastChangeDate = new Date().getTime()
+  })),
+
+  getGraph: () => {
+    const project = get().project
+    return {
+      initialState: project.initialState,
+      projectType: project.projectType,
+      states: project.states,
+      transitions: project.projectType === 'TM' ? project.transitions : expandTransitions(project.transitions)
+    } as ProjectGraph
+  },
+
+  updateGraph: graph => set(produce(({ project }: { project: StoredProject}) => {
+    project.transitions = graph.transitions
+    project.states = graph.states
+    project.initialState = graph.initialState
   })),
 
   reset: () => set({ project: createNewProject(), history: [], historyPointer: 0, lastChangeDate: -1, lastSaveDate: -1 })

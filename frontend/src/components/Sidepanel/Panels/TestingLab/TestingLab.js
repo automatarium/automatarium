@@ -4,7 +4,7 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph, simulateFSA, simulatePDA } from '@automatarium/simulation'
+import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/simulation'
 
 import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
@@ -29,11 +29,7 @@ const TestingLab = () => {
   const [showTraceTape, setShowTraceTape] = useState(false)
 
   // Graph state
-  const graph = {
-    states: useProjectStore(s => s.project.states),
-    transitions: useProjectStore(s => s.project.transitions),
-    initialState: useProjectStore(s => s.project.initialState)
-  }
+  const graph = useProjectStore(s => s.getGraph())
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
   // eslint-disable-next-line no-unused-vars
@@ -179,9 +175,8 @@ const TestingLab = () => {
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
-    const resolvedGraph = resolveGraph(graph)
-    const closure = closureWithPredicate(resolvedGraph, resolvedGraph.initialState, () => true)
-    return Array.from(closure).some(([stateID]) => resolvedGraph.states.find(s => s.id === stateID)?.isFinal)
+    const closure = closureWithPredicate(graph, graph.initialState, () => true)
+    return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
   if (!pathToFinal && !noInitialState && !noFinalState) { warnings.push('There is no path to a final state') }
 
