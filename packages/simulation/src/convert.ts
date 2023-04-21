@@ -542,11 +542,11 @@ export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph =>
 export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => {
   // Do some error checking (could add proper authentic error messaging)
   if (!statesAndTransitionsPresent(nfaGraph)) {
-    throw new Error('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present')
+    throw new Error('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present.')
   } else if (!initialStateIsPresent(nfaGraph.initialState)) {
-    throw new Error('Error: Graph is not suitable for conversion. Please ensure that an initial state is declared')
+    throw new Error('Error: Graph is not suitable for conversion. Please ensure that an initial state is declared.')
   } else if (!finalStateIsPresent(nfaGraph.states)) {
-    throw new Error('Error: Graph is not suitable for conversion. Please ensure that at least one final state is declared')
+    throw new Error('Error: Graph is not suitable for conversion. Please ensure that at least one final state is declared.')
   } else {
     // Remove unreachable states and check to make sure final state is still present. Test graph is used otherwise states are deleted
     // in nfaGraph before returning, which may not be desired
