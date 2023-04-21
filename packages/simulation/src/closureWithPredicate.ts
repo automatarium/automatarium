@@ -1,9 +1,13 @@
 import { StateID } from './graph'
-import { BaseAutomataTransition, ProjectType } from 'frontend/src/types/ProjectTypes'
+import { assertType, BaseAutomataTransition, ProjectType } from 'frontend/src/types/ProjectTypes'
 import { RestrictedProject, TransitionMapping } from './utils'
 
 export type ClosureNode<T extends BaseAutomataTransition> = { transition: T, parents: T[] }
-export type ClosureWithPredicateFn = (transition: BaseAutomataTransition) => boolean
+export type ClosureWithPredicateFn<T> = (transition: T) => boolean
+/**
+ * The closure that is returned
+ */
+type GraphClosure<T> = Set<{state: StateID, transitions: T[]}>
 
 /**
  * Compute the set of states accessible from a given state using only transitions that meet the conditions
@@ -27,12 +31,15 @@ export type ClosureWithPredicateFn = (transition: BaseAutomataTransition) => boo
  * closureWithPredicate(graph, 0, transition => transition.read.length === 0)
  * ```
  */
-export const closureWithPredicate = <P extends ProjectType, T extends TransitionMapping[P]>(graph: RestrictedProject<P>, currentStateID: StateID, predicate: ClosureWithPredicateFn): Set<[StateID, T[]]> => {
+export const closureWithPredicate = <P extends ProjectType, T extends TransitionMapping[P]>(graph: RestrictedProject<P>, currentStateID: StateID, predicate: ClosureWithPredicateFn<T>): GraphClosure<T> => {
   // Setup flood fill sets
   type CNode = ClosureNode<T>
   const closed: CNode[] = []
+  // Typescript doesn't seem to properly carry this info
+  // TODO: Refine the generic type
+  assertType<T[]>(graph.transitions)
 
-  const open = (graph.transitions)
+  const open = graph.transitions
     .filter(tr => tr.from === currentStateID && predicate(tr))
     .map(transition => ({ transition, parents: [] } as CNode))
 
@@ -43,7 +50,7 @@ export const closureWithPredicate = <P extends ProjectType, T extends Transition
     closed.push(node)
 
     // Add neighbouring transitions
-    for (const neighbour of (graph.transitions as T[]).filter(tr => tr.from === node.transition.to && predicate(tr))) {
+    for (const neighbour of graph.transitions.filter(tr => tr.from === node.transition.to && predicate(tr))) {
       if (![...closed, ...open].map(({ transition }) => transition.id).includes(neighbour.id)) {
         // Add neighbour to open set and record the path to it in parents
         open.push({ transition: neighbour, parents: [...node.parents, node.transition] })
@@ -51,7 +58,10 @@ export const closureWithPredicate = <P extends ProjectType, T extends Transition
     }
   }
 
-  return new Set(closed.map(node => [node.transition.to, [...node.parents, node.transition]]))
+  return new Set(closed.map(node => ({
+    state: node.transition.to,
+    transitions: [...node.parents, node.transition]
+  })))
 }
 
 export default closureWithPredicate

@@ -46,7 +46,7 @@ export type RestrictedProject<P extends ProjectType> = ProjectGraphMapping[P] & 
  * @see expandReadSymbols
  */
 export const expandTransitions = <T extends BaseAutomataTransition>(transitions: T[]): T[] => {
-  return transitions.map(t => ({ ...t, read: expandReadSymbols(t.read) }))
+  return transitions.map(t => ({ ...t, read: expandReadSymbols(t.read ?? '') }))
 }
 
 /**

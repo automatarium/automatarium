@@ -1,5 +1,6 @@
 import { StateID, ReadSymbol } from './graph'
 import { AutomataState, FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import closureWithPredicate from './closureWithPredicate'
 
 // Define useful types
 type TransitionTable = Record<StateID, [StateID, ReadSymbol][]>
@@ -7,53 +8,18 @@ type CombinedStateArray = [string, { symbol: ReadSymbol, tostates: StateID[] }[]
 type CombinedStates = Record<string, {symbol: ReadSymbol, tostates: StateID[] }[]>
 
 // Graph traversal algorithm starting from the initial state that removes unreachable states and transitions (NFA)
-export const removeUnreachableNFAStates = (nfaGraph: FSAProjectGraph): FSAProjectGraph => {
+export const removeUnreachableStates = (graph: FSAProjectGraph): FSAProjectGraph => {
   // Keep track of all the reachable states from the initial state
-  const reachableStates = new Set<StateID>([nfaGraph.initialState])
-  // Traverse the graph starting from the initial state
-  const stack = [nfaGraph.initialState]
-  while (stack.length > 0) {
-    const currentState = stack.pop() as StateID
-    for (const transition of nfaGraph.transitions) {
-      if (transition.from === currentState) {
-        // If the transition leads to a new state, add it to the reachable states
-        if (!reachableStates.has(transition.to)) {
-          reachableStates.add(transition.to)
-          stack.push(transition.to)
-        }
-      }
-    }
+  // We destruct the closure into just a set of states
+  const reachableStates = new Set<StateID>([graph.initialState])
+  for (const { state } of closureWithPredicate(graph, graph.initialState, () => true)) {
+    reachableStates.add(state)
   }
   // Remove any states that are not in the set of reachable states
-  nfaGraph.states = nfaGraph.states.filter((state) => reachableStates.has(state.id))
+  graph.states = graph.states.filter(state => reachableStates.has(state.id))
   // Remove any transitions that are not connected to reachable states
-  nfaGraph.transitions = nfaGraph.transitions.filter((transition) => reachableStates.has(transition.from) && reachableStates.has(transition.to))
-  return nfaGraph
-}
-
-// Graph traversal algorithm starting from the initial state that removes unreachable states and transitions (DFA)
-export const removeUnreachableDFAStates = (dfaGraph: FSAProjectGraph): FSAProjectGraph => {
-  // Keep track of all the reachable states from the initial state
-  const reachableStates = new Set<StateID>([dfaGraph.initialState])
-  // Traverse the graph starting from the initial state
-  const stack = [dfaGraph.initialState]
-  while (stack.length > 0) {
-    const currentState = stack.pop() as StateID
-    for (const transition of dfaGraph.transitions) {
-      if (transition.from === currentState) {
-        // If the transition leads to a new state, add it to the reachable states
-        if (!reachableStates.has(transition.to)) {
-          reachableStates.add(transition.to)
-          stack.push(transition.to)
-        }
-      }
-    }
-  }
-  // Remove any states that are not in the set of reachable states
-  dfaGraph.states = dfaGraph.states.filter((state) => reachableStates.has(state.id))
-  // Remove any transitions that are not connected to reachable states
-  dfaGraph.transitions = dfaGraph.transitions.filter((transition) => reachableStates.has(transition.from) && reachableStates.has(transition.to))
-  return dfaGraph
+  graph.transitions = graph.transitions.filter(transition => reachableStates.has(transition.from) && reachableStates.has(transition.to))
+  return graph
 }
 
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
@@ -546,12 +512,12 @@ export const convertNFAtoDFA = (nfaGraph: FSAProjectGraph): FSAProjectGraph => {
     // Remove unreachable states and check to make sure final state is still present. Test graph is used otherwise states are deleted
     // in nfaGraph before returning, which may not be desired
     let testGraph = { ...nfaGraph }
-    testGraph = removeUnreachableNFAStates(testGraph)
+    testGraph = removeUnreachableStates(testGraph)
     if (!finalStateIsPresent(testGraph.states)) {
       throw new Error('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
     } else {
       // DFA doesn't need unreachable states, so remove the unreachable states then proceed
-      nfaGraph = removeUnreachableNFAStates(nfaGraph)
+      nfaGraph = removeUnreachableStates(nfaGraph)
       let dfaGraph = {
         projectType: 'FSA',
         initialState: null,
@@ -563,7 +529,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAProjectGraph): FSAProjectGraph => {
       // Create a DFA from the given NFA
       dfaGraph = createDFA(nfaGraph, dfaGraph)
       // Remove unreachable states from this new dfaGraph
-      dfaGraph = removeUnreachableDFAStates(dfaGraph)
+      dfaGraph = removeUnreachableStates(dfaGraph)
       // Finally copy over the required elements from nfaGraph and return the final dfaGraph
       const { initialState, states, transitions, ...dfaGraphCopy } = nfaGraph
       return { ...dfaGraph, ...dfaGraphCopy }

@@ -16,7 +16,7 @@ export type ValidTransition<T extends BaseAutomataTransition> = { transition: T,
  */
 export const validTransitions = <P extends ProjectType, T extends TransitionMapping[P]>(graph: RestrictedProject<P>, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition<T>[] => {
   // Compute lambda closure (states accessible without consuming input)
-  const closure: [number, T[]][] = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
+  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
 
   // Find direct non-lambda transitions
   const directTransitions = graph.transitions
@@ -25,17 +25,17 @@ export const validTransitions = <P extends ProjectType, T extends TransitionMapp
 
   // Find transitions from states in lambda closure that we can take
   const indirectTransitions = closure
-    .map(([stateID, precedingTransitions]) => graph.transitions
-      .filter(transition => transition.from === stateID && transition.read.includes(nextRead))
-      .map((transition: T) => ({ transition, trace: precedingTransitions } as ValidTransition<T>)))
+    .map(({ state, transitions }) => graph.transitions
+      .filter(transition => transition.from === state && transition.read.includes(nextRead))
+      .map((transition: T) => ({ transition, trace: transitions } as ValidTransition<T>)))
     .reduce((a, b) => [...a, ...b], [])
 
   // Find transitions to final states in lambda closure
   const finalTransitions = closure
-    .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
-    .map(([stateID, precedingTransitions]) => ({
-      transition: graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as T,
-      trace: precedingTransitions.slice(0, -1)
+    .filter(({ state }) => graph.states.some(s => s.id === state && s.id !== currentStateID && s.isFinal))
+    .map(({ state, transitions }) => ({
+      transition: graph.transitions.find(tr => tr.to === state && tr.read.length === 0) as T,
+      trace: transitions.slice(0, -1)
     }))
 
   // Combine transitions

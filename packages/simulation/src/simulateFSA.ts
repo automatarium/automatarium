@@ -34,6 +34,7 @@ export const simulateFSA = (
       trace: []
     }
   }
+
   const result = breadthFirstSearch(problem)
 
   if (!result) {

@@ -35,7 +35,6 @@ export const simulatePDA = (
   input: string
 ): PDAExecutionResult => {
   const tempStack: Stack = []
-
   const problem = buildProblem(graph, input)
   if (!problem) {
     return {
