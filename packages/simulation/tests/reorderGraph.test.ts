@@ -53,6 +53,37 @@ describe('Reordering graph', () => {
     })
   })
 
+  test('Nothing happens when no initial state', () => {
+    const graph = {
+      states: [
+        {
+          isFinal: true,
+          x: 570,
+          y: 255,
+          id: 0
+        },
+        {
+          isFinal: false,
+          x: 405,
+          y: 255,
+          id: 1
+        }
+      ],
+      transitions: [
+        {
+          from: 1,
+          to: 0,
+          id: 0,
+          write: '',
+          direction: 'R',
+          read: ''
+        }
+      ],
+      initialState: null
+    } as unknown as UnparsedGraph
+    expect(reorderStates(graph)).toEqual(graph)
+  })
+
   test('Cycles are handled', () => {
     let testVer = JSON.parse(JSON.stringify(dibDipLambdaLoop)) as UnparsedGraph
     testVer = reorderStates(testVer)
