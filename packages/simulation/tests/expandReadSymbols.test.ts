@@ -2,9 +2,33 @@
 
 import { expandReadSymbols } from '../src'
 
+/**
+ * Check that an input is expanded how we expect it to
+ * @param input The string that we are testing
+ * @param expected What we expect input to be expanded to
+ */
 const expectExpansion = (input: string, expected: string) => {
   expect(expandReadSymbols(input)).toEqual(expected)
 }
+
+describe('Edge cases', () => {
+  test('Edge cases', () => {
+    const tests = ['][', '-9]', '[-]', '[a-']
+    for (const test of tests) {
+      // Make sure it is sorted like how the tests are run.
+      expectExpansion(test, test.split('').sort().join(''))
+    }
+  })
+
+  test('Invalid order', () => {
+    expectExpansion('[z-a]', '')
+    expectExpansion('[9-0]', '')
+  })
+
+  test('Invalid duplicated symbols in range', () => {
+    expectExpansion('[a-a]', 'a')
+  })
+})
 
 describe('Expand literals', () => {
   test('Should pass through abc', () => {
@@ -39,10 +63,6 @@ describe('Expand ranges', () => {
 
   test('Should expand [a-z][A-Z]', () => {
     expectExpansion('[a-z][A-Z]', 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz')
-  })
-
-  test('Should expand [z-a]', () => {
-    expectExpansion('[z-a]', '')
   })
 
   test('Should expand [a-a]', () => {

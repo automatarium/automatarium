@@ -10,6 +10,37 @@ import { FSAGraph, FSAState } from './FSASearch'
 import { TMGraph, TMState } from './TMSearch'
 import { Tape } from './graph'
 
+export interface StateMapping {
+  'FSA': FSAState
+  'PDA': PDAState
+  'TM': TMState
+}
+
+/**
+ * Maps a project type to the transitions that the graph uses.
+ * Used in generic function signatures
+ */
+export interface TransitionMapping {
+  'FSA': FSAAutomataTransition
+  'PDA': PDAAutomataTransition
+  'TM': TMAutomataTransition
+}
+
+/**
+ * Maps a project type to the full project type.
+ * Used by generics for easier restricting (Typescript fails in some situations so we need to do this to help it)
+ */
+export interface ProjectGraphMapping {
+  'FSA': FSAProjectGraph
+  'PDA': PDAProjectGraph
+  'TM': TMProjectGraph
+}
+
+/**
+ * A project restricted to a certain graph
+ */
+export type RestrictedProject<P extends ProjectType> = ProjectGraphMapping[P] & {projectType: P}
+
 /**
  * Expands the read symbols in a list of transitions so that they can be used by the simulator
  * @see expandReadSymbols
@@ -19,31 +50,21 @@ export const expandTransitions = <T extends BaseAutomataTransition>(transitions:
 }
 
 /**
+ * Performs any expansions needed for a graph (i.e. expands any transitions if its a FSA/PDA graph)
+ */
+export const expandGraph = <T extends ProjectGraph>(graph: T): T => {
+  if (['FSA', 'PDA'].includes(graph.projectType)) {
+    return { ...graph, transitions: expandTransitions(graph.transitions) }
+  }
+  return graph
+}
+
+/**
  * Returns the initial state object from the graph. Returns undefined if not found
  */
 export const findInitialState = (graph: ProjectGraph): AutomataState | undefined => {
   return graph.states.find((state) => state.id === graph.initialState)
 }
-
-export interface StateMapping {
-  'FSA': FSAState
-  'PDA': PDAState
-  'TM': TMState
-}
-
-export interface TransitionMapping {
-  'FSA': FSAAutomataTransition
-  'PDA': PDAAutomataTransition
-  'TM': TMAutomataTransition
-}
-
-export interface ProjectGraphMapping {
-  'FSA': FSAProjectGraph
-  'PDA': PDAProjectGraph
-  'TM': TMProjectGraph
-}
-
-export type RestrictedProject<P extends ProjectType> = ProjectGraphMapping[P]
 
 /**
  * Creates a new tape object from an input. The tape is set to start at 0
@@ -53,13 +74,14 @@ export const newTape = (input: string): Tape => ({ pointer: 0, trace: input ? in
 /**
  * Builds the graph into a problem graph so that it can be simulated
  */
-export const buildProblem = <P extends ProjectType, S extends StateMapping[P], T extends TransitionMapping[P]>(graph: RestrictedProject<P>, input: string): Graph<S, T> => {
+export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>, input: string): Graph<StateMapping[P], TransitionMapping[P]> => {
   // Find what constructors we need to use
   let StateType: new(id: number, isFinal: boolean, ...args: any) => State
-  // let StateType: any
+  // let GraphType: new(initialNode: Node<S>, states: S[], transitions: T[]) => Graph<S, T>
   let GraphType: any
-  switch (graph.projectType as P) {
+  switch (graph.projectType) {
     case 'FSA':
+      console.log('test' as P)
       StateType = FSAState
       GraphType = FSAGraph
       break
@@ -74,10 +96,10 @@ export const buildProblem = <P extends ProjectType, S extends StateMapping[P], T
   }
 
   const states = graph.states.map(
-    (state) => new StateType(state.id, state.isFinal) as S
+    (state) => new StateType(state.id, state.isFinal)
   )
 
-  const initialNode = new Node<S>(states.find(n => n.id === graph.initialState))
+  const initialNode = new Node(states.find(n => n.id === graph.initialState))
 
   if (graph.projectType === 'TM') {
     (initialNode.state as TMState).tape = newTape(input)
@@ -87,6 +109,6 @@ export const buildProblem = <P extends ProjectType, S extends StateMapping[P], T
     initialNode,
     states,
     // Only FSA and PDA graphs need to have transitions expanded
-    (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions)) as T[]
+    (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions))
   )
 }

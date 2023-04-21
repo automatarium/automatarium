@@ -9,7 +9,6 @@ import disconnected from './graphs/disconnected.json'
 import { expandGraph } from '../src/utils'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
-console.log(dib.projectType)
 describe('Automata dib', () => {
   const graph = expandGraph(dib as FSAProjectGraph)
 

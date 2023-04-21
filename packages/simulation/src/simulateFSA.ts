@@ -1,10 +1,10 @@
-import { FSAGraph, FSAState } from './FSASearch'
+import { FSAState } from './FSASearch'
 import { GraphStepper } from './Step'
 import { ExecutionResult, ExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
-import { buildProblem, expandTransitions, findInitialState } from './utils'
+import { buildProblem, findInitialState } from './utils'
 
 const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
   const trace: ExecutionTrace[] = []
@@ -27,9 +27,7 @@ export const simulateFSA = (
   input: string
 ): ExecutionResult => {
   // Doing this find here so we don't have to deal with undefined in the class
-  const initialState = findInitialState(graph)
-
-  if (!initialState) {
+  if (!findInitialState(graph)) {
     return {
       accepted: false,
       remaining: input,
@@ -37,20 +35,7 @@ export const simulateFSA = (
     }
   }
 
-  const initialNode = new Node<FSAState>(
-    new FSAState(initialState.id, initialState.isFinal, null, input)
-  )
-
-  const states = graph.states.map(
-    (state) => new FSAState(state.id, state.isFinal)
-  )
-
-  const problem = new FSAGraph(
-    initialNode,
-    states,
-    // We need to expand the read symbols in the transitions
-    expandTransitions(graph.transitions)
-  )
+  const problem = buildProblem(graph, input)
   const result = breadthFirstSearch(problem)
 
   if (!result) {

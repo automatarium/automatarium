@@ -1,6 +1,6 @@
 import { ReadSymbol, StateID } from './graph'
 import closureWithPredicate from './closureWithPredicate'
-import { assertType, BaseAutomataTransition, ProjectType } from 'frontend/src/types/ProjectTypes'
+import { BaseAutomataTransition, ProjectType } from 'frontend/src/types/ProjectTypes'
 import { RestrictedProject, TransitionMapping } from './utils'
 
 export type ValidTransition<T extends BaseAutomataTransition> = { transition: T, trace: { to: number, read: string }[]}
@@ -17,7 +17,6 @@ export type ValidTransition<T extends BaseAutomataTransition> = { transition: T,
 export const validTransitions = <P extends ProjectType, T extends TransitionMapping[P]>(graph: RestrictedProject<P>, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition<T>[] => {
   // Compute lambda closure (states accessible without consuming input)
   const closure: [number, T[]][] = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
-  assertType<T>(graph.transitions)
 
   // Find direct non-lambda transitions
   const directTransitions = graph.transitions

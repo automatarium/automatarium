@@ -1,10 +1,10 @@
-import { PDAGraph, PDAState } from './PDASearch'
+import { PDAState } from './PDASearch'
 import { GraphStepper } from './Step'
 import { PDAExecutionResult, PDAExecutionTrace, Stack } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
 import { PDAAutomataTransition, PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
-import { buildProblem, expandTransitions, findInitialState } from './utils'
+import { buildProblem, findInitialState } from './utils'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   const trace: PDAExecutionTrace[] = []
@@ -37,9 +37,7 @@ export const simulatePDA = (
 ): PDAExecutionResult => {
   const tempStack: Stack = []
   // Doing this find here so we don't have to deal with undefined in the class
-  const initialState = findInitialState(graph)
-
-  if (!initialState) {
+  if (!findInitialState(graph)) {
     return {
       accepted: false,
       remaining: input,
@@ -48,20 +46,7 @@ export const simulatePDA = (
     }
   }
 
-  const initialNode = new Node<PDAState>(
-    new PDAState(initialState.id, initialState.isFinal, null, input)//, stack ),//, initialState.stack),
-  )
-
-  const states = graph.states.map(
-    (state) => new PDAState(state.id, state.isFinal)
-  )
-
-  const problem = new PDAGraph(
-    initialNode,
-    states,
-    // We need to expand the read symbols in the transitions
-    expandTransitions(graph.transitions)
-  )
+  const problem = buildProblem(graph, input)
   const result = breadthFirstSearch(problem)
 
   if (!result) {

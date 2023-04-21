@@ -8,9 +8,9 @@ import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 // Shim to allow for structuredClone alternative (See https://github.com/jsdom/jsdom/issues/3363)
 // This should work for our cases
-global.structuredClone = jest.fn(val => {
-  return JSON.parse(JSON.stringify(val))
-})
+// global.structuredClone = jest.fn(val => {
+//   return JSON.parse(JSON.stringify(val))
+// })
 
 function simulate (graph, input: string): TMExecutionResult {
   return simulateTM(graph as TMProjectGraph, input)
