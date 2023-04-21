@@ -92,6 +92,26 @@ const rotate = (degrees: number, centre: Coordinate): string => `rotate(${degree
 
 const RAD2DEG = 180 / Math.PI
 
+/**
+ * Calculates the coordinate of a point along a quadratic curve
+ * @param a The first point to use (This will be a point on a state circle)
+ * @param b The control point (This is the midpoint between the two states)
+ * @param c Third point to use (Will also be a point on a state circle)
+ * @param t Value in range 0-1 of where to get point (0 being left, 0.5 middle, etc)
+ */
+const calcPoint = (a: Coordinate, b: Coordinate, c: Coordinate, t: number): Coordinate => {
+  /**
+   * Calculate the coordinate along one axis (X or Y).
+   * From here: https://en.wikipedia.org/wiki/B%C3%A9zier_curve#Quadratic_B%C3%A9zier_curves
+   */
+  const forAxis = (a: number, b: number, c: number): number =>
+    Math.pow(1 - t, 2) * a + 2 * (1 - t) * t * b + Math.pow(t, 2) * c
+  return {
+    x: forAxis(a.x, b.x, c.x),
+    y: forAxis(a.y, b.y, c.y)
+  }
+}
+
 const Transition = ({
   id,
   transitions = [],
@@ -118,13 +138,15 @@ const Transition = ({
     under: 0.5
   }[bendDirection] * TRANSITION_SEPERATION
   // Calculate path
-  const { pathData, textPathData, control, normal } = calculateTransitionPath(from, to, bendValue, fullWidth)
+  const { pathData, textPathData, control, normal, edges } = calculateTransitionPath(from, to, bendValue, fullWidth)
   // Convert the normal to degrees
   const degrees = Math.acos(normal.x) * RAD2DEG - 90
   const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
   // -- used to place the text on the same path
   const pathID = `${from.x}${from.y}${to.x}${to.y}`
+  // Calculate the midpoint of the curve which is where we will place the text
+  const midPoint = calcPoint(edges[0], control, edges[1], 0.5)
 
   // Callbacks for individual transitions
   const handleTransitionMouseUp = (t: PositionedTransition) => e =>
@@ -148,7 +170,12 @@ const Transition = ({
   // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend
   // upwards.
   const offsetDirection = bendDirection === 'under' ? 1 : -1
+  // The offset for each transition label from each other
   const textOffset = (1.2 * offsetDirection) + 'em'
+  // Offset of the first transition label from the edge.
+  // 'under' transitions require more spacing
+  const initialOffset = ((bendDirection === 'under' ? 0.9 : 0.2) * offsetDirection) + 'em'
+
   return <g>
     {/* The edge itself */}
     <path
@@ -174,37 +201,29 @@ const Transition = ({
       strokeWidth={20}
     />}
 
-    {/*
-      Create the text for each transition. We have it grouped under one element to make rotation easier.
-      The Y coordinate needs to be lowered to the edge since by default it would appear very high.
-
-      I apologise for the funky ass offset math for setting the y coordinate. There is a better solution but this was
-      easiest - Jake
-     */}
     <text
-      x={control.x}
+      {...midPoint}
       transform={rotate(degrees, control)}
-      textAnchor="middle"
-      y={control.y + (isReflexive ? REFLEXIVE_Y_OFFSET / 3 : 0) - (13 * offsetDirection) - (bendDirection === 'under' ? 5 : 0)}>
-      {transitions.map((t, i) => {
-        return <tspan
-          dy={bendDirection === 'over' && i === 0 ? '0em' : textOffset}
-          key={t.id}
-          fill={selectedTransitions.includes(t.id) ? 'var(--primary)' : 'var(--stroke)'}
-          onMouseDown={handleTransitionMouseDown(t)}
-          onMouseUp={handleTransitionMouseUp(t)}
-          onDoubleClick={handleTransitionDoubleClick(t)}
-          x={control.x}>
-            {makeTransitionText(projectType, t)}
-        </tspan>
-      })}
+      textAnchor="middle">
+        {transitions.map((t, i) => {
+          return <tspan
+            dy={i === 0 ? initialOffset : textOffset}
+            key={t.id}
+            fill={selectedTransitions.includes(t.id) ? 'var(--primary)' : 'var(--stroke)'}
+            onMouseDown={handleTransitionMouseDown(t)}
+            onMouseUp={handleTransitionMouseUp(t)}
+            onDoubleClick={handleTransitionDoubleClick(t)}
+            x={control.x}>
+              {makeTransitionText(projectType, t)}
+          </tspan>
+        })}
     </text>
   </g>
 }
 
 const calculateTransitionPath = (
   from: Coordinate, to: Coordinate,
-  bendValue: number, fullWidth: boolean): {pathData: string, textPathData: string, control: Coordinate, normal: Coordinate} => {
+  bendValue: number, fullWidth: boolean): {pathData: string, textPathData: string, control: Coordinate, normal: Coordinate, edges: Coordinate[]} => {
   // Is this path reflexive
   const isReflexive = from.x === to.x && from.y === to.y
 
@@ -245,7 +264,8 @@ const calculateTransitionPath = (
     pathData,
     textPathData: (angle > 90 || angle <= -90) ? pathReversed : pathData,
     control,
-    normal
+    normal,
+    edges: [edge1, edge2]
   }
 }
 

@@ -16,7 +16,6 @@ const useResourceSelection = (getSelected: () => number[], makeSetter: () => (x:
     if (tool === 'cursor' || e.detail.originalEvent.button === 2 || tool === 'delete') {
       // Update transition selections
       const ids: number[] = 'ids' in e.detail ? e.detail.ids : [e.detail[eventKey].id]
-      console.log(ids)
       const alreadySelected = ids.some(id => selected.includes(id))
       newSelected = alreadySelected
         ? selected
