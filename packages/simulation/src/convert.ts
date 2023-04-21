@@ -73,7 +73,7 @@ export const finalStateIsPresent = (nfaGraphStates: FSAState[]): boolean => {
 
 // This will check to ensure that the graph passed in has an initial state before continuing
 export const initialStateIsPresent = (nfaGraphInitialState: StateID): boolean => {
-  return nfaGraphInitialState != null
+  return nfaGraphInitialState !== null
 }
 
 // This will check that a given states transitions contain all the symbols
@@ -541,17 +541,19 @@ export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph =>
 
 export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => {
   // Do some error checking (could add proper authentic error messaging)
-  if (!statesAndTransitionsPresent(nfaGraph) || !initialStateIsPresent(nfaGraph.initialState) || !finalStateIsPresent(nfaGraph.states)) {
-    window.alert('Error: Graph is not suitable for conversion. Please ensure you have states and transitions, and that an initial state and at least one final state is declared.')
-    return nfaGraph
+  if (!statesAndTransitionsPresent(nfaGraph)) {
+    throw new Error('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present')
+  } else if (!initialStateIsPresent(nfaGraph.initialState)) {
+    throw new Error('Error: Graph is not suitable for conversion. Please ensure that an initial state is declared')
+  } else if (!finalStateIsPresent(nfaGraph.states)) {
+    throw new Error('Error: Graph is not suitable for conversion. Please ensure that at least one final state is declared')
   } else {
     // Remove unreachable states and check to make sure final state is still present. Test graph is used otherwise states are deleted
     // in nfaGraph before returning, which may not be desired
     let testGraph = { ...nfaGraph }
     testGraph = removeUnreachableNFAStates(testGraph)
     if (!finalStateIsPresent(testGraph.states)) {
-      window.alert('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
-      return nfaGraph
+      throw new Error('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
     } else {
       // DFA doesn't need unreachable states, so remove the unreachable states then proceed
       nfaGraph = removeUnreachableNFAStates(nfaGraph)
