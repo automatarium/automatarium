@@ -10,9 +10,10 @@ import { Queue } from './collection'
  * This is performed by using a combination of breath and depth searches. If there is only a single path to take then it
  * goes depth first. If there are multiple branches then it adds them to the queue so it goes back to breath first.
  * i.e. This is a fancy floodfill
- * @param graph Graph to reorder. This is performed in-place
+ * @param graph Graph to reorder
  */
 export const reorderStates = (graph: UnparsedGraph): UnparsedGraph => {
+  if (graph.initialState === null) return graph
   // Convert the graph into an adjacency list of transitions
   const graphList: {[key: number]: number[]} = {}
   graph.transitions.forEach(x => {

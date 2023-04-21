@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import create from 'zustand'
+import { create } from 'zustand'
 
 import { firebase } from '/src/auth'
 import { getUser } from '/src/services/user'
