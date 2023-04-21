@@ -74,14 +74,13 @@ export const newTape = (input: string): Tape => ({ pointer: 0, trace: input ? in
 /**
  * Builds the graph into a problem graph so that it can be simulated
  */
-export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>, input: string): Graph<StateMapping[P], TransitionMapping[P]> => {
+export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>, input: string): Graph<StateMapping[P], TransitionMapping[P]> | null => {
   // Find what constructors we need to use
   let StateType: new(id: number, isFinal: boolean, ...args: any) => State
   // let GraphType: new(initialNode: Node<S>, states: S[], transitions: T[]) => Graph<S, T>
   let GraphType: any
   switch (graph.projectType) {
     case 'FSA':
-      console.log('test' as P)
       StateType = FSAState
       GraphType = FSAGraph
       break
@@ -95,20 +94,25 @@ export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>,
       break
   }
 
+  const initialState = graph.states.find(s => s.id === graph.initialState)
+  if (!initialState) {
+    return null
+  }
+
+  const initialNode = new Node(graph.projectType === 'TM'
+    ? new StateType(initialState.id, initialState.isFinal, newTape(input))
+    : new StateType(initialState.id, initialState.isFinal, null, input)
+  )
+
   const states = graph.states.map(
     (state) => new StateType(state.id, state.isFinal)
   )
-
-  const initialNode = new Node(states.find(n => n.id === graph.initialState))
-
-  if (graph.projectType === 'TM') {
-    (initialNode.state as TMState).tape = newTape(input)
-  }
 
   return new GraphType(
     initialNode,
     states,
     // Only FSA and PDA graphs need to have transitions expanded
+    // This should've been done by the frontend but we do it here just encase
     (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions))
   )
 }

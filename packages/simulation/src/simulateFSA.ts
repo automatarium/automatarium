@@ -4,7 +4,7 @@ import { ExecutionResult, ExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
-import { buildProblem, findInitialState } from './utils'
+import { buildProblem } from './utils'
 
 const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
   const trace: ExecutionTrace[] = []
@@ -26,16 +26,14 @@ export const simulateFSA = (
   graph: FSAProjectGraph,
   input: string
 ): ExecutionResult => {
-  // Doing this find here so we don't have to deal with undefined in the class
-  if (!findInitialState(graph)) {
+  const problem = buildProblem(graph, input)
+  if (!problem) {
     return {
       accepted: false,
       remaining: input,
       trace: []
     }
   }
-
-  const problem = buildProblem(graph, input)
   const result = breadthFirstSearch(problem)
 
   if (!result) {

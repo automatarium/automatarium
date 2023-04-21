@@ -85,11 +85,11 @@ describe('Reordering graph', () => {
   })
 
   test('Cycles are handled', () => {
-    expect(reorderStates(dibDipLambdaLoop as FSAProjectGraph)).toMatchObject(dibDipLambdaLoop)
+    expect(reorderStates(structuredClone(dibDipLambdaLoop) as FSAProjectGraph)).toMatchObject(dibDipLambdaLoop)
   })
 
   test('Lower ID path is taken first', () => {
-    let testVer = dibDipLambdaLoop as FSAProjectGraph
+    let testVer = structuredClone(dibDipLambdaLoop) as FSAProjectGraph
     // We have to update both states and transitions. We will apply this mapping
     const mapping = {
       0: 2,

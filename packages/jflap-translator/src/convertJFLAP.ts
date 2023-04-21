@@ -1,7 +1,12 @@
 import { xml2json } from 'xml-js'
 
 import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config/projects'
-import { ProjectType, Project, BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
+import {
+  ProjectType,
+  Project,
+  assertType,
+  PDAAutomataTransition, TMAutomataTransition
+} from 'frontend/src/types/ProjectTypes'
 
 const PROJECT_TYPE_MAP: Record<string, ProjectType> = {
   fa: 'FSA',
@@ -59,9 +64,10 @@ export const convertJFLAPProject = (jflapProject: any): Project => {
       from: Number(transition.from._text),
       to: Number(transition.to._text),
       read: transition.read._text ? transition.read._text : ''
-    } as BaseAutomataTransition
+    }
     // Add any extra fields if needed
     if (projectType === 'PDA') {
+      assertType<PDAAutomataTransition>(trans)
       // Copy is needed to please type checker
       trans.push = transition.push._text ?? ''
       trans.pop = transition.pop._text ?? ''
@@ -70,6 +76,7 @@ export const convertJFLAPProject = (jflapProject: any): Project => {
         throw new Error("Automatarium doesn't support multi character input")
       }
     } else if (projectType === 'TM') {
+      assertType<TMAutomataTransition>(trans)
       trans.write = transition.write._text ?? ''
       trans.direction = transition.move._text ?? ''
     }

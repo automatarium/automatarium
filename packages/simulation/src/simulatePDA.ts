@@ -4,7 +4,7 @@ import { PDAExecutionResult, PDAExecutionTrace, Stack } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
 import { PDAAutomataTransition, PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
-import { buildProblem, findInitialState } from './utils'
+import { buildProblem } from './utils'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   const trace: PDAExecutionTrace[] = []
@@ -30,14 +30,14 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   return trace.reverse()
 }
 
-// TODO: Make this take a PDAGraph instead of UnparsedGraph
 export const simulatePDA = (
   graph: PDAProjectGraph,
   input: string
 ): PDAExecutionResult => {
   const tempStack: Stack = []
-  // Doing this find here so we don't have to deal with undefined in the class
-  if (!findInitialState(graph)) {
+
+  const problem = buildProblem(graph, input)
+  if (!problem) {
     return {
       accepted: false,
       remaining: input,
@@ -46,7 +46,6 @@ export const simulatePDA = (
     }
   }
 
-  const problem = buildProblem(graph, input)
   const result = breadthFirstSearch(problem)
 
   if (!result) {

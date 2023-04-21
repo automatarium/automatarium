@@ -64,7 +64,7 @@ export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
     return result
   }
   // Clone the graph
-  const output = JSON.parse(JSON.stringify(graph))
+  const output = structuredClone(graph)
   // Update the initial graph using the mappings
   output.states.forEach(state => (state.id = getMapping(state.id)))
   output.transitions.forEach(t => {
