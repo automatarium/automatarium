@@ -11,35 +11,27 @@ import convertInitialNotAtStart from './graphs/convertInitialNotAtStart.json'
 
 describe('Check to ensure NFA graph is valid before conversion begins', () => {
   test('Graph should not be processed for conversion if there are no final states', () => {
-    try {
+    expect(() => {
       reorderStates(convertNFAtoDFA(reorderStates(convertFinalNotPresent as any) as any) as any)
-    } catch (error) {
-      expect(error.message).toBe('Error: Graph is not suitable for conversion. Please ensure that at least one final state is declared.')
-    }
+    }).toThrow('Error: Graph is not suitable for conversion. Please ensure that at least one final state is declared.')
   })
 
   test('Graph should not be processed for conversion if there are no initial states', () => {
-    try {
+    expect(() => {
       reorderStates(convertNFAtoDFA(reorderStates(convertInitialNotPresent as any) as any) as any)
-    } catch (error) {
-      expect(error.message).toBe('Error: Graph is not suitable for conversion. Please ensure that an initial state is declared.')
-    }
+    }).toThrow('Error: Graph is not suitable for conversion. Please ensure that an initial state is declared.')
   })
 
   test('Graph should not be processed for conversion if there are no states or transitions', () => {
-    try {
+    expect(() => {
       reorderStates(convertNFAtoDFA(reorderStates(convertNoStatesOrTransitionsPresent as any) as any) as any)
-    } catch (error) {
-      expect(error.message).toBe('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present.')
-    }
+    }).toThrow('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present.')
   })
 
   test('Graph should not be processed for conversion if there are no reachable final states', () => {
-    try {
+    expect(() => {
       reorderStates(convertNFAtoDFA(reorderStates(convertFinalNotReachable as any) as any) as any)
-    } catch (error) {
-      expect(error.message).toBe('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
-    }
+    }).toThrow('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
   })
 })
 
