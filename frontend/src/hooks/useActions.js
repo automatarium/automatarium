@@ -454,7 +454,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     REORDER_GRAPH: {
-      disabled: () => project.initialState !== null,
+      disabled: () => project.initialState === null,
       handler: () => {
         updateProject(reorderStates(project))
         commit()
