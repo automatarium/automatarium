@@ -12,7 +12,9 @@ import {
   AutomataState,
   ProjectConfig,
   ProjectComment,
-  ProjectType
+  ProjectType,
+  Template,
+  CopyData
 } from '../types/ProjectTypes'
 
 import {
@@ -82,6 +84,7 @@ interface ProjectStore {
   createState: (state: AutomataState) => number,
   updateState: (state: AutomataState) => void,
   removeState: (state: AutomataState) => void,
+  insertGroup: (createData: Template | CopyData) => string | Template | CopyData,
   setSingleTest: (value: string) => void,
   addBatchTest: (value: string) => void,
   updateBatchTest: (index: number, value: string) => void,
@@ -223,6 +226,11 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   removeState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
     project.states = project.states.filter((st: AutomataState) => st.id !== state.id)
   })),
+
+  insertGroup: (createData) => {
+    
+    return 'foo'
+  },
 
   /* Update tests */
   setSingleTest: (value: string) => set(produce((state: ProjectStore) => {
