@@ -42,12 +42,10 @@ const useTemplateInsert = () => {
     createData.states.forEach(state => {
       // TODO: ensure position isn't out of window
       // Probably will have to take adjusting position out of this function
-      console.log(`this state is ${state.id}`)
       state.x += PASTE_POSITION_OFFSET
       state.y += PASTE_POSITION_OFFSET
       const newId = createState(state)
       // Update transitions to new state id
-      console.log(`replacing ${state.id} with ${newId}`)
       createData.transitions.forEach((transition, i) => {
         if (transition.from === state.id && newTransitions[i].from === null) {
           newTransitions[i].from = newId
@@ -113,12 +111,12 @@ const useTemplateInsert = () => {
     // //   createState(positionFromEvent(e))
     //   commit()
     // }
-    console.log('here' + isInserting)
-    if (isInserting && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
-        moveStatesToMouse(positionFromEvent(e), template.states)
-        createBatch(template)
+    if (tool === 'template' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+        const copyTemplate = structuredClone(template)
+        moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
+        createBatch(copyTemplate)
     }
-  }, [isInserting])
+  }, [isInserting, template, tool])
 
   return { ghostState: tool === 'state' && showGhost && mousePos }
 }
