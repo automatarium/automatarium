@@ -1,18 +1,13 @@
-import { FSAGraphIn, FSAState, StateID, ReadSymbol } from './graph'
-import { AutomataState, AutomataTransition } from 'frontend/src/types/ProjectTypes'
+import { StateID, ReadSymbol } from './graph'
+import { AutomataState, FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 // Define useful types
-type DFAGraph = {
-  initialState: StateID;
-  states: AutomataState[];
-  transitions: AutomataTransition[];
-}
 type TransitionTable = Record<StateID, [StateID, ReadSymbol][]>
 type CombinedStateArray = [string, { symbol: ReadSymbol, tostates: StateID[] }[]]
-type CombinedStates = {[key: string]: {symbol: ReadSymbol, tostates: StateID[] }[]}
+type CombinedStates = Record<string, {symbol: ReadSymbol, tostates: StateID[] }[]>
 
 // Graph traversal algorithm starting from the initial state that removes unreachable states and transitions (NFA)
-export const removeUnreachableNFAStates = (nfaGraph: FSAGraphIn): FSAGraphIn => {
+export const removeUnreachableNFAStates = (nfaGraph: FSAProjectGraph): FSAProjectGraph => {
   // Keep track of all the reachable states from the initial state
   const reachableStates = new Set<StateID>([nfaGraph.initialState])
   // Traverse the graph starting from the initial state
@@ -37,7 +32,7 @@ export const removeUnreachableNFAStates = (nfaGraph: FSAGraphIn): FSAGraphIn => 
 }
 
 // Graph traversal algorithm starting from the initial state that removes unreachable states and transitions (DFA)
-export const removeUnreachableDFAStates = (dfaGraph: DFAGraph): DFAGraph => {
+export const removeUnreachableDFAStates = (dfaGraph: FSAProjectGraph): FSAProjectGraph => {
   // Keep track of all the reachable states from the initial state
   const reachableStates = new Set<StateID>([dfaGraph.initialState])
   // Traverse the graph starting from the initial state
@@ -62,12 +57,12 @@ export const removeUnreachableDFAStates = (dfaGraph: DFAGraph): DFAGraph => {
 }
 
 // This will check to ensure that the graph passed in has valid states/transitions before continuing
-export const statesAndTransitionsPresent = (nfaGraph: FSAGraphIn): boolean => {
+export const statesAndTransitionsPresent = (nfaGraph: FSAProjectGraph): boolean => {
   return !(nfaGraph.states.length === 0 || nfaGraph.transitions.length === 0)
 }
 
 // This will check to ensure that the graph passed in has a final state before continuing
-export const finalStateIsPresent = (nfaGraphStates: FSAState[]): boolean => {
+export const finalStateIsPresent = (nfaGraphStates: AutomataState[]): boolean => {
   return nfaGraphStates.some(state => state.isFinal)
 }
 
@@ -236,7 +231,7 @@ export function removeLambdaTransitions (initialTransitionTable: TransitionTable
 }
 
 // This will mimic STEP 2 of the procedure by ensuring that for every DFA state, there is a symbol transition coming from it
-export function createSymbolFromEveryState (initialTransitionTable: TransitionTable, symbolsPresent: Set<ReadSymbol>, numberOfNFAStates: StateID, nfaGraph: FSAGraphIn) {
+export function createSymbolFromEveryState (initialTransitionTable: TransitionTable, symbolsPresent: Set<ReadSymbol>, numberOfNFAStates: StateID, nfaGraph: FSAProjectGraph) {
   const symbolsArray = Array.from(symbolsPresent)
   let nextAvailableStateID = numberOfNFAStates
   // Go through all the original states defined and see if new states need to be created
@@ -455,7 +450,7 @@ export function createSymbolsToStateMap (initialTransitionTable: TransitionTable
 // This will create a transition table such that the DFA can be constructed from it. It will return a transitionTable that consists of keys of arrays of key value pairs, where
 // the number of keys is equal to the number of states (each key equal to a StateID), where each key will then consist of an array of key value pairs, where the key in this case
 // is a StateID of the state the original key (or state in this case) transitions to, and the value is the ReadSymbol for this transition.
-export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFAStates: number): [TransitionTable, StateID, StateID[]] {
+export function createTransitionTable (nfaGraph: FSAProjectGraph, numberOfNFAStates: number): [TransitionTable, StateID, StateID[]] {
   let initialTransitionTable: TransitionTable = {}
   const tempTransitionTable: TransitionTable = {}
   const symbolsPresent = new Set<ReadSymbol>()
@@ -505,7 +500,7 @@ export function createTransitionTable (nfaGraph: FSAGraphIn, numberOfNFAStates: 
 }
 
 // This will create the DFA and return it by updating a passed in DFA template from a passed in NFA
-export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph => {
+export const createDFA = (nfaGraph: FSAProjectGraph, dfaGraph: FSAProjectGraph): FSAProjectGraph => {
   const numberOfNFAStates: number = nfaGraph.states.length
   const result: [TransitionTable, StateID, StateID[]] = createTransitionTable(nfaGraph, numberOfNFAStates)
   const transitionTable: TransitionTable = result[0]
@@ -539,7 +534,7 @@ export const createDFA = (nfaGraph: FSAGraphIn, dfaGraph: DFAGraph): DFAGraph =>
   return dfaGraph
 }
 
-export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => {
+export const convertNFAtoDFA = (nfaGraph: FSAProjectGraph): FSAProjectGraph => {
   // Do some error checking (could add proper authentic error messaging)
   if (!statesAndTransitionsPresent(nfaGraph)) {
     throw new Error('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present.')
@@ -558,10 +553,11 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
       // DFA doesn't need unreachable states, so remove the unreachable states then proceed
       nfaGraph = removeUnreachableNFAStates(nfaGraph)
       let dfaGraph = {
-        initialState: undefined as StateID,
-        states: [] as AutomataState[],
-        transitions: [] as AutomataTransition[]
-      }
+        projectType: 'FSA',
+        initialState: null,
+        states: [],
+        transitions: []
+      } as FSAProjectGraph
       // Sort the states so that they're ordered. This is important as the keys of the objects is used in the conversion algorithm
       nfaGraph.states.sort((a, b) => a.id - b.id)
       // Create a DFA from the given NFA

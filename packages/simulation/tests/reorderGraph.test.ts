@@ -55,6 +55,7 @@ describe('Reordering graph', () => {
 
   test('Nothing happens when no initial state', () => {
     const graph = {
+      projectType: 'FSA',
       states: [
         {
           isFinal: true,
@@ -74,13 +75,11 @@ describe('Reordering graph', () => {
           from: 1,
           to: 0,
           id: 0,
-          write: '',
-          direction: 'R',
           read: ''
         }
       ],
       initialState: null
-    } as unknown as UnparsedGraph
+    } as FSAProjectGraph
     expect(reorderStates(graph)).toEqual(graph)
   })
 

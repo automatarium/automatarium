@@ -8,36 +8,41 @@ import convertSimpleConversion from './graphs/convertSimpleConversion.json'
 import convertHarderConversion from './graphs/convertHarderConversion.json'
 import convertMultipleFinal from './graphs/convertMultipleFinal.json'
 import convertInitialNotAtStart from './graphs/convertInitialNotAtStart.json'
+import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+
+const convertToDFA = (project: FSAProjectGraph): FSAProjectGraph => {
+  return reorderStates(convertNFAtoDFA(reorderStates(project)))
+}
 
 describe('Check to ensure NFA graph is valid before conversion begins', () => {
   test('Graph should not be processed for conversion if there are no final states', () => {
     expect(() => {
-      reorderStates(convertNFAtoDFA(reorderStates(convertFinalNotPresent as any) as any) as any)
+      convertToDFA(convertFinalNotPresent as FSAProjectGraph)
     }).toThrow('Error: Graph is not suitable for conversion. Please ensure that at least one final state is declared.')
   })
 
   test('Graph should not be processed for conversion if there are no initial states', () => {
     expect(() => {
-      reorderStates(convertNFAtoDFA(reorderStates(convertInitialNotPresent as any) as any) as any)
+      convertToDFA(convertInitialNotPresent as FSAProjectGraph)
     }).toThrow('Error: Graph is not suitable for conversion. Please ensure that an initial state is declared.')
   })
 
   test('Graph should not be processed for conversion if there are no states or transitions', () => {
     expect(() => {
-      reorderStates(convertNFAtoDFA(reorderStates(convertNoStatesOrTransitionsPresent as any) as any) as any)
+      convertToDFA(convertNoStatesOrTransitionsPresent as FSAProjectGraph)
     }).toThrow('Error: Graph is not suitable for conversion. Please ensure you have both states and transitions present.')
   })
 
   test('Graph should not be processed for conversion if there are no reachable final states', () => {
     expect(() => {
-      reorderStates(convertNFAtoDFA(reorderStates(convertFinalNotReachable as any) as any) as any)
+      convertToDFA(convertFinalNotReachable as FSAProjectGraph)
     }).toThrow('Error: Graph is not suitable for conversion. Please ensure your final state is able to be reached by the initial state.')
   })
 })
 
 describe('Check to ensure DFA graph is displayed as expected', () => {
   test('Graph should be converted correctly to DFA under simple conditions (1 symbol)', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertSimpleConversion as any) as any) as any)
+    const graph = convertToDFA(convertSimpleConversion as FSAProjectGraph)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA
@@ -59,7 +64,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions[2].to).toBe(2)
   })
   test('Graph should be converted correctly when initial state is not at the start', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertInitialNotAtStart as any) as any) as any)
+    const graph = convertToDFA(convertInitialNotAtStart as FSAProjectGraph)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA
@@ -81,7 +86,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions[2].to).toBe(2)
   })
   test('Graph should be converted correctly to DFA with multiple final states', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertMultipleFinal as any) as any) as any)
+    const graph = convertToDFA(convertMultipleFinal as FSAProjectGraph)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA
@@ -103,7 +108,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions[2].to).toBe(2)
   })
   test('Graph should be converted correctly to DFA under harder conditions (2 symbols)', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertHarderConversion as any) as any) as any)
+    const graph = convertToDFA(convertHarderConversion as FSAProjectGraph)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
     // They would be 6 if they got returned as a DFA rather than 4 as an NFA
