@@ -10,10 +10,8 @@ export interface CustomEvents {
   'editStateName': {id: number},
   'editStateLabel': {id: number},
   'svg:mousedown': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
-  // I think this is right?
   'svg:mousemove': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
   'svg:mouseup': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
-
 }
 
 /**

@@ -43,7 +43,7 @@ const stateContextItems = [
   'hr',
   {
     label: 'New template from selection',
-    action: 'TEMPLATE'
+    action: 'CREATE_TEMPLATE'
   }
 ]
 

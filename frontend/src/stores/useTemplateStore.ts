@@ -3,24 +3,8 @@ import { persist } from 'zustand/middleware'
 import produce, { current } from 'immer'
 
 import {
-  ProjectType,
   Template
 } from '../types/ProjectTypes'
-
-import {
-  DEFAULT_PROJECT_TYPE,
-} from '../config/projects'
-
-export const createNewTemplate = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): Template => ({
-    _id: crypto.randomUUID(),
-    states: [],
-    transitions: [],
-    comments: [],
-    initialStateId: null,
-    projectType,
-    projectSource: '',
-    name: ''
-})
 
 const myTemplate: Template = {
   states: [{
@@ -95,22 +79,18 @@ const myTemplate: Template = {
 
 interface TemplateStore {
   template: Template,
-  isInserting: boolean,
   setTemplate: (template: Template) => void,
-  setIsInserting: (isInserting: boolean) => void,
   update: (template: Template) => void,
   setName: (newName: string) => void
 }
 
 const useTemplateStore = create<TemplateStore>((set: SetState<TemplateStore>) => ({
   template: myTemplate,
-  isInserting: false,
   setTemplate: template => {
     console.log('changing template')
     console.log(template)
     set({ template })
   },
-  setIsInserting: isInserting => set({ isInserting }),
   update: (template) => {
 
   },

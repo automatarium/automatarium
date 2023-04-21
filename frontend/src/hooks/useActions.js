@@ -56,7 +56,6 @@ const useActions = (registerHotkeys = false) => {
   const clearTemplates = useTemplatesStore(s => s.clearTemplates)
 
   const createBatch = (createData, project) => {
-    console.log(createData)
     let isInitialStateUpdated = false
     if (createData.projectType !== project.projectType) {
       alert(`Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`)
@@ -121,7 +120,7 @@ const useActions = (registerHotkeys = false) => {
 
   // TODO: memoize
   const actions = {
-    TEMPLATE: {
+    CREATE_TEMPLATE: {
       hotkey: { key: 'j', meta: true },
       handler: () => {
         if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {

@@ -3,16 +3,13 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useTemplatesStore, useSelectionStore, useTemplateStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
-import { Template, CopyData, Project, AutomataState } from '/src/types/ProjectTypes'
-import { StoredProject } from '/src/stores/useProjectStore'
+import { Template, CopyData, AutomataState } from '/src/types/ProjectTypes'
 import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
   
 
 const useTemplateInsert = () => {
   const tool = useToolStore(s => s.tool)
-  const templates = useTemplatesStore(s => s.templates)
   const [mousePos, setMousePos] = useState({x: null, y: null})
-  const [showGhost, setShowGhost] = useState(false)
   const project = useProjectStore(s => s.project)
   const createState = useProjectStore(s => s.createState)
   const createComment = useProjectStore(s => s.createComment)
@@ -22,10 +19,8 @@ const useTemplateInsert = () => {
   const selectTransitions = useSelectionStore(s => s.setTransitions)
   const selectComments = useSelectionStore(s => s.setComments)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
-  const commit = useProjectStore(s => s.commit)
-  // Which template to insert  
+  const commit = useProjectStore(s => s.commit)  
   const template = useTemplateStore(s => s.template)
-  const isInserting = useTemplateStore(s => s.isInserting)
   const createBatch = (createData: CopyData | Template) => {
     let isInitialStateUpdated = false
     if (createData.projectType !== project.projectType) {
@@ -98,30 +93,20 @@ const useTemplateInsert = () => {
     // Make sure we are in the template tool
     if (tool === 'hand' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
         // Track mousedown event
-        console.log('mouse down')
     }
-    console.log('mouse down')
-    
   })
 
   useEvent('svg:mouseup', e => {
     // Track mouseup event
-    // setShowGhost(false)
-    // if (tool === 'state' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
-    // //   createState(positionFromEvent(e))
-    //   commit()
-    // }
     if (tool === 'template' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
         const copyTemplate = structuredClone(template)
         moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
         createBatch(copyTemplate)
     }
-  }, [isInserting, template, tool])
-
-  return { ghostState: tool === 'state' && showGhost && mousePos }
+  }, [template, tool])
 }
 
-const positionFromEvent = e => {
+const positionFromEvent = (e: CustomEvent) => {
   const doSnap = !e.detail.originalEvent.altKey
   const pos = { x: e.detail.viewX, y: e.detail.viewY }
   return doSnap ? snapPosition(pos) : pos
