@@ -551,6 +551,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAGraphIn): FSAGraphIn | DFAGraph => 
     if (!finalStateIsPresent(testGraph.states)) {
       return nfaGraph
     } else {
+      // DFA doesn't need unreachable states, so remove the unreachable states then proceed
       nfaGraph = removeUnreachableNFAStates(nfaGraph)
       let dfaGraph = {
         initialState: undefined as StateID,

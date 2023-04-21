@@ -51,7 +51,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // No lambda transition should be found, and should be 3 transitions total. All transitions should have symbol "A"
     expect(graph.transitions.length).toBe(3)
     expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === "A")).toBe(true)
+    expect(graph.transitions.every((transition) => transition.read === 'A')).toBe(true)
     // Transitions should go in a straight line except the trap state, which goes to itself
     expect(graph.transitions[0].from).toBe(0)
     expect(graph.transitions[0].to).toBe(1)
@@ -73,7 +73,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // No lambda transition should be found, and should be 3 transitions total. All transitions should have symbol "A"
     expect(graph.transitions.length).toBe(3)
     expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === "A")).toBe(true)
+    expect(graph.transitions.every((transition) => transition.read === 'A')).toBe(true)
     // Transitions should go in a straight line except the trap state, which goes to itself
     expect(graph.transitions[0].from).toBe(0)
     expect(graph.transitions[0].to).toBe(1)
@@ -95,7 +95,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // No lambda transition should be found, and should be 3 transitions total. All transitions should have symbol "A"
     expect(graph.transitions.length).toBe(3)
     expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === "A")).toBe(true)
+    expect(graph.transitions.every((transition) => transition.read === 'A')).toBe(true)
     // Transitions should go in a straight line except the trap state, which goes to itself
     expect(graph.transitions[0].from).toBe(0)
     expect(graph.transitions[0].to).toBe(1)
@@ -124,38 +124,38 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // Transitions should be connected appropriately
     expect(graph.transitions.filter((transition) => transition.from === 0).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 0)[0].to).toBeOneOf([1, 3])
-    expect(graph.transitions.filter((transition) => transition.from === 0)[0].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 0)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 0)[1].to).toBeOneOf([1, 3])
-    expect(graph.transitions.filter((transition) => transition.from === 0)[1].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 0)[1].read).toBeOneOf(['A', 'B'])
 
     expect(graph.transitions.filter((transition) => transition.from === 1).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 1)[0].to).toBeOneOf([2, 1])
-    expect(graph.transitions.filter((transition) => transition.from === 1)[0].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 1)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 1)[1].to).toBeOneOf([2, 1])
-    expect(graph.transitions.filter((transition) => transition.from === 1)[1].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 1)[1].read).toBeOneOf(['A', 'B'])
 
     expect(graph.transitions.filter((transition) => transition.from === 2).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 2)[0].to).toBe(4)
-    expect(graph.transitions.filter((transition) => transition.from === 2)[0].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 2)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 2)[1].to).toBe(4)
-    expect(graph.transitions.filter((transition) => transition.from === 2)[1].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 2)[1].read).toBeOneOf(['A', 'B'])
 
     expect(graph.transitions.filter((transition) => transition.from === 3).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 3)[0].to).toBe(5)
-    expect(graph.transitions.filter((transition) => transition.from === 3)[0].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 3)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 3)[1].to).toBe(5)
-    expect(graph.transitions.filter((transition) => transition.from === 3)[1].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 3)[1].read).toBeOneOf(['A', 'B'])
 
     expect(graph.transitions.filter((transition) => transition.from === 4).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 4)[0].to).toBe(4)
-    expect(graph.transitions.filter((transition) => transition.from === 4)[0].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 4)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 4)[1].to).toBe(4)
-    expect(graph.transitions.filter((transition) => transition.from === 4)[1].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 4)[1].read).toBeOneOf(['A', 'B'])
 
     expect(graph.transitions.filter((transition) => transition.from === 5).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 5)[0].to).toBe(5)
-    expect(graph.transitions.filter((transition) => transition.from === 5)[0].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 5)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 5)[1].to).toBe(5)
-    expect(graph.transitions.filter((transition) => transition.from === 5)[1].read).toBeOneOf(["A", "B"])
+    expect(graph.transitions.filter((transition) => transition.from === 5)[1].read).toBeOneOf(['A', 'B'])
   })
 })
