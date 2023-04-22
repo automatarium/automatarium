@@ -3,6 +3,7 @@ import { useProjectStore, useToolStore, useSelectionStore, useTemplateStore } fr
 import { GRID_SNAP } from '/src/config/interactions'
 import { Template, CopyData, AutomataState } from '/src/types/ProjectTypes'
 import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
+import { InsertGroupResponseType } from '../stores/useProjectStore'
 
 const useTemplateInsert = () => {
   const tool = useToolStore(s => s.tool)
@@ -16,6 +17,7 @@ const useTemplateInsert = () => {
   const selectComments = useSelectionStore(s => s.setComments)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const commit = useProjectStore(s => s.commit)
+  const insertGroup = useProjectStore(s => s.insertGroup)
   const template = useTemplateStore(s => s.template)
   const createBatch = (createData: CopyData | Template) => {
     let isInitialStateUpdated = false
@@ -95,7 +97,18 @@ const useTemplateInsert = () => {
     if (tool === 'template' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       const copyTemplate = structuredClone(template)
       moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
-      createBatch(copyTemplate)
+      const insertResponse = insertGroup(copyTemplate)
+        // This will be better in TS with enum
+        if (insertResponse.type == InsertGroupResponseType.SUCCESS) {
+          selectComments(insertResponse.body.comments.map(comment => comment.id))
+          selectStates(insertResponse.body.states.map(state => state.id))
+          selectTransitions(insertResponse.body.transitions.map(transition => transition.id))
+          commit()
+        }
+        else if (insertResponse.type == InsertGroupResponseType.FAIL) {
+          alert(insertResponse.body)
+        }
+      // createBatch(copyTemplate)
     }
   }, [template, tool])
 }

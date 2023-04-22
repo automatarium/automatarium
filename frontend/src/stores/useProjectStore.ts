@@ -39,9 +39,12 @@ export enum InsertGroupResponseType {
   SUCCESS
 }
 
-export type InsertGroupResponse = {
-  type: InsertGroupResponseType,
-  body: string | CopyData | Template
+type InsertGroupResponse = {
+  type: InsertGroupResponseType.FAIL,
+  body: string
+} | {
+  type: InsertGroupResponseType.SUCCESS,
+  body: Template | CopyData
 }
 
 export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): StoredProject => ({

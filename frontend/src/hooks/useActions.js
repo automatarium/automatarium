@@ -63,33 +63,8 @@ const useActions = (registerHotkeys = false) => {
           // Temporary UI
           alert('Nothing selected, cannot make template')
         }
-        const selectedStates = selectedStatesIds.map((stateId) => {
-          return project.states.find((state) => {
-            return state.id === stateId
-          })
-        })
-        const selectedComments = selectedCommentsIds.map((commentId) => {
-          return project.comments.find((comment) => {
-            return comment.id === commentId
-          })
-        })
-        const selectedTransitions = selectedTransitionsIds.map((transitionId) => {
-          return project.transitions.find((transition) => {
-            return transition.id === transitionId
-          })
-        })
-        const isInitialSelected = selectedStatesIds.includes(project.initialState)
         // This will use the Template type defined in ProjectTypes
-        const newTemplate = {
-          states: selectedStates,
-          comments: selectedComments,
-          transitions: selectedTransitions,
-          projectSource: project._id,
-          projectType: project.projectType,
-          initialStateId: isInitialSelected ? project.initialState : null,
-          _id: crypto.randomUUID(),
-          name: 'a template'
-        }
+        const newTemplate = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project, true)
         addTemplate(newTemplate)
         // Temporary UI
         alert('New template created from your selection')
@@ -168,31 +143,8 @@ const useActions = (registerHotkeys = false) => {
     COPY: {
       hotkey: { key: 'c', meta: true },
       handler: () => {
-        const selectedStates = selectedStatesIds.map((stateId) => {
-          return project.states.find((state) => {
-            return state.id === stateId
-          })
-        })
-        const selectedComments = selectedCommentsIds.map((commentId) => {
-          return project.comments.find((comment) => {
-            return comment.id === commentId
-          })
-        })
-        const selectedTransitions = selectedTransitionsIds.map((transitionId) => {
-          return project.transitions.find((transition) => {
-            return transition.id === transitionId
-          })
-        })
-        const isInitialSelected = selectedStatesIds.includes(project.initialState)
         // This will use the CopyData type defined in ProjectTypes
-        const copyData = {
-          states: selectedStates,
-          comments: selectedComments,
-          transitions: selectedTransitions,
-          projectSource: project._id,
-          projectType: project.projectType,
-          initialStateId: isInitialSelected ? project.initialState : null
-        }
+        const copyData = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project, false)
         localStorage.setItem(COPY_DATA_KEY, JSON.stringify(copyData))
       }
     },
@@ -559,7 +511,7 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
 // Takes in the IDs of selected states, comments, and transitions
 // Parameters also include  the current project and whether a template is being created
 // Outputs a CopyData or Template object to be copied or created into a template
-const selectionToCopyData = (stateIds, commentIds, transitionIds, project, isTemplate) => {
+const selectionToCopyTemplate = (stateIds, commentIds, transitionIds, project, isTemplate) => {
   const selectedStates = stateIds.map((stateId) => {
     return project.states.find((state) => {
       return state.id === stateId
