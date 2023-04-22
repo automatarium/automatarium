@@ -288,7 +288,6 @@ export function createSymbolFromEveryState (initialTransitionTable: TransitionTa
                 for (const tempSymbol of symbolsArray) {
                   initialTransitionTable[nextAvailableStateID].push([nextAvailableStateID, tempSymbol])
                 }
-                nextAvailableStateID++
               } else {
                 // If a transition already exists for this symbol, update the destination state ID to the new trap state
                 existingTransition[0] = nextAvailableStateID - 1

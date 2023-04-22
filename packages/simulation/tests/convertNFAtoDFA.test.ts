@@ -8,6 +8,7 @@ import convertSimpleConversion from './graphs/convertSimpleConversion.json'
 import convertHarderConversion from './graphs/convertHarderConversion.json'
 import convertMultipleFinal from './graphs/convertMultipleFinal.json'
 import convertInitialNotAtStart from './graphs/convertInitialNotAtStart.json'
+import convertSingleTrapState from './graphs/convertSingleTrapState.json'
 
 describe('Check to ensure NFA graph is valid before conversion begins', () => {
   test('Graph should not be processed for conversion if there are no final states', () => {
@@ -58,7 +59,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions[2].from).toBe(2)
     expect(graph.transitions[2].to).toBe(2)
   })
-  test('Graph should be converted correctly when initial state is not at the start', () => {
+  test('Graph should be converted correctly to DFA when initial state is not at the start', () => {
     const graph = reorderStates(convertNFAtoDFA(reorderStates(convertInitialNotAtStart as any) as any) as any)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
@@ -155,5 +156,52 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions.filter((transition) => transition.from === 5)[0].read).toBeOneOf(['A', 'B'])
     expect(graph.transitions.filter((transition) => transition.from === 5)[1].to).toBe(5)
     expect(graph.transitions.filter((transition) => transition.from === 5)[1].read).toBeOneOf(['A', 'B'])
+  })
+  test('Graph should use a single trap state instead of multiple when converted to a DFA', () => {
+    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertSingleTrapState as any) as any) as any)
+    // Initial state should be q0
+    expect(graph.initialState).toBe(0)
+    // They would be 6 if they got returned as a DFA rather than 4 as an NFA
+    expect(graph.states.length).toBe(4)
+    // Should be two final states, q2 and q3
+    expect((graph.states.find((state) => state.id === 0)).isFinal).toBe(false)
+    expect((graph.states.find((state) => state.id === 1)).isFinal).toBe(false)
+    expect((graph.states.find((state) => state.id === 2)).isFinal).toBe(false)
+    expect((graph.states.find((state) => state.id === 3)).isFinal).toBe(true)
+    // No lambda transition should be found, and should be 28 transitions total. All states should have a single transition 'A' to 'G' and be connected in a certain way
+    expect(graph.transitions.length).toBe(28)
+    expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
+    expect(graph.transitions.every((transition) => transition.read === 'A' || transition.read === 'B' || transition.read === 'C' || transition.read === 'D' || transition.read === 'E' || transition.read === 'F' || transition.read === 'G')).toBe(true)
+    // Transitions that are not initially present should all go to a single trap state "2"
+    expect(graph.transitions.filter((transition) => transition.from === 0).length).toBe(7)
+    expect(graph.transitions.filter((transition) => transition.from === 0 && transition.read === 'C')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 0 && transition.read === 'D')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 0 && transition.read === 'E')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 0 && transition.read === 'F')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 0 && transition.read === 'G')[0].to).toBe(2)
+
+    expect(graph.transitions.filter((transition) => transition.from === 1).length).toBe(7)
+    expect(graph.transitions.filter((transition) => transition.from === 1 && transition.read === 'A')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 1 && transition.read === 'B')[0].to).toBe(2)
+
+    // This is the trap state, should go to itself for every symbol
+    expect(graph.transitions.filter((transition) => transition.from === 2).length).toBe(7)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'A')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'B')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'C')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'D')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'E')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'F')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 2 && transition.read === 'G')[0].to).toBe(2)
+
+    // Final state with no transitions to must all go to a single trap state
+    expect(graph.transitions.filter((transition) => transition.from === 3).length).toBe(7)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'A')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'B')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'C')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'D')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'E')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'F')[0].to).toBe(2)
+    expect(graph.transitions.filter((transition) => transition.from === 3 && transition.read === 'G')[0].to).toBe(2)
   })
 })
