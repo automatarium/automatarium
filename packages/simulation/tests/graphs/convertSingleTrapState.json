@@ -1,0 +1,89 @@
+{
+  "projectType": "FSA",
+  "states": [
+    {
+      "x": 360,
+      "y": 330,
+      "isFinal": false,
+      "id": 0
+    },
+    {
+      "x": 615,
+      "y": 300,
+      "isFinal": false,
+      "id": 1
+    },
+    {
+      "x": 1035,
+      "y": 270,
+      "isFinal": true,
+      "id": 2
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 0,
+      "read": "A"
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "read": "B"
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "id": 2,
+      "read": "C"
+    },
+    {
+      "from": 1,
+      "to": 0,
+      "id": 3,
+      "read": "D"
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "id": 4,
+      "read": "E"
+    },
+    {
+      "from": 1,
+      "to": 1,
+      "id": 5,
+      "read": "F"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 6,
+      "read": "G"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Busy Grass",
+    "dateCreated": 1682132769959,
+    "dateEdited": 1682132769959,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

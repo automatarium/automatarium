@@ -199,7 +199,7 @@ export function removeLambdaTransitions (initialTransitionTable: TransitionTable
 // This will mimic STEP 2 of the procedure by ensuring that for every DFA state, there is a symbol transition coming from it
 export function createSymbolFromEveryState (initialTransitionTable: TransitionTable, symbolsPresent: Set<ReadSymbol>, numberOfNFAStates: StateID, nfaGraph: FSAProjectGraph) {
   const symbolsArray = Array.from(symbolsPresent)
-  let nextAvailableStateID = numberOfNFAStates
+  const nextAvailableStateID = numberOfNFAStates
   // Go through all the original states defined and see if new states need to be created
   for (let stateID = 0; stateID < numberOfNFAStates; stateID++) {
     // If the state has been removed then ignore it and go to the next one
@@ -233,7 +233,6 @@ export function createSymbolFromEveryState (initialTransitionTable: TransitionTa
               }
             }
           }
-          nextAvailableStateID++
         } else {
         // Else go each transition and if a symbol is not found, make a new state for it and transition to that state with the given symbol.
           for (const symbol of symbolsArray) {
@@ -249,7 +248,6 @@ export function createSymbolFromEveryState (initialTransitionTable: TransitionTa
                 for (const tempSymbol of symbolsArray) {
                   initialTransitionTable[nextAvailableStateID].push([nextAvailableStateID, tempSymbol])
                 }
-                nextAvailableStateID++
               } else {
                 // If a transition already exists for this symbol, update the destination state ID to the new trap state
                 existingTransition[0] = nextAvailableStateID - 1
@@ -263,7 +261,6 @@ export function createSymbolFromEveryState (initialTransitionTable: TransitionTa
             for (const symbol of symbolsArray) {
               initialTransitionTable[nextAvailableStateID - 1].push([nextAvailableStateID - 1, symbol])
             }
-            nextAvailableStateID++
           }
         }
       }
