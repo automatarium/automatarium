@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 
 import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore } from '/src/stores'
 import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
-import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
@@ -508,9 +507,9 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
   input.click()
 }
 
-// Takes in the IDs of selected states, comments, and transitions
+// Takes in the IDs of states, comments, and transitions
 // Parameters also include  the current project and whether a template is being created
-// Outputs a CopyData or Template object to be copied or created into a template
+// Outputs a CopyData to be copied or Template object to be created into a template
 const selectionToCopyTemplate = (stateIds, commentIds, transitionIds, project, isTemplate) => {
   const selectedStates = stateIds.map((stateId) => {
     return project.states.find((state) => {
@@ -528,27 +527,19 @@ const selectionToCopyTemplate = (stateIds, commentIds, transitionIds, project, i
     })
   })
   const isInitialSelected = stateIds.includes(project.initialState)
-  // This will use the Template type defined in ProjectTypes
-  if (isTemplate) { 
-    return {
-      states: selectedStates,
-      comments: selectedComments,
-      transitions: selectedTransitions,
-      projectSource: project._id,
-      projectType: project.projectType,
-      initialStateId: isInitialSelected ? project.initialState : null,
-      _id: crypto.randomUUID(),
-      name: 'a template'
-    }
-  }
-  return {
+  let returnObject = {
     states: selectedStates,
     comments: selectedComments,
     transitions: selectedTransitions,
     projectSource: project._id,
     projectType: project.projectType,
-    initialStateId: isInitialSelected ? project.initialState : null
+    initialStateId: isInitialSelected ? project.initialState : null,
   }
+  if (isTemplate) {
+    returnObject._id = crypto.randomUUID()
+    returnObject.name = 'a template'
+  }
+  return returnObject
 }
 
 export default useActions
