@@ -14,6 +14,8 @@ const useCreateBatch = (createData: CopyData | Template) => {
   const selectComments = useSelectionStore(s => s.setComments)
   const setStateInitial = useProjectStore(s => s.setStateInitial)
   const commit = useProjectStore(s => s.commit)
+
+  const createBatch = () => {
   if (createData.projectType !== project.projectType) {
     alert(`Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`)
     return
@@ -74,5 +76,8 @@ const useCreateBatch = (createData: CopyData | Template) => {
   }
   commit()
 }
+return { createBatch }
+}
+
 
 export default useCreateBatch

@@ -6,6 +6,7 @@ import isEqual from 'lodash.isequal'
 
 import { randomProjectName } from '../util/projectName'
 
+
 import {
   Project,
   AutomataTransition,
@@ -26,10 +27,22 @@ import {
   DEFAULT_PROJECT_COLOR
 } from '../config/projects'
 
+import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering.js'
+
 /**
  * A stored project has an extra `_id` field which is used to tell identify it
  */
 export type StoredProject = Project & {_id: string}
+
+export enum InsertGroupResponseType {
+  FAIL = 1,
+  SUCCESS
+}
+
+export type InsertGroupResponse = {
+  type: InsertGroupResponseType,
+  body: string | CopyData | Template
+}
 
 export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): StoredProject => ({
   projectType,
@@ -84,7 +97,7 @@ interface ProjectStore {
   createState: (state: AutomataState) => number,
   updateState: (state: AutomataState) => void,
   removeState: (state: AutomataState) => void,
-  insertGroup: (createData: Template | CopyData) => string | Template | CopyData,
+  insertGroup: (createData: Template | CopyData) => InsertGroupResponse,
   setSingleTest: (value: string) => void,
   addBatchTest: (value: string) => void,
   updateBatchTest: (index: number, value: string) => void,
@@ -228,7 +241,70 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   insertGroup: (createData) => {
-    return 'foo'
+    set(produce(({ project }: { project: StoredProject }) => {
+      let isInitialStateUpdated = false
+      if (createData.projectType !== project.projectType) {
+        return {type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`}
+      }
+      const isNewProject = createData.projectSource !== project._id
+      const newTransitions = structuredClone(createData.transitions)
+      newTransitions.forEach(transition => {
+        transition.from = null
+        transition.to = null
+      })
+      createData.states.forEach((state, i) => {
+        // TODO: ensure position isn't out of window
+        // Probably will have to take adjusting position out of this function
+        state.x += PASTE_POSITION_OFFSET
+        state.y += PASTE_POSITION_OFFSET
+        const newId = i + 1 + Math.max(-1, ...get().project.states.map(s => s.id))
+        // Update transitions to new state id
+        createData.transitions.forEach((transition, i) => {
+          if (transition.from === state.id && newTransitions[i].from === null) {
+            newTransitions[i].from = newId
+          }
+          if (transition.to === state.id && newTransitions[i].to === null) {
+            newTransitions[i].to = newId
+          }
+        })
+        // Update initial state id if applicable
+        if (createData.initialStateId === state.id && !isInitialStateUpdated) {
+          createData.initialStateId = newId
+          isInitialStateUpdated = true
+        }
+        state.id = newId
+        // createState
+        project.states.push({ ...state })
+      })
+      // TODO: Improve this error handling
+      if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
+        // removeState
+        createData.states.forEach((state) => {
+          project.states = project.states.filter((st) => st.id !== state.id)
+        })
+        return {type: InsertGroupResponseType.FAIL, body: 'Sorry, there was an error.'}
+      }
+      createData.transitions = newTransitions
+      createData.comments.forEach(comment => {
+        // TODO: ensure position isn't out of window
+        comment.x += PASTE_POSITION_OFFSET
+        comment.y += PASTE_POSITION_OFFSET
+        const newId = 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
+        comment.id = newId
+        // createComment
+        project.comments.push({ ...comment })
+      })
+      createData.transitions.forEach(transition => {
+        const newId = 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
+        transition.id = newId
+        // createTransition
+        project.transitions.push({ ...transition })
+      })
+      if (isNewProject && createData.initialStateId !== null && project.initialState === null) {
+        project.initialState = createData.initialStateId
+      }
+    }))
+    return {type: InsertGroupResponseType.SUCCESS, body: createData}
   },
 
   /* Update tests */

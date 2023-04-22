@@ -10,6 +10,8 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 
+import { useCreateBatch } from './index'
+
 const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
@@ -47,70 +49,9 @@ const useActions = (registerHotkeys = false) => {
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
   const updateProject = useProjectStore(s => s.update)
+  const insertGroup = useProjectStore(s => s.insertGroup)
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const clearTemplates = useTemplatesStore(s => s.clearTemplates)
-
-  const createBatch = (createData, project) => {
-    let isInitialStateUpdated = false
-    if (createData.projectType !== project.projectType) {
-      alert(`Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`)
-      return
-    }
-    // Perhaps this will be passed through
-    const isNewProject = createData.projectSource !== project._id
-    const newTransitions = structuredClone(createData.transitions)
-    newTransitions.forEach(transition => {
-      transition.from = null
-      transition.to = null
-    })
-    createData.states.forEach(state => {
-      // TODO: ensure position isn't out of window
-      // Probably will have to take adjusting position out of this function
-      state.x += PASTE_POSITION_OFFSET
-      state.y += PASTE_POSITION_OFFSET
-      const newId = createState(state)
-      // Update transitions to new state id
-      createData.transitions.forEach((transition, i) => {
-        if (transition.from === state.id && newTransitions[i].from === null) {
-          newTransitions[i].from = newId
-        }
-        if (transition.to === state.id && newTransitions[i].to === null) {
-          newTransitions[i].to = newId
-        }
-      })
-      // Update initial state id if applicable
-      if (createData.initialStateId === state.id && !isInitialStateUpdated) {
-        createData.initialStateId = newId
-        isInitialStateUpdated = true
-      }
-      state.id = newId
-    })
-    // TODO: Improve this error handling
-    if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
-      alert('Sorry, there was an error')
-      removeStates(createData.states.map(state => state.id))
-      return
-    }
-    createData.transitions = newTransitions
-    selectStates(createData.states.map(state => state.id))
-    createData.comments.forEach(comment => {
-      // TODO: ensure position isn't out of window
-      comment.x += PASTE_POSITION_OFFSET
-      comment.y += PASTE_POSITION_OFFSET
-      const newId = createComment(comment)
-      comment.id = newId
-    })
-    selectComments(createData.comments.map(comment => comment.id))
-    createData.transitions.forEach(transition => {
-      const newId = createTransition(transition)
-      transition.id = newId
-    })
-    selectTransitions(createData.transitions.map(transition => transition.id))
-    if (isNewProject && createData.initialStateId !== null && project.initialState === null) {
-      setStateInitial(createData.initialStateId)
-    }
-    commit()
-  }
   const navigate = useNavigate()
 
   // TODO: memoize
@@ -119,8 +60,8 @@ const useActions = (registerHotkeys = false) => {
       hotkey: { key: 'j', meta: true },
       handler: () => {
         if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
-          clearTemplates()
-          return
+          // Temporary UI
+          alert('Nothing selected, cannot make template')
         }
         const selectedStates = selectedStatesIds.map((stateId) => {
           return project.states.find((state) => {
@@ -138,7 +79,7 @@ const useActions = (registerHotkeys = false) => {
           })
         })
         const isInitialSelected = selectedStatesIds.includes(project.initialState)
-        // This will use the CopyData type defined in ProjectTypes
+        // This will use the Template type defined in ProjectTypes
         const newTemplate = {
           states: selectedStates,
           comments: selectedComments,
@@ -150,6 +91,7 @@ const useActions = (registerHotkeys = false) => {
           name: 'a template'
         }
         addTemplate(newTemplate)
+        // Temporary UI
         alert('New template created from your selection')
       }
     },
@@ -262,7 +204,15 @@ const useActions = (registerHotkeys = false) => {
           // Copy has not been executed
           return
         }
-        createBatch(pasteData, project)
+        // createBatch(pasteData, project)
+        const insertResponse = insertGroup(pasteData)
+        // This will be better in TS with enum
+        if (insertResponse.type = 2) {
+          selectComments(insertResponse.body.comments.map(comment => comment.id))
+          selectStates(insertResponse.body.states.map(state => state.id))
+          selectTransitions(insertResponse.body.transitions.map(transition => transition.id))
+          commit()
+        }
       }
 
     },
@@ -604,6 +554,49 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
     reader.readAsText(input.files[0])
   }
   input.click()
+}
+
+// Takes in the IDs of selected states, comments, and transitions
+// Parameters also include  the current project and whether a template is being created
+// Outputs a CopyData or Template object to be copied or created into a template
+const selectionToCopyData = (stateIds, commentIds, transitionIds, project, isTemplate) => {
+  const selectedStates = stateIds.map((stateId) => {
+    return project.states.find((state) => {
+      return state.id === stateId
+    })
+  })
+  const selectedComments = commentIds.map((commentId) => {
+    return project.comments.find((comment) => {
+      return comment.id === commentId
+    })
+  })
+  const selectedTransitions = transitionIds.map((transitionId) => {
+    return project.transitions.find((transition) => {
+      return transition.id === transitionId
+    })
+  })
+  const isInitialSelected = stateIds.includes(project.initialState)
+  // This will use the Template type defined in ProjectTypes
+  if (isTemplate) { 
+    return {
+      states: selectedStates,
+      comments: selectedComments,
+      transitions: selectedTransitions,
+      projectSource: project._id,
+      projectType: project.projectType,
+      initialStateId: isInitialSelected ? project.initialState : null,
+      _id: crypto.randomUUID(),
+      name: 'a template'
+    }
+  }
+  return {
+    states: selectedStates,
+    comments: selectedComments,
+    transitions: selectedTransitions,
+    projectSource: project._id,
+    projectType: project.projectType,
+    initialStateId: isInitialSelected ? project.initialState : null
+  }
 }
 
 export default useActions

@@ -53,7 +53,6 @@ const useTemplateInsert = () => {
       state.id = newId
     })
     // TODO: Improve this error handling
-    console.log(newTransitions)
     if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
       alert('Sorry, there was an error')
       removeStates(createData.states.map(state => state.id))
