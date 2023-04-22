@@ -15,6 +15,9 @@
     "lint:fix": "yarn lint --fix",
     "check:types": "tsc --noemit"
   },
+  "dependencies": {
+    "frontend": "1.0.0"
+  },
   "devDependencies": {
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.10",

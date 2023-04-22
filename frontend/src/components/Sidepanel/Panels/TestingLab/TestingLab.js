@@ -4,7 +4,7 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
 import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
-import { closureWithPredicate, resolveGraph, simulateFSA, simulatePDA } from '@automatarium/simulation'
+import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/simulation'
 
 import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
@@ -29,15 +29,9 @@ const TestingLab = () => {
   const [showTraceTape, setShowTraceTape] = useState(false)
 
   // Graph state
-  const graph = {
-    states: useProjectStore(s => s.project.states),
-    transitions: useProjectStore(s => s.project.transitions),
-    initialState: useProjectStore(s => s.project.initialState)
-  }
+  const graph = useProjectStore(s => s.getGraph())
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
-  // eslint-disable-next-line no-unused-vars
-  const clearProjectSimResults = useTMSimResultStore(s => s.clearSimResults)
   const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
@@ -48,7 +42,6 @@ const TestingLab = () => {
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
-  // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
   /**
    * Runs the correct simulation result for a trace input and returns the result.
@@ -56,10 +49,7 @@ const TestingLab = () => {
    */
   const runSimulation = (input) => {
     if (projectType === 'TM') {
-      const tapeTrace = input ? input.split('') : ['']
-      const tapePointer = 0 // This is hard coded for now. Future development available
-
-      const { halted, trace, tape } = simulateTM(graph, { pointer: tapePointer, trace: tapeTrace })
+      const { halted, trace, tape } = simulateTM(graph, input)
 
       return {
         accepted: halted,
@@ -182,9 +172,8 @@ const TestingLab = () => {
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
-    const resolvedGraph = resolveGraph(graph)
-    const closure = closureWithPredicate(resolvedGraph, resolvedGraph.initialState, () => true)
-    return Array.from(closure).some(([stateID]) => resolvedGraph.states.find(s => s.id === stateID)?.isFinal)
+    const closure = closureWithPredicate(graph, graph.initialState, () => true)
+    return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
   if (!pathToFinal && !noInitialState && !noFinalState) { warnings.push('There is no path to a final state') }
 
@@ -195,7 +184,7 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
-  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - 1
+  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - (projectType === 'TM' ? 1 : 0)
 
   return (
     <>

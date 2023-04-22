@@ -1,9 +1,9 @@
-import { PDAGraph, PDAState } from './PDASearch'
-import { GraphStepper } from './Step'
-import { PDAExecutionResult, PDAExecutionTrace, PDAGraphIn, Stack, UnparsedGraph } from './graph'
+import { PDAState } from './PDASearch'
+import { PDAExecutionResult, PDAExecutionTrace, Stack } from './graph'
 import { Node } from './interfaces/graph'
-import { resolveGraph } from './parseGraph'
 import { breadthFirstSearch } from './search'
+import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { buildProblem } from './utils'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   const trace: PDAExecutionTrace[] = []
@@ -29,19 +29,13 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   return trace.reverse()
 }
 
-// TODO: Make this take a PDAGraph instead of UnparsedGraph
 export const simulatePDA = (
-  graph: UnparsedGraph,
+  graph: PDAProjectGraph,
   input: string
 ): PDAExecutionResult => {
   const tempStack: Stack = []
-  const parsedGraph = resolveGraph(graph) as PDAGraphIn
-  // Doing this find here so we don't have to deal with undefined in the class
-  const initialState = parsedGraph.states.find((state) => {
-    return state.id === graph.initialState
-  })
-
-  if (!initialState) {
+  const problem = buildProblem(graph, input)
+  if (!problem) {
     return {
       accepted: false,
       remaining: input,
@@ -50,15 +44,6 @@ export const simulatePDA = (
     }
   }
 
-  const initialNode = new Node<PDAState>(
-    new PDAState(initialState.id, initialState.isFinal, null, input)//, stack ),//, initialState.stack),
-  )
-
-  const states = parsedGraph.states.map(
-    (state) => new PDAState(state.id, state.isFinal)
-  )
-
-  const problem = new PDAGraph(initialNode, states, parsedGraph.transitions)
   const result = breadthFirstSearch(problem)
 
   if (!result) {
@@ -106,32 +91,4 @@ export const simulatePDA = (
     trace,
     stack
   }
-}
-
-export const graphStepperPDA = (graph: UnparsedGraph, input: string) => {
-  const parsedGraph = resolveGraph(graph)
-
-  const initialState = parsedGraph.states.find((state) => {
-    return state.id === graph.initialState
-  })
-
-  if (!initialState) {
-    return {
-      accepted: false,
-      remaining: input,
-      trace: []
-    }
-  }
-
-  const initialNode = new Node<PDAState>(
-    new PDAState(initialState.id, initialState.isFinal, null, input)//, initialState.stack),//, initialState.stack),
-  )
-
-  const states = parsedGraph.states.map(
-    (state) => new PDAState(state.id, state.isFinal)//, state.stack),
-  )
-
-  const problem = new PDAGraph(initialNode, states, parsedGraph.transitions)
-
-  return new GraphStepper(problem)
 }
