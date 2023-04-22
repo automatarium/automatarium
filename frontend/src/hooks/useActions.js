@@ -158,11 +158,14 @@ const useActions = (registerHotkeys = false) => {
         // createBatch(pasteData, project)
         const insertResponse = insertGroup(pasteData)
         // This will be better in TS with enum
-        if (insertResponse.type = 2) {
+        if (insertResponse.type == 2) {
           selectComments(insertResponse.body.comments.map(comment => comment.id))
           selectStates(insertResponse.body.states.map(state => state.id))
           selectTransitions(insertResponse.body.transitions.map(transition => transition.id))
           commit()
+        }
+        else if (insertResponse.type == 1) {
+          alert(insertResponse.body)
         }
       }
 

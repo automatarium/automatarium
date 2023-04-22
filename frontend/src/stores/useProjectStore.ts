@@ -244,10 +244,36 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   insertGroup: (createData) => {
+    let returnVal: InsertGroupResponse = {} as InsertGroupResponse
+    // Check that we are inserting into same project type
+    if (createData.projectType !== get().project.projectType) {
+      return {type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.`}
+    }
+    // Check that for transitions being inserted, to and from states are also inserted
+    let missingState = false
+    createData.transitions.forEach((transition) => {
+      let toFound = false
+      let fromFound = false
+      createData.states.forEach((state) => {
+        if (state.id === transition.from) {
+          fromFound = true
+        }
+        if (state.id === transition.to) {
+          toFound = true
+        }
+      })
+      // If a transition has to or from missing, flag to return error
+      if (!(toFound && fromFound)) {
+        missingState = true
+      }
+    })
+    if (missingState) {
+      return {type: InsertGroupResponseType.FAIL, body: `Sorry, there was an error.`}
+    }
     set(produce(({ project }: { project: StoredProject }) => {
       let isInitialStateUpdated = false
       if (createData.projectType !== project.projectType) {
-        return {type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`}
+        returnVal = {type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`}
       }
       const isNewProject = createData.projectSource !== project._id
       const newTransitions = structuredClone(createData.transitions)
@@ -279,26 +305,18 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
         // createState
         project.states.push({ ...state })
       })
-      // TODO: Improve this error handling
-      if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
-        // removeState
-        createData.states.forEach((state) => {
-          project.states = project.states.filter((st) => st.id !== state.id)
-        })
-        return {type: InsertGroupResponseType.FAIL, body: 'Sorry, there was an error.'}
-      }
       createData.transitions = newTransitions
-      createData.comments.forEach(comment => {
+      createData.comments.forEach((comment, i) => {
         // TODO: ensure position isn't out of window
         comment.x += PASTE_POSITION_OFFSET
         comment.y += PASTE_POSITION_OFFSET
-        const newId = 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
+        const newId = i + 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
         comment.id = newId
         // createComment
         project.comments.push({ ...comment })
       })
-      createData.transitions.forEach(transition => {
-        const newId = 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
+      createData.transitions.forEach((transition, i) => {
+        const newId = i + 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
         transition.id = newId
         // createTransition
         project.transitions.push({ ...transition })
