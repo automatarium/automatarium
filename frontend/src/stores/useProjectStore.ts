@@ -6,7 +6,6 @@ import isEqual from 'lodash.isequal'
 
 import { randomProjectName } from '../util/projectName'
 
-
 import {
   Project,
   AutomataTransition,
@@ -35,7 +34,9 @@ import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering.js'
 export type StoredProject = Project & {_id: string}
 
 export enum InsertGroupResponseType {
+  // eslint-disable-next-line no-unused-vars
   FAIL = 1,
+  // eslint-disable-next-line no-unused-vars
   SUCCESS
 }
 
@@ -244,10 +245,9 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   insertGroup: (createData) => {
-    let returnVal: InsertGroupResponse = {} as InsertGroupResponse
     // Check that we are inserting into same project type
     if (createData.projectType !== get().project.projectType) {
-      return {type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.`}
+      return { type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.` }
     }
     // Check that for transitions being inserted, to and from states are also inserted
     let missingState = false
@@ -268,13 +268,10 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       }
     })
     if (missingState) {
-      return {type: InsertGroupResponseType.FAIL, body: `Sorry, there was an error.`}
+      return { type: InsertGroupResponseType.FAIL, body: 'Sorry, there was an error.' }
     }
     set(produce(({ project }: { project: StoredProject }) => {
       let isInitialStateUpdated = false
-      if (createData.projectType !== project.projectType) {
-        returnVal = {type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`}
-      }
       const isNewProject = createData.projectSource !== project._id
       const newTransitions = structuredClone(createData.transitions)
       newTransitions.forEach(transition => {
@@ -325,7 +322,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
         project.initialState = createData.initialStateId
       }
     }))
-    return {type: InsertGroupResponseType.SUCCESS, body: createData}
+    return { type: InsertGroupResponseType.SUCCESS, body: createData }
   },
 
   /* Update tests */

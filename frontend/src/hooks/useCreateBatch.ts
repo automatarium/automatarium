@@ -16,68 +16,67 @@ const useCreateBatch = (createData: CopyData | Template) => {
   const commit = useProjectStore(s => s.commit)
 
   const createBatch = () => {
-  if (createData.projectType !== project.projectType) {
-    alert(`Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`)
-    return
-  }
-  let isInitialStateUpdated = false
-  // Perhaps this will be passed through
-  const isNewProject = createData.projectSource !== project._id
-  const newTransitions = structuredClone(createData.transitions)
-  newTransitions.forEach(transition => {
-    transition.from = null
-    transition.to = null
-  })
-  createData.states.forEach(state => {
+    if (createData.projectType !== project.projectType) {
+      alert(`Error: you cannot insert elements from a ${createData.projectType} project into a ${project.projectType} project.`)
+      return
+    }
+    let isInitialStateUpdated = false
+    // Perhaps this will be passed through
+    const isNewProject = createData.projectSource !== project._id
+    const newTransitions = structuredClone(createData.transitions)
+    newTransitions.forEach(transition => {
+      transition.from = null
+      transition.to = null
+    })
+    createData.states.forEach(state => {
     // TODO: ensure position isn't out of window
     // Probably will have to take adjusting position out of this function
-    state.x += PASTE_POSITION_OFFSET
-    state.y += PASTE_POSITION_OFFSET
-    const newId = createState(state)
-    // Update transitions to new state id
-    createData.transitions.forEach((transition, i) => {
-      if (transition.from === state.id && newTransitions[i].from === null) {
-        newTransitions[i].from = newId
+      state.x += PASTE_POSITION_OFFSET
+      state.y += PASTE_POSITION_OFFSET
+      const newId = createState(state)
+      // Update transitions to new state id
+      createData.transitions.forEach((transition, i) => {
+        if (transition.from === state.id && newTransitions[i].from === null) {
+          newTransitions[i].from = newId
+        }
+        if (transition.to === state.id && newTransitions[i].to === null) {
+          newTransitions[i].to = newId
+        }
+      })
+      // Update initial state id if applicable
+      if (createData.initialStateId === state.id && !isInitialStateUpdated) {
+        createData.initialStateId = newId
+        isInitialStateUpdated = true
       }
-      if (transition.to === state.id && newTransitions[i].to === null) {
-        newTransitions[i].to = newId
-      }
+      state.id = newId
     })
-    // Update initial state id if applicable
-    if (createData.initialStateId === state.id && !isInitialStateUpdated) {
-      createData.initialStateId = newId
-      isInitialStateUpdated = true
+    // TODO: Improve this error handling
+    if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
+      alert('Sorry, there was an error')
+      removeStates(createData.states.map(state => state.id))
+      return
     }
-    state.id = newId
-  })
-  // TODO: Improve this error handling
-  if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
-    alert('Sorry, there was an error')
-    removeStates(createData.states.map(state => state.id))
-    return
-  }
-  createData.transitions = newTransitions
-  selectStates(createData.states.map(state => state.id))
-  createData.comments.forEach(comment => {
+    createData.transitions = newTransitions
+    selectStates(createData.states.map(state => state.id))
+    createData.comments.forEach(comment => {
     // TODO: ensure position isn't out of window
-    comment.x += PASTE_POSITION_OFFSET
-    comment.y += PASTE_POSITION_OFFSET
-    const newId = createComment(comment)
-    comment.id = newId
-  })
-  selectComments(createData.comments.map(comment => comment.id))
-  createData.transitions.forEach(transition => {
-    const newId = createTransition(transition)
-    transition.id = newId
-  })
-  selectTransitions(createData.transitions.map(transition => transition.id))
-  if (isNewProject && createData.initialStateId !== null && project.initialState === null) {
-    setStateInitial(createData.initialStateId)
+      comment.x += PASTE_POSITION_OFFSET
+      comment.y += PASTE_POSITION_OFFSET
+      const newId = createComment(comment)
+      comment.id = newId
+    })
+    selectComments(createData.comments.map(comment => comment.id))
+    createData.transitions.forEach(transition => {
+      const newId = createTransition(transition)
+      transition.id = newId
+    })
+    selectTransitions(createData.transitions.map(transition => transition.id))
+    if (isNewProject && createData.initialStateId !== null && project.initialState === null) {
+      setStateInitial(createData.initialStateId)
+    }
+    commit()
   }
-  commit()
+  return { createBatch }
 }
-return { createBatch }
-}
-
 
 export default useCreateBatch

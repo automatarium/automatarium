@@ -1,21 +1,14 @@
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useSelectionStore, useTemplateStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
-import { Template, CopyData, AutomataState } from '/src/types/ProjectTypes'
-import { PASTE_POSITION_OFFSET } from '/src/config/rendering'
+import { AutomataState } from '/src/types/ProjectTypes'
 import { InsertGroupResponseType } from '../stores/useProjectStore'
 
 const useTemplateInsert = () => {
   const tool = useToolStore(s => s.tool)
-  const project = useProjectStore(s => s.project)
-  const createState = useProjectStore(s => s.createState)
-  const createComment = useProjectStore(s => s.createComment)
-  const createTransition = useProjectStore(s => s.createTransition)
-  const removeStates = useProjectStore(s => s.removeStates)
   const selectStates = useSelectionStore(s => s.setStates)
   const selectTransitions = useSelectionStore(s => s.setTransitions)
   const selectComments = useSelectionStore(s => s.setComments)
-  const setStateInitial = useProjectStore(s => s.setStateInitial)
   const commit = useProjectStore(s => s.commit)
   const insertGroup = useProjectStore(s => s.insertGroup)
   const template = useTemplateStore(s => s.template)
@@ -36,13 +29,12 @@ const useTemplateInsert = () => {
       moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
       const insertResponse = insertGroup(copyTemplate)
       console.log(insertResponse)
-      if (insertResponse.type == InsertGroupResponseType.SUCCESS) {
+      if (insertResponse.type === InsertGroupResponseType.SUCCESS) {
         selectComments(insertResponse.body.comments.map(comment => comment.id))
         selectStates(insertResponse.body.states.map(state => state.id))
         selectTransitions(insertResponse.body.transitions.map(transition => transition.id))
         commit()
-      }
-      else if (insertResponse.type == InsertGroupResponseType.FAIL) {
+      } else if (insertResponse.type === InsertGroupResponseType.FAIL) {
         alert(insertResponse.body)
       }
     }

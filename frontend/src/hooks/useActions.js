@@ -9,8 +9,6 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 
-import { useCreateBatch } from './index'
-
 const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
   meta && (showCtrl ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
@@ -42,15 +40,12 @@ const useActions = (registerHotkeys = false) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const moveView = useViewStore(s => s.moveViewPosition)
   const createState = useProjectStore(s => s.createState)
-  const createComment = useProjectStore(s => s.createComment)
-  const createTransition = useProjectStore(s => s.createTransition)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
   const updateProject = useProjectStore(s => s.update)
   const insertGroup = useProjectStore(s => s.insertGroup)
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
-  const clearTemplates = useTemplatesStore(s => s.clearTemplates)
   const navigate = useNavigate()
 
   // TODO: memoize
@@ -158,13 +153,12 @@ const useActions = (registerHotkeys = false) => {
         // createBatch(pasteData, project)
         const insertResponse = insertGroup(pasteData)
         // This will be better in TS with enum
-        if (insertResponse.type == 2) {
+        if (insertResponse.type === 2) {
           selectComments(insertResponse.body.comments.map(comment => comment.id))
           selectStates(insertResponse.body.states.map(state => state.id))
           selectTransitions(insertResponse.body.transitions.map(transition => transition.id))
           commit()
-        }
-        else if (insertResponse.type == 1) {
+        } else if (insertResponse.type === 1) {
           alert(insertResponse.body)
         }
       }
@@ -530,13 +524,13 @@ const selectionToCopyTemplate = (stateIds, commentIds, transitionIds, project, i
     })
   })
   const isInitialSelected = stateIds.includes(project.initialState)
-  let returnObject = {
+  const returnObject = {
     states: selectedStates,
     comments: selectedComments,
     transitions: selectedTransitions,
     projectSource: project._id,
     projectType: project.projectType,
-    initialStateId: isInitialSelected ? project.initialState : null,
+    initialStateId: isInitialSelected ? project.initialState : null
   }
   if (isTemplate) {
     returnObject._id = crypto.randomUUID()
