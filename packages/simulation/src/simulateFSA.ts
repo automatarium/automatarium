@@ -1,12 +1,12 @@
 import { FSAState } from './FSASearch'
-import { ExecutionResult, ExecutionTrace } from './graph'
+import { ExecutionResult, FSAExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
-const generateTrace = (node: Node<FSAState>): ExecutionTrace[] => {
-  const trace: ExecutionTrace[] = []
+const generateTrace = (node: Node<FSAState>): FSAExecutionTrace[] => {
+  const trace: FSAExecutionTrace[] = []
   while (node.parent) {
     trace.push({
       to: node.state.id,

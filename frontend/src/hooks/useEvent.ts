@@ -32,7 +32,9 @@ export interface CustomEvents {
   'ctx:svg': ExtraMouseEvent,
   'ctx:state': ExtraMouseEvent,
   'ctx:transition': ExtraMouseEvent,
-  'ctx:comment': ExtraMouseEvent
+  'ctx:comment': ExtraMouseEvent,
+  'bottomPanel:open': { panel: string },
+  'bottomPanel:close': null
 }
 
 /**

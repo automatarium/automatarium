@@ -1,11 +1,8 @@
 import { styled } from 'goober'
 
 export const Wrapper = styled('div')`
-  flex: 1;
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: .8rem;
   margin: .8rem;
 `
@@ -62,7 +59,7 @@ export const RemoveButton = styled('button')`
   transition: max-width .15s, padding .15s, margin-left .15s;
 `
 
-export const StatusIcon = styled('div')`
+export const StatusIcon = styled('div')<{$accepted: boolean}>`
   display: flex;
   align-items: center;
   justify-content: center;

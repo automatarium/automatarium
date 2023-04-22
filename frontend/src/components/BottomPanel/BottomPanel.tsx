@@ -5,6 +5,12 @@ import { useEvent } from '/src/hooks'
 import { Wrapper, Panel } from './bottomPanelStyle'
 import { TMTapeLab } from './Panels'
 
+interface Panel {
+  label: string
+  value: string
+  element: JSX.Element
+}
+
 const panels = [
   {
     label: 'TMTapeLab',
@@ -14,7 +20,8 @@ const panels = [
 ]
 
 const BottomPanel = () => {
-  const [activePanel, setActivePanel] = useState()
+  // eslint-disable-next-line no-self-compare
+  const [activePanel, setActivePanel] = useState<Panel | undefined>()
 
   // Open panel via event
   useEvent('bottomPanel:open', e => {
@@ -31,7 +38,7 @@ const BottomPanel = () => {
             {activePanel && (
                 <Panel >
                     <div>
-                        {activePanel?.element}
+                        {activePanel.element}
                     </div>
                 </Panel>
             )}

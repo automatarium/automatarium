@@ -1,5 +1,5 @@
 // Quantify the position of a transition using a list of states
-export const locateTransition = (t: AutomataTransition, states) => {
+export const locateTransition = (t, states) => {
   const fromState = states.find(s => s.id === t.from)
   const toState = states.find(s => s.id === t.to)
   return {

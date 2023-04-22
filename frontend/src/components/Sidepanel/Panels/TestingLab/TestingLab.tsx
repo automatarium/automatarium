@@ -19,11 +19,16 @@ import {
   StatusIcon,
   WarningLabel
 } from './testingLabStyle'
+import { FSAExecutionTrace, PDAExecutionTrace, StateID, Tape, TMExecutionTrace } from '@automatarium/simulation/src/graph'
 
 export const ThemeContext = createContext({})
 
+type SimulationResult =
+  {accepted: boolean, transitionCount: number, tape: Tape, trace: TMExecutionTrace[]} |
+  {accepted: boolean, transitionCount: number, remaining: string, trace: FSAExecutionTrace[] | PDAExecutionTrace[]}
+
 const TestingLab = () => {
-  const [simulationResult, setSimulationResult] = useState()
+  const [simulationResult, setSimulationResult] = useState<SimulationResult>()
   const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
@@ -47,22 +52,19 @@ const TestingLab = () => {
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
    */
-  const runSimulation = (input) => {
-    if (projectType === 'TM') {
+  const runSimulation = (input: string): SimulationResult => {
+    if (graph.projectType === 'TM') {
       const { halted, trace, tape } = simulateTM(graph, input)
 
       return {
         accepted: halted,
         tape,
-        trace: trace.map(step => ({
-          to: step.to,
-          read: step.tape
-        })),
+        trace,
         transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
       }
-    } else if (['PDA', 'FSA'].includes(projectType)) {
+    } else if (['PDA', 'FSA'].includes(graph.projectType)) {
       const { accepted, trace, remaining } =
-            projectType === 'PDA'
+            graph.projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
 
@@ -91,7 +93,7 @@ const TestingLab = () => {
   // Execute graph
   const simulateGraph = useCallback(() => {
     const result = runSimulation(traceInput)
-    if (projectType === 'TM') {
+    if (graph.projectType === 'TM') {
       setSimulationResult(result)
       setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
     } else {

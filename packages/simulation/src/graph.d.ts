@@ -6,7 +6,7 @@ export type Tape ={
     trace: string[]
 }
 
-export type ExecutionTrace = {
+export type FSAExecutionTrace = {
     read: string | null;
     to: StateID;
 };
@@ -14,7 +14,7 @@ export type ExecutionTrace = {
 export type ExecutionResult = {
     accepted: boolean;
     remaining: string;
-    trace: ExecutionTrace[];
+    trace: FSAExecutionTrace[];
 };
 
 export type Stack = string[];
