@@ -65,6 +65,7 @@ const TestingLab = () => {
             projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
+
       return {
         accepted,
         remaining,

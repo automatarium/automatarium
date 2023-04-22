@@ -9,6 +9,7 @@ import { PDAGraph, PDAState } from './PDASearch'
 import { FSAGraph, FSAState } from './FSASearch'
 import { TMGraph, TMState } from './TMSearch'
 import { Tape } from './graph'
+import { GraphStepper } from './Step'
 
 export interface StateMapping {
   'FSA': FSAState
@@ -119,4 +120,10 @@ export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>,
     // This should've been done by the frontend but we do it here just encase
     (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions))
   )
+}
+
+export const graphStepper = <P extends ('FSA' | 'PDA')>(graph: RestrictedProject<P>, input: string): GraphStepper<StateMapping[P], TransitionMapping[P]> | null => {
+  const problem = buildProblem(graph, input)
+  if (!problem) return null
+  return new GraphStepper(problem)
 }

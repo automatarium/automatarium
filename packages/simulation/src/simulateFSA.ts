@@ -1,5 +1,4 @@
 import { FSAState } from './FSASearch'
-import { GraphStepper } from './Step'
 import { ExecutionResult, ExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
@@ -50,10 +49,4 @@ export const simulateFSA = (
     remaining: result.state.remaining,
     trace: generateTrace(result)
   }
-}
-
-export const graphStepper = (graph: FSAProjectGraph, input: string) => {
-  const problem = buildProblem(graph, input)
-
-  return new GraphStepper(problem)
 }

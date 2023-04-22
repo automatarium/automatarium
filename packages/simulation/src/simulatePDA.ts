@@ -1,9 +1,8 @@
 import { PDAState } from './PDASearch'
-import { GraphStepper } from './Step'
 import { PDAExecutionResult, PDAExecutionTrace, Stack } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
-import { PDAAutomataTransition, PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
 const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
@@ -92,8 +91,4 @@ export const simulatePDA = (
     trace,
     stack
   }
-}
-
-export const graphStepperPDA = (graph: PDAProjectGraph, input: string): GraphStepper<PDAState, PDAAutomataTransition> => {
-  return new GraphStepper(buildProblem(graph, input))
 }
