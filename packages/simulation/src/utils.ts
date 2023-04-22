@@ -92,6 +92,10 @@ export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>,
       StateType = TMState
       GraphType = TMGraph
       break
+    default:
+      // This occured during testing, so I have it here to help in future
+      console.log(graph)
+      throw new Error(`${graph.projectType} is invalid`)
   }
 
   const initialState = graph.states.find(s => s.id === graph.initialState)

@@ -47,7 +47,7 @@ const useActions = (registerHotkeys = false) => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
-  const updateProject = useProjectStore(s => s.update)
+  const updateGraph = useProjectStore(s => s.updateGraph)
   const projectType = useProjectStore(s => s.project.config.type)
 
   const navigate = useNavigate()
@@ -302,7 +302,7 @@ const useActions = (registerHotkeys = false) => {
       disabled: () => projectType !== 'FSA',
       handler: () => {
         try {
-          updateProject(reorderStates(convertNFAtoDFA(reorderStates(project))))
+          updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project))))
           commit()
         } catch (error) {
           alert(error.message)
@@ -466,7 +466,7 @@ const useActions = (registerHotkeys = false) => {
     REORDER_GRAPH: {
       disabled: () => project.initialState === null,
       handler: () => {
-        updateProject(reorderStates(project))
+        updateGraph(reorderStates(project))
         commit()
       }
     }

@@ -32,8 +32,6 @@ const TestingLab = () => {
   const graph = useProjectStore(s => s.getGraph())
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
-  // eslint-disable-next-line no-unused-vars
-  const clearProjectSimResults = useTMSimResultStore(s => s.clearSimResults)
   const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
@@ -44,7 +42,6 @@ const TestingLab = () => {
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
-  // const stackInfo = usePDAVisualiserStore(s=>s.stack)
 
   /**
    * Runs the correct simulation result for a trace input and returns the result.
@@ -68,7 +65,7 @@ const TestingLab = () => {
             projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
-
+      console.log(accepted, trace, remaining, graph)
       return {
         accepted,
         remaining,
@@ -187,7 +184,7 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
-  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - 1
+  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - (projectType === 'TM' ? 1 : 0)
 
   return (
     <>

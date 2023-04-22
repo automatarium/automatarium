@@ -20,22 +20,13 @@ import { useMemo, useState } from 'react'
 const SteppingLab = () => {
   const [, setFrontier] = useState([])
   const projectType = useProjectStore(s => s.project.config.type)
-  const states = useProjectStore((s) => s.project.states)
-  const transitions = useProjectStore((s) => s.project.transitions)
-  const initialState = useProjectStore((s) => s.project.initialState)
 
   const traceInput = useProjectStore((s) => s.project.tests.single)
   const setTraceInput = useProjectStore((s) => s.setSingleTest)
 
   const setSteppedStates = useSteppingStore((s) => s.setSteppedStates)
 
-  const graph = useMemo(() => {
-    return {
-      states,
-      transitions,
-      initialState
-    }
-  }, [states, transitions, initialState])
+  const graph = useProjectStore(s => s.getGraph())
 
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
