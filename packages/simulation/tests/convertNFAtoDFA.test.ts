@@ -13,6 +13,7 @@ import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 const convertToDFA = (project: FSAProjectGraph): FSAProjectGraph => {
   return reorderStates(convertNFAtoDFA(reorderStates(project)))
+}
 
 describe('Check to ensure NFA graph is valid before conversion begins', () => {
   test('Graph should not be processed for conversion if there are no final states', () => {
@@ -162,7 +163,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions.filter((transition) => transition.from === 5)[1].read).toBeOneOf(['A', 'B'])
   })
   test('Graph should use a single trap state instead of multiple when converted to a DFA', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertSingleTrapState as any) as any) as any)
+    const graph = convertToDFA(convertSingleTrapState as FSAProjectGraph)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
     // Should be 4 states
