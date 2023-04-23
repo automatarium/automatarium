@@ -7,11 +7,11 @@
     "rootDir": "./",
     "jsx": "react-jsx",
     "sourceMap": true,
-    "target": "ES6",
+    "target": "ES2021",
     "paths": {
       "/src/*": ["./src/*"]
     },
-    "lib": ["DOM"]
+    "lib": ["DOM", "ES2021"]
   },
   "include": [
     "src/**/*"

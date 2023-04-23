@@ -3,11 +3,17 @@ import { useEffect } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
 import COLORS from '/src/config/colors'
+import { Size } from '/src/types/ProjectTypes'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
-// Download a URL with a specific filename
-export const downloadURL = ({ filename, extension, data }) => {
+/**
+ * Makes some data get downloaded by the users browser
+ * @param filename Name of the file for the download
+ * @param extension What extension the file should have
+ * @param data What the data inside the download will be
+ */
+export const downloadURL = (filename: string, extension: string, data: string) => {
   const link = document.createElement('a')
   link.download = `${filename.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.${extension}`
   link.href = data
@@ -15,7 +21,7 @@ export const downloadURL = ({ filename, extension, data }) => {
 }
 
 // Render an SVG on a canvas
-export const svgToCanvas = ({ height, width, svg }) => new Promise(resolve => {
+export const svgToCanvas = ({ height, width, svg }: Size & {svg: string}) => new Promise<HTMLCanvasElement>(resolve => {
   // Setup canvas
   const canvas = document.createElement('canvas')
   canvas.height = height * 2
@@ -36,15 +42,15 @@ export const svgToCanvas = ({ height, width, svg }) => new Promise(resolve => {
 export const getSvgString = ({
   margin = 20,
   background = 'none',
-  color,
+  color = null,
   darkMode = false
 } = {}) => {
   // Clone the SVG element
-  const svgElement = document.querySelector('#automatarium-graph')
-  const clonedSvgElement = svgElement.cloneNode(true)
+  const svgElement = document.querySelector('#automatarium-graph') as SVGGraphicsElement
+  const clonedSvgElement = svgElement.cloneNode(true) as SVGGraphicsElement
 
   // Set viewbox
-  const b = document.querySelector('#automatarium-graph > g').getBBox()
+  const b = (document.querySelector('#automatarium-graph > g') as SVGGraphicsElement).getBBox()
   margin = Number(margin ?? 0) + 1
   const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin * 2, b.height + margin * 2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
@@ -75,10 +81,10 @@ export const getSvgString = ({
     // Create a rect to fill the SVG background
     const bg = document.createElementNS(SVG_NS, 'rect')
     bg.setAttributeNS(SVG_NS, 'fill', styles.getPropertyValue(`--grid-bg-${theme}`))
-    bg.setAttributeNS(SVG_NS, 'x', x)
-    bg.setAttributeNS(SVG_NS, 'y', y)
-    bg.setAttributeNS(SVG_NS, 'width', width)
-    bg.setAttributeNS(SVG_NS, 'height', height)
+    bg.setAttributeNS(SVG_NS, 'x', String(x))
+    bg.setAttributeNS(SVG_NS, 'y', String(y))
+    bg.setAttributeNS(SVG_NS, 'width', String(width))
+    bg.setAttributeNS(SVG_NS, 'height', String(height))
     clonedSvgElement.prepend(bg)
   } else if (background === 'grid') {
     // TODO: draw dot grid with SVG
@@ -120,11 +126,11 @@ const useImageExport = () => {
 
     // Quick export SVG
     if (e.detail?.type === 'svg') {
-      return downloadURL({
-        filename: project.meta.name,
-        extension: 'svg',
-        data: 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg)
-      })
+      return downloadURL(
+        project.meta.name,
+        'svg',
+        'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg)
+      )
     }
 
     // Quick export PNG
@@ -136,19 +142,21 @@ const useImageExport = () => {
         return canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({ 'image/png': blob })]))
       }
 
-      return downloadURL({
-        filename: project.meta.name,
-        extension: 'png',
-        data: canvas.toDataURL()
-      })
+      return downloadURL(
+        project.meta.name,
+        'png',
+        canvas.toDataURL()
+      )
     }
   }, [project.meta.name])
 
   // Generate thumbnail
-  useEffect(() => window.setTimeout(() => {
-    const { svg } = getSvgString()
-    setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg))
-  }, 200), [project])
+  useEffect(() => {
+    window.setTimeout(() => {
+      const { svg } = getSvgString()
+      setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg))
+    }, 200)
+  }, [project])
 }
 
 export default useImageExport

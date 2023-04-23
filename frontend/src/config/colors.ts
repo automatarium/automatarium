@@ -1,4 +1,8 @@
-const COLORS = {
+export type COLOR_KEY = 'red' | 'orange' | 'green' | 'teal' | 'blue' | 'purple' | 'pink'
+
+export type Color = {h: number, s: number, l: number}
+
+const COLORS: Record<COLOR_KEY, Color> = {
   red: {
     h: 0,
     s: 63,

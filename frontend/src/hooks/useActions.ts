@@ -10,6 +10,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
+import { FSAProjectGraph } from '/src/types/ProjectTypes'
 
 /**
  * Combination of keys. Used to call an action
@@ -317,7 +318,7 @@ const useActions = (registerHotkeys = false) => {
       disabled: () => projectType !== 'FSA',
       handler: () => {
         try {
-          updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project))))
+          updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project as FSAProjectGraph))))
           commit()
         } catch (error) {
           alert(error.message)

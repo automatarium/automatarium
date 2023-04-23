@@ -2,6 +2,12 @@ import { useEffect, useCallback, DependencyList } from 'react'
 import { SidePanelKey } from '/src/components/Sidepanel/Panels'
 
 /**
+ * Mouse event that includes the original event but also adds extra info like where in the view the click was
+ * and if it was clicking the SVG
+ */
+type ExtraMouseEvent = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+
+/**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
  */
@@ -10,8 +16,6 @@ export interface CustomEvents {
   'editComment': {id?: number, x: number, y: number},
   'editStateName': {id: number},
   'editStateLabel': {id: number},
-  'svg:mousedown': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
-  'svg:mouseup': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
   'modal:preferences': null,
   'exportImage': {type: string, clipboard?: boolean} | null,
   /**
@@ -20,6 +24,15 @@ export interface CustomEvents {
    */
   'sidepanel:open': {panel: SidePanelKey},
   'modal:shortcuts': null,
+  'svg:mousedown': ExtraMouseEvent
+  'svg:mouseup': ExtraMouseEvent
+  'state:mouseup': ExtraMouseEvent
+  'transition:mouseup': ExtraMouseEvent,
+  'comment:mouseup': ExtraMouseEvent,
+  'ctx:svg': ExtraMouseEvent,
+  'ctx:state': ExtraMouseEvent,
+  'ctx:transition': ExtraMouseEvent,
+  'ctx:comment': ExtraMouseEvent
 }
 
 /**

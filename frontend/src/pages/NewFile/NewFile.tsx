@@ -28,7 +28,7 @@ const NewFile = () => {
   const preferences = usePreferencesStore(state => state.preferences)
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
-  const { user, userLoading } = useAuth()
+  const { user, loading } = useAuth()
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -107,7 +107,7 @@ const NewFile = () => {
       <Header linkTo="/" />
       <div style={{ flex: 1 }} />
       <ButtonGroup>
-        {!userLoading && !user && <>
+        {!loading && !user && <>
           <Button secondary onClick={() => setLoginModalVisible(true)}>Log In</Button>
           <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
         </>}

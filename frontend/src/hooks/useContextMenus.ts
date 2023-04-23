@@ -1,10 +1,9 @@
 import { useCallback } from 'react'
-
-import useEvent from '/src/hooks/useEvent'
+import useEvent, { CustomEvents } from '/src/hooks/useEvent'
 import { dispatchCustomEvent } from '/src/util/events'
 
 const useContextMenus = () => {
-  const showContext = name => useCallback(e => {
+  const showContext = (name: keyof CustomEvents) => useCallback(e => {
     if (e.detail.originalEvent.button === 2) {
       dispatchCustomEvent(name, {
         x: e.detail.originalEvent.clientX,

@@ -1,9 +1,10 @@
 import { create, SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { COLOR_KEY } from '/src/config/colors'
 
 interface Preferences {
-  theme: string
-  color: string
+  theme: 'system' | 'dark' | 'light'
+  color: COLOR_KEY | 'match'
   showGrid: boolean
   ctrlZoom: boolean
 }
