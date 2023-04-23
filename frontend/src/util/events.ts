@@ -1,5 +1,9 @@
-import { Events } from '/src/hooks/useEvent'
+import { CustomEvents } from '/src/hooks/useEvent'
 
-export const dispatchCustomEvent = <T extends keyof Events>(name: T, detail: Events[T]) => {
+/**
+ * Creates an event and dispatches it with specified data.
+ * This should only be used for custom events
+ */
+export const dispatchCustomEvent = <T extends keyof CustomEvents>(name: T, detail: CustomEvents[T]) => {
   document.dispatchEvent(new CustomEvent(name, { detail }))
 }

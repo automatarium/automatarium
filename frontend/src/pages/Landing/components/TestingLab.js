@@ -8,6 +8,7 @@ import { Wrapper, StepButtons, TraceConsole } from './testingLabStyle'
 
 // Example automaton graph
 const graph = {
+  projectType: 'FSA',
   states: [
     { id: 0, isFinal: false },
     { id: 1, isFinal: false },

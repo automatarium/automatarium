@@ -17,8 +17,14 @@ const Editor = () => {
   const [priorTool, setPriorTool] = useState()
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
-  const projectType = useProjectStore(s => s.project.config.type)
-  // Syncronize last-opened project with backend before showing it
+  const project = useProjectStore(s => s.project)
+  // Check the user has selected a project, navigate to creation page if not
+  if (!project) {
+    navigate('/new')
+    return null
+  }
+  const projectType = project.config.type
+  // Synchronize last-opened project with backend before showing it
   const loading = useSyncCurrentProject()
 
   // Auto save project as its edited
@@ -29,13 +35,9 @@ const Editor = () => {
 
   // Project must be set
   useEffect(() => {
-    if (!useProjectStore.getState().project) {
-      navigate('/new')
-    }
     resetExportSettings()
     setViewPositionAndScale({ x: 0, y: 0 }, 1)
   }, [])
-
   // Change tool when holding certain keys
   useEvent('keydown', e => {
     // Hotkeys are disabled if an input is focused

@@ -1,28 +1,11 @@
 import {
-  ReadSymbol,
-  UnparsedGraph
+  ReadSymbol
 } from './graph'
 
-const RANGE_REG = /\[(\w-\w)\]/g
-const LITERAL_REG = /[\S]/
+const RANGE_REG = /\[(\w-\w)]/g
+const LITERAL_REG = /\S/
 export const RANGE_VALS =
     '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('')
-
-/**
- * This is used by JS with graphs. It expands all read symbols (Even for turing machines)
- * Reason for any return is that making the types was becoming a weird sandwich
- * TODO: Remove once we start properly typing the frontend
- *
- * @param graph - FSA Graph object to resolve.
- * @see expandReadSymbols
- */
-export const resolveGraph = (graph: UnparsedGraph): any => {
-  // Resolve graph transitions
-  const transitions = graph.transitions
-    .filter(transition => transition !== undefined && transition.read !== undefined)
-    .map(transition => ({ ...transition, read: expandReadSymbols(transition.read) }))
-  return { ...graph, transitions }
-}
 
 /**
  * Create an array of characters in between the two characters. Uses 0-9a-zA-Z ordering.
@@ -55,21 +38,21 @@ const makeCharRange = (start: ReadSymbol, stop: ReadSymbol): ReadSymbol[] => {
  * Expands and de-dupes the symbols represented by a read string.
  *
  * @param read - the string to expand
- * @returns The set of unique symbols represented by the read string
+ * @returns The set of unique symbols represented by the read string. This is a string to make the types more coherent
  *
  * @example Expand a string representing a run of lowercase letters
  * ```ts
  * const symbols = expandReadSymbols('[a-e]')
- * console.log(symbols) // ['a', 'b', 'c', 'd', 'e']
+ * console.log(symbols) // 'abcde'
  * ```
  *
  * @example Expand and de-dupe a string representing specific letters and a run of digits
  * ```ts
  * const symbols = expandReadSymbols('abb[3-5]')
- * console.log(symbols) // ['a', 'b', '3', '4', '5']
+ * console.log(symbols) // 'ab345'
  * ```
  */
-export const expandReadSymbols = (read: string): ReadSymbol[] => {
+export const expandReadSymbols = (read: string): string => {
   // Find ranges
   const rangeStrings = read.match(RANGE_REG) ?? []
   read = read.replace(RANGE_REG, '')
@@ -82,5 +65,5 @@ export const expandReadSymbols = (read: string): ReadSymbol[] => {
   // Find literals
   const symbols = read.split('').filter((s) => LITERAL_REG.test(s))
 
-  return Array.from(new Set([...symbols, ...rangeSymbols])).sort()
+  return Array.from(new Set([...symbols, ...rangeSymbols])).sort().join('')
 }

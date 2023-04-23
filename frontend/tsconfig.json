@@ -7,6 +7,7 @@
     "rootDir": "./",
     "jsx": "react-jsx",
     "sourceMap": true,
+    "target": "ES6",
     "paths": {
       "/src/*": ["./src/*"]
     },

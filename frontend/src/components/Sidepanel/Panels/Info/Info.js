@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from 'react'
-import { validTransitions, resolveGraph, closureWithPredicate } from '@automatarium/simulation'
+import { validTransitions, closureWithPredicate } from '@automatarium/simulation'
 
 import { useProjectStore } from '/src/stores'
 import { Table, SectionLabel } from '/src/components'
@@ -10,8 +10,7 @@ const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
-  const initialState = useProjectStore(s => s.project?.initialState)
-  const graph = { states, transitions: transitions ?? [], initialState }
+  const graph = useProjectStore(s => s.getGraph())
 
   // Function to get name of state from an id
   const getStateName = useCallback(id =>
@@ -19,12 +18,9 @@ const Info = () => {
   [graph.states, statePrefix]
   )
 
-  // Resolve graph
-  const resolvedGraph = useMemo(() => resolveGraph(graph), [graph])
-
   // Determine alphabet
   const alphabet = useMemo(() =>
-    Array.from(new Set(resolvedGraph.transitions
+    Array.from(new Set(graph.transitions
       .map(tr => tr.read)
       .reduce((a, b) => [...a, ...b], [])
       .sort()
@@ -35,16 +31,16 @@ const Info = () => {
     const map = {} // (ID, Symbol) -> ID[]
     for (const state of states ?? []) {
       for (const symbol of alphabet) {
-        const transitions = validTransitions(resolvedGraph, state.id, symbol)
+        const transitions = validTransitions(graph, state.id, symbol)
         for (const { transition } of transitions) {
           // Record accessibility after transition
           map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], transition.to]))
 
           // Record accessibility of states indirectly accessible after transition via lambdas
           if (transition.read.length > 0) {
-            const lambdaClosure = closureWithPredicate(resolvedGraph, transition.to, tr => tr.read.length === 0)
-            for (const [stateID] of lambdaClosure) {
-              map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], stateID]))
+            const lambdaClosure = closureWithPredicate(graph, transition.to, tr => tr.read.length === 0)
+            for (const { state } of lambdaClosure) {
+              map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], state]))
             }
           }
         }
@@ -52,7 +48,7 @@ const Info = () => {
     }
 
     return map
-  }, [states, alphabet, resolvedGraph])
+  }, [states, alphabet, graph])
 
   return <>
     <SectionLabel>Alphabet</SectionLabel>
@@ -70,7 +66,7 @@ const Info = () => {
             <th>&delta;</th>
             {alphabet.map(symbol => <th key={symbol}>{symbol}</th>)}
           </tr>
-          {resolvedGraph.states?.map(state => <tr key={state.id}>
+          {graph.states?.map(state => <tr key={state.id}>
             <th>{getStateName(state.id)}</th>
             {alphabet.map(symbol => <td key={symbol}>
               {Object.entries(transitionMap)

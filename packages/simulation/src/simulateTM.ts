@@ -1,12 +1,9 @@
-import { TMState, TMGraph } from './TMSearch'
-import {
-  TMGraphIn,
-  Tape,
-  TMExecutionResult,
-  TMExecutionTrace
-} from './graph'
+import { TMGraph, TMState } from './TMSearch'
+import { TMExecutionResult, TMExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
+import { buildProblem, newTape } from './utils'
+import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
   const trace: TMExecutionTrace[] = []
@@ -25,38 +22,25 @@ const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
 }
 
 export const simulateTM = (
-  graphIn: TMGraphIn,
-  // This forces front end to through a tape
-  inputTapeIn: Tape
+  graph: TMProjectGraph,
+  input: string
 ): TMExecutionResult => {
-  const inputTape = structuredClone(inputTapeIn)
-  const graph = structuredClone(graphIn)
-  const initialState = graph.states.find((state) => {
-    return state.id === graph.initialState
-  })
-
-  if (!initialState) {
+  const problem = buildProblem(graph, input) as TMGraph
+  if (!problem) {
     return {
       halted: false,
-      tape: inputTape,
+      tape: newTape(input),
       trace: []
     }
   }
-
-  initialState.tape = inputTape
-
-  const initialNode = new Node<TMState>(new TMState(initialState.id, initialState.isFinal, initialState.tape))
-
-  const problem = new TMGraph(initialNode, graph.states.map(s => new TMState(s.id, s.isFinal, s.tape)), graph.transitions)
   const result = breadthFirstSearch(problem)
 
   if (!result) {
-    const emptyExecution: TMExecutionResult = {
+    return {
       trace: [{ to: 0, tape: null }],
       halted: false,
-      tape: inputTape
+      tape: newTape(input)
     }
-    return emptyExecution
   }
   return {
     halted: result.state.isFinal,
