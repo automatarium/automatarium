@@ -11,7 +11,7 @@ export type FSAExecutionTrace = {
     to: StateID;
 };
 
-export type ExecutionResult = {
+export type FSAExecutionResult = {
     accepted: boolean;
     remaining: string;
     trace: FSAExecutionTrace[];
@@ -41,7 +41,10 @@ export type TMExecutionTrace = {
 }
 
 export type TMExecutionResult = {
-    halted: boolean
+    accepted: boolean // Halted is the correct term, but accepted makes life easier
     tape: Tape
     trace: TMExecutionTrace[]
 }
+
+// Union of all possible execution results
+export type ExecutionResult = FSAExecutionResult | PDAExecutionResult | TMExecutionResult

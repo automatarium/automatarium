@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { useState } from 'react'
 import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
 import './stackVisualiser.css'
@@ -6,8 +5,6 @@ import './stackVisualiser.css'
 const PDAStackVisualiser = () => {
   // Closes and shows the PDA stack visualiser.
   const [showStackTab, setShowStackTab] = useState(true)
-  // Variable to display stack
-  const [show] = useState()
 
   const traceIDx = useTMSimResultStore((s) => s.traceIDx)
   const stackInfo = usePDAVisualiserStore((s) => s.stack)
@@ -18,7 +15,7 @@ const PDAStackVisualiser = () => {
   let currentStack
 
   // Stores stack variables
-  if (stackInfo.trace) {
+  if (stackInfo?.trace) {
     if (stackInfo.trace[traceIDx]) {
       currentStack = stackInfo.trace[traceIDx].currentStack
       for (let i = 0; i < currentStack.length; i++) {
@@ -54,7 +51,7 @@ const PDAStackVisualiser = () => {
           <div className="stack-container">
             <h3>Stack</h3>
             <div className="stack-container">
-              {show ? 'no show' : displayStack()}
+              {displayStack()}
             </div>
           </div>
             )

@@ -19,16 +19,22 @@ import {
   StatusIcon,
   WarningLabel
 } from './testingLabStyle'
-import { FSAExecutionTrace, PDAExecutionTrace, StateID, Tape, TMExecutionTrace } from '@automatarium/simulation/src/graph'
+import {
+  ExecutionResult,
+  FSAExecutionResult,
+  FSAExecutionTrace,
+  PDAExecutionResult,
+  PDAExecutionTrace,
+  TMExecutionResult
+} from '@automatarium/simulation/src/graph'
+import { assertType } from '/src/types/ProjectTypes'
 
 export const ThemeContext = createContext({})
 
-type SimulationResult =
-  {accepted: boolean, transitionCount: number, tape: Tape, trace: TMExecutionTrace[]} |
-  {accepted: boolean, transitionCount: number, remaining: string, trace: FSAExecutionTrace[] | PDAExecutionTrace[]}
+type SimulationResult = (FSAExecutionResult | PDAExecutionResult | TMExecutionResult) & {transitionCount: number}
 
 const TestingLab = () => {
-  const [simulationResult, setSimulationResult] = useState<SimulationResult>()
+  const [simulationResult, setSimulationResult] = useState<SimulationResult | undefined>()
   const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
@@ -53,32 +59,32 @@ const TestingLab = () => {
    * The simulation function to use depends on the project name
    */
   const runSimulation = (input: string): SimulationResult => {
+    const transitionCount = (res: ExecutionResult) => Math.max(1, res.trace.length - (res.accepted ? 1 : 0))
     if (graph.projectType === 'TM') {
-      const { halted, trace, tape } = simulateTM(graph, input)
-
+      const result = simulateTM(graph, input)
       return {
-        accepted: halted,
-        tape,
-        trace,
-        transitionCount: Math.max(1, trace.length - (halted ? 1 : 0))
+        ...result,
+        transitionCount: transitionCount(result)
       }
     } else if (['PDA', 'FSA'].includes(graph.projectType)) {
-      const { accepted, trace, remaining } =
+      const result =
             graph.projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
-
+      assertType<FSAExecutionTrace[] | PDAExecutionTrace[]>(result.trace)
+      // Formats a symbol. Makes an empty symbol become a lambda
+      const formatSymbol = (char: string): string => char === '' ? 'λ' : char
       return {
-        accepted,
-        remaining,
-        trace: trace.map(step => ({
+        ...result,
+        // We need format the symbols in the trace so any empty symbols become lambdas
+        trace: result.trace.map(step => ({
           to: step.to,
-          read: step.read === '' ? 'λ' : step.read,
-          pop: step.pop === '' ? 'λ' : step.pop,
-          push: step.push === '' ? 'λ' : step.push,
+          read: formatSymbol(step.read),
+          pop: formatSymbol(step.pop),
+          push: formatSymbol(step.push),
           currentStack: step.currentStack
-        })),
-        transitionCount: Math.max(1, trace.length - (accepted ? 1 : 0))
+        } as FSAExecutionTrace | PDAExecutionTrace)),
+        transitionCount: transitionCount(result)
       }
     } else {
       throw new Error(`${projectType} is not supported`)
@@ -93,13 +99,16 @@ const TestingLab = () => {
   // Execute graph
   const simulateGraph = useCallback(() => {
     const result = runSimulation(traceInput)
-    if (graph.projectType === 'TM') {
+    // The `in` is just to type narrow for TS
+    if ('tape' in result) {
       setSimulationResult(result)
-      setProjectSimResults([result]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
+      setProjectSimResults([{ accepted: result.accepted, ...result }]) // Currently for just a single simulation result. (DTM. Not yet NDTM).
     } else {
       setSimulationResult(result)
       // Adds result to PDA visualiser
-      setPDAVisualiser(result)
+      if (graph.projectType === 'PDA') {
+        setPDAVisualiser(result as PDAExecutionResult)
+      }
     }
     return result
   }, [graph, traceInput])
@@ -108,9 +117,10 @@ const TestingLab = () => {
 
   const traceOutput = useMemo(() => {
     // No output before simulating
-    if (!simulationResult) { return '' }
+    if (!simulationResult || graph.projectType === 'TM') { return '' }
+    assertType<(FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}>(simulationResult)
 
-    const { trace, accepted, remaining, transitionCount } = simulationResult
+    const { trace, accepted, transitionCount } = simulationResult
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
       if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
@@ -125,10 +135,10 @@ const TestingLab = () => {
       .filter((_x, i) => i < traceIdx)
 
     // Add rejecting transition if applicable
-    const transitionsWithRejected = !accepted && traceIdx === trace.length && remaining !== undefined
+    const transitionsWithRejected = !accepted && traceIdx === trace.length
       ? [...transitions,
-          remaining[0]
-            ? `${remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
+          simulationResult.remaining[0]
+            ? `${simulationResult.remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
             : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
       : transitions
 
@@ -138,14 +148,15 @@ const TestingLab = () => {
 
   useEffect(() => {
     simulateGraph()
-    setMultiTraceOutput()
+    setMultiTraceOutput([])
     setTraceIdx(0)
   }, [lastChangeDate])
 
   // Set the trace IDx to be passed through store to TMTapeLab component
   useEffect(() => {
-    if (projectType === 'TM') setProjectSimTraceIDx(traceIdx)
-    else if (projectType === 'PDA') setProjectSimTraceIDx(traceIdx)
+    if (['TM', 'PDA'].includes(graph.projectType)) {
+      setProjectSimTraceIDx(traceIdx)
+    }
     // Try this for PDA as well - stack display
   }, [traceIdx])
 
@@ -155,15 +166,10 @@ const TestingLab = () => {
       if (showTraceTape) {
         dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
       } else {
-        dispatchCustomEvent('bottomPanel:close', {})
+        dispatchCustomEvent('bottomPanel:close', null)
       }
     }
   }, [showTraceTape])
-
-  // const proxyMultiTraceOnMount = (input) => {
-  //   if input
-  //   setMultiTraceOutput(multiTraceInput.map(input => simulateTM(graph, input)))
-  // }
 
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
@@ -184,13 +190,13 @@ const TestingLab = () => {
 
   // Determine input position
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
-  const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ').reduce((a, b) => a + b, 0) ?? 0
+  const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
   const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - (projectType === 'TM' ? 1 : 0)
-
+  console.log(traceInput)
   return (
     <>
-      {(showTraceTape && traceInput !== '' && traceInput && projectType !== 'TM') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
+      {(showTraceTape && traceInput !== '') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
@@ -204,7 +210,7 @@ const TestingLab = () => {
           onChange={e => {
             setTraceInput(e.target.value)
             setTraceIdx(0)
-            setSimulationResult()
+            setSimulationResult(undefined)
           }}
           value={traceInput ?? ''}
           placeholder="Enter a value to test"
@@ -289,7 +295,7 @@ const TestingLab = () => {
                 placeholder="λ"
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
                 onPaste={e => {
-                  const paste = (e.clipboardData || window.clipboardData).getData('text')
+                  const paste = (e.clipboardData || navigator.clipboard).getData('text')
                   if (!paste.includes('\n')) return
 
                   e.preventDefault()
@@ -326,8 +332,8 @@ const TestingLab = () => {
               />
               <RemoveButton
                 onClick={e => {
-                  const container = e.target.closest('div')
-                  const next = (container?.nextSibling?.tagName === 'DIV' || multiTraceInput.length === 1) ? container : container?.previousSibling
+                  const container = (e.target as HTMLElement).closest('div')
+                  const next = (((container?.nextSibling as HTMLElement)?.tagName === 'DIV' || multiTraceInput.length === 1) ? container : container?.previousSibling) as HTMLElement
                   if (multiTraceInput.length === 1) {
                     updateMultiTraceInput(index, '')
                   } else {
