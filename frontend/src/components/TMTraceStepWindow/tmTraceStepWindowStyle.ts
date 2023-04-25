@@ -18,14 +18,6 @@ export const Container = styled('div')`
     overflow: hidden;
   }
 `
-// ${p => p.$green && `
-//   background: #689540
-// `}
-// ${p => p.$red && `
-//   background: #d30303
-// `}
-
-// var(${props => (props.colour ? 'green' : 'black')});
 export const TickerTapeContainer = styled('div')`
   display: flex;
   flex-direction: row;
@@ -33,7 +25,7 @@ export const TickerTapeContainer = styled('div')`
 `
 
 // Involves spooky math function for transform. Pen and paper type stuff.
-export const TickerTape = styled('div')`
+export const TickerTape = styled('div')<{$tapeLength: number, $index: number}>`
   display: flex;
   flex-direction: row;
   transform: translateX(calc((${p => p.$tapeLength - 1}/2) * var(--cell-width) + ${p => -p.$index} * var(--cell-width)));
@@ -59,7 +51,7 @@ export const TickerTapeCell = styled('span')`
   }
 `
 
-export const SerratedEdgeContainer = styled('svg')`
+export const SerratedEdgeContainer = styled('svg')<{$flipped: boolean}>`
   position: absolute;
   right: 100%;
   top: 0;

@@ -40,7 +40,6 @@ This file breaks down each component briefly and gives descriptions of its funct
 - [Table](#table)
 - [Toolbar](#toolbar)
 - [Tracepreview](#tracepreview)
-- [TraceStepBubble](#tracestepbubble)
 - [TransitionSet](#transitionset)
 
 
@@ -403,11 +402,6 @@ Implementation of tracepreview in testing lab.
 ```
 <TracePreview trace={result} step={idx} />
 ```
-
-# TraceStepBubble
-
-
-![Image of tracestepbubble](../images/tracestepbubble.png)
 
 # TransitionSet
 

@@ -20,7 +20,7 @@ interface ViewStore {
   // Convert from screen mouse coords to view space
   screenToViewSpace: (clientX: number, clientY: number) => [number, number]
   // Convert from screen mouse coords to view space
-  viewToScreenSpace: (viewX, number, viewY: number) => [number, number]
+  viewToScreenSpace: (viewX: number, viewY: number) => [number, number]
 }
 
 const screenToCanvasSpace = (x: number, y: number, container: Element): [number, number] => {

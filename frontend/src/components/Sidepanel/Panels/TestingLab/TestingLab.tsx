@@ -2,7 +2,7 @@ import { createContext, useState, useCallback, useMemo, useEffect } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
-import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
+import { SectionLabel, Button, Input, TracePreview, Preference, Switch } from '/src/components'
 import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
 import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/simulation'
 
@@ -189,14 +189,9 @@ const TestingLab = () => {
   const dibEgg = useDibEgg()
 
   // Determine input position
-  const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
-  const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
-  const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
   const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - (projectType === 'TM' ? 1 : 0)
-  console.log(traceInput)
   return (
     <>
-      {(showTraceTape && traceInput !== '') && <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />}
       {warnings.length > 0 && <>
         <SectionLabel>Warnings</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
