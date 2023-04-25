@@ -1,0 +1,65 @@
+{
+  "projectType": "FSA",
+  "states": [
+    {
+      "id": 0,
+      "isFinal": false,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 1,
+      "isFinal": true,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 2,
+      "isFinal": false,
+      "x": 765,
+      "y": 330
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "id": 0,
+      "read": "A",
+      "to": 1
+    },
+    {
+      "from": 1,
+      "id": 4,
+      "read": "A",
+      "to": 2
+    },
+    {
+      "from": 2,
+      "id": 5,
+      "read": "A",
+      "to": 2
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Thankful Caterpillar",
+    "dateCreated": 1682044927890,
+    "dateEdited": 1682044927890,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}
