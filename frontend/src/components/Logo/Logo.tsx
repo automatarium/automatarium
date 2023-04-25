@@ -1,3 +1,13 @@
+import { HTMLAttributes } from 'react'
+
+interface LogoProps extends HTMLAttributes<SVGElement> {
+  size?: string
+  primary?: string
+  secondary?: string
+  hideTriangle?: boolean
+  hidePlanet?: boolean
+}
+
 const Logo = ({
   size = '4rem',
   primary = 'var(--primary)',
@@ -5,7 +15,7 @@ const Logo = ({
   hideTriangle = false,
   hidePlanet = false,
   ...props
-}) => (
+}: LogoProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
     width={size} height={size}

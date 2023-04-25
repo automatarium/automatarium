@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const HeaderContainer = styled('header')`
+export const HeaderContainer = styled('header')<{$center?: boolean}>`
   display: flex;
   align-items: center;
   margin-bottom: 1em;
