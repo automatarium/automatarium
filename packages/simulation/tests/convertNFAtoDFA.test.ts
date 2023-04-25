@@ -49,13 +49,17 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA
     expect(graph.states.length).toBe(3)
     // Only q1 should be a final state
-    expect((graph.states.find((state) => state.id === 0)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 1)).isFinal).toBe(true)
-    expect((graph.states.find((state) => state.id === 2)).isFinal).toBe(false)
+    for (let curState = 0; curState < graph.states.length; curState++) {
+      if (curState === 1) {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(true)
+      } else {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(false)
+      }
+    }
     // No lambda transition should be found, and should be 3 transitions total. All transitions should have symbol "A"
     expect(graph.transitions.length).toBe(3)
-    expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === 'A')).toBe(true)
+    const alphabet = 'A'
+    expect(graph.transitions.every((transition) => alphabet.includes(transition.read))).toBe(true)
     // Transitions should go in a straight line except the trap state, which goes to itself
     expect(graph.transitions[0].from).toBe(0)
     expect(graph.transitions[0].to).toBe(1)
@@ -71,13 +75,17 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA
     expect(graph.states.length).toBe(3)
     // Only q1 should be a final state
-    expect((graph.states.find((state) => state.id === 0)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 1)).isFinal).toBe(true)
-    expect((graph.states.find((state) => state.id === 2)).isFinal).toBe(false)
+    for (let curState = 0; curState < graph.states.length; curState++) {
+      if (curState === 1) {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(true)
+      } else {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(false)
+      }
+    }
     // No lambda transition should be found, and should be 3 transitions total. All transitions should have symbol "A"
     expect(graph.transitions.length).toBe(3)
-    expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === 'A')).toBe(true)
+    const alphabet = 'A'
+    expect(graph.transitions.every((transition) => alphabet.includes(transition.read))).toBe(true)
     // Transitions should go in a straight line except the trap state, which goes to itself
     expect(graph.transitions[0].from).toBe(0)
     expect(graph.transitions[0].to).toBe(1)
@@ -92,14 +100,18 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.initialState).toBe(0)
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA
     expect(graph.states.length).toBe(3)
-    // Only q1 should be a final state
-    expect((graph.states.find((state) => state.id === 0)).isFinal).toBe(true)
-    expect((graph.states.find((state) => state.id === 1)).isFinal).toBe(true)
-    expect((graph.states.find((state) => state.id === 2)).isFinal).toBe(false)
+    // Both q0 and q1 should be final states
+    for (let curState = 0; curState < graph.states.length; curState++) {
+      if (curState === 0 || curState === 1) {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(true)
+      } else {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(false)
+      }
+    }
     // No lambda transition should be found, and should be 3 transitions total. All transitions should have symbol "A"
     expect(graph.transitions.length).toBe(3)
-    expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === 'A')).toBe(true)
+    const alphabet = 'A'
+    expect(graph.transitions.every((transition) => alphabet.includes(transition.read))).toBe(true)
     // Transitions should go in a straight line except the trap state, which goes to itself
     expect(graph.transitions[0].from).toBe(0)
     expect(graph.transitions[0].to).toBe(1)
@@ -115,16 +127,17 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // They would be 6 if they got returned as a DFA rather than 4 as an NFA
     expect(graph.states.length).toBe(6)
     // Should be two final states, q2 and q3
-    expect((graph.states.find((state) => state.id === 0)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 1)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 2)).isFinal).toBe(true)
-    expect((graph.states.find((state) => state.id === 3)).isFinal).toBe(true)
-    expect((graph.states.find((state) => state.id === 4)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 5)).isFinal).toBe(false)
+    for (let curState = 0; curState < graph.states.length; curState++) {
+      if (curState === 2 || curState === 3) {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(true)
+      } else {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(false)
+      }
+    }
     // No lambda transition should be found, and should be 12 transitions total. All states should have a single transition 'A' and 'B' from, and be connected in a certain way
     expect(graph.transitions.length).toBe(12)
-    expect(graph.transitions.some((transition) => transition.read === undefined)).toBe(false)
-    expect(graph.transitions.every((transition) => transition.read === 'A' || transition.read === 'B')).toBe(true)
+    const alphabet = 'AB'
+    expect(graph.transitions.every((transition) => alphabet.includes(transition.read))).toBe(true)
     // Transitions should be connected appropriately
     expect(graph.transitions.filter((transition) => transition.from === 0).length).toBe(2)
     expect(graph.transitions.filter((transition) => transition.from === 0)[0].to).toBeOneOf([1, 3])
@@ -169,10 +182,13 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     // Should be 4 states
     expect(graph.states.length).toBe(4)
     // Should be one final state, q3
-    expect((graph.states.find((state) => state.id === 0)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 1)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 2)).isFinal).toBe(false)
-    expect((graph.states.find((state) => state.id === 3)).isFinal).toBe(true)
+    for (let curState = 0; curState < graph.states.length; curState++) {
+      if (curState === 3) {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(true)
+      } else {
+        expect((graph.states.find((state) => state.id === curState)).isFinal).toBe(false)
+      }
+    }
     // No lambda transition should be found, and should be 28 transitions total. All states should have a single transition 'A' to 'G' and be connected in a certain way
     expect(graph.transitions.length).toBe(28)
     const alphabet = 'ABCDEFG'
