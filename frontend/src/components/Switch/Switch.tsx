@@ -1,8 +1,10 @@
-import { forwardRef } from 'react'
+import React, { forwardRef } from 'react'
 
 import { SwitchInput, StyledSwitch } from './switchStyle'
 
-const Switch = forwardRef((props, ref) => (
+type SwitchProps = React.InputHTMLAttributes<HTMLInputElement> & {name?: string}
+
+const Switch = forwardRef<HTMLInputElement, SwitchProps>((props, ref) => (
   <label>
     <SwitchInput id={props.id ?? props.name} type="checkbox" ref={ref} {...props} />
     <StyledSwitch><div /></StyledSwitch>

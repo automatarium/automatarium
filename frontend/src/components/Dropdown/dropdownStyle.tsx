@@ -1,7 +1,7 @@
 import { styled } from 'goober'
-import { forwardRef } from 'react'
+import { forwardRef, ReactNode } from 'react'
 
-export const Wrapper = styled('div', forwardRef)`
+export const Wrapper = styled('div', forwardRef)<{$subMenu: ReactNode, $visible: boolean, $active?: boolean}>`
   background: var(--surface);
   border-radius: .3em;
   padding: .4em 0;
@@ -38,7 +38,7 @@ export const Shortcut = styled('span')`
   opacity: .5;
 `
 
-export const ItemWrapper = styled('button')`
+export const ItemWrapper = styled('button')<{$active: boolean}>`
   display: flex;
   justify-content: space-between;
   align-items: center;

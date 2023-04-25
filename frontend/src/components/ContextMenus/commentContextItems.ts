@@ -1,4 +1,6 @@
-const commentContextItems = [
+import { ContextItems } from './contextItem'
+
+const commentContextItems: ContextItems = [
   {
     label: 'Edit comment',
     action: 'EDIT_COMMENT'

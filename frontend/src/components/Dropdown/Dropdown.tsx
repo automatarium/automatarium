@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, ReactNode, HTMLAttributes } from 'react'
 import { ChevronRight } from 'lucide-react'
 
 import { useActions } from '/src/hooks'
@@ -9,8 +9,9 @@ import {
   Shortcut,
   Divider
 } from './dropdownStyle'
+import { ContextItem, ContextItems } from '/src/components/ContextMenus/contextItem'
 
-const ItemWithItems = ({ item, onClose }) => {
+const ItemWithItems = ({ item, onClose }: {item: ContextItem, onClose: () => void}) => {
   const [active, setActive] = useState(false)
 
   return (
@@ -30,7 +31,14 @@ const ItemWithItems = ({ item, onClose }) => {
   )
 }
 
-const Item = ({ item, active, setActive, onClose }) => {
+interface ItemProps {
+  item: ContextItem
+  active?: boolean
+  setActive?: () => void
+  onClose?: () => void
+}
+
+const Item = ({ item, active, setActive, onClose }: ItemProps) => {
   const actions = useActions()
   const actionHandler = item.action ? actions[item.action]?.handler : null
   const hotKeyLabel = item.action ? actions[item.action]?.label : null
@@ -51,6 +59,14 @@ const Item = ({ item, active, setActive, onClose }) => {
   )
 }
 
+interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
+  subMenu?: ReactNode
+  visible?: boolean
+  items?: ContextItems
+  onClose?: () => void
+  getRef?: any
+}
+
 const Dropdown = ({
   subMenu,
   visible = true,
@@ -58,8 +74,8 @@ const Dropdown = ({
   onClose,
   getRef,
   ...props
-}) => {
-  const dropdownRef = useRef()
+}: DropdownProps) => {
+  const dropdownRef = useRef<HTMLDivElement>()
 
   // Close dropdown if click outside
   const handleClick = useCallback(e => !dropdownRef.current?.contains(e.target) && onClose(), [dropdownRef.current, onClose])
@@ -90,19 +106,15 @@ const Dropdown = ({
       onBlur={e => !subMenu && visible && !e.currentTarget.contains(e.relatedTarget) && onClose()}
       {...props}
     >
-      {items?.map((item, i) => item === 'hr'
-        ? (
-          <Divider key={`hr-${i}`} />
-          )
-        : (
-            item.items
-              ? (
-            <ItemWithItems key={item.label} item={item} onClose={onClose} />
-                )
-              : (
-            <Item key={item.label} item={item} onClose={onClose} />
-                )
-          ))}
+      {items?.map((item, i) => {
+        if (item === 'hr') {
+          return <Divider key={`hr-${i}`} />
+        } else if (item.items) {
+          return <ItemWithItems key={item.label} item={item} onClose={onClose}/>
+        } else {
+          return <Item key={item.label} item={item} onClose={onClose} />
+        }
+      })}
       {props.children}
     </Wrapper>
   )

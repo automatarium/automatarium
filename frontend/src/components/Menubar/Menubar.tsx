@@ -23,13 +23,14 @@ import {
 } from './menubarStyle'
 
 import menus from './menus'
+import { ContextItem } from '/src/components/ContextMenus/contextItem'
 
 // Extend dayjs
 dayjs.extend(relativeTime)
 
 const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
-  const buttonRef = useRef()
-  const [rect, setRect] = useState({})
+  const buttonRef = useRef<HTMLButtonElement>()
+  const [rect, setRect] = useState<DOMRect>()
 
   useEffect(() => {
     buttonRef.current && setRect(buttonRef.current.getBoundingClientRect())
@@ -60,12 +61,12 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
 const Menubar = () => {
   const navigate = useNavigate()
   const { user, loading: userLoading } = useAuth()
-  const [dropdown, setDropdown] = useState()
+  const [dropdown, setDropdown] = useState<string>()
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const [shareModalVisible, setShareModalVisible] = useState(false)
 
-  const titleRef = useRef()
+  const titleRef = useRef<HTMLInputElement>()
   const [editingTitle, setEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState('')
 
@@ -140,7 +141,7 @@ const Menubar = () => {
             </NameRow>
 
             <DropdownMenus>
-              {menus.map(item => (
+              {menus.map((item: ContextItem) => (
                 <DropdownButton
                   key={item.label}
                   item={item}

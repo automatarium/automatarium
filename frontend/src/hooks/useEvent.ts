@@ -1,11 +1,14 @@
 import { useEffect, useCallback, DependencyList } from 'react'
 import { SidePanelKey } from '/src/components/Sidepanel/Panels'
+import { Coordinate } from '/src/types/ProjectTypes'
 
 /**
  * Mouse event that includes the original event but also adds extra info like where in the view the click was
  * and if it was clicking the SVG
  */
-type ExtraMouseEvent = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+type SVGMouseData = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+
+type CommentEventData = {originalEvent: MouseEvent, comment: {id: number, text: string}}
 
 /**
  * Mapping of events to what data the event accepts.
@@ -24,17 +27,18 @@ export interface CustomEvents {
    */
   'sidepanel:open': {panel: SidePanelKey},
   'modal:shortcuts': null,
-  'svg:mousedown': ExtraMouseEvent
-  'svg:mouseup': ExtraMouseEvent
-  'state:mouseup': ExtraMouseEvent
-  'transition:mouseup': ExtraMouseEvent,
-  'comment:mouseup': ExtraMouseEvent,
-  'ctx:svg': ExtraMouseEvent,
-  'ctx:state': ExtraMouseEvent,
-  'ctx:transition': ExtraMouseEvent,
-  'ctx:comment': ExtraMouseEvent,
+  'svg:mousedown': SVGMouseData
+  'svg:mouseup': SVGMouseData
+  'state:mouseup': SVGMouseData
+  'transition:mouseup': SVGMouseData,
+  'ctx:svg': Coordinate,
+  'ctx:state': Coordinate,
+  'ctx:transition': Coordinate,
+  'ctx:comment': Coordinate,
   'bottomPanel:open': { panel: string },
-  'bottomPanel:close': null
+  'bottomPanel:close': null,
+  'comment:mousedown': CommentEventData
+  'comment:mouseup': CommentEventData
 }
 
 /**
@@ -42,7 +46,7 @@ export interface CustomEvents {
  * It is a combination of our custom events along with DOM events
  */
 // eslint-disable-next-line no-undef
-export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} & DocumentEventMap
+export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} & DocumentEventMap & WindowEventMap
 
 /**
  * What a function that handles an event should look like
@@ -50,7 +54,7 @@ export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} &
 type EventHandler<T extends keyof Events> = (e: Events[T]) => void
 
 interface EventOptions {
-  target?: Document,
+  target?: Document | Window,
   // eslint-disable-next-line no-undef
   options?: boolean | AddEventListenerOptions
 }

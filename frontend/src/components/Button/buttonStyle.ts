@@ -1,6 +1,14 @@
 import { styled } from 'goober'
+import { ExoticComponent } from 'react'
 
-export const Wrapper = styled('button')`
+interface WrapperProps {
+  $icon: boolean
+  $secondary: boolean
+  $surface: boolean
+  as: string | ExoticComponent
+}
+
+export const Wrapper = styled('button')<WrapperProps>`
   margin: 0;
   padding: .5em 1.2em;
   border: 0;

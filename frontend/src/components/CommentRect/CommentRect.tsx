@@ -5,8 +5,15 @@ import { useSelectionStore, useViewStore } from '/src/stores'
 
 import { commentStyles, commentSelectedClass } from './commentRectStyle'
 
-const CommentRect = ({ id, x, y, text }) => {
-  const containerRef = useRef()
+interface CommentRectProps {
+  id: number
+  x: number,
+  y: number,
+  text: string
+}
+
+const CommentRect = ({ id, x, y, text }: CommentRectProps) => {
+  const containerRef = useRef<HTMLDivElement>()
   const [size, setSize] = useState({ height: 30, width: 30 })
   const selectedComments = useSelectionStore(s => s.selectedComments)
   const selected = selectedComments.includes(id)
@@ -35,7 +42,6 @@ const CommentRect = ({ id, x, y, text }) => {
 
   return <foreignObject x={x} y={y} {...size}>
     <div
-      xmlns="http://www.w3.org/1999/xhtml"
       ref={containerRef}
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}

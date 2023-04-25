@@ -1,18 +1,22 @@
 import { createPortal } from 'react-dom'
-import { useEffect } from 'react'
+import { CSSProperties, HTMLAttributes, ReactNode, RefObject, useEffect } from 'react'
 import { useA11yDialog } from 'react-a11y-dialog'
 
 import { Button } from '/src/components'
 
-import {
-  Container,
-  Overlay,
-  Content,
-  Buttons,
-  Children,
-  Heading,
-  Description
-} from './modalStyle'
+import { Buttons, Children, Container, Content, Description, Heading, Overlay } from './modalStyle'
+
+export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
+  description?: string
+  actions?: ReactNode
+  isOpen?: boolean
+  role?: 'dialog' | 'alertdialog'
+  onClose?: () => void
+  focusRef?: RefObject<HTMLElement>
+  dropdown?: boolean
+  containerStyle?: CSSProperties
+  width?: string | number
+}
 
 const Modal = ({
   id = 'dialog',
@@ -28,7 +32,7 @@ const Modal = ({
   containerStyle,
   width,
   ...props
-}) => {
+}: ModalProps) => {
   const [instance, attr] = useA11yDialog({ id, role, title })
 
   useEffect(() => {
@@ -45,7 +49,7 @@ const Modal = ({
     focusRef?.current && instance.on('show', () => setTimeout(() => focusRef.current?.focus(), 100))
   }, [instance, onClose, focusRef?.current])
 
-  const dialog = createPortal(
+  return createPortal(
     <Container
       {...attr.container}
       className={dropdown ? 'dropdown' : ''}
@@ -68,8 +72,6 @@ const Modal = ({
     </Container>,
     document.body
   )
-
-  return dialog
 }
 
 export default Modal

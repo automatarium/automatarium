@@ -43,7 +43,7 @@ export const NameInput = styled('input', forwardRef)`
   border-radius: .3em;
 `
 
-export const SaveStatus = styled('span')`
+export const SaveStatus = styled('span')<{$show?: boolean}>`
   position: relative;
   font-size: .8em;
   opacity: 0;
@@ -55,9 +55,7 @@ export const SaveStatus = styled('span')`
   ${p => p.$show && `
     opacity: .75;
   `}
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
+  
   &::before {
     content: '';
     position: absolute;
@@ -71,6 +69,8 @@ export const SaveStatus = styled('span')`
     border-block-end: 2px solid transparent;
     animation: spin 1s linear infinite;
   }
+  
+  @keyframes spin { to { transform: rotate(360deg); } }
 `
 
 export const Actions = styled('div')`
@@ -85,7 +85,7 @@ export const DropdownMenus = styled('div')`
   gap: .1em;
 `
 
-export const DropdownButtonWrapper = styled('button', forwardRef)`
+export const DropdownButtonWrapper = styled('button', forwardRef)<{$active?: boolean}>`
   font: inherit;
   margin: 0;
   color: inherit;

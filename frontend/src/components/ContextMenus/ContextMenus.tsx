@@ -7,9 +7,10 @@ import graphContextItems from './graphContextItems'
 import stateContextItems from './stateContextItems'
 import transitionContextItems from './transitionContextItems'
 import commentContextItems from './commentContextItems'
+import { ContextItems } from './contextItem'
 
 const ContextMenus = () => {
-  const [context, setContext] = useState({ visible: false })
+  const [context, setContext] = useState<{visible: boolean, x: number, y: number, items: ContextItems}>()
 
   useEvent('ctx:svg', ({ detail: { x, y } }) => {
     setContext({ visible: true, x, y, items: graphContextItems })
@@ -27,6 +28,7 @@ const ContextMenus = () => {
     setContext({ visible: true, x, y, items: commentContextItems })
   }, [])
 
+  if (!context?.visible) return null
   return (
     <Dropdown
       visible={context.visible}

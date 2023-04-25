@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const Wrapper = styled('label')`
+export const Wrapper = styled('label')<{$fullWidth: boolean}>`
   display: flex;
   align-items: center;
   justify-content: space-between;

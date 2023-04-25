@@ -12,7 +12,7 @@ export const commentStyles = {
   width: 'max-content',
   maxWidth: '255px',
   boxSizing: 'border-box'
-}
+} as const
 
 export const commentSelectedClass = css`
   border-color: var(--primary) !important;

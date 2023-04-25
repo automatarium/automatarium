@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom'
 
 import { Wrapper } from './buttonStyle'
+import React, { ReactNode } from 'react'
+
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  children?: ReactNode
+  icon?: JSX.Element
+  surface?: boolean
+  secondary?: boolean
+}
 
 const Button = ({
   type = 'button',
@@ -9,13 +17,13 @@ const Button = ({
   secondary,
   surface,
   ...props
-}) => (
+}: ButtonProps) => (
   <Wrapper
     type={type}
     $icon={icon && !children}
     $secondary={secondary}
     $surface={surface}
-    as={props.href ? 'a' : (props.to ? Link : 'button')}
+    as={'href' in props ? 'a' : ('to' in props ? Link : 'button')}
     {...props}
   >
     {icon}

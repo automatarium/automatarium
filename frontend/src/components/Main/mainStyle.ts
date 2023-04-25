@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const MainContainer = styled('main')`
+export const MainContainer = styled('main')<{$wide: boolean, $fullWidth: boolean}>`
   max-width: 600px;
   width: 100%;
   padding: 1em 2em;

@@ -1,4 +1,6 @@
-const graphContextItems = [
+import { ContextItems } from './contextItem'
+
+const graphContextItems: ContextItems = [
   {
     label: 'Add comment',
     action: 'CREATE_COMMENT'

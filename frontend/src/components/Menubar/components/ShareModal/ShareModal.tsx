@@ -2,8 +2,13 @@ import { useCallback, useState } from 'react'
 
 import { Button, Modal, Input } from '/src/components'
 import config from '/src/config'
+import { ModalProps } from '/src/components/Modal/Modal'
 
-const ShareModal = ({ projectId, ...props }) => {
+interface ShareModalProps extends ModalProps {
+  projectId: string
+}
+
+const ShareModal = ({ projectId, ...props }: ShareModalProps) => {
   const [copied, setCopied] = useState(false)
 
   const shareUrl = `${config.baseUrl}/share/${projectId}`

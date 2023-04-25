@@ -1,4 +1,6 @@
-const stateContextItems = [
+import { ContextItems } from './contextItem'
+
+const stateContextItems: ContextItems = [
   {
     label: 'Set as initial',
     action: 'SET_STATE_INITIAL'

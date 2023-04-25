@@ -1,6 +1,7 @@
 import { APP_VERSION } from '/src/config/projects'
+import { ContextItems } from '/src/components/ContextMenus/contextItem'
 
-const menus = [
+const menus: ContextItems = [
   {
     label: 'File',
     items: [
