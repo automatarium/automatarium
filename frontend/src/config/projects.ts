@@ -1,6 +1,6 @@
 import packageConfig from '../../package.json'
-import { COLOR_KEY } from '/src/config/colors'
-import { ProjectType } from '/src/types/ProjectTypes'
+import { COLOR_KEY } from './colors'
+import { ProjectType } from '../types/ProjectTypes'
 
 export const SCHEMA_VERSION = packageConfig.schemaVersion
 export const APP_VERSION = packageConfig.version

@@ -1,6 +1,6 @@
 import { xml2json } from 'xml-js'
 
-import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config/projects'
+import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config'
 import {
   ProjectType,
   Project,
