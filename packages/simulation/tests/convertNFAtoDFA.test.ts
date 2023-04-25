@@ -65,7 +65,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph.transitions[2].to).toBe(2)
   })
   test('Graph should be converted correctly to DFA when initial state is not at the start', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertInitialNotAtStart as any) as any) as any)
+    const graph = convertToDFA(convertInitialNotAtStart as FSAProjectGraph)
     // Initial state should be q0
     expect(graph.initialState).toBe(0)
     // They would be 3 if they got returned as a DFA rather than 4 as an NFA

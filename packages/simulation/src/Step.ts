@@ -12,7 +12,7 @@ export class GraphStepper<S extends State, T extends BaseAutomataTransition> {
     const frontierCopy = this.frontier.slice()
     this.frontier = []
     while (frontierCopy.length > 0) {
-      const node = frontierCopy.shift()!
+      const node = frontierCopy.shift()
       for (const successor of this.graph.getSuccessors(node)) {
         this.frontier.push(successor)
       }

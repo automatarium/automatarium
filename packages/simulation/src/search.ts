@@ -15,7 +15,7 @@ export const breadthFirstSearch = <S extends State, T extends BaseAutomataTransi
 
   while (!frontier.isEmpty()) {
     // Bang is necessary because TS doesn't understand that the frontier is not empty here
-    node = frontier.remove()!
+    node = frontier.remove()
     if (graph.isFinalState(node)) {
       return node
     }
