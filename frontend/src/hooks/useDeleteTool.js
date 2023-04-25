@@ -28,7 +28,7 @@ const useDeleteTool = () => {
   })
 
   // On mouse up deletes the previously selected state
-  useEvent('state:mouseup', e => {
+  useEvent('state:mouseup', () => {
     if (tool === 'delete') {
       removeStates(selectedStates)
       selectNone()
@@ -45,7 +45,7 @@ const useDeleteTool = () => {
   })
 
   // On mouseup deletes the previously selected (mousedown) transition
-  useEvent('transition:mouseup', e => {
+  useEvent('transition:mouseup', () => {
     if (tool === 'delete') {
       removeTransitions(selectedTransitions)
       selectNone()
@@ -58,7 +58,7 @@ const useDeleteTool = () => {
     if (tool === 'delete') setSelectedComments(selectedCommentIDs)
   })
 
-  useEvent('comment:mouseup', e => {
+  useEvent('comment:mouseup', () => {
     if (tool === 'delete') {
       removeComments(selectedComments)
       selectNone()

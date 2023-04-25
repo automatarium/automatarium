@@ -1,46 +1,41 @@
 import {
   AutomataState,
   BaseAutomataTransition, FSAAutomataTransition, FSAProjectGraph, PDAAutomataTransition, PDAProjectGraph,
-  ProjectGraph, ProjectType, TMAutomataTransition, TMProjectGraph
+  ProjectGraph, TMAutomataTransition, TMProjectGraph
 } from 'frontend/src/types/ProjectTypes'
 import { expandReadSymbols } from './parseGraph'
-import { Graph, Node, State } from './interfaces/graph'
+import { Node } from './interfaces/graph'
 import { PDAGraph, PDAState } from './PDASearch'
 import { FSAGraph, FSAState } from './FSASearch'
 import { TMGraph, TMState } from './TMSearch'
 import { Tape } from './graph'
 import { GraphStepper } from './Step'
 
-export interface StateMapping {
-  'FSA': FSAState
-  'PDA': PDAState
-  'TM': TMState
-}
+/**
+ * Utility type for mapping a ProjectGraph to something else.
+ * This is needed because normal graph mapping just produced a union which meant the type inference only
+ * produced a union instead of a certain type.
+ * e.g. buildProblem({} as TMProjectGraph, '') would be TMGraph | PDAGraph | FSAGraph instead of TMGraph.
+ * Hopefully this problem is fixed in future typescript versions
+ */
+type GraphMapper<P extends ProjectGraph, TM, PDA, FSA> =
+  P extends TMProjectGraph ? TM :
+    P extends PDAProjectGraph ? PDA :
+      FSA
 
 /**
- * Maps a project type to the transitions that the graph uses.
- * Used in generic function signatures
+ * Mapping of frontend graph -> simulator graph
  */
-export interface TransitionMapping {
-  'FSA': FSAAutomataTransition
-  'PDA': PDAAutomataTransition
-  'TM': TMAutomataTransition
-}
-
+export type GraphMapping<P extends ProjectGraph> = GraphMapper<P, TMGraph, PDAGraph, FSAGraph>
 /**
- * Maps a project type to the full project type.
- * Used by generics for easier restricting (Typescript fails in some situations so we need to do this to help it)
+ * Mapping of frontend graph -> simulator state
  */
-export interface ProjectGraphMapping {
-  'FSA': FSAProjectGraph
-  'PDA': PDAProjectGraph
-  'TM': TMProjectGraph
-}
-
+export type StateMapping<P extends ProjectGraph> = GraphMapper<P, TMState, PDAState, FSAState>
 /**
- * A project restricted to a certain graph
+ * Mapping of frontend graph -> its transition type.
  */
-export type RestrictedProject<P extends ProjectType> = ProjectGraphMapping[P] & {projectType: P}
+export type TransitionMapping<P extends ProjectGraph> =
+  GraphMapper<P, TMAutomataTransition, PDAAutomataTransition, FSAAutomataTransition>
 
 /**
  * Expands the read symbols in a list of transitions so that they can be used by the simulator
@@ -75,28 +70,28 @@ export const newTape = (input: string): Tape => ({ pointer: 0, trace: input ? in
 /**
  * Builds the graph into a problem graph so that it can be simulated
  */
-export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>, input: string): Graph<StateMapping[P], TransitionMapping[P]> | null => {
-  // Find what constructors we need to use
-  let StateType: new(id: number, isFinal: boolean, ...args: any) => State
-  // let GraphType: new(initialNode: Node<S>, states: S[], transitions: T[]) => Graph<S, T>
-  let GraphType: any
+export function buildProblem <M extends ProjectGraph> (graph: M, input: string): GraphMapping<M> | null {
+  // Make some type aliases
+  type S = StateMapping<M>
+  type T = TransitionMapping<M>
+
+  let StateType: new(id: number, isFinal: boolean, read?: null, remaining?: string) => S
+  let GraphType: new(initial: Node<S>, states: S[], transitions: T[]) => GraphMapping<M>
+  // Find which constructor is needed.
+  // Due to typescript weirdness this needs to be done like this (Hopefully can be changed in future)
   switch (graph.projectType) {
     case 'FSA':
-      StateType = FSAState
-      GraphType = FSAGraph
+      StateType = FSAState as typeof StateType
+      GraphType = FSAGraph as typeof GraphType
       break
     case 'PDA':
-      StateType = PDAState
-      GraphType = PDAGraph
+      StateType = PDAState as typeof StateType
+      GraphType = PDAGraph as typeof GraphType
       break
     case 'TM':
-      StateType = TMState
-      GraphType = TMGraph
+      StateType = TMState as typeof StateType
+      GraphType = TMGraph as typeof GraphType
       break
-    default:
-      // This occured during testing, so I have it here to help in future
-      console.log(graph)
-      throw new Error(`${graph.projectType} is invalid`)
   }
 
   const initialState = graph.states.find(s => s.id === graph.initialState)
@@ -105,25 +100,31 @@ export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>,
   }
 
   const initialNode = new Node(graph.projectType === 'TM'
-    ? new StateType(initialState.id, initialState.isFinal, newTape(input))
+    ? new TMState(initialState.id, initialState.isFinal, newTape(input))
     : new StateType(initialState.id, initialState.isFinal, null, input)
-  )
+  ) as Node<S>
 
   const states = graph.states.map(
-    (state) => new StateType(state.id, state.isFinal)
+    state => new StateType(state.id, state.isFinal)
   )
 
   return new GraphType(
     initialNode,
     states,
     // Only FSA and PDA graphs need to have transitions expanded
-    // This should've been done by the frontend but we do it here just encase
-    (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions))
+    // This should've been done by the frontend, but we do it here just encase
+    (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions)) as T[]
   )
 }
 
-export const graphStepper = <P extends ('FSA' | 'PDA')>(graph: RestrictedProject<P>, input: string): GraphStepper<StateMapping[P], TransitionMapping[P]> | null => {
+/**
+ * Creates a GraphStepper for stepping through how a frontend graph simulates an input
+ * @see GraphStepper
+ */
+export const graphStepper = <P extends FSAProjectGraph | PDAProjectGraph>(graph: P, input: string) => {
   const problem = buildProblem(graph, input)
   if (!problem) return null
-  return new GraphStepper(problem)
+  // We know that problem is PDAGraph | FSAGraph so this is safe
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return new GraphStepper<StateMapping<P>, TransitionMapping<P>>(problem as any)
 }

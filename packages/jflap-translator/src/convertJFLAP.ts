@@ -1,4 +1,4 @@
-import { xml2json } from 'xml-js'
+import { ElementCompact, xml2js } from 'xml-js'
 
 import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config/projects'
 import {
@@ -16,13 +16,12 @@ const PROJECT_TYPE_MAP: Record<string, ProjectType> = {
 
 // Convert JFLAP XML to Automatarium format
 export const convertJFLAPXML = (xml: string): Project => {
-  const json = xml2json(xml, { compact: true, ignoreComment: true, ignoreDeclaration: true })
-  const jflapProject = JSON.parse(json)
+  const jflapProject = xml2js(xml, { compact: true, ignoreComment: true, ignoreDeclaration: true })
   return convertJFLAPProject(jflapProject)
 }
 
 // Convert JFLAP JSON to Automatarium format
-export const convertJFLAPProject = (jflapProject: any): Project => {
+export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
   // Pull out necessary values from jflap project
   let {
     structure: {
@@ -38,7 +37,7 @@ export const convertJFLAPProject = (jflapProject: any): Project => {
   }
 
   // Convert attributes to arrays if they are not already
-  const toArray = (x: any[]) => x === undefined ? [] : (Array.isArray(x) ? x : [x])
+  const toArray = <T>(x: T[]): T[] => x === undefined ? [] : (Array.isArray(x) ? x : [x])
   states = toArray(states)
   transitions = toArray(transitions)
   notes = toArray(notes)

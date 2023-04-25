@@ -22,7 +22,7 @@ const BottomPanel = () => {
     setActivePanel(activePanel?.value === panel.value ? undefined : panel)
   }, [activePanel])
 
-  useEvent('bottomPanel:close', e => {
+  useEvent('bottomPanel:close', () => {
     setActivePanel(undefined)
   }, [activePanel])
 

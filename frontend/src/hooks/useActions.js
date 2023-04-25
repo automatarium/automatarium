@@ -82,7 +82,7 @@ const useActions = (registerHotkeys = false) => {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
         // Pull project state
-        const { project: { _id, userid, ...project } } = useProjectStore.getState()
+        const project = useProjectStore.getState()
 
         // Create a download link and use it
         const a = document.createElement('a')

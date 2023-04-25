@@ -66,9 +66,9 @@ const SteppingLab = () => {
           />
         </ButtonRow>
         <ButtonRow>
-          <Button icon={<Snowflake size={23} />} onClick={() => {}} />
-          <Button icon={<Flame size={23} />} onClick={() => {}} />
-          <Button icon={<XCircle size={23} />} onClick={() => {}} />
+          <Button icon={<Snowflake size={23} />}/>
+          <Button icon={<Flame size={23} />} />
+          <Button icon={<XCircle size={23} />}/>
         </ButtonRow>
       </Wrapper>
     </>
