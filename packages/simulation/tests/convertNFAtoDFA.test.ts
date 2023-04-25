@@ -52,7 +52,7 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     expect(graph).toEqual(convertSimpleConversionDFA)
   })
   test('Graph should be converted correctly to DFA when initial state is not at the start', () => {
-    const graph = reorderStates(convertNFAtoDFA(reorderStates(convertInitialNotAtStart as any) as any) as any)
+    const graph = convertToDFA(convertInitialNotAtStart as FSAProjectGraph)
     expect(graph).toEqual(convertInitialNotAtStartDFA)
   })
   test('Graph should be converted correctly to DFA with multiple final states', () => {
