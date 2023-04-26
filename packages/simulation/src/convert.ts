@@ -225,7 +225,7 @@ export function createSymbolFromEveryState (initialTransitionTable: TransitionTa
             const symbolFound = initialTransitionTable[stateID].some(([, readSymbol]) => readSymbol === symbol)
             // If symbol isn't found then transition to the defined trap state
             if (!symbolFound) {
-              const existingTransition = initialTransitionTable[stateID].find(([toStateID, readSymbol]) => readSymbol === symbol)
+              const existingTransition = initialTransitionTable[stateID].find(([, readSymbol]) => readSymbol === symbol)
               if (!existingTransition) {
                 initialTransitionTable[stateID].push([nextAvailableStateID, symbol])
               } else {
@@ -239,7 +239,7 @@ export function createSymbolFromEveryState (initialTransitionTable: TransitionTa
             const symbolFound = initialTransitionTable[stateID].some(([, readSymbol]) => readSymbol === symbol)
             if (!symbolFound) {
               // Check if a transition already exists for this symbol
-              const existingTransition = initialTransitionTable[stateID].find(([toStateID, readSymbol]) => readSymbol === symbol)
+              const existingTransition = initialTransitionTable[stateID].find(([, readSymbol]) => readSymbol === symbol)
               // If not, then make a transition to the next state for this symbol for the current state
               if (!existingTransition) {
                 initialTransitionTable[stateID].push([nextAvailableStateID, symbol])
@@ -528,8 +528,7 @@ export const convertNFAtoDFA = (nfaGraph: FSAProjectGraph): FSAProjectGraph => {
       // Remove unreachable states from this new dfaGraph
       dfaGraph = removeUnreachableStates(dfaGraph)
       // Finally copy over the required elements from nfaGraph and return the final dfaGraph
-      const { initialState, states, transitions, ...dfaGraphCopy } = nfaGraph
-      return { ...dfaGraph, ...dfaGraphCopy }
+      return dfaGraph
     }
   }
 }

@@ -1,7 +1,7 @@
 import { ReadSymbol, StateID } from './graph'
 import closureWithPredicate from './closureWithPredicate'
-import { BaseAutomataTransition, ProjectType } from 'frontend/src/types/ProjectTypes'
-import { RestrictedProject, TransitionMapping } from './utils'
+import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { TransitionMapping } from './utils'
 
 export type ValidTransition<T extends BaseAutomataTransition> = { transition: T, trace: { to: number, read: string }[]}
 
@@ -14,7 +14,7 @@ export type ValidTransition<T extends BaseAutomataTransition> = { transition: T,
  * @param nextRead  - The input symbol to be read next
  * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
  */
-export const validTransitions = <P extends ProjectType, T extends TransitionMapping[P]>(graph: RestrictedProject<P>, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition<T>[] => {
+export const validTransitions = <P extends ProjectGraph, T extends TransitionMapping<P>>(graph: P, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition<T>[] => {
   // Compute lambda closure (states accessible without consuming input)
   const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
 

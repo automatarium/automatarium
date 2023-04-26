@@ -97,7 +97,7 @@ const useActions = (registerHotkeys = false) => {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
         // Pull project state
-        const { project: { _id, ...project } } = useProjectStore.getState()
+        const project = useProjectStore.getState()
 
         // Create a download link and use it
         const a = document.createElement('a')
@@ -424,7 +424,6 @@ const useActions = (registerHotkeys = false) => {
     },
     CREATE_STATE: {
       handler: (e: MouseEvent) => {
-        console.log(e)
         const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
         createState({ x: viewX, y: viewY })
         commit()

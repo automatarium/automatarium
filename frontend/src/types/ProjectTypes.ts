@@ -160,6 +160,7 @@ export type CopyData = {
  * Small helper function to change the value of a type at block level.
  * Use this with care since it does override the type system.
  */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 export function assertType<T> (value: unknown): asserts value is T {
 
 }

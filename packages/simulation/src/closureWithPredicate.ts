@@ -1,6 +1,6 @@
 import { StateID } from './graph'
-import { assertType, BaseAutomataTransition, ProjectType } from 'frontend/src/types/ProjectTypes'
-import { RestrictedProject, TransitionMapping } from './utils'
+import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { TransitionMapping } from './utils'
 
 export type ClosureNode<T extends BaseAutomataTransition> = { transition: T, parents: T[] }
 export type ClosureWithPredicateFn<T> = (transition: T) => boolean
@@ -31,16 +31,13 @@ type GraphClosure<T> = Set<{state: StateID, transitions: T[]}>
  * closureWithPredicate(graph, 0, transition => transition.read.length === 0)
  * ```
  */
-export const closureWithPredicate = <P extends ProjectType, T extends TransitionMapping[P]>(graph: RestrictedProject<P>, currentStateID: StateID, predicate: ClosureWithPredicateFn<T>): GraphClosure<T> => {
+export const closureWithPredicate = <P extends ProjectGraph, T extends TransitionMapping<P>>(graph: P, currentStateID: StateID, predicate: ClosureWithPredicateFn<T>): GraphClosure<T> => {
   // Setup flood fill sets
   type CNode = ClosureNode<T>
   const closed: CNode[] = []
-  // Typescript doesn't seem to properly carry this info
-  // TODO: Refine the generic type
-  assertType<T[]>(graph.transitions)
 
   const open = graph.transitions
-    .filter(tr => tr.from === currentStateID && predicate(tr))
+    .filter((tr: T) => tr.from === currentStateID && predicate(tr))
     .map(transition => ({ transition, parents: [] } as CNode))
 
   // Perform flood fill until fully discovered
@@ -50,10 +47,10 @@ export const closureWithPredicate = <P extends ProjectType, T extends Transition
     closed.push(node)
 
     // Add neighbouring transitions
-    for (const neighbour of graph.transitions.filter(tr => tr.from === node.transition.to && predicate(tr))) {
+    for (const neighbour of graph.transitions.filter((tr: T) => tr.from === node.transition.to && predicate(tr))) {
       if (![...closed, ...open].map(({ transition }) => transition.id).includes(neighbour.id)) {
         // Add neighbour to open set and record the path to it in parents
-        open.push({ transition: neighbour, parents: [...node.parents, node.transition] })
+        open.push({ transition: neighbour as T, parents: [...node.parents, node.transition] })
       }
     }
   }

@@ -1,6 +1,6 @@
-const env = process.env.NODE_ENV || 'development'
+import firebaseConfigDev from './firebase-config-dev.json'
 
-const firebaseConfigDev = require('./firebase-config-dev.json')
+const env = process.env.NODE_ENV || 'development'
 
 const config = {
   development: {
