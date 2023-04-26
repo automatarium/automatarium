@@ -10,7 +10,6 @@ import { usePreferencesStore, useProjectStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
 
-// @ts-ignore
 import favicon from 'bundle-text:/public/logo.svg'
 
 // Set up goober to use React

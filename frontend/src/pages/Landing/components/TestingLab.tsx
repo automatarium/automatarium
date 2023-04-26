@@ -5,18 +5,19 @@ import { simulateFSA } from '@automatarium/simulation'
 import { Input, Button, TracePreview } from '/src/components'
 
 import { Wrapper, StepButtons, TraceConsole } from './testingLabStyle'
+import { FSAExecutionResult } from '@automatarium/simulation/src/graph'
 
 // Example automaton graph
 const graph = {
   projectType: 'FSA',
   states: [
-    { id: 0, isFinal: false },
-    { id: 1, isFinal: false },
-    { id: 2, isFinal: true }
+    { id: 0, isFinal: false, x: 0, y: 0 },
+    { id: 1, isFinal: false, x: 0, y: 0 },
+    { id: 2, isFinal: true, x: 0, y: 0 }
   ],
   transitions: [
-    { id: 0, from: 0, to: 1, read: 'a' },
-    { id: 1, from: 1, to: 2, read: 'b' }
+    { id: 0, from: 0, to: 1, read: 'a', x: 0, y: 0 },
+    { id: 1, from: 1, to: 2, read: 'b', x: 0, y: 0 }
   ],
   initialState: 0
 }
@@ -24,7 +25,7 @@ const graph = {
 const TestingLab = () => {
   const [input, setInput] = useState('ab')
   const [idx, setIdx] = useState(0)
-  const [result, setResult] = useState()
+  const [result, setResult] = useState<FSAExecutionResult & {transitionCount: number}>()
 
   const simulateGraph = useCallback(() => {
     const { accepted, trace, remaining } = simulateFSA(graph, input ?? '')
@@ -78,7 +79,7 @@ const TestingLab = () => {
         onChange={e => {
           setInput(e.target.value)
           setIdx(0)
-          setResult()
+          setResult(undefined)
         }}
         value={input}
         placeholder="Enter a value to test"
@@ -121,7 +122,7 @@ const TestingLab = () => {
 
       {trace && (
         <div>
-          <TracePreview trace={result} step={idx} />
+          <TracePreview result={result} step={idx} states={graph.states} />
           <TraceConsole><pre>{trace}</pre></TraceConsole>
         </div>
       )}

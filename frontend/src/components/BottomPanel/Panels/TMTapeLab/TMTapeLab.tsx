@@ -5,6 +5,7 @@ import { Wrapper } from './tmTapeLabStyle'
 
 const TMTapeLab = () => {
   const traceIDx = useTMSimResultStore(s => s.traceIDx)
+
   const simResults = useTMSimResultStore(s => s.simResults)
 
   return (

@@ -24,14 +24,13 @@ import {
   FSAExecutionResult,
   FSAExecutionTrace,
   PDAExecutionResult,
-  PDAExecutionTrace,
-  TMExecutionResult
+  PDAExecutionTrace
 } from '@automatarium/simulation/src/graph'
 import { assertType } from '/src/types/ProjectTypes'
 
-export const ThemeContext = createContext({})
+type SimulationResult = ExecutionResult & {transitionCount: number}
 
-type SimulationResult = (FSAExecutionResult | PDAExecutionResult | TMExecutionResult) & {transitionCount: number}
+export const ThemeContext = createContext({})
 
 const TestingLab = () => {
   const [simulationResult, setSimulationResult] = useState<SimulationResult | undefined>()
@@ -59,7 +58,11 @@ const TestingLab = () => {
    * The simulation function to use depends on the project name
    */
   const runSimulation = (input: string): SimulationResult => {
-    const transitionCount = (res: ExecutionResult) => Math.max(1, res.trace.length - (res.accepted ? 1 : 0))
+    // Find how many transitions can be shown
+    // TODO: Find reasoning behind the magical -1
+    const transitionCount = (res: ExecutionResult) =>
+      Math.max(1, res.trace.length) - (res.accepted ? 1 : graph.projectType === 'TM' ? 1 : 0)
+
     if (graph.projectType === 'TM') {
       const result = simulateTM(graph, input)
       return {
@@ -71,7 +74,6 @@ const TestingLab = () => {
             graph.projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
-      assertType<FSAExecutionTrace[] | PDAExecutionTrace[]>(result.trace)
       // Formats a symbol. Makes an empty symbol become a lambda
       const formatSymbol = (char: string): string => char === '' ? 'λ' : char
       return {
@@ -113,6 +115,9 @@ const TestingLab = () => {
     return result
   }, [graph, traceInput])
 
+  // Determine last position allowed
+  const lastTraceIdx = simulationResult?.transitionCount
+
   const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
 
   const traceOutput = useMemo(() => {
@@ -120,7 +125,7 @@ const TestingLab = () => {
     if (!simulationResult || graph.projectType === 'TM') { return '' }
     assertType<(FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}>(simulationResult)
 
-    const { trace, accepted, transitionCount } = simulationResult
+    const { trace, accepted } = simulationResult
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
       if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
@@ -143,7 +148,7 @@ const TestingLab = () => {
       : transitions
 
     // Add 'REJECTED'/'ACCEPTED' label
-    return `${transitionsWithRejected.join('\n')}${(traceIdx === transitionCount) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
 
   useEffect(() => {
@@ -188,8 +193,6 @@ const TestingLab = () => {
   // :^)
   const dibEgg = useDibEgg()
 
-  // Determine input position
-  const lastTraceIdx = (simulationResult?.trace?.length ?? 0) - (projectType === 'TM' ? 1 : 0)
   return (
     <>
       {warnings.length > 0 && <>
@@ -251,12 +254,12 @@ const TestingLab = () => {
             onClick={() => {
               // Increment tracer index
               const result = simulationResult ?? simulateGraph()
-              setTraceIdx(result.trace.length - (result.accepted ? 1 : 0))
+              setTraceIdx(lastTraceIdx)
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-        {traceOutput && projectType !== 'TM' && <div>
-          <TracePreview trace={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states} />
+        {traceOutput && graph.projectType !== 'TM' && <div>
+          <TracePreview result={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states}/>
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
         <Preference

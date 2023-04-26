@@ -1,12 +1,13 @@
 import { create } from 'zustand'
 import { Node, State } from '@automatarium/simulation'
+import { AutomataState } from '/src/types/ProjectTypes'
 
 interface SteppingStore<S extends State> {
   steppedStates: Node<S>[]
   setSteppedStates: (states: Node<S>[]) => void
 }
 
-const useSteppingStore = create<SteppingStore<any>>((set) => ({
+const useSteppingStore = create<SteppingStore<AutomataState>>((set) => ({
   steppedStates: [],
 
   /* Update graph step state */

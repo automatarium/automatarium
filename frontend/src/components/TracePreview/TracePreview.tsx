@@ -1,6 +1,10 @@
-import { Fragment, useRef, useState, useEffect } from 'react'
+import { Fragment, useRef, useState, useEffect, HTMLAttributes } from 'react'
 
 import { Wrapper, StyledState, StyledInitialArrow, StyledTransition } from './tracePreviewStyle'
+import {
+  ExecutionResult
+} from '@automatarium/simulation/src/graph'
+import { AutomataState } from '/src/types/ProjectTypes'
 
 const InitialArrow = () => (
   <StyledInitialArrow viewBox="0 0 14 32">
@@ -16,16 +20,16 @@ const Transition = ({ error }) => (
 )
 
 const State = ({ final, children }) => {
-  const textRef = useRef()
-  const [box, setBox] = useState({})
+  const textRef = useRef<SVGTextElement>()
+  const [box, setBox] = useState<DOMRect>()
 
   useEffect(() => setBox(textRef.current?.getBBox()), [textRef.current])
-
+  const width = Math.max(box?.width ?? 0, 32)
   return (
     <StyledState viewBox="0 0 32 32">
       <circle r="15" cx="50%" cy="50%" />
       {final && <circle r="12" cx="50%" cy="50%" />}
-      <svg preserveAspectRatio="xMinYMin" viewBox={`0 0 ${Math.max(box.width ?? 0, 32)} ${Math.max(box.width ?? 0, 32)}`} width="70%" x="15%" y="15%">
+      <svg preserveAspectRatio="xMinYMin" viewBox={`0 0 ${width} ${width}`} width="70%" x="15%" y="15%">
         <text
           ref={textRef}
           textAnchor="middle"
@@ -37,21 +41,28 @@ const State = ({ final, children }) => {
   )
 }
 
+interface TracePreviewProps extends HTMLAttributes<HTMLDivElement>{
+  result: ExecutionResult & {transitionCount: number}
+  step: number
+  states: AutomataState[]
+  statePrefix?: string
+}
+
 const TracePreview = ({
-  trace,
+  result,
   step,
   states,
   statePrefix = 'q',
   ...props
-}) => (
+}: TracePreviewProps) => (
   <Wrapper {...props}>
-    {trace.trace.slice(0, step + 1).map((item, i) => <Fragment key={i}>
+    {result.trace.slice(0, step + 1).map((item, i) => <Fragment key={i}>
       {item.read === null && i === 0 && <InitialArrow />}
-      <State final={i + 1 === trace.trace.length && trace.accepted}>
+      <State final={i + 1 === result.trace.length && result.accepted}>
         {states?.find(s => s.id === item.to)?.name ?? statePrefix + item.to}
       </State>
-      {((i < step || (!trace.accepted && trace.transitionCount === step)) && (trace.trace.length > 1 || !trace.accepted)) && <Transition
-        error={i + 1 === trace.trace.length}
+      {((i < step || (!result.accepted && result.transitionCount === step)) && (result.trace.length > 1 || !result.accepted)) && <Transition
+        error={i === result.transitionCount && !result.accepted}
       />}
     </Fragment>)}
   </Wrapper>

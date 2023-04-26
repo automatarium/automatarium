@@ -64,7 +64,7 @@ interface DropdownProps extends HTMLAttributes<HTMLDivElement> {
   visible?: boolean
   items?: ContextItems
   onClose?: () => void
-  getRef?: any
+  getRef?: (ref: HTMLDivElement) => void
 }
 
 const Dropdown = ({
