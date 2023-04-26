@@ -8,6 +8,7 @@ const useThumbnailStore = create()(persist(set => ({
     thumbnails: { ...state.thumbnails, [id]: thumbnail }
   })),
   removeThumbnail: id => set(state => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { [id]: removed, ...thumbnails } = state.thumbnails
     return { thumbnails }
   }),

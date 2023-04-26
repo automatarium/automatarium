@@ -1,37 +1,18 @@
-import { PDATransition, Stack } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
+import { Stack } from './graph'
+import { PDAAutomataTransition } from 'frontend/src/types/ProjectTypes'
 
 export class PDAState extends State {
   constructor (
-    _id: number,
-    _isFinal: boolean,
-    private _read: string | null = null,
-    private _remaining: string = '',
-    private _stack: Stack = [],
-    private _pop: string = '',
-    private _push: string = ''
+    id: number,
+    isFinal: boolean,
+    readonly read: string | null = null,
+    readonly remaining: string = '',
+    readonly stack: Stack = [],
+    readonly pop: string = '',
+    readonly push: string = ''
   ) {
-    super(_id, _isFinal)
-  }
-
-  get read () {
-    return this._read
-  }
-
-  get remaining () {
-    return this._remaining
-  }
-
-  get stack () {
-    return this._stack
-  }
-
-  get pop () {
-    return this._pop
-  }
-
-  get push () {
-    return this._push
+    super(id, isFinal)
   }
 
   key () {
@@ -42,7 +23,7 @@ export class PDAState extends State {
   }
 }
 
-export class PDAGraph extends Graph<PDAState, PDATransition> {
+export class PDAGraph extends Graph<PDAState, PDAAutomataTransition> {
   public isFinalState (node: Node<PDAState>) {
     return node.state.isFinal &&
                node.state.remaining.length === 0 &&
@@ -51,7 +32,7 @@ export class PDAGraph extends Graph<PDAState, PDATransition> {
 
   public getSuccessors (node: Node<PDAState>) {
     const transitions = this.transitions.filter(
-      (transition) => transition.from === node.state.id
+      transition => transition.from === node.state.id
     )
     const successors: Node<PDAState>[] = []
 

@@ -9,6 +9,7 @@ import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
+import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 
 const isWindows = navigator.platform?.match(/Win/)
 export const formatHotkey = ({ key, meta, alt, shift, showCtrl = isWindows }) => [
@@ -46,7 +47,8 @@ const useActions = (registerHotkeys = false) => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
-  const updateProject = useProjectStore(s => s.update)
+  const updateGraph = useProjectStore(s => s.updateGraph)
+  const projectType = useProjectStore(s => s.project.config.type)
 
   const navigate = useNavigate()
 
@@ -80,7 +82,7 @@ const useActions = (registerHotkeys = false) => {
       hotkey: { key: 's', shift: true, meta: true },
       handler: () => {
         // Pull project state
-        const { project: { _id, userid, ...project } } = useProjectStore.getState()
+        const project = useProjectStore.getState()
 
         // Create a download link and use it
         const a = document.createElement('a')
@@ -297,7 +299,15 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      // handler: () => console.log('Convert to DFA'),
+      disabled: () => projectType !== 'FSA',
+      handler: () => {
+        try {
+          updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project))))
+          commit()
+        } catch (error) {
+          alert(error.message)
+        }
+      }
     },
     MINIMIZE_DFA: {
       // handler: () => console.log('Minimize DFA'),
@@ -454,8 +464,9 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     REORDER_GRAPH: {
+      disabled: () => project.initialState === null,
       handler: () => {
-        updateProject(reorderStates(project))
+        updateGraph(reorderStates(project))
         commit()
       }
     }

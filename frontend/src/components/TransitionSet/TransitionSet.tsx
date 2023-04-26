@@ -7,7 +7,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
 import { pathStyles, pathSelectedClass } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
-import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -16,10 +16,13 @@ import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
  * - FSA: read
  */
 const makeTransitionText = (type: ProjectType, t: PositionedTransition): string => {
+  // Since the type can't be narrowed, we need to narrow ourselves inside the blocks
   switch (type) {
     case 'TM':
+      assertType<TMAutomataTransition>(t)
       return `${t.read || 'λ'},${t.write || 'λ'};${t.direction || 'λ'}`
     case 'PDA':
+      assertType<PDAAutomataTransition>(t)
       return `${t.read || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
     case 'FSA':
       return t.read || 'λ'
@@ -113,7 +116,6 @@ const calcPoint = (a: Coordinate, b: Coordinate, c: Coordinate, t: number): Coor
 }
 
 const Transition = ({
-  id,
   transitions = [],
   from,
   to,

@@ -1,11 +1,12 @@
-import { TMTransition, Tape } from './graph'
+import { Tape } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
+import { TMAutomataTransition } from 'frontend/src/types/ProjectTypes'
 
 export class TMState extends State {
   constructor (
     id: number,
     isFinal: boolean,
-    public tape: Tape
+    public tape?: Tape
   ) {
     super(id, isFinal)
   }
@@ -16,7 +17,7 @@ export class TMState extends State {
   }
 }
 
-export class TMGraph extends Graph<TMState, TMTransition> {
+export class TMGraph extends Graph<TMState, TMAutomataTransition> {
   public isFinalState (node: Node<TMState>) {
     return (
       node.state.isFinal
@@ -60,7 +61,7 @@ export class TMGraph extends Graph<TMState, TMTransition> {
     return successors
   }
 
-  private progressTape (node: Node<TMState>, transition: TMTransition) {
+  private progressTape (node: Node<TMState>, transition: TMAutomataTransition) {
     const tapeTrace = node.state.tape.trace
     const write = transition.write
     const direction = transition.direction

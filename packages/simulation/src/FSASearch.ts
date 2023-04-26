@@ -1,22 +1,13 @@
-import { FSATransition } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
-
+import { FSAAutomataTransition } from 'frontend/src/types/ProjectTypes'
 export class FSAState extends State {
   constructor (
-    _id: number,
-    _isFinal: boolean,
-    private _read: string | null = null,
-    private _remaining: string = ''
+    id: number,
+    isFinal: boolean,
+    readonly read: string | null = null,
+    readonly remaining: string = ''
   ) {
-    super(_id, _isFinal)
-  }
-
-  get read () {
-    return this._read
-  }
-
-  get remaining () {
-    return this._remaining
+    super(id, isFinal)
   }
 
   key () {
@@ -24,7 +15,7 @@ export class FSAState extends State {
   }
 }
 
-export class FSAGraph extends Graph<FSAState, FSATransition> {
+export class FSAGraph extends Graph<FSAState, FSAAutomataTransition> {
   public isFinalState (node: Node<FSAState>) {
     return node.state.isFinal && node.state.remaining.length === 0
   }
