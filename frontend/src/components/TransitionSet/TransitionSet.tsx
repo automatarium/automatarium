@@ -127,9 +127,6 @@ const Transition = ({
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
 
-  // Test if the transitions go in both directions. The transitions are sorted by direction, so we only need to check
-  // if first and last transition aren't in the same direction
-
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
   const bendValue = {
@@ -143,7 +140,6 @@ const Transition = ({
   const degrees = Math.acos(normal.x) * RAD2DEG - 90
   const isReflexive = from.x === to.x && from.y === to.y
   // Generate a unique id for this path
-  // -- used to place the text on the same path
   const pathID = `${from.x}${from.y}${to.x}${to.y}`
   // Calculate the midpoint of the curve which is where we will place the text
   const midPoint = calcPoint(edges[0], control, edges[1], 0.5)
