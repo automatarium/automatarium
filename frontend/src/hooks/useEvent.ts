@@ -45,7 +45,6 @@ export interface CustomEvents {
  * The mapping of all available events.
  * It is a combination of our custom events along with DOM events
  */
-// eslint-disable-next-line no-undef
 export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} & DocumentEventMap & WindowEventMap
 
 /**
@@ -55,7 +54,6 @@ type EventHandler<T extends keyof Events> = (e: Events[T]) => void
 
 interface EventOptions {
   target?: Document | Window,
-  // eslint-disable-next-line no-undef
   options?: boolean | AddEventListenerOptions
 }
 

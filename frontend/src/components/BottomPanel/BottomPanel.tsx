@@ -20,8 +20,7 @@ const panels = [
 ]
 
 const BottomPanel = () => {
-  // eslint-disable-next-line no-self-compare
-  const [activePanel, setActivePanel] = useState<Panel | undefined>()
+  const [activePanel, setActivePanel] = useState<Panel>()
 
   // Open panel via event
   useEvent('bottomPanel:open', e => {

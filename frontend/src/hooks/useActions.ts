@@ -496,8 +496,8 @@ const useActions = (registerHotkeys = false) => {
       const handleKeyDown = (e: KeyboardEvent) => {
         // Hotkeys are disabled if an input is focused
         if (haveInputFocused(e)) return
-
         // Check hotkeys
+
         for (const action of Object.values(actions)) {
           // Skip if no hotkey
           if (!action.hotkey) { continue }
@@ -514,11 +514,12 @@ const useActions = (registerHotkeys = false) => {
             if (!(letterMatch || digitMatch || keyMatch)) { return false }
 
             // Check augmenting keys
-            if (hotkey.meta !== (e.metaKey || e.ctrlKey)) { return false }
-            if (hotkey.alt !== e.altKey) { return false }
-            return hotkey.shift === e.shiftKey
+            // The !! is to force the type to be a boolean so that the equality check passess correctly
+            // i.e. Without it, if meta is undefined then it wont equal false
+            if (!!hotkey.meta !== (e.metaKey || e.ctrlKey)) { return false }
+            if (!!hotkey.alt !== e.altKey) { return false }
+            return !!hotkey.shift === e.shiftKey
           })
-
           // Prevent default and exec callback
           if (activeHotkey) {
             e.preventDefault()

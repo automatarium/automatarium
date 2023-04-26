@@ -46,7 +46,6 @@ const Info = () => {
         }
       }
     }
-    console.log(map)
     return map
   }, [states, alphabet, graph])
 
