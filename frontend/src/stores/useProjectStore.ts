@@ -95,7 +95,7 @@ interface ProjectStore {
   removeStates: (stateIDs: number[]) => void,
   removeTransitions: (transitionIDs: number[]) => void,
   removeComments: (commentIDs: number[]) => void,
-  updateConfig: (newConfig: ProjectConfig) => void,
+  updateConfig: (newConfig: Partial<ProjectConfig>) => void,
   /**
    * Returns just a copy of the project graph.
    * This expands transitions if needed
@@ -291,7 +291,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   // Change the config
-  updateConfig: (newConfig: ProjectConfig) => set(produce((state: ProjectStore) => {
+  updateConfig: newConfig => set(produce((state: ProjectStore) => {
     state.project.config = { ...state.project.config, ...newConfig }
     state.lastChangeDate = new Date().getTime()
   })),

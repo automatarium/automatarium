@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 import { forwardRef } from 'react'
 
-const Sidebar = styled('nav')`
+const Sidebar = styled('nav')<{$tools?: boolean}>`
   background-color: var(--toolbar);
   color: var(--white);
   display: flex;
@@ -16,7 +16,8 @@ const Sidebar = styled('nav')`
   `}
 `
 
-Sidebar.Button = styled('button', forwardRef)`
+// eslint-disable-next-line dot-notation
+Sidebar['Button'] = styled('button', forwardRef)<{$active: boolean}>`
   background: none;
   font: inherit;
   color: inherit;

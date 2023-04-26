@@ -38,7 +38,7 @@ export const StyledInitialArrow = styled('svg')`
   }
 `
 
-export const StyledTransition = styled('svg')`
+export const StyledTransition = styled('svg')<{$error?: boolean}>`
   height: 2rem;
   min-width: 1.6rem;
 

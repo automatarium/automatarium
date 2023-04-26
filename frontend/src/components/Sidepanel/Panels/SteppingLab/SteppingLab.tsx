@@ -12,6 +12,7 @@ import {
 
 import { graphStepper } from '@automatarium/simulation'
 import { useMemo, useState } from 'react'
+import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 
 // The initial states and project store calls, along with the display of the current input trace,
 // could be made its own component, and the Testing Lab could switch between the two using a
@@ -29,7 +30,7 @@ const SteppingLab = () => {
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
-    return graphStepper(graph, traceInput)
+    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph, traceInput)
   }, [graph, traceInput])
 
   const handleStep = (newFrontier) => {

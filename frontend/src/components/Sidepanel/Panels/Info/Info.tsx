@@ -5,6 +5,7 @@ import { useProjectStore } from '/src/stores'
 import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
+import { StateID } from '@automatarium/simulation/src/graph'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
@@ -22,31 +23,30 @@ const Info = () => {
   const alphabet = useMemo(() =>
     Array.from(new Set(graph.transitions
       .map(tr => tr.read)
-      .reduce((a, b) => [...a, ...b], [])
-      .sort()
+      .reduce((a, b) => [...a, ...b], [] as string[])
+      .sort() as string[]
     ))
   , [transitions])
 
   const transitionMap = useMemo(() => {
-    const map = {} // (ID, Symbol) -> ID[]
+    const map = new Map<[StateID, string], StateID[]>() // (ID, Symbol) -> ID[]
     for (const state of states ?? []) {
       for (const symbol of alphabet) {
         const transitions = validTransitions(graph, state.id, symbol)
         for (const { transition } of transitions) {
           // Record accessibility after transition
-          map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], transition.to]))
-
+          map.set([state.id, symbol], Array.from(new Set([...map.get([state.id, symbol]) ?? [], transition.to])))
           // Record accessibility of states indirectly accessible after transition via lambdas
           if (transition.read.length > 0) {
             const lambdaClosure = closureWithPredicate(graph, transition.to, tr => tr.read.length === 0)
             for (const { state } of lambdaClosure) {
-              map[[state.id, symbol]] = Array.from(new Set([...map[[state.id, symbol]] ?? [], state]))
+              map.set([state, symbol], Array.from(new Set([...map.get([state, symbol]) ?? [], state])))
             }
           }
         }
       }
     }
-
+    console.log(map)
     return map
   }, [states, alphabet, graph])
 
@@ -69,8 +69,8 @@ const Info = () => {
           {graph.states?.map(state => <tr key={state.id}>
             <th>{getStateName(state.id)}</th>
             {alphabet.map(symbol => <td key={symbol}>
-              {Object.entries(transitionMap)
-                .filter(([key]) => key.split(',')[0] === state.id.toString() && key.split(',')[1] === symbol)
+              {[...transitionMap.entries()]
+                .filter(([[stateID, read]]) => stateID === state.id && read === symbol)
                 .map(([, states]) => states.map(id => getStateName(id)).join(', '))[0] ?? '-'}
             </td>)}
           </tr>)}

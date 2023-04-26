@@ -15,6 +15,12 @@ export type Coordinate = {x: number, y: number}
  * Stores width/height of a 2D object
  */
 export type Size = {width: number, height: number}
+
+/**
+ * Different UI themes available. System just matches the users light/dark mode
+ */
+export type AutomatariumTheme = 'system' | 'light' | 'dark'
+
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum

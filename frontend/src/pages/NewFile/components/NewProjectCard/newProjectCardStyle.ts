@@ -40,7 +40,7 @@ export const CardContent = styled('div')`
   }
 `
 
-export const CardImage = styled('div')`
+export const CardImage = styled('div')<{theme: string, $disabled?: boolean}>`
   height: 100%;
   background: var(--grid-pattern${p => p.theme});
   background-size: 1.875em 1.875em;

@@ -123,6 +123,8 @@ export const buildProblem = <P extends ProjectType>(graph: RestrictedProject<P>,
 }
 
 export const graphStepper = <P extends ('FSA' | 'PDA')>(graph: RestrictedProject<P>, input: string): GraphStepper<StateMapping[P], TransitionMapping[P]> | null => {
+  // Just in case an assertion makes the type not be FSA/PDA
+  if (graph.projectType as string === 'TM') return null
   const problem = buildProblem(graph, input)
   if (!problem) return null
   return new GraphStepper(problem)

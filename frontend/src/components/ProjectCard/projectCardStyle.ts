@@ -23,7 +23,7 @@ export const CardContainer = styled('button')`
   }
 `
 
-export const CardImage = styled('div')`
+export const CardImage = styled('div')<{$image?: boolean}>`
   aspect-ratio: 1;
   border-radius: .6rem;
   display: flex;
@@ -31,10 +31,6 @@ export const CardImage = styled('div')`
   justify-content: center;
   position: relative;
   background: var(--grid-bg-light);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
 
   svg {
     width: 60%;

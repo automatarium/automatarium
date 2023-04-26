@@ -1,12 +1,13 @@
 import { forwardRef } from 'react'
 import { styled } from 'goober'
+import { Tool } from '/src/stores/useToolStore'
 
 export const Wrapper = styled('div', forwardRef)`
   flex: 1;
   position: relative;
 `
 
-export const Svg = styled('svg', forwardRef)`
+export const Svg = styled('svg', forwardRef)<{$showGrid: boolean, $tool?: Tool}>`
   position: absolute;
   inset: 0;
   display: block;

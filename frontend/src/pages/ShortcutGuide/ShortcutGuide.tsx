@@ -111,7 +111,7 @@ const shortcuts = [
       },
       {
         label: 'Select multiple',
-        hotkeys: [...formatHotkey({ shift: true })]
+        hotkeys: formatHotkey({ shift: true, key: '' })
       },
       {
         label: 'Delete',
@@ -160,7 +160,7 @@ const shortcuts = [
       },
       {
         label: 'Drag without snapping',
-        hotkeys: formatHotkey({ alt: true })
+        hotkeys: formatHotkey({ alt: true, key: '' })
       }
     ]
   },
@@ -181,11 +181,11 @@ const shortcuts = [
       },
       {
         label: 'Execute multi-run',
-        hotkeys: [...formatHotkey({ meta: true }), 'Enter']
+        hotkeys: formatHotkey({ meta: true, key: 'Enter' })
       }
     ]
   }
-]
+] as const
 
 const ShortcutGuide = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -207,7 +207,7 @@ const ShortcutGuide = () => {
         <Section>{category.items.map(item => (
           <Shortcut key={item.label}>
             <label>{item.label}</label>
-            {((item.action && formatHotkey(actions[item.action].hotkey)) || item.hotkeys)?.map(key => <kbd key={key}>{key}</kbd>)}
+            {((item.action && actions[item.action].hotkey) || item.hotkeys)?.map(key => <kbd key={key}>{key}</kbd>)}
           </Shortcut>
         ))}</Section>
       </Fragment>), [actions])}

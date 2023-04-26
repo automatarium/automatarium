@@ -35,7 +35,6 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
   useEffect(() => {
     buttonRef.current && setRect(buttonRef.current.getBoundingClientRect())
   }, [buttonRef.current])
-
   return (
     <>
       <DropdownButtonWrapper
@@ -47,8 +46,8 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
 
       <Dropdown
         style={{
-          top: `${rect.y + rect.height + 10}px`,
-          left: `${rect.x}px`
+          top: `${rect?.y + rect?.height + 10}px`,
+          left: `${rect?.x}px`
         }}
         items={item.items}
         visible={dropdown === item.label}

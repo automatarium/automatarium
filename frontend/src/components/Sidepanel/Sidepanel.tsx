@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { ReactNode, useState } from 'react'
 import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2 } from 'lucide-react'
 
 import { Sidebar } from '..'
@@ -7,7 +7,14 @@ import { useEvent } from '/src/hooks'
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options } from './Panels'
 
-const panels = [
+type PanelItem = {
+  label: string
+  value: string
+  icon: ReactNode
+  element: ReactNode
+}
+
+const panels: PanelItem[] = [
   {
     label: 'Testing Lab',
     value: 'test',
@@ -35,7 +42,7 @@ const panels = [
 ]
 
 const Sidepanel = () => {
-  const [activePanel, setActivePanel] = useState()
+  const [activePanel, setActivePanel] = useState<PanelItem>()
 
   // Open panel via event
   useEvent('sidepanel:open', e => {

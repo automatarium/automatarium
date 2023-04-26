@@ -152,8 +152,8 @@ const InputDialogs = () => {
    * This is just want it was like before so assuming there is a design reason
    */
   const formatRangeChars = (input: string): string => {
-    const ranges = value.match(/\[(.*?)]/g)
-    const chars = value.replace(/\[(.*?)]/g, '')
+    const ranges = input.match(/\[(.*?)]/g)
+    const chars = input.replace(/\[(.*?)]/g, '')
     return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
   }
 

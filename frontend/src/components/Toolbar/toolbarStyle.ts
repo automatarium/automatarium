@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const ToolPopup = styled('div')`
+export const ToolPopup = styled('div')<{$y?: number}>`
   background: var(--toolbar);
   border-radius: .3em;
   overflow: hidden;

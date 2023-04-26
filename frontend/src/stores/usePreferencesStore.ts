@@ -1,9 +1,10 @@
 import { create, SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { COLOR_KEY } from '/src/config/colors'
+import { AutomatariumTheme } from '/src/types/ProjectTypes'
 
 interface Preferences {
-  theme: 'system' | 'dark' | 'light'
+  theme: AutomatariumTheme
   color: COLOR_KEY | 'match'
   showGrid: boolean
   ctrlZoom: boolean

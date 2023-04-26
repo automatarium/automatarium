@@ -12,7 +12,7 @@ export const Sections = styled('div')`
   }
 `
 
-export const Section = styled('section')`
+export const Section = styled('section')<{$reverse?: boolean}>`
   display: grid;
   width: 100%;
   grid-template-columns: 1fr 1.2fr;
