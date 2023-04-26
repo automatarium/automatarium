@@ -1,14 +1,28 @@
-import { Link } from 'react-router-dom'
+/* eslint-disable react/no-unknown-property */
 
-import { Wrapper } from './buttonStyle'
-import React, { ReactNode } from 'react'
+import { Link, LinkProps, To } from 'react-router-dom'
 
-interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+import { ButtonStyleClass } from './buttonStyle'
+import { AnchorHTMLAttributes, ButtonHTMLAttributes, ReactNode } from 'react'
+
+type BaseButtonProps = {
   children?: ReactNode
   icon?: JSX.Element
   surface?: boolean
   secondary?: boolean
 }
+
+type AnchorButtonProps = {
+  href: string
+} & BaseButtonProps & AnchorHTMLAttributes<HTMLAnchorElement>
+
+type LinkButtonProps = {
+  to: To
+} & BaseButtonProps & LinkProps
+
+type ButtonButtonProps = BaseButtonProps & ButtonHTMLAttributes<HTMLButtonElement>
+
+type ButtonProps = AnchorButtonProps | ButtonButtonProps | LinkButtonProps
 
 const Button = ({
   type = 'button',
@@ -17,18 +31,29 @@ const Button = ({
   secondary,
   surface,
   ...props
-}: ButtonProps) => (
-  <Wrapper
-    type={type}
-    $icon={icon && !children}
-    $secondary={secondary}
-    $surface={surface}
-    as={'href' in props ? 'a' : ('to' in props ? Link : 'button')}
+}: ButtonProps) => {
+  // Select which element to use.
+  // This is done because the `as` prop didn't work well with goober
+  let Element
+  if ('href' in props) {
+    Element = 'a'
+  } else if ('to' in props) {
+    Element = Link
+  } else {
+    Element = 'button'
+  }
+  return <Element
+    className={ButtonStyleClass({
+      $icon: icon && !children,
+      $secondary: secondary,
+      $surface: surface
+    })}
+    type={type as ButtonHTMLAttributes<HTMLButtonElement>['type']}
     {...props}
   >
     {icon}
     {children}
-  </Wrapper>
-)
+  </Element>
+}
 
 export default Button
