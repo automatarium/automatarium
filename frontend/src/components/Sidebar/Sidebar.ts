@@ -16,8 +16,7 @@ const Sidebar = styled('nav')<{$tools?: boolean}>`
   `}
 `
 
-// eslint-disable-next-line dot-notation
-Sidebar['Button'] = styled('button', forwardRef)<{$active: boolean}>`
+export const SidebarButton = styled('button', forwardRef)<{$active: boolean}>`
   background: none;
   font: inherit;
   color: inherit;

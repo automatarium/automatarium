@@ -6,6 +6,7 @@ import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options } from './Panels'
+import { SidebarButton } from '/src/components/Sidebar/Sidebar'
 
 type PanelItem = {
   label: string
@@ -68,14 +69,14 @@ const Sidepanel = () => {
 
       <Sidebar>
         {panels.map(panel => (
-          <Sidebar.Button
+          <SidebarButton
             key={panel.value}
             onClick={() => setActivePanel(activePanel?.value === panel.value ? undefined : panel)}
             $active={activePanel?.value === panel.value}
             title={panel.label}
           >
             {panel.icon}
-          </Sidebar.Button>
+          </SidebarButton>
         ))}
       </Sidebar>
     </Wrapper>
