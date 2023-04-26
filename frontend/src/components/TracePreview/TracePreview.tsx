@@ -62,7 +62,7 @@ const TracePreview = ({
         {states?.find(s => s.id === item.to)?.name ?? statePrefix + item.to}
       </State>
       {((i < step || (!result.accepted && result.transitionCount === step)) && (result.trace.length > 1 || !result.accepted)) && <Transition
-        error={i === result.transitionCount && !result.accepted}
+        error={i + 1 === result.trace.length}
       />}
     </Fragment>)}
   </Wrapper>
