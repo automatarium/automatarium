@@ -18,6 +18,7 @@ export const Container = styled('div')`
     overflow: hidden;
   }
 `
+
 export const TickerTapeContainer = styled('div')`
   display: flex;
   flex-direction: row;
@@ -51,7 +52,7 @@ export const TickerTapeCell = styled('span')`
   }
 `
 
-export const SerratedEdgeContainer = styled('svg')<{$flipped: boolean}>`
+export const SerratedEdgeContainer = styled('svg')<{$flipped?: boolean}>`
   position: absolute;
   right: 100%;
   top: 0;
