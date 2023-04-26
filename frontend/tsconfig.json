@@ -3,6 +3,7 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "isolatedModules": true,
     "baseUrl": "./",
     "rootDir": "./",
     "jsx": "react-jsx",
@@ -11,7 +12,8 @@
     "paths": {
       "/src/*": ["./src/*"]
     },
-    "lib": ["DOM", "ES2021"]
+    "lib": ["DOM", "ES2021"],
+    "outDir": "dist/"
   },
   "include": [
     "src/**/*",

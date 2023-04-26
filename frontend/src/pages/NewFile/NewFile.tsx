@@ -69,7 +69,7 @@ const NewFile = () => {
         if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
           const project = {
             ...createNewProject(),
-            ...convertJFLAPXML(reader.result)
+            ...convertJFLAPXML(reader.result as string)
           }
           setProject({
             ...project,

@@ -6,9 +6,10 @@ import { Input, Button, TracePreview } from '/src/components'
 
 import { Wrapper, StepButtons, TraceConsole } from './testingLabStyle'
 import { FSAExecutionResult } from '@automatarium/simulation/src/graph'
+import { FSAProjectGraph } from '/src/types/ProjectTypes'
 
 // Example automaton graph
-const graph = {
+const graph: FSAProjectGraph = {
   projectType: 'FSA',
   states: [
     { id: 0, isFinal: false, x: 0, y: 0 },
@@ -16,8 +17,8 @@ const graph = {
     { id: 2, isFinal: true, x: 0, y: 0 }
   ],
   transitions: [
-    { id: 0, from: 0, to: 1, read: 'a', x: 0, y: 0 },
-    { id: 1, from: 1, to: 2, read: 'b', x: 0, y: 0 }
+    { id: 0, from: 0, to: 1, read: 'a' },
+    { id: 1, from: 1, to: 2, read: 'b' }
   ],
   initialState: 0
 }

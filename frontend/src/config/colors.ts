@@ -1,8 +1,5 @@
-export type COLOR_KEY = 'red' | 'orange' | 'green' | 'teal' | 'blue' | 'purple' | 'pink'
 
-export type Color = {h: number, s: number, l: number}
-
-const COLORS: Record<COLOR_KEY, Color> = {
+const COLORS = {
   red: {
     h: 0,
     s: 63,
@@ -38,6 +35,8 @@ const COLORS: Record<COLOR_KEY, Color> = {
     s: 70,
     l: 43
   }
-}
+} as const
+
+export type COLOR_KEY = keyof typeof COLORS
 
 export default COLORS
