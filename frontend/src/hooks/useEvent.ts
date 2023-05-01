@@ -1,4 +1,5 @@
 import { useEffect, useCallback, DependencyList } from 'react'
+import { PositionedTransition } from '/src/util/states'
 
 /**
  * Mapping of events to what data the event accepts.
@@ -9,6 +10,15 @@ export interface CustomEvents {
   'editComment': {id: number, x: number, y: number},
   'editStateName': {id: number},
   'editStateLabel': {id: number},
+  'transition:mouseup': {originalEvent: MouseEvent, transition: PositionedTransition},
+  'transition:mousedown': {originalEvent: MouseEvent, transition: PositionedTransition},
+  /**
+   * Called when an edge (The line joining two states) is called. It contains
+   * all the transitions that use that edge
+   */
+  'edge:mousedown': {originalEvent: MouseEvent, transitions: PositionedTransition[]},
+  'state:mousedown': {originalEvent: MouseEvent},
+  'comment:mousedown': {originalEvent: MouseEvent}
   'svg:mousedown': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
   'svg:mouseup': {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
 

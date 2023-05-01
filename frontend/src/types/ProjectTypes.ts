@@ -22,6 +22,11 @@ export interface ProjectMetaData {
     version: string
 }
 
+/**
+ * Simple x,y pair of coodinates
+ */
+export type Coordinate = {x: number, y: number}
+
 export interface ProjectComment {
     x: number,
     y: number,
