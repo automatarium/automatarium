@@ -7,7 +7,7 @@
     "start": "parcel public/index.html --no-cache",
     "prebuild": "rm -rf dist",
     "build": "parcel build public/index.html",
-    "lint": "eslint . --ext .js,.ts --cache --cache-location '../.eslintcache'",
+    "lint": "eslint . --ext .js,.ts,.tsx --cache --cache-location '../.eslintcache'",
     "lint:fix": "yarn lint --fix",
     "check:types": "tsc --noemit"
   },
@@ -16,6 +16,7 @@
     "@automatarium/simulation": "2.0.0",
     "@types/react": "^18.0.33",
     "axios": "^0.26.1",
+    "backend": "1.0.0",
     "dayjs": "^1.11.2",
     "firebase": "^9.6.10",
     "goober": "^2.1.8",

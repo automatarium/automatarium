@@ -1,11 +1,11 @@
 import { Coordinate } from '/src/types/ProjectTypes'
 
-export const lerpPoints = (p1: Coordinate, p2: Coordinate, t: number): Coordinate => ({
+export const lerpPoints = (p1: Coordinate, p2: Coordinate, t: number) => ({
   x: p1.x + t * (p2.x - p1.x),
   y: p1.y + t * (p2.y - p1.y)
 })
 
-export const movePointTowards = (p: Coordinate, tar: Coordinate, d: number) => {
+export const movePointTowards = (p: Coordinate, tar: Coordinate, d: number): Coordinate => {
   const l = size({ x: tar.x - p.x, y: tar.y - p.y })
   if (p.x === tar.x && p.y === tar.y) { return p }
   return {
@@ -14,5 +14,5 @@ export const movePointTowards = (p: Coordinate, tar: Coordinate, d: number) => {
   }
 }
 
-export const size = (p: Coordinate) =>
+export const size = (p: Coordinate): number =>
   Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2))

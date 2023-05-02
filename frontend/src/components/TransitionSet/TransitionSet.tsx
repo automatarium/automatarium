@@ -157,7 +157,7 @@ const Transition = ({
       originalEvent: e,
       transition: t
     })
-  const handleTransitionDoubleClick = (t: PositionedTransition) => e =>
+  const handleTransitionDoubleClick = (t: PositionedTransition) => () =>
     dispatchCustomEvent('editTransition', { id: t.id })
 
   // Callbacks for the edge

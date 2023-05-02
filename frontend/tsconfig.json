@@ -3,16 +3,20 @@
     "resolveJsonModule": true,
     "esModuleInterop": true,
     "moduleResolution": "node",
+    "isolatedModules": true,
     "baseUrl": "./",
     "rootDir": "./",
     "jsx": "react-jsx",
     "sourceMap": true,
-    "target": "ES6",
+    "target": "ES2021",
     "paths": {
       "/src/*": ["./src/*"]
-    }
+    },
+    "lib": ["DOM", "ES2021"],
+    "outDir": "dist/"
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "global.d.ts"
   ]
 }

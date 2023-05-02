@@ -17,4 +17,7 @@ const config = {
   }
 }
 
+export * from './colors'
+export * from './projects'
+
 export default config[env]

@@ -80,12 +80,12 @@ interface ProjectStore {
   createComment: (comment: ProjectComment) => void,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
-  createState: (state: AutomataState) => void,
+  createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => void,
   updateState: (state: AutomataState) => void,
   removeState: (state: AutomataState) => void,
   // still not sure what's going on with the tests
   setSingleTest: (value: string) => void,
-  addBatchTest: (value: string) => void,
+  addBatchTest: (value?: string) => void,
   updateBatchTest: (index: number, value: string) => void,
   removeBatchTest: (index: number) => void,
   setStateInitial: (stateID: number) => void,
@@ -95,7 +95,7 @@ interface ProjectStore {
   removeStates: (stateIDs: number[]) => void,
   removeTransitions: (transitionIDs: number[]) => void,
   removeComments: (commentIDs: number[]) => void,
-  updateConfig: (newConfig: ProjectConfig) => void,
+  updateConfig: (newConfig: Partial<ProjectConfig>) => void,
   /**
    * Returns just a copy of the project graph.
    * This expands transitions if needed
@@ -236,7 +236,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     state.lastChangeDate = new Date().getTime()
   })),
 
-  addBatchTest: (value: string) => set(produce((state: ProjectStore) => {
+  addBatchTest: value => set(produce((state: ProjectStore) => {
     value = value ?? ''
     state.project.tests.batch.push(value)
     state.lastChangeDate = new Date().getTime()
@@ -291,7 +291,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   // Change the config
-  updateConfig: (newConfig: ProjectConfig) => set(produce((state: ProjectStore) => {
+  updateConfig: newConfig => set(produce((state: ProjectStore) => {
     state.project.config = { ...state.project.config, ...newConfig }
     state.lastChangeDate = new Date().getTime()
   })),

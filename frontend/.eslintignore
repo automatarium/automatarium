@@ -1,2 +1,2 @@
 dist/
-src/hooks/useEgg.js
+src/hooks/useEgg.ts

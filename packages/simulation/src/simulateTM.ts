@@ -28,7 +28,7 @@ export const simulateTM = (
   const problem = buildProblem(graph, input) as TMGraph
   if (!problem) {
     return {
-      halted: false,
+      accepted: false,
       tape: newTape(input),
       trace: []
     }
@@ -38,12 +38,12 @@ export const simulateTM = (
   if (!result) {
     return {
       trace: [{ to: 0, tape: null }],
-      halted: false,
+      accepted: false,
       tape: newTape(input)
     }
   }
   return {
-    halted: result.state.isFinal,
+    accepted: result.state.isFinal,
     tape: result.state.tape,
     trace: generateTrace(result)
   }

@@ -10,11 +10,8 @@ import {
   useCommentCreation,
   useStateSelection,
   useTransitionSelection,
-  useContextMenus,
-  useDeleteTool
+  useContextMenus
 } from '/src/hooks'
-import { useSelectionStore } from '/src/stores'
-import { PositionedTransition } from '/src/util/states'
 
 const EditorPanel = () => {
   // Interactivity hooks
@@ -26,7 +23,6 @@ const EditorPanel = () => {
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
 
-  useDeleteTool()
   useCommentCreation()
   useContextMenus()
 

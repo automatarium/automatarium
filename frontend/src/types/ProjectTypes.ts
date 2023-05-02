@@ -6,6 +6,21 @@
  */
 export type ProjectType = 'FSA' | 'PDA' | 'TM'
 
+/**
+ * 2D x, y coordinate pair
+ */
+export type Coordinate = {x: number, y: number}
+
+/**
+ * Stores width/height of a 2D object
+ */
+export type Size = {width: number, height: number}
+
+/**
+ * Different UI themes available. System just matches the users light/dark mode
+ */
+export type AutomatariumTheme = 'system' | 'light' | 'dark'
+
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum
@@ -21,11 +36,6 @@ export interface ProjectMetaData {
     name: string,
     version: string
 }
-
-/**
- * Simple x,y pair of coodinates
- */
-export type Coordinate = {x: number, y: number}
 
 export interface ProjectComment {
     x: number,

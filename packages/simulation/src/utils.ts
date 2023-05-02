@@ -122,6 +122,8 @@ export function buildProblem <M extends ProjectGraph> (graph: M, input: string):
  * @see GraphStepper
  */
 export const graphStepper = <P extends FSAProjectGraph | PDAProjectGraph>(graph: P, input: string) => {
+  // Just in case an assertion makes the type not be FSA/PDA
+  if (graph.projectType as string === 'TM') return null
   const problem = buildProblem(graph, input)
   if (!problem) return null
   // We know that problem is PDAGraph | FSAGraph so this is safe

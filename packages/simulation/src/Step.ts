@@ -8,7 +8,7 @@ export class GraphStepper<S extends State, T extends BaseAutomataTransition> {
         private frontier: Node<S>[] = [graph.initial]
   ) {}
 
-  public forward () {
+  public forward (): Node<S>[] {
     const frontierCopy = this.frontier.slice()
     this.frontier = []
     while (frontierCopy.length > 0) {
@@ -20,7 +20,7 @@ export class GraphStepper<S extends State, T extends BaseAutomataTransition> {
     return this.frontier
   }
 
-  public backward () {
+  public backward (): Node<S>[] {
     if (
       this.frontier.length === 1 &&
             this.frontier[0].state.key() === this.graph.initial.state.key()
@@ -45,7 +45,7 @@ export class GraphStepper<S extends State, T extends BaseAutomataTransition> {
     return frontier.some((n) => n.state.key() === node.state.key())
   }
 
-  public reset () {
+  public reset (): Node<S>[] {
     this.frontier = [this.graph.initial]
     return this.frontier
   }
