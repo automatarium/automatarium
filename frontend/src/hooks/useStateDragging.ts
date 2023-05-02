@@ -1,12 +1,12 @@
 import { useProjectStore } from '/src/stores'
 
 import useResourceDragging from './useResourceDragging'
+import { AutomataState } from '/src/types/ProjectTypes'
 
 // Setup state interactivity deps
-const statesFromIDs = IDs => {
+const statesFromIDs = (IDs: number[]): AutomataState[] => {
   const states = useProjectStore.getState()?.project?.states ?? []
-  return IDs
-    .map(id => states.find(state => state.id === id))
+  return states.filter(state => IDs.includes(state.id))
 }
 const makeUpdateState = () => useProjectStore(s => s.updateState)
 

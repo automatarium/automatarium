@@ -30,6 +30,7 @@ export interface CustomEvents {
   'modal:shortcuts': null,
   'svg:mousedown': SVGMouseData,
   'svg:mouseup': SVGMouseData,
+  'svg:mousemove': SVGMouseData,
   'state:mouseup': SVGMouseData,
   'state:mousedown': SVGMouseData,
   'transition:mouseup': {originalEvent: MouseEvent, transition: PositionedTransition},

@@ -4,8 +4,7 @@ import useResourceDragging from './useResourceDragging'
 
 const commentsFromIDs = (IDs: number[]) => {
   const comments = useProjectStore.getState()?.project?.comments ?? []
-  return IDs
-    .map(id => comments.find(comment => comment.id === id))
+  return comments.filter(comment => IDs.includes(comment.id))
 }
 
 const makeUpdateComment = () => useProjectStore(s => s.updateComment)

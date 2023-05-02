@@ -4,7 +4,13 @@ import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useViewStore, usePreferencesStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
 
-const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
+interface RequiredProps {
+  x: number
+  y: number
+  id: number
+}
+
+const useResourceDragging = <T extends RequiredProps>(resourcesFromIDs: (IDs: number[]) => T[], makeUpdateResource: () => (x: Partial<T>) => void) => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
 
@@ -12,9 +18,9 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
   const commit = useProjectStore(s => s.commit)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
 
-  const [dragOffsets, setDragOffsets] = useState()
-  const [dragCenters, setDragCenters] = useState()
-  const [dragging, setDragging] = useState(null)
+  const [dragOffsets, setDragOffsets] = useState<[number, number][]>()
+  const [dragCenters, setDragCenters] = useState<[number, number][]>()
+  const [dragging, setDragging] = useState<number[]>(null)
 
   const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
@@ -55,7 +61,7 @@ const useResourceDragging = (resourcesFromIDs, makeUpdateResource) => {
             : [(Math.floor(lx / GRID_SNAP) * GRID_SNAP) + lox, Math.floor(ly / GRID_SNAP) * GRID_SNAP + loy]
 
         // Update state position
-        updateResource({ id, x: sx, y: sy })
+        updateResource({ id, x: sx, y: sy } as Partial<T>)
       })
     }
   }, [toolActive, dragging, gridVisible])
