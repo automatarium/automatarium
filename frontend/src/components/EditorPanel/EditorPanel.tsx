@@ -42,15 +42,31 @@ const EditorPanel = () => {
     selectTransition(e)
   })
 
+  useEvent('edge:mousedown', e => {
+    // We want to call the selectTransition so that if holding shift and selecting two edges
+    // the two sets of transitions will be selected (Instead of unselecting one and selecting the other)
+    const newEvent = {
+      ...e,
+      detail: {
+        ...e.detail,
+        ids: e.detail.transitions.map(t => t.id)
+      }
+    }
+    selectTransition(newEvent)
+  })
+
   return <>
     <GraphView>
-      {/* Render in-creation transition */}
+      {/* Render in-creation transition. Since we aren't rendering text it doesn't matter what the project is */}
       {createTransitionStart && createTransitionEnd && <TransitionSet.Transition
         fullWidth
         suppressEvents
         from={createTransitionStart}
         to={createTransitionEnd}
         count={1}
+        projectType="FSA"
+        id={-1}
+        transitions={[]}
       />}
 
       {/* Ghost State */}

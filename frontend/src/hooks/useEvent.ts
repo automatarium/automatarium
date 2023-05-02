@@ -1,5 +1,7 @@
 import { useEffect, useCallback, DependencyList } from 'react'
 import { SidePanelKey } from '/src/components/Sidepanel/Panels'
+import { PositionedTransition } from '/src/util/states'
+
 import { Coordinate } from '/src/types/ProjectTypes'
 
 /**
@@ -7,7 +9,6 @@ import { Coordinate } from '/src/types/ProjectTypes'
  * and if it was clicking the SVG
  */
 type SVGMouseData = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
-
 type CommentEventData = {originalEvent: MouseEvent, comment: {id: number, text: string}}
 
 /**
@@ -27,18 +28,25 @@ export interface CustomEvents {
    */
   'sidepanel:open': {panel: SidePanelKey},
   'modal:shortcuts': null,
-  'svg:mousedown': SVGMouseData
-  'svg:mouseup': SVGMouseData
-  'state:mouseup': SVGMouseData
-  'transition:mouseup': SVGMouseData,
+  'svg:mousedown': SVGMouseData,
+  'svg:mouseup': SVGMouseData,
+  'state:mouseup': SVGMouseData,
+  'state:mousedown': SVGMouseData,
+  'transition:mouseup': {originalEvent: MouseEvent, transition: PositionedTransition},
+  'transition:mousedown': {originalEvent: MouseEvent, transition: PositionedTransition},
   'ctx:svg': Coordinate,
   'ctx:state': Coordinate,
   'ctx:transition': Coordinate,
   'ctx:comment': Coordinate,
   'bottomPanel:open': { panel: string },
   'bottomPanel:close': null,
-  'comment:mousedown': CommentEventData
-  'comment:mouseup': CommentEventData
+  'comment:mousedown': CommentEventData,
+  'comment:mouseup': CommentEventData,
+  /**
+   * Called when an edge (The line joining two states) is called. It contains
+   * all the transitions that use that edge
+   */
+  'edge:mousedown': {originalEvent: MouseEvent, transitions: PositionedTransition[]}
 }
 
 /**
