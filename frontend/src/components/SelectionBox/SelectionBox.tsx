@@ -19,6 +19,10 @@ const SelectionBox = () => {
   const setSelectedTransitions = useSelectionStore(s => s.setTransitions)
   const setSelectedComments = useSelectionStore(s => s.setComments)
 
+  const prevSelectedStates = useSelectionStore(s => s.selectedStates)
+  const prevSelectedTransitions = useSelectionStore(s => s.selectedTransitions)
+  const prevSelectedComments = useSelectionStore(s => s.selectedComments)
+
   const [dragStart, setDragStart] = useState(null)
   const [mousePos, setMousePos] = useState(null)
 
@@ -33,7 +37,7 @@ const SelectionBox = () => {
     }
   }, [toolActive, svgElement])
 
-  useEvent('svg:mouseup', () => {
+  useEvent('svg:mouseup', e => {
     if (dragStart !== null && toolActive) {
       // Calculate drag bounds
       const startX = Math.min(dragStart[0], mousePos[0])
@@ -66,6 +70,12 @@ const SelectionBox = () => {
         comment.x <= endX &&
         comment.y <= endY).map(c => c.id)
 
+      // If the shift key is pressed then we need to append additional things
+      if (e.detail.originalEvent.shiftKey) {
+        selectedStates.push(...prevSelectedStates)
+        selectedTransitions.push(...prevSelectedTransitions)
+        selectedComments.push(...prevSelectedComments)
+      }
       // Update state
       setSelectedStates(selectedStates)
       setSelectedTransitions(selectedTransitions)
