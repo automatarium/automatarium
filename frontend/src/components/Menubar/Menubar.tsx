@@ -78,7 +78,7 @@ const Menubar = () => {
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   // Determine whether saving
-  const isSaving = useMemo(() => user && !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate)), [user, lastChangeDate, lastSaveDate])
+  const isSaving = useMemo(() => !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate)), [lastChangeDate, lastSaveDate])
 
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
@@ -136,7 +136,7 @@ const Menubar = () => {
                 : (
                 <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
                   )}
-              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
+              <SaveStatus $show={isSaving && !!user}>Saving...</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
