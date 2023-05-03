@@ -14,14 +14,21 @@ const useResourceSelection = (getSelected: () => number[], makeSetter: () => (x:
   const select = useCallback<(e: SelectionEvent) => number[]>(e => {
     let newSelected: number[]
     if (tool === 'cursor' || e.detail.originalEvent.button === 2 || tool === 'delete') {
-      // Update transition selections
+      // Things like transitions need to be able to send multiple ID's so that they don't
+      // need to send individual events for each transition (This is for stacked transitions).
       const ids: number[] = 'ids' in e.detail ? e.detail.ids : [e.detail[eventKey].id]
       const alreadySelected = ids.some(id => selected.includes(id))
-      newSelected = alreadySelected
-        ? selected
-        : e.detail.originalEvent.shiftKey
-          ? [...selected, ...ids]
-          : [...ids]
+      const usedShift = e.detail.originalEvent.shiftKey
+      if (alreadySelected && usedShift) {
+        // If shifting on an already selected item then we can remove it
+        newSelected = selected.filter(id => !ids.includes(id))
+      } else if (usedShift) {
+        // If shifting on a new resource, add it to the selected list
+        newSelected = [...selected, ...ids]
+      } else {
+        // If nothing else, just keep the new items selected
+        newSelected = [...ids]
+      }
       // Reset selected states?
       if (!alreadySelected && !e.detail.originalEvent.shiftKey) {
         selectNone()
