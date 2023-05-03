@@ -10,7 +10,17 @@ interface RequiredProps {
   id: number
 }
 
-const useResourceDragging = <T extends RequiredProps>(resourcesFromIDs: (IDs: number[]) => T[], makeUpdateResource: () => (x: Partial<T>) => void) => {
+type DragEvent = {detail: {originalEvent: MouseEvent}}
+export type ResourceDraggingHook = {startDrag: (e: DragEvent, ids: number[]) => void}
+
+/**
+ * Handles dragging of resources (e.g. comments, states)
+ * @param resourcesFromIDs Function takes a list of IDs and returns resources with those IDs
+ * @param makeUpdateResource Function that updates the resource in the store
+ */
+const useResourceDragging = <T extends RequiredProps>(
+  resourcesFromIDs: (IDs: number[]) => T[],
+  makeUpdateResource: () => (x: Partial<T>) => void): ResourceDraggingHook => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
 
@@ -24,7 +34,7 @@ const useResourceDragging = <T extends RequiredProps>(resourcesFromIDs: (IDs: nu
 
   const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
-  const startDrag = useCallback((e, selectedResourceIDs) => {
+  const startDrag = useCallback((e: DragEvent, selectedResourceIDs: number[]) => {
     if (toolActive) {
       const [x, y] = screenToViewSpace(e.detail.originalEvent.clientX, e.detail.originalEvent.clientY)
       const selected = resourcesFromIDs(selectedResourceIDs)

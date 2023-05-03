@@ -1,6 +1,6 @@
 import { useProjectStore } from '/src/stores'
 
-import useResourceDragging from './useResourceDragging'
+import useResourceDragging, { ResourceDraggingHook } from './useResourceDragging'
 import { AutomataState } from '/src/types/ProjectTypes'
 
 // Setup state interactivity deps
@@ -10,4 +10,4 @@ const statesFromIDs = (IDs: number[]): AutomataState[] => {
 }
 const makeUpdateState = () => useProjectStore(s => s.updateState)
 
-export default useResourceDragging.bind(null, statesFromIDs, makeUpdateState)
+export default useResourceDragging.bind(null, statesFromIDs, makeUpdateState) as () => ResourceDraggingHook
