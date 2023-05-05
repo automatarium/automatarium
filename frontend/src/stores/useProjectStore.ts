@@ -82,7 +82,6 @@ interface ProjectStore {
   removeComment: (comment: ProjectComment) => void,
   createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => void,
   updateState: (state: AutomataState) => void,
-  removeState: (state: AutomataState) => void,
   // still not sure what's going on with the tests
   setSingleTest: (value: string) => void,
   addBatchTest: (value?: string) => void,
@@ -225,11 +224,6 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     project.states = project.states.map((st: AutomataState) => st.id === state.id ? { ...st, ...state } : st)
   })),
 
-  /* Remove a state by id */
-  removeState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
-    project.states = project.states.filter((st: AutomataState) => st.id !== state.id)
-  })),
-
   /* Update tests */
   setSingleTest: (value: string) => set(produce((state: ProjectStore) => {
     state.project.tests.single = value
@@ -278,6 +272,11 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
     // Remove associated transitions
     project.transitions = project.transitions.filter((t: BaseAutomataTransition) => !stateIDs.includes(t.from) && !stateIDs.includes(t.to))
+
+    // Remove initial state if deleted
+    if (stateIDs.includes(project.initialState)) {
+      project.initialState = null
+    }
   })),
 
   /* Remove transitions by id */
