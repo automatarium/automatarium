@@ -31,7 +31,6 @@ const SelectionBox = () => {
   }, [])
 
   useEvent('svg:mousedown', e => {
-    // console.log('I am here')
     if (e.detail.originalEvent.button === 0 && e.detail.didTargetSVG && toolActive) {
       setDragStart([e.detail.viewX, e.detail.viewY])
     }
