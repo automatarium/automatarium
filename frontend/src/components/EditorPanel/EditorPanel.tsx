@@ -12,6 +12,8 @@ import {
   useTransitionSelection,
   useContextMenus
 } from '/src/hooks'
+import { SelectionEvent } from '/src/hooks/useResourceSelection'
+import { useSelectionStore } from '/src/stores'
 
 const EditorPanel = () => {
   // Interactivity hooks
@@ -23,20 +25,27 @@ const EditorPanel = () => {
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
 
+  const selectedStates = useSelectionStore(s => s.selectedStates)
+  const selectedComments = useSelectionStore(s => s.selectedComments)
+
   useCommentCreation()
   useContextMenus()
 
-  useEvent('state:mousedown', e => {
-    const selectedStateIDs = selectState(e)
+  const handleDragging = (e: SelectionEvent) => {
     if (e.detail.originalEvent.button === 0) {
-      startStateDrag(e, selectedStateIDs)
-    }
-  })
+      // Only try and check if the user is selecting a new resource if the event correlates with that.
+      // Else just use the previous value from the store
+      const selStates = e.type === 'state:mousedown' ? selectState(e) : selectedStates
+      const selComments = e.type === 'comment:mousedown' ? selectComment(e) : selectedComments
 
-  useEvent('comment:mousedown', e => {
-    const selectedCommentIDs = selectComment(e)
-    if (e.detail.originalEvent.button === 0) { startCommentDrag(e, selectedCommentIDs) }
-  })
+      startStateDrag(e, selStates)
+      startCommentDrag(e, selComments)
+    }
+  }
+
+  // Setup dragging for comments and states
+  useEvent('state:mousedown', handleDragging)
+  useEvent('comment:mousedown', handleDragging)
 
   useEvent('transition:mousedown', e => {
     selectTransition(e)

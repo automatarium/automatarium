@@ -2,7 +2,7 @@ import { useCallback } from 'react'
 
 import { useSelectionStore, useToolStore } from '/src/stores'
 
-type SelectionEvent = CustomEvent<{originalEvent: MouseEvent, ids?: number[]}>
+export type SelectionEvent = CustomEvent<{originalEvent: MouseEvent, ids?: number[]}>
 
 const useResourceSelection = (getSelected: () => number[], makeSetter: () => (x: number[]) => void, eventKey: string) => {
   const tool = useToolStore(s => s.tool)
