@@ -1,10 +1,11 @@
-import { useRef, useEffect, useState } from 'react'
+import { useRef, useEffect, useState, MouseEvent } from 'react'
 
 import { dispatchCustomEvent } from '/src/util/events'
 import { useProjectStore } from '/src/stores'
 import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 
 import { circleStyles, stepGlowStyle, circleSelectedClass, textStyles } from './stateCircleStyle'
+import { CustomEvents } from '/src/hooks/useEvent'
 
 const FINAL_OUTLINE_OFFSET = 5
 
@@ -13,8 +14,8 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
 
   const displayName = name || `${statePrefix}${id}`
 
-  const labelRef = useRef()
-  const [labelBox, setLabelBox] = useState()
+  const labelRef = useRef<SVGTextElement>()
+  const [labelBox, setLabelBox] = useState<{x: number, y: number, width: number, height: number}>()
 
   useEffect(() => {
     const { x, y, width, height } = labelRef.current?.getBBox() ?? {}
@@ -22,18 +23,18 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
   }, [labelRef.current, label])
 
   // TODO: use Callback
-  const handleStateMouseUp = e =>
-    dispatchCustomEvent('state:mouseup', {
+  const handleEvent = (eventName: keyof CustomEvents) => (e: MouseEvent) => {
+    dispatchCustomEvent(eventName, {
       originalEvent: e,
       state: { id, name, cx, cy }
     })
-  const handleStateMouseDown = e =>
-    dispatchCustomEvent('state:mousedown', {
-      originalEvent: e,
-      state: { id, name, cx, cy }
-    })
+  }
 
-  return <g transform={`translate(${cx}, ${cy})`} onMouseDown={handleStateMouseDown} onMouseUp={handleStateMouseUp} {...props}>
+  return <g transform={`translate(${cx}, ${cy})`}
+            onMouseDown={handleEvent('state:mousedown')}
+            onMouseUp={handleEvent('state:mouseup')}
+            onDoubleClick={handleEvent('state:dblclick')}
+            {...props}>
     {/* Filled Circle */}
     <circle r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, ...(stepped ? stepGlowStyle : {}) }} className={(selected && circleSelectedClass) || undefined} />
 
