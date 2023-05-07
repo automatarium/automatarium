@@ -508,21 +508,9 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
 // Parameters also include  the current project and whether a template is being created
 // Outputs a CopyData to be copied or Template object to be created into a template
 const selectionToCopyTemplate = (stateIds, commentIds, transitionIds, project, isTemplate) => {
-  const selectedStates = stateIds.map((stateId) => {
-    return project.states.find((state) => {
-      return state.id === stateId
-    })
-  })
-  const selectedComments = commentIds.map((commentId) => {
-    return project.comments.find((comment) => {
-      return comment.id === commentId
-    })
-  })
-  const selectedTransitions = transitionIds.map((transitionId) => {
-    return project.transitions.find((transition) => {
-      return transition.id === transitionId
-    })
-  })
+  const selectedStates = project.states.filter(state => stateIds.includes(state.id))
+  const selectedComments = project.comments.filter(comment => commentIds.includes(comment.id))
+  const selectedTransitions = project.transitions.filter(transition => transitionIds.includes(transition.id))
   const isInitialSelected = stateIds.includes(project.initialState)
   const returnObject = {
     states: selectedStates,
