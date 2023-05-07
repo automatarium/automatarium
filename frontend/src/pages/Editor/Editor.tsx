@@ -10,11 +10,12 @@ import { Content, LoadingContainer, EditorContent } from './editorStyle'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 import { useAutosaveProject } from '../../hooks'
+import { Tool } from '/src/stores/useToolStore'
 
 const Editor = () => {
   const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
-  const [priorTool, setPriorTool] = useState()
+  const [priorTool, setPriorTool] = useState<Tool>()
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)

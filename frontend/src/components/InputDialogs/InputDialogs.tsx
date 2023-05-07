@@ -8,7 +8,13 @@ import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
-import { AutomataState, ProjectComment, TMDirection } from '/src/types/ProjectTypes'
+import {
+  assertType,
+  AutomataState,
+  PDAAutomataTransition,
+  ProjectComment, TMAutomataTransition,
+  TMDirection
+} from '/src/types/ProjectTypes'
 
 /**
  * The default input styling for transition inputs
@@ -68,7 +74,7 @@ type Dialog = TransitionDialog | CommentDialog | StateDialog
 
 const InputDialogs = () => {
   const [dialog, setDialog] = useState<Dialog | undefined>()
-  const inputRef = useRef()
+  const inputRef = useRef<HTMLInputElement>()
   const inputPopRef = useRef()
   const inputPushRef = useRef()
 
@@ -89,7 +95,6 @@ const InputDialogs = () => {
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
-  // @ts-ignore
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
   useEvent('editTransition', ({ detail: { id } }) => {
@@ -101,6 +106,7 @@ const InputDialogs = () => {
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
     switch (projectType) {
       case 'TM':
+        assertType<TMAutomataTransition>(transition)
         setRead(transition?.read ?? '')
         setWrite(transition?.write ?? '')
         setDirection(transition?.direction)
@@ -113,6 +119,7 @@ const InputDialogs = () => {
         })
         break
       case 'PDA':
+        assertType<PDAAutomataTransition>(transition)
         setValue(transition?.read ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
@@ -138,43 +145,39 @@ const InputDialogs = () => {
     focusInput()
   }, arr)
 
-  const saveTransition = () => {
-    // Remove duplicate characters
-    const ranges = value.match(/\[(.*?)\]/g)
-    const chars = value.replace(/\[(.*?)\]/g, '')
+  /**
+   * Rearranges a read string so that all single characters come before ranges.
+   * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
+   * This is just want it was like before so assuming there is a design reason
+   */
+  const formatRangeChars = (input: string): string => {
+    const ranges = input.match(/\[(.*?)]/g)
+    const chars = input.replace(/\[(.*?)]/g, '')
+    return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
+  }
 
+  const saveTransition = () => {
     editTransition({
       id: dialog.id,
-      read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
+      read: formatRangeChars(value)
     })
     commit()
     hideDialog()
   }
 
   const saveTMTransition = () => {
-    editTransition({ id: dialog.id, read, write, direction: direction || 'R' })
+    editTransition({ id: dialog.id, read, write, direction: direction || 'R' } as TMAutomataTransition)
     commit()
     hideDialog()
   }
 
   const savePDATransition = () => {
-    // NOTE: This seems related to #310
-    // Looks like the UI supports multiple characters but gets stripped off somewhere
-    const ranges = value.match(/\[(.*?)\]/g)
-    const chars = value.replace(/\[(.*?)\]/g, '')
-
-    const charsPush = valuePush.replace(/\[(.*?)\]/g, '')
-    const rangesPush = valuePush.match(/\[(.*?)\]/g)
-
-    const charsPop = valuePop.replace(/\[(.*?)\]/g, '')
-    const rangesPop = valuePop.match(/\[(.*?)\]/g)
-
     editTransition({
       id: dialog.id,
-      read: `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`,
-      pop: `${Array.from(new Set(charsPop)).join('')}${rangesPop ? rangesPop.join('') : ''}`,
-      push: `${Array.from(new Set(charsPush)).join('')}${rangesPush ? rangesPush.join('') : ''}`
-    })
+      read: formatRangeChars(value),
+      pop: formatRangeChars(valuePop),
+      push: formatRangeChars(valuePush)
+    } as PDAAutomataTransition)
     commit()
     hideDialog()
   }
@@ -261,8 +264,7 @@ const InputDialogs = () => {
     comment: saveComment,
     stateName: saveStateName,
     stateLabel: saveStateLabel
-    // eslint-disable-next-line no-unused-vars
-  } as {[key in DialogType]: () => void})[dialog?.type]
+  } as Record<DialogType, () => void>)[dialog?.type]
 
   const handleReadIn = (e: InputEvent) => {
     const input = e.target.value.toString()

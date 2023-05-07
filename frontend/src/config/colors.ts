@@ -1,3 +1,4 @@
+
 const COLORS = {
   red: {
     h: 0,
@@ -34,6 +35,8 @@ const COLORS = {
     s: 70,
     l: 43
   }
-}
+} as const
+
+export type COLOR_KEY = keyof typeof COLORS
 
 export default COLORS

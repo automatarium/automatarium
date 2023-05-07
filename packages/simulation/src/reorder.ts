@@ -1,5 +1,5 @@
-import { UnparsedGraph } from './graph'
 import { Queue } from './collection'
+import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Reorders the states in the graph so they follow the flow i.e. we perform a basic topological sort.
@@ -10,9 +10,10 @@ import { Queue } from './collection'
  * This is performed by using a combination of breath and depth searches. If there is only a single path to take then it
  * goes depth first. If there are multiple branches then it adds them to the queue so it goes back to breath first.
  * i.e. This is a fancy floodfill
- * @param graph Graph to reorder. This is performed in-place
+ * @param graph Graph to reorder
  */
-export const reorderStates = (graph: UnparsedGraph): UnparsedGraph => {
+export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
+  if (graph.initialState === null) return graph
   // Convert the graph into an adjacency list of transitions
   const graphList: {[key: number]: number[]} = {}
   graph.transitions.forEach(x => {
@@ -63,7 +64,7 @@ export const reorderStates = (graph: UnparsedGraph): UnparsedGraph => {
     return result
   }
   // Clone the graph
-  const output = JSON.parse(JSON.stringify(graph))
+  const output = structuredClone(graph)
   // Update the initial graph using the mappings
   output.states.forEach(state => (state.id = getMapping(state.id)))
   output.transitions.forEach(t => {

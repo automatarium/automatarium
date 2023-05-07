@@ -1,15 +1,16 @@
 import { create, SetState } from 'zustand'
+import { PDAExecutionResult } from '@automatarium/simulation/src/graph'
 
 interface PDAVisualiserStore {
-  stack: Record<string, string[]>
-  setStack: (stack: Record<string, string[]>) => void
+  stack: PDAExecutionResult
+  setStack: (stack: PDAExecutionResult) => void
   clearStack: () => void
 }
 
 const usePDAVisualiserStore = create<PDAVisualiserStore>((set: SetState<PDAVisualiserStore>) => ({
-  stack: {},
-  setStack: (stack: Record<string, string[]>) => set({ stack }),
-  clearStack: () => set({ stack: {} })
+  stack: null,
+  setStack: stack => set({ stack }),
+  clearStack: () => set({ stack: null })
 }))
 
 export default usePDAVisualiserStore

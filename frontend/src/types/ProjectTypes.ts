@@ -6,6 +6,21 @@
  */
 export type ProjectType = 'FSA' | 'PDA' | 'TM'
 
+/**
+ * 2D x, y coordinate pair
+ */
+export type Coordinate = {x: number, y: number}
+
+/**
+ * Stores width/height of a 2D object
+ */
+export type Size = {width: number, height: number}
+
+/**
+ * Different UI themes available. System just matches the users light/dark mode
+ */
+export type AutomatariumTheme = 'system' | 'light' | 'dark'
+
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum
@@ -51,36 +66,90 @@ export interface AutomataTests {
  */
 export type TMDirection = 'L' | 'R' | 'S'
 
-// May be different types for each automata
-export interface AutomataTransition {
+/**
+ * Basic transition type shared across every transition
+ */
+export interface BaseAutomataTransition {
     from: number,
     id: number,
-    read: string,
+    read: string
     to: number,
-    direction?: TMDirection,
-    write?: string,
-    push?: string,
-    pop?: string,
+
 }
 
-export interface Project {
+/**
+ * Alias to make FSA seem like the rest
+ */
+export type FSAAutomataTransition = BaseAutomataTransition
+
+/**
+ * Transition used by PDA projects
+ */
+export interface PDAAutomataTransition extends BaseAutomataTransition{
+    push: string
+    pop: string
+}
+
+/**
+ * Transition used by TM projects
+ */
+export interface TMAutomataTransition extends BaseAutomataTransition {
+    write: string
+    direction: TMDirection
+}
+
+export type AutomataTransition = BaseAutomataTransition | PDAAutomataTransition | TMAutomataTransition
+
+/**
+ * What the graph used by the frontend looks like.
+ * This is the base type, with variants for the other project types defined later
+ */
+type BaseProjectGraph<PT extends ProjectType, T extends BaseAutomataTransition> = {
+    projectType: PT
+    states: AutomataState[]
+    transitions: T[]
+    initialState: number | null
+}
+
+/**
+ * Graph for FSA project. There isn't any different in types but this is just for completion’s sake
+ */
+export type FSAProjectGraph = BaseProjectGraph<'FSA', FSAAutomataTransition>
+
+/**
+ * Graph for PDA project. The transitions need push/pop properties
+ */
+export type PDAProjectGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
+
+/**
+ * Graph for TM project. The transitions need read/write properties
+ */
+export type TMProjectGraph = BaseProjectGraph<'TM', TMAutomataTransition>
+
+/**
+ * All the different types a project can be.
+ * This allows for the transitions types to be different
+ */
+export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
+
+/**
+ * What a project for the frontend looks like.
+ * This contains everything that is needed to display a graph
+ */
+export type Project = ProjectGraph & {
     comments: ProjectComment[],
     config: ProjectConfig,
-    initialState: number | null,
     meta: ProjectMetaData,
     projectType: string,
-    // Not sure about type of array
     simResult: string[],
-    states: AutomataState[],
     tests: AutomataTests,
-    transitions: AutomataTransition[],
 }
 
 // This is for copy/paste function which isn't TS converted yet
 // Leaving it here so its ready for when its converted, so as not to clutter useActions
 export type CopyData = {
     states: AutomataState[],
-    transitions: AutomataTransition[],
+    transitions: BaseAutomataTransition[],
     comments: ProjectComment[],
     projectSource: string,
     projectType: ProjectType,
@@ -90,4 +159,12 @@ export type CopyData = {
 export type Template = CopyData & {
     _id: string,
     name: string
+}
+/**
+ * Small helper function to change the value of a type at block level.
+ * Use this with care since it does override the type system.
+ */
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+export function assertType<T> (value: unknown): asserts value is T {
+
 }

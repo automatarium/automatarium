@@ -1,4 +1,5 @@
 {
+  "projectType": "FSA",
   "id": "932aede0-53a3-4ea5-a193-2537f8cd4416",
   "states": [
     { "id": 0, "x": 105, "y": 165, "isFinal": false },

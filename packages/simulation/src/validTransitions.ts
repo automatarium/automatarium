@@ -1,7 +1,9 @@
-import { FSAGraphIn, FSATransition, ReadSymbol, StateID, Transition } from './graph'
+import { ReadSymbol, StateID } from './graph'
 import closureWithPredicate from './closureWithPredicate'
+import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { TransitionMapping } from './utils'
 
-export type ValidTransition = { transition: Transition, trace: { to: number, read: string }[]}
+export type ValidTransition<T extends BaseAutomataTransition> = { transition: T, trace: { to: number, read: string }[]}
 
 /**
  * Compute the list of transitions that are directly or indirectly navigable from a given starting state using a specific input symbol.
@@ -12,34 +14,32 @@ export type ValidTransition = { transition: Transition, trace: { to: number, rea
  * @param nextRead  - The input symbol to be read next
  * @returns A list of transitions and the "trace" of states and symbols required to navigate it.
  */
-export const validTransitions = (graph: FSAGraphIn, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition[] => {
+export const validTransitions = <P extends ProjectGraph, T extends TransitionMapping<P>>(graph: P, currentStateID: StateID, nextRead: ReadSymbol): ValidTransition<T>[] => {
   // Compute lambda closure (states accessible without consuming input)
-  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => (tr as FSATransition).read.length === 0))
+  const closure = Array.from(closureWithPredicate(graph, currentStateID, tr => tr.read.length === 0))
 
   // Find direct non-lambda transitions
   const directTransitions = graph.transitions
-    .filter(transition => transition.from === currentStateID &&
-                         transition.read.some(symbol => symbol === nextRead))
-    .map(transition => ({ transition, trace: [] }))
+    .filter(transition => transition.from === currentStateID && transition.read.includes(nextRead))
+    .map(transition => ({ transition, trace: [] } as ValidTransition<T>))
 
   // Find transitions from states in lambda closure that we can take
   const indirectTransitions = closure
-    .map(([stateID, precedingTransitions]) => graph.transitions
-      .filter(transition => transition.from === stateID &&
-                           transition.read.some(symbol => symbol === nextRead))
-      .map(transition => ({ transition, trace: precedingTransitions })))
+    .map(({ state, transitions }) => graph.transitions
+      .filter(transition => transition.from === state && transition.read.includes(nextRead))
+      .map((transition: T) => ({ transition, trace: transitions } as ValidTransition<T>)))
     .reduce((a, b) => [...a, ...b], [])
 
   // Find transitions to final states in lambda closure
   const finalTransitions = closure
-    .filter(([stateID]) => graph.states.some(s => s.id === stateID && s.id !== currentStateID && s.isFinal))
-    .map(([stateID, precedingTransitions]) => ({
-      transition: (graph.transitions.find(tr => tr.to === stateID && tr.read.length === 0) as Transition),
-      trace: precedingTransitions.slice(0, -1)
+    .filter(({ state }) => graph.states.some(s => s.id === state && s.id !== currentStateID && s.isFinal))
+    .map(({ state, transitions }) => ({
+      transition: graph.transitions.find(tr => tr.to === state && tr.read.length === 0) as T,
+      trace: transitions.slice(0, -1)
     }))
 
   // Combine transitions
-  const allTransitions = [
+  const allTransitions: ValidTransition<T>[] = [
     ...directTransitions,
     ...indirectTransitions,
     ...finalTransitions
