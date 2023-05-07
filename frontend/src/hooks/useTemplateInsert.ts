@@ -13,11 +13,11 @@ const useTemplateInsert = () => {
   const insertGroup = useProjectStore(s => s.insertGroup)
   const template = useTemplateStore(s => s.template)
 
-  useEvent('svg:mousemove', e => {
+  useEvent('svg:mousemove', () => {
     // Keep track of the mouse position
   })
 
-  useEvent('svg:mousedown', e => {
+  useEvent('svg:mousedown', () => {
     // Track mousedown event
     // Showing ghost template will go here
   })

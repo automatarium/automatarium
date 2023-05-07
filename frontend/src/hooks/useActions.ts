@@ -9,7 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
-import { AutomataState, AutomataTests, CopyData, FSAProjectGraph, ProjectComment, Template } from '/src/types/ProjectTypes'
+import { AutomataState, CopyData, FSAProjectGraph, ProjectComment, Template } from '/src/types/ProjectTypes'
 
 /**
  * Combination of keys. Used to call an action
@@ -59,7 +59,6 @@ const useActions = (registerHotkeys = false) => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
-  const updateProject = useProjectStore(s => s.update)
   const insertGroup = useProjectStore(s => s.insertGroup)
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const updateGraph = useProjectStore(s => s.updateGraph)

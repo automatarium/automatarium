@@ -9,13 +9,12 @@ import { randomProjectName } from '../util/projectName'
 import {
   Project,
   BaseAutomataTransition,
-  AutomataTransition,
   AutomataState,
   ProjectConfig,
   ProjectComment,
   Template,
   CopyData,
-  ProjectType, 
+  ProjectType,
   ProjectGraph
 } from '../types/ProjectTypes'
 

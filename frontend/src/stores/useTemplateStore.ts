@@ -29,22 +29,22 @@ const myTemplate: Template = {
 
 interface TemplateStore {
   template: Template,
-  setTemplate: (template: Template) => void,
-  update: (template: Template) => void,
-  setName: (newName: string) => void
+  setTemplate: (template: Template) => void
+  // update: (template: Template) => void,
+  // setName: (newName: string) => void
 }
 
 const useTemplateStore = create<TemplateStore>((set: SetState<TemplateStore>) => ({
   template: myTemplate,
   setTemplate: template => {
     set({ template })
-  },
-  update: (template) => {
-
-  },
-  setName: (newName) => {
-
   }
+  // update: (template) => {
+
+  // },
+  // setName: (newName) => {
+
+  // }
 }))
 
 export default useTemplateStore
