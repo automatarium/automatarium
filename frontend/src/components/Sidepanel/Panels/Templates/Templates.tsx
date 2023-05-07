@@ -2,12 +2,13 @@ import { useTemplatesStore, useTemplateStore } from '/src/stores'
 import { SectionLabel, Input } from '/src/components'
 
 import { Wrapper } from './templatesStyle'
+import React from 'react'
 
 const Templates = () => {
   const templates = useTemplatesStore(s => s.templates)
   const setTemplate = useTemplateStore(s => s.setTemplate)
 
-  const pickTemplate = (e) => {
+  const pickTemplate = (e: React.ChangeEvent<HTMLInputElement>) => {
     const id = e.target.value
     const newTemplate = templates.find(template => template._id === id)
     setTemplate(newTemplate)
@@ -16,11 +17,11 @@ const Templates = () => {
   return <>
     <SectionLabel>Your templates</SectionLabel>
       <Wrapper>
-      <Input type="select" onChange={(e) => pickTemplate(e)}>
-        {templates.map((temp, key) => (
-          <option value={temp._id} key={key}>{temp._id}</option>
-        ))}
-      </Input>
+        <Input type="select" onChange={(e: React.ChangeEvent<HTMLInputElement>) => pickTemplate(e)}>
+          {templates.map((temp, key) => (
+            <option value={temp._id} key={key}>{temp._id}</option>
+          ))}
+        </Input>
       </Wrapper>
   </>
 }
