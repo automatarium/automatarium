@@ -29,7 +29,7 @@ import {
 } from '../config/projects'
 import { expandTransitions } from '@automatarium/simulation/src/utils'
 
-import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering.js'
+import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
 
 /**
  * A stored project has an extra `_id` field which is used to tell identify it
