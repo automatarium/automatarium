@@ -36,9 +36,7 @@ import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
 export type StoredProject = Project & {_id: string}
 
 export enum InsertGroupResponseType {
-  // eslint-disable-next-line no-unused-vars
   FAIL = 1,
-  // eslint-disable-next-line no-unused-vars
   SUCCESS
 }
 
