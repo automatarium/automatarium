@@ -25,14 +25,31 @@ const EditorPanel = () => {
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
 
-  const selectedStates = useSelectionStore(s => s.selectedStates)
-  const selectedComments = useSelectionStore(s => s.selectedComments)
+  let selectedStates = useSelectionStore(s => s.selectedStates)
+  let selectedComments = useSelectionStore(s => s.selectedComments)
+  const unselectAll = useSelectionStore(s => s.selectNone)
+
+  /**
+   * Checks if state needs to reset when selecting an item.
+   * Resets state if shift isn't held while selecting
+   */
+  const checkIfSelectingOne = (e: SelectionEvent) => {
+    // If user isn't holding shift then they are only try to select one item.
+    // So make sure to unselect everything else so they are in a clean slate
+    if (!e.detail.originalEvent.shiftKey) {
+      unselectAll()
+      // Also reset the previous values
+      selectedStates = []
+      selectedComments = []
+    }
+  }
 
   useCommentCreation()
   useContextMenus()
 
   const handleDragging = (e: SelectionEvent) => {
     if (e.detail.originalEvent.button === 0) {
+      checkIfSelectingOne(e)
       // Only try and check if the user is selecting a new resource if the event correlates with that.
       // Else just use the previous value from the store
       const selStates = e.type === 'state:mousedown' ? selectState(e) : selectedStates
@@ -48,10 +65,12 @@ const EditorPanel = () => {
   useEvent('comment:mousedown', handleDragging)
 
   useEvent('transition:mousedown', e => {
+    checkIfSelectingOne(e)
     selectTransition(e)
   })
 
   useEvent('edge:mousedown', e => {
+    checkIfSelectingOne(e)
     // We want to call the selectTransition so that if holding shift and selecting two edges
     // the two sets of transitions will be selected (Instead of unselecting one and selecting the other)
     const newEvent = {
