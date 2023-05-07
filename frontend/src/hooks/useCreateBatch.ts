@@ -31,8 +31,7 @@ const useCreateBatch = (createData: CopyData | Template) => {
     createData.states.forEach(state => {
     // TODO: ensure position isn't out of window
     // Probably will have to take adjusting position out of this function
-      state.x += PASTE_POSITION_OFFSET
-      state.y += PASTE_POSITION_OFFSET
+      state.x, state.y = state.x += PASTE_POSITION_OFFSET, state.y += PASTE_POSITION_OFFSET
       const newId = createState(state)
       // Update transitions to new state id
       createData.transitions.forEach((transition, i) => {
@@ -60,8 +59,7 @@ const useCreateBatch = (createData: CopyData | Template) => {
     selectStates(createData.states.map(state => state.id))
     createData.comments.forEach(comment => {
     // TODO: ensure position isn't out of window
-      comment.x += PASTE_POSITION_OFFSET
-      comment.y += PASTE_POSITION_OFFSET
+    comment.x, comment.y = comment.x += PASTE_POSITION_OFFSET, comment.y += PASTE_POSITION_OFFSET
       const newId = createComment(comment)
       comment.id = newId
     })
