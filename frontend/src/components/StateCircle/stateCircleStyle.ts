@@ -18,4 +18,4 @@ export const circleSelectedClass = css`
 export const textStyles = {
   userSelect: 'none',
   fill: 'var(--stroke)'
-}
+} as const

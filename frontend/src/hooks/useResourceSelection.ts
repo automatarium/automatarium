@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { MouseEvent, useCallback } from 'react'
 
 import { useSelectionStore, useToolStore } from '/src/stores'
 
@@ -25,9 +25,13 @@ const useResourceSelection = (getSelected: () => number[], makeSetter: () => (x:
       } else if (usedShift) {
         // If shifting on a new resource, add it to the selected list
         newSelected = [...selected, ...ids]
+      } else if (alreadySelected) {
+        // If already selected then keep selected items.
+        // This keeps the items selecting while dragging
+        newSelected = selected
       } else {
-        // If nothing else, just keep the new items selected
-        newSelected = [...ids]
+        // Else just use what is selected
+        newSelected = ids
       }
       // Reset selected states?
       if (!alreadySelected && !e.detail.originalEvent.shiftKey) {
