@@ -3,6 +3,7 @@ import { useProjectStore, useToolStore, useSelectionStore, useTemplateStore } fr
 import { GRID_SNAP } from '/src/config/interactions'
 import { AutomataState } from '/src/types/ProjectTypes'
 import { InsertGroupResponseType } from '../stores/useProjectStore'
+import { snapPosition } from '/src/util/points'
 
 const useTemplateInsert = () => {
   const tool = useToolStore(s => s.tool)
@@ -59,8 +60,5 @@ const moveStatesToMouse = (mousePos: {x: number, y: number}, states: AutomataSta
     state.y += offsetY
   })
 }
-
-const snapPosition = ({ x, y }) =>
-  ({ x: Math.floor(x / GRID_SNAP) * GRID_SNAP, y: Math.floor(y / GRID_SNAP) * GRID_SNAP })
 
 export default useTemplateInsert

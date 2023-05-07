@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
+import { snapPosition } from '/src/util/points'
 
 const useStateCreation = () => {
   const tool = useToolStore(s => s.tool)
@@ -37,8 +38,5 @@ const positionFromEvent = e => {
   const pos = { x: e.detail.viewX, y: e.detail.viewY }
   return doSnap ? snapPosition(pos) : pos
 }
-
-const snapPosition = ({ x, y }) =>
-  ({ x: Math.floor(x / GRID_SNAP) * GRID_SNAP, y: Math.floor(y / GRID_SNAP) * GRID_SNAP })
 
 export default useStateCreation

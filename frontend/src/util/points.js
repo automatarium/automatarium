@@ -14,3 +14,6 @@ export const movePointTowards = (p, tar, d) => {
 
 export const size = p =>
   Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2))
+
+export const snapPosition = ({ x, y }) =>
+  ({ x: Math.floor(x / GRID_SNAP) * GRID_SNAP, y: Math.floor(y / GRID_SNAP) * GRID_SNAP })
