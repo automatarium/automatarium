@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, MouseEvent } from 'react'
 
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useViewStore, usePreferencesStore } from '/src/stores'

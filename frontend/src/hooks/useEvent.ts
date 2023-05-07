@@ -1,4 +1,4 @@
-import { useEffect, useCallback, DependencyList } from 'react'
+import { useEffect, useCallback, DependencyList, MouseEvent } from 'react'
 import { SidePanelKey } from '/src/components/Sidepanel/Panels'
 import { PositionedTransition } from '/src/util/states'
 
@@ -9,8 +9,15 @@ import { Coordinate } from '/src/types/ProjectTypes'
  * and if it was clicking the SVG
  */
 type SVGMouseData = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
-type CommentEventData = {originalEvent: MouseEvent, comment: {id: number, text: string}}
 
+export type StateEventData = {originalEvent: MouseEvent, state: {id: number, name: string, cx: number, cy: number}}
+
+export type CommentEventData = {originalEvent: MouseEvent, comment: {id: number, text: string}}
+/**
+ * Contains information about the click along with the transition that was clicked
+ */
+export type TransitionEventData = {originalEvent: MouseEvent, transition: PositionedTransition}
+type EdgeEventData = {originalEvent: MouseEvent, transitions: PositionedTransition[]}
 /**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
@@ -31,10 +38,12 @@ export interface CustomEvents {
   'svg:mousedown': SVGMouseData,
   'svg:mouseup': SVGMouseData,
   'svg:mousemove': SVGMouseData,
-  'state:mouseup': SVGMouseData,
-  'state:mousedown': SVGMouseData,
-  'transition:mouseup': {originalEvent: MouseEvent, transition: PositionedTransition},
-  'transition:mousedown': {originalEvent: MouseEvent, transition: PositionedTransition},
+  'state:mouseup': StateEventData,
+  'state:mousedown': StateEventData,
+  'state:dblclick': StateEventData
+  'transition:mouseup': TransitionEventData,
+  'transition:mousedown': TransitionEventData,
+  'transition:dblclick': TransitionEventData,
   'ctx:svg': Coordinate,
   'ctx:state': Coordinate,
   'ctx:transition': Coordinate,
@@ -43,11 +52,13 @@ export interface CustomEvents {
   'bottomPanel:close': null,
   'comment:mousedown': CommentEventData,
   'comment:mouseup': CommentEventData,
+  'comment:dblclick': CommentEventData,
   /**
    * Called when an edge (The line joining two states) is called. It contains
    * all the transitions that use that edge
    */
-  'edge:mousedown': {originalEvent: MouseEvent, transitions: PositionedTransition[]}
+  'edge:mousedown': EdgeEventData,
+  'edge:dblclick': EdgeEventData
 }
 
 /**

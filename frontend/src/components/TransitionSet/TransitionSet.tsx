@@ -1,4 +1,4 @@
-import { useContext } from 'react'
+import { MouseEvent, useContext } from 'react'
 import { useProjectStore } from '../../stores'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
@@ -157,13 +157,20 @@ const Transition = ({
       originalEvent: e,
       transition: t
     })
-  const handleTransitionDoubleClick = (t: PositionedTransition) => () =>
+  const handleTransitionDoubleClick = (t: PositionedTransition) => (e: MouseEvent) => {
     dispatchCustomEvent('editTransition', { id: t.id })
+    // Needs to be a different event since this takes the whole transition object but editTransition only supports IDs
+    // The need for the whole object is so that it is inline with the other events
+    dispatchCustomEvent('transition:dblclick', { originalEvent: e, transition: t })
+  }
 
   // Callbacks for the edge
 
   const handleEdgeMouseDown = e =>
     dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
+
+  const handleEdgeDoubleClick = e =>
+    dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions })
 
   // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend
   // upwards.
@@ -196,6 +203,7 @@ const Transition = ({
       stroke='transparent'
       fill='none'
       onMouseDown={handleEdgeMouseDown}
+      onDoubleClick={handleEdgeDoubleClick}
       strokeWidth={20}
     />}
 

@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, MouseEvent } from 'react'
 
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore, useViewStore } from '/src/stores'
 
 import { commentStyles, commentSelectedClass } from './commentRectStyle'
+import { CustomEvents } from '/src/hooks/useEvent'
 
 interface CommentRectProps {
   id: number
@@ -29,13 +30,8 @@ const CommentRect = ({ id, x, y, text }: CommentRectProps) => {
     }
   }, [containerRef?.current, text, x, y])
 
-  const handleMouseDown = e =>
-    dispatchCustomEvent('comment:mousedown', {
-      originalEvent: e,
-      comment: { id, text }
-    })
-  const handleMouseUp = e =>
-    dispatchCustomEvent('comment:mouseup', {
+  const dispatchMouseEvent = (name: keyof CustomEvents) => (e: MouseEvent) =>
+    dispatchCustomEvent(name, {
       originalEvent: e,
       comment: { id, text }
     })
@@ -43,8 +39,9 @@ const CommentRect = ({ id, x, y, text }: CommentRectProps) => {
   return <foreignObject x={x} y={y} {...size}>
     <div
       ref={containerRef}
-      onMouseDown={handleMouseDown}
-      onMouseUp={handleMouseUp}
+      onMouseDown={dispatchMouseEvent('comment:mousedown')}
+      onMouseUp={dispatchMouseEvent('comment:mouseup')}
+      onDoubleClick={dispatchMouseEvent('comment:dblclick')}
       style={commentStyles}
       className={(selected && commentSelectedClass) || undefined}
     >{text}</div>
