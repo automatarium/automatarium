@@ -2,7 +2,6 @@ import { useState } from 'react'
 
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore } from '/src/stores'
-import { GRID_SNAP } from '/src/config/interactions'
 import { snapPosition } from '/src/util/points'
 
 const useStateCreation = () => {

@@ -286,7 +286,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       createData.states.forEach((state, i) => {
         // TODO: ensure position isn't out of window
         // Probably will have to take adjusting position out of this function
-        [ state.x, state.y ] = [ state.x + PASTE_POSITION_OFFSET, state.y + PASTE_POSITION_OFFSET ]
+        [state.x, state.y] = [state.x + PASTE_POSITION_OFFSET, state.y + PASTE_POSITION_OFFSET]
         const newId = nextStateId + i
         // Update transitions to new state id
         createData.transitions.forEach((transition, i) => {
@@ -310,7 +310,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       const nextCommentId = nextIDFor(project.comments)
       createData.comments.forEach((comment, i) => {
         // TODO: ensure position isn't out of window
-        [ comment.x, comment.y ] = [ comment.x + PASTE_POSITION_OFFSET, comment.y + PASTE_POSITION_OFFSET ]
+        [comment.x, comment.y] = [comment.x + PASTE_POSITION_OFFSET, comment.y + PASTE_POSITION_OFFSET]
         const newId = nextCommentId + i
         comment.id = newId
         // createComment

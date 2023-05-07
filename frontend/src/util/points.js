@@ -1,3 +1,5 @@
+import { GRID_SNAP } from '/src/config/interactions'
+
 export const lerpPoints = (p1, p2, t) => ({
   x: p1.x + t * (p2.x - p1.x),
   y: p1.y + t * (p2.y - p1.y)

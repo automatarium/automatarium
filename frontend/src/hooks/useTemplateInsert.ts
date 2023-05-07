@@ -1,6 +1,5 @@
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useSelectionStore, useTemplateStore } from '/src/stores'
-import { GRID_SNAP } from '/src/config/interactions'
 import { AutomataState } from '/src/types/ProjectTypes'
 import { InsertGroupResponseType } from '../stores/useProjectStore'
 import { snapPosition } from '/src/util/points'
