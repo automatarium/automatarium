@@ -75,6 +75,10 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
   }
 })
 
+const nextIDFor = (elementArr: AutomataState[] | AutomataTransition[] | ProjectComment[]): number => {
+  return 1 + Math.max(-1, ...elementArr.map((e: AutomataState | AutomataTransition | ProjectComment) => e.id))
+}
+
 interface ProjectStore {
   project: StoredProject,
   // Can't work this one out
@@ -278,11 +282,12 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
         transition.from = null
         transition.to = null
       })
+      const nextStateId = nextIDFor(project.states)
       createData.states.forEach((state, i) => {
         // TODO: ensure position isn't out of window
         // Probably will have to take adjusting position out of this function
         [ state.x, state.y ] = [ state.x + PASTE_POSITION_OFFSET, state.y + PASTE_POSITION_OFFSET ]
-        const newId = i + 1 + Math.max(-1, ...get().project.states.map(s => s.id))
+        const newId = nextStateId + i
         // Update transitions to new state id
         createData.transitions.forEach((transition, i) => {
           if (transition.from === state.id && newTransitions[i].from === null) {
@@ -302,16 +307,18 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
         project.states.push({ ...state })
       })
       createData.transitions = newTransitions
+      const nextCommentId = nextIDFor(project.comments)
       createData.comments.forEach((comment, i) => {
         // TODO: ensure position isn't out of window
         [ comment.x, comment.y ] = [ comment.x + PASTE_POSITION_OFFSET, comment.y + PASTE_POSITION_OFFSET ]
-        const newId = i + 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
+        const newId = nextCommentId + i
         comment.id = newId
         // createComment
         project.comments.push({ ...comment })
       })
+      const nextTransitionId = nextIDFor(project.transitions)
       createData.transitions.forEach((transition, i) => {
-        const newId = i + 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
+        const newId = nextTransitionId + i
         transition.id = newId
         // createTransition
         project.transitions.push({ ...transition })
