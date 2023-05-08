@@ -26,3 +26,7 @@
 .modal button:hover {
     background-color: #d32f2f;
 }
+
+.modal-content {
+    border: 3px solid orange;
+}
