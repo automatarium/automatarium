@@ -20,8 +20,8 @@ export const Warning = () => {
       actions={
         <Button onClick={() => setIsOpen(false)}>OK</Button>
       }
+      description={message}
     >
-      <p>{message}</p>
     </Modal>
   )
 }
