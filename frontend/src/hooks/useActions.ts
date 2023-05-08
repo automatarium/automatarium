@@ -68,23 +68,6 @@ const useActions = (registerHotkeys = false) => {
 
   // TODO: memoize
   const actions: Record<string, Handler> = {
-    CREATE_TEMPLATE: {
-      hotkey: { key: 'j', meta: true },
-      handler: () => {
-        if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
-          // Temporary UI
-          alert('Nothing selected, cannot make template')
-        }
-        // This will use the Template type defined in ProjectTypes
-        const newTemplate = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project)
-        const temp = newTemplate as Template
-        temp._id = crypto.randomUUID()
-        temp.name = 'a template'
-        addTemplate(temp)
-        // Temporary UI
-        alert('New template created from your selection')
-      }
-    },
     NEW_FILE: {
       handler: () => navigate('/new')
     },
@@ -538,7 +521,7 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
 // Takes in the IDs of states, comments, and transitions
 // Parameters also include  the current project and whether a template is being created
 // Outputs a CopyData to be copied or Template object to be created into a template
-const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project): CopyData => {
+export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project): CopyData => {
   const selectedStates: AutomataState[] = project.states.filter(state => stateIds.includes(state.id))
   const selectedComments: ProjectComment[] = project.comments.filter(comment => commentIds.includes(comment.id))
   const selectedTransitions = project.transitions.filter(transition => transitionIds.includes(transition.id))

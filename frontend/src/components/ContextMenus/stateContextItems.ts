@@ -42,11 +42,7 @@ const stateContextItems: ContextItems = [
     shortcut: '⌫',
     action: 'DELETE'
   },
-  'hr',
-  {
-    label: 'New template from selection',
-    action: 'CREATE_TEMPLATE'
-  }
+  'hr'
 ]
 
 export default stateContextItems

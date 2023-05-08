@@ -1,5 +1,8 @@
 import { styled } from 'goober'
 
 export const Wrapper = styled('div')`
-  padding-inline: .8rem;
+  display: flex;
+  flex-direction: column;
+  gap: .8rem;
+  margin: .8rem;
 `
