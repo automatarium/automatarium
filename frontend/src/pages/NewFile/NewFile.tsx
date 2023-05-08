@@ -18,6 +18,7 @@ import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
 import { Project, ProjectType } from '/src/types/ProjectTypes'
+import { showWarning } from '/src/components/Warning/Warning'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -162,10 +163,6 @@ const NewFile = () => {
     <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
-}
-
-function showWarning (msg: string) {
-  dispatchCustomEvent('showWarning', msg)
 }
 
 export default NewFile

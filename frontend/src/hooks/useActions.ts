@@ -11,6 +11,7 @@ import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { FSAProjectGraph } from '/src/types/ProjectTypes'
+import { showWarning } from '/src/components/Warning/Warning'
 
 /**
  * Combination of keys. Used to call an action
@@ -588,10 +589,6 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
     reader.readAsText(input.files[0])
   }
   input.click()
-}
-
-function showWarning (msg: string) {
-  dispatchCustomEvent('showWarning', msg)
 }
 
 export default useActions
