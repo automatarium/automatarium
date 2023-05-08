@@ -18,7 +18,6 @@ import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
 import { Project, ProjectType } from '/src/types/ProjectTypes'
-import Warning from '/src/components/Warning/Warning'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -95,7 +94,7 @@ const NewFile = () => {
           })
           navigate('/editor')
         } else {
-          Warning('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
+          showWarning('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
         }
       }
       reader.readAsText(input.files[0])
@@ -162,6 +161,10 @@ const NewFile = () => {
     <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
+}
+
+function showWarning(msg: string) {
+  dispatchCustomEvent("showWarning", msg )
 }
 
 export default NewFile
