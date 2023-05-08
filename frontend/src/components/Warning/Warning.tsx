@@ -30,7 +30,7 @@ export const Warning = () => {
   )
 }
 
-// This function is intended to dispatch a custom event 'showWarning' to essentially approve of 
+// This function is intended to dispatch a custom event 'showWarning' to essentially approve of
 // the warning modal, allowing it to be shown
 export function showWarning (msg: string) {
   dispatchCustomEvent('showWarning', msg)
