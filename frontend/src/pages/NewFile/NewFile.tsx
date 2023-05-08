@@ -163,8 +163,8 @@ const NewFile = () => {
   </Main>
 }
 
-function showWarning(msg: string) {
-  dispatchCustomEvent("showWarning", msg )
+function showWarning (msg: string) {
+  dispatchCustomEvent('showWarning', msg)
 }
 
 export default NewFile

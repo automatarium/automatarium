@@ -590,8 +590,8 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
   input.click()
 }
 
-function showWarning(msg: string) {
-  dispatchCustomEvent("showWarning", msg )
+function showWarning (msg: string) {
+  dispatchCustomEvent('showWarning', msg)
 }
 
 export default useActions
