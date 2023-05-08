@@ -11,6 +11,7 @@ import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { FSAProjectGraph } from '/src/types/ProjectTypes'
+import { showWarning } from '/src/components/Warning/Warning'
 
 /**
  * Combination of keys. Used to call an action
@@ -181,7 +182,7 @@ const useActions = (registerHotkeys = false) => {
         }
         let isInitialStateUpdated = false
         if (pasteData.projectType !== project.projectType) {
-          alert(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
+          showWarning(`Error: you cannot paste elements from a ${pasteData.projectType} project into a ${project.projectType} project.`)
           return
         }
         const isNewProject = pasteData.projectSource !== project._id
@@ -215,7 +216,7 @@ const useActions = (registerHotkeys = false) => {
         })
         // Error if trying to paste transition without its to and from states
         if (newTransitions.find(transition => transition.from === null || transition.to === null)) {
-          alert('Sorry, there was an error while pasting')
+          showWarning('Sorry, there was an error while pasting')
           removeStates(pasteData.states.map(state => state.id))
           return
         }
@@ -321,7 +322,7 @@ const useActions = (registerHotkeys = false) => {
           updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project as FSAProjectGraph))))
           commit()
         } catch (error) {
-          alert(error.message)
+          showWarning(error.message)
         }
       }
     },
@@ -581,7 +582,7 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
           }
         })
       } catch (error) {
-        window.alert(`${errorMessage}\n${error}`)
+        showWarning(`${errorMessage}\n${error}`)
         console.error(error)
       }
     }
