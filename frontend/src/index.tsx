@@ -9,6 +9,7 @@ import { useEgg, useSyncProjects } from '/src/hooks'
 import { usePreferencesStore, useProjectStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
+import { Warning } from '/src/components/Warning/Warning'
 
 import favicon from 'bundle-text:/public/logo.svg'
 
@@ -68,7 +69,7 @@ const App = () => {
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
     {!hideFooter && <Footer/>}
-
+    <Warning />
     <Pages.Preferences />
   </>
 }
