@@ -18,7 +18,7 @@ import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
 import { Project, ProjectType } from '/src/types/ProjectTypes'
-import { showWarningModal } from '/src/components/WarningModal/warningModal'
+import Warning from '/src/components/Warning/Warning'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -95,7 +95,7 @@ const NewFile = () => {
           })
           navigate('/editor')
         } else {
-          showWarningModal('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
+          Warning('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
         }
       }
       reader.readAsText(input.files[0])
