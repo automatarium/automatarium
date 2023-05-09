@@ -10,6 +10,7 @@ import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { AutomataState, CopyData, FSAProjectGraph, ProjectComment, Template } from '/src/types/ProjectTypes'
+import { showWarning } from '/src/components/Warning/Warning'
 
 /**
  * Combination of keys. Used to call an action
@@ -249,7 +250,7 @@ const useActions = (registerHotkeys = false) => {
           updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project as FSAProjectGraph))))
           commit()
         } catch (error) {
-          alert(error.message)
+          showWarning(error.message)
         }
       }
     },
@@ -301,6 +302,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     TOGGLE_STATES_FINAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length === 0,
       handler: () => {
         const selectedStateIDs = useSelectionStore.getState().selectedStates
         if (selectedStateIDs.length > 0) {
@@ -509,7 +511,7 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
           }
         })
       } catch (error) {
-        window.alert(`${errorMessage}\n${error}`)
+        showWarning(`${errorMessage}\n${error}`)
         console.error(error)
       }
     }

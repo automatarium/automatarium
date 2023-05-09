@@ -58,7 +58,8 @@ export interface CustomEvents {
    * all the transitions that use that edge
    */
   'edge:mousedown': EdgeEventData,
-  'edge:dblclick': EdgeEventData
+  'edge:dblclick': EdgeEventData,
+  'showWarning': string
 }
 
 /**
