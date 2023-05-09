@@ -75,3 +75,13 @@ export const CardDetail = styled('div')`
     font-size: .9em;
   }
 `
+
+export const SelectedTemplateOverlay = styled('div')`
+  position: absolute;
+  z-index: 9;
+  background: var(--primary);
+  opacity: 40%;
+  width: 100%;
+  height: 100%;
+  border-radius: .6rem;
+`

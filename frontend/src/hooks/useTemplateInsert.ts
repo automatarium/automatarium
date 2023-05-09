@@ -24,7 +24,8 @@ const useTemplateInsert = () => {
 
   useEvent('svg:mouseup', e => {
     // Track mouseup event
-    if (tool === 'template' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+    console.log(template)
+    if (template !== null && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       const copyTemplate = structuredClone(template)
       moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
       const insertResponse = insertGroup(copyTemplate)
@@ -38,7 +39,7 @@ const useTemplateInsert = () => {
         alert(insertResponse.body)
       }
     }
-  }, [template, tool])
+  }, [template])
 }
 
 const positionFromEvent = (e: CustomEvent) => {

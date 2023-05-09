@@ -158,7 +158,8 @@ export type CopyData = {
 
 export type Template = CopyData & {
     _id: string,
-    name: string
+    name: string,
+    date: number
 }
 /**
  * Small helper function to change the value of a type at block level.

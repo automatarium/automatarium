@@ -5,7 +5,7 @@ import { Logo } from '/src/components'
 import { deleteProject } from '/src/services'
 import { useProjectsStore } from '/src/stores'
 
-import { CardContainer, CardImage, TypeBadge, CardDetail } from './projectCardStyle'
+import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay } from './projectCardStyle'
 import { MoreVertical } from 'lucide-react'
 dayjs.extend(relativeTime)
 
@@ -13,12 +13,13 @@ const blah = hi => {
   console.log('deleting', hi)
 }
 
-const ProjectCard = ({ name, type, date, image, projectId, ...props }) => {
+const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate, ...props }) => {
   const deleteProjectFromStore = useProjectsStore(s => s.deleteProject)
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
-      <TypeBadge>{type}</TypeBadge>
+      {type && <TypeBadge>{type}</TypeBadge>}
+      {isSelectedTemplate && <SelectedTemplateOverlay/>}
     </CardImage>
     <CardDetail>
       <strong>{name}</strong>
