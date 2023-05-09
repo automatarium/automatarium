@@ -11,6 +11,8 @@ import React, { useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 
+import { showWarning } from '/src/components/Warning/Warning'
+
 
 const Templates = () => {
   const project = useProjectStore(s => s.project)
@@ -43,12 +45,16 @@ const Templates = () => {
 
   const createTemplate = () => {
     const templateName = templateNameInput
+    // Show error if nothing selected
     if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
-      // Temporary UI
-      alert("Please select states and/or transitions before clicking 'Add'")
+      showWarning("Please select states and/or transitions before clicking 'Add'")
       return
     }
-    // TODO: Check name isn't already taken
+    if(templates.map(temp => temp.name).includes(templateName)) {
+      showWarning(`A template named '${templateName}' already exists. Please choose another name.`)
+      return
+    }
+    // Check that name isn't already taken
     const temp = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project)
     const newTemplate = temp as Template
     newTemplate._id = crypto.randomUUID()
