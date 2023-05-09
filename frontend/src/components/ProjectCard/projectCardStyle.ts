@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('button')`
-  width: 12em;
+export const CardContainer = styled('button')<{width: number}>`
+  width: ${props => props.width}em;
   padding: 0;
   margin: 3px;
   background: none;

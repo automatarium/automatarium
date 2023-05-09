@@ -1,5 +1,6 @@
 import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore } from '/src/stores'
 import { SectionLabel, Input, Button, ProjectCard } from '/src/components'
+import { CardList } from '/src/pages/NewFile/components'
 import { selectionToCopyTemplate } from '/src/hooks/useActions'
 import { Plus } from 'lucide-react'
 import dayjs from 'dayjs'
@@ -8,16 +9,18 @@ import { Wrapper } from './templatesStyle'
 import { Description } from '/src/components/Preference/preferenceStyle'
 import React, { useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
+import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
+
 
 const Templates = () => {
-  const templates = useTemplatesStore(s => s.templates)
+  const project = useProjectStore(s => s.project)
+  const templates = (useTemplatesStore(s => s.templates)).filter(temp => temp.projectType === project.projectType)
   const clearTemplates = useTemplatesStore(s => s.clearTemplates)
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const template = useTemplateStore(s => s.template)
   const selectedStatesIds = useSelectionStore(s => s.selectedStates)
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
-  const project = useProjectStore(s => s.project)
   const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
 
   const [templateNameInput, setTemplateNameInput] = useState('')
@@ -26,16 +29,16 @@ const Templates = () => {
 
   const pickTemplate = (id: string, e: MouseEvent) => {
     // Deselect if template already selected
-    const projectCardContainer = e.currentTarget as HTMLElement
-    const projectCard = projectCardContainer.children[0] as HTMLElement
+    const thumbnailContainer = e.currentTarget as HTMLElement
+    const thumbnail = thumbnailContainer.children[0] as HTMLElement
     if(template!== null && template._id === id) {
       setTemplate(null)
-      projectCard.style.boxShadow = 'none'
+      thumbnail.style.boxShadow = 'none'
       return
     }
     // If template isn't yet selected, select it
     setTemplate(templates.find(template => template._id === id))
-    projectCard.style.boxShadow = '0 0 0 3px var(--primary)'
+    thumbnail.style.boxShadow = '0 0 0 3px var(--primary)'
   }
 
   const createTemplate = () => {
@@ -58,9 +61,8 @@ const Templates = () => {
   const removeBorder = (e: FocusEvent) => {
     console.log(e.relatedTarget)
     if (e.relatedTarget !== null) {
-      const projectCardContainer = e.target as HTMLElement
-      const projectCard = projectCardContainer.children[0] as HTMLElement
-      projectCard.style.boxShadow = 'none'
+      const thumbnail = e.target as HTMLElement
+      thumbnail.style.boxShadow = 'none'
     }
   }
 
@@ -82,31 +84,22 @@ const Templates = () => {
       </Wrapper>
     <SectionLabel>Insert Templates</SectionLabel>
       <Wrapper>
-        {/* <Button
-          onClick={() => {
-            clearTemplates()
-          }
-          }>Templates</Button> */}
           {/* TODO: Only show projects of relevant type */}
-          {templates.sort((a, b) => b.date - a.date).map((temp) => (
-            <ProjectCard
-              key={temp._id}
-              name={temp.name}
-              date={dayjs(temp.date)}
-              projectId={temp.projectSource}
-              onClick={(e: MouseEvent) => pickTemplate(temp._id, e)}
-              isSelectedTemplate={template && template._id === temp._id}
-              // onFocus={() => pickTemplate(temp._id)}
-              onBlur={(e: FocusEvent) => removeBorder(e)}
-            />
-          ))}
-          {/* <ProjectCard 
-            key={1234567890}
-            name='something'
-            date={'2022-03-25'}
-            type='FSA'
-            projectId={1234567890}
-          /> */}
+          <CardList title='Your templates' style={{ gap: '1em 1em' }}>
+            {templates.sort((a, b) => b.date - a.date).map((temp) => (
+              <ProjectCard
+                key={temp._id}
+                name={temp.name}
+                date={dayjs(temp.date)}
+                projectId={temp.projectSource}
+                width={TEMPLATE_THUMBNAIL_WIDTH}
+                isSelectedTemplate={template && template._id === temp._id}
+                showKebab={false}
+                onClick={(e: MouseEvent) => pickTemplate(temp._id, e)}
+                onBlur={(e: FocusEvent) => removeBorder(e)}
+              />
+            ))}
+          </CardList>
       </Wrapper>
   </>
 }
