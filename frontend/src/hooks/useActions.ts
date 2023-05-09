@@ -374,6 +374,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     TOGGLE_STATES_FINAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length !== 1,
       handler: () => {
         const selectedStateIDs = useSelectionStore.getState().selectedStates
         if (selectedStateIDs.length > 0) {
