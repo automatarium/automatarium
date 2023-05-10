@@ -1,0 +1,27 @@
+{
+  "projectType": "FSA",
+  "states": [],
+  "transitions": [],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Motionless Broom",
+    "dateCreated": 1681973441991,
+    "dateEdited": 1681973441991,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}
