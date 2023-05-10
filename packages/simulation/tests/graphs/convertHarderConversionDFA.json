@@ -1,0 +1,137 @@
+{
+  "projectType": "FSA",
+  "states": [
+    {
+      "id": 0,
+      "isFinal": false,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 1,
+      "isFinal": false,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 2,
+      "isFinal": true,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 4,
+      "isFinal": false,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 3,
+      "isFinal": true,
+      "x": 765,
+      "y": 330
+    },
+    {
+      "id": 5,
+      "isFinal": false,
+      "x": 765,
+      "y": 330
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "id": 0,
+      "read": "B",
+      "to": 1
+    },
+    {
+      "from": 0,
+      "id": 1,
+      "read": "A",
+      "to": 3
+    },
+    {
+      "from": 1,
+      "id": 2,
+      "read": "A",
+      "to": 2
+    },
+    {
+      "from": 1,
+      "id": 3,
+      "read": "B",
+      "to": 1
+    },
+    {
+      "from": 2,
+      "id": 4,
+      "read": "A",
+      "to": 4
+    },
+    {
+      "from": 2,
+      "id": 5,
+      "read": "B",
+      "to": 4
+    },
+    {
+      "from": 4,
+      "id": 8,
+      "read": "A",
+      "to": 4
+    },
+    {
+      "from": 4,
+      "id": 9,
+      "read": "B",
+      "to": 4
+    },
+    {
+      "from": 3,
+      "id": 10,
+      "read": "A",
+      "to": 5
+    },
+    {
+      "from": 3,
+      "id": 11,
+      "read": "B",
+      "to": 5
+    },
+    {
+      "from": 5,
+      "id": 12,
+      "read": "A",
+      "to": 5
+    },
+    {
+      "from": 5,
+      "id": 13,
+      "read": "B",
+      "to": 5
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Thankful Caterpillar",
+    "dateCreated": 1682044927890,
+    "dateEdited": 1682044927890,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

@@ -1,8 +1,8 @@
 import { Queue } from './collection'
-import { Transition } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
+import { BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 
-export const breadthFirstSearch = <S extends State, T extends Transition>(
+export const breadthFirstSearch = <S extends State, T extends BaseAutomataTransition>(
   graph: Graph<S, T>
 ) => {
   const frontier = new Queue<Node<S>>()
@@ -15,7 +15,7 @@ export const breadthFirstSearch = <S extends State, T extends Transition>(
 
   while (!frontier.isEmpty()) {
     // Bang is necessary because TS doesn't understand that the frontier is not empty here
-    node = frontier.remove()!
+    node = frontier.remove()
     if (graph.isFinalState(node)) {
       return node
     }

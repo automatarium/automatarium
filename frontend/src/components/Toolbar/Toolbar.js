@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, Skull } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { useToolStore } from '/src/stores'
@@ -13,7 +13,7 @@ import handAnimation from './animations/hand.json'
 import stateAnimation from './animations/state.json'
 import transitionAnimation from './animations/transition.json'
 import commentAnimation from './animations/comment.json'
-import deleteAnimation from './animations/delete.json'
+import { SidebarButton } from '../Sidebar/Sidebar'
 
 const tools = [
   {
@@ -55,14 +55,6 @@ const tools = [
     value: 'comment',
     icon: <MessageSquare />,
     animation: commentAnimation
-  },
-  {
-    label: 'Delete tool',
-    hotkey: 'D',
-    description: 'Delete states, transitions and comments from your automaton',
-    value: 'delete',
-    icon: <Skull />,
-    animation: deleteAnimation
   }
 ]
 
@@ -77,7 +69,7 @@ const Toolbar = () => {
   return (
     <Sidebar $tools>
       {tools.map(toolOption => (
-        <Sidebar.Button
+        <SidebarButton
           key={toolOption.label}
           onClick={() => setTool(toolOption.value)}
           $active={tool === toolOption.value}
@@ -95,7 +87,7 @@ const Toolbar = () => {
           }}
         >
           {toolOption.icon}
-        </Sidebar.Button>
+        </SidebarButton>
       ))}
 
       <ToolPopup $y={toolPopup.y} className={toolPopup.visible ? 'visible' : ''}>
@@ -115,7 +107,7 @@ const Toolbar = () => {
 
       <div style={{ flex: 1 }} />
 
-      <Sidebar.Button
+      <SidebarButton
         style={{
           aspectRatio: 'initial',
           fontSize: '.9em',
@@ -130,7 +122,7 @@ const Toolbar = () => {
       >
         <span>{Math.floor(1 / viewScale * 100)}%</span>
         <ChevronDown size="1.1em" />
-      </Sidebar.Button>
+      </SidebarButton>
 
       <Dropdown
         visible={zoomMenuOpen}

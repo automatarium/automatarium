@@ -27,5 +27,8 @@
       "react/prop-types": "off",
       "react/display-name": "off",
       "react/no-unescaped-entities": "off"
-    }
+    },
+  "globals": {
+    "JSX": true
+  }
 }
