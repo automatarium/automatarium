@@ -5,8 +5,8 @@ import { Logo } from '/src/components'
 import { deleteProject } from '/src/services'
 import { useProjectsStore } from '/src/stores'
 
-import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay } from './projectCardStyle'
-import { MoreVertical } from 'lucide-react'
+import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay, DeleteButton } from './projectCardStyle'
+import { MoreVertical, Trash } from 'lucide-react'
 dayjs.extend(relativeTime)
 
 const blah = hi => {

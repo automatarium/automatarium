@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('button')<{width: number}>`
+export const CardContainer = styled('button')<{width: number, istemplate: string}>`
   width: ${props => props.width}em;
   padding: 0;
   margin: 3px;
@@ -11,7 +11,7 @@ export const CardContainer = styled('button')<{width: number}>`
   color: inherit;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:hover${props => !(props.istemplate === 'true') && `, &:focus`} {
     outline: none;
 
     &:not(:disabled) > div:first-of-type {
@@ -63,6 +63,20 @@ export const TypeBadge = styled('div')`
   font-size: .8rem;
   font-weight: 600;
   opacity: .9;
+`
+
+export const DeleteButton = styled('button')`
+  position: absolute;
+  top: 1em;
+  right: 1em;
+  background: var(--toolbar);
+  color: white;
+  padding: .4em .6em;
+  border-radius: .3em;
+  letter-spacing: .1em;
+  font-size: .8rem;
+  font-weight: 600;
+  opacity: 0.9
 `
 
 export const CardDetail = styled('div')`

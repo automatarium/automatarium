@@ -2,7 +2,7 @@ import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore
 import { SectionLabel, Input, Button, ProjectCard } from '/src/components'
 import { CardList } from '/src/pages/NewFile/components'
 import { selectionToCopyTemplate } from '/src/hooks/useActions'
-import { Plus } from 'lucide-react'
+import { Plus, AlertTriangle } from 'lucide-react'
 import dayjs from 'dayjs'
 
 import { Wrapper } from './templatesStyle'
@@ -10,6 +10,7 @@ import { Description } from '/src/components/Preference/preferenceStyle'
 import React, { useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
+import { WarningLabel } from '../TestingLab/testingLabStyle'
 
 import { showWarning } from '/src/components/Warning/Warning'
 
@@ -26,6 +27,7 @@ const Templates = () => {
   const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
 
   const [templateNameInput, setTemplateNameInput] = useState('')
+  const [error, setError] = useState('')
 
   // clearTemplates()
 
@@ -35,7 +37,7 @@ const Templates = () => {
     const thumbnail = thumbnailContainer.children[0] as HTMLElement
     if(template!== null && template._id === id) {
       setTemplate(null)
-      thumbnail.style.boxShadow = 'none'
+      thumbnail.style.boxShadow = ''
       return
     }
     // If template isn't yet selected, select it
@@ -47,11 +49,15 @@ const Templates = () => {
     const templateName = templateNameInput
     // Show error if nothing selected
     if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
-      showWarning("Please select states and/or transitions before clicking 'Add'")
+      setError("Please select states and/or transitions before clicking 'Add'")
+      return
+    }
+    if (templateName === '') {
+      setError("Template name cannot be empty.")
       return
     }
     if(templates.map(temp => temp.name).includes(templateName)) {
-      showWarning(`A template named '${templateName}' already exists. Please choose another name.`)
+      setError(`A template named '${templateName}' already exists. Please choose another name.`)
       return
     }
     // Check that name isn't already taken
@@ -62,23 +68,35 @@ const Templates = () => {
     newTemplate.date = new Date().getTime()
     addTemplate(newTemplate)
     setTemplateNameInput('')
+    setError('')
   }
 
   const removeBorder = (e: FocusEvent) => {
-    console.log(e.relatedTarget)
-    if (e.relatedTarget !== null) {
-      const thumbnail = e.target as HTMLElement
-      thumbnail.style.boxShadow = 'none'
+    const thumbnailContainer = e.currentTarget as HTMLElement
+    const thumbnail = thumbnailContainer.children[0] as HTMLElement
+    thumbnail.style.boxShadow = ''
+  }
+
+  const deleteTemplate = (e: KeyboardEvent) => {
+    if(e.key === 'a') {
+      console.log("Deleting")
     }
   }
 
   return <>
     <SectionLabel>Create a Template</SectionLabel>
     {/* TODO: Add tooltip */}
+      {error !== '' && <>
+        <WarningLabel>
+          <AlertTriangle />
+          {error}
+        </WarningLabel>
+      </>}
       <Wrapper>
         <Input
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setTemplateNameInput(e.target.value)
+              setError('')
             }}
             value={templateNameInput}
             placeholder="Name your template"
@@ -90,8 +108,7 @@ const Templates = () => {
       </Wrapper>
     <SectionLabel>Insert Templates</SectionLabel>
       <Wrapper>
-          {/* TODO: Only show projects of relevant type */}
-          <CardList title='Your templates' style={{ gap: '1em 1em' }}>
+          <CardList title='' style={{ gap: '1em 1em' }}>
             {templates.sort((a, b) => b.date - a.date).map((temp) => (
               <ProjectCard
                 key={temp._id}
@@ -99,10 +116,16 @@ const Templates = () => {
                 date={dayjs(temp.date)}
                 projectId={temp.projectSource}
                 width={TEMPLATE_THUMBNAIL_WIDTH}
-                isSelectedTemplate={template && template._id === temp._id}
+                istemplate='true'
                 showKebab={false}
+                isSelectedTemplate={template && template._id === temp._id}
                 onClick={(e: MouseEvent) => pickTemplate(temp._id, e)}
-                onBlur={(e: FocusEvent) => removeBorder(e)}
+                onBlur={(e: FocusEvent) => { 
+                  if(e.relatedTarget !== null) {
+                    removeBorder(e)
+                  }
+                }}
+                onKeyPress={(e: KeyboardEvent) => deleteTemplate(e)}
               />
             ))}
           </CardList>

@@ -55,14 +55,6 @@ const tools = [
     value: 'comment',
     icon: <MessageSquare />,
     animation: commentAnimation
-  },
-  {
-    label: 'Template tool',
-    hotkey: 'J',
-    description: 'Add templates to your automaton',
-    value: 'template',
-    icon: <Star />,
-    animation: commentAnimation
   }
 ]
 
