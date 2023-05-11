@@ -86,6 +86,13 @@ body.light, body.light #automatarium-graph {
   --comment-text: var(--comment-text-light);
   --grid-pattern: var(--grid-pattern-light);
 }
+
+
+body.light {
+  background: rgb(146, 136, 136);
+}
+
+
 body.dark, body.dark #automatarium-graph {
   --grid-bg: var(--grid-bg-dark);
   --grid-dot: var(--grid-dot-dark);
