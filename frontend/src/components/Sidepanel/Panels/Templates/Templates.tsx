@@ -32,18 +32,18 @@ const Templates = () => {
 
   const pickTemplate = (id: string, e: MouseEvent) => {
     // Deselect if template already selected
-    const thumbnailContainer = e.currentTarget as HTMLElement
-    const thumbnail = thumbnailContainer.children[0] as HTMLElement
+    // const thumbnailContainer = e.currentTarget as HTMLElement
+    // const thumbnail = thumbnailContainer.children[0] as HTMLElement
     if(template!== null && template._id === id) {
       setTemplate(null)
       setTool('cursor')
-      thumbnail.style.boxShadow = ''
+      // thumbnail.style.boxShadow = ''
       return
     }
     // If template isn't yet selected, select it
     setTemplate(templates.find(template => template._id === id))
     setTool(null)
-    thumbnail.style.boxShadow = '0 0 0 3px var(--primary)'
+    // thumbnail.style.boxShadow = '0 0 0 3px var(--primary)'
   }
 
   const createTemplate = () => {
@@ -75,7 +75,7 @@ const Templates = () => {
   const removeBorder = (e: FocusEvent) => {
     const thumbnailContainer = e.currentTarget as HTMLElement
     const thumbnail = thumbnailContainer.children[0] as HTMLElement
-    thumbnail.style.boxShadow = ''
+    // thumbnail.style.boxShadow = ''
   }
 
   const deleteTemplate = (e: KeyboardEvent) => {

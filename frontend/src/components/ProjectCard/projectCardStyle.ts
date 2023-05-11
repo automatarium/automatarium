@@ -93,9 +93,9 @@ export const CardDetail = styled('div')`
 export const SelectedTemplateOverlay = styled('div')`
   position: absolute;
   z-index: 9;
-  background: var(--primary);
-  opacity: 40%;
+  background: hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.4);
   width: 100%;
   height: 100%;
   border-radius: .6rem;
+  box-shadow: 0 0 0 3px var(--primary);
 `
