@@ -1,4 +1,4 @@
-import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore } from '/src/stores'
+import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore, useToolStore } from '/src/stores'
 import { SectionLabel, Input, Button, ProjectCard } from '/src/components'
 import { CardList } from '/src/pages/NewFile/components'
 import { selectionToCopyTemplate } from '/src/hooks/useActions'
@@ -12,9 +12,6 @@ import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { WarningLabel } from '../TestingLab/testingLabStyle'
 
-import { showWarning } from '/src/components/Warning/Warning'
-
-
 const Templates = () => {
   const project = useProjectStore(s => s.project)
   const templates = (useTemplatesStore(s => s.templates)).filter(temp => temp.projectType === project.projectType)
@@ -25,6 +22,8 @@ const Templates = () => {
   const selectedStatesIds = useSelectionStore(s => s.selectedStates)
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
   const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
+  const tool = useToolStore(s => s.tool)
+  const setTool = useToolStore(s => s.setTool)
 
   const [templateNameInput, setTemplateNameInput] = useState('')
   const [error, setError] = useState('')
@@ -37,11 +36,13 @@ const Templates = () => {
     const thumbnail = thumbnailContainer.children[0] as HTMLElement
     if(template!== null && template._id === id) {
       setTemplate(null)
+      setTool('cursor')
       thumbnail.style.boxShadow = ''
       return
     }
     // If template isn't yet selected, select it
     setTemplate(templates.find(template => template._id === id))
+    setTool(null)
     thumbnail.style.boxShadow = '0 0 0 3px var(--primary)'
   }
 

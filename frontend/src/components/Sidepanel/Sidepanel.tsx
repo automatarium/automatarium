@@ -8,7 +8,7 @@ import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
 
-import { useTemplateStore } from '/src/stores'
+import { useTemplateStore, useToolStore } from '/src/stores'
 
 type PanelItem = {
   label: string
@@ -53,6 +53,7 @@ const panels: PanelItem[] = [
 const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
   const setTemplate = useTemplateStore(s => s.setTemplate)
+  const setTool = useToolStore(s => s.setTool)
 
   // Open panel via event
   useEvent('sidepanel:open', e => {
@@ -69,6 +70,8 @@ const Sidepanel = () => {
               setActivePanel(undefined)
               // Stop template insertion mode
               setTemplate(null)
+              setTool('cursor')
+
             }}
           ><ChevronRight /></CloseButton>
           <Panel>

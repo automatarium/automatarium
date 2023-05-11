@@ -3,6 +3,7 @@ import { useProjectStore, useToolStore, useSelectionStore, useTemplateStore } fr
 import { AutomataState } from '/src/types/ProjectTypes'
 import { InsertGroupResponseType } from '../stores/useProjectStore'
 import { snapPosition } from '/src/util/points'
+import { useState } from 'react'
 
 const useTemplateInsert = () => {
   const tool = useToolStore(s => s.tool)
@@ -13,18 +14,22 @@ const useTemplateInsert = () => {
   const insertGroup = useProjectStore(s => s.insertGroup)
   const template = useTemplateStore(s => s.template)
 
-  useEvent('svg:mousemove', () => {
-    // Keep track of the mouse position
+  const [mousePos, setMousePos] = useState({x: 0, y: 0})
+  const [showGhost, setShowGhost] = useState(false)
+
+  useEvent('svg:mousemove', e => {
+    setMousePos(positionFromEvent(e))
   })
 
-  useEvent('svg:mousedown', () => {
-    // Track mousedown event
-    // Showing ghost template will go here
+  useEvent('svg:mousedown', e => {
+    if (template !== null && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+      setShowGhost(true)
+    }
   })
 
   useEvent('svg:mouseup', e => {
     // Track mouseup event
-    console.log(template)
+    setShowGhost(false)
     if (template !== null && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       const copyTemplate = structuredClone(template)
       moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
@@ -40,6 +45,8 @@ const useTemplateInsert = () => {
       }
     }
   }, [template])
+
+  return { ghostState: template !== null && showGhost && mousePos }
 }
 
 const positionFromEvent = (e: CustomEvent) => {
