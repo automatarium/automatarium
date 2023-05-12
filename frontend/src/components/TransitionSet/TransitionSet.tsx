@@ -1,11 +1,11 @@
 import { MouseEvent, useContext } from 'react'
-import { useProjectStore } from '../../stores'
+import { useProjectStore, useTemplateStore } from '../../stores'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-import { pathStyles, pathSelectedClass } from './transitionSetStyle'
+import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
 
@@ -41,8 +41,9 @@ const toRightOf = (a: Coordinate, b: Coordinate) => {
 // Direction that a transition can bend
 type BendDirection = 'over' | 'under' | 'straight'
 
-const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) => {
+const TransitionSet = ({ transitions, isGhost=false } : {transitions: PositionedTransition[], isGhost?: boolean}) => {
   const projectType = useProjectStore(s => s.project.config.type)
+  const template = useTemplateStore(s => s.template)
   // Split the transitions into the two directions (left->right and right->left)
   // This makes the code easier since we don't need to handle direction changes
   // Named over and under since
@@ -57,15 +58,25 @@ const TransitionSet = ({ transitions } : {transitions: PositionedTransition[]}) 
     // The transitions sent should all start and end the same, so we only need to get the values
     // from the first transition
     const first = toRender[0]
-    return <Transition
-      transitions={toRender}
-      from={first.from}
-      to={first.to}
-      id={first.id}
-      key={first.id}
-      bendDirection={bend}
-      projectType={projectType}
-    />
+    if (isGhost) {
+      return <TransitionSet.Ghost
+        from={first.from}
+        to={first.to}
+        key={first.id}
+        bendDirection={bend}
+      />
+    }
+    else {
+      return <Transition
+        transitions={toRender}
+        from={first.from}
+        to={first.to}
+        id={first.id}
+        key={first.id}
+        bendDirection={bend}
+        projectType={projectType}
+      />
+    }
   }
   // We don't bend the transition if only rendering in one direction
   const isStraight = (over.length === 0 && under.length > 0) || (over.length > 0 && under.length === 0) ? 'straight' : ''
@@ -276,5 +287,21 @@ const calculateTransitionPath = (
 }
 
 TransitionSet.Transition = Transition
+
+TransitionSet.Ghost = ({ from, to, bendDirection }) => {
+  const pathID = `${from.x}${from.y}${to.x}${to.y}`
+  const bendValue = {
+    straight: 0,
+    over: -0.5,
+    under: 0.5
+  }[bendDirection] * TRANSITION_SEPERATION
+  const { pathData, textPathData, control, normal, edges } = calculateTransitionPath(from, to, bendValue, false)
+  return <path
+    id={pathID}
+    d={pathData}
+    key={pathID}
+    style={ghostStyles}
+  />
+}
 
 export default TransitionSet

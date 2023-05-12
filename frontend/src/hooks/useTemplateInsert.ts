@@ -46,7 +46,7 @@ const useTemplateInsert = () => {
     }
   }, [template])
 
-  return { ghostState: template !== null && showGhost && mousePos }
+  return { ghostTemplate: template !== null && showGhost && mousePos, actualTemplate: template }
 }
 
 const positionFromEvent = (e: CustomEvent) => {
@@ -55,7 +55,7 @@ const positionFromEvent = (e: CustomEvent) => {
   return doSnap ? snapPosition(pos) : pos
 }
 
-const moveStatesToMouse = (mousePos: {x: number, y: number}, states: AutomataState[]) => {
+export const moveStatesToMouse = (mousePos: {x: number, y: number}, states: AutomataState[]) => {
   // Find the leftmost state (lowest x val)
   const originState = states.reduce((previous, current) => {
     return current.x < previous.x ? current : previous
