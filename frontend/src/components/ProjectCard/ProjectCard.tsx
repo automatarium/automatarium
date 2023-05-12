@@ -9,10 +9,6 @@ import { ProjectType } from '/src/types/ProjectTypes'
 import { ButtonHTMLAttributes } from 'react'
 dayjs.extend(relativeTime)
 
-const blah = hi => {
-  console.log('deleting', hi)
-}
-
 type ProjectCardProps = {
   name: string
   type: ProjectType | '???' // '???' is used has a default type
@@ -25,7 +21,7 @@ type ProjectCardProps = {
   disabled?: boolean
 }
 
-const ProjectCard = ({ name, type, date, image, projectId, ...props }: ProjectCardProps) => {
+const ProjectCard = ({ name, type, date, image, ...props }: ProjectCardProps) => {
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}

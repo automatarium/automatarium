@@ -3,12 +3,14 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore } from '/src/stores'
 import { GRID_SNAP } from '/src/config/interactions'
+import { SVGMouseData } from '/src/hooks/useEvent'
+import { Coordinate } from '/src/types/ProjectTypes'
 
 const useStateCreation = () => {
   const tool = useToolStore(s => s.tool)
   const createState = useProjectStore(s => s.createState)
   const commit = useProjectStore(s => s.commit)
-  const [mousePos, setMousePos] = useState()
+  const [mousePos, setMousePos] = useState<Coordinate>()
   const [showGhost, setShowGhost] = useState(false)
 
   useEvent('svg:mousemove', e => {
@@ -32,13 +34,13 @@ const useStateCreation = () => {
   return { ghostState: tool === 'state' && showGhost && mousePos }
 }
 
-const positionFromEvent = e => {
+const positionFromEvent = (e: CustomEvent<SVGMouseData>) => {
   const doSnap = !e.detail.originalEvent.altKey
   const pos = { x: e.detail.viewX, y: e.detail.viewY }
   return doSnap ? snapPosition(pos) : pos
 }
 
-const snapPosition = ({ x, y }) =>
+const snapPosition = ({ x, y }: Coordinate): Coordinate =>
   ({ x: Math.floor(x / GRID_SNAP) * GRID_SNAP, y: Math.floor(y / GRID_SNAP) * GRID_SNAP })
 
 export default useStateCreation

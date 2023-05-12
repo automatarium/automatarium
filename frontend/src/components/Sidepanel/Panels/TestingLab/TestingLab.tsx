@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback, useMemo, useEffect } from 'react'
+import { createContext, useState, useCallback, useMemo, useEffect, KeyboardEvent } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
@@ -308,7 +308,7 @@ const TestingLab = () => {
                   const lines = paste.split(/\r?\n/).filter(l => l !== '')
                   lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
                 }}
-                onKeyDown={e => {
+                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
                   if (e.key === 'Enter' && !e.repeat) {
                     if (e.metaKey || e.ctrlKey) {
                       // Run shortcut
