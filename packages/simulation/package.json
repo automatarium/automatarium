@@ -6,7 +6,6 @@
   "source": "src/index.ts",
   "main": "dist/index.js",
   "module": "dist/module.js",
-  "types": "dist/types.d.ts",
   "scripts": {
     "watch": "parcel watch",
     "build": "parcel build",
@@ -14,6 +13,9 @@
     "lint": "eslint . --ext .js,.ts --cache --cache-location '../../.eslintcache'",
     "lint:fix": "yarn lint --fix",
     "check:types": "tsc --noemit"
+  },
+  "dependencies": {
+    "frontend": "1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",

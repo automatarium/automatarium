@@ -1,6 +1,6 @@
-const env = process.env.NODE_ENV || 'development'
+import firebaseConfigDev from './firebase-config-dev.json'
 
-const firebaseConfigDev = require('./firebase-config-dev.json')
+const env = process.env.NODE_ENV || 'development'
 
 const config = {
   development: {
@@ -16,5 +16,8 @@ const config = {
     firebaseConfig: firebaseConfigDev
   }
 }
+
+export * from './colors'
+export * from './projects'
 
 export default config[env]

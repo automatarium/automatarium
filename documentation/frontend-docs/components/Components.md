@@ -292,7 +292,7 @@ Used to create styled buttons.
 
 An example from the toolbar
 ```
-<Sidebar.Button
+<SidebarButton
           key={toolOption.label}
           onClick={() => setTool(toolOption.value)}
           $active={tool === toolOption.value}
@@ -310,7 +310,7 @@ An example from the toolbar
           }}
         >
           {toolOption.icon}
-</Sidebar.Button>
+</SidebarButton>
 ```
 
 # Sidepanel

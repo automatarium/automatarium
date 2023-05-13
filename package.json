@@ -30,9 +30,9 @@
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint:fix",
     "check:types": "yarn workspaces run check:types",
-    "test": "yarn workspace @automatarium/simulation test",
+    "test": "yarn workspace @automatarium/simulation test && yarn workspace @automatarium/jflap-translator test",
     "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
-    "build": "yarn build:packages && yarn build:backend && yarn build:frontend"
+    "build": "yarn build:packages && yarn build:frontend"
   },
   "devDependencies": {
     "@parcel/packager-ts": "2.8.3",
