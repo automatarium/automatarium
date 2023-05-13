@@ -21,7 +21,9 @@ type ProjectCardProps = {
   disabled?: boolean
 }
 
-const ProjectCard = ({ name, type, date, image, ...props }: ProjectCardProps) => {
+// TODO: Remove this when projectId is actually used
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+const ProjectCard = ({ name, type, date, image, projectId, ...props }: ProjectCardProps) => {
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
@@ -30,7 +32,7 @@ const ProjectCard = ({ name, type, date, image, ...props }: ProjectCardProps) =>
     <CardDetail>
       <strong>{name}</strong>
       <MoreVertical/>
-      {date && <span>{date instanceof Dayjs ? dayjs().to(date) : date}</span>}
+      {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
   </CardContainer>
 }
