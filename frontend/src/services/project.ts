@@ -1,7 +1,7 @@
 import api from '.'
 import { StoredProject } from '/src/stores/useProjectStore'
 
-export const getProject = async (pid: string): Promise<StoredProject> => {
+export const getProject = async (pid: string): Promise<{project: StoredProject}> => {
   const res = await api.get(`/projects/${pid}`)
   return res.data
 }

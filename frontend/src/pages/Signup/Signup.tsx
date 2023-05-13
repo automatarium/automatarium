@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef } from 'react'
+import React, { useState, useEffect, forwardRef, ReactNode, Ref } from 'react'
 import { useForm } from 'react-hook-form'
 
 import { firebase } from '/src/auth'
@@ -12,9 +12,12 @@ const defaultValues = {
   passwordAgain: ''
 }
 
-const Signup = {}
+interface SignupFormProps {
+  setFormActions: (actions: ReactNode) => void
+  onComplete: () => void
+}
 
-Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
+export const SignupForm = forwardRef(({ setFormActions, onComplete, ...props }: SignupFormProps, ref: Ref<HTMLFormElement>) => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState(null)
   const { signOut, setSigningUp } = useAuth()
@@ -33,7 +36,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
         <Button type='submit' form='signup-form' disabled={!isDirty || isSubmitting}>Sign Up</Button>
       </>)
     }
-  }, [isDirty, isSubmitting, ref?.current, setFormActions])
+  }, [isDirty, isSubmitting, ref, setFormActions])
 
   const watchPassword = watch('password')
 
@@ -101,7 +104,7 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
     <Label htmlFor='password'>Password</Label>
     <Input type='password' minLength={6} {...register('password')} />
 
-    <p>{errors.email?.password}</p>
+    <p>{errors.password?.message}</p>
 
     <Label htmlFor='passwordAgain'>Confirm Password</Label>
     <Input type='password' {...register('passwordAgain', {
@@ -112,8 +115,8 @@ Signup.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
   </form>
 })
 
-Signup.Modal = ({ ...props }) => {
-  const [formActions, setFormActions] = useState()
+const SignupModal = ({ ...props }) => {
+  const [formActions, setFormActions] = useState<ReactNode>()
 
   return <Modal
     actions={<>
@@ -124,11 +127,11 @@ Signup.Modal = ({ ...props }) => {
   >
     <Header center />
     <h2>Sign Up</h2>
-    <Signup.Form
+    <SignupForm
       onComplete={props?.onClose}
       setFormActions={setFormActions}
     />
   </Modal>
 }
 
-export default Signup
+export default SignupModal

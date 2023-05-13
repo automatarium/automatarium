@@ -6,6 +6,7 @@ import { usePreferencesStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
 
 import { Section } from './preferencesStyle'
+import { Preferences } from '/src/stores/usePreferencesStore'
 
 const defaultValues = {
   theme: 'system',
@@ -22,7 +23,7 @@ const Preferences = () => {
 
   const { register, handleSubmit, reset } = useForm({ defaultValues })
 
-  const onSubmit = values => {
+  const onSubmit = (values: Preferences) => {
     setPreferences(values)
     setIsOpen(false)
   }

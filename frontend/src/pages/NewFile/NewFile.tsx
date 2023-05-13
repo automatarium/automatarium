@@ -8,8 +8,8 @@ import { Main, Button, Header, ProjectCard } from '/src/components'
 import { useProjectsStore, useProjectStore, useThumbnailStore, usePreferencesStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
 import { useAuth } from '/src/hooks'
-import { createNewProject } from '/src/stores/useProjectStore' // #HACK
-import LoginPage from '/src/pages/Login/Login'
+import { createNewProject, StoredProject } from '/src/stores/useProjectStore' // #HACK
+import LoginModal from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 
 import { NewProjectCard, CardList } from './components'
@@ -17,7 +17,7 @@ import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFi
 import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
-import { Project, ProjectType } from '/src/types/ProjectTypes'
+import { ProjectType } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 
 const NewFile = () => {
@@ -52,7 +52,7 @@ const NewFile = () => {
     navigate('/editor')
   }
 
-  const handleLoadProject = (project: Project) => {
+  const handleLoadProject = (project: StoredProject) => {
     setProject(project)
     navigate('/editor')
   }
@@ -160,8 +160,8 @@ const NewFile = () => {
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
     </CardList>
 
-    <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
-    <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
+    <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
+    <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
 }
 

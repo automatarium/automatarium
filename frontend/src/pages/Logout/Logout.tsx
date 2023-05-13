@@ -9,12 +9,10 @@ const Logout = () => {
   const clearProjects = useProjectsStore(s => s.clearProjects)
 
   useEffect(() => {
-    const doSignout = async () => {
+    (async () => {
       await signOut()
       clearProjects()
-    }
-
-    doSignout()
+    })()
   }, [])
 
   return loading
