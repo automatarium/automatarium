@@ -19,7 +19,7 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate, s
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
       {type && <TypeBadge>{type}</TypeBadge>}
-      {/* TODO: put text in overlay? */}
+      {/* Highlight a template if it is selected */}
       {isSelectedTemplate && <SelectedTemplateOverlay/>}
     </CardImage>
     <CardDetail>

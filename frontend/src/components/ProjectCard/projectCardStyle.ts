@@ -65,20 +65,6 @@ export const TypeBadge = styled('div')`
   opacity: .9;
 `
 
-export const DeleteButton = styled('button')`
-  position: absolute;
-  top: 1em;
-  right: 1em;
-  background: var(--toolbar);
-  color: white;
-  padding: .4em .6em;
-  border-radius: .3em;
-  letter-spacing: .1em;
-  font-size: .8rem;
-  font-weight: 600;
-  opacity: 0.9
-`
-
 export const CardDetail = styled('div')`
   margin-block-start: 1em;
 
@@ -90,6 +76,7 @@ export const CardDetail = styled('div')`
   }
 `
 
+// Highlight and outline for selected template
 export const SelectedTemplateOverlay = styled('div')`
   position: absolute;
   z-index: 9;

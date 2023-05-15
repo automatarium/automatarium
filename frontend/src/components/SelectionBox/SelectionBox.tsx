@@ -1,14 +1,12 @@
 import { useState } from 'react'
 
-import { useProjectStore, useViewStore, useSelectionStore, useToolStore, useTemplateStore } from '/src/stores'
+import { useProjectStore, useViewStore, useSelectionStore, useToolStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
 import { locateTransition } from '/src/util/states'
 
 const SelectionBox = () => {
   const tool = useToolStore(s => s.tool)
-  const template = useTemplateStore(s => s.template)
-  // Only want selection box when not in template insertion mode
-  const toolActive = tool === 'cursor' && template === null
+  const toolActive = tool === 'cursor'
 
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)

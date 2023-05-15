@@ -27,7 +27,7 @@ const EditorPanel = () => {
   const { startDrag: startCommentDrag } = useCommentDragging()
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
-  const { ghostTemplate, actualTemplate } = useTemplateInsert()
+  const { ghostTemplate } = useTemplateInsert()
 
   const selectedStates = useSelectionStore(s => s.selectedStates)
   const selectedComments = useSelectionStore(s => s.selectedComments)

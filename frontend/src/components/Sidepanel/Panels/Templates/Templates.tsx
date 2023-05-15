@@ -26,12 +26,8 @@ const Templates = () => {
   const [templateNameInput, setTemplateNameInput] = useState('')
   const [error, setError] = useState('')
 
-  // clearTemplates()
-
   const pickTemplate = (id: string) => {
     // Deselect if template already selected
-    // const thumbnailContainer = e.currentTarget as HTMLElement
-    // const thumbnail = thumbnailContainer.children[0] as HTMLElement
     if (template !== null && template._id === id) {
       setTemplate(null)
       setTool('cursor')
@@ -41,14 +37,13 @@ const Templates = () => {
     // If template isn't yet selected, select it
     setTemplate(templates.find(template => template._id === id))
     setTool(null)
-    // thumbnail.style.boxShadow = '0 0 0 3px var(--primary)'
   }
 
   const createTemplate = () => {
     const templateName = templateNameInput
-    // Show error if nothing selected
+    // Show errors
     if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
-      setError("Please select states and/or transitions before clicking 'Add'")
+      setError('Please select states and/or transitions before clicking "Add".')
       return
     }
     if (templateName === '') {
@@ -59,9 +54,9 @@ const Templates = () => {
       setError(`A template named '${templateName}' already exists. Please choose another name.`)
       return
     }
-    // Check that name isn't already taken
     const temp = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project)
     const newTemplate = temp as Template
+    // Set template attributes
     newTemplate._id = crypto.randomUUID()
     newTemplate.name = templateName
     newTemplate.date = new Date().getTime()
@@ -72,7 +67,6 @@ const Templates = () => {
 
   return <>
     <SectionLabel>Create a Template</SectionLabel>
-    {/* TODO: Add tooltip */}
       {error !== '' && <>
         <WarningLabel>
           <AlertTriangle />
@@ -93,6 +87,7 @@ const Templates = () => {
           onClick={createTemplate}>Add</Button>
           <Description>Template is created from selected states and transitions</Description>
       </Wrapper>
+    {/* TODO: Add tooltip explaining how to insert templates */}
     <SectionLabel>Insert Templates</SectionLabel>
       <Wrapper>
           <CardList title='' style={{ gap: '1em 1em' }}>
@@ -101,7 +96,7 @@ const Templates = () => {
                 key={temp._id}
                 name={temp.name}
                 date={dayjs(temp.date)}
-                projectId={temp.projectSource}
+                projectId={temp._id}
                 width={TEMPLATE_THUMBNAIL_WIDTH}
                 istemplate='true'
                 showKebab={false}

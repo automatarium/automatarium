@@ -61,6 +61,7 @@ const tools = [
 const Toolbar = () => {
   const { tool, setTool } = useToolStore()
   const setTemplate = useTemplateStore(s => s.setTemplate)
+  const template = useTemplateStore(s => s.template)
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
   const viewScale = useViewStore(s => s.scale)
@@ -74,7 +75,7 @@ const Toolbar = () => {
           key={toolOption.label}
           onClick={() => {
             setTool(toolOption.value)
-            setTemplate(null)
+            if (template !== null) setTemplate(null)
           }}
           $active={tool === toolOption.value}
           onMouseEnter={e => {

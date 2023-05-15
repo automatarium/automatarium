@@ -104,7 +104,7 @@ interface ProjectStore {
   removeComment: (comment: ProjectComment) => void,
   createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => number,
   updateState: (state: AutomataState) => void,
-  insertGroup: (createData: Template | CopyData) => InsertGroupResponse,
+  insertGroup: (createData: Template | CopyData, isTemplate?: boolean) => InsertGroupResponse,
   setSingleTest: (value: string) => void,
   addBatchTest: (value?: string) => void,
   updateBatchTest: (index: number, value: string) => void,
@@ -250,10 +250,10 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     project.states = project.states.filter((st: AutomataState) => st.id !== state.id)
   })),
 
-  insertGroup: (createData) => {
+  insertGroup: (createData, isTemplate = false) => {
     // Check that we are inserting into same project type
     if (createData.projectType !== get().project.projectType) {
-      return { type: InsertGroupResponseType.FAIL, body: `Error: you cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.` }
+      return { type: InsertGroupResponseType.FAIL, body: `You cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.` }
     }
     // Check that for transitions being inserted, to and from states are also inserted
     let missingState = false
@@ -279,6 +279,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     set(produce(({ project }: { project }) => {
       let isInitialStateUpdated = false
       const isNewProject = createData.projectSource !== project._id
+      const positionOffset = isTemplate ? 0 : PASTE_POSITION_OFFSET
       const newTransitions = structuredClone(createData.transitions)
       newTransitions.forEach(transition => {
         transition.from = null
@@ -288,7 +289,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       createData.states.forEach((state, i) => {
         // TODO: ensure position isn't out of window
         // Probably will have to take adjusting position out of this function
-        [state.x, state.y] = [state.x + PASTE_POSITION_OFFSET, state.y + PASTE_POSITION_OFFSET]
+        [state.x, state.y] = [state.x + positionOffset, state.y + positionOffset]
         const newId = nextStateId + i
         // Update transitions to new state id
         createData.transitions.forEach((transition, i) => {
@@ -312,7 +313,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       const nextCommentId = nextIDFor(project.comments)
       createData.comments.forEach((comment, i) => {
         // TODO: ensure position isn't out of window
-        [comment.x, comment.y] = [comment.x + PASTE_POSITION_OFFSET, comment.y + PASTE_POSITION_OFFSET]
+        [comment.x, comment.y] = [comment.x + positionOffset, comment.y + positionOffset]
         const newId = nextCommentId + i
         comment.id = newId
         // createComment

@@ -179,8 +179,8 @@ const useActions = (registerHotkeys = false) => {
     DELETE: {
       hotkeys: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
-        // If a template is selected, delete the template
-        if (template !== null) {
+        // If a template is selected and nothing else is, delete the template
+        if (template !== null && selectedCommentsIds.length === 0 && selectedStatesIds.length === 0 && selectedTransitionsIds.length === 0) {
           if (window.confirm(`Are you sure you want to delete your template '${template.name}'?`)) {
             deleteTemplate(template._id)
             setTemplate(null)
@@ -188,14 +188,10 @@ const useActions = (registerHotkeys = false) => {
           }
         }
         // Otherwise, delete selection
-        const selectionState = useSelectionStore.getState()
-        const selectedStateIDs = selectionState.selectedStates
-        const selectedTransitionIDs = selectionState.selectedTransitions
-        const selectedCommentIDs = selectionState.selectedComments
-        if (selectedStateIDs.length > 0 || selectedTransitionIDs.length > 0 || selectedCommentIDs.length > 0) {
-          removeStates(selectedStateIDs)
-          removeTransitions(selectedTransitionIDs)
-          removeComments(selectedCommentIDs)
+        if (selectedStatesIds.length > 0 || selectedTransitionsIds.length > 0 || selectedCommentsIds.length > 0) {
+          removeStates(selectedStatesIds)
+          removeTransitions(selectedTransitionsIds)
+          removeComments(selectedCommentsIds)
           selectNone()
           commit()
         }

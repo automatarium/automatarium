@@ -32,7 +32,7 @@ const useTemplateInsert = () => {
     if (template !== null && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       const copyTemplate = structuredClone(template)
       moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
-      const insertResponse = insertGroup(copyTemplate)
+      const insertResponse = insertGroup(copyTemplate, true)
       console.log(insertResponse)
       if (insertResponse.type === InsertGroupResponseType.SUCCESS) {
         selectComments(insertResponse.body.comments.map(comment => comment.id))
@@ -45,7 +45,7 @@ const useTemplateInsert = () => {
     }
   }, [template])
 
-  return { ghostTemplate: template !== null && showGhost && mousePos, actualTemplate: template }
+  return { ghostTemplate: template !== null && showGhost && mousePos }
 }
 
 const positionFromEvent = (e: CustomEvent) => {
