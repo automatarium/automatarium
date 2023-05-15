@@ -41,8 +41,7 @@ const stateContextItems: ContextItems = [
     label: 'Delete',
     shortcut: '⌫',
     action: 'DELETE'
-  },
-  'hr'
+  }
 ]
 
 export default stateContextItems

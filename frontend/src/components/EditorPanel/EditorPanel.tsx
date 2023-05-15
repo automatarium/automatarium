@@ -41,9 +41,6 @@ const EditorPanel = () => {
   useCommentCreation()
   useContextMenus()
 
-  if (ghostTemplate) console.log(actualTemplate)
-  if (ghostTemplate) console.log(ghostTemplate)
-
   const handleDragging = (e: SelectionEvent) => {
     // Only try and check if the user is selecting a new resource if the event correlates with that.
     // Else just use the previous value from the store.

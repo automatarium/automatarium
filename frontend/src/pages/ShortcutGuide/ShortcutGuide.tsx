@@ -2,11 +2,26 @@ import { useMemo, Fragment, useState } from 'react'
 
 import { SectionLabel, Modal } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
-import { formatHotkey } from '/src/hooks/useActions'
+import { formatHotkey, HotKey } from '/src/hooks/useActions'
 
 import { Section, Shortcut } from './shortcutGuideStyle'
 
-const shortcuts = [
+interface ActionShortcut {
+  label: string
+  action: string
+}
+
+interface HotkeyShortcut {
+  label: string
+  hotkeys: HotKey[]
+}
+
+interface Category {
+  title: string
+  items: (ActionShortcut | HotkeyShortcut)[]
+}
+
+const shortcuts: Category[] = [
   {
     title: 'Application',
     items: [
@@ -111,11 +126,11 @@ const shortcuts = [
       },
       {
         label: 'Select multiple',
-        hotkeys: formatHotkey({ shift: true, key: '' })
+        hotkeys: [{ shift: true, key: '' }]
       },
       {
         label: 'Delete',
-        hotkeys: ['⌫']
+        hotkeys: [{ key: '⌫' }]
       }
     ]
   },
@@ -140,7 +155,7 @@ const shortcuts = [
       },
       {
         label: 'Fullscreen',
-        hotkeys: ['F11']
+        hotkeys: [{ key: 'F11' }]
       },
       {
         label: 'Testing lab',
@@ -156,11 +171,11 @@ const shortcuts = [
       },
       {
         label: 'Move view',
-        hotkeys: ['←', '↑', '→', '↓']
+        hotkeys: [{ key: '←' }, { key: '↑' }, { key: '→' }, { key: '↓' }]
       },
       {
         label: 'Drag without snapping',
-        hotkeys: formatHotkey({ alt: true, key: '' })
+        hotkeys: [{ alt: true, key: '' }]
       }
     ]
   },
@@ -169,28 +184,27 @@ const shortcuts = [
     items: [
       {
         label: 'Move between multi-run cells',
-        hotkeys: ['↑', '↓']
+        hotkeys: [{ key: '↑' }, { key: '↓' }]
       },
       {
         label: 'Create multi-run cell',
-        hotkeys: ['Enter']
+        hotkeys: [{ key: 'Enter' }]
       },
       {
         label: 'Delete multi-run cell',
-        hotkeys: ['⌫']
+        hotkeys: [{ key: '⌫' }]
       },
       {
         label: 'Execute multi-run',
-        hotkeys: formatHotkey({ meta: true, key: 'Enter' })
+        hotkeys: [{ meta: true, key: 'Enter' }]
       }
     ]
   }
-] as const
+]
 
 const ShortcutGuide = () => {
   const [isOpen, setIsOpen] = useState(false)
   useEvent('modal:shortcuts', () => setIsOpen(true), [])
-  if (!isOpen) return null
 
   const actions = useActions()
 
@@ -207,7 +221,10 @@ const ShortcutGuide = () => {
         <Section>{category.items.map(item => (
           <Shortcut key={item.label}>
             <label>{item.label}</label>
-            {((item.action && actions[item.action].hotkey) || item.hotkeys)?.map(key => <kbd key={key}>{key}</kbd>)}
+            {(('action' in item && actions[item.action]?.hotkeys) || (item as HotkeyShortcut).hotkeys)?.map(hotkey => {
+              const key = formatHotkey(hotkey)
+              return <kbd key={key}>{key}</kbd>
+            })}
           </Shortcut>
         ))}</Section>
       </Fragment>), [actions])}
