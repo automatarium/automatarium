@@ -184,6 +184,7 @@ const useActions = (registerHotkeys = false) => {
           if (window.confirm(`Are you sure you want to delete your template '${template.name}'?`)) {
             deleteTemplate(template._id)
             setTemplate(null)
+            setTool('cursor')
             return
           }
         }
