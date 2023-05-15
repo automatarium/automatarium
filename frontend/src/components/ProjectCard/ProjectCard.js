@@ -17,7 +17,7 @@ const ProjectCard = ({ name, type, date, image, projectId, ...props }) => {
   const deleteProjectFromStore = useProjectsStore(s => s.deleteProject)
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
-      {image ? <img src={image} alt="" /> : <Logo />}
+      {image ? <img src={image} alt="" /> : <Logo size={''} />}
       <TypeBadge>{type}</TypeBadge>
     </CardImage>
     <CardDetail>
