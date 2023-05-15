@@ -39,12 +39,12 @@ const EditorPanel = () => {
   useContextMenus()
 
   const handleDragging = (e: SelectionEvent) => {
+    // Only try and check if the user is selecting a new resource if the event correlates with that.
+    // Else just use the previous value from the store.
+    // Outside the if so that you can directly right-click and edit a state
+    const selStates = e.type === 'state:mousedown' ? selectState(e) : selectedStates
+    const selComments = e.type === 'comment:mousedown' ? selectComment(e) : selectedComments
     if (e.detail.originalEvent.button === 0) {
-      // Only try and check if the user is selecting a new resource if the event correlates with that.
-      // Else just use the previous value from the store
-      const selStates = e.type === 'state:mousedown' ? selectState(e) : selectedStates
-      const selComments = e.type === 'comment:mousedown' ? selectComment(e) : selectedComments
-
       startStateDrag(e, selStates)
       startCommentDrag(e, selComments)
     }

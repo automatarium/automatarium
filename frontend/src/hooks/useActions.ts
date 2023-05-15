@@ -10,28 +10,29 @@ import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { AutomataState, CopyData, FSAProjectGraph, ProjectComment, Template } from '/src/types/ProjectTypes'
+import { showWarning } from '/src/components/Warning/Warning'
 
 /**
  * Combination of keys. Used to call an action
  */
-type HotKey = {key: string, meta?: boolean, shift?: boolean, alt?: boolean}
+export type HotKey = {key: string, meta?: boolean, shift?: boolean, alt?: boolean}
 
 /**
  * Represents an action handler
  */
 interface Handler {
   handler: (e?: KeyboardEvent | MouseEvent) => void
-  hotkey?: HotKey | HotKey[]
+  hotkeys?: HotKey[]
   disabled?: () => boolean
 }
 
 const isWindows = /Win/.test(navigator.platform)
-export const formatHotkey = (hotkey: HotKey) => [
+export const formatHotkey = (hotkey: HotKey): string => [
   hotkey.meta && (isWindows ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   hotkey.alt && (isWindows ? 'Alt' : '⌥'),
   hotkey.shift && (isWindows ? 'Shift' : '⇧'),
   hotkey.key?.toUpperCase()
-].filter(Boolean)
+].filter(Boolean).join(isWindows ? '+' : ' ')
 
 const useActions = (registerHotkeys = false) => {
   const undo = useProjectStore(s => s.undo)
@@ -69,7 +70,6 @@ const useActions = (registerHotkeys = false) => {
   // TODO: memoize
   const actions: Record<string, Handler> = {
     CREATE_TEMPLATE: {
-      hotkey: { key: 'j', meta: true },
       handler: () => {
         if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
           // Temporary UI
@@ -89,19 +89,19 @@ const useActions = (registerHotkeys = false) => {
       handler: () => navigate('/new')
     },
     IMPORT_AUTOMATARIUM_PROJECT: {
-      hotkey: { key: 'i', meta: true },
+      hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
         if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
-      hotkey: { key: 'i', meta: true, shift: true },
+      hotkeys: [{ key: 'i', meta: true, shift: true }],
       handler: async () => {
         if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project') }
       }
     },
     SAVE_FILE: {
-      hotkey: { key: 's', meta: true },
+      hotkeys: [{ key: 's', meta: true }],
       handler: () => {
         const project = useProjectStore.getState().project
         const toSave = { ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } }
@@ -110,7 +110,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     SAVE_FILE_AS: {
-      hotkey: { key: 's', shift: true, meta: true },
+      hotkeys: [{ key: 's', shift: true, meta: true }],
       handler: () => {
         // Pull project state
         const project = useProjectStore.getState().project
@@ -125,19 +125,19 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     EXPORT: {
-      hotkey: { key: 'e', meta: true },
+      hotkeys: [{ key: 'e', meta: true }],
       handler: () => dispatchCustomEvent('exportImage', null)
     },
     EXPORT_AS_PNG: {
-      hotkey: { key: 'e', shift: true, meta: true },
+      hotkeys: [{ key: 'e', shift: true, meta: true }],
       handler: () => dispatchCustomEvent('exportImage', { type: 'png' })
     },
     EXPORT_AS_SVG: {
-      hotkey: { key: 'e', shift: true, alt: true, meta: true },
+      hotkeys: [{ key: 'e', shift: true, alt: true, meta: true }],
       handler: () => dispatchCustomEvent('exportImage', { type: 'svg' })
     },
     EXPORT_TO_CLIPBOARD: {
-      hotkey: { key: 'c', shift: true, meta: true },
+      hotkeys: [{ key: 'c', shift: true, meta: true }],
       handler: () => dispatchCustomEvent('exportImage', { type: 'png', clipboard: true })
     },
     EXPORT_AS_JFLAP: {
@@ -145,19 +145,19 @@ const useActions = (registerHotkeys = false) => {
       handler: () => console.log('Export JFLAP')
     },
     OPEN_PREFERENCES: {
-      hotkey: { key: ',', meta: true },
+      hotkeys: [{ key: ',', meta: true }],
       handler: () => dispatchCustomEvent('modal:preferences', null)
     },
     UNDO: {
-      hotkey: { key: 'z', meta: true },
+      hotkeys: [{ key: 'z', meta: true }],
       handler: undo
     },
     REDO: {
-      hotkey: { key: 'y', meta: true },
+      hotkeys: [{ key: 'y', meta: true }],
       handler: redo
     },
     COPY: {
-      hotkey: { key: 'c', meta: true },
+      hotkeys: [{ key: 'c', meta: true }],
       handler: () => {
         // This will use the CopyData type defined in ProjectTypes
         const copyData = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project)
@@ -165,7 +165,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     PASTE: {
-      hotkey: { key: 'v', meta: true },
+      hotkeys: [{ key: 'v', meta: true }],
       handler: () => {
         const pasteData = JSON.parse(localStorage.getItem(COPY_DATA_KEY))
         if (pasteData === null) {
@@ -187,11 +187,11 @@ const useActions = (registerHotkeys = false) => {
 
     },
     SELECT_ALL: {
-      hotkey: { key: 'a', meta: true },
+      hotkeys: [{ key: 'a', meta: true }],
       handler: selectAll
     },
     DELETE: {
-      hotkey: [{ key: 'Delete' }, { key: 'Backspace' }],
+      hotkeys: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
         const selectionState = useSelectionStore.getState()
         const selectedStateIDs = selectionState.selectedStates
@@ -207,19 +207,19 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     ZOOM_IN: {
-      hotkey: { key: '=', meta: true },
+      hotkeys: [{ key: '=', meta: true }],
       handler: () => zoomViewTo(useViewStore.getState().scale - 0.1)
     },
     ZOOM_OUT: {
-      hotkey: { key: '-', meta: true },
+      hotkeys: [{ key: '-', meta: true }],
       handler: () => zoomViewTo(useViewStore.getState().scale + 0.1)
     },
     ZOOM_100: {
-      hotkey: { key: '0', meta: true },
+      hotkeys: [{ key: '0', meta: true }],
       handler: () => { zoomViewTo(1) }
     },
     ZOOM_FIT: {
-      hotkey: { key: 'f', shift: true },
+      hotkeys: [{ key: 'f', shift: true }],
       handler: () => {
         // Get state
         const view = useViewStore.getState()
@@ -248,15 +248,15 @@ const useActions = (registerHotkeys = false) => {
         : document.documentElement.requestFullscreen()
     },
     TESTING_LAB: {
-      hotkey: { key: '1', shift: true },
+      hotkeys: [{ key: '1', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' })
     },
     FILE_INFO: {
-      hotkey: { key: '2', shift: true },
+      hotkeys: [{ key: '2', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' })
     },
     FILE_OPTIONS: {
-      hotkey: { key: '3', shift: true },
+      hotkeys: [{ key: '3', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
@@ -266,7 +266,7 @@ const useActions = (registerHotkeys = false) => {
           updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project as FSAProjectGraph))))
           commit()
         } catch (error) {
-          alert(error.message)
+          showWarning(error.message)
         }
       }
     },
@@ -282,7 +282,7 @@ const useActions = (registerHotkeys = false) => {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
     },
     KEYBOARD_SHORTCUTS: {
-      hotkey: { key: '/', meta: true },
+      hotkeys: [{ key: '/', meta: true }],
       handler: () => dispatchCustomEvent('modal:shortcuts', null)
     },
     PRIVACY_POLICY: {
@@ -292,19 +292,19 @@ const useActions = (registerHotkeys = false) => {
       handler: () => window.open('/about', '_blank')
     },
     MOVE_VIEW_LEFT: {
-      hotkey: { key: 'ArrowLeft' },
+      hotkeys: [{ key: 'ArrowLeft' }],
       handler: () => moveView({ x: -VIEW_MOVE_STEP })
     },
     MOVE_VIEW_RIGHT: {
-      hotkey: { key: 'ArrowRight' },
+      hotkeys: [{ key: 'ArrowRight' }],
       handler: () => moveView({ x: VIEW_MOVE_STEP })
     },
     MOVE_VIEW_UP: {
-      hotkey: { key: 'ArrowUp' },
+      hotkeys: [{ key: 'ArrowUp' }],
       handler: () => moveView({ y: -VIEW_MOVE_STEP })
     },
     MOVE_VIEW_DOWN: {
-      hotkey: { key: 'ArrowDown' },
+      hotkeys: [{ key: 'ArrowDown' }],
       handler: () => moveView({ y: VIEW_MOVE_STEP })
     },
     SET_STATE_INITIAL: {
@@ -318,6 +318,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     TOGGLE_STATES_FINAL: {
+      disabled: () => useSelectionStore.getState()?.selectedStates?.length === 0,
       handler: () => {
         const selectedStateIDs = useSelectionStore.getState().selectedStates
         if (selectedStateIDs.length > 0) {
@@ -401,27 +402,27 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     TOOL_CURSOR: {
-      hotkey: { key: 'V' },
+      hotkeys: [{ key: 'V' }],
       handler: () => setTool('cursor')
     },
     TOOL_HAND: {
-      hotkey: { key: 'H' },
+      hotkeys: [{ key: 'H' }],
       handler: () => setTool('hand')
     },
     TOOL_STATE: {
-      hotkey: { key: 'S' },
+      hotkeys: [{ key: 'S' }],
       handler: () => setTool('state')
     },
     TOOL_TRANSITION: {
-      hotkey: { key: 'T' },
+      hotkeys: [{ key: 'T' }],
       handler: () => setTool('transition')
     },
     TOOL_COMMENT: {
-      hotkey: { key: 'C' },
+      hotkeys: [{ key: 'C' }],
       handler: () => setTool('comment')
     },
     TOOL_DELETE: {
-      hotkey: { key: 'D' },
+      hotkeys: [{ key: 'D' }],
       handler: () => {
         setTool('delete')
       }
@@ -445,12 +446,12 @@ const useActions = (registerHotkeys = false) => {
 
         for (const action of Object.values(actions)) {
           // Skip if no hotkey
-          if (!action.hotkey) { continue }
+          if (!action.hotkeys) { continue }
 
           // Skip if disabled
           if (action.disabled && action.disabled()) { continue }
 
-          const hotkeys = Array.isArray(action.hotkey) ? action.hotkey : [action.hotkey]
+          const hotkeys = action.hotkeys
           const activeHotkey = hotkeys.find(hotkey => {
             // Guard against other keys
             const letterMatch = e.code === `Key${hotkey.key.toUpperCase()}`
@@ -484,7 +485,7 @@ const useActions = (registerHotkeys = false) => {
   // Add formatted hotkeys to actions
   return useMemo(() => Object.fromEntries(Object.entries(actions).map(([key, action]) => ([key, {
     ...action,
-    label: action.hotkey ? formatHotkey(Array.isArray(action.hotkey) ? action.hotkey[0] : action.hotkey).join(isWindows ? '+' : ' ') : null
+    label: action.hotkeys ? formatHotkey(action.hotkeys[0]) : null
   }]))), [actions])
 }
 
@@ -526,7 +527,7 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
           }
         })
       } catch (error) {
-        window.alert(`${errorMessage}\n${error}`)
+        showWarning(`${errorMessage}\n${error}`)
         console.error(error)
       }
     }

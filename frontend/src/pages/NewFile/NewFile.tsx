@@ -18,6 +18,7 @@ import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
 import { Project, ProjectType } from '/src/types/ProjectTypes'
+import { showWarning } from '/src/components/Warning/Warning'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -60,6 +61,7 @@ const NewFile = () => {
     // Prompt user for file input
     const input = document.createElement('input')
     input.type = 'file'
+    input.accept = '.jff,.json'
     input.onchange = () => {
       // Read file data
       const reader = new FileReader()
@@ -94,7 +96,7 @@ const NewFile = () => {
           })
           navigate('/editor')
         } else {
-          window.alert('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
+          showWarning('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
         }
       }
       reader.readAsText(input.files[0])
