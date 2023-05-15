@@ -1,12 +1,11 @@
 import { useEvent } from '/src/hooks'
-import { useProjectStore, useToolStore, useSelectionStore, useTemplateStore } from '/src/stores'
+import { useProjectStore, useSelectionStore, useTemplateStore } from '/src/stores'
 import { AutomataState } from '/src/types/ProjectTypes'
 import { InsertGroupResponseType } from '../stores/useProjectStore'
 import { snapPosition } from '/src/util/points'
 import { useState } from 'react'
 
 const useTemplateInsert = () => {
-  const tool = useToolStore(s => s.tool)
   const selectStates = useSelectionStore(s => s.setStates)
   const selectTransitions = useSelectionStore(s => s.setTransitions)
   const selectComments = useSelectionStore(s => s.setComments)
@@ -14,7 +13,7 @@ const useTemplateInsert = () => {
   const insertGroup = useProjectStore(s => s.insertGroup)
   const template = useTemplateStore(s => s.template)
 
-  const [mousePos, setMousePos] = useState({x: 0, y: 0})
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 })
   const [showGhost, setShowGhost] = useState(false)
 
   useEvent('svg:mousemove', e => {

@@ -1,14 +1,12 @@
-import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
 import groupBy from 'lodash.groupby'
 
-import { circleStyles } from './stateCircleStyle'
 import { AutomataTransition, Coordinate, Template } from '/src/types/ProjectTypes'
 import { moveStatesToMouse } from '/src/hooks/useTemplateInsert'
 import StateCircle from '../StateCircle/StateCircle'
 import TransitionSet from '../TransitionSet/TransitionSet'
 import { PositionedTransition, locateTransition } from '/src/util/states'
 
-const TemplateGhost = ({ template, mousePos, ...props }: {template: Template, mousePos: Coordinate}) => {
+const TemplateGhost = ({ template, mousePos }: {template: Template, mousePos: Coordinate}) => {
   // may have to make a copy
   const templateCopy = structuredClone(template)
   moveStatesToMouse(mousePos, templateCopy.states)
@@ -22,7 +20,7 @@ const TemplateGhost = ({ template, mousePos, ...props }: {template: Template, mo
   console.log(mousePos)
   return <>
     {templateCopy.states.map((state, key) => (
-        <StateCircle.Ghost key={key} cx={state.x} cy={state.y} />    
+        <StateCircle.Ghost key={key} cx={state.x} cy={state.y} />
     ))}
     {locatedTransitions.map((transitions, i) => <TransitionSet
       transitions={transitions}

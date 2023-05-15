@@ -11,7 +11,7 @@ export const CardContainer = styled('button')<{width: number, istemplate: string
   color: inherit;
   cursor: pointer;
 
-  &:hover${props => !(props.istemplate === 'true') && `, &:focus`} {
+  &:hover${props => !(props.istemplate === 'true') && ', &:focus'} {
     outline: none;
 
     &:not(:disabled) > div:first-of-type {

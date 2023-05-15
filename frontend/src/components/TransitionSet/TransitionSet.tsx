@@ -1,5 +1,5 @@
 import { MouseEvent, useContext } from 'react'
-import { useProjectStore, useTemplateStore } from '../../stores'
+import { useProjectStore } from '../../stores'
 import { MarkerContext } from '/src/providers'
 import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
 import { movePointTowards, lerpPoints, size } from '/src/util/points'
@@ -41,9 +41,8 @@ const toRightOf = (a: Coordinate, b: Coordinate) => {
 // Direction that a transition can bend
 type BendDirection = 'over' | 'under' | 'straight'
 
-const TransitionSet = ({ transitions, isGhost=false } : {transitions: PositionedTransition[], isGhost?: boolean}) => {
+const TransitionSet = ({ transitions, isGhost = false } : {transitions: PositionedTransition[], isGhost?: boolean}) => {
   const projectType = useProjectStore(s => s.project.config.type)
-  const template = useTemplateStore(s => s.template)
   // Split the transitions into the two directions (left->right and right->left)
   // This makes the code easier since we don't need to handle direction changes
   // Named over and under since
@@ -65,8 +64,7 @@ const TransitionSet = ({ transitions, isGhost=false } : {transitions: Positioned
         key={first.id}
         bendDirection={bend}
       />
-    }
-    else {
+    } else {
       return <Transition
         transitions={toRender}
         from={first.from}
@@ -295,7 +293,7 @@ TransitionSet.Ghost = ({ from, to, bendDirection }) => {
     over: -0.5,
     under: 0.5
   }[bendDirection] * TRANSITION_SEPERATION
-  const { pathData, textPathData, control, normal, edges } = calculateTransitionPath(from, to, bendValue, false)
+  const { pathData } = calculateTransitionPath(from, to, bendValue, false)
   return <path
     id={pathID}
     d={pathData}

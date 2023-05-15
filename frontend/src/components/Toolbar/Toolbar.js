@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react'
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, Star } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
 import { useToolStore, useTemplateStore } from '/src/stores'
@@ -72,7 +72,7 @@ const Toolbar = () => {
       {tools.map(toolOption => (
         <SidebarButton
           key={toolOption.label}
-          onClick={() => { 
+          onClick={() => {
             setTool(toolOption.value)
             setTemplate(null)
           }}

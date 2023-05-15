@@ -15,14 +15,12 @@ import { WarningLabel } from '../TestingLab/testingLabStyle'
 const Templates = () => {
   const project = useProjectStore(s => s.project)
   const templates = (useTemplatesStore(s => s.templates)).filter(temp => temp.projectType === project.projectType)
-  const clearTemplates = useTemplatesStore(s => s.clearTemplates)
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const template = useTemplateStore(s => s.template)
   const selectedStatesIds = useSelectionStore(s => s.selectedStates)
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
   const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
-  const tool = useToolStore(s => s.tool)
   const setTool = useToolStore(s => s.setTool)
 
   const [templateNameInput, setTemplateNameInput] = useState('')
@@ -30,11 +28,11 @@ const Templates = () => {
 
   // clearTemplates()
 
-  const pickTemplate = (id: string, e: MouseEvent) => {
+  const pickTemplate = (id: string) => {
     // Deselect if template already selected
     // const thumbnailContainer = e.currentTarget as HTMLElement
     // const thumbnail = thumbnailContainer.children[0] as HTMLElement
-    if(template!== null && template._id === id) {
+    if (template !== null && template._id === id) {
       setTemplate(null)
       setTool('cursor')
       // thumbnail.style.boxShadow = ''
@@ -54,10 +52,10 @@ const Templates = () => {
       return
     }
     if (templateName === '') {
-      setError("Template name cannot be empty.")
+      setError('Template name cannot be empty.')
       return
     }
-    if(templates.map(temp => temp.name).includes(templateName)) {
+    if (templates.map(temp => temp.name).includes(templateName)) {
       setError(`A template named '${templateName}' already exists. Please choose another name.`)
       return
     }
@@ -70,18 +68,6 @@ const Templates = () => {
     addTemplate(newTemplate)
     setTemplateNameInput('')
     setError('')
-  }
-
-  const removeBorder = (e: FocusEvent) => {
-    const thumbnailContainer = e.currentTarget as HTMLElement
-    const thumbnail = thumbnailContainer.children[0] as HTMLElement
-    // thumbnail.style.boxShadow = ''
-  }
-
-  const deleteTemplate = (e: KeyboardEvent) => {
-    if(e.key === 'a') {
-      console.log("Deleting")
-    }
   }
 
   return <>
@@ -120,13 +106,7 @@ const Templates = () => {
                 istemplate='true'
                 showKebab={false}
                 isSelectedTemplate={template && template._id === temp._id}
-                onClick={(e: MouseEvent) => pickTemplate(temp._id, e)}
-                onBlur={(e: FocusEvent) => { 
-                  if(e.relatedTarget !== null) {
-                    removeBorder(e)
-                  }
-                }}
-                onKeyPress={(e: KeyboardEvent) => deleteTemplate(e)}
+                onClick={() => pickTemplate(temp._id)}
               />
             ))}
           </CardList>

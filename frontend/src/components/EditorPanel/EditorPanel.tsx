@@ -110,7 +110,7 @@ const EditorPanel = () => {
       {ghostState && <StateCircle.Ghost cx={ghostState.x} cy={ghostState.y} /> }
 
       {/* Ghost template */}
-      {ghostTemplate && <TemplateGhost template={template} mousePos={{x: ghostTemplate.x, y: ghostTemplate.y}} />}
+      {ghostTemplate && <TemplateGhost template={template} mousePos={{ x: ghostTemplate.x, y: ghostTemplate.y }} />}
 
       {/* Render states and transitions */}
       <GraphContent />

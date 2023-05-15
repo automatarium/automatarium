@@ -66,12 +66,11 @@ const Sidepanel = () => {
       {activePanel && (
         <>
           <CloseButton
-            onClick={() => { 
+            onClick={() => {
               setActivePanel(undefined)
               // Stop template insertion mode
               setTemplate(null)
               setTool('cursor')
-
             }}
           ><ChevronRight /></CloseButton>
           <Panel>
