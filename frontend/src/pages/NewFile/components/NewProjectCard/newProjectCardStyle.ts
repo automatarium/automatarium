@@ -1,12 +1,13 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('button')`
+export const CardContainer = styled('button')<{height: number}>`
   display: grid;
   grid-template-rows: 1.3fr 1fr;
   box-sizing: border-box;
   min-width: 18em;
   width: 20em;
-
+  height: ${p => p.height || '100%'}px;
+  
   border-radius: .5rem;
   border: 3px solid transparent;
   overflow: hidden;

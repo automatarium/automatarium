@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
@@ -30,6 +30,14 @@ const NewFile = () => {
   const [loginModalVisible, setLoginModalVisible] = useState(false)
   const [signupModalVisible, setSignupModalVisible] = useState(false)
   const { user, loading } = useAuth()
+  // We find the tallest card using method shown here
+  // https://legacy.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
+  const [height, setHeight] = useState(0)
+  const cardsRef = useCallback((node: HTMLDivElement) => {
+    if (node === null) return
+    // Get the height of the tallest card, we will set the rest of the cards to it
+    setHeight(Math.max(...[...node.children].map(it => it.getBoundingClientRect().height)))
+  }, [])
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -121,23 +129,27 @@ const NewFile = () => {
     <CardList
       title="New Project"
       button={<Button onClick={importProject}>Import...</Button>}
+      innerRef={cardsRef}
     >
       <NewProjectCard
         title="Finite State Automaton"
         description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
         onClick={() => handleNewFile('FSA')}
+        height={height}
         image={<FSA {...stylingVals}/>}
       />
       <NewProjectCard
         title="Push Down Automaton"
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
         onClick={() => handleNewFile('PDA')}
+        height={height}
         image={<PDA {...stylingVals}/>}
       />
       <NewProjectCard
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
+        height={height}
         image={<TM {...stylingVals}/>}
       />
     </CardList>
