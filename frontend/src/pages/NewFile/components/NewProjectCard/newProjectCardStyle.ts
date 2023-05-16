@@ -6,6 +6,7 @@ export const CardContainer = styled('button')<{height: number}>`
   box-sizing: border-box;
   min-width: 18em;
   width: 20em;
+  // Default to 100% if anything wrong happens so its still viewable
   height: ${p => p.height || '100%'}px;
   
   border-radius: .5rem;
