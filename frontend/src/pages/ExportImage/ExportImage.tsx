@@ -5,16 +5,17 @@ import { useExportStore, useProjectStore } from '/src/stores'
 import { downloadURL, getSvgString, svgToCanvas } from '/src/hooks/useImageExport'
 
 import { Wrapper, Image } from './exportImageStyle'
+import { Size } from '/src/types/ProjectTypes'
 
 const ExportImage = () => {
   const { exportVisible, setExportVisible, options, setOptions } = useExportStore()
   const { filename, type, margin, color, darkMode, background } = options
   const projectName = useProjectStore(s => s.project?.meta.name)
   const projectColor = useProjectStore(s => s.project?.config.color)
-  const [svg, setSvg] = useState()
-  const [size, setSize] = useState({})
+  const [svg, setSvg] = useState<string>()
+  const [size, setSize] = useState<Size>({} as Size)
   const [preview, setPreview] = useState('#')
-  const [prevBG, setPrevBG] = useState()
+  const [prevBG, setPrevBG] = useState<'solid' | 'none'>()
 
   // Set project settings if they change
   useEffect(() => {
@@ -64,7 +65,7 @@ const ExportImage = () => {
     }
 
     // Download file
-    if (data) downloadURL({ filename, extension: type, data })
+    if (data) downloadURL(filename, type, data)
   }, [svg, size, type, filename])
 
   const copyToClipboard = useCallback(async () => {
@@ -111,7 +112,7 @@ const ExportImage = () => {
           </Preference>
           {type === 'svg' && <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>Note: SVG exporting is still in beta and may not work as expected</span>}
           <Preference label="Margin" fullWidth>
-            <Input type="number" min="0" max="500" small value={margin} onChange={e => setOptions({ margin: e.target.value === '' ? e.target.value : Math.min(Math.max(e.target.value, 0), 500) })} />
+            <Input type="number" min="0" max="500" small value={margin} onChange={e => setOptions({ margin: e.target.value === '' ? 0 : Math.min(Math.max(Number(e.target.value), 0), 500) })} />
           </Preference>
           <Preference label="Accent colour" fullWidth>
             <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value })}>

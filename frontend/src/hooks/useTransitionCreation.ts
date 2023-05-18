@@ -3,6 +3,7 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
+import { BaseAutomataTransition } from '/src/types/ProjectTypes'
 
 const useTransitionCreation = () => {
   const createTransition = useProjectStore(s => s.createTransition)
@@ -26,7 +27,7 @@ const useTransitionCreation = () => {
 
   useEvent('state:mouseup', e => {
     if (createTransitionState && e.detail.originalEvent.button === 0) {
-      const id = createTransition({ from: createTransitionState.id, to: e.detail.state.id })
+      const id = createTransition({ from: createTransitionState.id, to: e.detail.state.id } as BaseAutomataTransition)
       setCreateTransitionStart(null)
       setCreateTransitionState(null)
       window.setTimeout(() => dispatchCustomEvent('editTransition', { id }), 100)
