@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { forwardRef } from 'react'
 
 export const CardListTitleContainer = styled('div')`
   display: flex;
@@ -11,7 +12,7 @@ export const CardListTitle = styled('h2')`
   margin-block: 0;
 `
 
-export const CardListContainer = styled('div')`
+export const CardListContainer = styled('div', forwardRef)`
   display: flex;
   gap: .4em;
   margin-block-start: 1em;
