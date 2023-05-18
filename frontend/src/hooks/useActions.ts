@@ -326,10 +326,6 @@ const useActions = (registerHotkeys = false) => {
         }
       }
     },
-    MINIMIZE_DFA: {
-      disabled: () => true,
-      handler: () => console.log('Minimize DFA')
-    },
     AUTO_LAYOUT: {
       disabled: () => true,
       handler: () => console.log('Auto Layout')
