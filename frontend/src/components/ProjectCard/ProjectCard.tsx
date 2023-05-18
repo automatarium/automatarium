@@ -26,7 +26,7 @@ type ProjectCardProps = {
 const ProjectCard = ({ name, type, date, image, projectId, ...props }: ProjectCardProps) => {
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
-      {image ? <img src={image} alt="" /> : <Logo />}
+      {image ? <img src={image} alt="" /> : <Logo size={''} />}
       <TypeBadge>{type}</TypeBadge>
     </CardImage>
     <CardDetail>
