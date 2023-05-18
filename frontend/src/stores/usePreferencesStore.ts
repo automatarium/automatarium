@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware'
 import { COLOR_KEY } from '/src/config/colors'
 import { AutomatariumTheme } from '/src/types/ProjectTypes'
 
-interface Preferences {
+export interface Preferences {
   theme: AutomatariumTheme
   color: COLOR_KEY | 'match'
   showGrid: boolean

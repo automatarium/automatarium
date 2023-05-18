@@ -6,12 +6,13 @@ import { getProject } from '/src/services/project'
 import { Spinner, ProjectCard, Button } from '/src/components'
 import { useProjectStore } from '/src/stores'
 import { Container } from './shareStyle'
+import { StoredProject } from '/src/stores/useProjectStore'
 
 const Share = () => {
   const { pid } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
-  const [sharedProject, setSharedProject] = useState()
+  const [sharedProject, setSharedProject] = useState<StoredProject>()
   const setProject = useProjectStore(s => s.set)
 
   useEffect(() => {

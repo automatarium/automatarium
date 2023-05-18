@@ -1,4 +1,4 @@
-import { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 
 import { MarkerProvider } from '/src/providers'
 import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
@@ -12,8 +12,8 @@ import { useViewDragging } from './hooks'
 import { calculateZoomFit } from '../../hooks/useActions'
 
 const GraphView = ({ children, ...props }) => {
-  const wrapperRef = useRef()
-  const svgRef = useRef()
+  const wrapperRef = useRef<HTMLDivElement>()
+  const svgRef = useRef<SVGSVGElement>()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
   const projectColor = useProjectStore(state => state.project?.config.color)
   const colorPref = usePreferencesStore(state => state.preferences.color)
@@ -35,30 +35,30 @@ const GraphView = ({ children, ...props }) => {
     }
   }, [])
 
-  const onContainerMouseDown = useCallback(e => {
+  const onContainerMouseDown = useCallback((e: MouseEvent) => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
     dispatchCustomEvent('svg:mousedown', {
-      originalEvent: e,
+      originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
       viewY
     })
   }, [])
 
-  const onContainerMouseUp = useCallback(e => {
+  const onContainerMouseUp = useCallback((e: MouseEvent) => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
     dispatchCustomEvent('svg:mouseup', {
-      originalEvent: e,
+      originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
       viewY
     })
   }, [])
 
-  const onContainerMouseMove = useCallback(e => {
+  const onContainerMouseMove = useCallback((e: MouseEvent) => {
     const [viewX, viewY] = screenToViewSpace(e.clientX, e.clientY)
     dispatchCustomEvent('svg:mousemove', {
-      originalEvent: e,
+      originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
       viewY

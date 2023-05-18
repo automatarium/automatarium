@@ -1,4 +1,4 @@
-import { createContext, useState, useCallback, useMemo, useEffect } from 'react'
+import { createContext, useState, useCallback, useMemo, useEffect, KeyboardEvent } from 'react'
 import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCircle2, XCircle, AlertTriangle } from 'lucide-react'
 
 import { useDibEgg } from '/src/hooks'
@@ -301,21 +301,22 @@ const TestingLab = () => {
                 placeholder="λ"
                 color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
                 onPaste={e => {
-                  const paste = (e.clipboardData || navigator.clipboard).getData('text')
+                  const paste = e.clipboardData.getData('text')
                   if (!paste.includes('\n')) return
 
                   e.preventDefault()
                   const lines = paste.split(/\r?\n/).filter(l => l !== '')
                   lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
                 }}
-                onKeyDown={e => {
+                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                  assertType<HTMLElement>(e.target)
                   if (e.key === 'Enter' && !e.repeat) {
                     if (e.metaKey || e.ctrlKey) {
                       // Run shortcut
                       rerunMultiTraceInput()
                     } else {
                       addMultiTraceInput()
-                      window.setTimeout(() => e.target.closest('div').parentElement?.querySelector('div:last-of-type > input')?.focus(), 50)
+                      window.setTimeout(() => (e.target as HTMLElement).closest('div').parentElement?.querySelector<HTMLElement>('div:last-of-type > input')?.focus(), 50)
                     }
                   }
                   if (e.key === 'Backspace' && value === '' && !e.repeat) {
@@ -323,16 +324,16 @@ const TestingLab = () => {
                     e.preventDefault()
                     e.target?.focus()
                     if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
-                      e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
+                      (e.target?.closest('div')?.previousSibling as HTMLElement)?.querySelector('input')?.focus()
                     }
                     removeMultiTraceInput(index)
                     setMultiTraceOutput([])
                   }
                   if (e.key === 'ArrowUp') {
-                    e.target?.closest('div')?.previousSibling?.querySelector('input')?.focus()
+                    (e.target?.closest('div')?.previousSibling as HTMLElement)?.querySelector('input')?.focus()
                   }
                   if (e.key === 'ArrowDown') {
-                    e.target?.closest('div')?.nextSibling?.querySelector('input')?.focus()
+                    (e.target?.closest('div')?.nextSibling as HTMLElement)?.querySelector('input')?.focus()
                   }
                 }}
               />

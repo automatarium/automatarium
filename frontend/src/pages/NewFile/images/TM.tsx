@@ -4,7 +4,7 @@ const TM = ({ stateFill, strokeColor }: { stateFill: string, strokeColor: string
   return (
     <svg viewBox="454 384 362 192">
       <defs>
-        <marker id="standard-arrow-head" strokeWidth="2" markerHeight="30" markerUnits="2" markerWidth="30" orient="auto" refX="29" refY="15">
+        <marker id="standard-arrow-head" strokeWidth="2" markerHeight="30" markerUnits="strokeWidth" markerWidth="30" orient="auto" refX="29" refY="15">
           <path fill={strokeColor} d="M29 15l-7.208-3.471v6.942z" strokeWidth="2"></path>
         </marker>
         <marker strokeWidth="2" markerHeight="30" markerUnits="strokeWidth" markerWidth="30" orient="auto" refX="29" refY="15" >

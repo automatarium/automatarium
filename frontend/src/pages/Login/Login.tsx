@@ -1,4 +1,9 @@
-import React, { useState, useEffect, forwardRef } from 'react'
+import React, {
+  useState,
+  useEffect,
+  forwardRef,
+  ReactNode, Ref
+} from 'react'
 import { useForm } from 'react-hook-form'
 
 import { Input, Button, Label, Header, Modal } from '/src/components'
@@ -9,12 +14,15 @@ const defaultValues = {
   password: ''
 }
 
-const Login = {}
+interface LoginFormProps {
+  onComplete: () => void
+  setFormActions: (x: ReactNode) => void
+}
 
-Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
-  const [fireError, setFireError] = useState(null)
+const LoginForm = forwardRef(({ setFormActions, onComplete, ...props }: LoginFormProps, ref: Ref<HTMLFormElement>) => {
+  const [error, setError] = useState(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const { isLoading, signIn, error: authError } = useAuth()
+  const { loading: isLoading, signIn } = useAuth()
 
   const {
     register,
@@ -22,20 +30,16 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
     formState: { errors, isDirty }
   } = useForm({ defaultValues })
 
-  // Were there errors from fire / from signing in?
-  const error = fireError || authError?.message
-
   useEffect(() => {
     if (setFormActions) {
       setFormActions(<>
         <Button type='submit' form='login-form' disabled={!isDirty || isLoading || isSubmitting}>Login</Button>
       </>)
     }
-  }, [isDirty, isLoading, isSubmitting, ref?.current, setFormActions])
-
+  }, [isDirty, isLoading, isSubmitting, ref, setFormActions])
   const onSubmit = async values => {
     setIsSubmitting(true)
-    setFireError(null)
+    setError(null)
     signIn(values.email, values.password)
       .then(() => {
         setIsSubmitting(false)
@@ -43,9 +47,9 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
       .then(() => { onComplete?.() })
       .catch(e => {
         if (e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password') {
-          setFireError('Incorrect email or password')
+          setError('Incorrect email or password')
         } else {
-          setFireError('An error occurred, please check you are connected to the internet and try again')
+          setError('An error occurred, please check you are connected to the internet and try again')
         }
         setIsSubmitting(false)
       })
@@ -61,12 +65,12 @@ Login.Form = forwardRef(({ setFormActions, onComplete, ...props }, ref) => {
 
     <Label htmlFor='login-password'>Password</Label>
     <Input id='login-password' type='password' {...register('password')} />
-    <p>{errors.email?.password}</p>
+    <p>{errors.password?.message}</p>
   </form>
 })
 
-Login.Modal = ({ ...props }) => {
-  const [formActions, setFormActions] = useState()
+const LoginModal = ({ ...props }) => {
+  const [formActions, setFormActions] = useState<ReactNode>()
 
   return <Modal
     actions={<>
@@ -77,11 +81,11 @@ Login.Modal = ({ ...props }) => {
   >
     <Header center/>
     <h2>Login</h2>
-    <Login.Form
+    <LoginForm
       onComplete={props?.onClose}
       setFormActions={setFormActions}
     />
   </Modal>
 }
 
-export default Login
+export default LoginModal

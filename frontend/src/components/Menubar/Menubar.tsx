@@ -6,8 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button, Logo, Dropdown } from '/src/components'
 import { useAuth, useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
-import LoginPage from '/src/pages/Login/Login'
-import SignupPage from '/src/pages/Signup/Signup'
+import { Signup, Login } from '/src/pages'
 import ShareModal from './components/ShareModal/ShareModal'
 
 import {
@@ -164,8 +163,8 @@ const Menubar = () => {
           {user && <Button disabled={userLoading} onClick={() => setShareModalVisible(true)}>Share</Button>}
         </Actions>
 
-        <LoginPage.Modal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
-        <SignupPage.Modal isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
+        <Login isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
+        <Signup isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
         <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />
       </Wrapper>
     </>
