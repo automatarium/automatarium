@@ -188,7 +188,7 @@ const TestingLab = () => {
     const closure = closureWithPredicate(graph, graph.initialState, () => true)
     return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
-  if (!pathToFinal && !noInitialState && !noFinalState) { warnings.push('There is no path to a final state') }
+  if (!pathToFinal && noInitialState && noFinalState) { warnings.push('There is no path to a final state') }
 
   // :^)
   const dibEgg = useDibEgg()
@@ -225,7 +225,7 @@ const TestingLab = () => {
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
             disabled={traceIdx <= 0 ||
-            (projectType === 'TM' && !showTraceTape)
+              noInitialState || noFinalState
             }
             onClick={() => {
               setTraceIdx(0)
@@ -233,7 +233,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronLeft size={23} />}
             disabled={traceIdx <= 0 ||
-            (projectType === 'TM' && !showTraceTape)
+              noInitialState || noFinalState
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
@@ -242,8 +242,7 @@ const TestingLab = () => {
           <Button icon={<ChevronRight size={23} />}
             disabled={
               traceIdx >= lastTraceIdx ||
-              noInitialState ||
-              (projectType === 'TM' && !showTraceTape)
+              noInitialState || noFinalState
             }
             onClick={() => {
               if (!simulationResult) {
@@ -256,8 +255,7 @@ const TestingLab = () => {
             // eslint-disable-next-line no-mixed-operators
             disabled={
                 traceIdx >= lastTraceIdx ||
-                noInitialState ||
-                (projectType === 'TM' && !showTraceTape)
+                noInitialState || noFinalState
             }
             onClick={() => {
               // Increment tracer index
@@ -277,7 +275,7 @@ const TestingLab = () => {
           <Switch
             type="checkbox"
             checked={showTraceTape}
-            disabled={((projectType === 'TM') && (!traceInput))}
+            disabled={((projectType === 'TM') && (noInitialState) && (noFinalState) && (!pathToFinal))}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>
