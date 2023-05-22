@@ -188,7 +188,7 @@ const TestingLab = () => {
     const closure = closureWithPredicate(graph, graph.initialState, () => true)
     return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
-  if (!pathToFinal && noInitialState && noFinalState) { warnings.push('There is no path to a final state') }
+  if (!pathToFinal) { warnings.push('There is no path to a final state') }
 
   // :^)
   const dibEgg = useDibEgg()
@@ -225,7 +225,7 @@ const TestingLab = () => {
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
             disabled={traceIdx <= 0 ||
-              noInitialState || noFinalState
+              noInitialState || noFinalState || !pathToFinal
             }
             onClick={() => {
               setTraceIdx(0)
@@ -233,7 +233,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronLeft size={23} />}
             disabled={traceIdx <= 0 ||
-              noInitialState || noFinalState
+              noInitialState || noFinalState || !pathToFinal
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
@@ -242,7 +242,7 @@ const TestingLab = () => {
           <Button icon={<ChevronRight size={23} />}
             disabled={
               traceIdx >= lastTraceIdx ||
-              noInitialState || noFinalState
+              noInitialState || noFinalState || !pathToFinal
             }
             onClick={() => {
               if (!simulationResult) {
@@ -255,7 +255,7 @@ const TestingLab = () => {
             // eslint-disable-next-line no-mixed-operators
             disabled={
                 traceIdx >= lastTraceIdx ||
-                noInitialState || noFinalState
+                noInitialState || noFinalState || !pathToFinal
             }
             onClick={() => {
               // Increment tracer index
