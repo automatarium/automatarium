@@ -165,16 +165,15 @@ const TestingLab = () => {
     // Try this for PDA as well - stack display
   }, [traceIdx])
 
-  // Show bottom panel with TM Tape Lab
+  // If the project is a TM and other conditions are met, open the tracing tape
   useEffect(() => {
-    if (projectType === 'TM') {
-      if (showTraceTape) {
-        dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
-      } else {
-        dispatchCustomEvent('bottomPanel:close', null)
-      }
+    if (projectType === 'TM' && !noFinalState && !noInitialState && pathToFinal) {
+      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' });
     }
-  }, [showTraceTape])
+    else {
+      dispatchCustomEvent('bottomPanel:close', null)
+    }
+  }, []);
 
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
