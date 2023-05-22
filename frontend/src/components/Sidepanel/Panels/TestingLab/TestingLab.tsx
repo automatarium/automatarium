@@ -268,6 +268,7 @@ const TestingLab = () => {
           <TracePreview result={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states}/>
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
+        {projectType !== 'TM' && (
         <Preference
           label={useMemo(() => Math.random() < 0.001 ? 'Trace buddy' : 'Trace tape', [])}
           style={{ marginBlock: 0 }}
@@ -275,10 +276,11 @@ const TestingLab = () => {
           <Switch
             type="checkbox"
             checked={showTraceTape}
-            disabled={((projectType === 'TM') && (noInitialState) && (noFinalState) && (!pathToFinal))}
+            disabled={noInitialState && noFinalState && !pathToFinal}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>
+      )}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
