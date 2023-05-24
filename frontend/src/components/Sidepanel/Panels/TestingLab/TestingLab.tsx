@@ -268,7 +268,7 @@ const TestingLab = () => {
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>
-      )}
+        )}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>

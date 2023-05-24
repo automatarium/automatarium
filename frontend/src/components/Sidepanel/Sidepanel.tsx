@@ -47,7 +47,6 @@ const panels: PanelItem[] = [
 
 const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
-  const [showTuringTape, setShowTuringTape] = useState(false)
 
   const projectType = useProjectStore(s => s.project.config.type)
 
@@ -55,25 +54,18 @@ const Sidepanel = () => {
   useEvent('sidepanel:open', e => {
     const panel = panels.find(p => p.value === e.detail.panel)
     setActivePanel(activePanel?.value === panel.value ? undefined : panel)
-    setShowTuringTape(true)
-  }, [activePanel])
-
-  useEffect(() => {
-    if (activePanel === undefined) {
-      setShowTuringTape(false)
-    }
   }, [activePanel])
 
   // Show bottom panel with TM Tape Lab
   useEffect(() => {
     if (projectType === 'TM') {
-      if (showTuringTape) {
+      if (activePanel?.value === 'test') {
         dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
       } else {
         dispatchCustomEvent('bottomPanel:close', null)
       }
     }
-  }, [showTuringTape])
+  }, [activePanel])
 
   return (
     <Wrapper>
