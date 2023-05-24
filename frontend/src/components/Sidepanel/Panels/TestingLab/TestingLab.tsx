@@ -8,7 +8,6 @@ import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/si
 
 import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
-import { dispatchCustomEvent } from '/src/util/events'
 
 import {
   StepButtons,
@@ -164,16 +163,6 @@ const TestingLab = () => {
     }
     // Try this for PDA as well - stack display
   }, [traceIdx])
-
-  // If the project is a TM and other conditions are met, open the tracing tape
-  useEffect(() => {
-    if (projectType === 'TM' && !noFinalState && !noInitialState && pathToFinal) {
-      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' });
-    }
-    else {
-      dispatchCustomEvent('bottomPanel:close', null)
-    }
-  }, []);
 
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
