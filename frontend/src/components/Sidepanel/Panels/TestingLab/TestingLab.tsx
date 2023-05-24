@@ -185,6 +185,7 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
+  const automataIsInvalid = noInitialState || noFinalState || !pathToFinal
 
   return (
     <>
@@ -212,16 +213,14 @@ const TestingLab = () => {
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={traceIdx <= 0 ||
-              noInitialState || noFinalState || !pathToFinal
+            disabled={traceIdx <= 0 || automataIsInvalid
             }
             onClick={() => {
               setTraceIdx(0)
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={traceIdx <= 0 ||
-              noInitialState || noFinalState || !pathToFinal
+            disabled={traceIdx <= 0 || automataIsInvalid
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
@@ -229,8 +228,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              traceIdx >= lastTraceIdx ||
-              noInitialState || noFinalState || !pathToFinal
+              traceIdx >= lastTraceIdx || automataIsInvalid
             }
             onClick={() => {
               if (!simulationResult) {
@@ -242,8 +240,7 @@ const TestingLab = () => {
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
             disabled={
-                traceIdx >= lastTraceIdx ||
-                noInitialState || noFinalState || !pathToFinal
+                traceIdx >= lastTraceIdx || automataIsInvalid
             }
             onClick={() => {
               // Increment tracer index
@@ -264,7 +261,7 @@ const TestingLab = () => {
           <Switch
             type="checkbox"
             checked={showTraceTape}
-            disabled={noInitialState && noFinalState && !pathToFinal}
+            disabled={automataIsInvalid}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>

@@ -3,7 +3,6 @@ import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2 } from '
 
 import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
-import { useProjectStore } from '/src/stores'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options } from './Panels'
@@ -48,22 +47,18 @@ const panels: PanelItem[] = [
 const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
 
-  const projectType = useProjectStore(s => s.project.config.type)
-
   // Open panel via event
   useEvent('sidepanel:open', e => {
     const panel = panels.find(p => p.value === e.detail.panel)
     setActivePanel(activePanel?.value === panel.value ? undefined : panel)
   }, [activePanel])
 
-  // Show bottom panel with TM Tape Lab
+  // Show bottom panel with TM Tape Lab (don't need to check if its TM, Editor.tsx:99 handles this)
   useEffect(() => {
-    if (projectType === 'TM') {
-      if (activePanel?.value === 'test') {
-        dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
-      } else {
-        dispatchCustomEvent('bottomPanel:close', null)
-      }
+    if (activePanel?.value === 'test') {
+      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
+    } else {
+      dispatchCustomEvent('bottomPanel:close', null)
     }
   }, [activePanel])
 
