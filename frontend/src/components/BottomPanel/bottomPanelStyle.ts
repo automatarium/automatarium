@@ -5,17 +5,13 @@ export const Wrapper = styled('div')`
   position: relative;
   width: 100%
 `
-// In the future if multiple tapes are used, can make the height reliant on the tapes. Something like:
-// 100 + (0.8 * (x * 100)) perhaps, where x is the number of tapes (simResults.length)
 export const Panel = styled('div')`
   width: 100%;
-  height: 180px;
   background: var(--surface);
   position: relative;
   z-index: 10;
 
   & > div {
-    position: absolute;
     inset: 0;
     overflow-x: auto;
   }
