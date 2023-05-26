@@ -1,3 +1,5 @@
+import { COLOR_KEY } from '/src/config'
+
 /**
  * Possible types of a project
  * - FSA: Finite state automata
@@ -24,7 +26,7 @@ export type AutomatariumTheme = 'system' | 'light' | 'dark'
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum
-    color: string,
+    color: COLOR_KEY | '',
     statePrefix: string,
     type: ProjectType
 }

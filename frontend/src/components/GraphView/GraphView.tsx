@@ -94,7 +94,7 @@ const GraphView = ({ children, ...props }) => {
   // Set color theme
   useEffect(() => {
     const color = COLORS[(projectColor !== '' && projectColor) || 'orange']
-    svgRef.current.style.setProperty('--primary-h', color.h)
+    svgRef.current.style.setProperty('--primary-h', color.h.toString())
     svgRef.current.style.setProperty('--primary-s', color.s + '%')
     svgRef.current.style.setProperty('--primary-l', color.l + '%')
   }, [projectColor, colorPref])

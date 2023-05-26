@@ -10,7 +10,13 @@ import {
 import { SerratedEdge, Pointer } from '/src/components/TMTraceStepWindow/TMTraceStepWindow'
 import { AutomataState } from '/src/types/ProjectTypes'
 
-const TraceStepBubble = ({ stateID, input, index }) => {
+interface TraceStepBubbleProps {
+  stateID: number
+  input: string
+  index: number
+}
+
+const TraceStepBubble = ({ stateID, input, index }: TraceStepBubbleProps) => {
   const [targetState, setTargetState] = useState<AutomataState>()
   const [transitionsEnabled, setTransitionsEnabled] = useState(false)
   const viewToScreenSpace = useViewStore(s => s.viewToScreenSpace)

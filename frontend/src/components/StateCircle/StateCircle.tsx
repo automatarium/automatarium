@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState, MouseEvent } from 'react'
+import { useRef, useEffect, useState, MouseEvent, HTMLAttributes } from 'react'
 
 import { dispatchCustomEvent } from '/src/util/events'
 import { useProjectStore } from '/src/stores'
@@ -9,7 +9,18 @@ import { CustomEvents } from '/src/hooks/useEvent'
 
 const FINAL_OUTLINE_OFFSET = 5
 
-const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...props }) => {
+type StateCircleProps = {
+  id: number
+  name: string
+  label: string
+  isFinal: boolean
+  cx: number
+  cy: number
+  selected: boolean
+  stepped: boolean
+} & HTMLAttributes<SVGElement>
+
+const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...props }: StateCircleProps) => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix) ?? 'q'
 
   const displayName = name || `${statePrefix}${id}`
@@ -62,7 +73,7 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
   </g>
 }
 
-StateCircle.Ghost = ({ cx, cy }) =>
+StateCircle.Ghost = ({ cx, cy }: {cx: number, cy: number}) =>
   <circle cx={cx} cy={cy} r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, opacity: 0.3, pointerEvents: 'none' }} />
 
 export default StateCircle

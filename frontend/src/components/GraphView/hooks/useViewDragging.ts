@@ -1,11 +1,11 @@
-import { useCallback, useState } from 'react'
+import { MutableRefObject, useCallback, useState } from 'react'
 
 import { useViewStore, useToolStore, usePreferencesStore } from '/src/stores'
 import { useEvent } from '/src/hooks'
 
 import { SCROLL_MAX, SCROLL_MIN, SCROLL_SPEED } from '/src/config/interactions'
 
-const useViewDragging = containerRef => {
+const useViewDragging = (containerRef: MutableRefObject<SVGSVGElement>) => {
   const currentTool = useToolStore(s => s.tool)
   const toolActive = currentTool === 'hand'
 
@@ -20,7 +20,7 @@ const useViewDragging = containerRef => {
   const [dragStartPosition, setDragStartPosition] = useState(null)
   const [dragStartViewPosition, setDragStartViewPosition] = useState(null)
 
-  const relativeMousePosition = useCallback((x, y) => {
+  const relativeMousePosition = useCallback((x: number, y: number) => {
     const b = containerRef.current.getBoundingClientRect()
     return [
       x - b.left,
@@ -29,7 +29,7 @@ const useViewDragging = containerRef => {
   }, [containerRef?.current])
 
   useEvent('wheel', e => {
-    if (!containerRef.current.contains(e.target)) {
+    if (!containerRef.current.contains(e.target as Element)) {
       return
     }
 
@@ -62,7 +62,7 @@ const useViewDragging = containerRef => {
   })
 
   useEvent('mousedown', e => {
-    if (toolActive && containerRef.current?.contains(e.target)) {
+    if (toolActive && containerRef.current?.contains(e.target as Element)) {
       setDragStartPosition(relativeMousePosition(e.clientX, e.clientY))
       setDragStartViewPosition(viewPosition)
     }

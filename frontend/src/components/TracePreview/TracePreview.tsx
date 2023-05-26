@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState, useEffect, HTMLAttributes } from 'react'
+import { Fragment, useRef, useState, useEffect, HTMLAttributes, ReactNode } from 'react'
 
 import { Wrapper, StyledState, StyledInitialArrow, StyledTransition } from './tracePreviewStyle'
 import {
@@ -12,14 +12,14 @@ const InitialArrow = () => (
   </StyledInitialArrow>
 )
 
-const Transition = ({ error }) => (
+const Transition = ({ error }: { error: boolean}) => (
   <StyledTransition viewBox="0 0 25 32" $error={error}>
     {!error && <path d="M0 16 L24 16 m-7 -7 l7 7 l-7 7" />}
     {error && <path d="M0 16 L22 16 m-7 -7 l7 7 l-7 7 M24 8 l0 16" />}
   </StyledTransition>
 )
 
-const State = ({ final, children }) => {
+const State = ({ final, children }: { final: boolean, children: ReactNode }) => {
   const textRef = useRef<SVGTextElement>()
   const [box, setBox] = useState<DOMRect>()
 

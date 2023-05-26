@@ -153,12 +153,12 @@ const Transition = ({
   const midPoint = calcPoint(edges[0], control, edges[1], 0.5)
 
   // Callbacks for individual transitions
-  const handleTransitionMouseUp = (t: PositionedTransition) => e =>
+  const handleTransitionMouseUp = (t: PositionedTransition) => (e: MouseEvent) =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
       transition: t
     })
-  const handleTransitionMouseDown = (t: PositionedTransition) => e =>
+  const handleTransitionMouseDown = (t: PositionedTransition) => (e: MouseEvent) =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
       transition: t
@@ -172,10 +172,10 @@ const Transition = ({
 
   // Callbacks for the edge
 
-  const handleEdgeMouseDown = e =>
+  const handleEdgeMouseDown = (e: MouseEvent) =>
     dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
 
-  const handleEdgeDoubleClick = e =>
+  const handleEdgeDoubleClick = (e: MouseEvent) =>
     dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions })
 
   // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend
