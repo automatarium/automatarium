@@ -7,13 +7,13 @@ interface CardListProps extends HTMLAttributes<HTMLDivElement> {
   innerRef?: Ref<HTMLDivElement>
 }
 
-const CardList = ({ title, button, ...props }: CardListProps) => (
+const CardList = ({ title, button, innerRef, ...props }: CardListProps) => (
   <section>
     <CardListTitleContainer>
       {title && <CardListTitle>{title}</CardListTitle>}
       {button}
     </CardListTitleContainer>
-    <CardListContainer ref={props.innerRef} {...props} />
+    <CardListContainer ref={innerRef} {...props} />
   </section>
 )
 
