@@ -72,12 +72,12 @@ const ExportImage = () => {
     if (type === 'svg') {
       // TODO: kinda broken, might need to clean the svg at an earlier stage
       const blob = new Blob([svg], { type: 'text/plain' })
-      navigator.clipboard.write([new window.ClipboardItem({ 'text/plain': blob })])
-    }
-
-    if (type === 'png' || type === 'jpg') {
+      await navigator.clipboard.write([new window.ClipboardItem({ 'text/plain': blob })])
+    } else if (type === 'png') {
       const canvas = await svgToCanvas({ ...size, svg })
-      canvas.toBlob(blob => navigator.clipboard.write([new window.ClipboardItem({ [type === 'jpg' ? 'image/jpeg' : 'image/png']: blob })]), type === 'jpg' && 'image/jpeg')
+      canvas.toBlob(blob => navigator.clipboard.write([
+        new window.ClipboardItem({ 'image/png': blob })
+      ]))
     }
 
     setExportVisible(false)
@@ -91,17 +91,21 @@ const ExportImage = () => {
       onClose={() => setExportVisible(false)}
       actions={<>
         <Button secondary onClick={() => setExportVisible(false)}>Cancel</Button>
-        <div style={{ flex: 1 }} />
-        <Button secondary onClick={copyToClipboard}>Copy to clipboard</Button>
+        <div style={{ flex: 1 }}/>
+        {/*
+            Currently jpg is not supported for the ClipboardItem API.
+            See https://stackoverflow.com/a/69536762
+         */}
+        <Button disabled={type === 'jpg'} secondary onClick={copyToClipboard}>Copy to clipboard</Button>
         <Button onClick={doExport}>Export</Button>
       </>}
       width="800px"
     >
       <Wrapper>
-        <Image src={preview} alt="" />
+        <Image src={preview} alt=""/>
         <div>
           <Preference label="File name" fullWidth>
-            <Input small value={filename} onChange={e => setOptions({ filename: e.target.value })} />
+            <Input small value={filename} onChange={e => setOptions({ filename: e.target.value })}/>
           </Preference>
           <Preference label="File type" fullWidth>
             <Input type="select" small value={type} onChange={e => setOptions({ type: e.target.value })}>
@@ -110,9 +114,11 @@ const ExportImage = () => {
               <option value="svg">SVG</option>
             </Input>
           </Preference>
-          {type === 'svg' && <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>Note: SVG exporting is still in beta and may not work as expected</span>}
+          {type === 'svg' &&
+              <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>Note: SVG exporting is still in beta and may not work as expected</span>}
           <Preference label="Margin" fullWidth>
-            <Input type="number" min="0" max="500" small value={margin} onChange={e => setOptions({ margin: e.target.value === '' ? 0 : Math.min(Math.max(Number(e.target.value), 0), 500) })} />
+            <Input type="number" min="0" max="500" small value={margin}
+                   onChange={e => setOptions({ margin: e.target.value === '' ? 0 : Math.min(Math.max(Number(e.target.value), 0), 500) })}/>
           </Preference>
           <Preference label="Accent colour" fullWidth>
             <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value })}>
@@ -133,7 +139,7 @@ const ExportImage = () => {
             </Input>
           </Preference>
           <Preference label="Dark mode">
-            <Switch checked={darkMode} onChange={e => setOptions({ darkMode: e.target.checked })} />
+            <Switch checked={darkMode} onChange={e => setOptions({ darkMode: e.target.checked })}/>
           </Preference>
         </div>
       </Wrapper>
