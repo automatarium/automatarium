@@ -74,16 +74,22 @@ const TestingLab = () => {
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
       // Formats a symbol. Makes an empty symbol become a lambda
-      const formatSymbol = (char: string): string => char === '' ? 'λ' : char
+      const formatSymbol = (char?: string): string => char === '' ? 'λ' : char
       return {
         ...result,
         // We need format the symbols in the trace so any empty symbols become lambdas
-        trace: result.trace.map(step => ({
+        trace: result.trace.map((step: FSAExecutionTrace | PDAExecutionTrace) => ({
           to: step.to,
           read: formatSymbol(step.read),
-          pop: formatSymbol(step.pop),
-          push: formatSymbol(step.push),
-          currentStack: step.currentStack
+          // Add extra info if its a PDA trace.
+          // I know this isn't needed, but it pleases typescript
+          ...('currentStack' in step
+            ? {
+                pop: formatSymbol(step.pop),
+                push: formatSymbol(step.push),
+                currentStack: step.currentStack
+              }
+            : {})
         } as FSAExecutionTrace | PDAExecutionTrace)),
         transitionCount: transitionCount(result)
       }
@@ -117,7 +123,7 @@ const TestingLab = () => {
   // Determine last position allowed
   const lastTraceIdx = simulationResult?.transitionCount
 
-  const getStateName = useCallback(id => graph.states.find(s => s.id === id)?.name, [graph.states])
+  const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
 
   const traceOutput = useMemo(() => {
     // No output before simulating
@@ -134,7 +140,7 @@ const TestingLab = () => {
     // Represent transitions as strings of form start -> end
     const transitions = trace
       .slice(0, -1)
-      .map((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+      .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
       .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
       .filter((_x, i) => i < traceIdx)
 
@@ -183,7 +189,7 @@ const TestingLab = () => {
 
   // Determine input position
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
-  const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
+  const inputIdx = currentTrace.map(tr => 'read' in tr && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
   const automataIsInvalid = noInitialState || noFinalState || !pathToFinal
 
