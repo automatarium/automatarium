@@ -59,12 +59,10 @@ const Sidepanel = () => {
   // Show bottom panel with TM Tape Lab (can make other effects for other project types if
   // the bottom panel wants to be used for something else)
   useEffect(() => {
-    if (projectType === 'TM') {
-      if (activePanel?.value === 'test') {
-        dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
-      } else {
-        dispatchCustomEvent('bottomPanel:close', null)
-      }
+    if (projectType === 'TM' && activePanel?.value === 'test') {
+      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
+    } else {
+      dispatchCustomEvent('bottomPanel:close', null)
     }
   }, [activePanel])
 
