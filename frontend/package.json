@@ -36,6 +36,7 @@
   },
   "devDependencies": {
     "@parcel/transformer-inline-string": "^2.8.3",
+    "@types/lodash.groupby": "^4.6.7",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.29.4",
     "parcel": "^2.8.3",
