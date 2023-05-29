@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
-import COLORS, { COLOR_KEY } from '/src/config/colors'
+import COLORS, { ColourName } from '/src/config/colors'
 import { Size } from '/src/types/ProjectTypes'
+import { Background } from '/src/stores/useExportStore'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
@@ -40,8 +41,8 @@ export const svgToCanvas = ({ height, width, svg }: Size & {svg: string}) => new
 
 interface GetSvgStringProps {
   margin?: number
-  background?: 'none' | 'solid' | 'grid'
-  color?: COLOR_KEY
+  background?: Background
+  color?: ColourName | ''
   darkMode?: boolean
 }
 

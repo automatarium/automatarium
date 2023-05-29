@@ -50,7 +50,6 @@ const Info = () => {
     }
     return map
   }, [states, alphabet, graph])
-  console.log(transitionMap)
   return <>
     <SectionLabel>Alphabet</SectionLabel>
     <Wrapper>

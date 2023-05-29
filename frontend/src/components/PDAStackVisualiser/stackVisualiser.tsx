@@ -11,7 +11,7 @@ const PDAStackVisualiser = () => {
   const projectType = useProjectStore((s) => s.project.config.type)
 
   // Stack
-  const stack = []
+  const stack: {element: string, key: number}[] = []
   let currentStack
 
   // Stores stack variables

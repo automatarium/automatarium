@@ -1,4 +1,4 @@
-import { COLOR_KEY } from '/src/config'
+import { ColourName } from '/src/config'
 
 /**
  * Possible types of a project
@@ -26,7 +26,7 @@ export type AutomatariumTheme = 'system' | 'light' | 'dark'
 export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum
-    color: COLOR_KEY | '',
+    color: ColourName | '',
     statePrefix: string,
     type: ProjectType
 }

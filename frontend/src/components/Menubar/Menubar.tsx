@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo } from 'react'
+import { useState, useEffect, useRef, useMemo, HTMLAttributes } from 'react'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -27,7 +27,13 @@ import { ContextItem } from '/src/components/ContextMenus/contextItem'
 // Extend dayjs
 dayjs.extend(relativeTime)
 
-const DropdownButton = ({ item, dropdown, setDropdown, ...props }) => {
+type DropdownButton = {
+  item: ContextItem
+  dropdown: string
+  setDropdown: (x: undefined) => void
+} & HTMLAttributes<HTMLButtonElement>
+
+const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButton) => {
   const buttonRef = useRef<HTMLButtonElement>()
   const [rect, setRect] = useState<DOMRect>()
 

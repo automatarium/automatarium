@@ -18,7 +18,7 @@ type StateCircleProps = {
   cy: number
   selected: boolean
   stepped: boolean
-} & HTMLAttributes<SVGElement>
+} & Omit<HTMLAttributes<SVGElement>, 'id'> // Need to remove `id` or else it will be never type
 
 const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...props }: StateCircleProps) => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix) ?? 'q'
