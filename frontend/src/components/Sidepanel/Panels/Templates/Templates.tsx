@@ -31,7 +31,6 @@ const Templates = () => {
     if (template !== null && template._id === id) {
       setTemplate(null)
       setTool('cursor')
-      // thumbnail.style.boxShadow = ''
       return
     }
     // If template isn't yet selected, select it
