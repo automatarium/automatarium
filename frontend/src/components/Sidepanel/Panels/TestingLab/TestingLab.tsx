@@ -256,7 +256,12 @@ const TestingLab = () => {
             }} />
         </StepButtons>
         {traceOutput && graph.projectType !== 'TM' && <div>
-          <TracePreview result={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states}/>
+          <TracePreview
+              result={simulationResult as (FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}}
+              step={traceIdx}
+              statePrefix={statePrefix}
+              states={graph.states}
+          />
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
         {projectType !== 'TM' && (

@@ -1,4 +1,4 @@
-import { ColourName } from '/src/config'
+import { ColourName } from '../config'
 
 /**
  * Possible types of a project

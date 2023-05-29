@@ -2,7 +2,7 @@ import { Fragment, useRef, useState, useEffect, HTMLAttributes, ReactNode } from
 
 import { Wrapper, StyledState, StyledInitialArrow, StyledTransition } from './tracePreviewStyle'
 import {
-  ExecutionResult
+  FSAExecutionResult, PDAExecutionResult
 } from '@automatarium/simulation/src/graph'
 import { AutomataState } from '/src/types/ProjectTypes'
 
@@ -42,7 +42,9 @@ const State = ({ final, children }: { final: boolean, children: ReactNode }) => 
 }
 
 interface TracePreviewProps extends HTMLAttributes<HTMLDivElement>{
-  result: ExecutionResult & {transitionCount: number}
+  // TracePreview isn't implemented for TM's (I don't know why) so we only allow FSA and PDA.
+  // Implementing should be simple, I think the issue was the item.read === null check not working (since TMs dont have that)
+  result: (FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}
   step: number
   states: AutomataState[]
   statePrefix?: string
