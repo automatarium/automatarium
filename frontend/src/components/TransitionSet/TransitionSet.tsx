@@ -29,11 +29,15 @@ const makeTransitionText = (type: ProjectType, t: PositionedTransition): string 
   }
 }
 
+// Direction that a transition can bend
+type BendDirection = 'over' | 'under' | 'straight'
+
 const getBendValue = (direction: BendDirection): number => (
-   { 
-      straight: 0, 
-      over: -0.5, 
-      under: 0.5 }[direction] * TRANSITION_SEPERATION 
+  {
+    straight: 0,
+    over: -0.5,
+    under: 0.5
+  }[direction] * TRANSITION_SEPERATION
 )
 
 /**
@@ -44,9 +48,6 @@ const getBendValue = (direction: BendDirection): number => (
 const toRightOf = (a: Coordinate, b: Coordinate) => {
   return a.x === b.x ? a.y < b.y : a.x > b.x
 }
-
-// Direction that a transition can bend
-type BendDirection = 'over' | 'under' | 'straight'
 
 const TransitionSet = ({ transitions, isGhost = false } : {transitions: PositionedTransition[], isGhost?: boolean}) => {
   const projectType = useProjectStore(s => s.project.config.type)
