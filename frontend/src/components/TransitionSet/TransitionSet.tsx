@@ -29,6 +29,13 @@ const makeTransitionText = (type: ProjectType, t: PositionedTransition): string 
   }
 }
 
+const getBendValue = (direction: BendDirection): number => (
+   { 
+      straight: 0, 
+      over: -0.5, 
+      under: 0.5 }[direction] * TRANSITION_SEPERATION 
+)
+
 /**
  * Return if transition b is to the right of a.
  * It is considered "to the right" if the a.x > b.x but if they are equal then it compares y coordinates
@@ -133,11 +140,7 @@ const Transition = ({
 
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
-  const bendValue = {
-    straight: 0,
-    over: -0.5,
-    under: 0.5
-  }[bendDirection] * TRANSITION_SEPERATION
+  const bendValue = getBendValue(bendDirection)
   // Calculate path
   const { pathData, textPathData, control, normal, edges } = calculateTransitionPath(from, to, bendValue, fullWidth)
   // Convert the normal to degrees
@@ -281,11 +284,7 @@ TransitionSet.Transition = Transition
 
 TransitionSet.Ghost = ({ from, to, bendDirection }) => {
   const pathID = `${from.x}${from.y}${to.x}${to.y}`
-  const bendValue = {
-    straight: 0,
-    over: -0.5,
-    under: 0.5
-  }[bendDirection] * TRANSITION_SEPERATION
+  const bendValue = getBendValue(bendDirection)
   const { pathData } = calculateTransitionPath(from, to, bendValue, false)
   return <path
     id={pathID}
