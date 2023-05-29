@@ -57,22 +57,15 @@ const TransitionSet = ({ transitions, isGhost = false } : {transitions: Position
     // The transitions sent should all start and end the same, so we only need to get the values
     // from the first transition
     const first = toRender[0]
+    const props = { from: first.from, to: first.to, key: first.id, bendDirection: bend }
     if (isGhost) {
-      return <TransitionSet.Ghost
-        from={first.from}
-        to={first.to}
-        key={first.id}
-        bendDirection={bend}
-      />
+      return <TransitionSet.Ghost {...props}/>
     } else {
       return <Transition
         transitions={toRender}
-        from={first.from}
-        to={first.to}
         id={first.id}
-        key={first.id}
-        bendDirection={bend}
         projectType={projectType}
+        {...props}
       />
     }
   }
