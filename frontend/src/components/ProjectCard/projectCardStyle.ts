@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('button')<{width: number, istemplate: string}>`
+export const CardContainer = styled('button')<{width: number, $istemplate: boolean}>`
   width: ${props => props.width}em;
   padding: 0;
   margin: 3px;
@@ -11,7 +11,7 @@ export const CardContainer = styled('button')<{width: number, istemplate: string
   color: inherit;
   cursor: pointer;
 
-  &:hover${props => !(props.istemplate === 'true') && ', &:focus'} {
+  &:hover${props => !(props.$istemplate) && ', &:focus'} {
     outline: none;
 
     &:not(:disabled) > div:first-of-type {
