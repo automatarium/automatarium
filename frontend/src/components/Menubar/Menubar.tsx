@@ -27,11 +27,11 @@ import { ContextItem } from '/src/components/ContextMenus/contextItem'
 // Extend dayjs
 dayjs.extend(relativeTime)
 
-type DropdownButton = {
+interface DropdownButton extends HTMLAttributes<HTMLButtonElement> {
   item: ContextItem
   dropdown: string
   setDropdown: (x: undefined) => void
-} & HTMLAttributes<HTMLButtonElement>
+}
 
 const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButton) => {
   const buttonRef = useRef<HTMLButtonElement>()

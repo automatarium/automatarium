@@ -31,7 +31,7 @@ const SteppingLab = () => {
     // to handle non-determinism so branching stops on the first rejected transition.
     return graphStepper(graph as FSAProjectGraph | PDAProjectGraph, traceInput)
   }, [graph, traceInput])
-  console.log(stepper)
+
   const handleStep = <S extends State>(newFrontier: Node<S>[]) => {
     setFrontier(newFrontier)
     setSteppedStates(newFrontier)
