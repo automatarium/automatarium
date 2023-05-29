@@ -185,11 +185,10 @@ const useActions = (registerHotkeys = false) => {
             deleteTemplate(template._id)
             setTemplate(null)
             setTool('cursor')
-            return
           }
         }
         // Otherwise, delete selection
-        if (selectedStatesIds.length > 0 || selectedTransitionsIds.length > 0 || selectedCommentsIds.length > 0) {
+        else if (selectedStatesIds.length > 0 || selectedTransitionsIds.length > 0 || selectedCommentsIds.length > 0) {
           removeStates(selectedStatesIds)
           removeTransitions(selectedTransitionsIds)
           removeComments(selectedCommentsIds)
