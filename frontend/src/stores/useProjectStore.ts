@@ -80,13 +80,10 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
  * but instead returns the number of the highest
  * e.g. [1, 4, 7] next ID would be 8
  */
-const nextIDFor = (elementArr: {id?: number}[]): number => {
+const nextIDFor = (elementArr: {id: number}[]): number => {
   // We can't do elementArr.length + 1 since that might reuse an ID from a deleted item.
-  // Order also is guarenteed so we can't just get the last element.
-  let highest = Math.max(-1, ...elementArr.map(e => e.id))
-  // If any of the IDs were undefined then `highest` would be NaN
-  if (isNaN(highest)) highest = -1
-  return 1 + highest
+  // Order also is guaranteed so we can't just get the last element.
+  return 1 + Math.max(-1, ...elementArr.map(e => e.id))
 }
 
 interface ProjectStore {
@@ -109,7 +106,7 @@ interface ProjectStore {
   setName: (name: string) => void,
   createTransition: (transition: BaseAutomataTransition) => number,
   editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
-  createComment: (comment: ProjectComment) => number,
+  createComment: (comment: Omit<ProjectComment, 'id'>) => number,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
   createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => number,
@@ -222,7 +219,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Create a new comment */
-  createComment: (comment: ProjectComment) => {
+  createComment: comment => {
     const id = nextIDFor(get().project.comments)
     set(produce(({ project }: { project: StoredProject }) => {
       project.comments.push({ ...comment, id })
