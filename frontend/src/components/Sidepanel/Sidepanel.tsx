@@ -43,7 +43,7 @@ const panels: PanelItem[] = [
     element: <Options />
   },
   {
-    label: 'Templates',
+    label: 'Templates (Beta)',
     value: 'templates',
     icon: <Star />,
     element: <Templates />
@@ -54,6 +54,10 @@ const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const setTool = useToolStore(s => s.setTool)
+  const stopTemplateInsert = () => {
+    setTemplate(null)
+    setTool('cursor')
+  }
 
   // Open panel via event
   useEvent('sidepanel:open', e => {
@@ -68,9 +72,7 @@ const Sidepanel = () => {
           <CloseButton
             onClick={() => {
               setActivePanel(undefined)
-              // Stop template insertion mode
-              setTemplate(null)
-              setTool('cursor')
+              stopTemplateInsert()
             }}
           ><ChevronRight /></CloseButton>
           <Panel>
@@ -86,7 +88,10 @@ const Sidepanel = () => {
         {panels.map(panel => (
           <SidebarButton
             key={panel.value}
-            onClick={() => setActivePanel(activePanel?.value === panel.value ? undefined : panel)}
+            onClick={() => {
+              setActivePanel(activePanel?.value === panel.value ? undefined : panel)
+              stopTemplateInsert()
+            }}
             $active={activePanel?.value === panel.value}
             title={panel.label}
           >
