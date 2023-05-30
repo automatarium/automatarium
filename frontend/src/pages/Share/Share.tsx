@@ -8,6 +8,8 @@ import { useProjectStore } from '/src/stores'
 import { Container } from './shareStyle'
 import { StoredProject } from '/src/stores/useProjectStore'
 
+import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
+
 const Share = () => {
   const { pid } = useParams()
   const navigate = useNavigate()
@@ -39,6 +41,8 @@ const Share = () => {
           name={sharedProject.meta?.name}
           type={sharedProject.config?.type}
           date={dayjs(sharedProject.meta?.dateEdited)}
+          width={PROJECT_THUMBNAIL_WIDTH}
+          $istemplate={false}
         />
         <Button onClick={handleCopy}>Make a copy</Button>
       </>}

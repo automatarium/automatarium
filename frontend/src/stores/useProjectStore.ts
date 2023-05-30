@@ -12,7 +12,10 @@ import {
   AutomataState,
   ProjectConfig,
   ProjectComment,
-  ProjectType, ProjectGraph
+  Template,
+  CopyData,
+  ProjectType,
+  ProjectGraph
 } from '../types/ProjectTypes'
 
 import {
@@ -25,10 +28,25 @@ import {
 } from '/src/config'
 import { expandTransitions } from '@automatarium/simulation/src/utils'
 
+import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
+
 /**
  * Normal project, except it has extra information to identify it
  */
 export type StoredProject = Project & {_id: string, userid?: string}
+
+export enum InsertGroupResponseType {
+  FAIL = 1,
+  SUCCESS
+}
+
+type InsertGroupResponse = {
+  type: InsertGroupResponseType.FAIL,
+  body: string
+} | {
+  type: InsertGroupResponseType.SUCCESS,
+  body: Template | CopyData
+}
 
 export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): StoredProject => ({
   projectType,
@@ -57,6 +75,10 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
   }
 })
 
+const nextIDFor = (elementArr: AutomataState[] | BaseAutomataTransition[] | ProjectComment[]): number => {
+  return 1 + Math.max(-1, ...elementArr.map((e: AutomataState | BaseAutomataTransition | ProjectComment) => e.id))
+}
+
 interface ProjectStore {
   project: StoredProject,
   // Can't work this one out
@@ -77,18 +99,17 @@ interface ProjectStore {
   setName: (name: string) => void,
   createTransition: (transition: BaseAutomataTransition) => number,
   editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
-  createComment: (comment: ProjectComment) => void,
+  createComment: (comment: ProjectComment) => number,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
-  createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => void,
+  createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => number,
   updateState: (state: AutomataState) => void,
-  // still not sure what's going on with the tests
+  insertGroup: (createData: Template | CopyData, isTemplate?: boolean) => InsertGroupResponse,
   setSingleTest: (value: string) => void,
   addBatchTest: (value?: string) => void,
   updateBatchTest: (index: number, value: string) => void,
   removeBatchTest: (index: number) => void,
   setStateInitial: (stateID: number) => void,
-  // not sure if arrays
   toggleStatesFinal: (stateIDs: number[]) => void,
   flipTransitions: (transitionIDs: number[]) => void,
   removeStates: (stateIDs: number[]) => void,
@@ -223,6 +244,81 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   updateState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
     project.states = project.states.map((st: AutomataState) => st.id === state.id ? { ...st, ...state } : st)
   })),
+
+  /* Remove a state by id */
+  removeState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
+    project.states = project.states.filter((st: AutomataState) => st.id !== state.id)
+  })),
+
+  insertGroup: (createData, isTemplate = false) => {
+    // Check that we are inserting into same project type
+    if (createData.projectType !== get().project.projectType) {
+      return { type: InsertGroupResponseType.FAIL, body: `You cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.` }
+    }
+    // Check that for transitions being inserted, to and from states are also inserted
+    const stateIDs = new Set(createData.states.map(it => it.id))
+    for (const transition of createData.transitions) {
+      const hasTo = stateIDs.has(transition.to)
+      const hasFrom = stateIDs.has(transition.from)
+      // If either `to` or `from` is missing then return an error
+      if (!(hasTo && hasFrom)) {
+        return { type: InsertGroupResponseType.FAIL, body: 'Sorry, there was an error.' }
+      }
+    }
+    set(produce(({ project }: { project }) => {
+      let isInitialStateUpdated = false
+      const isNewProject = createData.projectSource !== project._id
+      const positionOffset = isTemplate ? 0 : PASTE_POSITION_OFFSET
+      const newTransitions = structuredClone(createData.transitions)
+      newTransitions.forEach(transition => {
+        transition.from = null
+        transition.to = null
+      })
+      const nextStateId = nextIDFor(project.states)
+      createData.states.forEach((state, i) => {
+        // TODO: ensure position isn't out of window
+        // Probably will have to take adjusting position out of this function
+        [state.x, state.y] = [state.x + positionOffset, state.y + positionOffset]
+        const newId = nextStateId + i
+        // Update transitions to new state id
+        createData.transitions.forEach((transition, i) => {
+          if (transition.from === state.id && newTransitions[i].from === null) {
+            newTransitions[i].from = newId
+          }
+          if (transition.to === state.id && newTransitions[i].to === null) {
+            newTransitions[i].to = newId
+          }
+        })
+        // Update initial state id if applicable
+        if (createData.initialStateId === state.id && !isInitialStateUpdated) {
+          createData.initialStateId = newId
+          isInitialStateUpdated = true
+        }
+        state.id = newId
+        // createState
+        project.states.push({ ...state })
+      })
+      createData.transitions = newTransitions
+      const nextCommentId = nextIDFor(project.comments)
+      createData.comments.forEach((comment, i) => {
+        // TODO: ensure position isn't out of window
+        [comment.x, comment.y] = [comment.x + positionOffset, comment.y + positionOffset]
+        comment.id = nextCommentId + i
+        // createComment
+        project.comments.push({ ...comment })
+      })
+      const nextTransitionId = nextIDFor(project.transitions)
+      createData.transitions.forEach((transition, i) => {
+        transition.id = nextTransitionId + i
+        // createTransition
+        project.transitions.push({ ...transition })
+      })
+      if (isNewProject && createData.initialStateId !== null && project.initialState === null) {
+        project.initialState = createData.initialStateId
+      }
+    }))
+    return { type: InsertGroupResponseType.SUCCESS, body: createData }
+  },
 
   /* Update tests */
   setSingleTest: (value: string) => set(produce((state: ProjectStore) => {

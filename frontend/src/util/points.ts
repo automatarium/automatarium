@@ -1,3 +1,4 @@
+import { GRID_SNAP } from '/src/config/interactions'
 import { Coordinate } from '/src/types/ProjectTypes'
 
 export const lerpPoints = (p1: Coordinate, p2: Coordinate, t: number) => ({
@@ -16,3 +17,6 @@ export const movePointTowards = (p: Coordinate, tar: Coordinate, d: number): Coo
 
 export const size = (p: Coordinate): number =>
   Math.sqrt(Math.pow(p.x, 2) + Math.pow(p.y, 2))
+
+export const snapPosition = (p: Coordinate): Coordinate =>
+  ({ x: Math.floor(p.x / GRID_SNAP) * GRID_SNAP, y: Math.floor(p.y / GRID_SNAP) * GRID_SNAP })

@@ -2,7 +2,7 @@ import { useState, useRef, ReactNode } from 'react'
 import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
-import { useToolStore } from '/src/stores'
+import { useToolStore, useTemplateStore } from '/src/stores'
 import { Dropdown, Sidebar } from '/src/components'
 import useViewStore from '/src/stores/useViewStore'
 
@@ -73,6 +73,7 @@ type ToolPopupType = {visible: boolean, y: number, tool: ToolItem}
 
 const Toolbar = () => {
   const { tool, setTool } = useToolStore()
+  const setTemplate = useTemplateStore(s => s.setTemplate)
   const zoomButtonRect = useRef<DOMRect>()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
   const viewScale = useViewStore(s => s.scale)
@@ -84,7 +85,10 @@ const Toolbar = () => {
       {tools.map(toolOption => (
         <SidebarButton
           key={toolOption.label}
-          onClick={() => setTool(toolOption.value)}
+          onClick={() => {
+            setTool(toolOption.value)
+            setTemplate(null)
+          }}
           $active={tool === toolOption.value}
           onMouseEnter={e => {
             toolPopupHover.current = { ...toolPopupHover.current, value: toolOption.value }

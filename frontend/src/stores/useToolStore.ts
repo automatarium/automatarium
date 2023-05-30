@@ -4,7 +4,7 @@ import { create } from 'zustand'
  * Specifies a tool that can be used
  * @see Toolbar where all the tools are shown in the UI
  */
-export type Tool = 'cursor' | 'hand' | 'state' | 'transition' | 'comment' | 'delete'
+export type Tool = 'cursor' | 'hand' | 'state' | 'transition' | 'comment' | 'delete' | 'template'
 
 interface ToolStore {
   tool: Tool

@@ -6,6 +6,8 @@ import { Main, Button, Header, Table, ProjectCard } from '/src/components'
 import ExampleAutomaton from './components/ExampleAutomaton'
 import TestingLab from './components/TestingLab'
 
+import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
+
 const Landing = () => (
   <Main fullWidth style={{ paddingBottom: 0 }}>
     <Header center />
@@ -56,7 +58,7 @@ const Landing = () => (
       </Section>
 
       <Section $reverse>
-        <ProjectCard name="My Project" type="FSA" date="2 days ago" disabled />
+        <ProjectCard name="My Project" type="FSA" date="2 days ago" disabled width={PROJECT_THUMBNAIL_WIDTH} $istemplate={false}/>
         <div className="text">
           <h3>Share with colleagues</h3>
           <p>Easily share your projects with your peers via a link that lets anyone make a copy of your project and continue working.</p>
