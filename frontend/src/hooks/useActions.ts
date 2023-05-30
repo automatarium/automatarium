@@ -11,6 +11,7 @@ import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { AutomataState, CopyData, FSAProjectGraph, ProjectComment } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
+import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 
 /**
  * Combination of keys. Used to call an action
@@ -183,8 +184,7 @@ const useActions = (registerHotkeys = false) => {
         if (template !== null && selectedCommentsIds.length === 0 && selectedStatesIds.length === 0 && selectedTransitionsIds.length === 0) {
           if (window.confirm(`Are you sure you want to delete your template '${template.name}'?`)) {
             deleteTemplate(template._id)
-            setTemplate(null)
-            setTool('cursor')
+            stopTemplateInsert(setTemplate, setTool)
           }
         } else if (selectedStatesIds.length > 0 || selectedTransitionsIds.length > 0 || selectedCommentsIds.length > 0) {
           // Otherwise, delete selection

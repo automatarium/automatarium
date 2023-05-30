@@ -7,6 +7,7 @@ import { useEvent } from '/src/hooks'
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
+import { stopTemplateInsert } from './Panels/Templates/Templates'
 
 import { useTemplateStore, useToolStore } from '/src/stores'
 
@@ -54,10 +55,6 @@ const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const setTool = useToolStore(s => s.setTool)
-  const stopTemplateInsert = () => {
-    setTemplate(null)
-    setTool('cursor')
-  }
 
   // Open panel via event
   useEvent('sidepanel:open', e => {
@@ -72,7 +69,7 @@ const Sidepanel = () => {
           <CloseButton
             onClick={() => {
               setActivePanel(undefined)
-              stopTemplateInsert()
+              stopTemplateInsert(setTemplate, setTool)
             }}
           ><ChevronRight /></CloseButton>
           <Panel>
@@ -90,7 +87,7 @@ const Sidepanel = () => {
             key={panel.value}
             onClick={() => {
               setActivePanel(activePanel?.value === panel.value ? undefined : panel)
-              stopTemplateInsert()
+              stopTemplateInsert(setTemplate, setTool)
             }}
             $active={activePanel?.value === panel.value}
             title={panel.label}

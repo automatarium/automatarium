@@ -11,6 +11,12 @@ import React, { useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { WarningLabel } from '../TestingLab/testingLabStyle'
+import { Tool } from '/src/stores/useToolStore'
+
+export const stopTemplateInsert = (setTemplate: (template: Template) => void, setTool: (tool: Tool) => void) => {
+  setTemplate(null)
+  setTool('cursor')
+}
 
 const Templates = () => {
   const project = useProjectStore(s => s.project)
@@ -29,8 +35,7 @@ const Templates = () => {
   const pickTemplate = (id: string) => {
     // Deselect if template already selected
     if (template !== null && template._id === id) {
-      setTemplate(null)
-      setTool('cursor')
+      stopTemplateInsert(setTemplate, setTool)
       return
     }
     // If template isn't yet selected, select it
