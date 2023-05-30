@@ -8,7 +8,7 @@ import { Coordinate } from '/src/types/ProjectTypes'
  * Mouse event that includes the original event but also adds extra info like where in the view the click was
  * and if it was clicking the SVG
  */
-type SVGMouseData = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+export type SVGMouseData = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
 
 export type StateEventData = {originalEvent: MouseEvent, state: {id: number, name: string, cx: number, cy: number}}
 

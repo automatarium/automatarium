@@ -1,7 +1,15 @@
 import { styled } from 'goober'
 import { forwardRef } from 'react'
 
-export const StyledInput = styled('input', forwardRef)`
+export type InputColor = 'success' | 'error'
+
+interface StyledInputProps {
+  $color: InputColor
+  $small: boolean
+  as: string
+}
+
+export const StyledInput = styled('input', forwardRef)<StyledInputProps>`
   font: inherit;
   border: 1px solid var(--border-color, var(--input-border));
   background: var(--white);
@@ -12,7 +20,6 @@ export const StyledInput = styled('input', forwardRef)`
   ${props => props.as === 'textarea' && 'resize: vertical;'}
   transition: box-shadow .1s, border-color .1s;
   color: var(--black);
-  box-sizing: border-box;
   margin: 0;
 
   &:focus {

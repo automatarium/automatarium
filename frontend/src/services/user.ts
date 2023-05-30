@@ -1,6 +1,6 @@
 import api from '../services'
 
-export const getUser = async uid => {
+export const getUser = async (uid: string) => {
   const res = await api.get(`/users/${uid}`)
   return res.data
 }

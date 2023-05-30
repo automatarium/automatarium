@@ -5,11 +5,12 @@ import { useAuth } from '/src/hooks'
 import { useProjectsStore } from '/src/stores'
 import { getProjects, updateProject } from '/src/services/project'
 import isEqual from 'lodash.isequal'
+import { StoredProject } from '/src/stores/useProjectStore'
 
 const useSyncProjects = () => {
   const { user } = useAuth()
   const { projects, setProjects } = useProjectsStore()
-  const [savedProjects, setSavedProjects] = useState()
+  const [savedProjects, setSavedProjects] = useState<StoredProject[]>()
 
   // Update projects from backend (if authenticated)
   useEffect(() => {

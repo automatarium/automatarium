@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, ReactNode } from 'react'
 import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
@@ -14,8 +14,18 @@ import stateAnimation from './animations/state.json'
 import transitionAnimation from './animations/transition.json'
 import commentAnimation from './animations/comment.json'
 import { SidebarButton } from '../Sidebar/Sidebar'
+import { Tool } from '/src/stores/useToolStore'
 
-const tools = [
+interface ToolItem {
+  label: string
+  hotkey: string
+  description: string
+  value: Tool
+  icon: ReactNode
+  animation: object
+}
+
+const tools: ToolItem[] = [
   {
     label: 'Cursor tool',
     hotkey: 'V',
@@ -58,14 +68,17 @@ const tools = [
   }
 ]
 
+type ToolHoverType = {value?: string, timeout?: number, visible: boolean}
+type ToolPopupType = {visible: boolean, y: number, tool: ToolItem}
+
 const Toolbar = () => {
   const { tool, setTool } = useToolStore()
   const setTemplate = useTemplateStore(s => s.setTemplate)
-  const zoomButtonRect = useRef()
+  const zoomButtonRect = useRef<DOMRect>()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
   const viewScale = useViewStore(s => s.scale)
-  const [toolPopup, setToolPopup] = useState({})
-  const toolPopupHover = useRef({})
+  const [toolPopup, setToolPopup] = useState<ToolPopupType>({} as ToolPopupType)
+  const toolPopupHover = useRef<ToolHoverType>({} as ToolHoverType)
 
   return (
     <Sidebar $tools>
@@ -81,12 +94,12 @@ const Toolbar = () => {
             toolPopupHover.current = { ...toolPopupHover.current, value: toolOption.value }
             window.setTimeout(() => {
               if (toolPopupHover.current.value !== toolOption.value) return
-              const box = e.target.getBoundingClientRect()
+              const box = (e.target as HTMLElement).getBoundingClientRect()
               setToolPopup({ visible: true, y: box.y, tool: tools.find(t => t.value === toolOption.value) })
             }, toolPopupHover.current.timeout || 1000)
           }}
           onMouseLeave={e => {
-            toolPopupHover.current = { value: undefined, timeout: (e.relatedTarget.tagName === 'BUTTON' && toolPopup.visible) && 10 }
+            toolPopupHover.current = { value: undefined, timeout: ((e.relatedTarget as HTMLElement).tagName === 'BUTTON' && toolPopup.visible) && 10 } as ToolHoverType
             setToolPopup({ ...toolPopup, visible: false })
           }}
         >

@@ -25,15 +25,15 @@ import {
   DEFAULT_PROJECT_TYPE,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
-} from '../config/projects'
+} from '/src/config'
 import { expandTransitions } from '@automatarium/simulation/src/utils'
 
 import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
 
 /**
- * A stored project has an extra `_id` field which is used to tell identify it
+ * Normal project, except it has extra information to identify it
  */
-export type StoredProject = Project & {_id: string}
+export type StoredProject = Project & {_id: string, userid?: string}
 
 export enum InsertGroupResponseType {
   FAIL = 1,
@@ -86,7 +86,7 @@ interface ProjectStore {
   historyPointer: number,
   lastChangeDate: number,
   lastSaveDate: number,
-  set: (project: Project) => void,
+  set: (project: StoredProject) => void,
   /**
    * Updates the current project. This doesn't reset the history like `set`
    * @param project

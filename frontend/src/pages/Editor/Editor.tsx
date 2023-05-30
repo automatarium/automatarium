@@ -96,9 +96,7 @@ const Editor = () => {
         <Toolbar />
         <EditorContent>
           <EditorPanel />
-          {(projectType === 'TM') &&
             <BottomPanel />
-          }
         </EditorContent>
         {(projectType === 'PDA') &&
             <PDAStackVisualiser/>

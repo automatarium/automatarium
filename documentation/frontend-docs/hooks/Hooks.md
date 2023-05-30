@@ -154,7 +154,7 @@ This hook contains methods to enable the user to save the autonoma as an image:
 * ``svgToCanvas``
   * Extracts the SVG graph as a string.
 
-These above methods are used in ``ExportImage.js``.
+These above methods are used in ``ExportImage.tsx``.
 
 Likewise, the method can be simply called: 
 ```

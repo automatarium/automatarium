@@ -9,10 +9,6 @@ import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverla
 import { MoreVertical } from 'lucide-react'
 dayjs.extend(relativeTime)
 
-const blah = hi => {
-  console.log('deleting', hi)
-}
-
 const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate, showKebab = true, ...props }) => {
   const deleteProjectFromStore = useProjectsStore(s => s.deleteProject)
   return <CardContainer {...props}>
