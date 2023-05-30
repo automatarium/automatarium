@@ -3,14 +3,13 @@ import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2, Star } 
 
 import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
-import { useProjectStore } from '/src/stores'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
 import { stopTemplateInsert } from './Panels/Templates/Templates'
 
-import { useTemplateStore, useToolStore } from '/src/stores'
+import { useTemplateStore, useToolStore, useProjectStore } from '/src/stores'
 
 import { dispatchCustomEvent } from '/src/util/events'
 
