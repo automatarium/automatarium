@@ -15,12 +15,6 @@ const useTemplateStore = create<TemplateStore>((set: SetState<TemplateStore>) =>
   setTemplate: template => {
     set({ template })
   }
-  // update: (template) => {
-
-  // },
-  // setName: (newName) => {
-
-  // }
 }))
 
 export default useTemplateStore
