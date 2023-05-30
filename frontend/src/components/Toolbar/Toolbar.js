@@ -1,8 +1,8 @@
 import { useState, useRef } from 'react'
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, Star } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 
-import { useToolStore } from '/src/stores'
+import { useToolStore, useTemplateStore } from '/src/stores'
 import { Dropdown, Sidebar } from '/src/components'
 import useViewStore from '/src/stores/useViewStore'
 
@@ -55,19 +55,12 @@ const tools = [
     value: 'comment',
     icon: <MessageSquare />,
     animation: commentAnimation
-  },
-  {
-    label: 'Template tool',
-    hotkey: 'J',
-    description: 'Add templates to your automaton',
-    value: 'template',
-    icon: <Star />,
-    animation: commentAnimation
   }
 ]
 
 const Toolbar = () => {
   const { tool, setTool } = useToolStore()
+  const setTemplate = useTemplateStore(s => s.setTemplate)
   const zoomButtonRect = useRef()
   const [zoomMenuOpen, setZoomMenuOpen] = useState(false)
   const viewScale = useViewStore(s => s.scale)
@@ -79,7 +72,10 @@ const Toolbar = () => {
       {tools.map(toolOption => (
         <SidebarButton
           key={toolOption.label}
-          onClick={() => setTool(toolOption.value)}
+          onClick={() => {
+            setTool(toolOption.value)
+            setTemplate(null)
+          }}
           $active={tool === toolOption.value}
           onMouseEnter={e => {
             toolPopupHover.current = { ...toolPopupHover.current, value: toolOption.value }

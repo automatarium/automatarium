@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore } from '/src/stores'
 import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
@@ -9,8 +9,9 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
-import { AutomataState, CopyData, FSAProjectGraph, ProjectComment, Template } from '/src/types/ProjectTypes'
+import { AutomataState, CopyData, FSAProjectGraph, ProjectComment } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
+import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 
 /**
  * Combination of keys. Used to call an action
@@ -61,30 +62,16 @@ const useActions = (registerHotkeys = false) => {
   const setTool = useToolStore(s => s.setTool)
   const project = useProjectStore(s => s.project)
   const insertGroup = useProjectStore(s => s.insertGroup)
-  const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const updateGraph = useProjectStore(s => s.updateGraph)
   const projectType = useProjectStore(s => s.project.config.type)
+  const template = useTemplateStore(s => s.template)
+  const setTemplate = useTemplateStore(s => s.setTemplate)
+  const deleteTemplate = useTemplatesStore(s => s.deleteTemplate)
 
   const navigate = useNavigate()
 
   // TODO: memoize
   const actions: Record<string, Handler> = {
-    CREATE_TEMPLATE: {
-      handler: () => {
-        if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
-          // Temporary UI
-          alert('Nothing selected, cannot make template')
-        }
-        // This will use the Template type defined in ProjectTypes
-        const newTemplate = selectionToCopyTemplate(selectedStatesIds, selectedCommentsIds, selectedTransitionsIds, project)
-        const temp = newTemplate as Template
-        temp._id = crypto.randomUUID()
-        temp.name = 'a template'
-        addTemplate(temp)
-        // Temporary UI
-        alert('New template created from your selection')
-      }
-    },
     NEW_FILE: {
       handler: () => navigate('/new')
     },
@@ -193,14 +180,17 @@ const useActions = (registerHotkeys = false) => {
     DELETE: {
       hotkeys: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
-        const selectionState = useSelectionStore.getState()
-        const selectedStateIDs = selectionState.selectedStates
-        const selectedTransitionIDs = selectionState.selectedTransitions
-        const selectedCommentIDs = selectionState.selectedComments
-        if (selectedStateIDs.length > 0 || selectedTransitionIDs.length > 0 || selectedCommentIDs.length > 0) {
-          removeStates(selectedStateIDs)
-          removeTransitions(selectedTransitionIDs)
-          removeComments(selectedCommentIDs)
+        // If a template is selected and nothing else is, delete the template
+        if (template !== null && selectedCommentsIds.length === 0 && selectedStatesIds.length === 0 && selectedTransitionsIds.length === 0) {
+          if (window.confirm(`Are you sure you want to delete your template '${template.name}'?`)) {
+            deleteTemplate(template._id)
+            stopTemplateInsert(setTemplate, setTool)
+          }
+        } else if (selectedStatesIds.length > 0 || selectedTransitionsIds.length > 0 || selectedCommentsIds.length > 0) {
+          // Otherwise, delete selection
+          removeStates(selectedStatesIds)
+          removeTransitions(selectedTransitionsIds)
+          removeComments(selectedCommentsIds)
           selectNone()
           commit()
         }
@@ -539,7 +529,7 @@ const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') =>
 // Takes in the IDs of states, comments, and transitions
 // Parameters also include  the current project and whether a template is being created
 // Outputs a CopyData to be copied or Template object to be created into a template
-const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project): CopyData => {
+export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project): CopyData => {
   const selectedStates: AutomataState[] = project.states.filter(state => stateIds.includes(state.id))
   const selectedComments: ProjectComment[] = project.comments.filter(comment => commentIds.includes(comment.id))
   const selectedTransitions = project.transitions.filter(transition => transitionIds.includes(transition.id))

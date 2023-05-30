@@ -7,6 +7,9 @@ import { useEvent } from '/src/hooks'
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
 import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
+import { stopTemplateInsert } from './Panels/Templates/Templates'
+
+import { useTemplateStore, useToolStore } from '/src/stores'
 
 type PanelItem = {
   label: string
@@ -41,7 +44,7 @@ const panels: PanelItem[] = [
     element: <Options />
   },
   {
-    label: 'Templates',
+    label: 'Templates (Beta)',
     value: 'templates',
     icon: <Star />,
     element: <Templates />
@@ -50,6 +53,8 @@ const panels: PanelItem[] = [
 
 const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
+  const setTemplate = useTemplateStore(s => s.setTemplate)
+  const setTool = useToolStore(s => s.setTool)
 
   // Open panel via event
   useEvent('sidepanel:open', e => {
@@ -62,7 +67,10 @@ const Sidepanel = () => {
       {activePanel && (
         <>
           <CloseButton
-            onClick={() => setActivePanel(undefined)}
+            onClick={() => {
+              setActivePanel(undefined)
+              stopTemplateInsert(setTemplate, setTool)
+            }}
           ><ChevronRight /></CloseButton>
           <Panel>
             <div>
@@ -77,7 +85,10 @@ const Sidepanel = () => {
         {panels.map(panel => (
           <SidebarButton
             key={panel.value}
-            onClick={() => setActivePanel(activePanel?.value === panel.value ? undefined : panel)}
+            onClick={() => {
+              setActivePanel(activePanel?.value === panel.value ? undefined : panel)
+              stopTemplateInsert(setTemplate, setTool)
+            }}
             $active={activePanel?.value === panel.value}
             title={panel.label}
           >

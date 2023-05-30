@@ -11,6 +11,7 @@ import { useAuth } from '/src/hooks'
 import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 import LoginPage from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
+import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 
 import { NewProjectCard, CardList } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
@@ -154,6 +155,7 @@ const NewFile = () => {
           date={dayjs(p?.meta?.dateEdited)}
           projectId={p._id}
           image={thumbnails[p._id]}
+          width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
         />
       )}

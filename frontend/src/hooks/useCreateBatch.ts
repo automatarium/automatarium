@@ -1,3 +1,5 @@
+// NOTE: THIS HOOK IS NOT CURRENTLY USED/CALLED ANYWHERE
+// SEE useProjectStore FOR EQUIVALENT FUNCTIONALITY THAT IS ACTUALLY CALLED
 import { useSelectionStore, useProjectStore } from '/src/stores'
 
 import { CopyData, Template } from '/src/types/ProjectTypes'
