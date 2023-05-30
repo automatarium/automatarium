@@ -7,8 +7,7 @@ import {
 interface TemplateStore {
   template: Template,
   setTemplate: (template: Template) => void
-  // update: (template: Template) => void,
-  // setName: (newName: string) => void
+  // TODO: Support updating/renaming
 }
 
 const useTemplateStore = create<TemplateStore>((set: SetState<TemplateStore>) => ({
