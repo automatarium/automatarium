@@ -6,7 +6,7 @@ import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/conf
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
-import { createNewProject } from '/src/stores/useProjectStore'
+import { InsertGroupResponseType, createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { AutomataState, CopyData, FSAProjectGraph, ProjectComment } from '/src/types/ProjectTypes'
@@ -161,12 +161,12 @@ const useActions = (registerHotkeys = false) => {
         }
         const insertResponse = insertGroup(pasteData)
         // This will be better in TS with enum
-        if (insertResponse.type === 2) {
+        if (insertResponse.type === InsertGroupResponseType.SUCCESS) {
           selectComments(insertResponse.body.comments.map(comment => comment.id))
           selectStates(insertResponse.body.states.map(state => state.id))
           selectTransitions(insertResponse.body.transitions.map(transition => transition.id))
           commit()
-        } else if (insertResponse.type === 1) {
+        } else if (insertResponse.type === InsertGroupResponseType.FAIL) {
           alert(insertResponse.body)
         }
       }
