@@ -159,7 +159,6 @@ const useActions = (registerHotkeys = false) => {
           // Copy has not been executed
           return
         }
-        // createBatch(pasteData, project)
         const insertResponse = insertGroup(pasteData)
         // This will be better in TS with enum
         if (insertResponse.type === 2) {
