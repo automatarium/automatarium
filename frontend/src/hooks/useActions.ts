@@ -70,6 +70,8 @@ const useActions = (registerHotkeys = false) => {
 
   const navigate = useNavigate()
 
+  const nothingSelected = selectedCommentsIds.length === 0 && selectedStatesIds.length === 0 && selectedTransitionsIds.length === 0
+
   // TODO: memoize
   const actions: Record<string, Handler> = {
     NEW_FILE: {
@@ -160,7 +162,6 @@ const useActions = (registerHotkeys = false) => {
           return
         }
         const insertResponse = insertGroup(pasteData)
-        // This will be better in TS with enum
         if (insertResponse.type === InsertGroupResponseType.SUCCESS) {
           selectComments(insertResponse.body.comments.map(comment => comment.id))
           selectStates(insertResponse.body.states.map(state => state.id))
@@ -180,12 +181,12 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
         // If a template is selected and nothing else is, delete the template
-        if (template !== null && selectedCommentsIds.length === 0 && selectedStatesIds.length === 0 && selectedTransitionsIds.length === 0) {
+        if (template !== null && nothingSelected) {
           if (window.confirm(`Are you sure you want to delete your template '${template.name}'?`)) {
             deleteTemplate(template._id)
             stopTemplateInsert(setTemplate, setTool)
           }
-        } else if (selectedStatesIds.length > 0 || selectedTransitionsIds.length > 0 || selectedCommentsIds.length > 0) {
+        } else if (!nothingSelected) {
           // Otherwise, delete selection
           removeStates(selectedStatesIds)
           removeTransitions(selectedTransitionsIds)
