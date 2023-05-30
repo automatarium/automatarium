@@ -169,6 +169,7 @@ const NewFile = () => {
           image={thumbnails[p._id]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
+          $istemplate={false}
         />
       )}
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
