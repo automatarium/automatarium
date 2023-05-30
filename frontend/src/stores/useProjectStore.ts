@@ -75,8 +75,18 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
   }
 })
 
-const nextIDFor = (elementArr: AutomataState[] | BaseAutomataTransition[] | ProjectComment[]): number => {
-  return 1 + Math.max(-1, ...elementArr.map((e: AutomataState | BaseAutomataTransition | ProjectComment) => e.id))
+/**
+ * Returns the next ID for a list of items. This doesn't get the next available ID
+ * but instead returns the number of the highest
+ * e.g. [1, 4, 7] next ID would be 8
+ */
+const nextIDFor = (elementArr: {id?: number}[]): number => {
+  // We can't do elementArr.length + 1 since that might reuse an ID from a deleted item.
+  // Order also is guarenteed so we can't just get the last element.
+  let highest = Math.max(-1, ...elementArr.map(e => e.id))
+  // If any of the IDs were undefined then `highest` would be NaN
+  if (isNaN(highest)) highest = -1
+  return 1 + highest
 }
 
 interface ProjectStore {
@@ -197,7 +207,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
   /* Create a new transition */
   createTransition: (transition: BaseAutomataTransition) => {
-    const id = 1 + Math.max(-1, ...get().project.transitions.map(t => t.id))
+    const id = nextIDFor(get().project.transitions)
     set(produce(({ project }) => {
       project.transitions.push({ ...transition, id })
     }))
@@ -213,7 +223,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
   /* Create a new comment */
   createComment: (comment: ProjectComment) => {
-    const id = 1 + Math.max(-1, ...get().project.comments.map((c: ProjectComment) => c.id))
+    const id = nextIDFor(get().project.comments)
     set(produce(({ project }: { project: StoredProject }) => {
       project.comments.push({ ...comment, id })
     }))
@@ -232,7 +242,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
   /* Create a new state */
   createState: (state: AutomataState) => {
-    const id = 1 + Math.max(-1, ...get().project.states.map(s => s.id))
+    const id = nextIDFor(get().project.states)
     set(produce(({ project }: { project: StoredProject }) => {
       state.isFinal = state.isFinal ?? false
       project.states.push({ ...state, id })
