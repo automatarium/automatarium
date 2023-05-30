@@ -9,7 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
-import { AutomataState, CopyData, FSAProjectGraph, ProjectComment } from '/src/types/ProjectTypes'
+import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 
