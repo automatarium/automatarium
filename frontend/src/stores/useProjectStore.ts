@@ -256,25 +256,14 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       return { type: InsertGroupResponseType.FAIL, body: `You cannot insert elements from a ${createData.projectType} project into a ${get().project.projectType} project.` }
     }
     // Check that for transitions being inserted, to and from states are also inserted
-    let missingState = false
-    createData.transitions.forEach((transition) => {
-      let toFound = false
-      let fromFound = false
-      createData.states.forEach((state) => {
-        if (state.id === transition.from) {
-          fromFound = true
-        }
-        if (state.id === transition.to) {
-          toFound = true
-        }
-      })
-      // If a transition has to or from missing, flag to return error
-      if (!(toFound && fromFound)) {
-        missingState = true
+    const stateIDs = new Set(createData.states.map(it => it.id))
+    for (const transition of createData.transitions) {
+      const hasTo = stateIDs.has(transition.to)
+      const hasFrom = stateIDs.has(transition.from)
+      // If either `to` or `from` is missing then return an error
+      if (!(hasTo && hasFrom)) {
+        return { type: InsertGroupResponseType.FAIL, body: 'Sorry, there was an error.' }
       }
-    })
-    if (missingState) {
-      return { type: InsertGroupResponseType.FAIL, body: 'Sorry, there was an error.' }
     }
     set(produce(({ project }: { project }) => {
       let isInitialStateUpdated = false
@@ -314,15 +303,13 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       createData.comments.forEach((comment, i) => {
         // TODO: ensure position isn't out of window
         [comment.x, comment.y] = [comment.x + positionOffset, comment.y + positionOffset]
-        const newId = nextCommentId + i
-        comment.id = newId
+        comment.id = nextCommentId + i
         // createComment
         project.comments.push({ ...comment })
       })
       const nextTransitionId = nextIDFor(project.transitions)
       createData.transitions.forEach((transition, i) => {
-        const newId = nextTransitionId + i
-        transition.id = newId
+        transition.id = nextTransitionId + i
         // createTransition
         project.transitions.push({ ...transition })
       })
