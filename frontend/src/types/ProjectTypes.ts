@@ -41,7 +41,7 @@ export interface ProjectComment {
     x: number,
     y: number,
     text: string,
-    id?: number
+    id: number
 }
 
 export interface AutomataState {
