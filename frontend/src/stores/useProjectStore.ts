@@ -104,7 +104,7 @@ interface ProjectStore {
   redo: () => void,
   setLastSaveDate: (lastSaveDate: number) => void,
   setName: (name: string) => void,
-  createTransition: (transition: BaseAutomataTransition) => number,
+  createTransition: (transition: Omit<BaseAutomataTransition, 'id' | 'read'>) => number,
   editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
   createComment: (comment: Omit<ProjectComment, 'id'>) => number,
   updateComment: (comment: ProjectComment) => void,
@@ -203,7 +203,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Create a new transition */
-  createTransition: (transition: BaseAutomataTransition) => {
+  createTransition: (transition) => {
     const id = nextIDFor(get().project.transitions)
     set(produce(({ project }) => {
       project.transitions.push({ ...transition, id })
