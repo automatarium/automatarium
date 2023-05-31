@@ -109,7 +109,7 @@ interface ProjectStore {
   createComment: (comment: Omit<ProjectComment, 'id'>) => number,
   updateComment: (comment: ProjectComment) => void,
   removeComment: (comment: ProjectComment) => void,
-  createState: (state: Omit<AutomataState, 'isFinal' | 'id'>) => number,
+  createState: (state: Omit<AutomataState, 'isFinal' | 'id'> & {isFinal?: boolean}) => number,
   updateState: (state: AutomataState) => void,
   insertGroup: (createData: Template | CopyData, isTemplate?: boolean) => InsertGroupResponse,
   setSingleTest: (value: string) => void,
@@ -203,7 +203,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Create a new transition */
-  createTransition: (transition) => {
+  createTransition: transition => {
     const id = nextIDFor(get().project.transitions)
     set(produce(({ project }) => {
       project.transitions.push({ ...transition, id })
@@ -238,11 +238,10 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Create a new state */
-  createState: (state: AutomataState) => {
+  createState: state => {
     const id = nextIDFor(get().project.states)
     set(produce(({ project }: { project: StoredProject }) => {
-      state.isFinal = state.isFinal ?? false
-      project.states.push({ ...state, id })
+      project.states.push({ ...state, id, isFinal: state.isFinal ?? false })
     }))
     return id
   },
