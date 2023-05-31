@@ -21,7 +21,7 @@ Stores are created using [zustand](https://www.npmjs.com/package/zustand). Zusta
 # useExportStore
 
 Creates a store that: 
-- contains default options to display when the user is about to export an image (see documentation: pages/ExportImage.js)
+- contains default options to display when the user is about to export an image (see documentation: pages/ExportImage.tsx)
 - Stores visibility options for ExportImage to use
 - Allows the user to change previous options and stores these
 

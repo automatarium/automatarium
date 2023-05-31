@@ -10,11 +10,13 @@ import {
   useCommentCreation,
   useStateSelection,
   useTransitionSelection,
+  useTemplateInsert,
   useContextMenus
 } from '/src/hooks'
 import { SelectionEvent } from '/src/hooks/useResourceSelection'
-import { useSelectionStore } from '/src/stores'
+import { useSelectionStore, useTemplateStore } from '/src/stores'
 import { CommentEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
+import TemplateGhost from '../Template/TemplateGhost'
 
 const EditorPanel = () => {
   // Interactivity hooks
@@ -25,6 +27,7 @@ const EditorPanel = () => {
   const { startDrag: startCommentDrag } = useCommentDragging()
   const { createTransitionStart, createTransitionEnd } = useTransitionCreation()
   const { ghostState } = useStateCreation()
+  const { ghostTemplate } = useTemplateInsert()
 
   const selectedStates = useSelectionStore(s => s.selectedStates)
   const selectedComments = useSelectionStore(s => s.selectedComments)
@@ -32,6 +35,8 @@ const EditorPanel = () => {
   const setStates = useSelectionStore(s => s.setStates)
   const setComments = useSelectionStore(s => s.setComments)
   const setTransitions = useSelectionStore(s => s.setTransitions)
+
+  const template = useTemplateStore(s => s.template)
 
   useCommentCreation()
   useContextMenus()
@@ -100,6 +105,9 @@ const EditorPanel = () => {
 
       {/* Ghost State */}
       {ghostState && <StateCircle.Ghost cx={ghostState.x} cy={ghostState.y} /> }
+
+      {/* Ghost template */}
+      {ghostTemplate && <TemplateGhost template={template} mousePos={{ x: ghostTemplate.x, y: ghostTemplate.y }} />}
 
       {/* Render states and transitions */}
       <GraphContent />

@@ -6,12 +6,15 @@ import { getProject } from '/src/services/project'
 import { Spinner, ProjectCard, Button } from '/src/components'
 import { useProjectStore } from '/src/stores'
 import { Container } from './shareStyle'
+import { StoredProject } from '/src/stores/useProjectStore'
+
+import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 
 const Share = () => {
   const { pid } = useParams()
   const navigate = useNavigate()
   const [loading, setLoading] = useState(true)
-  const [sharedProject, setSharedProject] = useState()
+  const [sharedProject, setSharedProject] = useState<StoredProject>()
   const setProject = useProjectStore(s => s.set)
 
   useEffect(() => {
@@ -38,6 +41,8 @@ const Share = () => {
           name={sharedProject.meta?.name}
           type={sharedProject.config?.type}
           date={dayjs(sharedProject.meta?.dateEdited)}
+          width={PROJECT_THUMBNAIL_WIDTH}
+          $istemplate={false}
         />
         <Button onClick={handleCopy}>Make a copy</Button>
       </>}

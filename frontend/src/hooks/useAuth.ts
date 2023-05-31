@@ -3,9 +3,9 @@ import { create } from 'zustand'
 
 import { firebase } from '/src/auth'
 import { getUser } from '/src/services/user'
-import IUser from 'backend/src/interfaces/user'
+import Firebase from '/src/auth/firebase'
 
-type User = IUser & {uid: string}
+type User = Firebase.User
 type FireState = {fireLoaded: boolean, fireUser: User}
 
 interface UserStore {

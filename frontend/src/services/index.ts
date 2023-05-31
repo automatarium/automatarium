@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 import { createToken } from '../auth'
 import config from '../config'
 
@@ -19,10 +19,10 @@ instance.interceptors.request.use(async (config) => {
 })
 
 const api = {
-  get: (endpoint, data) =>
+  get: <T>(endpoint: string, data?: T) =>
     instance.get(endpoint, { params: data }),
 
-  post: (endpoint, data, type = 'application/json') =>
+  post: <T>(endpoint: string, data?: T, type = 'application/json') =>
     instance.post(endpoint, data, {
       headers: {
         'Content-Type': type
@@ -36,7 +36,7 @@ const api = {
       }
     }),
 
-  delete: (endpoint, config) =>
+  delete: (endpoint: string, config?: AxiosRequestConfig) =>
     instance.delete(endpoint, config)
 }
 

@@ -18,7 +18,10 @@ const Logo = ({
 }: LogoProps) => (
   <svg
     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"
-    width={size} height={size}
+    style={{
+      width: size,
+      height: size
+    }}
     {...props}
   >
     {!hidePlanet && <circle fill={secondary} cx="241.33" cy="241.33" r="173.99"/>}
