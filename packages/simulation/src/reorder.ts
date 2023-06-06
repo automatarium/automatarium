@@ -15,15 +15,17 @@ import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
   if (graph.initialState === null) return graph
   // Convert the graph into an adjacency list of transitions
-  const graphList: {[key: number]: number[]} = {}
-  graph.transitions.forEach(t => {
-    if (!(t.from in graphList)) graphList[t.from] = []
-    graphList[t.from].push(t.to)
-  })
-  // Sort the lists so that states with lower ID go first
-  graph.transitions.forEach(t => (
-    graphList[t.from] = graphList[t.from].sort((a, b) => a - b)
-  ))
+  const graphList = new Map<number, number[]>()
+  for (const t of graph.transitions) {
+    if (!graphList.has(t.from)) graphList.set(t.from, [])
+    graphList.get(t.from).push(t.to)
+  }
+  // Sort the lists so that states with lower ID go first.
+  // We iterate transitions instead of states since not every state will
+  // be in graphList (We only care about states with transitions)
+  for (const t of graph.transitions) {
+    graphList.get(t.from).sort((a, b) => a - b)
+  }
 
   // Keep track of next available ID
   let nextID = 0
@@ -43,8 +45,8 @@ export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
     if (seen(currID)) continue
     mappings.set(currID, nextID++)
     // Continue down straight paths, so they have a continuous counting of ID's
-    while (currID in graphList) {
-      const notSeen = graphList[currID].filter(x => !seen(x))
+    while (graphList.has(currID)) {
+      const notSeen = graphList.get(currID).filter(x => !seen(x))
       // Either path is not straight or we have seen everything
       if (notSeen.length !== 1) break
       currID = notSeen[0]
@@ -52,7 +54,7 @@ export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
     }
     // For multiple path options, we just add them to the queue and process later
     // We only add them if we haven't seen them
-    graphList[currID]?.forEach(x => !seen(x) && frontier.add(x))
+    graphList.get(currID)?.forEach(x => !seen(x) && frontier.add(x))
   }
 
   /**
@@ -71,10 +73,10 @@ export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
   const output = structuredClone(graph)
   // Update the initial graph using the mappings
   output.states.forEach(state => (state.id = getMapping(state.id)))
-  output.transitions.forEach(t => {
+  for (const t of output.transitions) {
     t.from = getMapping(t.from)
     t.to = getMapping(t.to)
-  })
+  }
   output.initialState = 0
   return output
 }
