@@ -157,6 +157,10 @@ const menus: ContextItems = [
       {
         label: 'Auto layout',
         action: 'AUTO_LAYOUT'
+      },
+      {
+        label: 'Reorder graph',
+        action: 'REORDER_GRAPH'
       }
     ]
   },
