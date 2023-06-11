@@ -10,10 +10,6 @@ const graphContextItems: ContextItems = [
     label: 'Create state here',
     action: 'CREATE_STATE'
   },
-  {
-    label: 'Reorder graph',
-    action: 'REORDER_GRAPH'
-  },
   'hr',
   {
     label: 'Select all',
