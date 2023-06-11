@@ -34,8 +34,8 @@ const GraphView = ({ children, ...props }) => {
     const zoomFit = calculateZoomFit()
     if (resizeView && zoomFit) {
       const { scale, x, y } = zoomFit
-      // Set a minimum scale so it doesn't zoom out too much (Smaller scale means more zoomed in)
-      setViewPositionAndScale({ x, y }, Math.min(scale, 1))
+      // Set a min scale so it doesn't zoom in too much (Smaller scale means more zoomed in)
+      setViewPositionAndScale({ x, y }, Math.max(scale, 1))
       setResizeView(false)
     }
   }, [])
