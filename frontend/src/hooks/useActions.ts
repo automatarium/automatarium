@@ -35,6 +35,31 @@ export const formatHotkey = (hotkey: HotKey): string => [
   hotkey.key?.toUpperCase()
 ].filter(Boolean).join(isWindows ? '+' : ' ')
 
+/**
+ * Calculates the coodinates and scale in order to zoom the viewing window to the project
+ */
+export const calculateZoomFit = () => {
+  // Get state
+  const view = useViewStore.getState()
+
+  // Margin around view
+  const border = 40
+
+  // Get the bounding box of the SVG group
+  const b = (document.querySelector('#automatarium-graph > g') as SVGGElement).getBBox()
+  // Bail if the bounding box is too small
+  if (Math.max(Math.abs(b.width), Math.abs(b.height)) < border) return
+  const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
+  // Calculate fit region
+  const desiredScale = Math.max(width / view.size.width, height / view.size.height)
+  // Calculate x and y to centre graph
+  return {
+    scale: desiredScale,
+    x: x + (width - view.size.width * desiredScale) / 2,
+    y: y + (height - view.size.height * desiredScale) / 2
+  }
+}
+
 const useActions = (registerHotkeys = false) => {
   const undo = useProjectStore(s => s.undo)
   const redo = useProjectStore(s => s.redo)
@@ -64,6 +89,7 @@ const useActions = (registerHotkeys = false) => {
   const insertGroup = useProjectStore(s => s.insertGroup)
   const updateGraph = useProjectStore(s => s.updateGraph)
   const projectType = useProjectStore(s => s.project.config.type)
+  const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const template = useTemplateStore(s => s.template)
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const deleteTemplate = useTemplatesStore(s => s.deleteTemplate)
@@ -211,25 +237,10 @@ const useActions = (registerHotkeys = false) => {
     ZOOM_FIT: {
       hotkeys: [{ key: 'f', shift: true }],
       handler: () => {
-        // Get state
-        const view = useViewStore.getState()
-
-        // Margin around view
-        const border = 40
-
-        // Get the bounding box of the SVG group
-        const b = (document.querySelector('#automatarium-graph > g') as SVGGraphicsElement).getBBox()
-        if (Math.max(b.width, b.height) < border) return // Bail if the bounding box is too small
-        const [x, y, width, height] = [b.x - border, b.y - border, b.width + border * 2, b.height + border * 2]
-
-        // Calculate fit region
-        const desiredScale = Math.max(width / view.size.width, height / view.size.height)
-        view.setViewScale(desiredScale)
-        // Calculate x and y to centre graph
-        view.setViewPosition({
-          x: x + (width - view.size.width * desiredScale) / 2,
-          y: y + (height - view.size.height * desiredScale) / 2
-        })
+        const values = calculateZoomFit()
+        if (values) {
+          setViewPositionAndScale({ x: values.x, y: values.y }, values.scale)
+        }
       }
     },
     FULLSCREEN: {

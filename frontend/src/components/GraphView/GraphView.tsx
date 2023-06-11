@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback, HTMLAttributes, ReactNode } from 'react'
+import React, { useEffect, useRef, useCallback, HTMLAttributes, ReactNode, useState } from 'react'
 
 import { MarkerProvider } from '/src/providers'
 import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
@@ -9,6 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 
 import { Wrapper, Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
+import { calculateZoomFit } from '/src/hooks/useActions'
 
 interface GraphViewProps extends HTMLAttributes<SVGElement>{
   children: ReactNode
@@ -21,13 +22,26 @@ const GraphView = ({ children, ...props }: GraphViewProps) => {
   const projectColor = useProjectStore(state => state.project?.config.color)
   const colorPref = usePreferencesStore(state => state.preferences.color)
   const tool = useToolStore(state => state.tool)
+  const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
+  const [resizeView, setResizeView] = useState(true)
   useViewDragging(svgRef)
   useImageExport()
 
   // Update width and height on resize
   const onContainerResize = useCallback(() => {
     const b = wrapperRef.current?.getBoundingClientRect()
-    b && setViewSize({ width: b.width, height: b.height })
+    if (!b) return
+    setViewSize({ width: b.width, height: b.height })
+    // Check if we are able to zoom fit and if we are meant to zoom fit.
+    // This only needs to run once, but we need to check multiple times
+    // since the SVG doesn't load initially
+    const zoomFit = calculateZoomFit()
+    if (resizeView && zoomFit) {
+      const { scale, x, y } = zoomFit
+      // Set a min scale so it doesn't zoom in too much (Smaller scale means more zoomed in)
+      setViewPositionAndScale({ x, y }, Math.max(scale, 1))
+      setResizeView(false)
+    }
   }, [])
 
   const onContainerMouseDown = useCallback((e: MouseEvent) => {
