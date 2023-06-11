@@ -5,6 +5,12 @@ export const pathStyles = {
   fill: 'none'
 }
 
+export const ghostStyles = {
+  stroke: 'var(--stroke)',
+  fill: 'none',
+  opacity: 0.3
+}
+
 export const pathSelectedClass = css`
   stroke: var(--primary) !important;
 `

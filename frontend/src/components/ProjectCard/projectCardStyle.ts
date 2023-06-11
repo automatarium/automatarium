@@ -1,7 +1,7 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('button')`
-  width: 12em;
+export const CardContainer = styled('button')<{width: number, $istemplate: boolean}>`
+  width: ${props => props.width}em;
   padding: 0;
   margin: 3px;
   background: none;
@@ -11,7 +11,7 @@ export const CardContainer = styled('button')`
   color: inherit;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:hover${props => !(props.$istemplate) && ', &:focus'} {
     outline: none;
 
     &:not(:disabled) > div:first-of-type {
@@ -74,4 +74,15 @@ export const CardDetail = styled('div')`
     margin-block-start: .2rem;
     font-size: .9em;
   }
+`
+
+// Highlight and outline for selected template
+export const SelectedTemplateOverlay = styled('div')`
+  position: absolute;
+  z-index: 9;
+  background: hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.4);
+  width: 100%;
+  height: 100%;
+  border-radius: .6rem;
+  box-shadow: 0 0 0 3px var(--primary);
 `

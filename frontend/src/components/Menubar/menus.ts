@@ -153,10 +153,6 @@ const menus: ContextItems = [
         label: 'Convert to DFA',
         action: 'CONVERT_TO_DFA'
       },
-      {
-        label: 'Minimize DFA',
-        action: 'MINIMIZE_DFA'
-      },
       'hr',
       {
         label: 'Auto layout',

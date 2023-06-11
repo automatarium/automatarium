@@ -8,7 +8,6 @@ import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/si
 
 import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
-import { dispatchCustomEvent } from '/src/util/events'
 
 import {
   StepButtons,
@@ -165,17 +164,6 @@ const TestingLab = () => {
     // Try this for PDA as well - stack display
   }, [traceIdx])
 
-  // Show bottom panel with TM Tape Lab
-  useEffect(() => {
-    if (projectType === 'TM') {
-      if (showTraceTape) {
-        dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
-      } else {
-        dispatchCustomEvent('bottomPanel:close', null)
-      }
-    }
-  }, [showTraceTape])
-
   // Update warnings
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const noFinalState = !graph?.states.find(s => s.isFinal)
@@ -188,7 +176,7 @@ const TestingLab = () => {
     const closure = closureWithPredicate(graph, graph.initialState, () => true)
     return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
-  if (!pathToFinal && !noInitialState && !noFinalState) { warnings.push('There is no path to a final state') }
+  if (!pathToFinal) { warnings.push('There is no path to a final state') }
 
   // :^)
   const dibEgg = useDibEgg()
@@ -197,6 +185,7 @@ const TestingLab = () => {
   const currentTrace = simulationResult?.trace.slice(0, traceIdx + 1) ?? []
   const inputIdx = currentTrace.map(tr => tr.read && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
+  const automataIsInvalid = noInitialState || noFinalState || !pathToFinal
 
   return (
     <>
@@ -224,16 +213,14 @@ const TestingLab = () => {
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={traceIdx <= 0 ||
-            (projectType === 'TM' && !showTraceTape)
+            disabled={traceIdx <= 0 || automataIsInvalid
             }
             onClick={() => {
               setTraceIdx(0)
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={traceIdx <= 0 ||
-            (projectType === 'TM' && !showTraceTape)
+            disabled={traceIdx <= 0 || automataIsInvalid
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
@@ -241,9 +228,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              traceIdx >= lastTraceIdx ||
-              noInitialState ||
-              (projectType === 'TM' && !showTraceTape)
+              traceIdx >= lastTraceIdx || automataIsInvalid
             }
             onClick={() => {
               if (!simulationResult) {
@@ -255,9 +240,7 @@ const TestingLab = () => {
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
             disabled={
-                traceIdx >= lastTraceIdx ||
-                noInitialState ||
-                (projectType === 'TM' && !showTraceTape)
+                traceIdx >= lastTraceIdx || automataIsInvalid
             }
             onClick={() => {
               // Increment tracer index
@@ -270,6 +253,7 @@ const TestingLab = () => {
           <TracePreview result={simulationResult} step={traceIdx} statePrefix={statePrefix} states={graph.states}/>
           <TraceConsole><pre>{traceOutput}</pre></TraceConsole>
         </div>}
+        {projectType !== 'TM' && (
         <Preference
           label={useMemo(() => Math.random() < 0.001 ? 'Trace buddy' : 'Trace tape', [])}
           style={{ marginBlock: 0 }}
@@ -277,10 +261,11 @@ const TestingLab = () => {
           <Switch
             type="checkbox"
             checked={showTraceTape}
-            disabled={((projectType === 'TM') && (!traceInput))}
+            disabled={automataIsInvalid}
             onChange={e => setShowTraceTape(e.target.checked)}
           />
         </Preference>
+        )}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
