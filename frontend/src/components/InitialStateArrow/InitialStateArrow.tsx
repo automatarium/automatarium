@@ -1,6 +1,12 @@
 import { STATE_CIRCLE_RADIUS, STATE_TRIANGLE_WIDTH, STATE_TRIANGLE_HEIGHT } from '/src/config/rendering'
+import { AutomataState } from '/src/types/ProjectTypes'
 
-const InitialStateArrow = ({ states, initialStateID }) => {
+interface InitialStateArrowProps {
+  states: AutomataState[]
+  initialStateID: number
+}
+
+const InitialStateArrow = ({ states, initialStateID }: InitialStateArrowProps) => {
   const initialState = states.find(s => s.id === initialStateID)
   if (!initialState) { return null }
 

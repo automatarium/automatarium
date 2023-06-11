@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useCallback } from 'react'
+import React, { useEffect, useRef, useCallback, HTMLAttributes, ReactNode } from 'react'
 
 import { MarkerProvider } from '/src/providers'
 import { useViewStore, useToolStore, usePreferencesStore, useProjectStore } from '/src/stores'
@@ -10,7 +10,11 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { Wrapper, Svg } from './graphViewStyle'
 import { useViewDragging } from './hooks'
 
-const GraphView = ({ children, ...props }) => {
+interface GraphViewProps extends HTMLAttributes<SVGElement>{
+  children: ReactNode
+}
+
+const GraphView = ({ children, ...props }: GraphViewProps) => {
   const wrapperRef = useRef<HTMLDivElement>()
   const svgRef = useRef<SVGSVGElement>()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
@@ -94,7 +98,7 @@ const GraphView = ({ children, ...props }) => {
   // Set color theme
   useEffect(() => {
     const color = COLORS[(projectColor !== '' && projectColor) || 'orange']
-    svgRef.current.style.setProperty('--primary-h', color.h)
+    svgRef.current.style.setProperty('--primary-h', color.h.toString())
     svgRef.current.style.setProperty('--primary-s', color.s + '%')
     svgRef.current.style.setProperty('--primary-l', color.l + '%')
   }, [projectColor, colorPref])

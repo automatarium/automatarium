@@ -9,7 +9,14 @@ import {
   PointerContainer
 } from './tmTraceStepWindowStyle'
 
-const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }) => {
+interface TMTraceStepWindowProps {
+  trace: string[]
+  pointer: number
+  accepted: boolean
+  isEnd: boolean
+}
+
+const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindowProps) => {
   const [green, setGreen] = useState(false)
   const [red, setRed] = useState(false)
 

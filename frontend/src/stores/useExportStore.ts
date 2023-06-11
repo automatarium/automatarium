@@ -1,12 +1,18 @@
 import { create, SetState } from 'zustand'
+import { ColourName } from '/src/config'
+
+/**
+ * Possible option for the background in the image
+ */
+export type Background = 'none' | 'solid' | 'grid'
 
 interface Options {
   filename: string
   type: string
   margin: number
-  color: string
+  color: ColourName | ''
   darkMode: boolean
-  background: string
+  background: Background
 }
 
 interface ExportStore {

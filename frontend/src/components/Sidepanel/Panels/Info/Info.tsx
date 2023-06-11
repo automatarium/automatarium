@@ -14,7 +14,7 @@ const Info = () => {
   const graph = useProjectStore(s => s.getGraph())
 
   // Function to get name of state from an id
-  const getStateName = useCallback(id =>
+  const getStateName = useCallback((id: number) =>
     graph.states.find(s => s.id === id)?.name || `${statePrefix ?? 'q'}${id}`,
   [graph.states, statePrefix]
   )
@@ -32,15 +32,17 @@ const Info = () => {
     const map = new Map<[StateID, string], StateID[]>() // (ID, Symbol) -> ID[]
     for (const state of states ?? []) {
       for (const symbol of alphabet) {
+        // Important it is set to variable, since the key needs to share the address
+        const key: [number, string] = [state.id, symbol]
         const transitions = validTransitions(graph, state.id, symbol)
         for (const { transition } of transitions) {
           // Record accessibility after transition
-          map.set([state.id, symbol], Array.from(new Set([...map.get([state.id, symbol]) ?? [], transition.to])))
+          map.set(key, Array.from(new Set([...map.get(key) ?? [], transition.to])))
           // Record accessibility of states indirectly accessible after transition via lambdas
           if (transition.read.length > 0) {
             const lambdaClosure = closureWithPredicate(graph, transition.to, tr => tr.read.length === 0)
             for (const { state } of lambdaClosure) {
-              map.set([state, symbol], Array.from(new Set([...map.get([state, symbol]) ?? [], state])))
+              map.set(key, Array.from(new Set([...map.get(key) ?? [], state])))
             }
           }
         }
@@ -48,7 +50,6 @@ const Info = () => {
     }
     return map
   }, [states, alphabet, graph])
-
   return <>
     <SectionLabel>Alphabet</SectionLabel>
     <Wrapper>
@@ -85,8 +86,8 @@ const Info = () => {
             <th>Q &times; &Sigma;</th>
             <th> &delta;(Q &times; &Sigma;) </th>
           </tr>
-          {Object.entries(transitionMap).map(([key, states]) => <tr key={key}>
-            <td>({getStateName(Number(key.split(',')[0]))}, {key.split(',')[1]})</td>
+          {[...transitionMap.entries()].map(([[state, read], states]) => <tr key={`${state},${read}`}>
+            <td>({getStateName(state)}, {read})</td>
             <td>{`{${states.sort().map(id => getStateName(id)).join(',')}}`}</td>
           </tr>)}
         </tbody>

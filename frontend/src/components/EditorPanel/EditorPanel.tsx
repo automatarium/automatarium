@@ -61,7 +61,7 @@ const EditorPanel = () => {
 
   const handleDoubleClick = (e: CustomEvent<StateEventData | TransitionEventData | CommentEventData>) => {
     // Return array of selected item. If event isn't for the key then just return empty so it unselects
-    const getOrEmpty = (key): number[] => key in e.detail ? [e.detail[key].id] : []
+    const getOrEmpty = (key: string): number[] => key in e.detail ? [e.detail[key].id] : []
     setStates(getOrEmpty('state'))
     setTransitions(getOrEmpty('transition'))
     setComments(getOrEmpty('comment'))

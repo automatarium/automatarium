@@ -5,6 +5,7 @@
   "license": "MIT",
   "source": "src/index.ts",
   "main": "dist/index.js",
+  "typings": "src/index",
   "module": "dist/module.js",
   "scripts": {
     "watch": "parcel watch",

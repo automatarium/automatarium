@@ -1,6 +1,8 @@
+/// <reference types="node" />
+
 import firebaseConfigDev from './firebase-config-dev.json'
 
-const env = process.env.NODE_ENV || 'development'
+const env = (process.env.NODE_ENV || 'development') as 'development' | 'production'
 
 const config = {
   development: {
@@ -15,7 +17,7 @@ const config = {
     documentTitle: 'Automatarium',
     firebaseConfig: firebaseConfigDev
   }
-}
+} as const
 
 export * from './colors'
 export * from './projects'

@@ -1,4 +1,4 @@
-import { createContext } from 'react'
+import { createContext, ReactNode } from 'react'
 
 import { ARROWHEAD_ANGLE as a, ARROWHEAD_LENGTH as l } from '/src/config/rendering'
 
@@ -8,7 +8,7 @@ export const MarkerContext = createContext({
   lineArrowHead: 'marker'
 })
 
-const MarkerProvider = ({ children }) => {
+const MarkerProvider = ({ children }: { children: ReactNode }) => {
   // Define marker ids
   const standardArrowHead = 'standard-arrow-head'
   const selectedArrowHead = 'selected-arrow-head'

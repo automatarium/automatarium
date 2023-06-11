@@ -2,6 +2,7 @@ import { useProjectStore } from '/src/stores'
 import { SectionLabel, Preference, Input } from '/src/components'
 
 import { Wrapper } from './optionsStyle'
+import { ColourName } from '/src/config'
 
 const Options = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
@@ -34,7 +35,7 @@ const Options = () => {
           type="select"
           small
           value={(projectColor === '' || !projectColor) ? 'orange' : projectColor}
-          onChange={e => updateConfig({ color: e.target.value })}
+          onChange={e => updateConfig({ color: e.target.value as ColourName })}
         >
           <option value="red">Red</option>
           <option value="orange">Orange</option>

@@ -6,6 +6,8 @@ import { downloadURL, getSvgString, svgToCanvas } from '/src/hooks/useImageExpor
 
 import { Wrapper, Image } from './exportImageStyle'
 import { Size } from '/src/types/ProjectTypes'
+import { ColourName } from '/src/config'
+import { Background } from '/src/stores/useExportStore'
 
 const ExportImage = () => {
   const { exportVisible, setExportVisible, options, setOptions } = useExportStore()
@@ -121,7 +123,7 @@ const ExportImage = () => {
                    onChange={e => setOptions({ margin: e.target.value === '' ? 0 : Math.min(Math.max(Number(e.target.value), 0), 500) })}/>
           </Preference>
           <Preference label="Accent colour" fullWidth>
-            <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value })}>
+            <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value as ColourName })}>
               <option value="red">Red</option>
               <option value="orange">Orange</option>
               <option value="green">Green</option>
@@ -132,7 +134,7 @@ const ExportImage = () => {
             </Input>
           </Preference>
           <Preference label="Background" fullWidth>
-            <Input type="select" small value={background} onChange={e => setOptions({ background: e.target.value })}>
+            <Input type="select" small value={background} onChange={e => setOptions({ background: e.target.value as Background })}>
               <option value="solid">Solid</option>
               <option value="none" disabled={type === 'jpg'}>Transparent</option>
               {/* <option value="grid">Dot grid</option> */}

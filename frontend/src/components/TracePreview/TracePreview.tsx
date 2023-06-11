@@ -1,8 +1,8 @@
-import { Fragment, useRef, useState, useEffect, HTMLAttributes } from 'react'
+import { Fragment, useRef, useState, useEffect, HTMLAttributes, ReactNode } from 'react'
 
 import { Wrapper, StyledState, StyledInitialArrow, StyledTransition } from './tracePreviewStyle'
 import {
-  ExecutionResult
+  FSAExecutionResult, PDAExecutionResult
 } from '@automatarium/simulation/src/graph'
 import { AutomataState } from '/src/types/ProjectTypes'
 
@@ -12,14 +12,14 @@ const InitialArrow = () => (
   </StyledInitialArrow>
 )
 
-const Transition = ({ error }) => (
+const Transition = ({ error }: { error: boolean}) => (
   <StyledTransition viewBox="0 0 25 32" $error={error}>
     {!error && <path d="M0 16 L24 16 m-7 -7 l7 7 l-7 7" />}
     {error && <path d="M0 16 L22 16 m-7 -7 l7 7 l-7 7 M24 8 l0 16" />}
   </StyledTransition>
 )
 
-const State = ({ final, children }) => {
+const State = ({ final, children }: { final: boolean, children: ReactNode }) => {
   const textRef = useRef<SVGTextElement>()
   const [box, setBox] = useState<DOMRect>()
 
@@ -42,7 +42,9 @@ const State = ({ final, children }) => {
 }
 
 interface TracePreviewProps extends HTMLAttributes<HTMLDivElement>{
-  result: ExecutionResult & {transitionCount: number}
+  // TracePreview isn't implemented for TM's (I don't know why) so we only allow FSA and PDA.
+  // Implementing should be simple, I think the issue was the item.read === null check not working (since TMs dont have that)
+  result: (FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}
   step: number
   states: AutomataState[]
   statePrefix?: string
