@@ -37,7 +37,8 @@ Implemented support for push-down automata and Turing machines, as well as impro
 
 <details>
 <summary>Group 3 - 2023 Semester 1</summary>
-
+Added tools such as NFA $\rightarrow$ DFA, templates, and reordering. Also converted the frontend to Typescript.
+  
 - [Ope Abbas](https://github.com/OpeAbbas)
 - [Sidhra Fernando-Plant](https://github.com/SidhraFernando-Plant)
 - [Lachlan Van Der Klift](https://github.com/LvandoApps)
