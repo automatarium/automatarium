@@ -182,7 +182,7 @@ const useActions = (registerHotkeys = false) => {
     PASTE: {
       hotkeys: [{ key: 'v', meta: true }],
       handler: () => {
-        const pasteData = JSON.parse(localStorage.getItem(COPY_DATA_KEY))
+        const pasteData = JSON.parse(localStorage.getItem(COPY_DATA_KEY)) as CopyData
         if (pasteData === null) {
           // Copy has not been executed
           return
@@ -486,7 +486,7 @@ const useActions = (registerHotkeys = false) => {
   }]))), [actions])
 }
 
-const zoomViewTo = to => {
+const zoomViewTo = (to: number) => {
   const view = useViewStore.getState()
   if (view.scale === to) { return }
   const newScale = Math.min(SCROLL_MAX, Math.max(SCROLL_MIN, to))
@@ -502,7 +502,7 @@ const zoomViewTo = to => {
   }
 }
 
-const promptLoadFile = (parse, onData, errorMessage = 'Failed to parse file') => {
+const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file') => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'

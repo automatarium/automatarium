@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore } from '/src/stores'
 import { snapPosition } from '/src/util/points'
-import { SVGMouseData } from '/src/hooks/useEvent'
+import { SVGMouseEventData } from '/src/hooks/useEvent'
 import { Coordinate } from '/src/types/ProjectTypes'
 
 const useStateCreation = () => {
@@ -34,7 +34,7 @@ const useStateCreation = () => {
   return { ghostState: tool === 'state' && showGhost && mousePos }
 }
 
-const positionFromEvent = (e: CustomEvent<SVGMouseData>) => {
+const positionFromEvent = (e: CustomEvent<SVGMouseEventData>) => {
   const doSnap = !e.detail.originalEvent.altKey
   const pos = { x: e.detail.viewX, y: e.detail.viewY }
   return doSnap ? snapPosition(pos) : pos

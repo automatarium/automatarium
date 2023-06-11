@@ -3,6 +3,7 @@ import { reorderStates } from '../src/reorder'
 import dibDipLambdaLoop from './graphs/dib_dip-lambdaloop.json'
 import spiggy from './graphs/spiggy.json'
 import { FSAProjectGraph, TMProjectGraph } from 'frontend/src/types/ProjectTypes'
+import highSort from './graphs/highSort.json'
 
 describe('Reordering graph', () => {
   test('Simple graph can be rearranged', () => {
@@ -152,5 +153,13 @@ describe('Reordering graph', () => {
     const graph = reorderStates(spiggy as FSAProjectGraph)
     // Check that the state numbers are continuous
     expect(graph.states.map(it => it.id).sort()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8])
+  })
+
+  test('IDs are sorted correctly', () => {
+    const graph = reorderStates(highSort as FSAProjectGraph)
+    // q10 should be mapped to q2 since it was previously the highest
+    const highest = graph.transitions.find(t => t.to === 2)
+    // Transition from q0 to q10 reads B
+    expect(highest.read).toBe('B')
   })
 })

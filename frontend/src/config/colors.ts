@@ -37,6 +37,9 @@ const COLORS = {
   }
 } as const
 
-export type COLOR_KEY = keyof typeof COLORS
+/**
+ * All possible colour names that are allowed e.g. red, green
+ */
+export type ColourName = keyof typeof COLORS
 
 export default COLORS

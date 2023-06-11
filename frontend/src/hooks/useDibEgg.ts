@@ -43,7 +43,7 @@ const rainbowRoadHue = () => {
 
 const useDibEgg = () => {
   const { intervalID, setIntervalID } = useDibStore()
-  return (input, accepted) => {
+  return (input: string, accepted: boolean) => {
     // If user types dib and automaton accepts
     if (input === 'dib' && accepted) {
       if (intervalID) {

@@ -1,6 +1,5 @@
 import {
-  AutomataState,
-  BaseAutomataTransition, FSAAutomataTransition, FSAProjectGraph, PDAAutomataTransition, PDAProjectGraph,
+  BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, PDAProjectGraph,
   ProjectGraph, TMAutomataTransition, TMProjectGraph
 } from 'frontend/src/types/ProjectTypes'
 import { expandReadSymbols } from './parseGraph'
@@ -54,14 +53,6 @@ export const expandGraph = <T extends ProjectGraph>(graph: T): T => {
   }
   return graph
 }
-
-/**
- * Returns the initial state object from the graph. Returns undefined if not found
- */
-export const findInitialState = (graph: ProjectGraph): AutomataState | undefined => {
-  return graph.states.find((state) => state.id === graph.initialState)
-}
-
 /**
  * Creates a new tape object from an input. The tape is set to start at 0
  */
@@ -121,10 +112,8 @@ export function buildProblem <M extends ProjectGraph> (graph: M, input: string):
  * Creates a GraphStepper for stepping through how a frontend graph simulates an input
  * @see GraphStepper
  */
-export const graphStepper = <P extends FSAProjectGraph | PDAProjectGraph>(graph: P, input: string) => {
-  // Just in case an assertion makes the type not be FSA/PDA
-  if (graph.projectType as string === 'TM') return null
-  const problem = buildProblem(graph, input)
+export const graphStepper = <P extends ProjectGraph>(graph: P, input: string) => {
+  const problem: GraphMapping<P> = buildProblem(graph, input)
   if (!problem) return null
   // We know that problem is PDAGraph | FSAGraph so this is safe
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

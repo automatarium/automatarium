@@ -2,8 +2,9 @@ import { useEffect } from 'react'
 
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
-import COLORS from '/src/config/colors'
+import COLORS, { ColourName } from '/src/config/colors'
 import { Size } from '/src/types/ProjectTypes'
+import { Background } from '/src/stores/useExportStore'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
@@ -38,13 +39,20 @@ export const svgToCanvas = ({ height, width, svg }: Size & {svg: string}) => new
   img.src = 'data:image/svg+xml,' + encodeURIComponent(svg)
 })
 
+interface GetSvgStringProps {
+  margin?: number
+  background?: Background
+  color?: ColourName | ''
+  darkMode?: boolean
+}
+
 // Extract the SVG graph as a string
 export const getSvgString = ({
   margin = 20,
   background = 'none',
   color = null,
   darkMode = false
-} = {}) => {
+}: GetSvgStringProps = {}) => {
   // Clone the SVG element
   const svgElement = document.querySelector('#automatarium-graph') as SVGGraphicsElement
   const clonedSvgElement = svgElement.cloneNode(true) as SVGGraphicsElement
@@ -67,7 +75,7 @@ export const getSvgString = ({
   }
   if (color) {
     const c = COLORS[color] ?? COLORS.orange
-    svgElement.style.setProperty('--primary-h', c.h)
+    svgElement.style.setProperty('--primary-h', c.h.toString())
     svgElement.style.setProperty('--primary-s', `${c.s}%`)
     svgElement.style.setProperty('--primary-l', `${c.l}%`)
   }

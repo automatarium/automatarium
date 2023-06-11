@@ -15,22 +15,27 @@ import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
   if (graph.initialState === null) return graph
   // Convert the graph into an adjacency list of transitions
-  const graphList: {[key: number]: number[]} = {}
-  graph.transitions.forEach(x => {
-    if (!(x.from in graphList)) graphList[x.from] = []
-    graphList[x.from].push(x.to)
-  })
-  // Sort the lists so that lower items go first
-  graph.transitions.forEach(x => (graphList[x.from] = graphList[x.from].sort()))
+  const graphList = new Map<number, number[]>()
+  for (const t of graph.transitions) {
+    if (!graphList.has(t.from)) graphList.set(t.from, [])
+    graphList.get(t.from).push(t.to)
+  }
+  // Sort the lists so that states with lower ID go first.
+  // We iterate transitions instead of states since not every state will
+  // be in graphList (We only care about states with transitions)
+  for (const t of graph.transitions) {
+    graphList.get(t.from).sort((a, b) => a - b)
+  }
 
   // Keep track of next available ID
   let nextID = 0
   // Keep track of mapping from old ID to new ID
-  const mappings: {[key: number]: number} = {}
+  const mappings = new Map<number, number>()
+
   /**
    * @returns If the ID has been processed
    */
-  const seen = (id: number): boolean => id in mappings
+  const seen = (id: number): boolean => mappings.has(id)
 
   const frontier = new Queue<number>()
   frontier.add(graph.initialState)
@@ -38,39 +43,40 @@ export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
   while (!frontier.isEmpty()) {
     let currID = frontier.remove()
     if (seen(currID)) continue
-    mappings[currID] = nextID++
+    mappings.set(currID, nextID++)
     // Continue down straight paths, so they have a continuous counting of ID's
-    while (currID in graphList && graphList[currID].filter(x => !seen(x)).length === 1) {
-      currID = graphList[currID].filter(x => !seen(x))[0]
-      // Skip already seen items
-      if (seen(currID)) currID = undefined
-      if (currID !== undefined) {
-        mappings[currID] = nextID++
-      }
+    while (graphList.has(currID)) {
+      const notSeen = graphList.get(currID).filter(x => !seen(x))
+      // Either path is not straight or we have seen everything
+      if (notSeen.length !== 1) break
+      currID = notSeen[0]
+      mappings.set(currID, nextID++)
     }
     // For multiple path options, we just add them to the queue and process later
     // We only add them if we haven't seen them
-    (graphList[currID] ?? []).forEach(x => !seen(x) && frontier.add(x))
+    graphList.get(currID)?.forEach(x => !seen(x) && frontier.add(x))
   }
+
   /**
    * Returns mapping for an ID. If a mapping doesn't exist then it picks next available ID
    */
   const getMapping = (oldID: number): number => {
-    let result = mappings[oldID]
+    let result = mappings.get(oldID)
     if (result === undefined) {
       result = nextID++
-      mappings[oldID] = result
+      mappings.set(oldID, result)
     }
     return result
   }
+
   // Clone the graph
   const output = structuredClone(graph)
   // Update the initial graph using the mappings
   output.states.forEach(state => (state.id = getMapping(state.id)))
-  output.transitions.forEach(t => {
+  for (const t of output.transitions) {
     t.from = getMapping(t.from)
     t.to = getMapping(t.to)
-  })
+  }
   output.initialState = 0
   return output
 }

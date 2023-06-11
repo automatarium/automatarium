@@ -31,7 +31,7 @@ const App = () => {
   useEffect(() => {
     const computedColor = (projectColor !== '' && projectColor) || 'orange'
     const color = colorPref === 'match' ? COLORS[computedColor] : COLORS[colorPref]
-    document.documentElement.style.setProperty('--primary-h', color.h)
+    document.documentElement.style.setProperty('--primary-h', color.h.toString())
     document.documentElement.style.setProperty('--primary-s', color.s + '%')
     document.documentElement.style.setProperty('--primary-l', color.l + '%')
 

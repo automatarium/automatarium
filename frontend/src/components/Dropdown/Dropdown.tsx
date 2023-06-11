@@ -78,10 +78,10 @@ const Dropdown = ({
   const dropdownRef = useRef<HTMLDivElement>()
 
   // Close dropdown if click outside
-  const handleClick = useCallback(e => !dropdownRef.current?.contains(e.target) && onClose(), [dropdownRef.current, onClose])
+  const handleClick = useCallback((e: MouseEvent) => !dropdownRef.current?.contains(e.target as Element) && onClose(), [dropdownRef.current, onClose])
 
   // Close dropdown if escape pressed
-  const handleKey = useCallback(e => e.key === 'Escape' && onClose(), [onClose])
+  const handleKey = useCallback((e: KeyboardEvent) => e.key === 'Escape' && onClose(), [onClose])
 
   useEffect(() => {
     if (!subMenu && visible) {

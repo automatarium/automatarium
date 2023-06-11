@@ -19,18 +19,14 @@ export class Node<S extends State> {
 
 // eslint-disable-next-line no-unused-vars
 export abstract class Graph<S extends State, T extends BaseAutomataTransition> {
-  protected _initial: Node<S>
+  readonly initial: Node<S>
   protected states: S[]
   public transitions: T[]
 
   constructor (initial: Node<S>, states: S[], transitions: T[]) {
-    this._initial = initial
+    this.initial = initial
     this.states = states
     this.transitions = transitions
-  }
-
-  get initial () {
-    return this._initial
   }
 
   abstract getSuccessors(node: Node<S>): Node<S>[];

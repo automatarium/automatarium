@@ -10,7 +10,7 @@ import {
   XCircle
 } from 'lucide-react'
 
-import { graphStepper } from '@automatarium/simulation'
+import { graphStepper, Node, State } from '@automatarium/simulation'
 import { useMemo, useState } from 'react'
 import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 
@@ -20,10 +20,9 @@ import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 // means there's some repetition.
 const SteppingLab = () => {
   const [, setFrontier] = useState([])
-  const traceInput = useProjectStore((s) => s.project.tests.single)
-  const setTraceInput = useProjectStore((s) => s.setSingleTest)
-
-  const setSteppedStates = useSteppingStore((s) => s.setSteppedStates)
+  const traceInput = useProjectStore(s => s.project.tests.single)
+  const setTraceInput = useProjectStore(s => s.setSingleTest)
+  const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
 
   const graph = useProjectStore(s => s.getGraph())
 
@@ -33,11 +32,12 @@ const SteppingLab = () => {
     return graphStepper(graph as FSAProjectGraph | PDAProjectGraph, traceInput)
   }, [graph, traceInput])
 
-  const handleStep = (newFrontier) => {
+  const handleStep = <S extends State>(newFrontier: Node<S>[]) => {
     setFrontier(newFrontier)
     setSteppedStates(newFrontier)
   }
-  const noStepper = stepper === null
+
+  const noStepper = stepper === null && false
   return (
     <>
       <SectionLabel>Trace</SectionLabel>
