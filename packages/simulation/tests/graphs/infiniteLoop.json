@@ -1,35 +1,24 @@
 {
   "projectType": "FSA",
+  "_id": "48d52bf4-63e4-4129-900a-031d26b9fe56",
   "states": [
     {
-      "x": 225,
-      "y": 330,
-      "isFinal": false,
-      "id": 0
+      "x": 465,
+      "y": 660,
+      "id": 0,
+      "isFinal": false
     },
     {
-      "x": 405,
-      "y": 240,
-      "isFinal": false,
-      "id": 1
-    },
-    {
-      "x": 555,
-      "y": 150,
-      "isFinal": true,
-      "id": 2
-    },
-    {
-      "x": 420,
-      "y": 480,
-      "isFinal": false,
-      "id": 3
+      "x": 645,
+      "y": 660,
+      "id": 1,
+      "isFinal": true
     }
   ],
   "transitions": [
     {
       "from": 0,
-      "to": 3,
+      "to": 0,
       "id": 0,
       "read": "A"
     },
@@ -37,11 +26,11 @@
       "from": 0,
       "to": 1,
       "id": 1,
-      "read": ""
+      "read": "A"
     },
     {
       "from": 1,
-      "to": 2,
+      "to": 1,
       "id": 2,
       "read": "A"
     }
@@ -54,11 +43,11 @@
       ""
     ]
   },
-  "initialState": null,
+  "initialState": 0,
   "meta": {
-    "name": "Expensive Octopus",
-    "dateCreated": 1681973202562,
-    "dateEdited": 1681973202562,
+    "name": "Dull Shed",
+    "dateCreated": 1686637210665,
+    "dateEdited": 1686637210665,
     "version": "1.0.0",
     "automatariumVersion": "1.0.0"
   },
