@@ -1,43 +1,47 @@
 {
   "projectType": "FSA",
+  "_id": "c53a7961-03b5-4f51-a4a4-e905f433503c",
   "states": [
     {
       "id": 0,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "0, 1",
+      "x": 225,
+      "y": 375,
+      "isFinal": false
     },
     {
       "id": 1,
-      "isFinal": true,
-      "x": 765,
-      "y": 330
+      "label": "2, 3",
+      "x": 225,
+      "y": 375,
+      "isFinal": true
     },
     {
       "id": 2,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "Trap",
+      "x": 225,
+      "y": 375,
+      "isFinal": false
     }
   ],
   "transitions": [
     {
-      "from": 0,
       "id": 0,
-      "read": "A",
-      "to": 1
+      "from": 0,
+      "to": 1,
+      "read": "A"
     },
     {
+      "id": 1,
       "from": 1,
-      "id": 4,
-      "read": "A",
-      "to": 2
+      "to": 2,
+      "read": "A"
     },
     {
+      "id": 2,
       "from": 2,
-      "id": 5,
-      "read": "A",
-      "to": 2
+      "to": 2,
+      "read": "A"
     }
   ],
   "comments": [],
@@ -50,7 +54,7 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "Thankful Caterpillar",
+    "name": "convertSimpleConversionDFA",
     "dateCreated": 1682044927890,
     "dateEdited": 1682044927890,
     "version": "1.0.0",

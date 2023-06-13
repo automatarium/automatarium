@@ -19,7 +19,7 @@ import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 type LooseFSA = Omit<FSAProjectGraph, 'projectType'> & {projectType: string}
 
 const convertToDFA = (project: LooseFSA): FSAProjectGraph => {
-  return reorderStates(convertNFAtoDFA(reorderStates(project as FSAProjectGraph)))
+  return convertNFAtoDFA(project as FSAProjectGraph)
 }
 
 describe('Check to ensure DFA graph is displayed as expected', () => {
@@ -27,8 +27,8 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
     const graph = convertToDFA(nfa)
     // Only compare fields that are in FSAProjectGraph
     expect(graph.initialState).toEqual(dfa.initialState)
-    expect(graph.states).toMatchObject(dfa.states)
-    expect(graph.transitions).toMatchObject(dfa.transitions)
+    expect(graph.states).toEqual(dfa.states)
+    expect(graph.transitions).toEqual(dfa.transitions)
   }
   test('Graph should be converted correctly to DFA under simple conditions (1 symbol)', () => {
     expectDFA(convertSimpleConversion, convertSimpleConversionDFA)

@@ -74,11 +74,12 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
   // Our initial state is any state from the NFA's initial state that we can reach via lambdas
   const dfaInitialStates = explore([nfa.initialState], '').concat(nfa.initialState)
   const frontier: number[][] = [dfaInitialStates]
-  const seen = new Set<string>(makeStateLabel(dfaInitialStates))
+  const seen = new Set<string>([makeStateLabel(dfaInitialStates)])
   // Make a copy of the graph and reset the values so we can make the DFA
   const dfa = structuredClone(nfa)
   dfa.states = []
   dfa.transitions = []
+  dfa.initialState = 0 // It gets reset to 0
   // Helper to get next ID for item (I am too lazy to ++variable)
   const nextID = (x: {id: number}[]): number => (x[x.length - 1]?.id ?? -1) + 1
 
@@ -130,28 +131,28 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
 }
 
 convertNFAtoDFA({
-  projectType: 'FSA',
+  initialState: 0,
   states: [
     {
-      x: 225,
+      x: 195,
       y: 375,
       isFinal: false,
       id: 0
     },
     {
-      x: 375,
-      y: 300,
+      x: 345,
+      y: 285,
       isFinal: false,
       id: 1
     },
     {
-      x: 525,
-      y: 210,
+      x: 510,
+      y: 180,
       isFinal: true,
       id: 2
     },
     {
-      x: 435,
+      x: 360,
       y: 510,
       isFinal: false,
       id: 3
@@ -175,8 +176,15 @@ convertNFAtoDFA({
       to: 2,
       id: 2,
       read: 'A'
+    },
+    {
+      from: 1,
+      to: 1,
+      id: 3,
+      read: 'B'
     }
   ],
+  projectType: 'FSA',
   comments: [],
   simResult: [],
   tests: {
@@ -185,7 +193,6 @@ convertNFAtoDFA({
       ''
     ]
   },
-  initialState: 0,
   meta: {
     name: 'Thankful Caterpillar',
     dateCreated: 1682044927890,
