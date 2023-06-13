@@ -2,10 +2,11 @@ import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Makes a label for a set of states.
- * States are sorted first e.g. [2, 0, 1] => "0, 1, 2"
+ * States are sorted first e.g. [2, 0, 1] => "0, 1, 2".
+ * If there are no states then it assumes its the trap state (and returns 'Trap')
  */
 const makeStateLabel = (states: number[]): string => {
-  return states.sort((a, b) => a - b).join(', ')
+  return states.length === 0 ? 'Trap' : states.sort((a, b) => a - b).join(', ')
 }
 
 export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
@@ -102,8 +103,7 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
 
       // Find distinct states we can be in by either reading a lambda or reading the symbol
       const states = Array.from(new Set(explore(curr, symbol)))
-      // If we can't reach anything, ignore
-      if (states.length === 0) continue
+      // If we can't reach anything then make it go to trap state
       const key = makeStateLabel(states)
       if (!seen.has(key)) {
         // Make it seen so we don't add it again
@@ -114,6 +114,7 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
       dfaTable.get(currKey).push({ read: symbol, to: key })
     }
   }
+
   // Now that the states are all found, we need to add the transitions in
   for (const [label, transitions] of dfaTable) {
     for (const transition of transitions) {
@@ -130,25 +131,36 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
 
 convertNFAtoDFA({
   projectType: 'FSA',
-  _id: '48d52bf4-63e4-4129-900a-031d26b9fe56',
   states: [
     {
-      x: 465,
-      y: 660,
-      id: 0,
-      isFinal: false
+      x: 225,
+      y: 375,
+      isFinal: false,
+      id: 0
     },
     {
-      x: 645,
-      y: 660,
-      id: 1,
-      isFinal: true
+      x: 375,
+      y: 300,
+      isFinal: false,
+      id: 1
+    },
+    {
+      x: 525,
+      y: 210,
+      isFinal: true,
+      id: 2
+    },
+    {
+      x: 435,
+      y: 510,
+      isFinal: false,
+      id: 3
     }
   ],
   transitions: [
     {
       from: 0,
-      to: 0,
+      to: 3,
       id: 0,
       read: 'A'
     },
@@ -156,11 +168,11 @@ convertNFAtoDFA({
       from: 0,
       to: 1,
       id: 1,
-      read: 'A'
+      read: ''
     },
     {
       from: 1,
-      to: 1,
+      to: 2,
       id: 2,
       read: 'A'
     }
@@ -175,9 +187,9 @@ convertNFAtoDFA({
   },
   initialState: 0,
   meta: {
-    name: 'Dull Shed',
-    dateCreated: 1686637210665,
-    dateEdited: 1686637210665,
+    name: 'Thankful Caterpillar',
+    dateCreated: 1682044927890,
+    dateEdited: 1682044927890,
     version: '1.0.0',
     automatariumVersion: '1.0.0'
   },
