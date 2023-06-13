@@ -1,4 +1,3 @@
-import { reorderStates } from '../src/reorder'
 import { convertNFAtoDFA } from '../src/convert'
 import convertSimpleConversion from './graphs/convertSimpleConversion.json'
 import convertSimpleConversionDFA from './graphs/convertSimpleConversionDFA.json'
