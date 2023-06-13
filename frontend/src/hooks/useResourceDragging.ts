@@ -16,15 +16,15 @@ export type ResourceDraggingHook = {startDrag: (e: DragEvent, ids: number[]) => 
 /**
  * Handles dragging of resources (e.g. comments, states)
  * @param resourcesFromIDs Function takes a list of IDs and returns resources with those IDs
- * @param makeUpdateResource Function that updates the resource in the store
+ * @param makeUpdateResources Function that updates the resource in the store
  */
 const useResourceDragging = <T extends RequiredProps>(
   resourcesFromIDs: (IDs: number[]) => T[],
-  makeUpdateResource: () => (x: Partial<T>) => void): ResourceDraggingHook => {
+  makeUpdateResources: () => (x: Partial<T>[]) => void): ResourceDraggingHook => {
   const tool = useToolStore(s => s.tool)
   const toolActive = tool === 'cursor'
 
-  const updateResource = makeUpdateResource()
+  const updateResources = makeUpdateResources()
   const commit = useProjectStore(s => s.commit)
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
 
@@ -48,7 +48,7 @@ const useResourceDragging = <T extends RequiredProps>(
   // Listen for mouse move - dragging states
   useEvent('svg:mousemove', e => {
     if (dragging !== null && toolActive) {
-      dragging.forEach((id, i) => {
+      const updates = dragging.map((id, i) => {
         const [x, y] = [e.detail.viewX, e.detail.viewY]
         const [dx, dy] = [x - dragOffsets[i][0], y - dragOffsets[i][1]]
 
@@ -70,9 +70,9 @@ const useResourceDragging = <T extends RequiredProps>(
             ? [Math.floor(dx / GRID_SNAP) * GRID_SNAP, Math.floor(dy / GRID_SNAP) * GRID_SNAP]
             : [(Math.floor(lx / GRID_SNAP) * GRID_SNAP) + lox, Math.floor(ly / GRID_SNAP) * GRID_SNAP + loy]
 
-        // Update state position
-        updateResource({ id, x: sx, y: sy } as Partial<T>)
+        return { id, x: sx, y: sy } as Partial<T>
       })
+      updateResources(updates)
     }
   }, [toolActive, dragging, gridVisible])
 

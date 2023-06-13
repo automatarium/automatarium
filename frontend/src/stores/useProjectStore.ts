@@ -107,10 +107,12 @@ interface ProjectStore {
   createTransition: (transition: Omit<BaseAutomataTransition, 'id' | 'read'>) => number,
   editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
   createComment: (comment: Omit<ProjectComment, 'id'>) => number,
-  updateComment: (comment: ProjectComment) => void,
+  updateComment: (comment: Partial<ProjectComment>) => void,
+  updateComments: (comments: Partial<ProjectComment>[]) => void,
   removeComment: (comment: ProjectComment) => void,
   createState: (state: Omit<AutomataState, 'isFinal' | 'id'> & {isFinal?: boolean}) => number,
-  updateState: (state: AutomataState) => void,
+  updateState: (state: Partial<AutomataState>) => void,
+  updateStates: (states: Partial<AutomataState>[]) => void,
   insertGroup: (createData: Template | CopyData, isTemplate?: boolean) => InsertGroupResponse,
   setSingleTest: (value: string) => void,
   addBatchTest: (value?: string) => void,
@@ -229,7 +231,15 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
   /* Update a comment by id */
   updateComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
-    project.comments = project.comments.map((cm: ProjectComment) => cm.id === comment.id ? { ...cm, ...comment } : cm)
+    const index = project.comments.findIndex(s => s.id === comment.id)
+    project.comments[index] = { ...project.comments[index], ...comment }
+  })),
+
+  updateComments: comments => set(produce(({ project }: { project: StoredProject }) => {
+    for (const comment of comments) {
+      const index = project.comments.findIndex(s => s.id === comment.id)
+      project.comments[index] = { ...project.comments[index], ...comment }
+    }
   })),
 
   /* Remove a comment by id */
@@ -248,7 +258,15 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
   /* Update a state by id */
   updateState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
-    project.states = project.states.map((st: AutomataState) => st.id === state.id ? { ...st, ...state } : st)
+    const index = project.states.findIndex(s => s.id === state.id)
+    project.states[index] = { ...project.states[index], ...state }
+  })),
+
+  updateStates: states => set(produce(({ project }: { project: StoredProject }) => {
+    for (const state of states) {
+      const index = project.states.findIndex(s => s.id === state.id)
+      project.states[index] = { ...project.states[index], ...state }
+    }
   })),
 
   /* Remove a state by id */
