@@ -137,6 +137,15 @@ interface ProjectStore {
   reset: () => void
 }
 
+/**
+ * Updates an item with the same ID from a list of items.
+ * Expects the item to exist in items
+ */
+const updateById = <T extends {id: number}>(items: T[], item: Partial<T>) => {
+  const index = items.findIndex(x => x.id === item.id)
+  items[index] = { ...items[index], ...item }
+}
+
 const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
   project: null as StoredProject,
   history: [],
@@ -230,15 +239,13 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   /* Update a comment by id */
-  updateComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
-    const index = project.comments.findIndex(s => s.id === comment.id)
-    project.comments[index] = { ...project.comments[index], ...comment }
+  updateComment: comment => set(produce(({ project }: { project: StoredProject }) => {
+    updateById(project.comments, comment)
   })),
 
   updateComments: comments => set(produce(({ project }: { project: StoredProject }) => {
     for (const comment of comments) {
-      const index = project.comments.findIndex(s => s.id === comment.id)
-      project.comments[index] = { ...project.comments[index], ...comment }
+      updateById(project.comments, comment)
     }
   })),
 
@@ -257,15 +264,13 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   /* Update a state by id */
-  updateState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
-    const index = project.states.findIndex(s => s.id === state.id)
-    project.states[index] = { ...project.states[index], ...state }
+  updateState: state => set(produce(({ project }: { project: StoredProject }) => {
+    updateById(project.states, state)
   })),
 
   updateStates: states => set(produce(({ project }: { project: StoredProject }) => {
     for (const state of states) {
-      const index = project.states.findIndex(s => s.id === state.id)
-      project.states[index] = { ...project.states[index], ...state }
+      updateById(project.states, state)
     }
   })),
 
