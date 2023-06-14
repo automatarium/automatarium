@@ -380,7 +380,7 @@ const useActions = (registerHotkeys = false) => {
         const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
         if (states && states.length > 1) {
           const meanY = states.map(state => state.y).reduce((a, b) => a + b) / states.length
-          states.forEach(state => storeState.updateState({ ...state, y: meanY }))
+          storeState.updateStates(states.map(state => ({ ...state, y: meanY })))
           commit()
         }
       }
@@ -393,7 +393,7 @@ const useActions = (registerHotkeys = false) => {
         const states = storeState?.project?.states?.filter(s => selected.includes(s.id))
         if (states && states.length > 1) {
           const meanX = states.map(state => state.x).reduce((a, b) => a + b) / states.length
-          states.forEach(state => storeState.updateState({ ...state, x: meanX }))
+          storeState.updateStates(states.map(state => ({ ...state, x: meanX })))
           commit()
         }
       }
