@@ -106,13 +106,13 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project', '.json') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
       hotkeys: [{ key: 'i', meta: true, shift: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project', '.jff') }
       }
     },
     SAVE_FILE: {
@@ -498,10 +498,11 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file') => {
+const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
+  input.accept = accept
   input.onchange = () => {
     // Read file data
     const reader = new FileReader()

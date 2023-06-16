@@ -66,6 +66,7 @@ const NewFile = () => {
     navigate('/editor')
   }
 
+  // TODO: Use promptLoadFile from useActions
   const importProject = () => {
     // Prompt user for file input
     const input = document.createElement('input')
