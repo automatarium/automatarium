@@ -1,115 +1,103 @@
 {
   "projectType": "FSA",
+  "_id": "14027c64-78eb-4a90-b66d-d2ea76a3ede9",
   "states": [
     {
       "id": 0,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "0, 1",
+      "x": 195,
+      "y": 375,
+      "isFinal": false
     },
     {
       "id": 1,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "1",
+      "x": 195,
+      "y": 375,
+      "isFinal": false
     },
     {
       "id": 2,
-      "isFinal": true,
-      "x": 765,
-      "y": 330
-    },
-    {
-      "id": 4,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "2",
+      "x": 195,
+      "y": 375,
+      "isFinal": true
     },
     {
       "id": 3,
-      "isFinal": true,
-      "x": 765,
-      "y": 330
+      "label": "Trap",
+      "x": 195,
+      "y": 375,
+      "isFinal": false
     },
     {
-      "id": 5,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "id": 4,
+      "label": "2, 3",
+      "x": 195,
+      "y": 375,
+      "isFinal": true
     }
   ],
   "transitions": [
     {
-      "from": 0,
       "id": 0,
-      "read": "B",
-      "to": 1
-    },
-    {
       "from": 0,
+      "to": 4,
+      "read": "A"
+    },
+    {
       "id": 1,
-      "read": "A",
-      "to": 3
+      "from": 0,
+      "to": 1,
+      "read": "B"
     },
     {
-      "from": 1,
       "id": 2,
-      "read": "A",
-      "to": 2
-    },
-    {
       "from": 1,
+      "to": 2,
+      "read": "A"
+    },
+    {
       "id": 3,
-      "read": "B",
-      "to": 1
+      "from": 1,
+      "to": 1,
+      "read": "B"
     },
     {
-      "from": 2,
       "id": 4,
-      "read": "A",
-      "to": 4
-    },
-    {
       "from": 2,
+      "to": 3,
+      "read": "A"
+    },
+    {
       "id": 5,
-      "read": "B",
-      "to": 4
+      "from": 2,
+      "to": 3,
+      "read": "B"
     },
     {
-      "from": 4,
+      "id": 6,
+      "from": 3,
+      "to": 3,
+      "read": "A"
+    },
+    {
+      "id": 7,
+      "from": 3,
+      "to": 3,
+      "read": "B"
+    },
+    {
       "id": 8,
-      "read": "A",
-      "to": 4
-    },
-    {
       "from": 4,
+      "to": 3,
+      "read": "A"
+    },
+    {
       "id": 9,
-      "read": "B",
-      "to": 4
-    },
-    {
-      "from": 3,
-      "id": 10,
-      "read": "A",
-      "to": 5
-    },
-    {
-      "from": 3,
-      "id": 11,
-      "read": "B",
-      "to": 5
-    },
-    {
-      "from": 5,
-      "id": 12,
-      "read": "A",
-      "to": 5
-    },
-    {
-      "from": 5,
-      "id": 13,
-      "read": "B",
-      "to": 5
+      "from": 4,
+      "to": 3,
+      "read": "B"
     }
   ],
   "comments": [],
@@ -122,7 +110,7 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "Thankful Caterpillar",
+    "name": "convertHarderConversionDFA",
     "dateCreated": 1682044927890,
     "dateEdited": 1682044927890,
     "version": "1.0.0",

@@ -261,14 +261,10 @@ const useActions = (registerHotkeys = false) => {
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
-      disabled: () => projectType !== 'FSA',
+      disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {
-        try {
-          updateGraph(reorderStates(convertNFAtoDFA(reorderStates(project as FSAProjectGraph))))
-          commit()
-        } catch (error) {
-          showWarning(error.message)
-        }
+        updateGraph(convertNFAtoDFA(project as FSAProjectGraph))
+        commit()
       }
     },
     AUTO_LAYOUT: {

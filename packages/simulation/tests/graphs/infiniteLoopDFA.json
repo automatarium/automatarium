@@ -1,27 +1,20 @@
 {
   "projectType": "FSA",
-  "_id": "62f53a12-039a-404c-bf1c-3667a9a8bdc8",
+  "_id": "48d52bf4-63e4-4129-900a-031d26b9fe56",
   "states": [
     {
       "id": 0,
-      "label": "1",
-      "x": 225,
-      "y": 390,
+      "label": "0",
+      "x": 465,
+      "y": 660,
       "isFinal": false
     },
     {
       "id": 1,
-      "label": "2",
-      "x": 225,
-      "y": 390,
+      "label": "0, 1",
+      "x": 465,
+      "y": 660,
       "isFinal": true
-    },
-    {
-      "id": 2,
-      "label": "Trap",
-      "x": 225,
-      "y": 390,
-      "isFinal": false
     }
   ],
   "transitions": [
@@ -34,13 +27,7 @@
     {
       "id": 1,
       "from": 1,
-      "to": 2,
-      "read": "A"
-    },
-    {
-      "id": 2,
-      "from": 2,
-      "to": 2,
+      "to": 1,
       "read": "A"
     }
   ],
@@ -54,9 +41,9 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "convertInitialNotAtStartDFA",
-    "dateCreated": 1682044927890,
-    "dateEdited": 1682044927890,
+    "name": "infiniteLoop",
+    "dateCreated": 1686637210665,
+    "dateEdited": 1686637210665,
     "version": "1.0.0",
     "automatariumVersion": "1.0.0"
   },

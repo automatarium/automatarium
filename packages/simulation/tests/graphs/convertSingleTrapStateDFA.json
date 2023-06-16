@@ -1,199 +1,204 @@
 {
   "projectType": "FSA",
+  "_id": "696d7e75-e023-459b-8c67-74e828c895ea",
   "states": [
     {
       "id": 0,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "0",
+      "x": 360,
+      "y": 330,
+      "isFinal": false
     },
     {
       "id": 1,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
-    },
-    {
-      "id": 3,
-      "isFinal": true,
-      "x": 765,
-      "y": 330
+      "label": "Trap",
+      "x": 360,
+      "y": 330,
+      "isFinal": false
     },
     {
       "id": 2,
-      "isFinal": false,
-      "x": 765,
-      "y": 330
+      "label": "1",
+      "x": 360,
+      "y": 330,
+      "isFinal": false
+    },
+    {
+      "id": 3,
+      "label": "2",
+      "x": 360,
+      "y": 330,
+      "isFinal": true
     }
   ],
   "transitions": [
     {
-      "from": 0,
       "id": 0,
-      "read": "A",
-      "to": 1
+      "from": 0,
+      "to": 2,
+      "read": "A"
     },
     {
-      "from": 0,
       "id": 1,
-      "read": "B",
-      "to": 1
+      "from": 0,
+      "to": 2,
+      "read": "B"
     },
     {
-      "from": 0,
       "id": 2,
-      "read": "C",
-      "to": 2
+      "from": 0,
+      "to": 1,
+      "read": "C"
     },
     {
-      "from": 0,
       "id": 3,
-      "read": "D",
-      "to": 2
+      "from": 0,
+      "to": 1,
+      "read": "D"
     },
     {
-      "from": 0,
       "id": 4,
-      "read": "E",
-      "to": 2
+      "from": 0,
+      "to": 1,
+      "read": "E"
     },
     {
-      "from": 0,
       "id": 5,
-      "read": "F",
-      "to": 2
-    },
-    {
       "from": 0,
+      "to": 1,
+      "read": "F"
+    },
+    {
       "id": 6,
-      "read": "G",
-      "to": 2
+      "from": 0,
+      "to": 1,
+      "read": "G"
     },
     {
-      "from": 1,
       "id": 7,
-      "read": "C",
-      "to": 0
+      "from": 1,
+      "to": 1,
+      "read": "A"
     },
     {
-      "from": 1,
       "id": 8,
-      "read": "D",
-      "to": 0
+      "from": 1,
+      "to": 1,
+      "read": "B"
     },
     {
-      "from": 1,
       "id": 9,
-      "read": "E",
-      "to": 1
+      "from": 1,
+      "to": 1,
+      "read": "C"
     },
     {
-      "from": 1,
       "id": 10,
-      "read": "F",
-      "to": 1
+      "from": 1,
+      "to": 1,
+      "read": "D"
     },
     {
-      "from": 1,
       "id": 11,
-      "read": "G",
-      "to": 3
+      "from": 1,
+      "to": 1,
+      "read": "E"
     },
     {
-      "from": 1,
       "id": 12,
-      "read": "A",
-      "to": 2
-    },
-    {
       "from": 1,
+      "to": 1,
+      "read": "F"
+    },
+    {
       "id": 13,
-      "read": "B",
-      "to": 2
+      "from": 1,
+      "to": 1,
+      "read": "G"
     },
     {
-      "from": 3,
       "id": 14,
-      "read": "A",
-      "to": 2
+      "from": 2,
+      "to": 1,
+      "read": "A"
     },
     {
-      "from": 3,
       "id": 15,
-      "read": "B",
-      "to": 2
+      "from": 2,
+      "to": 1,
+      "read": "B"
     },
     {
-      "from": 3,
       "id": 16,
-      "read": "C",
-      "to": 2
+      "from": 2,
+      "to": 0,
+      "read": "C"
     },
     {
-      "from": 3,
       "id": 17,
-      "read": "D",
-      "to": 2
+      "from": 2,
+      "to": 0,
+      "read": "D"
     },
     {
-      "from": 3,
       "id": 18,
-      "read": "E",
-      "to": 2
+      "from": 2,
+      "to": 2,
+      "read": "E"
     },
     {
-      "from": 3,
       "id": 19,
-      "read": "F",
-      "to": 2
+      "from": 2,
+      "to": 2,
+      "read": "F"
     },
     {
-      "from": 3,
       "id": 20,
-      "read": "G",
-      "to": 2
+      "from": 2,
+      "to": 3,
+      "read": "G"
     },
     {
-      "from": 2,
       "id": 21,
-      "read": "A",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "A"
     },
     {
-      "from": 2,
       "id": 22,
-      "read": "B",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "B"
     },
     {
-      "from": 2,
       "id": 23,
-      "read": "C",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "C"
     },
     {
-      "from": 2,
       "id": 24,
-      "read": "D",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "D"
     },
     {
-      "from": 2,
       "id": 25,
-      "read": "E",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "E"
     },
     {
-      "from": 2,
       "id": 26,
-      "read": "F",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "F"
     },
     {
-      "from": 2,
       "id": 27,
-      "read": "G",
-      "to": 2
+      "from": 3,
+      "to": 1,
+      "read": "G"
     }
   ],
   "comments": [],
@@ -206,7 +211,7 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "Busy Grass",
+    "name": "convertSingleTrapState",
     "dateCreated": 1682132769959,
     "dateEdited": 1682132769959,
     "version": "1.0.0",
