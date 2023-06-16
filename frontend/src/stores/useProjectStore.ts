@@ -107,10 +107,12 @@ interface ProjectStore {
   createTransition: (transition: Omit<BaseAutomataTransition, 'id' | 'read'>) => number,
   editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
   createComment: (comment: Omit<ProjectComment, 'id'>) => number,
-  updateComment: (comment: ProjectComment) => void,
+  updateComment: (comment: Partial<ProjectComment>) => void,
+  updateComments: (comments: Partial<ProjectComment>[]) => void,
   removeComment: (comment: ProjectComment) => void,
   createState: (state: Omit<AutomataState, 'isFinal' | 'id'> & {isFinal?: boolean}) => number,
-  updateState: (state: AutomataState) => void,
+  updateState: (state: Partial<AutomataState>) => void,
+  updateStates: (states: Partial<AutomataState>[]) => void,
   insertGroup: (createData: Template | CopyData, isTemplate?: boolean) => InsertGroupResponse,
   setSingleTest: (value: string) => void,
   addBatchTest: (value?: string) => void,
@@ -133,6 +135,15 @@ interface ProjectStore {
    */
   updateGraph: (graph: ProjectGraph) => void,
   reset: () => void
+}
+
+/**
+ * Updates an item with the same ID from a list of items.
+ * Expects the item to exist in items
+ */
+const updateById = <T extends {id: number}>(items: T[], item: Partial<T>) => {
+  const index = items.findIndex(x => x.id === item.id)
+  items[index] = { ...items[index], ...item }
 }
 
 const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
@@ -228,8 +239,14 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   /* Update a comment by id */
-  updateComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
-    project.comments = project.comments.map((cm: ProjectComment) => cm.id === comment.id ? { ...cm, ...comment } : cm)
+  updateComment: comment => set(produce(({ project }: { project: StoredProject }) => {
+    updateById(project.comments, comment)
+  })),
+
+  updateComments: comments => set(produce(({ project }: { project: StoredProject }) => {
+    for (const comment of comments) {
+      updateById(project.comments, comment)
+    }
   })),
 
   /* Remove a comment by id */
@@ -247,8 +264,14 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   /* Update a state by id */
-  updateState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
-    project.states = project.states.map((st: AutomataState) => st.id === state.id ? { ...st, ...state } : st)
+  updateState: state => set(produce(({ project }: { project: StoredProject }) => {
+    updateById(project.states, state)
+  })),
+
+  updateStates: states => set(produce(({ project }: { project: StoredProject }) => {
+    for (const state of states) {
+      updateById(project.states, state)
+    }
   })),
 
   /* Remove a state by id */

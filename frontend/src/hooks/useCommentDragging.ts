@@ -1,6 +1,6 @@
 import { useProjectStore } from '/src/stores'
 
-import useResourceDragging, { ResourceDraggingHook } from './useResourceDragging'
+import useResourceDragging from './useResourceDragging'
 import { ProjectComment } from '/src/types/ProjectTypes'
 
 /**
@@ -14,7 +14,6 @@ const commentsFromIDs = (IDs: number[]): CommentWithID[] => {
   return comments.filter(comment => IDs.includes(comment.id)) as CommentWithID[]
 }
 
-const makeUpdateComment = () => useProjectStore(s => s.updateComment)
+const makeUpdateComments = () => useProjectStore(s => s.updateComments)
 
-// export default () => useResourceDragging(commentsFromIDs, makeUpdateComment)
-export default useResourceDragging.bind(null, commentsFromIDs, makeUpdateComment) as () => ResourceDraggingHook
+export default () => useResourceDragging(commentsFromIDs, makeUpdateComments)
