@@ -5,7 +5,7 @@ import { useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
 import { AutomataState, Coordinate } from '/src/types/ProjectTypes'
 
-const useTransitionCreation = (): {createTransitionStart: Coordinate, createTransitionEnd: Coordinate} => {
+const useTransitionCreation = (): { createTransitionStart: Coordinate, createTransitionEnd: Coordinate } => {
   const createTransition = useProjectStore(s => s.createTransition)
   const tool = useToolStore(s => s.tool)
 
