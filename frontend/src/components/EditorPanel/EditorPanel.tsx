@@ -29,8 +29,8 @@ const EditorPanel = () => {
   const { ghostState } = useStateCreation()
   const { ghostTemplate } = useTemplateInsert()
 
-  const selectedStates = useSelectionStore(s => s.selectedStates)
-  const selectedComments = useSelectionStore(s => s.selectedComments)
+  let selectedStates = useSelectionStore(s => s.selectedStates)
+  let selectedComments = useSelectionStore(s => s.selectedComments)
 
   const setStates = useSelectionStore(s => s.setStates)
   const setComments = useSelectionStore(s => s.setComments)
@@ -42,12 +42,30 @@ const EditorPanel = () => {
   useContextMenus()
 
   const handleDragging = (e: SelectionEvent) => {
+    const isLeftClick = e.detail.originalEvent.button === 0
+    // When the user isn't holding shift and is just clicking then we need to check if we
+    // need to clear their selection.
+    if (!e.detail.originalEvent.shiftKey && isLeftClick) {
+      // Runs a test to see if the item being selected in the event is already selected.
+      // If it isn't then we forget what we have selected before
+      const testEvent = (eventKey: string, ids: number[]) => {
+        if (eventKey in e.detail) {
+          if (!ids.includes(e.detail[eventKey].id)) {
+            selectedComments = []
+            selectedStates = []
+          }
+        }
+      }
+      testEvent('comment', selectedComments)
+      testEvent('state', selectedStates)
+    }
     // Only try and check if the user is selecting a new resource if the event correlates with that.
     // Else just use the previous value from the store.
-    // Outside the if so that you can directly right-click and edit a state
     const selStates = e.type === 'state:mousedown' ? selectState(e) : selectedStates
     const selComments = e.type === 'comment:mousedown' ? selectComment(e) : selectedComments
-    if (e.detail.originalEvent.button === 0) {
+    if (isLeftClick) {
+      // Only drag if a left click.
+      // We still allow selecting via right click so the user can directly click + edit something
       startStateDrag(e, selStates)
       startCommentDrag(e, selComments)
     }

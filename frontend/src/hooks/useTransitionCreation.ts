@@ -3,16 +3,18 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
+import { AutomataState, Coordinate } from '/src/types/ProjectTypes'
 
-const useTransitionCreation = () => {
+const useTransitionCreation = (): { createTransitionStart: Coordinate, createTransitionEnd: Coordinate } => {
   const createTransition = useProjectStore(s => s.createTransition)
   const tool = useToolStore(s => s.tool)
 
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
-
-  const [createTransitionStart, setCreateTransitionStart] = useState(null)
-  const [createTransitionState, setCreateTransitionState] = useState(null)
-  const [createTransitionEnd, setCreateTransitionEnd] = useState(null)
+  // Alias for whats used in the next states
+  type PosTuple = [number, number] | null
+  const [createTransitionStart, setCreateTransitionStart] = useState<PosTuple>(null)
+  const [createTransitionState, setCreateTransitionState] = useState<AutomataState>(null)
+  const [createTransitionEnd, setCreateTransitionEnd] = useState<PosTuple>(null)
 
   useEvent('state:mousedown', e => {
     if (tool === 'transition' && e.detail.originalEvent.button === 0) {
