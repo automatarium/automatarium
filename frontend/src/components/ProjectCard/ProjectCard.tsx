@@ -1,7 +1,7 @@
 import dayjs, { Dayjs } from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
-import { Logo } from '/src/components'
+import { Button, Logo } from '/src/components'
 
 import { MoreVertical } from 'lucide-react'
 import { ButtonHTMLAttributes, useState } from 'react'
@@ -27,22 +27,21 @@ type ProjectCardProps = {
 }
 
 const KebabMenu = (props) => {
-  const [open, setOpen] = useState(false);
-  
-  const handleclick = (e) => {
-    e.stopPropagation();
+  const [open, setOpen] = useState(false)
+
+  const handleClick = (e) => {
+    e.stopPropagation()
     setOpen(!open)
   }
 
-  return(
-
+  return (
     <li>
-      <a onClick={(e) => handleclick(e)}>
+      <a onClick={(e) => handleClick(e)}>
         {props.icon}
       </a>
       {open && props.children}
     </li>
-  );
+  )
 }
 
 // TODO: Remove this when projectId is actually used
@@ -57,11 +56,10 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
     </CardImage>
     <CardDetail>
       <strong>{name}</strong>
-      {/*{showKebab && <MoreVertical/>}*/}
       {showKebab && <KebabMenu icon={<MoreVertical/>}>
-          <p>Delete</p>
+          <Button onClick={props.onKebabClick}>Delete</Button>
           <p>Copy</p>
-          <p>Rename</p>       
+          <p>Rename</p>
         </KebabMenu>}
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
