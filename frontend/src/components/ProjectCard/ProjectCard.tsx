@@ -3,10 +3,10 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Logo } from '/src/components'
 
-import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay } from './projectCardStyle'
 import { MoreVertical } from 'lucide-react'
+import { ButtonHTMLAttributes, useState } from 'react'
+import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TypeBadge } from './projectCardStyle'
 import { ProjectType } from '/src/types/ProjectTypes'
-import { ButtonHTMLAttributes } from 'react'
 dayjs.extend(relativeTime)
 
 type ProjectCardProps = {
@@ -26,6 +26,25 @@ type ProjectCardProps = {
   disabled?: boolean,
 }
 
+const KebabMenu = (props) => {
+  const [open, setOpen] = useState(false);
+  
+  const handleclick = (e) => {
+    e.stopPropagation();
+    setOpen(!open)
+  }
+
+  return(
+
+    <li>
+      <a onClick={(e) => handleclick(e)}>
+        {props.icon}
+      </a>
+      {open && props.children}
+    </li>
+  );
+}
+
 // TODO: Remove this when projectId is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
@@ -38,7 +57,12 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
     </CardImage>
     <CardDetail>
       <strong>{name}</strong>
-      {showKebab && <button onClick={props.onKebabClick}><MoreVertical/></button>}
+      {/*{showKebab && <MoreVertical/>}*/}
+      {showKebab && <KebabMenu icon={<MoreVertical/>}>
+          <p>Delete</p>
+          <p>Copy</p>
+          <p>Rename</p>       
+        </KebabMenu>}
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
   </CardContainer>
