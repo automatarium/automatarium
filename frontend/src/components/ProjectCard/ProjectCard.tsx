@@ -58,9 +58,11 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
       <div className='title_and_kebab'>
       <strong>{name}</strong>
       {showKebab && <KebabMenu icon={<MoreVertical/>}>
+        <div className='kebab-menu-options'>
           <p>Delete</p>
           <p>Copy</p>
-          <p>Rename</p>       
+          <p>Rename</p> 
+        </div>      
         </KebabMenu>}
       </div>
       

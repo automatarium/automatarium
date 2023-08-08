@@ -68,12 +68,17 @@ export const TypeBadge = styled('div')`
 export const CardDetail = styled('div')`
   margin-block-start: 1em;
   list-style-type: none;
+
+  .kebab-menu-options {
+    position:absolute;
+  }
   
   .title_and_kebab {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
   }
+
 
   span {
     display: block;
