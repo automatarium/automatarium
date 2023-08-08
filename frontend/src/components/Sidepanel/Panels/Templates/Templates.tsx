@@ -100,7 +100,6 @@ const Templates = () => {
                 key={temp._id}
                 name={temp.name}
                 date={dayjs(temp.date)}
-                projectId={temp._id}
                 width={TEMPLATE_THUMBNAIL_WIDTH}
                 $istemplate={true}
                 showKebab={false}
