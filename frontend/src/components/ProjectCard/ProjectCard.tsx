@@ -22,6 +22,7 @@ type ProjectCardProps = {
   // Typescript currently doesn't supprt the spread operator with generics.
   // So we need to workaround that and add the extra props ourself
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick']
+  onKebabClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
   disabled?: boolean,
 }
 
@@ -37,7 +38,7 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
     </CardImage>
     <CardDetail>
       <strong>{name}</strong>
-      {showKebab && <MoreVertical/>}
+      {showKebab && <button onClick={props.onKebabClick}><MoreVertical/></button>}
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
   </CardContainer>

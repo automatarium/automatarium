@@ -39,6 +39,7 @@ const NewFile = () => {
     // Get the height of the tallest card, we will set the rest of the cards to it
     setHeight(Math.max(...[...node.children].map(it => it.getBoundingClientRect().height)))
   }, [])
+  const deleteProject = useProjectsStore(s => s.deleteProject)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -64,6 +65,10 @@ const NewFile = () => {
   const handleLoadProject = (project: StoredProject) => {
     setProject(project)
     navigate('/editor')
+  }
+
+  const handleDeleteProject = (pid: string) => {
+    deleteProject(pid)
   }
 
   // TODO: Use promptLoadFile from useActions
@@ -170,6 +175,10 @@ const NewFile = () => {
           image={thumbnails[p._id]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
+          onKebabClick={(event) => {
+            handleDeleteProject(p._id)
+            event.stopPropagation()
+          }}
           $istemplate={false}
         />
       )}
