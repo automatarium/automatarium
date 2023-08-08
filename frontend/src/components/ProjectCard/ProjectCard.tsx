@@ -14,7 +14,6 @@ type ProjectCardProps = {
   type?: ProjectType | '???' // '???' is used has a default type
   date: string | Dayjs
   image?: string
-  projectId?: string,
   isSelectedTemplate?: boolean,
   showKebab?: boolean,
   width: number,
@@ -44,9 +43,7 @@ const KebabMenu = (props) => {
   )
 }
 
-// TODO: Remove this when projectId is actually used
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
+const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}

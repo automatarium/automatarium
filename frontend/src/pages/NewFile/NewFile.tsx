@@ -171,7 +171,6 @@ const NewFile = () => {
           name={p?.meta?.name ?? '<Untitled>'}
           type={p?.config?.type ?? '???'}
           date={dayjs(p?.meta?.dateEdited)}
-          projectId={p._id}
           image={thumbnails[p._id]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
