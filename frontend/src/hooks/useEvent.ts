@@ -59,7 +59,8 @@ export interface CustomEvents {
    */
   'edge:mousedown': EdgeEventData,
   'edge:dblclick': EdgeEventData,
-  'showWarning': string
+  'showWarning': string,
+  'modal:deleteConfirm': null
 }
 
 /**

@@ -13,7 +13,7 @@ import LoginModal from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 
-import { NewProjectCard, CardList } from './components'
+import { NewProjectCard, CardList, DeleteConfirmationDialog } from './components'
 import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
 import FSA from './images/FSA'
 import TM from './images/TM'
@@ -40,6 +40,8 @@ const NewFile = () => {
     setHeight(Math.max(...[...node.children].map(it => it.getBoundingClientRect().height)))
   }, [])
   const deleteProject = useProjectsStore(s => s.deleteProject)
+  const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false)
+  const [slatedForDeletion, setSlatedForDeletion] = useState('')
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -175,14 +177,24 @@ const NewFile = () => {
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
           onKebabClick={(event) => {
-            handleDeleteProject(p._id)
             event.stopPropagation()
+            dispatchCustomEvent('modal:deleteConfirm', null)
+            setSlatedForDeletion(p._id)
           }}
           $istemplate={false}
         />
       )}
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
     </CardList>
+    <DeleteConfirmationDialog
+      isOpen={deleteConfirmationVisible}
+      isOpenReducer={setDeleteConfirmationVisible}
+      onClose={() => setDeleteConfirmationVisible(false)}
+      onConfirm={() => {
+        handleDeleteProject(slatedForDeletion)
+        setDeleteConfirmationVisible(false)
+      }}
+    />
 
     <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
