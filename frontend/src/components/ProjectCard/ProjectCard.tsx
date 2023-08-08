@@ -55,13 +55,16 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
       {isSelectedTemplate && <SelectedTemplateOverlay/>}
     </CardImage>
     <CardDetail>
+      <div className='title_and_kebab'>
       <strong>{name}</strong>
-      {/*{showKebab && <MoreVertical/>}*/}
       {showKebab && <KebabMenu icon={<MoreVertical/>}>
           <p>Delete</p>
           <p>Copy</p>
           <p>Rename</p>       
         </KebabMenu>}
+      </div>
+      
+      {/*{showKebab && <MoreVertical/>}*/}
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
   </CardContainer>
