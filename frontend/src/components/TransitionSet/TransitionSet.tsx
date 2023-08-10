@@ -175,8 +175,11 @@ const Transition = ({
   const handleEdgeMouseDown = (e: MouseEvent) =>
     dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
 
-  const handleEdgeDoubleClick = (e: MouseEvent) =>
+  const handleEdgeDoubleClick = (e: MouseEvent) => {
+    // Edit only first transition on dbl-click
+    dispatchCustomEvent('editTransition', { id: transitions[0].id })
     dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions })
+  }
 
   // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend
   // upwards.
