@@ -171,6 +171,9 @@ const Transition = ({
   }
 
   // Callbacks for the edge
+  const handleEdgeMouseUp = (e: MouseEvent) => {
+    dispatchCustomEvent('edge:mouseup', { originalEvent: e, transitions })
+  }
 
   const handleEdgeMouseDown = (e: MouseEvent) =>
     dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
@@ -211,6 +214,7 @@ const Transition = ({
       key={`${pathID}-selection`}
       stroke='transparent'
       fill='none'
+      onMouseUp={handleEdgeMouseUp}
       onMouseDown={handleEdgeMouseDown}
       onDoubleClick={handleEdgeDoubleClick}
       strokeWidth={20}

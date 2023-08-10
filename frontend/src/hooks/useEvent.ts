@@ -44,10 +44,14 @@ export interface CustomEvents {
   'transition:mouseup': TransitionEventData,
   'transition:mousedown': TransitionEventData,
   'transition:dblclick': TransitionEventData,
+  /**
+   * Context menu events
+   */
   'ctx:svg': Coordinate,
   'ctx:state': Coordinate,
   'ctx:transition': Coordinate,
   'ctx:comment': Coordinate,
+  'ctx:edge': Coordinate,
   'bottomPanel:open': { panel: string },
   'bottomPanel:close': null,
   'comment:mousedown': CommentEventData,
@@ -58,6 +62,7 @@ export interface CustomEvents {
    * all the transitions that use that edge
    */
   'edge:mousedown': EdgeEventData,
+  'edge:mouseup': EdgeEventData,
   'edge:dblclick': EdgeEventData,
   'showWarning': string
 }
