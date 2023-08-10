@@ -17,7 +17,7 @@ export type CommentEventData = {originalEvent: MouseEvent, comment: {id: number,
  * Contains information about the click along with the transition that was clicked
  */
 export type TransitionEventData = {originalEvent: MouseEvent, transition: PositionedTransition}
-type EdgeEventData = {originalEvent: MouseEvent, transitions: PositionedTransition[]}
+export type EdgeEventData = {originalEvent: MouseEvent, transitions: PositionedTransition[]}
 /**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
