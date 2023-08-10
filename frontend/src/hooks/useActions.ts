@@ -336,6 +336,13 @@ const useActions = (registerHotkeys = false) => {
         window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition }), 100)
       }
     },
+    EDIT_TRANSITIONS_GROUP: {
+      handler: () => {
+        const selectedTransitions = useSelectionStore.getState().selectedTransitions
+        if (selectedTransitions === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editTransitionGroup', { ids: selectedTransitions }), 100)
+      }
+    },
     FLIP_TRANSITION: {
       handler: () => {
         const selectedTransitions = useSelectionStore.getState().selectedTransitions

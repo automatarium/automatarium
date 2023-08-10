@@ -29,6 +29,7 @@ export interface CustomEvents {
   'editStateLabel': {id: number},
   'modal:preferences': null,
   'exportImage': {type: string, clipboard?: boolean} | null,
+  'editTransitionGroup': {ids: Array<number>},
   /**
    * Event to open a side panel.
    * @see SidePanelKey for available panels

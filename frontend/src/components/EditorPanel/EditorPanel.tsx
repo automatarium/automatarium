@@ -1,5 +1,5 @@
 import StateCircle from '../StateCircle/StateCircle'
-import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs } from '/src/components'
+import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs, InputTransitionGroup } from '/src/components'
 import {
   useEvent,
   useStateDragging,
@@ -135,6 +135,7 @@ const EditorPanel = () => {
     </GraphView>
     <ContextMenus />
     <InputDialogs />
+    <InputTransitionGroup />
   </>
 }
 
