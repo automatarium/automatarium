@@ -71,6 +71,8 @@ export const CardDetail = styled('div')`
 
   .kebab-menu-options {
     position:absolute;
+    background-color: hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.9);;
+    z-index:1;
   }
   
   .title_and_kebab {

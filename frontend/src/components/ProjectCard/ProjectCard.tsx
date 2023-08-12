@@ -4,6 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Logo } from '/src/components'
 
 import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay } from './projectCardStyle'
+import KebabMenu from '../KebabMenu/KebabMenu'
 import { MoreVertical } from 'lucide-react'
 import { ProjectType } from '/src/types/ProjectTypes'
 import { ButtonHTMLAttributes, useState } from 'react'
@@ -23,25 +24,6 @@ type ProjectCardProps = {
   // So we need to workaround that and add the extra props ourself
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick']
   disabled?: boolean,
-}
-
-const KebabMenu = (props) => {
-  const [open, setOpen] = useState(false);
-  
-  const handleclick = (e) => {
-    e.stopPropagation();
-    setOpen(!open)
-  }
-
-  return(
-
-    <li>
-      <a onClick={(e) => handleclick(e)}>
-        {props.icon}
-      </a>
-      {open && props.children}
-    </li>
-  );
 }
 
 // TODO: Remove this when projectId is actually used
