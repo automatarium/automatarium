@@ -40,19 +40,19 @@ const InputTransitionGroup = () => {
     setTransitionsList([...transitionsScope])
   }
 
-  const saveFSATransition = (id, read) => {
+  const saveFSATransition = ({ id, read }) => {
     editTransition({ id, read })
     commit()
     retrieveTransitions()
   }
 
-  const savePDATransition = (id, read, pop, push) => {
+  const savePDATransition = ({ id, read, pop, push }) => {
     editTransition({ id, read, pop, push } as PDAAutomataTransition)
     commit()
     retrieveTransitions()
   }
 
-  const saveTMTransition = (id, read, write, direction) => {
+  const saveTMTransition = ({ id, read, write, direction }) => {
     editTransition({ id, read, write, direction: direction || 'R' } as TMAutomataTransition)
     commit()
     retrieveTransitions()
@@ -67,7 +67,7 @@ const InputTransitionGroup = () => {
         return transitionsList.map((t, i) => <Input
           key={i}
           value={t.read}
-          onChange={e => saveFSATransition(t.id, e.target.value)}
+          onChange={e => saveFSATransition({ id: t.id, read: e.target.value })}
           placeholder={'λ'}
         />
         )
@@ -76,17 +76,32 @@ const InputTransitionGroup = () => {
         return transitionsList.map((t, i) => <InputWrapper key={i}>
             <Input
               value={t.read}
-              onChange={e => savePDATransition(t.id, e.target.value, t.pop, t.push)}
+              onChange={e => savePDATransition({
+                id: t.id,
+                read: e.target.value,
+                pop: t.pop,
+                push: t.push
+              })}
               placeholder={'λ\t(read)'}
               />
             <Input
               value={t.pop}
-              onChange={e => savePDATransition(t.id, t.read, e.target.value, t.push)}
+              onChange={e => savePDATransition({
+                id: t.id,
+                read: t.read,
+                pop: e.target.value,
+                push: t.push
+              })}
               placeholder={'λ\t(pop)'}
               />
             <Input
               value={t.push}
-              onChange={e => savePDATransition(t.id, t.read, t.pop, e.target.value)}
+              onChange={e => savePDATransition({
+                id: t.id,
+                read: t.read,
+                pop: t.pop,
+                push: e.target.value
+              })}
               placeholder={'λ\t(push)'}
             />
           </InputWrapper>)
@@ -95,17 +110,32 @@ const InputTransitionGroup = () => {
         return transitionsList.map((t, i) => <InputWrapper key={i}>
           <Input
             value={t.read}
-            onChange={e => saveTMTransition(t.id, e.target.value, t.write, t.direction)}
+            onChange={e => saveTMTransition({
+              id: t.id,
+              read: e.target.value,
+              write: t.write,
+              direction: t.direction
+            })}
             placeholder={'λ\t(read)'}
           />
           <Input
             value={t.write}
-            onChange={e => saveTMTransition(t.id, t.read, e.target.value, t.direction)}
+            onChange={e => saveTMTransition({
+              id: t.id,
+              read: t.read,
+              write: e.target.value,
+              direction: t.direction
+            })}
             placeholder={'λ\t(write)'}
           />
           <Input
             value={t.direction}
-            onChange={e => saveTMTransition(t.id, t.read, t.write, e.target.value)}
+            onChange={e => saveTMTransition({
+              id: t.id,
+              read: t.read,
+              write: t.write,
+              direction: e.target.value
+            })}
             placeholder={'↔\t(direction)'}
           />
         </InputWrapper>)
