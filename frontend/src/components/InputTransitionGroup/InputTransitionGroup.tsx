@@ -19,6 +19,10 @@ const InputTransitionGroup = () => {
 
   // For the new transition
   const [readValue, setReadValue] = useState('')
+  const [popValue, setPopValue] = useState('')
+  const [pushValue, setPushValue] = useState('')
+  const [writeValue, setWriteValue] = useState('')
+  const [dirValue, setDirValue] = useState('')
 
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
@@ -45,23 +49,21 @@ const InputTransitionGroup = () => {
     setTransitionsList([...transitionsScope])
   }
 
-  const savePDATransition = ({ id, read, pop, push }) => {
-    editTransition({ id, read, pop, push } as PDAAutomataTransition)
-    commit()
-    retrieveTransitions()
-  }
-
-  const saveTMTransition = ({ id, read, write, direction }) => {
-    editTransition({ id, read, write, direction: direction || 'R' } as TMAutomataTransition)
-    commit()
-    retrieveTransitions()
-  }
-
   const resetInputFields = () => {
     setReadValue('')
+    setPopValue('')
+    setPushValue('')
+    setWriteValue('')
+    setDirValue('')
   }
 
-  // Re-retrieve transitions when the id list changes (i.e. on save)
+  const createNewTransition = () => {
+    const newId = createTransition({ from: fromState, to: toState })
+    setIdList([...idList, newId])
+    return newId
+  }
+
+  // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
     retrieveTransitions()
   }, [idList])
@@ -76,8 +78,7 @@ const InputTransitionGroup = () => {
   }
 
   const saveNewFSATransition = () => {
-    const newId = createTransition({ from: fromState, to: toState })
-    setIdList([...idList, newId])
+    const newId = createNewTransition()
     editTransition({ id: newId, read: readValue } as FSAAutomataTransition)
     commit()
     resetInputFields()
@@ -93,6 +94,94 @@ const InputTransitionGroup = () => {
       <CornerDownLeft size='18px' />
     </SubmitButton>
   </InputWrapper>
+
+  /**
+   * Functions for PDAs
+   */
+  const savePDATransition = ({ id, read, pop, push }) => {
+    editTransition({ id, read, pop, push } as PDAAutomataTransition)
+    commit()
+    retrieveTransitions()
+  }
+
+  const saveNewPDATransition = () => {
+    const newId = createNewTransition()
+    editTransition({
+      id: newId,
+      read: readValue,
+      pop: popValue,
+      push: pushValue
+    } as PDAAutomataTransition)
+    commit()
+    resetInputFields()
+  }
+
+  const blankPDAInput = () => <InputWrapper>
+    <Input
+      value={readValue}
+      onChange={e => setReadValue(e.target.value)}
+      placeholder={'λ\t(read)'}
+    />
+    <Input
+      value={popValue}
+      onChange={e => setPopValue(e.target.value)}
+      placeholder={'λ\t(pop)'}
+    />
+    <Input
+      value={pushValue}
+      onChange={e => setPushValue(e.target.value)}
+      placeholder={'λ\t(push)'}
+    />
+    <SubmitButton onClick={saveNewPDATransition}>
+      <CornerDownLeft size='18px' />
+    </SubmitButton>
+  </InputWrapper>
+
+  /**
+   * Functions for TMs
+   */
+  const saveTMTransition = ({ id, read, write, direction }) => {
+    editTransition({ id, read, write, direction: direction || 'R' } as TMAutomataTransition)
+    commit()
+    retrieveTransitions()
+  }
+
+  const saveNewTMTransition = () => {
+    const newId = createNewTransition()
+    editTransition({
+      id: newId,
+      read: readValue,
+      write: writeValue,
+      direction: dirValue
+    } as TMAutomataTransition)
+    commit()
+    resetInputFields()
+  }
+
+  const blankTMInput = () => <InputWrapper>
+    <Input
+      value={readValue}
+      onChange={e => setReadValue(e.target.value)}
+      placeholder={'λ\t(read)'}
+    />
+    <Input
+      value={writeValue}
+      onChange={e => setWriteValue(e.target.value)}
+      placeholder={'λ\t(write)'}
+    />
+    <Input
+      value={dirValue}
+      onChange={e => setDirValue(e.target.value)}
+      placeholder={'↔\t(direction)'}
+    />
+    <SubmitButton onClick={saveNewTMTransition}>
+      <CornerDownLeft size='18px' />
+    </SubmitButton>
+  </InputWrapper>
+
+  /**
+   * Modal contents
+   */
 
   if (!transitionsList) return null
 
@@ -112,7 +201,8 @@ const InputTransitionGroup = () => {
         </>
       case 'PDA':
         assertType<Array<PDAAutomataTransition>>(transitionsList)
-        return transitionsList.map((t, i) => <InputWrapper key={i}>
+        return <>
+          {transitionsList.map((t, i) => <InputWrapper key={i}>
             <Input
               value={t.read}
               onChange={e => savePDATransition({
@@ -143,41 +233,49 @@ const InputTransitionGroup = () => {
               })}
               placeholder={'λ\t(push)'}
             />
-          </InputWrapper>)
+          </InputWrapper>)}
+          <hr/>
+          {blankPDAInput()}
+        </>
       case 'TM':
         assertType<Array<TMAutomataTransition>>(transitionsList)
-        return transitionsList.map((t, i) => <InputWrapper key={i}>
-          <Input
-            value={t.read}
-            onChange={e => saveTMTransition({
-              id: t.id,
-              read: e.target.value,
-              write: t.write,
-              direction: t.direction
-            })}
-            placeholder={'λ\t(read)'}
-          />
-          <Input
-            value={t.write}
-            onChange={e => saveTMTransition({
-              id: t.id,
-              read: t.read,
-              write: e.target.value,
-              direction: t.direction
-            })}
-            placeholder={'λ\t(write)'}
-          />
-          <Input
-            value={t.direction}
-            onChange={e => saveTMTransition({
-              id: t.id,
-              read: t.read,
-              write: t.write,
-              direction: e.target.value
-            })}
-            placeholder={'↔\t(direction)'}
-          />
-        </InputWrapper>)
+        return <>
+          {transitionsList.map((t, i) => <InputWrapper key={i}>
+            <Input
+              value={t.read}
+              onChange={e => saveTMTransition({
+                id: t.id,
+                read: e.target.value,
+                write: t.write,
+                direction: t.direction
+              })}
+              placeholder={'λ\t(read)'}
+            />
+            <Input
+              value={t.write}
+              onChange={e => saveTMTransition({
+                id: t.id,
+                read: t.read,
+                write: e.target.value,
+                direction: t.direction
+              })}
+              placeholder={'λ\t(write)'}
+            />
+            <Input
+              value={t.direction}
+              onChange={e => saveTMTransition({
+                id: t.id,
+                read: t.read,
+                write: t.write,
+                direction: e.target.value
+              })}
+              placeholder={'↔\t(direction)'}
+            />
+          </InputWrapper>
+          )}
+          <hr/>
+          {blankTMInput()}
+        </>
     }
   }
 
@@ -189,7 +287,10 @@ const InputTransitionGroup = () => {
         statePrefix + toState + '.'
       }
     isOpen={modalOpen}
-    actions={<Button onClick={() => setModalOpen(false)}>Done</Button>}
+    actions={<Button onClick={() => {
+      setModalOpen(false)
+      resetInputFields()
+    }}>Done</Button>}
   >
     {contents()}
   </Modal>
