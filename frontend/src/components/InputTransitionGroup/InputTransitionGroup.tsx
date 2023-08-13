@@ -14,6 +14,8 @@ const InputTransitionGroup = () => {
 
   const [modalOpen, setModalOpen] = useState(false)
 
+  const [idList, setIdList] = useState([])
+
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
 
@@ -23,6 +25,7 @@ const InputTransitionGroup = () => {
   useEvent('editTransitionGroup', ({ detail: { ids } }) => {
     // Get transitions from store
     const { transitions } = useProjectStore.getState()?.project ?? {}
+    setIdList([...ids])
     const transitionsScope = transitions.filter(t => ids.includes(t.id))
     // All of these should be part of the same transition edge
     setFromState(transitionsScope[0].from)
@@ -31,18 +34,28 @@ const InputTransitionGroup = () => {
     setModalOpen(true)
   })
 
+  const retrieveTransitions = () => {
+    const { transitions } = useProjectStore.getState()?.project ?? {}
+    const transitionsScope = transitions.filter(t => idList.includes(t.id))
+    setTransitionsList([...transitionsScope])
+  }
+
   const saveFSATransition = (id, read) => {
     editTransition({ id, read })
     commit()
+    retrieveTransitions()
   }
 
   const savePDATransition = (id, read, pop, push) => {
     editTransition({ id, read, pop, push } as PDAAutomataTransition)
     commit()
+    retrieveTransitions()
   }
 
   const saveTMTransition = (id, read, write, direction) => {
     editTransition({ id, read, write, direction: direction || 'R' } as TMAutomataTransition)
+    commit()
+    retrieveTransitions()
   }
 
   if (!transitionsList) return null
@@ -51,25 +64,50 @@ const InputTransitionGroup = () => {
     switch (projectType) {
       case 'FSA':
         assertType<Array<FSAAutomataTransition>>(transitionsList)
-        return transitionsList.map(t => <Input
-          key={t.id}
+        return transitionsList.map((t, i) => <Input
+          key={i}
           value={t.read}
+          onChange={e => saveFSATransition(t.id, e.target.value)}
           placeholder={'λ'}
         />
         )
       case 'PDA':
         assertType<Array<PDAAutomataTransition>>(transitionsList)
-        return transitionsList.map(t => <InputWrapper key={t.id}>
-            <Input value={t.read} placeholder={'λ\t(read)'} />
-            <Input value={t.pop} placeholder={'λ\t(pop)'} />
-            <Input value={t.push} placeholder={'λ\t(push)'} />
+        return transitionsList.map((t, i) => <InputWrapper key={i}>
+            <Input
+              value={t.read}
+              onChange={e => savePDATransition(t.id, e.target.value, t.pop, t.push)}
+              placeholder={'λ\t(read)'}
+              />
+            <Input
+              value={t.pop}
+              onChange={e => savePDATransition(t.id, t.read, e.target.value, t.push)}
+              placeholder={'λ\t(pop)'}
+              />
+            <Input
+              value={t.push}
+              onChange={e => savePDATransition(t.id, t.read, t.pop, e.target.value)}
+              placeholder={'λ\t(push)'}
+            />
           </InputWrapper>)
       case 'TM':
         assertType<Array<TMAutomataTransition>>(transitionsList)
-        return transitionsList.map(t => <InputWrapper key={t.id}>
-          <Input value={t.read} placeholder={'λ\t(read)'} />
-          <Input value={t.write} placeholder={'λ\t(write)'} />
-          <Input value={t.direction} placeholder={'↔\t(direction)'} />
+        return transitionsList.map((t, i) => <InputWrapper key={i}>
+          <Input
+            value={t.read}
+            onChange={e => saveTMTransition(t.id, e.target.value, t.write, t.direction)}
+            placeholder={'λ\t(read)'}
+          />
+          <Input
+            value={t.write}
+            onChange={e => saveTMTransition(t.id, t.read, e.target.value, t.direction)}
+            placeholder={'λ\t(write)'}
+          />
+          <Input
+            value={t.direction}
+            onChange={e => saveTMTransition(t.id, t.read, t.write, e.target.value)}
+            placeholder={'↔\t(direction)'}
+          />
         </InputWrapper>)
     }
   }
