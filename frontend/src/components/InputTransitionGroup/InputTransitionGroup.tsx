@@ -2,10 +2,10 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore } from '/src/stores'
 import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, assertType } from '/src/types/ProjectTypes'
-import Modal from '../Modal/Modal'
-import Button from '../Button/Button'
-import Input from '../Input/Input'
-import { InputWrapper } from '../InputDialogs/inputDialogsStyle'
+import Modal from '/src/components/Modal/Modal'
+import Button from '/src/components/Button/Button'
+import Input from '/src/components/Input/Input'
+import { InputWrapper } from '/src/components/InputDialogs/inputDialogsStyle'
 
 const InputTransitionGroup = () => {
   const [fromState, setFromState] = useState<number>()
@@ -16,6 +16,9 @@ const InputTransitionGroup = () => {
 
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
+
+  const editTransition = useProjectStore(s => s.editTransition)
+  const commit = useProjectStore(s => s.commit)
   // Get data from event dispatch
   useEvent('editTransitionGroup', ({ detail: { ids } }) => {
     // Get transitions from store
@@ -27,6 +30,20 @@ const InputTransitionGroup = () => {
     setTransitionsList(transitionsScope)
     setModalOpen(true)
   })
+
+  const saveFSATransition = (id, read) => {
+    editTransition({ id, read })
+    commit()
+  }
+
+  const savePDATransition = (id, read, pop, push) => {
+    editTransition({ id, read, pop, push } as PDAAutomataTransition)
+    commit()
+  }
+
+  const saveTMTransition = (id, read, write, direction) => {
+    editTransition({ id, read, write, direction: direction || 'R' } as TMAutomataTransition)
+  }
 
   if (!transitionsList) return null
 
@@ -67,7 +84,7 @@ const InputTransitionGroup = () => {
     isOpen={modalOpen}
     actions={<Button onClick={() => setModalOpen(false)}>Done</Button>}
   >
-    <div>{contents()}</div>
+    {contents()}
   </Modal>
 }
 
