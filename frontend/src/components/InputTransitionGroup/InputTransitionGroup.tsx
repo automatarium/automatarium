@@ -1,11 +1,12 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore } from '/src/stores'
 import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, assertType } from '/src/types/ProjectTypes'
 import Modal from '/src/components/Modal/Modal'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
-import { InputWrapper } from '/src/components/InputDialogs/inputDialogsStyle'
+import { InputWrapper, SubmitButton } from '/src/components/InputDialogs/inputDialogsStyle'
+import { CornerDownLeft } from 'lucide-react'
 
 const InputTransitionGroup = () => {
   const [fromState, setFromState] = useState<number>()
@@ -16,10 +17,14 @@ const InputTransitionGroup = () => {
 
   const [idList, setIdList] = useState([])
 
+  // For the new transition
+  const [readValue, setReadValue] = useState('')
+
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
 
   const editTransition = useProjectStore(s => s.editTransition)
+  const createTransition = useProjectStore(s => s.createTransition)
   const commit = useProjectStore(s => s.commit)
   // Get data from event dispatch
   useEvent('editTransitionGroup', ({ detail: { ids } }) => {
@@ -40,12 +45,6 @@ const InputTransitionGroup = () => {
     setTransitionsList([...transitionsScope])
   }
 
-  const saveFSATransition = ({ id, read }) => {
-    editTransition({ id, read })
-    commit()
-    retrieveTransitions()
-  }
-
   const savePDATransition = ({ id, read, pop, push }) => {
     editTransition({ id, read, pop, push } as PDAAutomataTransition)
     commit()
@@ -58,19 +57,59 @@ const InputTransitionGroup = () => {
     retrieveTransitions()
   }
 
+  const resetInputFields = () => {
+    setReadValue('')
+  }
+
+  // Re-retrieve transitions when the id list changes (i.e. on save)
+  useEffect(() => {
+    retrieveTransitions()
+  }, [idList])
+
+  /**
+   * Functions for FSAs
+   */
+  const saveFSATransition = ({ id, read }) => {
+    editTransition({ id, read })
+    commit()
+    retrieveTransitions()
+  }
+
+  const saveNewFSATransition = () => {
+    const newId = createTransition({ from: fromState, to: toState })
+    setIdList([...idList, newId])
+    editTransition({ id: newId, read: readValue } as FSAAutomataTransition)
+    commit()
+    resetInputFields()
+  }
+
+  const blankFSAInput = () => <InputWrapper>
+    <Input
+      value={readValue}
+      onChange={e => setReadValue(e.target.value)}
+      placeholder={'λ (New transition)'}
+    />
+    <SubmitButton onClick={saveNewFSATransition}>
+      <CornerDownLeft size='18px' />
+    </SubmitButton>
+  </InputWrapper>
+
   if (!transitionsList) return null
 
-  function contents () {
+  const contents = () => {
     switch (projectType) {
       case 'FSA':
         assertType<Array<FSAAutomataTransition>>(transitionsList)
-        return transitionsList.map((t, i) => <Input
-          key={i}
-          value={t.read}
-          onChange={e => saveFSATransition({ id: t.id, read: e.target.value })}
-          placeholder={'λ'}
-        />
-        )
+        return <>
+          {transitionsList.map((t, i) => <Input
+              key={i}
+              value={t.read}
+              onChange={e => saveFSATransition({ id: t.id, read: e.target.value })}
+              placeholder={'λ'}
+          />)}
+          <hr/>
+          {blankFSAInput()}
+        </>
       case 'PDA':
         assertType<Array<PDAAutomataTransition>>(transitionsList)
         return transitionsList.map((t, i) => <InputWrapper key={i}>
