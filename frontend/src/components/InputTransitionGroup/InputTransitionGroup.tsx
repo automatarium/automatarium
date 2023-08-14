@@ -9,7 +9,7 @@ import {
   useRef,
   useState
 } from 'react'
-import { InputSpacingWrapper } from './inputTransitionGroupStyle'
+import { InputSeparator, InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
 import { InputWrapper, SubmitButton } from '/src/components/InputDialogs/inputDialogsStyle'
@@ -199,6 +199,7 @@ const InputTransitionGroup = () => {
         placeholder={'λ\t(read)'}
         />
     </InputSpacingWrapper>
+    <InputSeparator>,</InputSeparator>
     <InputSpacingWrapper>
       <Input
         value={popValue}
@@ -209,6 +210,7 @@ const InputTransitionGroup = () => {
         placeholder={'λ\t(pop)'}
         />
     </InputSpacingWrapper>
+    <InputSeparator>;</InputSeparator>
     <InputSpacingWrapper>
       <Input
         value={pushValue}
@@ -273,6 +275,7 @@ const InputTransitionGroup = () => {
         placeholder={'λ\t(read)'}
         />
     </InputSpacingWrapper>
+    <InputSeparator>,</InputSeparator>
     <InputSpacingWrapper>
       <Input
         value={writeValue}
@@ -286,6 +289,7 @@ const InputTransitionGroup = () => {
         placeholder={'λ\t(write)'}
         />
     </InputSpacingWrapper>
+    <InputSeparator>;</InputSeparator>
     <InputSpacingWrapper>
       <Input
         value={dirValue}
@@ -372,6 +376,7 @@ const InputTransitionGroup = () => {
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
+            <InputSeparator>,</InputSeparator>
             <InputSpacingWrapper>
             <Input
               value={t.pop}
@@ -390,6 +395,7 @@ const InputTransitionGroup = () => {
               placeholder={'λ'}
               />
             </InputSpacingWrapper>
+            <InputSeparator>;</InputSeparator>
             <InputSpacingWrapper>
               <Input
                 value={t.push}
@@ -440,6 +446,7 @@ const InputTransitionGroup = () => {
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
+            <InputSeparator>,</InputSeparator>
             <InputSpacingWrapper>
               <Input
                 value={t.write}
@@ -459,6 +466,7 @@ const InputTransitionGroup = () => {
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
+            <InputSeparator>;</InputSeparator>
             <InputSpacingWrapper>
               <Input
                 value={t.direction}
