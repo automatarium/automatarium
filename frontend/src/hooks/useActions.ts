@@ -337,6 +337,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     EDIT_TRANSITIONS_GROUP: {
+      disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
         const selectedTransitions = useSelectionStore.getState().selectedTransitions
         if (selectedTransitions === undefined) return
