@@ -1,5 +1,14 @@
-import { CornerDownLeft, Cross, X } from 'lucide-react'
-import { ChangeEvent, KeyboardEvent, Ref, RefObject, createRef, useEffect, useRef, useState } from 'react'
+import { CornerDownLeft, X } from 'lucide-react'
+import {
+  ChangeEvent,
+  KeyboardEvent,
+  Ref,
+  RefObject,
+  createRef,
+  useEffect,
+  useRef,
+  useState
+} from 'react'
 import { InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
@@ -7,7 +16,14 @@ import { InputWrapper, SubmitButton } from '/src/components/InputDialogs/inputDi
 import Modal from '/src/components/Modal/Modal'
 import { useEvent } from '/src/hooks'
 import { useProjectStore } from '/src/stores'
-import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, TMDirection, assertType } from '/src/types/ProjectTypes'
+import {
+  BaseAutomataTransition,
+  FSAAutomataTransition,
+  PDAAutomataTransition,
+  TMAutomataTransition,
+  TMDirection,
+  assertType
+} from '/src/types/ProjectTypes'
 
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
@@ -110,9 +126,9 @@ const InputTransitionGroup = () => {
   }
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    switch (e.key){
+    switch (e.key) {
       case 'Enter':
-        if (selectedIndex === -1) { saveNewFSATransition() } else { handleIndexDown() }
+        if (selectedIndex === -1) { saveNewTransition() } else { handleIndexDown() }
         break
       case 'ArrowDown':
         handleIndexDown()
@@ -147,7 +163,7 @@ const InputTransitionGroup = () => {
       onFocus={e => e.target.select()}
       placeholder={'λ (New transition)'}
     />
-    <SubmitButton onClick={saveNewFSATransition}>
+    <SubmitButton onClick={saveNewTransition}>
       <CornerDownLeft size='18px' />
     </SubmitButton>
   </InputWrapper>
@@ -203,7 +219,7 @@ const InputTransitionGroup = () => {
         placeholder={'λ\t(push)'}
         />
     </InputSpacingWrapper>
-    <SubmitButton onClick={saveNewPDATransition}>
+    <SubmitButton onClick={saveNewTransition}>
       <CornerDownLeft size='18px' />
     </SubmitButton>
   </InputWrapper>
@@ -222,7 +238,7 @@ const InputTransitionGroup = () => {
       id: newId,
       read: readValue,
       write: writeValue,
-      direction: dirValue
+      direction: dirValue === '' ? 'R' : dirValue
     } as TMAutomataTransition)
     resetInputFields()
   }
@@ -280,13 +296,26 @@ const InputTransitionGroup = () => {
         onClick={() => setSelectedIndex(-1)}
         onKeyUp={handleKeyUp}
         onFocus={e => e.target.select()}
-        placeholder={'↔\t(direction)'}
+        placeholder={'R\t(direction)'}
         />
     </InputSpacingWrapper>
-    <SubmitButton onClick={saveNewTMTransition}>
+    <SubmitButton onClick={saveNewTransition}>
       <CornerDownLeft size='18px' />
     </SubmitButton>
   </InputWrapper>
+
+  const saveNewTransition = () => {
+    switch (projectType) {
+      case 'FSA':
+        saveNewFSATransition()
+        break
+      case 'PDA':
+        saveNewPDATransition()
+        break
+      case 'TM':
+        saveNewTMTransition()
+    }
+  }
 
   /**
    * Modal contents
@@ -408,7 +437,7 @@ const InputTransitionGroup = () => {
                 onClick={() => setSelectedIndex(i)}
                 onKeyUp={handleKeyUp}
                 onFocus={e => e.target.select()}
-                placeholder={'λ\t(read)'}
+                placeholder={'λ'}
                 />
             </InputSpacingWrapper>
             <InputSpacingWrapper>
@@ -427,7 +456,7 @@ const InputTransitionGroup = () => {
                 onClick={() => setSelectedIndex(i)}
                 onKeyUp={handleKeyUp}
                 onFocus={e => e.target.select()}
-                placeholder={'λ\t(write)'}
+                placeholder={'λ'}
                 />
             </InputSpacingWrapper>
             <InputSpacingWrapper>
@@ -446,7 +475,7 @@ const InputTransitionGroup = () => {
                 onClick={() => setSelectedIndex(i)}
                 onKeyUp={handleKeyUp}
                 onFocus={e => e.target.select()}
-                placeholder={'↔\t(direction)'}
+                placeholder={'↔'}
                 />
             </InputSpacingWrapper>
             <SubmitButton onClick={() => deleteTransition(i)}>
