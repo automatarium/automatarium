@@ -35,6 +35,9 @@ const InputTransitionGroup = () => {
   const [toState, setToState] = useState<number>()
   const [transitionsList, setTransitionsList] = useState<Array<BaseAutomataTransition> | undefined>()
 
+  const [fromName, setFromName] = useState<string>()
+  const [toName, setToName] = useState<string>()
+
   const [modalOpen, setModalOpen] = useState(false)
 
   const [idList, setIdList] = useState([])
@@ -56,15 +59,21 @@ const InputTransitionGroup = () => {
   // Get data from event dispatch
   useEvent('editTransitionGroup', ({ detail: { ids } }) => {
     // Get transitions from store
-    const { transitions } = useProjectStore.getState()?.project ?? {}
+    const { transitions, states } = useProjectStore.getState()?.project ?? {}
     // Do preliminary store updates
     setIdList([...ids])
     const transitionsScope = transitions.filter(t => ids.includes(t.id))
     // Somehow you can select nothing sometimes. This prevents a crash
     if (transitionsScope.length === 0) return null
     // All of these should be part of the same transition edge
-    setFromState(transitionsScope[0].from)
-    setToState(transitionsScope[0].to)
+    const f = transitionsScope[0].from
+    const t = transitionsScope[0].to
+    const fName = states.find(s => s.id === f).name ?? '' + statePrefix + f
+    const tName = states.find(s => s.id === t).name ?? '' + statePrefix + t
+    setFromState(f)
+    setToState(t)
+    setFromName(fName)
+    setToName(tName)
     setTransitionsList(transitionsScope)
     // Update ID list to include *ALL* transitions on this edge, including unselected
     // This will run the side effect of re-retrieving the updated id list when done
@@ -504,8 +513,8 @@ const InputTransitionGroup = () => {
     title='Transition Edge Editor'
     description={
         'Editing transition from ' +
-        statePrefix + fromState + ' to ' +
-        statePrefix + toState + '.'
+        fromName + ' to ' +
+        toName + '.'
       }
     isOpen={modalOpen}
     onClose={() => {
