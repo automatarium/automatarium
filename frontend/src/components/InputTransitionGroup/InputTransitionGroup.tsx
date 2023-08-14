@@ -81,14 +81,12 @@ const InputTransitionGroup = () => {
    */
   const saveFSATransition = ({ id, read }) => {
     editTransition({ id, read })
-    commit()
     retrieveTransitions()
   }
 
   const saveNewFSATransition = () => {
     const newId = createNewTransition()
     editTransition({ id: newId, read: readValue } as FSAAutomataTransition)
-    commit()
     resetInputFields()
   }
 
@@ -108,7 +106,6 @@ const InputTransitionGroup = () => {
    */
   const savePDATransition = ({ id, read, pop, push }) => {
     editTransition({ id, read, pop, push } as PDAAutomataTransition)
-    commit()
     retrieveTransitions()
   }
 
@@ -120,7 +117,6 @@ const InputTransitionGroup = () => {
       pop: popValue,
       push: pushValue
     } as PDAAutomataTransition)
-    commit()
     resetInputFields()
   }
 
@@ -156,7 +152,6 @@ const InputTransitionGroup = () => {
    */
   const saveTMTransition = ({ id, read, write, direction }) => {
     editTransition({ id, read, write, direction: direction || 'R' } as TMAutomataTransition)
-    commit()
     retrieveTransitions()
   }
 
@@ -168,7 +163,6 @@ const InputTransitionGroup = () => {
       write: writeValue,
       direction: dirValue
     } as TMAutomataTransition)
-    commit()
     resetInputFields()
   }
 
@@ -314,6 +308,7 @@ const InputTransitionGroup = () => {
       }
     isOpen={modalOpen}
     actions={<Button onClick={() => {
+      commit()
       setModalOpen(false)
       resetInputFields()
     }}>Done</Button>}
