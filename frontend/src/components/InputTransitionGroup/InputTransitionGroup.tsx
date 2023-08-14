@@ -1,5 +1,5 @@
 import { CornerDownLeft } from 'lucide-react'
-import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
@@ -38,6 +38,8 @@ const InputTransitionGroup = () => {
     // Do preliminary store updates
     setIdList([...ids])
     const transitionsScope = transitions.filter(t => ids.includes(t.id))
+    // Somehow you can select nothing sometimes. This prevents a crash
+    if (transitionsScope.length === 0) return null
     // All of these should be part of the same transition edge
     setFromState(transitionsScope[0].from)
     setToState(transitionsScope[0].to)
@@ -287,45 +289,51 @@ const InputTransitionGroup = () => {
         assertType<Array<TMAutomataTransition>>(transitionsList)
         return <>
           {transitionsList.map((t, i) => <InputWrapper key={i}>
-            <Input
-              value={t.read}
-              onChange={e => {
-                const r = tmReadWriteValidate(e)
-                saveTMTransition({
-                  id: t.id,
-                  read: r,
-                  write: t.write,
-                  direction: t.direction
-                })
-              }}
-              placeholder={'λ\t(read)'}
-            />
-            <Input
-              value={t.write}
-              onChange={e => {
-                const w = tmReadWriteValidate(e)
-                saveTMTransition({
-                  id: t.id,
-                  read: t.read,
-                  write: w,
-                  direction: t.direction
-                })
-              }}
-              placeholder={'λ\t(write)'}
-            />
-            <Input
-              value={t.direction}
-              onChange={e => {
-                const d = tmDirectionValidate(e)
-                saveTMTransition({
-                  id: t.id,
-                  read: t.read,
-                  write: t.write,
-                  direction: d
-                })
-              }}
-              placeholder={'↔\t(direction)'}
-            />
+            <InputSpacingWrapper>
+              <Input
+                value={t.read}
+                onChange={e => {
+                  const r = tmReadWriteValidate(e)
+                  saveTMTransition({
+                    id: t.id,
+                    read: r,
+                    write: t.write,
+                    direction: t.direction
+                  })
+                }}
+                placeholder={'λ\t(read)'}
+                />
+            </InputSpacingWrapper>
+            <InputSpacingWrapper>
+              <Input
+                value={t.write}
+                onChange={e => {
+                  const w = tmReadWriteValidate(e)
+                  saveTMTransition({
+                    id: t.id,
+                    read: t.read,
+                    write: w,
+                    direction: t.direction
+                  })
+                }}
+                placeholder={'λ\t(write)'}
+                />
+            </InputSpacingWrapper>
+            <InputSpacingWrapper>
+              <Input
+                value={t.direction}
+                onChange={e => {
+                  const d = tmDirectionValidate(e)
+                  saveTMTransition({
+                    id: t.id,
+                    read: t.read,
+                    write: t.write,
+                    direction: d
+                  })
+                }}
+                placeholder={'↔\t(direction)'}
+                />
+            </InputSpacingWrapper>
           </InputWrapper>
           )}
           <hr/>
