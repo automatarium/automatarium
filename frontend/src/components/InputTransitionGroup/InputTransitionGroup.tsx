@@ -207,9 +207,11 @@ const InputTransitionGroup = () => {
     return input[input.length - 1] ?? ''
   }
 
-  /** Copied over from InputDialogs handleDirectionIn @see InputDialogs */
+  /** Copied over from InputDialogs handleDirectionIn @see InputDialogs.tsx */
   const tmDirectionValidate = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.toString().match(/[rls]|^$/gi)
+    // TODO: catch error and show user a dialog saying its invalid rather than forcing to R
+    if (input === null) return 'R' as TMDirection
     const value = input[input.length - 1].toUpperCase()
     return value as TMDirection
   }
