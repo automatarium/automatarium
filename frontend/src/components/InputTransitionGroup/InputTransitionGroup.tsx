@@ -35,12 +35,19 @@ const InputTransitionGroup = () => {
   useEvent('editTransitionGroup', ({ detail: { ids } }) => {
     // Get transitions from store
     const { transitions } = useProjectStore.getState()?.project ?? {}
+    // Do preliminary store updates
     setIdList([...ids])
     const transitionsScope = transitions.filter(t => ids.includes(t.id))
     // All of these should be part of the same transition edge
     setFromState(transitionsScope[0].from)
     setToState(transitionsScope[0].to)
     setTransitionsList(transitionsScope)
+    // Update ID list to include *ALL* transitions on this edge, including unselected
+    // This will run the side effect of re-retrieving the updated id list when done
+    const allIdList = transitions.filter(
+      t => t.from === transitionsScope[0].from && t.to === transitionsScope[0].to
+    ).map(t => t.id)
+    setIdList([...allIdList])
     setModalOpen(true)
   })
 
@@ -49,6 +56,11 @@ const InputTransitionGroup = () => {
     const transitionsScope = transitions.filter(t => idList.includes(t.id))
     setTransitionsList([...transitionsScope])
   }
+
+  // Re-retrieve transitions when the id list changes (i.e. on new transition)
+  useEffect(() => {
+    retrieveTransitions()
+  }, [idList])
 
   const resetInputFields = () => {
     setReadValue('')
@@ -63,11 +75,6 @@ const InputTransitionGroup = () => {
     setIdList([...idList, newId])
     return newId
   }
-
-  // Re-retrieve transitions when the id list changes (i.e. on new transition)
-  useEffect(() => {
-    retrieveTransitions()
-  }, [idList])
 
   /**
    * Functions for FSAs
