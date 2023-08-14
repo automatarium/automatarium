@@ -1,4 +1,4 @@
-import { CornerDownLeft } from 'lucide-react'
+import { CornerDownLeft, Cross, X } from 'lucide-react'
 import { ChangeEvent, KeyboardEvent, Ref, RefObject, createRef, useEffect, useRef, useState } from 'react'
 import { InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
@@ -12,6 +12,7 @@ import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, T
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
   const [transitionListRef, setTransitionListRef] = useState<Array<Ref<HTMLInputElement>>>()
+  // selectIndex === -1 is the new transition field, others is the index
   const [selectedIndex, setSelectedIndex] = useState(-1)
 
   const [fromState, setFromState] = useState<number>()
@@ -34,6 +35,7 @@ const InputTransitionGroup = () => {
 
   const editTransition = useProjectStore(s => s.editTransition)
   const createTransition = useProjectStore(s => s.createTransition)
+  const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
   // Get data from event dispatch
   useEvent('editTransitionGroup', ({ detail: { ids } }) => {
@@ -81,6 +83,12 @@ const InputTransitionGroup = () => {
     const newId = createTransition({ from: fromState, to: toState })
     setIdList([...idList, newId])
     return newId
+  }
+
+  const deleteTransition = (index: number) => {
+    const delId = idList[index]
+    removeTransitions([delId])
+    setIdList(idList.filter((_, i) => i !== index))
   }
 
   const handleEnterKey = () => {
@@ -273,9 +281,9 @@ const InputTransitionGroup = () => {
       case 'FSA':
         assertType<Array<FSAAutomataTransition>>(transitionsList)
         return <>
-          {transitionsList.map((t, i) => <Input
+          {transitionsList.map((t, i) => <InputWrapper key={i}>
+          <Input
               ref={transitionListRef[i] ?? null}
-              key={i}
               value={t.read}
               onChange={e => {
                 saveFSATransition({ id: t.id, read: e.target.value })
@@ -285,7 +293,11 @@ const InputTransitionGroup = () => {
               onKeyUp={handleKeyUp}
               onFocus={e => e.target.select()}
               placeholder={'λ'}
-          />)}
+          />
+          <SubmitButton onClick={() => deleteTransition(i)}>
+            <X size='18px'/>
+          </SubmitButton>
+          </InputWrapper>)}
           <hr/>
           Add a new transition?
           {blankFSAInput()}
@@ -349,6 +361,9 @@ const InputTransitionGroup = () => {
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
+            <SubmitButton onClick={() => deleteTransition(i)}>
+              <X size='18px'/>
+            </SubmitButton>
           </InputWrapper>)}
           <hr/>
           Add a new transition?
@@ -416,6 +431,9 @@ const InputTransitionGroup = () => {
                 placeholder={'↔\t(direction)'}
                 />
             </InputSpacingWrapper>
+            <SubmitButton onClick={() => deleteTransition(i)}>
+              <X size='18px'/>
+            </SubmitButton>
           </InputWrapper>
           )}
           <hr/>
