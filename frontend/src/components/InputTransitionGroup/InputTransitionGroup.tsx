@@ -118,6 +118,7 @@ const InputTransitionGroup = () => {
       onChange={e => setReadValue(e.target.value)}
       onClick={() => setSelectedIndex(-1)}
       onKeyUp={handleKeyUp}
+      onFocus={e => e.target.select()}
       placeholder={'λ (New transition)'}
     />
     <SubmitButton onClick={saveNewFSATransition}>
@@ -150,6 +151,9 @@ const InputTransitionGroup = () => {
         ref={inputRef}
         value={readValue}
         onChange={e => setReadValue(e.target.value)}
+        onClick={() => setSelectedIndex(-1)}
+        onKeyUp={handleKeyUp}
+        onFocus={e => e.target.select()}
         placeholder={'λ\t(read)'}
         />
     </InputSpacingWrapper>
@@ -157,6 +161,9 @@ const InputTransitionGroup = () => {
       <Input
         value={popValue}
         onChange={e => setPopValue(e.target.value)}
+        onClick={() => setSelectedIndex(-1)}
+        onKeyUp={handleKeyUp}
+        onFocus={e => e.target.select()}
         placeholder={'λ\t(pop)'}
         />
     </InputSpacingWrapper>
@@ -164,6 +171,9 @@ const InputTransitionGroup = () => {
       <Input
         value={pushValue}
         onChange={e => setPushValue(e.target.value)}
+        onClick={() => setSelectedIndex(-1)}
+        onKeyUp={handleKeyUp}
+        onFocus={e => e.target.select()}
         placeholder={'λ\t(push)'}
         />
     </InputSpacingWrapper>
@@ -213,6 +223,9 @@ const InputTransitionGroup = () => {
           const r = tmReadWriteValidate(e)
           setReadValue(r)
         }}
+        onClick={() => setSelectedIndex(-1)}
+        onKeyUp={handleKeyUp}
+        onFocus={e => e.target.select()}
         placeholder={'λ\t(read)'}
         />
     </InputSpacingWrapper>
@@ -223,6 +236,9 @@ const InputTransitionGroup = () => {
           const w = tmReadWriteValidate(e)
           setWriteValue(w)
         }}
+        onClick={() => setSelectedIndex(-1)}
+        onKeyUp={handleKeyUp}
+        onFocus={e => e.target.select()}
         placeholder={'λ\t(write)'}
         />
     </InputSpacingWrapper>
@@ -233,6 +249,9 @@ const InputTransitionGroup = () => {
           const d = tmDirectionValidate(e)
           setDirValue(d)
         }}
+        onClick={() => setSelectedIndex(-1)}
+        onKeyUp={handleKeyUp}
+        onFocus={e => e.target.select()}
         placeholder={'↔\t(direction)'}
         />
     </InputSpacingWrapper>
@@ -262,6 +281,7 @@ const InputTransitionGroup = () => {
               }}
               onClick={() => setSelectedIndex(i)}
               onKeyUp={handleKeyUp}
+              onFocus={e => e.target.select()}
               placeholder={'λ'}
           />)}
           <hr/>
@@ -274,6 +294,7 @@ const InputTransitionGroup = () => {
           {transitionsList.map((t, i) => <InputWrapper key={i}>
             <InputSpacingWrapper>
               <Input
+                ref={transitionListRef[i] ?? null}
                 value={t.read}
                 onChange={e => {
                   savePDATransition({
@@ -282,31 +303,47 @@ const InputTransitionGroup = () => {
                     pop: t.pop,
                     push: t.push
                   })
+                  setSelectedIndex(i)
                 }}
+                onClick={() => setSelectedIndex(i)}
+                onKeyUp={handleKeyUp}
+                onFocus={e => e.target.select()}
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
             <InputSpacingWrapper>
             <Input
               value={t.pop}
-              onChange={e => savePDATransition({
-                id: t.id,
-                read: t.read,
-                pop: e.target.value,
-                push: t.push
-              })}
+              onChange={e => {
+                savePDATransition({
+                  id: t.id,
+                  read: t.read,
+                  pop: e.target.value,
+                  push: t.push
+                })
+                setSelectedIndex(i)
+              }}
+              onClick={() => setSelectedIndex(i)}
+              onKeyUp={handleKeyUp}
+              onFocus={e => e.target.select()}
               placeholder={'λ'}
               />
             </InputSpacingWrapper>
             <InputSpacingWrapper>
               <Input
                 value={t.push}
-                onChange={e => savePDATransition({
-                  id: t.id,
-                  read: t.read,
-                  pop: t.pop,
-                  push: e.target.value
-                })}
+                onChange={e => {
+                  savePDATransition({
+                    id: t.id,
+                    read: t.read,
+                    pop: t.pop,
+                    push: e.target.value
+                  })
+                  setSelectedIndex(i)
+                }}
+                onClick={() => setSelectedIndex(i)}
+                onKeyUp={handleKeyUp}
+                onFocus={e => e.target.select()}
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
@@ -321,6 +358,7 @@ const InputTransitionGroup = () => {
           {transitionsList.map((t, i) => <InputWrapper key={i}>
             <InputSpacingWrapper>
               <Input
+                ref={transitionListRef[i] ?? null}
                 value={t.read}
                 onChange={e => {
                   const r = tmReadWriteValidate(e)
@@ -330,7 +368,11 @@ const InputTransitionGroup = () => {
                     write: t.write,
                     direction: t.direction
                   })
+                  setSelectedIndex(i)
                 }}
+                onClick={() => setSelectedIndex(i)}
+                onKeyUp={handleKeyUp}
+                onFocus={e => e.target.select()}
                 placeholder={'λ\t(read)'}
                 />
             </InputSpacingWrapper>
@@ -345,7 +387,11 @@ const InputTransitionGroup = () => {
                     write: w,
                     direction: t.direction
                   })
+                  setSelectedIndex(i)
                 }}
+                onClick={() => setSelectedIndex(i)}
+                onKeyUp={handleKeyUp}
+                onFocus={e => e.target.select()}
                 placeholder={'λ\t(write)'}
                 />
             </InputSpacingWrapper>
@@ -360,7 +406,11 @@ const InputTransitionGroup = () => {
                     write: t.write,
                     direction: d
                   })
+                  setSelectedIndex(i)
                 }}
+                onClick={() => setSelectedIndex(i)}
+                onKeyUp={handleKeyUp}
+                onFocus={e => e.target.select()}
                 placeholder={'↔\t(direction)'}
                 />
             </InputSpacingWrapper>
