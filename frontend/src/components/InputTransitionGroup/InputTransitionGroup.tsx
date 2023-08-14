@@ -508,6 +508,11 @@ const InputTransitionGroup = () => {
         statePrefix + toState + '.'
       }
     isOpen={modalOpen}
+    onClose={() => {
+      commit()
+      setModalOpen(false)
+      resetInputFields()
+    }}
     actions={<Button onClick={() => {
       commit()
       setModalOpen(false)
