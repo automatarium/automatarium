@@ -91,19 +91,37 @@ const InputTransitionGroup = () => {
     setIdList(idList.filter((_, i) => i !== index))
   }
 
-  const handleEnterKey = () => {
-    if (selectedIndex === -1) {
-      saveNewFSATransition()
-    } else {
-      const nextIndex = selectedIndex < transitionsList?.length - 1 ?? -1 ? selectedIndex + 1 : -1
-      const nextInputRef = nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
-      const ro = nextInputRef as RefObject<HTMLInputElement>
-      setSelectedIndex(nextIndex)
+  const handleIndexDown = () => {
+    const nextIndex = selectedIndex < transitionsList?.length - 1 ?? -1 ? selectedIndex + 1 : -1
+    const nextInputRef = nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
+    const ro = nextInputRef as RefObject<HTMLInputElement>
+    setSelectedIndex(nextIndex)
+    ro?.current.focus()
+  }
+
+  const handleIndexUp = () => {
+    if (selectedIndex !== 0) {
+      const prevIndex = selectedIndex === -1 ? transitionListRef?.length - 1 ?? 0 : selectedIndex - 1
+      const prevInputRef = transitionListRef[prevIndex]
+      const ro = prevInputRef as RefObject<HTMLInputElement>
+      setSelectedIndex(prevIndex)
       ro?.current.focus()
     }
   }
 
-  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleEnterKey()
+  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key){
+      case 'Enter':
+        if (selectedIndex === -1) { saveNewFSATransition() } else { handleIndexDown() }
+        break
+      case 'ArrowDown':
+        handleIndexDown()
+        break
+      case 'ArrowUp':
+        handleIndexUp()
+        break
+    }
+  }
 
   /**
    * Functions for FSAs
