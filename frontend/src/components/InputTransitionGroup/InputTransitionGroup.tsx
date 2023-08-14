@@ -1,12 +1,13 @@
+import { CornerDownLeft } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { useEvent } from '/src/hooks'
-import { useProjectStore } from '/src/stores'
-import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, assertType } from '/src/types/ProjectTypes'
-import Modal from '/src/components/Modal/Modal'
+import { InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
 import { InputWrapper, SubmitButton } from '/src/components/InputDialogs/inputDialogsStyle'
-import { CornerDownLeft } from 'lucide-react'
+import Modal from '/src/components/Modal/Modal'
+import { useEvent } from '/src/hooks'
+import { useProjectStore } from '/src/stores'
+import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 const InputTransitionGroup = () => {
   const [fromState, setFromState] = useState<number>()
@@ -117,21 +118,27 @@ const InputTransitionGroup = () => {
   }
 
   const blankPDAInput = () => <InputWrapper>
-    <Input
-      value={readValue}
-      onChange={e => setReadValue(e.target.value)}
-      placeholder={'λ\t(read)'}
-    />
-    <Input
-      value={popValue}
-      onChange={e => setPopValue(e.target.value)}
-      placeholder={'λ\t(pop)'}
-    />
-    <Input
-      value={pushValue}
-      onChange={e => setPushValue(e.target.value)}
-      placeholder={'λ\t(push)'}
-    />
+    <InputSpacingWrapper>
+      <Input
+        value={readValue}
+        onChange={e => setReadValue(e.target.value)}
+        placeholder={'λ\t(read)'}
+        />
+    </InputSpacingWrapper>
+    <InputSpacingWrapper>
+      <Input
+        value={popValue}
+        onChange={e => setPopValue(e.target.value)}
+        placeholder={'λ\t(pop)'}
+        />
+    </InputSpacingWrapper>
+    <InputSpacingWrapper>
+      <Input
+        value={pushValue}
+        onChange={e => setPushValue(e.target.value)}
+        placeholder={'λ\t(push)'}
+        />
+    </InputSpacingWrapper>
     <SubmitButton onClick={saveNewPDATransition}>
       <CornerDownLeft size='18px' />
     </SubmitButton>
@@ -159,21 +166,27 @@ const InputTransitionGroup = () => {
   }
 
   const blankTMInput = () => <InputWrapper>
-    <Input
-      value={readValue}
-      onChange={e => setReadValue(e.target.value)}
-      placeholder={'λ\t(read)'}
-    />
-    <Input
-      value={writeValue}
-      onChange={e => setWriteValue(e.target.value)}
-      placeholder={'λ\t(write)'}
-    />
-    <Input
-      value={dirValue}
-      onChange={e => setDirValue(e.target.value)}
-      placeholder={'↔\t(direction)'}
-    />
+    <InputSpacingWrapper>
+      <Input
+        value={readValue}
+        onChange={e => setReadValue(e.target.value)}
+        placeholder={'λ\t(read)'}
+        />
+    </InputSpacingWrapper>
+    <InputSpacingWrapper>
+      <Input
+        value={writeValue}
+        onChange={e => setWriteValue(e.target.value)}
+        placeholder={'λ\t(write)'}
+        />
+    </InputSpacingWrapper>
+    <InputSpacingWrapper>
+      <Input
+        value={dirValue}
+        onChange={e => setDirValue(e.target.value)}
+        placeholder={'↔\t(direction)'}
+        />
+    </InputSpacingWrapper>
     <SubmitButton onClick={saveNewTMTransition}>
       <CornerDownLeft size='18px' />
     </SubmitButton>
@@ -203,16 +216,19 @@ const InputTransitionGroup = () => {
         assertType<Array<PDAAutomataTransition>>(transitionsList)
         return <>
           {transitionsList.map((t, i) => <InputWrapper key={i}>
-            <Input
-              value={t.read}
-              onChange={e => savePDATransition({
-                id: t.id,
-                read: e.target.value,
-                pop: t.pop,
-                push: t.push
-              })}
-              placeholder={'λ\t(read)'}
-              />
+            <InputSpacingWrapper>
+              <Input
+                value={t.read}
+                onChange={e => savePDATransition({
+                  id: t.id,
+                  read: e.target.value,
+                  pop: t.pop,
+                  push: t.push
+                })}
+                placeholder={'λ'}
+                />
+            </InputSpacingWrapper>
+            <InputSpacingWrapper>
             <Input
               value={t.pop}
               onChange={e => savePDATransition({
@@ -221,18 +237,21 @@ const InputTransitionGroup = () => {
                 pop: e.target.value,
                 push: t.push
               })}
-              placeholder={'λ\t(pop)'}
+              placeholder={'λ'}
               />
-            <Input
-              value={t.push}
-              onChange={e => savePDATransition({
-                id: t.id,
-                read: t.read,
-                pop: t.pop,
-                push: e.target.value
-              })}
-              placeholder={'λ\t(push)'}
-            />
+            </InputSpacingWrapper>
+            <InputSpacingWrapper>
+              <Input
+                value={t.push}
+                onChange={e => savePDATransition({
+                  id: t.id,
+                  read: t.read,
+                  pop: t.pop,
+                  push: e.target.value
+                })}
+                placeholder={'λ'}
+                />
+            </InputSpacingWrapper>
           </InputWrapper>)}
           <hr/>
           {blankPDAInput()}
