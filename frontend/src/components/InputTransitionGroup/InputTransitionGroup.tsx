@@ -318,7 +318,9 @@ const InputTransitionGroup = () => {
         break
       case 'TM':
         saveNewTMTransition()
+        break
     }
+    inputRef.current.focus()
   }
 
   /**
