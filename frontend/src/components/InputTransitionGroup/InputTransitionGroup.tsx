@@ -1,5 +1,5 @@
 import { CornerDownLeft } from 'lucide-react'
-import { ChangeEvent, useEffect, useState } from 'react'
+import { ChangeEvent, KeyboardEvent, Ref, RefObject, createRef, useEffect, useRef, useState } from 'react'
 import { InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
@@ -10,6 +10,10 @@ import { useProjectStore } from '/src/stores'
 import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, TMDirection, assertType } from '/src/types/ProjectTypes'
 
 const InputTransitionGroup = () => {
+  const inputRef = useRef<HTMLInputElement>()
+  const [transitionListRef, setTransitionListRef] = useState<Array<Ref<HTMLInputElement>>>()
+  const [selectedIndex, setSelectedIndex] = useState(-1)
+
   const [fromState, setFromState] = useState<number>()
   const [toState, setToState] = useState<number>()
   const [transitionsList, setTransitionsList] = useState<Array<BaseAutomataTransition> | undefined>()
@@ -62,6 +66,7 @@ const InputTransitionGroup = () => {
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
     retrieveTransitions()
+    setTransitionListRef(Array.from({ length: transitionsList?.length ?? 0 }, () => createRef<HTMLInputElement>()))
   }, [idList])
 
   const resetInputFields = () => {
@@ -77,6 +82,20 @@ const InputTransitionGroup = () => {
     setIdList([...idList, newId])
     return newId
   }
+
+  const handleEnterKey = () => {
+    if (selectedIndex === -1) {
+      saveNewFSATransition()
+    } else {
+      const nextIndex = selectedIndex < transitionsList?.length - 1 ?? -1 ? selectedIndex + 1 : -1
+      const nextInputRef = nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
+      const ro = nextInputRef as RefObject<HTMLInputElement>
+      setSelectedIndex(nextIndex)
+      ro?.current.focus()
+    }
+  }
+
+  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleEnterKey()
 
   /**
    * Functions for FSAs
@@ -94,8 +113,11 @@ const InputTransitionGroup = () => {
 
   const blankFSAInput = () => <InputWrapper>
     <Input
+      ref={inputRef}
       value={readValue}
       onChange={e => setReadValue(e.target.value)}
+      onClick={() => setSelectedIndex(-1)}
+      onKeyUp={handleKeyUp}
       placeholder={'λ (New transition)'}
     />
     <SubmitButton onClick={saveNewFSATransition}>
@@ -125,6 +147,7 @@ const InputTransitionGroup = () => {
   const blankPDAInput = () => <InputWrapper>
     <InputSpacingWrapper>
       <Input
+        ref={inputRef}
         value={readValue}
         onChange={e => setReadValue(e.target.value)}
         placeholder={'λ\t(read)'}
@@ -184,6 +207,7 @@ const InputTransitionGroup = () => {
   const blankTMInput = () => <InputWrapper>
     <InputSpacingWrapper>
       <Input
+        ref={inputRef}
         value={readValue}
         onChange={e => {
           const r = tmReadWriteValidate(e)
@@ -229,9 +253,15 @@ const InputTransitionGroup = () => {
         assertType<Array<FSAAutomataTransition>>(transitionsList)
         return <>
           {transitionsList.map((t, i) => <Input
+              ref={transitionListRef[i] ?? null}
               key={i}
               value={t.read}
-              onChange={e => saveFSATransition({ id: t.id, read: e.target.value })}
+              onChange={e => {
+                saveFSATransition({ id: t.id, read: e.target.value })
+                setSelectedIndex(i)
+              }}
+              onClick={() => setSelectedIndex(i)}
+              onKeyUp={handleKeyUp}
               placeholder={'λ'}
           />)}
           <hr/>
