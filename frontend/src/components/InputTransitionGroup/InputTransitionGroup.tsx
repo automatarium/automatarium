@@ -1,5 +1,5 @@
 import { CornerDownLeft } from 'lucide-react'
-import { useEffect, useState } from 'react'
+import { ChangeEvent, Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
 import Input from '/src/components/Input/Input'
@@ -7,7 +7,7 @@ import { InputWrapper, SubmitButton } from '/src/components/InputDialogs/inputDi
 import Modal from '/src/components/Modal/Modal'
 import { useEvent } from '/src/hooks'
 import { useProjectStore } from '/src/stores'
-import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, assertType } from '/src/types/ProjectTypes'
+import { BaseAutomataTransition, FSAAutomataTransition, PDAAutomataTransition, TMAutomataTransition, TMDirection, assertType } from '/src/types/ProjectTypes'
 
 const InputTransitionGroup = () => {
   const [fromState, setFromState] = useState<number>()
@@ -166,25 +166,47 @@ const InputTransitionGroup = () => {
     resetInputFields()
   }
 
+  /** TMs operate with the assumption of reading and writing one character */
+  const tmReadWriteValidate = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.toString()
+    return input[input.length - 1] ?? ''
+  }
+
+  /** Copied over from InputDialogs handleDirectionIn @see InputDialogs */
+  const tmDirectionValidate = (e: ChangeEvent<HTMLInputElement>) => {
+    const input = e.target.value.toString().match(/[rls]|^$/gi)
+    const value = input[input.length - 1].toUpperCase()
+    return value as TMDirection
+  }
+
   const blankTMInput = () => <InputWrapper>
     <InputSpacingWrapper>
       <Input
         value={readValue}
-        onChange={e => setReadValue(e.target.value)}
+        onChange={e => {
+          const r = tmReadWriteValidate(e)
+          setReadValue(r)
+        }}
         placeholder={'λ\t(read)'}
         />
     </InputSpacingWrapper>
     <InputSpacingWrapper>
       <Input
         value={writeValue}
-        onChange={e => setWriteValue(e.target.value)}
+        onChange={e => {
+          const w = tmReadWriteValidate(e)
+          setWriteValue(w)
+        }}
         placeholder={'λ\t(write)'}
         />
     </InputSpacingWrapper>
     <InputSpacingWrapper>
       <Input
         value={dirValue}
-        onChange={e => setDirValue(e.target.value)}
+        onChange={e => {
+          const d = tmDirectionValidate(e)
+          setDirValue(d)
+        }}
         placeholder={'↔\t(direction)'}
         />
     </InputSpacingWrapper>
@@ -211,6 +233,7 @@ const InputTransitionGroup = () => {
               placeholder={'λ'}
           />)}
           <hr/>
+          Add a new transition?
           {blankFSAInput()}
         </>
       case 'PDA':
@@ -220,12 +243,14 @@ const InputTransitionGroup = () => {
             <InputSpacingWrapper>
               <Input
                 value={t.read}
-                onChange={e => savePDATransition({
-                  id: t.id,
-                  read: e.target.value,
-                  pop: t.pop,
-                  push: t.push
-                })}
+                onChange={e => {
+                  savePDATransition({
+                    id: t.id,
+                    read: e.target.value,
+                    pop: t.pop,
+                    push: t.push
+                  })
+                }}
                 placeholder={'λ'}
                 />
             </InputSpacingWrapper>
@@ -255,6 +280,7 @@ const InputTransitionGroup = () => {
             </InputSpacingWrapper>
           </InputWrapper>)}
           <hr/>
+          Add a new transition?
           {blankPDAInput()}
         </>
       case 'TM':
@@ -263,37 +289,47 @@ const InputTransitionGroup = () => {
           {transitionsList.map((t, i) => <InputWrapper key={i}>
             <Input
               value={t.read}
-              onChange={e => saveTMTransition({
-                id: t.id,
-                read: e.target.value,
-                write: t.write,
-                direction: t.direction
-              })}
+              onChange={e => {
+                const r = tmReadWriteValidate(e)
+                saveTMTransition({
+                  id: t.id,
+                  read: r,
+                  write: t.write,
+                  direction: t.direction
+                })
+              }}
               placeholder={'λ\t(read)'}
             />
             <Input
               value={t.write}
-              onChange={e => saveTMTransition({
-                id: t.id,
-                read: t.read,
-                write: e.target.value,
-                direction: t.direction
-              })}
+              onChange={e => {
+                const w = tmReadWriteValidate(e)
+                saveTMTransition({
+                  id: t.id,
+                  read: t.read,
+                  write: w,
+                  direction: t.direction
+                })
+              }}
               placeholder={'λ\t(write)'}
             />
             <Input
               value={t.direction}
-              onChange={e => saveTMTransition({
-                id: t.id,
-                read: t.read,
-                write: t.write,
-                direction: e.target.value
-              })}
+              onChange={e => {
+                const d = tmDirectionValidate(e)
+                saveTMTransition({
+                  id: t.id,
+                  read: t.read,
+                  write: t.write,
+                  direction: d
+                })
+              }}
               placeholder={'↔\t(direction)'}
             />
           </InputWrapper>
           )}
           <hr/>
+          Add a new transition?
           {blankTMInput()}
         </>
     }
