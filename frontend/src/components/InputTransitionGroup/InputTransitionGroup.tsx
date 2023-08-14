@@ -350,7 +350,7 @@ const InputTransitionGroup = () => {
           <SubmitButton onClick={() => deleteTransition(i)}>
             <X size='18px'/>
           </SubmitButton>
-          </InputWrapper>)}
+          </InputWrapper>).reverse()}
           <hr/>
           Add a new transition?
           {blankFSAInput()}
@@ -419,7 +419,7 @@ const InputTransitionGroup = () => {
             <SubmitButton onClick={() => deleteTransition(i)}>
               <X size='18px'/>
             </SubmitButton>
-          </InputWrapper>)}
+          </InputWrapper>).reverse()}
           <hr/>
           Add a new transition?
           {blankPDAInput()}
@@ -492,7 +492,7 @@ const InputTransitionGroup = () => {
               <X size='18px'/>
             </SubmitButton>
           </InputWrapper>
-          )}
+          ).reverse()}
           <hr/>
           Add a new transition?
           {blankTMInput()}
