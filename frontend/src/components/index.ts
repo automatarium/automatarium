@@ -4,6 +4,7 @@ export { default as Toolbar } from './Toolbar/Toolbar'
 export { default as Sidepanel } from './Sidepanel/Sidepanel'
 export { default as ContextMenus } from './ContextMenus/ContextMenus'
 export { default as InputDialogs } from './InputDialogs/InputDialogs'
+export { default as InputTransitionGroup } from './InputTransitionGroup/InputTransitionGroup'
 export { default as EditorPanel } from './EditorPanel/EditorPanel'
 export { default as BottomPanel } from './BottomPanel/BottomPanel'
 

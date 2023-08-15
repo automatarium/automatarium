@@ -1,5 +1,5 @@
 import StateCircle from '../StateCircle/StateCircle'
-import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs } from '/src/components'
+import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs, InputTransitionGroup } from '/src/components'
 import {
   useEvent,
   useStateDragging,
@@ -15,7 +15,7 @@ import {
 } from '/src/hooks'
 import { SelectionEvent } from '/src/hooks/useResourceSelection'
 import { useSelectionStore, useTemplateStore } from '/src/stores'
-import { CommentEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
+import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
 import TemplateGhost from '../Template/TemplateGhost'
 
 const EditorPanel = () => {
@@ -101,7 +101,7 @@ const EditorPanel = () => {
     }
     selectTransition(newEvent)
   })
-  useEvent('edge:dblclick', e => {
+  useEvent('edge:dblclick', (e: CustomEvent<EdgeEventData>) => {
     setStates([])
     setComments([])
     setTransitions(e.detail.transitions.map(t => t.id))
@@ -135,6 +135,7 @@ const EditorPanel = () => {
     </GraphView>
     <ContextMenus />
     <InputDialogs />
+    <InputTransitionGroup />
   </>
 }
 

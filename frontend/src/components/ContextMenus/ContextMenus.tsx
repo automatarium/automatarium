@@ -7,6 +7,7 @@ import graphContextItems from './graphContextItems'
 import stateContextItems from './stateContextItems'
 import transitionContextItems from './transitionContextItems'
 import commentContextItems from './commentContextItems'
+import edgeContextItems from './edgeContextItems'
 import { ContextItems } from './contextItem'
 
 const ContextMenus = () => {
@@ -26,6 +27,10 @@ const ContextMenus = () => {
 
   useEvent('ctx:comment', ({ detail: { x, y } }) => {
     setContext({ visible: true, x, y, items: commentContextItems })
+  }, [])
+
+  useEvent('ctx:edge', ({ detail: { x, y } }) => {
+    setContext({ visible: true, x, y, items: edgeContextItems })
   }, [])
 
   if (!context?.visible) return null
