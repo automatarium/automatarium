@@ -30,8 +30,6 @@ type ProjectCardProps = {
 // TODO: Remove this when projectId is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
-
-
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
