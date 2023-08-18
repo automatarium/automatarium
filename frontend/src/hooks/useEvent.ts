@@ -17,7 +17,7 @@ export type CommentEventData = {originalEvent: MouseEvent, comment: {id: number,
  * Contains information about the click along with the transition that was clicked
  */
 export type TransitionEventData = {originalEvent: MouseEvent, transition: PositionedTransition}
-type EdgeEventData = {originalEvent: MouseEvent, transitions: PositionedTransition[]}
+export type EdgeEventData = {originalEvent: MouseEvent, transitions: PositionedTransition[]}
 /**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
@@ -29,6 +29,7 @@ export interface CustomEvents {
   'editStateLabel': {id: number},
   'modal:preferences': null,
   'exportImage': {type: string, clipboard?: boolean} | null,
+  'editTransitionGroup': {ids: Array<number>},
   /**
    * Event to open a side panel.
    * @see SidePanelKey for available panels
@@ -44,10 +45,14 @@ export interface CustomEvents {
   'transition:mouseup': TransitionEventData,
   'transition:mousedown': TransitionEventData,
   'transition:dblclick': TransitionEventData,
+  /**
+   * Context menu events
+   */
   'ctx:svg': Coordinate,
   'ctx:state': Coordinate,
   'ctx:transition': Coordinate,
   'ctx:comment': Coordinate,
+  'ctx:edge': Coordinate,
   'bottomPanel:open': { panel: string },
   'bottomPanel:close': null,
   'comment:mousedown': CommentEventData,
@@ -58,6 +63,7 @@ export interface CustomEvents {
    * all the transitions that use that edge
    */
   'edge:mousedown': EdgeEventData,
+  'edge:mouseup': EdgeEventData,
   'edge:dblclick': EdgeEventData,
   'showWarning': string
 }

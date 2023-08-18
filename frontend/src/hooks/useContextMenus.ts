@@ -2,6 +2,7 @@ import { useCallback } from 'react'
 import useEvent, {
   CommentEventData,
   CustomEvents,
+  EdgeEventData,
   StateEventData,
   SVGMouseEventData,
   TransitionEventData
@@ -9,7 +10,7 @@ import useEvent, {
 import { dispatchCustomEvent } from '/src/util/events'
 
 const useContextMenus = () => {
-  type EventData = CustomEvent<StateEventData | SVGMouseEventData | TransitionEventData | CommentEventData>
+  type EventData = CustomEvent<StateEventData | SVGMouseEventData | TransitionEventData | CommentEventData | EdgeEventData>
   const showContext = (name: keyof CustomEvents) => useCallback((e: EventData) => {
     if (e.detail.originalEvent.button === 2) {
       dispatchCustomEvent(name, {
@@ -24,6 +25,7 @@ const useContextMenus = () => {
   useEvent('state:mouseup', showContext('ctx:state'))
   useEvent('transition:mouseup', showContext('ctx:transition'))
   useEvent('comment:mouseup', showContext('ctx:comment'))
+  useEvent('edge:mouseup', showContext('ctx:edge'))
 }
 
 export default useContextMenus
