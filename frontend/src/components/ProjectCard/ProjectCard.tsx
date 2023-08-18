@@ -5,6 +5,7 @@ import { Logo } from '/src/components'
 
 import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay } from './projectCardStyle'
 import KebabMenu from '../KebabMenu/KebabMenu'
+import kebabContextItems from '../ContextMenus/kebabContextItems'
 import { MoreVertical } from 'lucide-react'
 import { ProjectType } from '/src/types/ProjectTypes'
 import { ButtonHTMLAttributes } from 'react'
@@ -29,6 +30,8 @@ type ProjectCardProps = {
 // TODO: Remove this when projectId is actually used
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
+
+
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
@@ -39,12 +42,7 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
     <CardDetail>
       <div className='title_and_kebab'>
       <strong>{name}</strong>
-      {showKebab && <KebabMenu icon={<MoreVertical/>}>
-        <div className='kebab-menu-options'>
-          <p>Delete</p>
-          <p>Copy</p>
-          <p>Rename</p>
-        </div>
+      {showKebab && <KebabMenu icon={<MoreVertical/>} kebabItems={kebabContextItems}>
         </KebabMenu>}
       </div>
 
