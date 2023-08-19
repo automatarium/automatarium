@@ -1,28 +1,22 @@
-import { useState } from 'react'
 import Dropdown from '../Dropdown/Dropdown'
+import kebabContextItems from './kebabDropdownItems'
 
-const KebabMenu = (props) => {
-  const [open, setOpen] = useState(false)
+type KebabProps = { x: number, y: number, isOpen: boolean, onClose: () => void }
 
-  const handleclick = (e) => {
-    e.stopPropagation()
-    setOpen(!open)
-  }
-
-  return <div>
-  <a onClick={(e) => handleclick(e)}>
-    {props.icon}
-  </a>
-  <Dropdown
-    visible={open}
-    onClose={() => setOpen(false)}
+const KebabMenu = (props: KebabProps) => {
+  return <Dropdown
+    visible={props.isOpen}
+    onClose={props.onClose}
     style={{
       position: 'absolute',
-      background: 'hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.9)'
+      top: `${props.y}px`,
+      left: `${props.x}px`,
+      borderStyle: 'solid',
+      borderWidth: '0.15em',
+      borderColor: 'hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.9)'
     }}
-    items={props.kebabItems}
+    items={kebabContextItems}
   />
-</div>
 }
 
 export default KebabMenu
