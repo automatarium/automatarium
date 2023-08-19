@@ -1,4 +1,4 @@
-import { ContextItems } from './contextItem'
+import { ContextItems } from '../ContextMenus/contextItem'
 
 const kebabContextItems: ContextItems = [
   {
@@ -9,6 +9,7 @@ const kebabContextItems: ContextItems = [
     label: 'Copy',
     action: 'COPY_PROJECT'
   },
+  'hr',
   {
     label: 'Delete',
     action: 'DELETE_PROJECT'

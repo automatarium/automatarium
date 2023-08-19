@@ -5,8 +5,8 @@ import { Logo } from '/src/components'
 
 import { MoreVertical } from 'lucide-react'
 import { ButtonHTMLAttributes } from 'react'
-import kebabContextItems from '../ContextMenus/kebabContextItems'
 import KebabMenu from '../KebabMenu/KebabMenu'
+import kebabContextItems from '../KebabMenu/kebabDropdownItems'
 import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleAndKebab, TypeBadge } from './projectCardStyle'
 import { ProjectType } from '/src/types/ProjectTypes'
 dayjs.extend(relativeTime)
@@ -37,9 +37,9 @@ const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, show
     </CardImage>
     <CardDetail>
       <TitleAndKebab>
-      <strong>{name}</strong>
-      {showKebab && <KebabMenu icon={<MoreVertical/>} kebabItems={kebabContextItems}>
-        </KebabMenu>}
+        <strong>{name}</strong>
+        {showKebab && <KebabMenu icon={<MoreVertical/>} kebabItems={kebabContextItems}>
+          </KebabMenu>}
       </TitleAndKebab>
 
       {/* {showKebab && <MoreVertical/>} */}
