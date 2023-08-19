@@ -449,6 +449,9 @@ const useActions = (registerHotkeys = false) => {
         updateGraph(reorderStates(project))
         commit()
       }
+    },
+    DELETE_PROJECT: {
+      handler: () => dispatchCustomEvent('modal:deleteConfirm', null)
     }
   }
 

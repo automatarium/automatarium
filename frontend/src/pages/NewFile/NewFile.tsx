@@ -1,26 +1,26 @@
-import { useState, useEffect, useCallback, createRef, RefObject } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
 import { Settings } from 'lucide-react'
+import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-import { Main, Button, Header, ProjectCard } from '/src/components'
-import { useProjectsStore, useProjectStore, useThumbnailStore, usePreferencesStore } from '/src/stores'
-import { dispatchCustomEvent } from '/src/util/events'
+import { Button, Header, Main, ProjectCard } from '/src/components'
+import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { useAuth } from '/src/hooks'
-import { createNewProject, StoredProject } from '/src/stores/useProjectStore' // #HACK
 import LoginModal from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
-import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
+import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
+import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
+import { dispatchCustomEvent } from '/src/util/events'
 
-import { NewProjectCard, CardList, DeleteConfirmationDialog } from './components'
-import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFileStyle'
+import { CardList, DeleteConfirmationDialog, NewProjectCard } from './components'
 import FSA from './images/FSA'
-import TM from './images/TM'
 import PDA from './images/PDA'
-import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
-import { showWarning } from '/src/components/Warning/Warning'
+import TM from './images/TM'
+import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
+import { showWarning } from '/src/components/Warning/Warning'
+import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -42,7 +42,8 @@ const NewFile = () => {
   }, [])
   const deleteProject = useProjectsStore(s => s.deleteProject)
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false)
-  const [slatedForDeletion, setSlatedForDeletion] = useState('')
+  const [selectedProjectId, setSelectedProjectId] = useState('')
+  const [selectedProjectName, setSelectedProjectName] = useState('')
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
@@ -198,7 +199,8 @@ const NewFile = () => {
               y: thisRef.offsetTop + thisRef.offsetHeight
             } as Coordinate
             setCoordinates(coords)
-            setSlatedForDeletion(p._id)
+            setSelectedProjectId(p._id)
+            setSelectedProjectName(p?.meta?.name ?? '<Untitled>')
           }}
           kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
           $istemplate={false}
@@ -215,14 +217,16 @@ const NewFile = () => {
     />
 
     <DeleteConfirmationDialog
+      projectName={selectedProjectName}
       isOpen={deleteConfirmationVisible}
       isOpenReducer={setDeleteConfirmationVisible}
       onClose={() => setDeleteConfirmationVisible(false)}
       onConfirm={() => {
-        handleDeleteProject(slatedForDeletion)
+        handleDeleteProject(selectedProjectId)
         setDeleteConfirmationVisible(false)
       }}
     />
+
     <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
