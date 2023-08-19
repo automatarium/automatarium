@@ -4,9 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Logo } from '/src/components'
 
 import { MoreVertical } from 'lucide-react'
-import { ButtonHTMLAttributes } from 'react'
-import KebabMenu from '../KebabMenu/KebabMenu'
-import kebabContextItems from '../KebabMenu/kebabDropdownItems'
+import { ButtonHTMLAttributes, Ref } from 'react'
 import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleAndKebab, TypeBadge } from './projectCardStyle'
 import { ProjectType } from '/src/types/ProjectTypes'
 dayjs.extend(relativeTime)
@@ -17,17 +15,17 @@ type ProjectCardProps = {
   date: string | Dayjs
   image?: string
   isSelectedTemplate?: boolean,
-  showKebab?: boolean,
   width: number,
   $istemplate: boolean,
   // Typescript currently doesn't supprt the spread operator with generics.
   // So we need to workaround that and add the extra props ourself
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick']
-  onKebabClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
+  onKebabClick?: ButtonHTMLAttributes<HTMLAnchorElement>['onClick'],
+  kebabRef?: Ref<HTMLAnchorElement>
   disabled?: boolean,
 }
 
-const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
+const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, ...props }: ProjectCardProps) => {
   return <CardContainer {...props}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
@@ -38,11 +36,12 @@ const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, show
     <CardDetail>
       <TitleAndKebab>
         <strong>{name}</strong>
-        {showKebab && <KebabMenu icon={<MoreVertical/>} kebabItems={kebabContextItems}>
-          </KebabMenu>}
+        <div>
+          <a onClick={props.onKebabClick} ref={props.kebabRef}>
+            <MoreVertical/>
+          </a>
+        </div>
       </TitleAndKebab>
-
-      {/* {showKebab && <MoreVertical/>} */}
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
   </CardContainer>

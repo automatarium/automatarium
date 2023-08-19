@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, createRef, RefObject } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
@@ -18,8 +18,9 @@ import { ButtonGroup, NoResultSpan, HeaderRow, PreferencesButton } from './newFi
 import FSA from './images/FSA'
 import TM from './images/TM'
 import PDA from './images/PDA'
-import { ProjectType } from '/src/types/ProjectTypes'
+import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
+import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -42,6 +43,9 @@ const NewFile = () => {
   const deleteProject = useProjectsStore(s => s.deleteProject)
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false)
   const [slatedForDeletion, setSlatedForDeletion] = useState('')
+  const [kebabOpen, setKebabOpen] = useState(false)
+  const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
+  const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -58,6 +62,11 @@ const NewFile = () => {
       Object.keys(thumbnails).forEach(id => !projects.some(p => p._id === id) && removeThumbnail(id))
     }
   }, [projects, thumbnails])
+
+  // Create and update refs when projects changes
+  useEffect(() => {
+    setKebabRefs(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
+  }, [projects])
 
   const handleNewFile = (type: ProjectType) => {
     setProject(createNewProject(type))
@@ -167,7 +176,7 @@ const NewFile = () => {
       title="Your Projects"
       style={{ gap: '1.5em .4em' }}
     >
-      {projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map(p =>
+      {projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map((p, i) =>
         <ProjectCard
           key={p._id}
           name={p?.meta?.name ?? '<Untitled>'}
@@ -178,14 +187,33 @@ const NewFile = () => {
           onClick={() => handleLoadProject(p)}
           onKebabClick={(event) => {
             event.stopPropagation()
-            dispatchCustomEvent('modal:deleteConfirm', null)
+            // dispatchCustomEvent('modal:deleteConfirm', null)
+            setKebabOpen(true)
+            const thisRef = kebabRefs[i] === null
+              // Set default values if not done yet to prevent crashes
+              ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
+              : kebabRefs[i].current
+            const coords = {
+              x: thisRef.offsetLeft,
+              y: thisRef.offsetTop + thisRef.offsetHeight
+            } as Coordinate
+            setCoordinates(coords)
             setSlatedForDeletion(p._id)
           }}
+          kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
           $istemplate={false}
         />
       )}
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
     </CardList>
+
+    <KebabMenu
+      x={coordinates.x}
+      y={coordinates.y}
+      isOpen={kebabOpen}
+      onClose={() => setKebabOpen(false)}
+    />
+
     <DeleteConfirmationDialog
       isOpen={deleteConfirmationVisible}
       isOpenReducer={setDeleteConfirmationVisible}
@@ -195,7 +223,6 @@ const NewFile = () => {
         setDeleteConfirmationVisible(false)
       }}
     />
-
     <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
