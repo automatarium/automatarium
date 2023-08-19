@@ -11,7 +11,9 @@ const KebabMenu = (props: KebabProps) => {
       position: 'absolute',
       top: `${props.y}px`,
       left: `${props.x}px`,
-      background: 'hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.9)'
+      borderStyle: 'solid',
+      borderWidth: '0.15em',
+      borderColor: 'hsla(var(--primary-h), var(--primary-s), var(--primary-l), 0.9)'
     }}
     items={kebabContextItems}
   />
