@@ -64,9 +64,15 @@ export const TypeBadge = styled('div')`
   font-weight: 600;
   opacity: .9;
 `
+export const TitleAndKebab = styled('div')`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+`
 
 export const CardDetail = styled('div')`
   margin-block-start: 1em;
+  list-style-type: none;
 
   span {
     display: block;
