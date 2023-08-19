@@ -4,7 +4,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Logo } from '/src/components'
 
 import { MoreVertical } from 'lucide-react'
-import { ButtonHTMLAttributes, useState } from 'react'
+import { ButtonHTMLAttributes } from 'react'
 import kebabContextItems from '../ContextMenus/kebabContextItems'
 import KebabMenu from '../KebabMenu/KebabMenu'
 import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleAndKebab, TypeBadge } from './projectCardStyle'
@@ -25,24 +25,6 @@ type ProjectCardProps = {
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick']
   onKebabClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick'],
   disabled?: boolean,
-}
-
-const KebabMenu = (props) => {
-  const [open, setOpen] = useState(false)
-
-  const handleClick = (e) => {
-    e.stopPropagation()
-    setOpen(!open)
-  }
-
-  return (
-    <li>
-      <a onClick={(e) => handleClick(e)}>
-        {props.icon}
-      </a>
-      {open && props.children}
-    </li>
-  )
 }
 
 const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, showKebab = true, ...props }: ProjectCardProps) => {
