@@ -102,7 +102,6 @@ const Templates = () => {
                 date={dayjs(temp.date)}
                 width={TEMPLATE_THUMBNAIL_WIDTH}
                 $istemplate={true}
-                showKebab={false}
                 isSelectedTemplate={template && template._id === temp._id}
                 onClick={() => pickTemplate(temp._id)}
               />
