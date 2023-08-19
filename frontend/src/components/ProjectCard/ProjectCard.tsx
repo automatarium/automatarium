@@ -3,7 +3,9 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Logo } from '/src/components'
 
-import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay } from './projectCardStyle'
+import { CardContainer, CardImage, TypeBadge, CardDetail, SelectedTemplateOverlay, TitleAndKebab } from './projectCardStyle'
+import KebabMenu from '../KebabMenu/KebabMenu'
+import kebabContextItems from '../ContextMenus/kebabContextItems'
 import { MoreVertical } from 'lucide-react'
 import { ProjectType } from '/src/types/ProjectTypes'
 import { ButtonHTMLAttributes } from 'react'
@@ -36,8 +38,13 @@ const ProjectCard = ({ name, type, date, image, projectId, isSelectedTemplate = 
       {isSelectedTemplate && <SelectedTemplateOverlay/>}
     </CardImage>
     <CardDetail>
+      <TitleAndKebab>
       <strong>{name}</strong>
-      {showKebab && <MoreVertical/>}
+      {showKebab && <KebabMenu icon={<MoreVertical/>} kebabItems={kebabContextItems}>
+        </KebabMenu>}
+      </TitleAndKebab>
+
+      {/* {showKebab && <MoreVertical/>} */}
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
   </CardContainer>
