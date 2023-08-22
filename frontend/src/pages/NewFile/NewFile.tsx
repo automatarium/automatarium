@@ -10,7 +10,7 @@ import { useAuth } from '/src/hooks'
 import LoginModal from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
-import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
+import { StoredProject, createNewProject } from '/src/stores/useProjectStore'; // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard } from './components'
@@ -186,7 +186,7 @@ const NewFile = () => {
           image={thumbnails[p._id]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
-          onKebabClick={(event) => {
+          kebabClick={(event) => {
             event.stopPropagation()
             // dispatchCustomEvent('modal:deleteConfirm', null)
             setKebabOpen(true)
