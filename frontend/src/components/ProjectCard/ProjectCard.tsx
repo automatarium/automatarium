@@ -20,13 +20,14 @@ type ProjectCardProps = {
   // Typescript currently doesn't supprt the spread operator with generics.
   // So we need to workaround that and add the extra props ourself
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick']
-  kebabClick?: ButtonHTMLAttributes<HTMLAnchorElement>['onClick'],
-  kebabRef?: Ref<HTMLAnchorElement>
+  $kebabClick?: ButtonHTMLAttributes<HTMLAnchorElement>['onClick'],
+  $kebabRef?: Ref<HTMLAnchorElement>
   disabled?: boolean,
 }
 
 const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, ...props }: ProjectCardProps) => {
-  return <CardContainer {...props}>
+  const { ...rest } = props
+  return <CardContainer {...rest}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
       {type && <TypeBadge>{type}</TypeBadge>}
@@ -37,7 +38,7 @@ const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, ...p
       <TitleAndKebab>
         <strong>{name}</strong>
         <div>
-          <a onClick={props.kebabClick} ref={props.kebabRef}>
+          <a onClick={props.$kebabClick} ref={props.$kebabRef}>
             <MoreVertical/>
           </a>
         </div>

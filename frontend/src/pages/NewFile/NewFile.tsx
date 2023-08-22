@@ -186,7 +186,7 @@ const NewFile = () => {
           image={thumbnails[p._id]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
-          kebabClick={(event) => {
+          $kebabClick={(event) => {
             event.stopPropagation()
             // dispatchCustomEvent('modal:deleteConfirm', null)
             setKebabOpen(true)
@@ -202,7 +202,7 @@ const NewFile = () => {
             setSelectedProjectId(p._id)
             setSelectedProjectName(p?.meta?.name ?? '<Untitled>')
           }}
-          kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
+          $kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
           $istemplate={false}
         />
       )}
