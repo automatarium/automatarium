@@ -6,8 +6,8 @@ import { useCallback } from 'react'
 const useCommentCreation = () => {
   const tool = useToolStore(s => s.tool)
 
-  const handleCommentMouseUp = useCallback((e) => {
-    if (tool === 'comment' && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
+  const handleCommentMouseUp = useCallback((e: { detail: { originalEvent: { button: number; clientX: number; clientY: number } } }) => {
+    if (tool === 'comment' && e.detail.originalEvent.button === 0) {
       window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.detail.originalEvent.clientX, y: e.detail.originalEvent.clientY }), 100)
     }
   }, [tool])
