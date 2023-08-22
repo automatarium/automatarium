@@ -1,12 +1,15 @@
-import { useEvent } from '/src/hooks'
-import { dispatchCustomEvent } from '/src/util/events'
-import { useToolStore } from '/src/stores'
 import { useCallback } from 'react'
+import { useEvent } from '/src/hooks'
+import { useToolStore } from '/src/stores'
+import { dispatchCustomEvent } from '/src/util/events'
 
 const useCommentCreation = () => {
   const tool = useToolStore(s => s.tool)
 
-  const handleCommentMouseUp = useCallback((e: { detail: { originalEvent: { button: number; clientX: number; clientY: number } } }) => {
+  // Only require a slice of the event in the type else we get the long list of type ors
+  type CommentToolData = { detail: { originalEvent: { button: number; clientX: number; clientY: number } } }
+
+  const handleCommentMouseUp = useCallback((e: CommentToolData) => {
     if (tool === 'comment' && e.detail.originalEvent.button === 0) {
       window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.detail.originalEvent.clientX, y: e.detail.originalEvent.clientY }), 100)
     }
