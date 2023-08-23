@@ -4,10 +4,7 @@ import { useProjectStore, useSteppingStore } from '/src/stores'
 import {
   SkipBack,
   ChevronRight,
-  ChevronLeft,
-  Snowflake,
-  Flame,
-  XCircle
+  ChevronLeft
 } from 'lucide-react'
 
 import { graphStepper, Node, State } from '@automatarium/simulation'
@@ -65,11 +62,6 @@ const SteppingLab = () => {
             disabled={noStepper}
             onClick={() => handleStep(stepper.forward())}
           />
-        </ButtonRow>
-        <ButtonRow>
-          <Button icon={<Snowflake size={23} />}/>
-          <Button icon={<Flame size={23} />} />
-          <Button icon={<XCircle size={23} />}/>
         </ButtonRow>
       </Wrapper>
     </>
