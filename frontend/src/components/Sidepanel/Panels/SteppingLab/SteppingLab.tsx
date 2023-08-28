@@ -1,5 +1,5 @@
 import { Wrapper, ButtonRow } from './steppingLabStyle'
-import { SectionLabel, Input, Button } from '/src/components'
+import { SectionLabel, Input, Button} from '/src/components'
 import { useProjectStore, useSteppingStore } from '/src/stores'
 import {
   SkipBack,
@@ -19,7 +19,6 @@ import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 // Switch component. For demonstrative purposes, I've made this a separate component for now, which
 // means there's some repetition.
 const SteppingLab = () => {
-  const [, setFrontier] = useState([])
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
@@ -33,7 +32,6 @@ const SteppingLab = () => {
   }, [graph, traceInput])
 
   const handleStep = <S extends State>(newFrontier: Node<S>[]) => {
-    setFrontier(newFrontier)
     setSteppedStates(newFrontier)
   }
 
