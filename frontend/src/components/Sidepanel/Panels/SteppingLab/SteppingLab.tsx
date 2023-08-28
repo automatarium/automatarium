@@ -11,7 +11,7 @@ import {
 } from 'lucide-react'
 
 import { graphStepper, Node, State } from '@automatarium/simulation'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 
 // The initial states and project store calls, along with the display of the current input trace,
