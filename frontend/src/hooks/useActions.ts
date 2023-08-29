@@ -524,35 +524,37 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string) => {
+const useParseFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file', input: Blob) => {
+  // Read file data
+  const reader = new FileReader()
+  reader.onloadend = () => {
+    try {
+      const fileData = parse(reader.result)
+      const project = {
+        ...createNewProject(),
+        ...fileData
+      }
+      onData({
+        ...project,
+        meta: {
+          ...project.meta,
+          name: input?.name.split('.').slice(0, -1).join('.')
+        }
+      })
+    } catch (error) {
+      showWarning(`${errorMessage}\n${error}`)
+      console.error(error)
+    }
+  }
+  reader.readAsText(input)
+}
+
+const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage: string, accept: string) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = accept
-  input.onchange = () => {
-    // Read file data
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      try {
-        const fileData = parse(reader.result)
-        const project = {
-          ...createNewProject(),
-          ...fileData
-        }
-        onData({
-          ...project,
-          meta: {
-            ...project.meta,
-            name: input.files[0]?.name.split('.').slice(0, -1).join('.')
-          }
-        })
-      } catch (error) {
-        showWarning(`${errorMessage}\n${error}`)
-        console.error(error)
-      }
-    }
-    reader.readAsText(input.files[0])
-  }
+  input.onchange = () => { useParseFile(parse, onData, errorMessage, input.files[0]) }
   input.click()
 }
 
