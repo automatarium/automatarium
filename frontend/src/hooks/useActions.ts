@@ -106,13 +106,13 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project', '.json') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open automatarium project', '.json') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
       hotkeys: [{ key: 'i', meta: true, shift: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project', '.jff') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open JFLAP project', '.jff') }
       }
     },
     SAVE_FILE: {
@@ -524,12 +524,15 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const useParseFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file', input: Blob) => {
+const useParseFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', input: Blob) => {
   // Read file data
   const reader = new FileReader()
   reader.onloadend = () => {
     try {
-      const fileData = parse(reader.result)
+      const parse = input.name.toLowerCase().endsWith('.jff')
+        ? convertJFLAPXML
+        : JSON.parse
+      const fileData = parse(reader.result as string)
       const project = {
         ...createNewProject(),
         ...fileData
@@ -549,12 +552,12 @@ const useParseFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val:
   reader.readAsText(input)
 }
 
-const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage: string, accept: string) => {
+const promptLoadFile = <T>(onData: (val: T) => void, errorMessage: string, accept: string) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = accept
-  input.onchange = () => { useParseFile(parse, onData, errorMessage, input.files[0]) }
+  input.onchange = () => { useParseFile(onData, errorMessage, input.files[0]) }
   input.click()
 }
 
