@@ -524,7 +524,7 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: Blob, onFinishLoading: () => void) => {
+const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void) => {
   // Read file data
   const reader = new FileReader()
   reader.onloadend = () => {
@@ -560,6 +560,20 @@ export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Fail
   input.accept = accept
   input.onchange = () => { useParseFile(onData, errorMessage, input.files[0], onFinishLoading) }
   input.click()
+}
+
+export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file. You may be giving me a website instead of a raw file.', onFinishLoading = () => null) => {
+  fetch(url)
+    .then(async (res) => {
+      const urlTokens = res.url.split('/')
+      const endpointName = decodeURIComponent(urlTokens[urlTokens.length - 1])
+      const asFile = new File([await res.blob()], endpointName)
+      useParseFile(onData, errorMessage, asFile, onFinishLoading)
+    })
+    .catch((error) => {
+      showWarning(`Failed to load data.\n${error}`)
+      console.error(error)
+    })
 }
 
 // Takes in the IDs of states, comments, and transitions
