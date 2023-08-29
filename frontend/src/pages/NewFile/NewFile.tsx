@@ -1,4 +1,3 @@
-import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
 import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
@@ -19,8 +18,8 @@ import PDA from './images/PDA'
 import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { showWarning } from '/src/components/Warning/Warning'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import { promptLoadFile } from '/src/hooks/useActions'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -83,52 +82,8 @@ const NewFile = () => {
     deleteProject(pid)
   }
 
-  // TODO: Use promptLoadFile from useActions
   const importProject = () => {
-    // Prompt user for file input
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = '.jff,.json'
-    input.onchange = () => {
-      // Read file data
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const fileToOpen = input.files[0]
-        // JFLAP file load - handle conversion
-        if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
-          const project = {
-            ...createNewProject(),
-            ...convertJFLAPXML(reader.result as string)
-          }
-          setProject({
-            ...project,
-            meta: {
-              ...project.meta,
-              name: input.files[0]?.name.split('.').slice(0, -1).join('.')
-            }
-          })
-          navigate('/editor')
-        } else if (fileToOpen.name.toLowerCase().endsWith('.json')) {
-          // Set project (file) in project store
-          const project = {
-            ...createNewProject(),
-            ...JSON.parse(reader.result as string)
-          }
-          setProject({
-            ...project,
-            meta: {
-              ...project.meta,
-              name: input.files[0]?.name.split('.').slice(0, -1).join('.')
-            }
-          })
-          navigate('/editor')
-        } else {
-          showWarning('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
-        }
-      }
-      reader.readAsText(input.files[0])
-    }
-    input.click()
+    promptLoadFile(setProject, 'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.', '.jff,.json', () => navigate('/editor'))
   }
 
   return <Main wide>

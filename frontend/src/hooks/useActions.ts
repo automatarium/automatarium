@@ -524,7 +524,7 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const useParseFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', input: Blob) => {
+const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: Blob, onFinishLoading: () => void) => {
   // Read file data
   const reader = new FileReader()
   reader.onloadend = () => {
@@ -544,6 +544,7 @@ const useParseFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to par
           name: input?.name.split('.').slice(0, -1).join('.')
         }
       })
+      onFinishLoading()
     } catch (error) {
       showWarning(`${errorMessage}\n${error}`)
       console.error(error)
@@ -552,12 +553,12 @@ const useParseFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to par
   reader.readAsText(input)
 }
 
-const promptLoadFile = <T>(onData: (val: T) => void, errorMessage: string, accept: string) => {
+export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = accept
-  input.onchange = () => { useParseFile(onData, errorMessage, input.files[0]) }
+  input.onchange = () => { useParseFile(onData, errorMessage, input.files[0], onFinishLoading) }
   input.click()
 }
 
