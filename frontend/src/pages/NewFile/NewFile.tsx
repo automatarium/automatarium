@@ -3,7 +3,7 @@ import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard } from '/src/components'
+import { Button, Header, ImportDialog, Main, ProjectCard } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { useAuth } from '/src/hooks'
 import LoginModal from '/src/pages/Login/Login'
@@ -83,7 +83,8 @@ const NewFile = () => {
   }
 
   const importProject = () => {
-    promptLoadFile(setProject, 'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.', '.jff,.json', () => navigate('/editor'))
+    // promptLoadFile(setProject, 'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.', '.jff,.json', () => navigate('/editor'))
+    dispatchCustomEvent('modal:import', null)
   }
 
   return <Main wide>
@@ -181,6 +182,8 @@ const NewFile = () => {
         setDeleteConfirmationVisible(false)
       }}
     />
+
+    <ImportDialog navigateFunction={navigate}/>
 
     <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
