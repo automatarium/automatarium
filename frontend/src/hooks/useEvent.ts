@@ -66,7 +66,8 @@ export interface CustomEvents {
   'edge:mouseup': EdgeEventData,
   'edge:dblclick': EdgeEventData,
   'showWarning': string,
-  'modal:deleteConfirm': null
+  'modal:deleteConfirm': null,
+  'modal:import': null
 }
 
 /**

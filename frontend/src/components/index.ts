@@ -7,6 +7,7 @@ export { default as InputDialogs } from './InputDialogs/InputDialogs'
 export { default as InputTransitionGroup } from './InputTransitionGroup/InputTransitionGroup'
 export { default as EditorPanel } from './EditorPanel/EditorPanel'
 export { default as BottomPanel } from './BottomPanel/BottomPanel'
+export { default as ImportDialog } from './ImportDialog/ImportDialog'
 
 export { default as GraphView } from './GraphView/GraphView'
 export { default as GraphContent } from './GraphContent/GraphContent'
