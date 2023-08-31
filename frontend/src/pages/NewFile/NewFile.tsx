@@ -19,7 +19,6 @@ import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
-import { promptLoadFile, urlLoadFile } from '/src/hooks/useActions'
 
 const NewFile = () => {
   const navigate = useNavigate()
