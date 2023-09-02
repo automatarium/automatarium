@@ -62,7 +62,12 @@ const SteppingLab = () => {
           <Button
             icon={<ChevronRight size={25} />}
             disabled={noStepper}
-            onClick={() => handleStep(stepper.forward())}
+            onClick={() => {
+              const frontier = stepper.forward()
+              if (frontier.length > 0) {
+                handleStep(frontier)
+              }
+            }}
           />
         </ButtonRow>
         <ButtonRow>
