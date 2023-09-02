@@ -6,7 +6,7 @@ export const circleStyles = {
 }
 
 export const stepGlowStyle = {
-  filter: 'drop-shadow(0px 0px 10px var(--primary)'
+  filter: 'drop-shadow(0px 0px 15px var(--primary)) drop-shadow(0px 0px 20px var(--primary))'
 }
 
 export const circleSelectedClass = css`
