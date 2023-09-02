@@ -36,6 +36,7 @@ const SteppingLab = () => {
   }
 
   const noStepper = stepper === null && false
+
   return (
     <>
       <SectionLabel>Trace</SectionLabel>

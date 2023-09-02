@@ -77,6 +77,7 @@ const Sidepanel = () => {
     }
   }, [activePanel])
 
+  // Clear the stepped states if the stepping lab is no longer in use
   useEffect(() => {
     if (activePanel?.value !== 'step') {
       setSteppedStates([])
