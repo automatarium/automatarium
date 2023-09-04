@@ -16,7 +16,7 @@ import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/T
 /**
  * Combination of keys. Used to call an action
  */
-export type HotKey = {key: string, meta?: boolean, shift?: boolean, alt?: boolean}
+export type HotKey = { key: string, meta?: boolean, shift?: boolean, alt?: boolean }
 
 /**
  * Represents an action handler
@@ -524,7 +524,7 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void) => {
+const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void, onFailedLoading: () => void) => {
   // Read file data
   const reader = new FileReader()
   reader.onloadend = () => {
@@ -548,31 +548,33 @@ const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: 
     } catch (error) {
       showWarning(`${errorMessage}\n${error}`)
       console.error(error)
+      onFailedLoading()
     }
   }
   reader.readAsText(input)
 }
 
-export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null) => {
+export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = accept
-  input.onchange = () => { useParseFile(onData, errorMessage, input.files[0], onFinishLoading) }
+  input.onchange = () => { useParseFile(onData, errorMessage, input.files[0], onFinishLoading, onFailedLoading) }
   input.click()
 }
 
-export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file. You may be giving me a website instead of a raw file.', onFinishLoading = () => null) => {
+export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file.', onFinishLoading = () => null, onFailedLoading = () => null) => {
   fetch(url)
     .then(async (res) => {
       const urlTokens = res.url.split('/')
       const endpointName = decodeURIComponent(urlTokens[urlTokens.length - 1])
       const asFile = new File([await res.blob()], endpointName)
-      useParseFile(onData, errorMessage, asFile, onFinishLoading)
+      useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
     })
     .catch((error) => {
-      showWarning(`Failed to load data.\n${error}`)
+      showWarning(`Failed to retrieve the file from this URL.\n${error}`)
       console.error(error)
+      onFailedLoading()
     })
 }
 
