@@ -6,16 +6,22 @@ import { useProjectStore } from '/src/stores'
 import { Container } from './shareStyle'
 
 import { useParseFile } from '/src/hooks/useActions'
+import { showWarning } from '/src/components/Warning/Warning'
 
 const Share = () => {
-  const { data } = useParams()
+  const { type, data } = useParams()
   const navigate = useNavigate()
   const setProject = useProjectStore(s => s.set)
 
   useEffect(() => {
-    const decodedJson = Buffer.from(data, 'base64').toString()
-    const dataJson = new File([decodedJson], 'Shared Project')
-    useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
+    if (type === 'raw') {
+      const decodedJson = Buffer.from(data, 'base64').toString()
+      const dataJson = new File([decodedJson], 'Shared Project')
+      useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
+    } else {
+      showWarning(`Unknown share type ${type}`)
+      handleLoadFail()
+    }
   }, [data])
 
   const handleLoadSuccess = () => {
