@@ -77,7 +77,6 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
                 navigate('/editor')
               },
               () => {
-                setModalOpen(true)
                 setLoading(false)
               }
             )
@@ -108,7 +107,6 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
                   navigate('/editor')
                 },
                 () => {
-                  setModalOpen(true)
                   setLoading(false)
                 }
               )

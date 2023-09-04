@@ -572,18 +572,27 @@ export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Fail
 }
 
 export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file.', onFinishLoading = () => null, onFailedLoading = () => null) => {
-  fetch(url)
-    .then(async (res) => {
-      const urlTokens = res.url.split('/')
-      const endpointName = decodeURIComponent(urlTokens[urlTokens.length - 1])
-      const asFile = new File([await res.blob()], endpointName)
-      useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
-    })
-    .catch((error) => {
-      showWarning(`Failed to retrieve the file from this URL.\n${error}`)
-      console.error(error)
-      onFailedLoading()
-    })
+  // Check that the user didn't just pass in the URL that was given from Automatarium
+  const urlTokens = url.split('/') ?? null
+  if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'raw') {
+    const data = Buffer.from(urlTokens[urlTokens.length - 1], 'base64').toString()
+    const asFile = new File([data], 'Shared Project')
+    useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
+  } else {
+    fetch(url)
+      .then(async (res) => {
+        const resUrlTokens = res.url.split('/')
+        const endpointName = decodeURIComponent(resUrlTokens[resUrlTokens.length - 1])
+        // Give a default filename based on the received URL
+        const asFile = new File([await res.blob()], endpointName)
+        useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
+      })
+      .catch((error) => {
+        showWarning(`Failed to retrieve the file from this URL.\n${error}`)
+        console.error(error)
+        onFailedLoading()
+      })
+  }
 }
 
 // Takes in the IDs of states, comments, and transitions
