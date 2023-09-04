@@ -7,6 +7,7 @@ import { Container } from './shareStyle'
 
 import { useParseFile } from '/src/hooks/useActions'
 import { showWarning } from '/src/components/Warning/Warning'
+import { decodeData } from '/src/util/encoding'
 
 const Share = () => {
   const { type, data } = useParams()
@@ -16,7 +17,7 @@ const Share = () => {
   useEffect(() => {
     switch (type) {
       case 'raw': {
-        const decodedJson = Buffer.from(data, 'base64').toString()
+        const decodedJson = decodeData(data)
         const dataJson = new File([decodedJson], 'Shared Project')
         useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
         break

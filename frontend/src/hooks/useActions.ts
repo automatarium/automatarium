@@ -12,6 +12,7 @@ import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
+import { decodeData } from '../util/encoding'
 
 /**
  * Combination of keys. Used to call an action
@@ -575,7 +576,7 @@ export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessa
   // Check that the user didn't just pass in the URL that was given from Automatarium
   const urlTokens = url.split('/') ?? null
   if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'raw') {
-    const data = Buffer.from(urlTokens[urlTokens.length - 1], 'base64').toString()
+    const data = decodeData(urlTokens[urlTokens.length - 1])
     const asFile = new File([data], 'Shared Project')
     useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
   } else {

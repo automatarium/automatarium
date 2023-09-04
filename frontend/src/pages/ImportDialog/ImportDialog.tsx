@@ -8,6 +8,7 @@ import { useProjectStore } from '/src/stores'
 import { ErrorText, ImportButtonWrapper } from './importDialogStyle'
 import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
+import { encodeData } from '/src/util/encoding'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -129,7 +130,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
           if (rawValue.length > 0) {
             const data = rawValue[0] === '{'
               // This is a json file. It might not fit on the URL
-              ? Buffer.from(rawValue).toString('base64')
+              ? encodeData(rawValue)
               : rawValue
             navigate(`/share/raw/${data}`)
           } else {

@@ -7,10 +7,11 @@ import { Copy } from 'lucide-react'
 import { Button, Input, Modal } from '/src/components'
 
 import { CopyRowWrapper, CopySuccessDiv } from './shareUrlStyle'
+import { encodeData } from '/src/util/encoding'
 
 const ShareUrl = () => {
   const project = useProjectStore(s => s.project)
-  const base64Project = Buffer.from(JSON.stringify(project, null, 0)).toString('base64')
+  const base64Project = encodeData(JSON.stringify(project, null, 0))
   const shareRawLink = `${window.location.origin}/share/raw/${base64Project}`
 
   const [exportUrlOpen, setExportUrlOpen] = useState(false)
