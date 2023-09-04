@@ -14,13 +14,18 @@ const Share = () => {
   const setProject = useProjectStore(s => s.set)
 
   useEffect(() => {
-    if (type === 'raw') {
-      const decodedJson = Buffer.from(data, 'base64').toString()
-      const dataJson = new File([decodedJson], 'Shared Project')
-      useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
-    } else {
-      showWarning(`Unknown share type ${type}`)
-      handleLoadFail()
+    switch (type) {
+      case 'raw': {
+        const decodedJson = Buffer.from(data, 'base64').toString()
+        const dataJson = new File([decodedJson], 'Shared Project')
+        useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
+        break
+      }
+      default: {
+        showWarning(`Unknown share type ${type}`)
+        handleLoadFail()
+        break
+      }
     }
   }, [data])
 
