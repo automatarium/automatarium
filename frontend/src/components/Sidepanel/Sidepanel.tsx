@@ -9,7 +9,7 @@ import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
 import { stopTemplateInsert } from './Panels/Templates/Templates'
 
-import { useTemplateStore, useToolStore, useProjectStore } from '/src/stores'
+import { useTemplateStore, useToolStore, useSteppingStore, useProjectStore } from '/src/stores'
 
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -57,6 +57,7 @@ const Sidepanel = () => {
   const [activePanel, setActivePanel] = useState<PanelItem>()
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const setTool = useToolStore(s => s.setTool)
+  const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
 
   const projectType = useProjectStore(s => s.project.config.type)
 
@@ -73,6 +74,13 @@ const Sidepanel = () => {
       dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
     } else {
       dispatchCustomEvent('bottomPanel:close', null)
+    }
+  }, [activePanel])
+
+  // Clear the stepped states if the stepping lab is no longer in use
+  useEffect(() => {
+    if (activePanel?.value !== 'step') {
+      setSteppedStates([])
     }
   }, [activePanel])
 
