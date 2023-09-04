@@ -3,9 +3,10 @@ import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, ImportDialog, Main, ProjectCard } from '/src/components'
+import { Button, Header, Main, ProjectCard } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { useAuth } from '/src/hooks'
+import { ImportDialog } from '/src/pages'
 import LoginModal from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
@@ -110,21 +111,21 @@ const NewFile = () => {
         description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
         onClick={() => handleNewFile('FSA')}
         height={height}
-        image={<FSA {...stylingVals}/>}
+        image={<FSA {...stylingVals} />}
       />
       <NewProjectCard
         title="Push Down Automaton"
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
         onClick={() => handleNewFile('PDA')}
         height={height}
-        image={<PDA {...stylingVals}/>}
+        image={<PDA {...stylingVals} />}
       />
       <NewProjectCard
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
         height={height}
-        image={<TM {...stylingVals}/>}
+        image={<TM {...stylingVals} />}
       />
     </CardList>
 
@@ -157,7 +158,7 @@ const NewFile = () => {
             setSelectedProjectId(p._id)
             setSelectedProjectName(p?.meta?.name ?? '<Untitled>')
           }}
-          kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
+          kebabRef={kebabRefs === undefined ? null : kebabRefs[i]}
           $istemplate={false}
         />
       )}
@@ -182,7 +183,7 @@ const NewFile = () => {
       }}
     />
 
-    <ImportDialog navigateFunction={navigate}/>
+    <ImportDialog navigateFunction={navigate} />
 
     <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
