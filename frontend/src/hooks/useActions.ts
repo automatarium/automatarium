@@ -541,7 +541,7 @@ const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: 
         ...project,
         meta: {
           ...project.meta,
-          name: input?.name.split('.').slice(0, -1).join('.')
+          name: project.meta.name ?? input?.name.split('.').slice(0, -1).join('.')
         }
       })
       onFinishLoading()
