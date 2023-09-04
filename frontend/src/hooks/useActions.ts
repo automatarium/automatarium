@@ -524,7 +524,7 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void, onFailedLoading: () => void) => {
+export const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void, onFailedLoading: () => void) => {
   // Read file data
   const reader = new FileReader()
   reader.onloadend = () => {

@@ -35,58 +35,58 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
   return loading
     ? <Spinner />
     : <Modal
-        title='Import Project'
-        description='Import an existing project.'
-        isOpen={modalOpen}
-        onClose={resetModal}
-        actions={<Button secondary onClick={resetModal}>Close</Button>}
+      title='Import Project'
+      description='Import an existing project.'
+      isOpen={modalOpen}
+      onClose={resetModal}
+      actions={<Button secondary onClick={resetModal}>Close</Button>}
+    >
+      From your computer
+      <Button
+        onClick={() => {
+          setLoading(true)
+          promptLoadFile(
+            setProject,
+            'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.',
+            '.jff,.json',
+            () => {
+              resetModal()
+              navigate('/editor')
+            })
+        }}
       >
-        From your computer
-        <Button
-          onClick={() => {
-            setLoading(true)
-            promptLoadFile(
-              setProject,
-              'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.',
-              '.jff,.json',
-              () => {
-                resetModal()
-                navigate('/editor')
-              })
-          }}
-        >
-          Browse...
-        </Button>
-        <hr/>
-        From URL (raw/plaintext)
-        <Input
-          value={urlValue}
-          onChange={e => setUrlValue(e.target.value)}
-          placeholder={'https://www.example.com/paste/raw/myMachine.json'}
-        />
-        <Button
-          onClick={() => {
-            setLoading(true)
-            urlLoadFile(
-              urlValue,
-              setProject,
-              'Automatarium failed to load a project from provided URL.',
-              () => {
-                resetModal()
-                navigate('/editor')
-              }
-            )
-          }}
-        >Import</Button>
-        <hr/>
-        From raw data
-        <Input
-          value={rawValue}
-          onChange={e => setRawValue(e.target.value)}
-          placeholder={'Enter raw .json file here'}
-        />
-        <Button>Load</Button>
-      </Modal>
+        Browse...
+      </Button>
+      <hr />
+      From URL (raw/plaintext)
+      <Input
+        value={urlValue}
+        onChange={e => setUrlValue(e.target.value)}
+        placeholder={'https://www.example.com/paste/raw/myMachine.json'}
+      />
+      <Button
+        onClick={() => {
+          setLoading(true)
+          urlLoadFile(
+            urlValue,
+            setProject,
+            'Automatarium failed to load a project from provided URL.',
+            () => {
+              resetModal()
+              navigate('/editor')
+            }
+          )
+        }}
+      >Import</Button>
+      <hr />
+      From raw data
+      <Input
+        value={rawValue}
+        onChange={e => setRawValue(e.target.value)}
+        placeholder={'Enter raw .json file here'}
+      />
+      <Button onClick={() => navigate(`/share/${rawValue}`)}>Load</Button>
+    </Modal>
 }
 
 export default ImportDialog
