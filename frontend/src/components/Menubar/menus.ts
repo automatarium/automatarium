@@ -30,6 +30,10 @@ const menus: ContextItems = [
           {
             label: 'Import JFLAP file',
             action: 'IMPORT_JFLAP_PROJECT'
+          },
+          {
+            label: 'Import other...',
+            action: 'IMPORT_DIALOG'
           }
         ]
       },

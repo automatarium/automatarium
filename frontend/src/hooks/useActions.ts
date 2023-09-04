@@ -115,6 +115,11 @@ const useActions = (registerHotkeys = false) => {
         if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open JFLAP project', '.jff') }
       }
     },
+    IMPORT_DIALOG: {
+      handler: async () => {
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { dispatchCustomEvent('modal:import', null) }
+      }
+    },
     SAVE_FILE: {
       hotkeys: [{ key: 's', meta: true }],
       handler: () => {
