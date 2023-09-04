@@ -1,9 +1,11 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { NavigateFunction } from 'react-router-dom'
 import { Button, Input, Modal, Spinner } from '/src/components'
 import { useEvent } from '/src/hooks'
 import { promptLoadFile, urlLoadFile } from '/src/hooks/useActions'
 import { useProjectStore } from '/src/stores'
+import { Container } from '/src/pages/Share/shareStyle'
+import { ErrorText, ImportButtonWrapper } from './importDialogStyle'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -20,9 +22,24 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
   const [urlValue, setUrlValue] = useState('')
   const [rawValue, setRawValue] = useState('')
 
+  const [rawError, setRawError] = useState(false)
+  const [urlError, setUrlError] = useState(false)
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setRawError(false), 3000)
+    return () => clearTimeout(timeout)
+  }, [rawError])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setUrlError(false), 3000)
+    return () => clearTimeout(timeout)
+  }, [urlError])
+
   useEvent('modal:import', () => {
     setModalOpen(true)
     setLoading(false)
+    setRawError(false)
+    setUrlError(false)
   })
 
   const resetModal = () => {
@@ -30,10 +47,12 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
     setRawValue('')
     setLoading(false)
     setModalOpen(false)
+    setRawError(false)
+    setUrlError(false)
   }
 
   return loading
-    ? <Spinner />
+    ? <Container><Spinner /></Container>
     : <Modal
       title='Import Project'
       description='Import an existing project.'
@@ -41,52 +60,85 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
       onClose={resetModal}
       actions={<Button secondary onClick={resetModal}>Close</Button>}
     >
-      From your computer
-      <Button
-        onClick={() => {
-          setLoading(true)
-          promptLoadFile(
-            setProject,
-            'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.',
-            '.jff,.json',
-            () => {
-              resetModal()
-              navigate('/editor')
-            })
-        }}
-      >
-        Browse...
-      </Button>
+      <ImportButtonWrapper>
+        From your computer
+        <Button
+          disabled={loading}
+          onClick={() => {
+            setLoading(true)
+            promptLoadFile(
+              setProject,
+              'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.',
+              '.jff,.json',
+              () => {
+                resetModal()
+                navigate('/editor')
+              },
+              () => {
+                setModalOpen(true)
+                setLoading(false)
+              }
+            )
+          }}
+        >
+          Browse...
+        </Button>
+      </ImportButtonWrapper>
       <hr />
       From URL (raw/plaintext)
-      <Input
-        value={urlValue}
-        onChange={e => setUrlValue(e.target.value)}
-        placeholder={'https://www.example.com/paste/raw/myMachine.json'}
-      />
-      <Button
-        onClick={() => {
-          setLoading(true)
-          urlLoadFile(
-            urlValue,
-            setProject,
-            'Automatarium failed to load a project from provided URL.',
-            () => {
-              resetModal()
-              navigate('/editor')
+      <ImportButtonWrapper>
+        <Input
+          value={urlValue}
+          onChange={e => setUrlValue(e.target.value)}
+          placeholder={'www.example.com/paste/raw/myMachine.json'}
+        />
+        <Button
+          disabled={loading}
+          onClick={() => {
+            if (urlValue.length > 0) {
+              setLoading(true)
+              urlLoadFile(
+                urlValue,
+                setProject,
+                'Automatarium failed to load a project from provided URL.',
+                () => {
+                  resetModal()
+                  navigate('/editor')
+                },
+                () => {
+                  setModalOpen(true)
+                  setLoading(false)
+                }
+              )
+            } else {
+              setUrlError(true)
             }
-          )
-        }}
-      >Import</Button>
+          }}
+        >Import</Button>
+      </ImportButtonWrapper>
+      {urlError ? <ErrorText>No URL specified!</ErrorText> : <></>}
       <hr />
       From raw data
-      <Input
-        value={rawValue}
-        onChange={e => setRawValue(e.target.value)}
-        placeholder={'Enter raw .json file here'}
-      />
-      <Button onClick={() => navigate(`/share/${rawValue}`)}>Load</Button>
-    </Modal>
+      <ImportButtonWrapper>
+        <Input
+          value={rawValue}
+          onChange={e => setRawValue(e.target.value)}
+          placeholder={'Enter raw data here'}
+        />
+        <Button disabled={loading} onClick={() => {
+          if (rawValue.length > 0) {
+            const data = rawValue[0] === '{'
+              // This is a json file. It might not fit on the URL
+              ? Buffer.from(rawValue).toString('base64')
+              : rawValue
+            navigate(`/share/raw/${data}`)
+          } else {
+            setRawError(true)
+          }
+        }}>Load</Button>
+      </ImportButtonWrapper>
+      {rawError ? <ErrorText>Can't load nothing!</ErrorText> : <></>}
+    </Modal >
 }
 
 export default ImportDialog
