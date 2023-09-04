@@ -139,6 +139,9 @@ const useActions = (registerHotkeys = false) => {
         a.click()
       }
     },
+    ENCODE_FILE: {
+      handler: () => dispatchCustomEvent('showSharing', null)
+    },
     EXPORT: {
       hotkeys: [{ key: 'e', meta: true }],
       handler: () => dispatchCustomEvent('exportImage', null)

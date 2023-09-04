@@ -8,33 +8,33 @@ import { Coordinate } from '/src/types/ProjectTypes'
  * Mouse event that includes the original event but also adds extra info like where in the view the click was
  * and if it was clicking the SVG
  */
-export type SVGMouseEventData = {originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number}
+export type SVGMouseEventData = { originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number }
 
-export type StateEventData = {originalEvent: MouseEvent, state: {id: number, name: string, cx: number, cy: number}}
+export type StateEventData = { originalEvent: MouseEvent, state: { id: number, name: string, cx: number, cy: number } }
 
-export type CommentEventData = {originalEvent: MouseEvent, comment: {id: number, text: string}}
+export type CommentEventData = { originalEvent: MouseEvent, comment: { id: number, text: string } }
 /**
  * Contains information about the click along with the transition that was clicked
  */
-export type TransitionEventData = {originalEvent: MouseEvent, transition: PositionedTransition}
-export type EdgeEventData = {originalEvent: MouseEvent, transitions: PositionedTransition[]}
+export type TransitionEventData = { originalEvent: MouseEvent, transition: PositionedTransition }
+export type EdgeEventData = { originalEvent: MouseEvent, transitions: PositionedTransition[] }
 /**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
  */
 export interface CustomEvents {
-  'editTransition': {id: number},
-  'editComment': {id?: number, x: number, y: number},
-  'editStateName': {id: number},
-  'editStateLabel': {id: number},
+  'editTransition': { id: number },
+  'editComment': { id?: number, x: number, y: number },
+  'editStateName': { id: number },
+  'editStateLabel': { id: number },
   'modal:preferences': null,
-  'exportImage': {type: string, clipboard?: boolean} | null,
-  'editTransitionGroup': {ids: Array<number>},
+  'exportImage': { type: string, clipboard?: boolean } | null,
+  'editTransitionGroup': { ids: Array<number> },
   /**
    * Event to open a side panel.
    * @see SidePanelKey for available panels
    */
-  'sidepanel:open': {panel: SidePanelKey},
+  'sidepanel:open': { panel: SidePanelKey },
   'modal:shortcuts': null,
   'svg:mousedown': SVGMouseEventData,
   'svg:mouseup': SVGMouseEventData,
@@ -67,14 +67,15 @@ export interface CustomEvents {
   'edge:dblclick': EdgeEventData,
   'showWarning': string,
   'modal:deleteConfirm': null,
-  'modal:import': null
+  'modal:import': null,
+  'showSharing': null
 }
 
 /**
  * The mapping of all available events.
  * It is a combination of our custom events along with DOM events
  */
-export type Events = {[K in keyof CustomEvents]: CustomEvent<CustomEvents[K]>} & DocumentEventMap & WindowEventMap
+export type Events = { [K in keyof CustomEvents]: CustomEvent<CustomEvents[K]> } & DocumentEventMap & WindowEventMap
 
 /**
  * What a function that handles an event should look like

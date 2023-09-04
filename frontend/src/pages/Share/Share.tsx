@@ -13,7 +13,8 @@ const Share = () => {
   const setProject = useProjectStore(s => s.set)
 
   useEffect(() => {
-    const dataJson = new File([data], 'Shared Project')
+    const decodedJson = Buffer.from(data, 'base64').toString()
+    const dataJson = new File([decodedJson], 'Shared Project')
     useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
   }, [data])
 
