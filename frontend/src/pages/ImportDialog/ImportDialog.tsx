@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { NavigateFunction } from 'react-router-dom'
-import { Button, Input, Modal, Spinner } from '/src/components'
+
 import { useEvent } from '/src/hooks'
 import { promptLoadFile, urlLoadFile } from '/src/hooks/useActions'
 import { useProjectStore } from '/src/stores'
-import { Container } from '/src/pages/Share/shareStyle'
+
 import { ErrorText, ImportButtonWrapper } from './importDialogStyle'
+import { Button, Input, Modal, Spinner } from '/src/components'
+import { Container } from '/src/pages/Share/shareStyle'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -55,7 +57,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
     ? <Container><Spinner /></Container>
     : <Modal
       title='Import Project'
-      description='Import an existing project.'
+      description='Have an existing project?'
       isOpen={modalOpen}
       onClose={resetModal}
       actions={<Button secondary onClick={resetModal}>Close</Button>}
@@ -90,7 +92,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
         <Input
           value={urlValue}
           onChange={e => setUrlValue(e.target.value)}
-          placeholder={'www.example.com/paste/raw/myMachine.json'}
+          placeholder={'www.example.com/paste/raw/CoolFSA.json'}
         />
         <Button
           disabled={loading}
@@ -118,7 +120,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
       </ImportButtonWrapper>
       {urlError ? <ErrorText>No URL specified!</ErrorText> : <></>}
       <hr />
-      From raw data
+      From raw data (from the export or your json file)
       <ImportButtonWrapper>
         <Input
           value={rawValue}

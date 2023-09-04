@@ -66,7 +66,7 @@ const menus: ContextItems = [
             action: 'EXPORT_AS_JFLAP'
           },
           {
-            label: 'Export as URL',
+            label: 'Export as URL/Raw data...',
             action: 'ENCODE_FILE'
           }
         ]
