@@ -130,7 +130,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
           if (rawValue.length > 0) {
             const data = rawValue[0] === '{'
               // This is a json file. It might not fit on the URL
-              ? encodeData(rawValue)
+              ? encodeData(JSON.parse(rawValue))
               : rawValue
             navigate(`/share/raw/${data}`)
           } else {

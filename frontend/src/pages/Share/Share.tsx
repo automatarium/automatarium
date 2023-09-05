@@ -17,9 +17,10 @@ const Share = () => {
   useEffect(() => {
     switch (type) {
       case 'raw': {
-        const decodedJson = decodeData(data)
-        const dataJson = new File([decodedJson], 'Shared Project')
-        useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
+        decodeData(data).then((decodedJson) => {
+          const dataJson = new File([JSON.stringify(decodedJson)], 'Shared Project')
+          useParseFile(setProject, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
+        })
         break
       }
       default: {

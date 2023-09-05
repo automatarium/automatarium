@@ -11,7 +11,13 @@ import { encodeData } from '/src/util/encoding'
 
 const ShareUrl = () => {
   const project = useProjectStore(s => s.project)
-  const base64Project = encodeData(JSON.stringify(project, null, 0))
+
+  const [base64Project, setBase64Project] = useState('')
+
+  if (base64Project === '') {
+    encodeData(project).then(setBase64Project)
+  }
+
   const shareRawLink = `${window.location.origin}/share/raw/${base64Project}`
 
   const [exportUrlOpen, setExportUrlOpen] = useState(false)
