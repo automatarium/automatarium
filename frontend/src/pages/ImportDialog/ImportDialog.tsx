@@ -3,12 +3,13 @@ import { NavigateFunction } from 'react-router-dom'
 
 import { useEvent } from '/src/hooks'
 import { promptLoadFile, urlLoadFile } from '/src/hooks/useActions'
-import { useProjectStore } from '/src/stores'
+import { useProjectStore, useProjectsStore } from '/src/stores'
 
 import { ErrorText, ImportButtonWrapper } from './importDialogStyle'
 import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { encodeData } from '/src/util/encoding'
+import { StoredProject } from '/src/stores/useProjectStore'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -18,6 +19,7 @@ type ImportDialogProps = {
 const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
   const navigate = navigateFunction
   const setProject = useProjectStore(s => s.set)
+  const upsertProject = useProjectsStore(s => s.upsertProject)
 
   const [modalOpen, setModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -54,6 +56,11 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
     setUrlError(false)
   }
 
+  const onData = (project: StoredProject) => {
+    setProject(project)
+    upsertProject(project)
+  }
+
   return loading
     ? <Container><Spinner /></Container>
     : <Modal
@@ -70,7 +77,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
           onClick={() => {
             setLoading(true)
             promptLoadFile(
-              setProject,
+              onData,
               'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.',
               '.jff,.json',
               () => {
@@ -101,7 +108,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
               setLoading(true)
               urlLoadFile(
                 urlValue,
-                setProject,
+                onData,
                 'Automatarium failed to load a project from provided URL.',
                 () => {
                   resetModal()
