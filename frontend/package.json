@@ -14,6 +14,7 @@
   "dependencies": {
     "@automatarium/jflap-translator": "1.0.0",
     "@automatarium/simulation": "2.0.0",
+    "@msgpack/msgpack": "^2.8.0",
     "axios": "^0.26.1",
     "backend": "1.0.0",
     "dayjs": "^1.11.2",

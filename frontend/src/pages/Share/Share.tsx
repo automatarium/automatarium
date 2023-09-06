@@ -1,51 +1,54 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import dayjs from 'dayjs'
 
-import { getProject } from '/src/services/project'
-import { Spinner, ProjectCard, Button } from '/src/components'
-import { useProjectStore } from '/src/stores'
+import { Spinner } from '/src/components'
+import { useProjectStore, useProjectsStore } from '/src/stores'
 import { Container } from './shareStyle'
+
+import { useParseFile } from '/src/hooks/useActions'
+import { showWarning } from '/src/components/Warning/Warning'
+import { decodeData } from '/src/util/encoding'
 import { StoredProject } from '/src/stores/useProjectStore'
 
-import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-
 const Share = () => {
-  const { pid } = useParams()
+  const { type, data } = useParams()
   const navigate = useNavigate()
-  const [loading, setLoading] = useState(true)
-  const [sharedProject, setSharedProject] = useState<StoredProject>()
   const setProject = useProjectStore(s => s.set)
+  const addProject = useProjectsStore(s => s.upsertProject)
 
   useEffect(() => {
-    getProject(pid)
-      .then(({ project }) => setSharedProject(project))
-      .then(() => setLoading(false))
-  }, [pid])
+    switch (type) {
+      case 'raw': {
+        decodeData(data).then((decodedJson) => {
+          const dataJson = new File([JSON.stringify(decodedJson)], 'Shared Project')
+          useParseFile(onData, 'Failed to load file.', dataJson, handleLoadSuccess, handleLoadFail)
+        })
+        break
+      }
+      default: {
+        showWarning(`Unknown share type ${type}`)
+        handleLoadFail()
+        break
+      }
+    }
+  }, [data])
 
-  const handleCopy = useCallback(() => {
-    setProject({ ...sharedProject, _id: crypto.randomUUID(), userid: null })
+  const onData = (project: StoredProject) => {
+    setProject(project)
+    addProject(project)
+  }
+
+  const handleLoadSuccess = () => {
     navigate('/editor')
-  }, [pid, sharedProject])
+  }
 
-  if (!sharedProject && !loading) navigate('/new')
+  const handleLoadFail = () => {
+    navigate('/new')
+  }
 
   return (
     <Container>
-      {loading
-        ? <Spinner />
-        : <>
-        <ProjectCard
-          disabled
-          key={sharedProject._id}
-          name={sharedProject.meta?.name}
-          type={sharedProject.config?.type}
-          date={dayjs(sharedProject.meta?.dateEdited)}
-          width={PROJECT_THUMBNAIL_WIDTH}
-          $istemplate={false}
-        />
-        <Button onClick={handleCopy}>Make a copy</Button>
-      </>}
+      <Spinner />
     </Container>
   )
 }

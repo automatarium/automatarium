@@ -1,4 +1,3 @@
-
 const COLORS = {
   red: {
     h: 0,

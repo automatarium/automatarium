@@ -5,7 +5,7 @@ import { useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
-import { ShortcutGuide, ExportImage } from '/src/pages'
+import { ShortcutGuide, ExportImage, ShareUrl, ImportDialog } from '/src/pages'
 import { Content, LoadingContainer, EditorContent } from './editorStyle'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
@@ -85,8 +85,8 @@ const Editor = () => {
 
   if (loading) {
     return <LoadingContainer>
-    <Spinner />
-  </LoadingContainer>
+      <Spinner />
+    </LoadingContainer>
   }
 
   return (
@@ -96,10 +96,10 @@ const Editor = () => {
         <Toolbar />
         <EditorContent>
           <EditorPanel />
-            <BottomPanel />
+          <BottomPanel />
         </EditorContent>
         {(projectType === 'PDA') &&
-            <PDAStackVisualiser/>
+          <PDAStackVisualiser />
         }
         <Sidepanel />
 
@@ -108,6 +108,10 @@ const Editor = () => {
       <ShortcutGuide />
 
       <ExportImage />
+
+      <ShareUrl />
+
+      <ImportDialog navigateFunction={navigate} />
 
     </>
   )

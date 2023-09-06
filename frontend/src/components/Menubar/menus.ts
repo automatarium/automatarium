@@ -30,6 +30,10 @@ const menus: ContextItems = [
           {
             label: 'Import JFLAP file',
             action: 'IMPORT_JFLAP_PROJECT'
+          },
+          {
+            label: 'Import other...',
+            action: 'IMPORT_DIALOG'
           }
         ]
       },
@@ -60,6 +64,10 @@ const menus: ContextItems = [
           {
             label: 'Export as a JFLAP file',
             action: 'EXPORT_AS_JFLAP'
+          },
+          {
+            label: 'Export as URL/Raw data...',
+            action: 'ENCODE_FILE'
           }
         ]
       },
