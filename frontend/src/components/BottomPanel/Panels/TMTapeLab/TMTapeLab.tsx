@@ -11,7 +11,7 @@ const TMTapeLab = () => {
 
   return (
     <>
-    <SectionLabel>Turing Machine Tapes</SectionLabel>
+    <SectionLabel>Turing Machine Tape</SectionLabel>
         {(simResults.length !== 0) && (
         <Wrapper >
             {simResults.map((result, index) => {
