@@ -4,7 +4,7 @@ import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
-import { useAuth, useEvent } from '/src/hooks'
+import { useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
 import ShareModal from './components/ShareModal/ShareModal'
 
@@ -63,7 +63,6 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButto
 
 const Menubar = () => {
   const navigate = useNavigate()
-  const { user, loading: userLoading } = useAuth()
   const [dropdown, setDropdown] = useState<string>()
   const [shareModalVisible, setShareModalVisible] = useState(false)
 
@@ -138,7 +137,7 @@ const Menubar = () => {
                 : (
                 <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
                   )}
-              <SaveStatus $show={isSaving && !!user}>Saving...</SaveStatus>
+              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
@@ -157,7 +156,7 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          {user && <Button disabled={userLoading} onClick={() => setShareModalVisible(true)}>Share</Button>}
+          {<Button disabled onClick={() => setShareModalVisible(true)}>Share</Button>}
         </Actions>
 
         <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />

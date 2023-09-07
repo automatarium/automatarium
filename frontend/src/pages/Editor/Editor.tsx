@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useSyncCurrentProject, useActions, useEvent } from '/src/hooks'
+import { useActions, useEvent } from '/src/hooks'
 import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
-import { Menubar, Sidepanel, Toolbar, EditorPanel, Spinner, BottomPanel } from '/src/components'
+import { Menubar, Sidepanel, Toolbar, EditorPanel, BottomPanel } from '/src/components'
 import { ShortcutGuide, ExportImage, ShareUrl, ImportDialog } from '/src/pages'
-import { Content, LoadingContainer, EditorContent } from './editorStyle'
+import { Content, EditorContent } from './editorStyle'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 import { useAutosaveProject } from '../../hooks'
@@ -25,8 +25,6 @@ const Editor = () => {
     return null
   }
   const projectType = project.config.type
-  // Synchronize last-opened project with backend before showing it
-  const loading = useSyncCurrentProject()
 
   // Auto save project as its edited
   useAutosaveProject()
@@ -82,12 +80,6 @@ const Editor = () => {
       setPriorTool(undefined)
     }
   }, [tool, priorTool])
-
-  if (loading) {
-    return <LoadingContainer>
-      <Spinner />
-    </LoadingContainer>
-  }
 
   return (
     <>
