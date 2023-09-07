@@ -1,4 +1,3 @@
-import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import dayjs from 'dayjs'
 import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
@@ -7,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Header, Main, ProjectCard } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { useAuth } from '/src/hooks'
+import { ImportDialog } from '/src/pages'
 import LoginModal from '/src/pages/Login/Login'
 import SignupPage from '/src/pages/Signup/Signup'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
@@ -19,7 +19,6 @@ import PDA from './images/PDA'
 import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { showWarning } from '/src/components/Warning/Warning'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 
 const NewFile = () => {
@@ -83,52 +82,9 @@ const NewFile = () => {
     deleteProject(pid)
   }
 
-  // TODO: Use promptLoadFile from useActions
   const importProject = () => {
-    // Prompt user for file input
-    const input = document.createElement('input')
-    input.type = 'file'
-    input.accept = '.jff,.json'
-    input.onchange = () => {
-      // Read file data
-      const reader = new FileReader()
-      reader.onloadend = () => {
-        const fileToOpen = input.files[0]
-        // JFLAP file load - handle conversion
-        if (fileToOpen.name.toLowerCase().endsWith('.jff')) {
-          const project = {
-            ...createNewProject(),
-            ...convertJFLAPXML(reader.result as string)
-          }
-          setProject({
-            ...project,
-            meta: {
-              ...project.meta,
-              name: input.files[0]?.name.split('.').slice(0, -1).join('.')
-            }
-          })
-          navigate('/editor')
-        } else if (fileToOpen.name.toLowerCase().endsWith('.json')) {
-          // Set project (file) in project store
-          const project = {
-            ...createNewProject(),
-            ...JSON.parse(reader.result as string)
-          }
-          setProject({
-            ...project,
-            meta: {
-              ...project.meta,
-              name: input.files[0]?.name.split('.').slice(0, -1).join('.')
-            }
-          })
-          navigate('/editor')
-        } else {
-          showWarning('The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.')
-        }
-      }
-      reader.readAsText(input.files[0])
-    }
-    input.click()
+    // promptLoadFile(setProject, 'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.', '.jff,.json', () => navigate('/editor'))
+    dispatchCustomEvent('modal:import', null)
   }
 
   return <Main wide>
@@ -155,21 +111,21 @@ const NewFile = () => {
         description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
         onClick={() => handleNewFile('FSA')}
         height={height}
-        image={<FSA {...stylingVals}/>}
+        image={<FSA {...stylingVals} />}
       />
       <NewProjectCard
         title="Push Down Automaton"
         description="Create an automaton with a push-down stack capable of representing context-free grammars."
         onClick={() => handleNewFile('PDA')}
         height={height}
-        image={<PDA {...stylingVals}/>}
+        image={<PDA {...stylingVals} />}
       />
       <NewProjectCard
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
         height={height}
-        image={<TM {...stylingVals}/>}
+        image={<TM {...stylingVals} />}
       />
     </CardList>
 
@@ -226,6 +182,8 @@ const NewFile = () => {
         setDeleteConfirmationVisible(false)
       }}
     />
+
+    <ImportDialog navigateFunction={navigate} />
 
     <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
     <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />

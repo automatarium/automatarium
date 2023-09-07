@@ -12,11 +12,12 @@ import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
+import { decodeData } from '../util/encoding'
 
 /**
  * Combination of keys. Used to call an action
  */
-export type HotKey = {key: string, meta?: boolean, shift?: boolean, alt?: boolean}
+export type HotKey = { key: string, meta?: boolean, shift?: boolean, alt?: boolean }
 
 /**
  * Represents an action handler
@@ -106,13 +107,18 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(JSON.parse, setProject, 'Failed to open automatarium project', '.json') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open automatarium project', '.json') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
       hotkeys: [{ key: 'i', meta: true, shift: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(convertJFLAPXML, setProject, 'Failed to open JFLAP project', '.jff') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open JFLAP project', '.jff') }
+      }
+    },
+    IMPORT_DIALOG: {
+      handler: async () => {
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { dispatchCustomEvent('modal:import', null) }
       }
     },
     SAVE_FILE: {
@@ -138,6 +144,9 @@ const useActions = (registerHotkeys = false) => {
         a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
         a.click()
       }
+    },
+    ENCODE_FILE: {
+      handler: () => dispatchCustomEvent('showSharing', null)
     },
     EXPORT: {
       hotkeys: [{ key: 'e', meta: true }],
@@ -524,36 +533,68 @@ const zoomViewTo = (to: number) => {
   }
 }
 
-const promptLoadFile = <T>(parse: (text: ArrayBuffer | string) => T, onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string) => {
+export const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void, onFailedLoading: () => void) => {
+  // Read file data
+  const reader = new FileReader()
+  reader.onloadend = () => {
+    try {
+      const parse = input.name.toLowerCase().endsWith('.jff')
+        ? convertJFLAPXML
+        : JSON.parse
+      const fileData = parse(reader.result as string)
+      const project = {
+        ...createNewProject(),
+        ...fileData
+      }
+      onData({
+        ...project,
+        meta: {
+          ...project.meta,
+          name: project.meta.name ?? input?.name.split('.').slice(0, -1).join('.')
+        }
+      })
+      onFinishLoading()
+    } catch (error) {
+      showWarning(`${errorMessage}\n${error}`)
+      console.error(error)
+      onFailedLoading()
+    }
+  }
+  reader.readAsText(input)
+}
+
+export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
   input.accept = accept
-  input.onchange = () => {
-    // Read file data
-    const reader = new FileReader()
-    reader.onloadend = () => {
-      try {
-        const fileData = parse(reader.result)
-        const project = {
-          ...createNewProject(),
-          ...fileData
-        }
-        onData({
-          ...project,
-          meta: {
-            ...project.meta,
-            name: input.files[0]?.name.split('.').slice(0, -1).join('.')
-          }
-        })
-      } catch (error) {
-        showWarning(`${errorMessage}\n${error}`)
-        console.error(error)
-      }
-    }
-    reader.readAsText(input.files[0])
-  }
+  input.onchange = () => { useParseFile(onData, errorMessage, input.files[0], onFinishLoading, onFailedLoading) }
   input.click()
+}
+
+export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file.', onFinishLoading = () => null, onFailedLoading = () => null) => {
+  // Check that the user didn't just pass in the URL that was given from Automatarium
+  const urlTokens = url.split('/') ?? null
+  if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'raw') {
+    decodeData(urlTokens[urlTokens.length - 1]).then((data) => {
+      const asFile = new File([JSON.stringify(data)], 'Shared Project')
+      useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
+    })
+  } else {
+    fetch(url)
+      .then(async (res) => {
+        const resUrlTokens = res.url.split('/')
+        const endpointName = decodeURIComponent(resUrlTokens[resUrlTokens.length - 1])
+        // Give a default filename based on the received URL
+        const asFile = new File([await res.blob()], endpointName)
+        useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
+      })
+      .catch((error) => {
+        showWarning(`Failed to retrieve the file from this URL.\n${error}`)
+        console.error(error)
+        onFailedLoading()
+      })
+  }
 }
 
 // Takes in the IDs of states, comments, and transitions

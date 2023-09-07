@@ -65,10 +65,10 @@ const App = () => {
       <Route path="/about" element={<Pages.About />} />
       <Route path="/privacy" element={<Pages.Privacy />} />
       <Route path="/new" element={<Pages.NewFile />} />
-      <Route path="/share/:pid" element={<Pages.Share />} />
+      <Route path="/share/:type/:data" element={<Pages.Share />} />
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
-    {!hideFooter && <Footer/>}
+    {!hideFooter && <Footer />}
     <Warning />
     <Pages.Preferences />
   </>

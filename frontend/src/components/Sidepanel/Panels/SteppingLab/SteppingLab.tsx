@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 
 import { graphStepper, Node, State } from '@automatarium/simulation'
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 
 // The initial states and project store calls, along with the display of the current input trace,
@@ -16,7 +16,6 @@ import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 // Switch component. For demonstrative purposes, I've made this a separate component for now, which
 // means there's some repetition.
 const SteppingLab = () => {
-  const [, setFrontier] = useState([])
   const traceInput = useProjectStore(s => s.project.tests.single)
   const setTraceInput = useProjectStore(s => s.setSingleTest)
   const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
@@ -30,11 +29,11 @@ const SteppingLab = () => {
   }, [graph, traceInput])
 
   const handleStep = <S extends State>(newFrontier: Node<S>[]) => {
-    setFrontier(newFrontier)
     setSteppedStates(newFrontier)
   }
 
   const noStepper = stepper === null && false
+
   return (
     <>
       <SectionLabel>Trace</SectionLabel>
@@ -60,7 +59,12 @@ const SteppingLab = () => {
           <Button
             icon={<ChevronRight size={25} />}
             disabled={noStepper}
-            onClick={() => handleStep(stepper.forward())}
+            onClick={() => {
+              const frontier = stepper.forward()
+              if (frontier.length > 0) {
+                handleStep(frontier)
+              }
+            }}
           />
         </ButtonRow>
       </Wrapper>
