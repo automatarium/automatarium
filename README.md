@@ -46,6 +46,18 @@ Added tools such as NFA $\rightarrow$ DFA, templates, and reordering. Also conve
 - [Aung Pyae Sone](https://github.com/eddie7788)
 </details>
 
+<details>
+<summary>Group 4 - 2023 Semester 2</summary>
+Current dev team.
+
+- [Claire Basile](https://github.com/S3865562)
+- [Jack Gardner](https://github.com/JackGardnerRMIT)
+- [Christopher Truong](https://github.com/Christopher-Truong-s3848927)
+- [Ethan Wang](https://github.com/anioncat)
+- [Haixu Wang](https://github.com/HaixuWang0615)
+
+</details>
+
 For a full list of contributors see: https://github.com/automatarium/automatarium/graphs/contributors
 
 ## License

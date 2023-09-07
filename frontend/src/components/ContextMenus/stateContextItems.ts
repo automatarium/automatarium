@@ -6,16 +6,16 @@ const stateContextItems: ContextItems = [
     action: 'SET_STATE_INITIAL'
   },
   {
-    label: 'Toggle is final',
+    label: 'Toggle as final',
     action: 'TOGGLE_STATES_FINAL'
   },
   'hr',
   {
-    label: 'Align Horizontally',
+    label: 'Align horizontally',
     action: 'ALIGN_STATES_HORIZONTAL'
   },
   {
-    label: 'Align Vertically',
+    label: 'Align vertically',
     action: 'ALIGN_STATES_VERTICAL'
   },
   'hr',
