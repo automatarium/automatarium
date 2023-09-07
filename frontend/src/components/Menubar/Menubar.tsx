@@ -6,7 +6,6 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button, Logo, Dropdown } from '/src/components'
 import { useAuth, useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
-import { Signup, Login } from '/src/pages'
 import ShareModal from './components/ShareModal/ShareModal'
 
 import {
@@ -66,8 +65,6 @@ const Menubar = () => {
   const navigate = useNavigate()
   const { user, loading: userLoading } = useAuth()
   const [dropdown, setDropdown] = useState<string>()
-  const [loginModalVisible, setLoginModalVisible] = useState(false)
-  const [signupModalVisible, setSignupModalVisible] = useState(false)
   const [shareModalVisible, setShareModalVisible] = useState(false)
 
   const titleRef = useRef<HTMLInputElement>()
@@ -160,17 +157,9 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          {!userLoading && !user && <>
-            <Button secondary surface onClick={() => setLoginModalVisible(true)}>Log In</Button>
-            <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
-          </>}
-
-          {user && <Button secondary surface onClick={() => confirm('Are you sure? You will lose unsaved work.') && navigate('/logout')}>Logout</Button>}
           {user && <Button disabled={userLoading} onClick={() => setShareModalVisible(true)}>Share</Button>}
         </Actions>
 
-        <Login isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
-        <Signup isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
         <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />
       </Wrapper>
     </>

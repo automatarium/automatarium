@@ -61,7 +61,6 @@ const App = () => {
     <Routes>
       <Route path="/" element={<Pages.Landing />} />
       <Route path="/editor" element={<Pages.Editor />} />
-      <Route path="/logout" element={<Pages.Logout />} />
       <Route path="/about" element={<Pages.About />} />
       <Route path="/privacy" element={<Pages.Privacy />} />
       <Route path="/new" element={<Pages.NewFile />} />
