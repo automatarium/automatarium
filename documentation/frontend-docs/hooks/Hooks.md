@@ -9,7 +9,6 @@ As an overview: Multiple custom hooks within the frontend development were used 
 - [Hooks](#hooks)
     - [Table of contents](#table-of-contents)
 - [useActions](#useactions)
-- [useAuth](#useauth)
 - [useAutosaveProject](#useautosaveproject)
 - [useComment__](#usecomment__)
   - [useCommentCreation](#usecommentcreation)
@@ -26,8 +25,6 @@ As an overview: Multiple custom hooks within the frontend development were used 
   - [useStateCreation](#usestatecreation)
   - [useStateDragging](#usestatedragging)
   - [useStateSelection](#usestateselection)
-- [useSyncCurrentProject](#usesynccurrentproject)
-- [useSyncProject](#usesyncproject)
 - [useTransition__](#usetransition__)
   - [useTransitionCreation](#usetransitioncreation)
   - [useTransitionSelection](#usetransitionselection)
@@ -45,19 +42,6 @@ NEW_TOOL: {
       property_name: { key: 'N' },
       handler: () => setTool('nameOfTool'),
     },
-```
-# useAuth
-``useAuth`` is used with fireBase for users that are logged in or sign up. The methods in this hook contains setting up setting a user using firebase, logs in a user using firebase and retrieves the user using firebase. 
-
-Other than logging in and signing up a user, this hook is useful for and has been used for validation in terms of checking if a user exists or if a user is logged in or to load a user. 
-
-Example of usage:
-```
-if (!userLoading && !fetchedProject) {
-  if (!user) {
-    // Logic here.
-  }
-}
 ```
 
 # useAutosaveProject
@@ -213,25 +197,6 @@ For example, it can be used with useEvent:
  useEvent('state:mousedown', event => {
        // Logic here.
  })
-```
-
-# useSyncCurrentProject
-When the user is editing their autonoma project live, the ``useSyncCurrentProject`` hook ensures that the user is editing the most updated autonoma. This is done to prevent the user from editing a previous save, so that it doesn't create any conflicts within localStorage and the backend data. 
-
-An example of where this was used is in the ``Editor.js`` file. 
-```
-const loading = useSyncCurrentProject()
-```
-This was essentially used to load a previously saved project before the user was able to edit anything on it. 
-
-# useSyncProject
-Updates autonoma projects in both local storage and backend database to makes sure it is matching. 
-
-This hook retrieves both the autonoma projects in localStorage and in the backend, then compares the projects by their corresponding id. If any of those corresponding matching projects do not match with one another, then it syncs and updates either of the projects to ensure the user is working with the most up to date project.
-
-This hook is used in the index file, by simply calling the method:
-```
-useSyncProject()
 ```
 
 # useTransition__
