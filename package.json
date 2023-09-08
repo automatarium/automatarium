@@ -13,7 +13,6 @@
   "private": true,
   "workspaces": [
     "frontend",
-    "backend",
     "packages/*"
   ],
   "scripts": {
@@ -24,14 +23,12 @@
     "watch:packages": "concurrently \"yarn watch:simulation -p 1235\" \"yarn watch:jflap-translator -p 1236\"",
     "build:packages": "yarn build:simulation && yarn build:jflap-translator",
     "dev:frontend": "concurrently \"yarn watch:packages\" \"yarn workspace frontend start\"",
-    "dev:backend": "yarn workspace backend dev",
     "build:frontend": "yarn workspace frontend build",
-    "build:backend": "yarn workspace backend build",
     "lint": "yarn workspaces run lint",
     "lint:fix": "yarn workspaces run lint:fix",
     "check:types": "yarn workspaces run check:types",
     "test": "yarn workspace @automatarium/simulation test && yarn workspace @automatarium/jflap-translator test",
-    "dev": "concurrently \"yarn dev:frontend\" \"yarn dev:backend\"",
+    "dev": "yarn dev:frontend",
     "build": "yarn build:packages && yarn build:frontend"
   },
   "devDependencies": {

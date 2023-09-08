@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 import * as Pages from './pages'
 
-import { useEgg, useSyncProjects } from '/src/hooks'
+import { useEgg } from '/src/hooks'
 import { usePreferencesStore, useProjectStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
@@ -55,13 +55,11 @@ const App = () => {
   }, [themePref])
 
   useEgg()
-  useSyncProjects()
 
   return <>
     <Routes>
       <Route path="/" element={<Pages.Landing />} />
       <Route path="/editor" element={<Pages.Editor />} />
-      <Route path="/logout" element={<Pages.Logout />} />
       <Route path="/about" element={<Pages.About />} />
       <Route path="/privacy" element={<Pages.Privacy />} />
       <Route path="/new" element={<Pages.NewFile />} />

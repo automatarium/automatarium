@@ -5,10 +5,7 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button, Header, Main, ProjectCard } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-import { useAuth } from '/src/hooks'
 import { ImportDialog } from '/src/pages'
-import LoginModal from '/src/pages/Login/Login'
-import SignupPage from '/src/pages/Signup/Signup'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
@@ -28,9 +25,6 @@ const NewFile = () => {
   const thumbnails = useThumbnailStore(s => s.thumbnails)
   const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const preferences = usePreferencesStore(state => state.preferences)
-  const [loginModalVisible, setLoginModalVisible] = useState(false)
-  const [signupModalVisible, setSignupModalVisible] = useState(false)
-  const { user, loading } = useAuth()
   // We find the tallest card using method shown here
   // https://legacy.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
   const [height, setHeight] = useState(0)
@@ -92,11 +86,6 @@ const NewFile = () => {
       <Header linkTo="/" />
       <div style={{ flex: 1 }} />
       <ButtonGroup>
-        {!loading && !user && <>
-          <Button secondary onClick={() => setLoginModalVisible(true)}>Log In</Button>
-          <Button onClick={() => setSignupModalVisible(true)}>Sign Up</Button>
-        </>}
-        {user && <Button secondary onClick={() => navigate('/logout')}>Logout</Button>}
         <PreferencesButton title="Preferences" type="button" onClick={() => dispatchCustomEvent('modal:preferences', null)}><Settings /></PreferencesButton>
       </ButtonGroup>
     </HeaderRow>
@@ -184,9 +173,6 @@ const NewFile = () => {
     />
 
     <ImportDialog navigateFunction={navigate} />
-
-    <LoginModal isOpen={loginModalVisible} onClose={() => setLoginModalVisible(false)} />
-    <SignupPage isOpen={signupModalVisible} onClose={() => setSignupModalVisible(false)} />
   </Main>
 }
 
