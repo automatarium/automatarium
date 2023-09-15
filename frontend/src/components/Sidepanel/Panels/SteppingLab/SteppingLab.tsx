@@ -30,38 +30,36 @@ const SteppingLab = () => {
     return graphStepper(graph as FSAProjectGraph | PDAProjectGraph, traceInput)
   }, [graph, traceInput])
 
-
   const handleStep = (stepType: StepType) => {
-    if (!stepper) return;
+    if (!stepper) return
 
-    let frontier: Node<State>[] = [];
+    let frontier: Node<State>[] = []
 
     switch (stepType) {
       case 'Forward':
-        frontier = stepper.forward();
-        break;
+        frontier = stepper.forward()
+        break
       case 'Backward':
-        frontier = stepper.backward();
-        break;
+        frontier = stepper.backward()
+        break
       case 'Reset':
-        frontier = stepper.reset();
-        break;
+        frontier = stepper.reset()
+        break
       default:
-        break;
+        break
     }
 
     if (frontier && frontier.length > 0) {
-      setSteppedStates(frontier);
+      setSteppedStates(frontier)
     }
   }
 
   useEffect(() => {
     // Upon component mount, initialise the stepper to highlight the initial state
     if (stepper !== null) {
-      handleStep('Reset');
+      handleStep('Reset')
     }
-  }, []);
-
+  }, [])
 
   const noStepper = stepper === null && false
 
