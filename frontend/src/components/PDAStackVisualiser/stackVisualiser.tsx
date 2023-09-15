@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useEvent } from '/src/hooks'
 import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
 import './stackVisualiser.css'
 
@@ -34,8 +35,12 @@ const PDAStackVisualiser = () => {
       })
   }
 
+  useEvent('stackVisualiser:toggle', e => {
+    setShowStackTab(e.detail.state)
+  })
+
   return (
-    projectType === 'PDA' && (
+    projectType === 'PDA' && showStackTab && (
       <div className="content-container">
         {/* =========== Title and Tab button =========== */}
         Display Stack{' '}
