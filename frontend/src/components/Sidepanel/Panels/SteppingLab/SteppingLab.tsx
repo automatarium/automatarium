@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 
 import { graphStepper } from '@automatarium/simulation'
-import { useMemo, useEffect, useState } from 'react'
+import { useMemo, useEffect } from 'react'
 import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph } from '/src/types/ProjectTypes'
 
 type StepType = 'Forward' | 'Backward' | 'Reset'
@@ -24,19 +24,11 @@ const SteppingLab = () => {
 
   const graph = useProjectStore(s => s.getGraph())
 
-  const [canMoveForward, setCanMoveForward] = useState(true)
-  const [canMoveBackward, setCanMoveBackward] = useState(true)
-
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
     return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
   }, [graph, traceInput])
-
-  const checkPossibleSteps = () => {
-    setCanMoveForward(stepper.canMoveForward())
-    setCanMoveBackward(stepper.canMoveBackward())
-  }
 
   const handleStep = (stepType: StepType) => {
     let frontier = []
@@ -58,7 +50,6 @@ const SteppingLab = () => {
       if (frontier && frontier.length > 0) {
         setSteppedStates(frontier)
       }
-      checkPossibleSteps()
     }
   }
 
@@ -84,18 +75,22 @@ const SteppingLab = () => {
         <ButtonRow>
           <Button
             icon={<SkipBack size={23} />}
-            disabled={noStepper || !canMoveBackward}
+            disabled={noStepper}
             onClick={() => handleStep('Reset')}
           />
           <Button
             icon={<ChevronLeft size={25} />}
-            disabled={noStepper || !canMoveBackward}
+            disabled={noStepper}
             onClick={() => handleStep('Backward')}
           />
           <Button
             icon={<ChevronRight size={25} />}
-            disabled={noStepper || !canMoveForward}
-            onClick={() => handleStep('Forward')}
+            disabled={noStepper}
+            onClick={() => {
+              if (stepper.canMoveForward()) {
+                handleStep('Forward')
+              }
+            }}
           />
         </ButtonRow>
       </Wrapper>
