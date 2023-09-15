@@ -8,7 +8,7 @@ import {
 } from 'lucide-react'
 
 import { graphStepper, Node, State } from '@automatarium/simulation'
-import { useMemo } from 'react'
+import { useMemo, useEffect } from 'react'
 import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 
 // The initial states and project store calls, along with the display of the current input trace,
@@ -31,6 +31,11 @@ const SteppingLab = () => {
   const handleStep = <S extends State>(newFrontier: Node<S>[]) => {
     setSteppedStates(newFrontier)
   }
+
+  useEffect(() => {
+    // Upon component mount, initialise the stepper to highlight the initial state
+    handleStep(stepper.reset());
+  }, []);
 
   const noStepper = stepper === null && false
 
