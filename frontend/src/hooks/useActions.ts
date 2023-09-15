@@ -276,12 +276,16 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: '1', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'test' })
     },
-    FILE_INFO: {
+    STEPPING_LAB: {
       hotkeys: [{ key: '2', shift: true }],
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'step' })
+    },
+    FILE_INFO: {
+      hotkeys: [{ key: '3', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'about' })
     },
     FILE_OPTIONS: {
-      hotkeys: [{ key: '3', shift: true }],
+      hotkeys: [{ key: '4', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
     CONVERT_TO_DFA: {
