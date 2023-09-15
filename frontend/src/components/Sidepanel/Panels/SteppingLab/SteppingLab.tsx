@@ -7,11 +7,11 @@ import {
   ChevronLeft
 } from 'lucide-react'
 
-import { graphStepper, Node, State } from '@automatarium/simulation'
-import { useMemo, useEffect } from 'react'
-import { FSAProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
+import { graphStepper } from '@automatarium/simulation'
+import { useMemo, useEffect, useState } from 'react'
+import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph } from '/src/types/ProjectTypes'
 
-type StepType = 'Forward' | 'Backward' | 'Reset';
+type StepType = 'Forward' | 'Backward' | 'Reset'
 
 // The initial states and project store calls, along with the display of the current input trace,
 // could be made its own component, and the Testing Lab could switch between the two using a
@@ -24,42 +24,49 @@ const SteppingLab = () => {
 
   const graph = useProjectStore(s => s.getGraph())
 
+  const [canMoveForward, setCanMoveForward] = useState(true)
+  const [canMoveBackward, setCanMoveBackward] = useState(true)
+
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
-    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph, traceInput)
+    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
   }, [graph, traceInput])
 
+  const checkPossibleSteps = () => {
+    setCanMoveForward(stepper.canMoveForward())
+    setCanMoveBackward(stepper.canMoveBackward())
+  }
+
   const handleStep = (stepType: StepType) => {
-    if (!stepper) return
+    let frontier = []
+    if (stepper) {
+      switch (stepType) {
+        case 'Forward':
+          frontier = stepper.forward()
+          break
+        case 'Backward':
+          frontier = stepper.backward()
+          break
+        case 'Reset':
+          frontier = stepper.reset()
+          break
+        default:
+          break
+      }
 
-    let frontier: Node<State>[] = []
-
-    switch (stepType) {
-      case 'Forward':
-        frontier = stepper.forward()
-        break
-      case 'Backward':
-        frontier = stepper.backward()
-        break
-      case 'Reset':
-        frontier = stepper.reset()
-        break
-      default:
-        break
-    }
-
-    if (frontier && frontier.length > 0) {
-      setSteppedStates(frontier)
+      if (frontier && frontier.length > 0) {
+        setSteppedStates(frontier)
+      }
+      checkPossibleSteps()
     }
   }
 
   useEffect(() => {
-    // Upon component mount, initialise the stepper to highlight the initial state
-    if (stepper !== null) {
+    if (stepper) {
       handleStep('Reset')
     }
-  }, [])
+  }, [traceInput])
 
   const noStepper = stepper === null && false
 
@@ -77,17 +84,17 @@ const SteppingLab = () => {
         <ButtonRow>
           <Button
             icon={<SkipBack size={23} />}
-            disabled={noStepper}
+            disabled={noStepper || !canMoveBackward}
             onClick={() => handleStep('Reset')}
           />
           <Button
             icon={<ChevronLeft size={25} />}
-            disabled={noStepper}
+            disabled={noStepper || !canMoveBackward}
             onClick={() => handleStep('Backward')}
           />
           <Button
             icon={<ChevronRight size={25} />}
-            disabled={noStepper}
+            disabled={noStepper || !canMoveForward}
             onClick={() => handleStep('Forward')}
           />
         </ButtonRow>
