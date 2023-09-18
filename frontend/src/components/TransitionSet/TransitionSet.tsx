@@ -196,22 +196,25 @@ const Transition = ({
 
   return <g>
     {/* Handles to drag the edge */}
-    <ChangeTransitionHandle
-      cx={edges[0].x}
-      cy={edges[0].y}
-      transitionId={0}
-      fromId={0}
-      toId={0}
-      isStart
-    />
-    <ChangeTransitionHandle
-      cx={edges[1].x}
-      cy={edges[1].y}
-      transitionId={1}
-      fromId={1}
-      toId={1}
-      isStart={false}
-    />
+    {setSelected && <>
+      <ChangeTransitionHandle
+        cx={edges[0].x}
+        cy={edges[0].y}
+        transitionId={0}
+        fromId={0}
+        toId={0}
+        isStart
+      />
+      <ChangeTransitionHandle
+        cx={edges[1].x}
+        cy={edges[1].y}
+        transitionId={1}
+        fromId={1}
+        toId={1}
+        isStart={false}
+      />
+    </>
+    }
 
     {/* The edge itself */}
     <path
