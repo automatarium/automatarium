@@ -8,6 +8,7 @@ import { useSelectionStore } from '/src/stores'
 import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
+import ChangeTransitionHandle from '../ChangeTransitionHandle/ChangeTransitionHandle'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -194,6 +195,24 @@ const Transition = ({
   const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
   return <g>
+    {/* Handles to drag the edge */}
+    <ChangeTransitionHandle
+      cx={edges[0].x}
+      cy={edges[0].y}
+      transitionId={0}
+      fromId={0}
+      toId={0}
+      isStart
+    />
+    <ChangeTransitionHandle
+      cx={edges[1].x}
+      cy={edges[1].y}
+      transitionId={1}
+      fromId={1}
+      toId={1}
+      isStart={false}
+    />
+
     {/* The edge itself */}
     <path
       id={pathID}
