@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
-import './stackVisualiser.css'
+import { ContentContainer, StackContainer, StackItem, CloseStackButton } from './stackVisualiserStyle'
 
 const PDAStackVisualiser = () => {
   // Closes and shows the PDA stack visualiser.
@@ -31,7 +31,7 @@ const PDAStackVisualiser = () => {
       .slice(0)
       .reverse()
       .map((x) => {
-        return <div key={x.key} className="stack-item">{x.element}</div>
+        return <StackItem key={x.key}>{x.element}</StackItem>
       })
   }
 
@@ -41,27 +41,22 @@ const PDAStackVisualiser = () => {
 
   return (
     projectType === 'PDA' && showStackTab && (
-      <div className="content-container">
-        {/* =========== Title and Tab button =========== */}
+      <ContentContainer>
         Display Stack{' '}
-        <button
-          className="close-stack-btn"
-          onClick={() => setShowStackTab((e) => !e)}
-        >
-          {showStackTab ? '-' : '+' }
-        </button>
-        {/* =========== Displays the stack =========== */}
+        <CloseStackButton onClick={() => setShowStackTab((e) => !e)}>
+          {showStackTab ? '-' : '+'}
+        </CloseStackButton>
         {showStackTab
           ? (
-          <div className="stack-container">
-            <h3>Stack</h3>
-            <div className="stack-container">
-              {displayStack()}
-            </div>
-          </div>
+            <StackContainer>
+              <h3>Stack</h3>
+              <StackContainer>
+                {displayStack()}
+              </StackContainer>
+            </StackContainer>
             )
           : null}
-      </div>
+      </ContentContainer>
     )
   )
 }
