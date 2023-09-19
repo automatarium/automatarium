@@ -1,14 +1,14 @@
 import { MouseEvent, useContext } from 'react'
 import { useProjectStore } from '../../stores'
+import ChangeTransitionHandlebars from '../ChangeTransitionHandle/ChangeTransitionHandle'
+import { ghostStyles, pathSelectedClass, pathStyles } from './transitionSetStyle'
+import { REFLEXIVE_X_OFFSET, REFLEXIVE_Y_OFFSET, STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION } from '/src/config/rendering'
 import { MarkerContext } from '/src/providers'
-import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
-import { movePointTowards, lerpPoints, size } from '/src/util/points'
-import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
+import { Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition, assertType } from '/src/types/ProjectTypes'
+import { dispatchCustomEvent } from '/src/util/events'
+import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
-import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
-import ChangeTransitionHandle from '../ChangeTransitionHandle/ChangeTransitionHandle'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -197,21 +197,9 @@ const Transition = ({
   return <g>
     {/* Handles to drag the edge */}
     {setSelected && <>
-      <ChangeTransitionHandle
-        cx={edges[0].x}
-        cy={edges[0].y}
-        transitionId={0}
-        fromId={0}
-        toId={0}
-        isStart
-      />
-      <ChangeTransitionHandle
-        cx={edges[1].x}
-        cy={edges[1].y}
-        transitionId={1}
-        fromId={1}
-        toId={1}
-        isStart={false}
+      <ChangeTransitionHandlebars
+        edges={edges}
+        selectedTransitions={selectedTransitions}
       />
     </>
     }
