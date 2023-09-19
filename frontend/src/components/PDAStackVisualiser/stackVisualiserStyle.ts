@@ -8,7 +8,7 @@ export const ContentContainer = styled('div')`
   bottom: 1rem;
   left: 5rem;
   padding: 1.2rem;
-  background: #282828;
+  background: var(--surface);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   font-size: 12px;
@@ -22,15 +22,15 @@ export const StackContainer = styled('div')`
 
 export const StackItem = styled('div')`
   font-weight: bold;
-  font-size: 18px;
+  font-size: 16px;
   width: 4.5rem;
   height: 1.8rem;
-  margin-top: 0.2rem;
+  margin-top: 0.4rem;
   padding-top: 0.5rem;
-  background-color: rgb(255, 255, 255);
-  color: black;
+  background: var(--primary);
+  color: white;
   border-radius: 7px;
-  border: solid 2px black;
+  border: 0;
   text-align: center;  
   display: flex;       
   align-items: center; 
