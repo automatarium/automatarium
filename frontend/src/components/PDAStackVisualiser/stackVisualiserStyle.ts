@@ -37,19 +37,20 @@ export const StackItem = styled('div')`
   justify-content: center; 
 `
 
-export const CloseStackButton = styled('button')`
-  position: absolute;   
-  top: -5px;           
-  right: -10px;         
-  border-radius: 5px;
-  box-shadow: none;
-  background-color: rgb(119, 119, 119);
-  border: none;
-  color: white;
-  text-decoration: none;
-  display: inline-block;
-  font-size: 18px;
-  padding: 0.2rem 0.7rem;
+export const ToggleStackButton = styled('button')`
+  position: absolute;
+  top: -.4em;
+  z-index: 15;
+  right: -0.6em;
+  height: 2em;
+  width: 2em;
+  font-size: 1.2em;
+  background: var(--toolbar);
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: .3em;
   cursor: pointer;
 `
 

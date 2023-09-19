@@ -1,7 +1,7 @@
-import { useState } from 'react';
-import { useEvent } from '/src/hooks';
-import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores';
-import { ContentContainer, StackContainer, StackItem, CloseStackButton, Label } from './stackVisualiserStyle'
+import { useState } from 'react'
+import { useEvent } from '/src/hooks'
+import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
+import { ContentContainer, StackContainer, StackItem, ToggleStackButton, Label } from './stackVisualiserStyle'
 
 const PDAStackVisualiser = () => {
   // Opens and closes the stack tab within the visualiser
@@ -28,7 +28,7 @@ const PDAStackVisualiser = () => {
   }
 
   // Displays the stack
-  function displayStack() {
+  function displayStack () {
     return stack
       .slice(0)
       .reverse()
@@ -45,15 +45,15 @@ const PDAStackVisualiser = () => {
     projectType === 'PDA' && showStackVisualiser && (
       <ContentContainer>
         <Label>Stack</Label>
-        <CloseStackButton onClick={() => setShowStackTab((e) => !e)}>
+        <ToggleStackButton onClick={() => setShowStackTab((e) => !e)}>
           {showStackTab ? '-' : '+'}
-        </CloseStackButton>
+        </ToggleStackButton>
         {showStackTab
           ? (
             <StackContainer>
                 {displayStack()}
             </StackContainer>
-          )
+            )
           : null}
       </ContentContainer>
     )
