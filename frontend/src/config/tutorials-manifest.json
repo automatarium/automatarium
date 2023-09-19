@@ -1,33 +1,36 @@
 {
-  "name": "Main",
+  "name": "Tutorials",
   "description": "Tutorials main *section*",
   "items": [
     {
-      "section": {
-        "name": "Parent1",
-        "description": "Meow",
-        "items": [
-          {
-            "item": {
-              "title": "Go home",
-              "link": "https://automatarium.tdib.xyz/",
-              "description": "Goes home"
-            }
-          },
-          {
-            "item": {
-              "title": "Also goes home",
-              "link": "https://automatarium.tdib.xyz/",
-              "description": "Haven't gotten home yet?"
-            }
-          }
-        ]
-    }},
+      "id": "parent1",
+      "name": "Parent1",
+      "description": "Meow",
+      "type": "section",
+      "items": [
+        {
+          "id": "item1.1",
+          "title": "Go home",
+          "description": "Goes home",
+          "type": "item",
+          "link": "https://automatarium.tdib.xyz/"
+          
+        },
+        {
+          "id": "item1.2",
+          "title": "Also goes home",
+          "description": "Haven't gotten home yet?",
+          "type": "item",
+          "link": "https://automatarium.tdib.xyz/"
+        }
+      ]
+    },
     {
-      "item": {
-        "title": "Go home",
-        "link": "https://automatarium.tdib.xyz/",
-        "description": "Goes home"
-    }}
+      "id": "item2",
+      "title": "Go home",
+      "description": "Goes home",
+      "type": "item",
+      "link": "https://automatarium.tdib.xyz/"
+    }
   ]
 }
