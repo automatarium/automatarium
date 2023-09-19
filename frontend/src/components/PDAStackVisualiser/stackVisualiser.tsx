@@ -1,18 +1,20 @@
-import { useState } from 'react'
-import { useEvent } from '/src/hooks'
-import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
+import { useState } from 'react';
+import { useEvent } from '/src/hooks';
+import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores';
 import { ContentContainer, StackContainer, StackItem, CloseStackButton } from './stackVisualiserStyle'
 
 const PDAStackVisualiser = () => {
-  // Closes and shows the PDA stack visualiser.
+  // Opens and closes the stack tab within the visualiser
   const [showStackTab, setShowStackTab] = useState(true)
+  // Opens and closes the entire stack visualiser component
+  const [showStackVisualiser, setShowStackVisualiser] = useState(true)
 
   const traceIDx = useTMSimResultStore((s) => s.traceIDx)
   const stackInfo = usePDAVisualiserStore((s) => s.stack)
   const projectType = useProjectStore((s) => s.project.config.type)
 
   // Stack
-  const stack: {element: string, key: number}[] = []
+  const stack: { element: string, key: number }[] = []
   let currentStack
 
   // Stores stack variables
@@ -26,7 +28,7 @@ const PDAStackVisualiser = () => {
   }
 
   // Displays the stack
-  function displayStack () {
+  function displayStack() {
     return stack
       .slice(0)
       .reverse()
@@ -36,11 +38,11 @@ const PDAStackVisualiser = () => {
   }
 
   useEvent('stackVisualiser:toggle', e => {
-    setShowStackTab(e.detail.state)
+    setShowStackVisualiser(e.detail.state)
   })
 
   return (
-    projectType === 'PDA' && showStackTab && (
+    projectType === 'PDA' && showStackVisualiser && (
       <ContentContainer>
         Display Stack{' '}
         <CloseStackButton onClick={() => setShowStackTab((e) => !e)}>
@@ -54,7 +56,7 @@ const PDAStackVisualiser = () => {
                 {displayStack()}
               </StackContainer>
             </StackContainer>
-            )
+          )
           : null}
       </ContentContainer>
     )
