@@ -2,10 +2,11 @@ import { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
 import { Button, Header, Main } from '/src/components'
-import { NotFound, TutorialsSection } from '/src/pages'
+import { NotFound } from '/src/pages'
 
-import { Title, TitleRow } from './tutorialsStyle'
+import TutorialsSection from './TutorialsSection'
 import EmbeddedVideo from './components/YoutubeTutorialEmbed/YoutubeTutorialEmbed'
+import { Title, TitleRow } from './tutorialsStyle'
 
 import manifest from '/src/config/tutorials-manifest.json'
 
