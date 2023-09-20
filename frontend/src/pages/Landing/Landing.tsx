@@ -19,10 +19,10 @@ const Landing = () => (
           <p>Work easily with a simple and intuitive design built for ease of use and accessibility.</p>
           <p>It's free to use, and syncs your projects and preferences across all your devices.</p>
           <Button to="/new">Start building!</Button>
+          <p>First time here? Check out our tutorials!</p>
+          <Button to='/tutorials'>Tutorials</Button>
         </div>
       </Section>
-
-      <Button to='/tutorials'>Tutorials</Button>
 
       <Banner>
         <h3>Automatarium is open-source and free</h3>
