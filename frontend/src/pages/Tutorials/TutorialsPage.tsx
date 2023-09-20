@@ -5,7 +5,7 @@ import { Button, Header, Main } from '/src/components'
 import { NotFound, TutorialsSection } from '/src/pages'
 
 import { Title, TitleRow } from './tutorialsStyle'
-import EmbeddedVideo from './YoutubeTutorialEmbed'
+import EmbeddedVideo from './components/YoutubeTutorialEmbed/YoutubeTutorialEmbed'
 
 import manifest from '/src/config/tutorials-manifest.json'
 
