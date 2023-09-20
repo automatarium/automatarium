@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const CardContainer = styled('button')`
+export const CardContainer = styled('button')<{$cardClass: string}>`
   margin: 3px;
   min-height: 240px;
   height: 360px;
@@ -30,6 +30,10 @@ export const CardContainer = styled('button')`
   background: var(--toolbar);
 
   overflow: hidden;
+
+  ${p => p.$cardClass === 'title-only' && `
+    justify-content: space-around;
+  `}
 `
 
 export const CardTitle = styled('div')`
@@ -39,11 +43,17 @@ export const CardTitle = styled('div')`
   padding-top: 1em;
 `
 
-export const CardTitleAndText = styled('div')`
+export const CardTitleAndText = styled('div')<{$cardClass: string}>`
   overflow: hidden;
+  ${p => p.$cardClass === 'img-text' && `
+    height: 50%;
+  `}
+  ${p => p.$cardClass === 'img-only' && `
+    padding-bottom: 1em;
+  `}
 `
 
-export const CardImage = styled('div')<{$image?: boolean}>`
+export const CardImage = styled('div')<{$cardClass: string}>`
   border-radius: .6rem;
   display: flex;
   align-items: center;
@@ -52,12 +62,6 @@ export const CardImage = styled('div')<{$image?: boolean}>`
   overflow: hidden;
   min-height: 50%;
 
-  svg {
-    width: 60%;
-    height: 60%;
-    aspect-ratio: inherit;
-    display: block;
-  }
   img {
     width: 100%;
     display: block;
