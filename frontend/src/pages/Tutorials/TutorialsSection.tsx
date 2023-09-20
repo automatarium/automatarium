@@ -1,5 +1,7 @@
 import { useSearchParams } from 'react-router-dom'
+
 import { Button } from '/src/components'
+
 import { TutorialSection } from './TutorialsPage'
 
 type TutorialSectionProps = {
@@ -12,7 +14,6 @@ const TutorialsSection = ({ pageInfo, pagePath }: TutorialSectionProps) => {
   const [_, setSearchParams] = useSearchParams()
 
   return <>
-    {<p>{pageInfo.description}</p>}
     {pageInfo.items.map((child) =>
       <Button
         key={child.id}
