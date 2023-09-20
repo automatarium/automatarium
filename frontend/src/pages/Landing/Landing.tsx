@@ -22,7 +22,7 @@ const Landing = () => (
         </div>
       </Section>
 
-      <Button to='/tutorials/main'>Tutorials</Button>
+      <Button to='/tutorials'>Tutorials</Button>
 
       <Banner>
         <h3>Automatarium is open-source and free</h3>
