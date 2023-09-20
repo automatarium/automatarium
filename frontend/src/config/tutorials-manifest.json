@@ -32,6 +32,12 @@
           "description": "",
           "type": "item",
           "link": "https://youtu.be/VP5kC9fJAUE?si=Bw51Ah-Y53T2_al_"
+        },
+        {
+          "id": "section1.2",
+          "title": "Parent1.2",
+          "type": "section",
+          "items": []
         }
       ]
     },

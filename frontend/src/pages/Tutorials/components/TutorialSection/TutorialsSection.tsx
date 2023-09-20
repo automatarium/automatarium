@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom'
 
-import { TutorialSection } from './TutorialsPage'
-import { TutorialCard } from './components/TutorialCard/TutorialCard'
-import { CardsList } from './tutorialsStyle'
+import { TutorialSection } from '../../TutorialsPage'
+import { CardsList } from './tutorialsSectionStyle'
+import { TutorialCard } from '../'
 
 type TutorialSectionProps = {
   pageInfo: TutorialSection

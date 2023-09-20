@@ -4,12 +4,11 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { Button, Header, Main } from '/src/components'
 import { NotFound } from '/src/pages'
 
-import TutorialsSection from './TutorialsSection'
-import EmbeddedVideo from './components/YoutubeTutorialEmbed/YoutubeTutorialEmbed'
+import { TutorialsSection, EmbeddedVideo } from './components'
 import { Title, TitleRow } from './tutorialsStyle'
 
-import manifest from '/src/config/tutorials-manifest.json'
 import { Banner } from '../Landing/landingStyle'
+import manifest from '/src/config/tutorials-manifest.json'
 
 export interface TutorialLeaf {
   id: string
