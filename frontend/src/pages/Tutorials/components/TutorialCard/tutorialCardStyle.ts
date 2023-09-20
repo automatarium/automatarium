@@ -3,7 +3,7 @@ import { styled } from 'goober'
 export const CardContainer = styled('button')`
   margin: 3px;
   min-height: 240px;
-  min-width: 18em;
+  min-width: 366px;
   width: 20em;
 
   border-radius: .5rem;
@@ -16,13 +16,16 @@ export const CardContainer = styled('button')`
   padding: 0;
   text-align: left;
 
-  gap: 3px;
   padding: 6px;
 
   &:hover:not(:disabled), &:focus {
     border: 3px solid var(--primary);
     outline: none;
   }
+
+  display: flex;
+  flex-direction: column;
+  flex-wrap: flex-start;
 
   background: var(--toolbar);
 `
