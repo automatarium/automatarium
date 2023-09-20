@@ -1,18 +1,20 @@
 import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
-import './stackVisualiser.css'
+import { ContentContainer, StackContainer, StackItem, ToggleStackButton, Label } from './stackVisualiserStyle'
 
 const PDAStackVisualiser = () => {
-  // Closes and shows the PDA stack visualiser.
+  // Opens and closes the stack tab within the visualiser
   const [showStackTab, setShowStackTab] = useState(true)
+  // Opens and closes the entire stack visualiser component
+  const [showStackVisualiser, setShowStackVisualiser] = useState(true)
 
   const traceIDx = useTMSimResultStore((s) => s.traceIDx)
   const stackInfo = usePDAVisualiserStore((s) => s.stack)
   const projectType = useProjectStore((s) => s.project.config.type)
 
   // Stack
-  const stack: {element: string, key: number}[] = []
+  const stack: { element: string, key: number }[] = []
   let currentStack
 
   // Stores stack variables
@@ -31,37 +33,29 @@ const PDAStackVisualiser = () => {
       .slice(0)
       .reverse()
       .map((x) => {
-        return <div key={x.key} className="stack-item">{x.element}</div>
+        return <StackItem key={x.key}>{x.element}</StackItem>
       })
   }
 
   useEvent('stackVisualiser:toggle', e => {
-    setShowStackTab(e.detail.state)
+    setShowStackVisualiser(e.detail.state)
   })
 
   return (
-    projectType === 'PDA' && showStackTab && (
-      <div className="content-container">
-        {/* =========== Title and Tab button =========== */}
-        Display Stack{' '}
-        <button
-          className="close-stack-btn"
-          onClick={() => setShowStackTab((e) => !e)}
-        >
-          {showStackTab ? '-' : '+' }
-        </button>
-        {/* =========== Displays the stack =========== */}
+    projectType === 'PDA' && showStackVisualiser && (
+      <ContentContainer>
+        <Label>Stack</Label>
+        <ToggleStackButton onClick={() => setShowStackTab((e) => !e)}>
+          {showStackTab ? '-' : '+'}
+        </ToggleStackButton>
         {showStackTab
           ? (
-          <div className="stack-container">
-            <h3>Stack</h3>
-            <div className="stack-container">
-              {displayStack()}
-            </div>
-          </div>
+            <StackContainer>
+                {displayStack()}
+            </StackContainer>
             )
           : null}
-      </div>
+      </ContentContainer>
     )
   )
 }
