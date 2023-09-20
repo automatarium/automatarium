@@ -1,12 +1,12 @@
 {
   "id": "main",
-  "name": "Tutorials",
+  "title": "Tutorials",
   "description": "Tutorials main *section*",
   "type": "section",
   "items": [
     {
       "id": "parent1",
-      "name": "Parent1",
+      "title": "Parent1",
       "description": "Meow",
       "type": "section",
       "items": [

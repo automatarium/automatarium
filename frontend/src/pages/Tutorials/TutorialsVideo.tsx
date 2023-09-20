@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { Button, Header, Main } from '/src/components'
 
-const TutorialsLeaf = () => {
+const TutorialsVideo = () => {
   const navigate = useNavigate()
 
   const handleCardClick = () => {
@@ -15,4 +15,4 @@ const TutorialsLeaf = () => {
   </Main>
 }
 
-export default TutorialsLeaf
+export default TutorialsVideo

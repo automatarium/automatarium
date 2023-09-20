@@ -22,6 +22,8 @@ const Landing = () => (
         </div>
       </Section>
 
+      <Button to='/tutorials/main'>Tutorials</Button>
+
       <Banner>
         <h3>Automatarium is open-source and free</h3>
         <p>Licensed under MIT, and hosted by RMIT University for everyone to use</p>
