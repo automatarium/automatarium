@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { useSearchParams } from 'react-router-dom'
 import { Button, Header, Main } from '/src/components'
 import { TutorialLeaf } from './TutorialsPage'
 
@@ -7,18 +7,15 @@ type TutorialVideoProps = {
   pagePath: string[]
 }
 
-const TutorialsVideo = ({ pageInfo }: TutorialVideoProps) => {
-  const navigate = useNavigate()
-
-  const handleCardClick = () => {
-    navigate('/')
-  }
+const TutorialsVideo = ({ pageInfo, pagePath }: TutorialVideoProps) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [_, setSearchParams] = useSearchParams()
 
   return <Main wide>
     <Header linkTo="/" />
     <h1>{pageInfo.title}</h1>
+    {pagePath.length > 0 && <><Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button><br/></>}
     This is a leaf page.
-    <Button onClick={handleCardClick}>Go home</Button>
   </Main>
 }
 
