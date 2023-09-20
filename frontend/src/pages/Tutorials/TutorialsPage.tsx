@@ -2,6 +2,8 @@ import { useSearchParams } from 'react-router-dom'
 import manifest from '/src/config/tutorials-manifest.json'
 import { NotFound, TutorialsSection, TutorialsVideo } from '/src/pages'
 import { useEffect, useState } from 'react'
+import { Button, Header, Main } from '/src/components'
+import { Title, TitleRow } from './tutorialsStyle'
 
 export interface TutorialLeaf {
   id: string
@@ -23,7 +25,7 @@ type ManifestItem = TutorialLeaf | TutorialSection
 type PageInfo = ManifestItem | 'not found'
 
 const TutorialsPage = () => {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
   const [pageInfo, setPageInfo] = useState<PageInfo>()
   const [pagePath, setPagePath] = useState<string[]>()
 
@@ -52,9 +54,17 @@ const TutorialsPage = () => {
   if (pageInfo === undefined || pageInfo === 'not found') {
     return <NotFound />
   } else {
-    return pageInfo.type === 'section'
-      ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
-      : <TutorialsVideo pageInfo={pageInfo} pagePath={pagePath} />
+    return <Main wide>
+      <Header linkTo="/" />
+      <TitleRow>
+        <Title>{pageInfo.title}</Title>
+        {pagePath.length > 0 && <Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button>}
+      </TitleRow>
+
+      {pageInfo.type === 'section'
+        ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
+        : <TutorialsVideo pageInfo={pageInfo} pagePath={pagePath} />}
+    </ Main>
   }
 }
 
