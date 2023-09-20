@@ -9,6 +9,7 @@ import EmbeddedVideo from './components/YoutubeTutorialEmbed/YoutubeTutorialEmbe
 import { Title, TitleRow } from './tutorialsStyle'
 
 import manifest from '/src/config/tutorials-manifest.json'
+import { Banner } from '../Landing/landingStyle'
 
 export interface TutorialLeaf {
   id: string
@@ -62,21 +63,27 @@ const TutorialsPage = () => {
   if (pageInfo === undefined || pageInfo === 'not found') {
     return <NotFound />
   } else {
-    return <Main wide>
-      <Header linkTo="/" />
-      <TitleRow>
-        <Title>{pageInfo.title}</Title>
-        {pagePath.length > 0
-          ? <Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button>
-          : <Button onClick={() => navigate('/')}>Return home</Button>}
-      </TitleRow>
+    return <>
+      <Main wide>
+        <Header linkTo="/" />
+        <TitleRow>
+          <Title>{pageInfo.title}</Title>
+          {pagePath.length > 0
+            ? <Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button>
+            : <Button onClick={() => navigate('/')}>Return home</Button>}
+        </TitleRow>
 
-      {<p>{pageInfo.description}</p>}
+        {<p>{pageInfo.description}</p>}
 
-      {pageInfo.type === 'section'
-        ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
-        : <EmbeddedVideo link={pageInfo.link} />}
-    </ Main>
+        {pageInfo.type === 'section'
+          ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
+          : <EmbeddedVideo link={pageInfo.link} />}
+      </ Main>
+      <Banner>
+        <p>Ready to start building?</p>
+        <Button to='/new'>Let's start</Button>
+      </Banner>
+    </>
   }
 }
 
