@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom'
 
-import { Button } from '/src/components'
-
 import { TutorialSection } from './TutorialsPage'
+import { TutorialCard } from './components/TutorialCard/TutorialCard'
+import { CardsList } from './tutorialsStyle'
 
 type TutorialSectionProps = {
   pageInfo: TutorialSection
@@ -13,15 +13,15 @@ const TutorialsSection = ({ pageInfo, pagePath }: TutorialSectionProps) => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [_, setSearchParams] = useSearchParams()
 
-  return <>
+  return <CardsList>
     {pageInfo.items.map((child) =>
-      <Button
+      <TutorialCard
         key={child.id}
-        onClick={() => setSearchParams([...pagePath, child.id].join('&'))}>
-          {child.title}
-      </Button>
+        title={child.title}
+        description={child.description}
+        onClick={() => setSearchParams([...pagePath, child.id].join('&'))} />
     )}
-  </>
+  </CardsList>
 }
 
 export default TutorialsSection
