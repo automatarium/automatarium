@@ -1,36 +1,43 @@
 {
   "id": "tutorials",
   "title": "Tutorials",
-  "description": "Tutorials main *section*",
+  "description": "Tutorials main section",
   "type": "section",
   "items": [
     {
       "id": "parent1",
-      "title": "Parent1",
+      "title": "Section",
       "description": "Meow",
       "type": "section",
       "items": [
         {
           "id": "item1.1",
-          "title": "Go home",
-          "description": "Goes home",
+          "title": "Item 1",
+          "description": "number 1",
           "type": "item",
-          "link": "https://automatarium.tdib.xyz/"
+          "link": "morenonsense"
           
         },
         {
           "id": "item1.2",
-          "title": "Also goes home",
-          "description": "Haven't gotten home yet?",
+          "title": "Item 2",
+          "description": "22222",
           "type": "item",
-          "link": "https://automatarium.tdib.xyz/"
+          "link": "nonsense"
+        },
+        {
+          "id": "lettuce",
+          "title": "Lettuce?",
+          "description": "",
+          "type": "item",
+          "link": "https://youtu.be/VP5kC9fJAUE?si=Bw51Ah-Y53T2_al_"
         }
       ]
     },
     {
       "id": "item2",
       "title": "Go home",
-      "description": "Goes home",
+      "description": "jokes",
       "type": "item",
       "link": "https://automatarium.tdib.xyz/"
     }

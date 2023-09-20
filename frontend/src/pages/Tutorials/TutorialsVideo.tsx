@@ -15,7 +15,7 @@ const TutorialsVideo = ({ pageInfo, pagePath }: TutorialVideoProps) => {
     <Header linkTo="/" />
     <h1>{pageInfo.title}</h1>
     {pagePath.length > 0 && <><Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button><br/></>}
-    This is a leaf page.
+    {<p>{pageInfo.description}</p>}
   </Main>
 }
 

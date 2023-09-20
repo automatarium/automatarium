@@ -15,6 +15,7 @@ const TutorialsSection = ({ pageInfo, pagePath }: TutorialSectionProps) => {
     <Header linkTo="/" />
     <h1>{pageInfo.title}</h1>
     {pagePath.length > 0 && <><Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button><br /></>}
+    {<p>{pageInfo.description}</p>}
     {pageInfo.items.map((child) =>
       <Button
         key={child.id}
