@@ -15,6 +15,8 @@ const EmbeddedVideo = ({ link }) => {
   }
 
   useLayoutEffect(() => {
+    updateRatios()
+
     window.addEventListener('resize', updateRatios)
 
     return () => {
