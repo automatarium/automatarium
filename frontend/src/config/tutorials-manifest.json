@@ -9,6 +9,7 @@
       "title": "Section",
       "description": "Meow",
       "type": "section",
+      "thumbnail": "https://http.cat/images/200.jpg",
       "items": [
         {
           "id": "item1.1",

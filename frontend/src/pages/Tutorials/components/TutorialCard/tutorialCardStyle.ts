@@ -34,4 +34,31 @@ export const CardTitle = styled('div')`
   text-align: center;
   font-weight: bold;
   font-size: large;
+  padding-top: 1em;
+`
+
+export const CardImage = styled('div')<{$image?: boolean}>`
+  border-radius: .6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: 50%;
+
+  svg {
+    width: 60%;
+    height: 60%;
+    aspect-ratio: inherit;
+    display: block;
+  }
+  img {
+    height: 100%;
+    width: 100%;
+    display: block;
+    object-fit: contain;
+  }
+
+  ${props => !props.$image && `
+    background: var(--white);
+  `}
 `

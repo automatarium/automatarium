@@ -1,7 +1,8 @@
-import { CardContainer, CardTitle } from './tutorialCardStyle'
+import { CardContainer, CardImage, CardTitle } from './tutorialCardStyle'
 
-export const TutorialCard = ({ title, description, ...props }) => {
+export const TutorialCard = ({ title, description, image, ...props }) => {
   return <CardContainer {...props}>
+    <CardImage>{image && <img src={image} alt={title} />}</CardImage>
     <CardTitle>{title}</CardTitle>
     <p>{description}</p>
   </CardContainer>

@@ -19,6 +19,7 @@ const TutorialsSection = ({ pageInfo, pagePath }: TutorialSectionProps) => {
         key={child.id}
         title={child.title}
         description={child.description}
+        image={child.thumbnail}
         onClick={() => setSearchParams([...pagePath, child.id].join('&'))} />
     )}
   </CardsList>

@@ -13,7 +13,8 @@ import manifest from '/src/config/tutorials-manifest.json'
 export interface TutorialLeaf {
   id: string
   title: string
-  description: string
+  description?: string
+  thumbnail?: string
   type: 'item'
   link: string
 }
@@ -21,7 +22,8 @@ export interface TutorialLeaf {
 export interface TutorialSection {
   id: string
   title: string
-  description: string
+  description?: string
+  thumbnail?: string
   type: 'section'
   items: [TutorialSection | TutorialLeaf]
 }
