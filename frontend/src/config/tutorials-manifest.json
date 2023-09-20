@@ -1,6 +1,8 @@
 {
+  "id": "main",
   "name": "Tutorials",
   "description": "Tutorials main *section*",
+  "type": "section",
   "items": [
     {
       "id": "parent1",
