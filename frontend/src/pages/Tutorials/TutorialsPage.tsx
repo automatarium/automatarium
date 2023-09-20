@@ -50,6 +50,8 @@ const TutorialsPage = () => {
 
     const assertedSection = manifestState as TutorialSection
     const nextState = assertedSection.items.find((mi: ManifestItem) => mi.id === iResult.value)
+    // Not found
+    if (nextState === undefined) { return 'not found' }
     const nextPath = [...path, nextState.id]
 
     return traceTree(params, nextState, nextPath)
