@@ -3,6 +3,7 @@ import { styled } from 'goober'
 export const CardContainer = styled('button')`
   margin: 3px;
   min-height: 240px;
+  height: 360px;
   min-width: 366px;
   width: 20em;
 
@@ -18,16 +19,17 @@ export const CardContainer = styled('button')`
 
   padding: 6px;
 
-  &:hover:not(:disabled), &:focus {
+  &:hover, &:focus {
     border: 3px solid var(--primary);
     outline: none;
   }
 
   display: flex;
   flex-direction: column;
-  flex-wrap: flex-start;
 
   background: var(--toolbar);
+
+  overflow: hidden;
 `
 
 export const CardTitle = styled('div')`
@@ -37,13 +39,18 @@ export const CardTitle = styled('div')`
   padding-top: 1em;
 `
 
+export const CardTitleAndText = styled('div')`
+  overflow: hidden;
+`
+
 export const CardImage = styled('div')<{$image?: boolean}>`
   border-radius: .6rem;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
-  height: 50%;
+  overflow: hidden;
+  min-height: 50%;
 
   svg {
     width: 60%;
@@ -52,13 +59,8 @@ export const CardImage = styled('div')<{$image?: boolean}>`
     display: block;
   }
   img {
-    height: 100%;
     width: 100%;
     display: block;
     object-fit: contain;
   }
-
-  ${props => !props.$image && `
-    background: var(--white);
-  `}
 `

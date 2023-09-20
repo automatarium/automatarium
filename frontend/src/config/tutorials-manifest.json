@@ -7,14 +7,14 @@
     {
       "id": "parent1",
       "title": "Section",
-      "description": "Meow",
+      "description": "Meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow",
       "type": "section",
       "thumbnail": "https://http.cat/images/200.jpg",
       "items": [
         {
           "id": "item1.1",
           "title": "Item 1",
-          "description": "number 1",
+          "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus id odio a nisi auctor pulvinar. Aliquam luctus risus et nibh pharetra semper. Vestibulum quis hendrerit arcu. Sed elementum blandit dui. Curabitur blandit mauris non mi volutpat venenatis. Praesent rutrum nulla massa, a rutrum metus pellentesque vitae. Ut tincidunt laoreet tellus eu vulputate. Aenean mollis eleifend quam, non condimentum sem euismod vitae. Duis consectetur accumsan rutrum. Vivamus orci mauris, laoreet quis nisi a, finibus pellentesque magna. In suscipit, nisi et consectetur vestibulum, purus mi suscipit justo, efficitur cursus augue leo condimentum diam. In ut metus rhoncus, elementum ante viverra, posuere dolor. Mauris tristique ornare nisi ac posuere. Etiam ac dictum diam, et pellentesque elit. Vestibulum scelerisque ante erat, a gravida orci laoreet sed. Vestibulum finibus sem vel lorem posuere, ac feugiat libero congue. ",
           "type": "item",
           "link": "morenonsense"
           
@@ -31,6 +31,7 @@
           "title": "Lettuce?",
           "description": "",
           "type": "item",
+          "thumbnail": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTvStJLJhnPMn2dQ05ecz5qLFsykm71rkLZBRsLEFECbzMaBuh9STMl5TTwaa8g_UcZEX6Cm08yW85nPJM",
           "link": "https://youtu.be/VP5kC9fJAUE?si=Bw51Ah-Y53T2_al_"
         },
         {
