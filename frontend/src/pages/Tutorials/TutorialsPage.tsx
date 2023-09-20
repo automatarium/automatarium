@@ -1,9 +1,10 @@
 import { useSearchParams } from 'react-router-dom'
 import manifest from '/src/config/tutorials-manifest.json'
-import { NotFound, TutorialsSection, TutorialsVideo } from '/src/pages'
+import { NotFound, TutorialsSection } from '/src/pages'
 import { useEffect, useState } from 'react'
 import { Button, Header, Main } from '/src/components'
 import { Title, TitleRow } from './tutorialsStyle'
+import EmbeddedVideo from './YoutubeTutorialEmbed'
 
 export interface TutorialLeaf {
   id: string
@@ -63,7 +64,7 @@ const TutorialsPage = () => {
 
       {pageInfo.type === 'section'
         ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
-        : <TutorialsVideo pageInfo={pageInfo} pagePath={pagePath} />}
+        : <EmbeddedVideo link={pageInfo.link} />}
     </ Main>
   }
 }
