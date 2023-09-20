@@ -1,4 +1,4 @@
-export type SidePanelKey = 'test' | 'about' | 'options'
+export type SidePanelKey = 'test' | 'step' | 'about' | 'options'
 
 export { default as TestingLab } from './TestingLab/TestingLab'
 export { default as SteppingLab } from './SteppingLab/SteppingLab'

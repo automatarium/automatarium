@@ -49,4 +49,12 @@ export class GraphStepper<S extends State, T extends BaseAutomataTransition> {
     this.frontier = [this.graph.initial]
     return this.frontier
   }
+
+  public canMoveForward (): boolean {
+    return this.frontier.some(node => this.graph.getSuccessors(node).length > 0)
+  }
+
+  public canMoveBackward (): boolean {
+    return this.frontier.some(node => !!node.parent)
+  }
 }
