@@ -33,11 +33,18 @@ const Options = () => {
         description="Used to separate input characters"
       >
         <Input
+          type="select"
           small
-          style={{ width: '8ch' }}
-          value={orOperator ?? '|'}
+          value={(orOperator === '' || !orOperator) ? '|' : orOperator}
           onChange={e => updateConfig({ orOperator: e.target.value })}
-        />
+        >
+          <option value="∣">∣</option>
+          <option value="∥">∥</option>
+          <option value="＋">＋</option>
+          <option value="∨">v</option>
+          <option value="OR">OR</option>
+          <option value=" ">None</option>
+        </Input>
       </Preference>
     </Wrapper>
 
