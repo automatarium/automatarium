@@ -25,8 +25,16 @@ const makeTransitionText = (type: ProjectType, t: PositionedTransition): string 
       assertType<PDAAutomataTransition>(t)
       return `${t.read || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
     case 'FSA':
-      return t.read || 'λ'
+      return splitCharsWithOr(t.read) || 'λ'
   }
+}
+
+// If the read length is greater than 1, add OR symbols between each character
+const splitCharsWithOr = (read: string): string => {
+  if (read && read.length > 1) {
+    return read.split('').join(' | ')
+  }
+  return read
 }
 
 // Direction that a transition can bend
@@ -193,6 +201,20 @@ const Transition = ({
   // 'under' transitions require more spacing
   const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
+  const coloriseOrSymbols = (text: string) => {
+    const elements: React.ReactNode[] = []
+    const parts = text.split('|')
+
+    parts.forEach((part, index) => {
+      elements.push(<tspan>{part}</tspan>)
+      if (index !== parts.length - 1) {
+        elements.push(<tspan fill="#999">|</tspan>)
+      }
+    })
+
+    return elements
+  }
+
   return <g>
     {/* The edge itself */}
     <path
@@ -233,7 +255,7 @@ const Transition = ({
             onMouseUp={handleTransitionMouseUp(t)}
             onDoubleClick={handleTransitionDoubleClick(t)}
             x={midPoint.x}>
-              {makeTransitionText(projectType, t)}
+            {coloriseOrSymbols(makeTransitionText(projectType, t))}
           </tspan>
         })}
     </text>
