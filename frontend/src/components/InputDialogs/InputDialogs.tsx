@@ -94,6 +94,7 @@ const InputDialogs = () => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
+  const orOperator = useProjectStore(s => s.project.config.orOperator)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
@@ -146,11 +147,14 @@ const InputDialogs = () => {
   }, arr)
 
   /**
-   * Rearranges a read string so that all single characters come before ranges.
+   * Removes OR operators and rearranges the read string when a range is present
+   * All single characters come before ranges
    * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
-   * This is just want it was like before so assuming there is a design reason
    */
-  const formatRangeChars = (input: string): string => {
+  const formatInput = (input: string): string => {
+    // Remove any given OR operator to be reintroduced during formatting
+    input = input.split(orOperator).join('')
+
     const ranges = input.match(/\[(.*?)]/g)
     const chars = input.replace(/\[(.*?)]/g, '')
     return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
@@ -159,7 +163,7 @@ const InputDialogs = () => {
   const saveTransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatRangeChars(value)
+      read: formatInput(value)
     })
     commit()
     hideDialog()
@@ -174,9 +178,9 @@ const InputDialogs = () => {
   const savePDATransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatRangeChars(value),
-      pop: formatRangeChars(valuePop),
-      push: formatRangeChars(valuePush)
+      read: formatInput(value),
+      pop: formatInput(valuePop),
+      push: formatInput(valuePush)
     } as PDAAutomataTransition)
     commit()
     hideDialog()
