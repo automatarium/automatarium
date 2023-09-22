@@ -31,11 +31,11 @@ const makeTransitionText = (type: ProjectType, t: PositionedTransition): string 
 
 // If the read length is greater than 1, add OR symbols between each character
 const splitCharsWithOr = (read: string, orOperator: string): string => {
-  if (!read || read.length <= 1) return read;
+  if (!read || read.length <= 1) return read
 
-  const joinStr = `  ${orOperator}  `;
+  const joinStr = `  ${orOperator}  `
   // Don't insert OR symbols inside ranges
-  return read.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr);
+  return read.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
 }
 
 // Direction that a transition can bend
@@ -205,16 +205,16 @@ const Transition = ({
 
   const formatOrSymbols = (text: string) => {
     text = splitCharsWithOr(text, orOperator)
-    const elements: React.ReactNode[] = [];
-    const parts = text.split(orOperator);  
+    const elements: React.ReactNode[] = []
+    const parts = text.split(orOperator)
 
     parts.forEach((part, index) => {
-      elements.push(<tspan>{part}</tspan>);
+      elements.push(<tspan>{part}</tspan>)
       if (index !== parts.length - 1) {
-        elements.push(<tspan fill="#999">{orOperator}</tspan>);  
+        elements.push(<tspan fill="#999">{orOperator}</tspan>)
       }
-    });
-    return elements;
+    })
+    return elements
   }
 
   return <g>
