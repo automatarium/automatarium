@@ -30,12 +30,19 @@ const makeTransitionText = (type: ProjectType, t: PositionedTransition): string 
 }
 
 // If the read length is greater than 1, add OR symbols between each character
-const splitCharsWithOr = (read: string, orOperator: string): string => {
-  if (!read || read.length <= 1) return read
-
-  const joinStr = `  ${orOperator}  `
-  // Don't insert OR symbols inside ranges
-  return read.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
+const splitCharsWithOr = (read: string, orOperator: string, type: ProjectType): string => {
+  switch (type) {
+    case 'TM':
+      return read
+    case 'PDA':
+      return read
+    case 'FSA': {
+      if (!read || read.length <= 1) return read
+      const joinStr = `  ${orOperator}  `
+      // Don't insert OR symbols inside ranges
+      return read.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
+    }
+  }
 }
 
 // Direction that a transition can bend
@@ -204,7 +211,7 @@ const Transition = ({
   const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
   const formatOrSymbols = (text: string) => {
-    text = splitCharsWithOr(text, orOperator)
+    text = splitCharsWithOr(text, orOperator, projectType)
     const elements: React.ReactNode[] = []
     const parts = text.split(orOperator)
 
