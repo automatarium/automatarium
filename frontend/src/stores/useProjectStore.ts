@@ -22,6 +22,7 @@ import {
   APP_VERSION,
   SCHEMA_VERSION,
   DEFAULT_STATE_PREFIX,
+  DEFAULT_OR_OPERATOR,
   DEFAULT_PROJECT_TYPE,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
@@ -70,6 +71,7 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
   config: {
     type: projectType,
     statePrefix: DEFAULT_STATE_PREFIX,
+    orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
     color: DEFAULT_PROJECT_COLOR[projectType]
   }

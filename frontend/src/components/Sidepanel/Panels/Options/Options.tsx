@@ -6,6 +6,7 @@ import { ColourName } from '/src/config'
 
 const Options = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
+  const orOperator = useProjectStore(s => s.project?.config?.orOperator)
   const projectColor = useProjectStore(s => s.project?.config?.color)
   const updateConfig = useProjectStore(s => s.updateConfig)
 
@@ -21,6 +22,21 @@ const Options = () => {
           style={{ width: '8ch' }}
           value={statePrefix ?? 'q'}
           onChange={e => updateConfig({ statePrefix: e.target.value })}
+        />
+      </Preference>
+    </Wrapper>
+
+    <SectionLabel>Operators</SectionLabel>
+    <Wrapper>
+      <Preference
+        label="OR operator"
+        description="Used to separate input characters"
+      >
+        <Input
+          small
+          style={{ width: '8ch' }}
+          value={orOperator ?? '|'}
+          onChange={e => updateConfig({ orOperator: e.target.value })}
         />
       </Preference>
     </Wrapper>
