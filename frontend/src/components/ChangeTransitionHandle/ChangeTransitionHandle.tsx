@@ -1,8 +1,9 @@
-import { MouseEvent } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import { handleStyle } from './changeTransitionHandleStyle'
 import { BOX_HANDLE_SIZE } from '/src/config/rendering'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Coordinate } from '/src/types/ProjectTypes'
+import { useProjectStore } from '/src/stores'
 
 type TransitionChangeHandleProps = {
   edges: Coordinate[]
@@ -12,17 +13,23 @@ type TransitionChangeHandleProps = {
 type RectCoords = { start: Coordinate, end: Coordinate }
 
 const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: TransitionChangeHandleProps) => {
-  console.log(selectedTransitions)
-  const isSameEdge = true
-  const id = 0
-  const from = 0
-  const to = 0
+  const [isSameEdge, setIsSameEdge] = useState(true)
+  const [from, setFrom] = useState<number>()
+  const [to, setTo] = useState<number>()
+
+  useEffect(() => {
+    const { transitions } = useProjectStore.getState()?.project ?? {}
+    const transitionsScope = transitions.filter(t => selectedTransitions.includes(t.id))
+    setIsSameEdge(transitions.every(t => t.from === transitionsScope[0].from && t.to === transitionsScope[0].to))
+    setFrom(transitionsScope[0].from)
+    setTo(transitionsScope[0].to)
+  }, [selectedTransitions])
 
   const handleStartMouseUp = (e: MouseEvent) => {
     dispatchCustomEvent('transitionhandle:mouseup', {
       originalEvent: e,
       transitionInfo: {
-        transitionId: id,
+        transitionIds: selectedTransitions,
         fromId: from,
         toId: to,
         isStart: true
@@ -34,7 +41,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
     dispatchCustomEvent('transitionhandle:mousedown', {
       originalEvent: e,
       transitionInfo: {
-        transitionId: id,
+        transitionIds: selectedTransitions,
         fromId: from,
         toId: to,
         isStart: true
@@ -46,7 +53,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
     dispatchCustomEvent('transitionhandle:mouseup', {
       originalEvent: e,
       transitionInfo: {
-        transitionId: id,
+        transitionIds: selectedTransitions,
         fromId: from,
         toId: to,
         isStart: false
@@ -58,7 +65,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
     dispatchCustomEvent('transitionhandle:mousedown', {
       originalEvent: e,
       transitionInfo: {
-        transitionId: id,
+        transitionIds: selectedTransitions,
         fromId: from,
         toId: to,
         isStart: false
