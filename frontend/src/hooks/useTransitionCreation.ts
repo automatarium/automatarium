@@ -51,9 +51,9 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
     if (moveTransitionState && transitionsToUpdate && e.detail.originalEvent.button === 0) {
       const otherId = e.detail.state.id
       if (isMoveStart) {
-        reattachTransitions(transitionsToUpdate, moveTransitionState.id, otherId)
-      } else {
         reattachTransitions(transitionsToUpdate, otherId, moveTransitionState.id)
+      } else {
+        reattachTransitions(transitionsToUpdate, moveTransitionState.id, otherId)
       }
       setMoveTransitionState(null)
       setTransitionsToUpdate(null)
@@ -71,9 +71,9 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
   useEvent('svg:mousemove', e => {
     if (tool === 'cursor' && moveTransitionState) {
       if (isMoveStart) {
-        setCreateTransitionStart([e.detail.viewX, e.detail.viewY])
-      } else {
         setCreateTransitionEnd([e.detail.viewX, e.detail.viewY])
+      } else {
+        setCreateTransitionStart([e.detail.viewX, e.detail.viewY])
       }
     }
   }, [tool, moveTransitionState])
@@ -93,10 +93,10 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
     setTransitionsToUpdate(e.detail.transitionInfo.transitionIds)
     const states = useProjectStore.getState().project?.states ?? []
     if (isMovingStart) {
-      setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.fromId))
+      setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.toId))
       setCreateTransitionStart(screenToViewSpace(e.detail.originalEvent.clientX, e.detail.originalEvent.clientY))
     } else {
-      setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.toId))
+      setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.fromId))
       setCreateTransitionEnd(screenToViewSpace(e.detail.originalEvent.clientX, e.detail.originalEvent.clientY))
     }
   })
