@@ -17,7 +17,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   const [from, setFrom] = useState<number>()
   const [to, setTo] = useState<number>()
 
-  const calcEdgeUnitVector = () => {
+  const calcEdgeUnitVector = (t: RectCoords) => {
     const vec = [t.end.x - t.start.x, t.end.y - t.start.y]
     const mag = Math.sqrt(vec[0] ** 2 + vec[1] ** 2)
     return [vec[0] / mag, vec[1] / mag]
@@ -76,7 +76,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   }, [edges])
 
   const tc: RectCoords = useMemo(() => {
-    const uv = calcEdgeUnitVector()
+    const uv = calcEdgeUnitVector(t)
     const m = 4
     return {
       start: { x: t.start.x + m * uv[0], y: t.start.y + m * uv[1] },
