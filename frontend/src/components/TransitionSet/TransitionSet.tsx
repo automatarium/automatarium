@@ -222,13 +222,11 @@ const Transition = ({
     />}
 
     {/* Handles to drag the edge */}
-    {setSelected && <>
-      <ChangeTransitionHandlebars
+    {setSelected && <ChangeTransitionHandlebars
         edges={edges}
         selectedTransitions={selectedTransitions}
         isReflexive={isReflexive}
       />
-    </>
     }
 
     <text

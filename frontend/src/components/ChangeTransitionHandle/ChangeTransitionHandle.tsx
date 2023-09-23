@@ -94,7 +94,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, .
     }
   }, [t])
 
-  return <g {...props}>
+  return isSameEdge && <g {...props}>
     <circle
       transform={`translate(${tc.start.x}, ${tc.start.y})`}
       r={BOX_HANDLE_SIZE}
