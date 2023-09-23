@@ -32,7 +32,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   useEffect(() => {
     const { transitions } = useProjectStore.getState()?.project ?? {}
     const transitionsScope = transitions.filter(t => selectedTransitions.includes(t.id))
-    setIsSameEdge(transitions.every(t => t.from === transitionsScope[0].from && t.to === transitionsScope[0].to))
+    setIsSameEdge(transitionsScope.every(t => t.from === transitionsScope[0].from && t.to === transitionsScope[0].to))
     setFrom(transitionsScope[0].from)
     setTo(transitionsScope[0].to)
   }, [selectedTransitions])
