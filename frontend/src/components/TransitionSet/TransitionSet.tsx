@@ -8,6 +8,7 @@ import { useSelectionStore } from '/src/stores'
 import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
+import { splitCharsWithOr } from '/src/util/orOperators'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -27,14 +28,6 @@ const makeTransitionText = (type: ProjectType, orOperator: string, t: Positioned
     case 'FSA':
       return splitCharsWithOr(t.read, orOperator) || 'λ'
   }
-}
-
-// If the read length is greater than 1, add OR symbols between each character
-const splitCharsWithOr = (text: string, orOperator: string): string => {
-  if (!text || text.length <= 1) return text
-  const joinStr = `  ${orOperator}  `
-  // Don't insert OR symbols inside ranges
-  return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
 }
 
 // Direction that a transition can bend

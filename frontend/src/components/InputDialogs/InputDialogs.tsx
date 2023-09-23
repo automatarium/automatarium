@@ -6,7 +6,7 @@ import { useProjectStore, useViewStore } from '/src/stores'
 import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
-import { possibleOrOperators } from '/src/util/orOperators'
+import { formatInput, splitCharsWithOr } from '/src/util/orOperators'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import {
@@ -108,7 +108,7 @@ const InputDialogs = () => {
     switch (projectType) {
       case 'TM':
         assertType<TMAutomataTransition>(transition)
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setWrite(transition?.write ?? '')
         setDirection(transition?.direction)
         setDialog({
@@ -121,7 +121,7 @@ const InputDialogs = () => {
         break
       case 'PDA':
         assertType<PDAAutomataTransition>(transition)
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
         setDialog({
@@ -133,7 +133,7 @@ const InputDialogs = () => {
         })
         break
       case 'FSA':
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setDialog({
           visible: true,
           x: screenMidPoint[0],
@@ -146,29 +146,10 @@ const InputDialogs = () => {
     focusInput()
   }, arr)
 
-  /**
-   * Removes OR operators and rearranges the read string when a range is present
-   * All single characters come before ranges
-   * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
-   */
-  const formatInput = (input: string): string => {
-    // Remove whitespace
-    input = input.replace(/\s+/g, '')
-
-    // Remove all possible OR operators from the input
-    for (const op of possibleOrOperators(orOperator)) {
-      input = input.split(op).join('')
-    }
-
-    const ranges = input.match(/\[(.*?)]/g)
-    const chars = input.replace(/\[(.*?)]/g, '')
-    return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
-  }
-
   const saveTransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatInput(value)
+      read: formatInput(value, orOperator)
     })
     commit()
     hideDialog()
@@ -177,7 +158,7 @@ const InputDialogs = () => {
   const saveTMTransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatInput(value),
+      read: formatInput(value, orOperator),
       write,
       direction: direction || 'R'
     } as TMAutomataTransition)
@@ -188,9 +169,9 @@ const InputDialogs = () => {
   const savePDATransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatInput(value),
-      pop: formatInput(valuePop),
-      push: formatInput(valuePush)
+      read: formatInput(value, orOperator),
+      pop: valuePop,
+      push: valuePush
     } as PDAAutomataTransition)
     commit()
     hideDialog()

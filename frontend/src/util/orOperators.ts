@@ -26,3 +26,30 @@ export const possibleOrOperators = (orOperator: string): string[] => {
       return [orOperator]
   }
 }
+
+// If the read length is greater than 1, add OR symbols between each character
+export const splitCharsWithOr = (text: string, orOperator: string): string => {
+  if (!text || text.length <= 1) return text
+  const joinStr = `  ${orOperator}  `
+  // Don't insert OR symbols inside ranges
+  return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
+}
+
+/**
+ * Removes OR operators and rearranges the read string when a range is present
+ * All single characters come before ranges
+ * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
+ */
+export const formatInput = (input: string, orOperator: string): string => {
+  // Remove whitespace
+  input = input.replace(/\s+/g, '')
+
+  // Remove all possible OR operators from the input
+  for (const op of possibleOrOperators(orOperator)) {
+    input = input.split(op).join('')
+  }
+
+  const ranges = input.match(/\[(.*?)]/g)
+  const chars = input.replace(/\[(.*?)]/g, '')
+  return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
+}
