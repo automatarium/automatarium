@@ -144,7 +144,7 @@ const InputDialogs = () => {
     }
 
     focusInput()
-  }, arr)
+  }, [arr, orOperator])
 
   const saveTransition = () => {
     editTransition({

@@ -30,7 +30,9 @@ export const possibleOrOperators = (orOperator: string): string[] => {
 // If the read length is greater than 1, add OR symbols between each character
 export const splitCharsWithOr = (text: string, orOperator: string): string => {
   if (!text || text.length <= 1) return text
-  const joinStr = `  ${orOperator}  `
+  let joinStr = ' '
+  if (orOperator !== ' ') { joinStr = ` ${orOperator} ` }
+
   // Don't insert OR symbols inside ranges
   return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
 }

@@ -84,7 +84,7 @@ const InputTransitionGroup = () => {
     ).map(t => t.id)
     setIdList([...allIdList])
     setModalOpen(true)
-  })
+  }, [orOperator])
 
   const retrieveTransitions = () => {
     const { transitions } = useProjectStore.getState()?.project ?? {}
