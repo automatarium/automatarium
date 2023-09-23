@@ -15,34 +15,26 @@ import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataT
  * - PDA: read,pop;direction
  * - FSA: read
  */
-const makeTransitionText = (type: ProjectType, t: PositionedTransition): string => {
+const makeTransitionText = (type: ProjectType, orOperator: string, t: PositionedTransition): string => {
   // Since the type can't be narrowed, we need to narrow ourselves inside the blocks
   switch (type) {
     case 'TM':
       assertType<TMAutomataTransition>(t)
-      return `${t.read || 'λ'},${t.write || 'λ'};${t.direction || 'λ'}`
+      return `${splitCharsWithOr(t.read, orOperator) || 'λ'},${t.write || 'λ'};${t.direction || 'λ'}`
     case 'PDA':
       assertType<PDAAutomataTransition>(t)
-      return `${t.read || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
+      return `${splitCharsWithOr(t.read, orOperator) || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
     case 'FSA':
-      return t.read || 'λ'
+      return splitCharsWithOr(t.read, orOperator) || 'λ'
   }
 }
 
 // If the read length is greater than 1, add OR symbols between each character
-const splitCharsWithOr = (text: string, orOperator: string, type: ProjectType): string => {
-  switch (type) {
-    case 'TM':
-      return text
-    case 'PDA':
-      return text
-    case 'FSA': {
-      if (!text || text.length <= 1) return text
-      const joinStr = `  ${orOperator}  `
-      // Don't insert OR symbols inside ranges
-      return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
-    }
-  }
+const splitCharsWithOr = (text: string, orOperator: string): string => {
+  if (!text || text.length <= 1) return text
+  const joinStr = `  ${orOperator}  `
+  // Don't insert OR symbols inside ranges
+  return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
 }
 
 // Direction that a transition can bend
@@ -211,7 +203,6 @@ const Transition = ({
   const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
   const formatOrSymbols = (text: string) => {
-    text = splitCharsWithOr(text, orOperator, projectType)
     const elements: React.ReactNode[] = []
     const parts = text.split(orOperator)
 
@@ -264,7 +255,7 @@ const Transition = ({
             onMouseUp={handleTransitionMouseUp(t)}
             onDoubleClick={handleTransitionDoubleClick(t)}
             x={midPoint.x}>
-            {formatOrSymbols(makeTransitionText(projectType, t))}
+            {formatOrSymbols(makeTransitionText(projectType, orOperator, t))}
           </tspan>
         })}
     </text>

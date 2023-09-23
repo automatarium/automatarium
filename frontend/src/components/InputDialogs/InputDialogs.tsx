@@ -85,7 +85,6 @@ const InputDialogs = () => {
 
   const inputWriteRef = useRef()
   const inputDirectionRef = useRef()
-  const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
   const [direction, setDirection] = useState<TMDirection | ''>('R')
   const editTransition = useProjectStore(s => s.editTransition)
@@ -109,7 +108,7 @@ const InputDialogs = () => {
     switch (projectType) {
       case 'TM':
         assertType<TMAutomataTransition>(transition)
-        setRead(transition?.read ?? '')
+        setValue(transition?.read ?? '')
         setWrite(transition?.write ?? '')
         setDirection(transition?.direction)
         setDialog({
@@ -176,7 +175,12 @@ const InputDialogs = () => {
   }
 
   const saveTMTransition = () => {
-    editTransition({ id: dialog.id, read, write, direction: direction || 'R' } as TMAutomataTransition)
+    editTransition({
+      id: dialog.id,
+      read: formatInput(value),
+      write,
+      direction: direction || 'R'
+    } as TMAutomataTransition)
     commit()
     hideDialog()
   }
@@ -275,11 +279,6 @@ const InputDialogs = () => {
     stateName: saveStateName,
     stateLabel: saveStateLabel
   } as Record<DialogType, () => void>)[dialog?.type]
-
-  const handleReadIn = (e: InputEvent) => {
-    const input = e.target.value.toString()
-    setRead(input[input.length - 1] ?? '')
-  }
 
   const handleWriteIn = (e: InputEvent) => {
     const input = e.target.value.toString()
@@ -383,8 +382,8 @@ const InputDialogs = () => {
           <InputWrapper>
             <Input
               ref={inputRef}
-              value={read}
-              onChange={handleReadIn}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
               style={TRANSITION_INPUT_STYLE}

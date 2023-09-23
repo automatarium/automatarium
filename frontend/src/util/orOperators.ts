@@ -1,4 +1,3 @@
-
 export const possibleOrOperators = (orOperator: string): string[] => {
   switch (orOperator) {
     case '+':

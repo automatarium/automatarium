@@ -51,7 +51,7 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       if (nextTape.pointer < 0) {
         nextTape = { pointer: 0, trace: ['', ...nextTape.trace] }
       }
-      if (transition.read === symbol) {
+      if (transition.read.includes(symbol)) {
         const graphState = new TMState(
           nextState.id,
           nextState.isFinal,

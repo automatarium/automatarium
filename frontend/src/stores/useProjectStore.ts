@@ -428,7 +428,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       initialState: project.initialState,
       projectType: project.projectType,
       states: project.states,
-      transitions: project.projectType === 'TM' ? project.transitions : expandTransitions(project.transitions)
+      transitions: expandTransitions(project.transitions)
     } as ProjectGraph
   },
 
