@@ -207,9 +207,9 @@ const Transition = ({
     const parts = text.split(orOperator)
 
     parts.forEach((part, index) => {
-      elements.push(<tspan>{part}</tspan>)
+      elements.push(<tspan key={`part-${index}`}>{part}</tspan>)
       if (index !== parts.length - 1) {
-        elements.push(<tspan fill="#999">{orOperator}</tspan>)
+        elements.push(<tspan key={`operator-${index}`} fill="#999">{orOperator}</tspan>)
       }
     })
     return elements
