@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react'
+import { MouseEvent, useEffect, useMemo, useState } from 'react'
 import { handleStyle } from './changeTransitionHandleStyle'
 import { BOX_HANDLE_SIZE } from '/src/config/rendering'
 import { useProjectStore } from '/src/stores'
@@ -16,18 +16,6 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   const [isSameEdge, setIsSameEdge] = useState(true)
   const [from, setFrom] = useState<number>()
   const [to, setTo] = useState<number>()
-
-  // Middle-ise co-ordinates
-  const t: RectCoords = {
-    start: {
-      x: edges[0].x,
-      y: edges[0].y
-    },
-    end: {
-      x: edges[1].x,
-      y: edges[1].y
-    }
-  }
 
   const calcEdgeUnitVector = () => {
     const vec = [t.end.x - t.start.x, t.end.y - t.start.y]
@@ -73,12 +61,28 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
     }
   }
 
-  const uv = calcEdgeUnitVector()
-  const m = 4
-  const tc = {
-    start: { x: t.start.x + m * uv[0], y: t.start.y + m * uv[1] },
-    end: { x: t.end.x - m * uv[0], y: t.end.y - m * uv[1] }
-  }
+  // Middle-ise co-ordinates
+  const t: RectCoords = useMemo(() => {
+    return {
+      start: {
+        x: edges[0].x,
+        y: edges[0].y
+      },
+      end: {
+        x: edges[1].x,
+        y: edges[1].y
+      }
+    }
+  }, [edges])
+
+  const tc: RectCoords = useMemo(() => {
+    const uv = calcEdgeUnitVector()
+    const m = 4
+    return {
+      start: { x: t.start.x + m * uv[0], y: t.start.y + m * uv[1] },
+      end: { x: t.end.x - m * uv[0], y: t.end.y - m * uv[1] }
+    }
+  }, [t])
 
   return <g {...props}>
     <circle
