@@ -195,15 +195,6 @@ const Transition = ({
   const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
   return <g>
-    {/* Handles to drag the edge */}
-    {setSelected && <>
-      <ChangeTransitionHandlebars
-        edges={edges}
-        selectedTransitions={selectedTransitions}
-      />
-    </>
-    }
-
     {/* The edge itself */}
     <path
       id={pathID}
@@ -229,6 +220,15 @@ const Transition = ({
       onDoubleClick={handleEdgeDoubleClick}
       strokeWidth={20}
     />}
+
+    {/* Handles to drag the edge */}
+    {setSelected && <>
+      <ChangeTransitionHandlebars
+        edges={edges}
+        selectedTransitions={selectedTransitions}
+      />
+    </>
+    }
 
     <text
       {...midPoint}
