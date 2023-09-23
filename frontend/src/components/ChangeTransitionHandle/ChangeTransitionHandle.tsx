@@ -29,6 +29,12 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
     }
   }
 
+  const calcEdgeUnitVector = () => {
+    const vec = [t.end.x - t.start.x, t.end.y - t.start.y]
+    const mag = Math.sqrt(vec[0] ** 2 + vec[1] ** 2)
+    return [vec[0] / mag, vec[1] / mag]
+  }
+
   useEffect(() => {
     const { transitions } = useProjectStore.getState()?.project ?? {}
     const transitionsScope = transitions.filter(t => selectedTransitions.includes(t.id))
@@ -67,14 +73,21 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
     }
   }
 
+  const uv = calcEdgeUnitVector()
+  const m = 4
+  const tc = {
+    start: { x: t.start.x + m * uv[0], y: t.start.y + m * uv[1] },
+    end: { x: t.end.x - m * uv[0], y: t.end.y - m * uv[1] }
+  }
+
   return <g {...props}>
     <circle
-      transform={`translate(${t.start.x}, ${t.start.y})`}
+      transform={`translate(${tc.start.x}, ${tc.start.y})`}
       r={BOX_HANDLE_SIZE}
       style={handleStyle}
       onMouseDown={handleStartMouseDown} />
     <circle
-      transform={`translate(${t.end.x}, ${t.end.y})`}
+      transform={`translate(${tc.end.x}, ${tc.end.y})`}
       r={BOX_HANDLE_SIZE}
       style={handleStyle}
       onMouseDown={handleEndMouseDown} />
