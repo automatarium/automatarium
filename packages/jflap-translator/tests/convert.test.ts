@@ -13,7 +13,8 @@ describe('Importing single attribute', () => {
     expect(machine.config).toMatchObject({
       type: 'FSA',
       statePrefix: 'q',
-      color: 'orange'
+      color: 'orange',
+      orOperator: '|'
     })
   })
 
@@ -116,7 +117,8 @@ describe('Import a PDA', function () {
     expect(machine.config).toMatchObject({
       type: 'PDA',
       statePrefix: 'q',
-      color: 'red'
+      color: 'red',
+      orOperator: '|'
     })
   })
 
@@ -153,7 +155,8 @@ describe('Import a TM', () => {
     expect(machine.config).toMatchObject({
       type: 'TM',
       statePrefix: 'q',
-      color: 'purple'
+      color: 'purple',
+      orOperator: '|'
     })
   })
 

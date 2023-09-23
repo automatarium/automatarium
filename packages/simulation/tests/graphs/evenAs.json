@@ -60,6 +60,7 @@
     "type": "PDA",
     "statePrefix": "q",
     "acceptanceCriteria": "both",
-    "color": "red"
+    "color": "red",
+    "orOperator": "|"
   }
 }

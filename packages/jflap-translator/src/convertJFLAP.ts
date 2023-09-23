@@ -1,6 +1,6 @@
 import { ElementCompact, xml2js } from 'xml-js'
 
-import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config'
+import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_OR_OPERATOR, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config'
 import {
   ProjectType,
   Project,
@@ -95,6 +95,7 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
       type: projectType,
       statePrefix: DEFAULT_STATE_PREFIX,
       color: DEFAULT_PROJECT_COLOR[projectType],
+      orOperator: DEFAULT_OR_OPERATOR,
       acceptanceCriteria: projectType === 'PDA' ? DEFAULT_ACCEPTANCE_CRITERIA : undefined
     },
     meta: {
