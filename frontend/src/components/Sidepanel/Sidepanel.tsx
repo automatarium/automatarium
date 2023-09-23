@@ -84,6 +84,15 @@ const Sidepanel = () => {
     }
   }, [activePanel])
 
+  // Show the stack visualiser only if the Testing Lab is currently in use
+  useEffect(() => {
+    if (projectType === 'PDA' && activePanel?.value === 'test') {
+      dispatchCustomEvent('stackVisualiser:toggle', { state: true })
+    } else {
+      dispatchCustomEvent('stackVisualiser:toggle', { state: false })
+    }
+  }, [activePanel])
+
   return (
     <Wrapper>
       {activePanel && (

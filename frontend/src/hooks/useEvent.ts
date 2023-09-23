@@ -75,7 +75,8 @@ export interface CustomEvents {
   'showWarning': string,
   'modal:deleteConfirm': null,
   'modal:import': null,
-  'showSharing': null
+  'showSharing': null,
+  'stackVisualiser:toggle': { state: boolean }
 }
 
 /**
