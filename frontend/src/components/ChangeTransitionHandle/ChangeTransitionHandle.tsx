@@ -20,12 +20,12 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   // Middle-ise co-ordinates
   const t: RectCoords = {
     start: {
-      x: edges[0].x - BOX_HANDLE_SIZE / 2,
-      y: edges[0].y - BOX_HANDLE_SIZE / 2
+      x: edges[0].x,
+      y: edges[0].y
     },
     end: {
-      x: edges[1].x - BOX_HANDLE_SIZE / 2,
-      y: edges[1].y - BOX_HANDLE_SIZE / 2
+      x: edges[1].x,
+      y: edges[1].y
     }
   }
 
@@ -68,16 +68,14 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   }
 
   return <g {...props}>
-    <rect
+    <circle
       transform={`translate(${t.start.x}, ${t.start.y})`}
-      width={BOX_HANDLE_SIZE}
-      height={BOX_HANDLE_SIZE}
+      r={BOX_HANDLE_SIZE}
       style={handleStyle}
       onMouseDown={handleStartMouseDown} />
-    <rect
+    <circle
       transform={`translate(${t.end.x}, ${t.end.y})`}
-      width={BOX_HANDLE_SIZE}
-      height={BOX_HANDLE_SIZE}
+      r={BOX_HANDLE_SIZE}
       style={handleStyle}
       onMouseDown={handleEndMouseDown} />
   </g>

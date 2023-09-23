@@ -1,3 +1,3 @@
 export const handleStyle = {
-  fill: 'grey'
+  fill: 'var(--toolbar)'
 }
