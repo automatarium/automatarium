@@ -226,6 +226,7 @@ const Transition = ({
       <ChangeTransitionHandlebars
         edges={edges}
         selectedTransitions={selectedTransitions}
+        isReflexive={isReflexive}
       />
     </>
     }

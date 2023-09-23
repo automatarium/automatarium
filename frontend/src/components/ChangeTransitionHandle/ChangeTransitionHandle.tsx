@@ -8,11 +8,12 @@ import { dispatchCustomEvent } from '/src/util/events'
 type TransitionChangeHandleProps = {
   edges: Coordinate[]
   selectedTransitions: number[]
+  isReflexive: boolean
 }
 
 type RectCoords = { start: Coordinate, end: Coordinate }
 
-const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: TransitionChangeHandleProps) => {
+const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, ...props }: TransitionChangeHandleProps) => {
   const [isSameEdge, setIsSameEdge] = useState(true)
   const [from, setFrom] = useState<number>()
   const [to, setTo] = useState<number>()
@@ -76,11 +77,18 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
   }, [edges])
 
   const tc: RectCoords = useMemo(() => {
-    const uv = calcEdgeUnitVector(t)
     const m = 4
-    return {
-      start: { x: t.start.x + m * uv[0], y: t.start.y + m * uv[1] },
-      end: { x: t.end.x - m * uv[0], y: t.end.y - m * uv[1] }
+    if (isReflexive) {
+      return {
+        start: { x: t.start.x, y: t.start.y - m },
+        end: { x: t.end.x, y: t.end.y - m }
+      }
+    } else {
+      const uv = calcEdgeUnitVector(t)
+      return {
+        start: { x: t.start.x + m * uv[0], y: t.start.y + m * uv[1] },
+        end: { x: t.end.x - m * uv[0], y: t.end.y - m * uv[1] }
+      }
     }
   }, [t])
 
