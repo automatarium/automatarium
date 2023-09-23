@@ -8,6 +8,7 @@ import { useSelectionStore } from '/src/stores'
 import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
+import { possibleOrOperators } from '/src/util/orOperators'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -37,6 +38,10 @@ const splitCharsWithOr = (read: string, orOperator: string, type: ProjectType): 
     case 'PDA':
       return read
     case 'FSA': {
+      // This will replace any of the possible operators with the chosen orOperator
+      for (const op of possibleOrOperators(orOperator)) {
+        read = read.split(op).join(orOperator)
+      }
       if (!read || read.length <= 1) return read
       const joinStr = `  ${orOperator}  `
       // Don't insert OR symbols inside ranges

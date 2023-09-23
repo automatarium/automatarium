@@ -6,6 +6,7 @@ import { useProjectStore, useViewStore } from '/src/stores'
 import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
+import { possibleOrOperators } from '/src/util/orOperators'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import {
@@ -152,8 +153,13 @@ const InputDialogs = () => {
    * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
    */
   const formatInput = (input: string): string => {
-    // Remove any given OR operator to be reintroduced during formatting
-    input = input.split(orOperator).join('')
+    // Remove whitespace
+    input = input.replace(/\s+/g, '')
+
+    // Remove all possible OR operators from the input
+    for (const op of possibleOrOperators(orOperator)) {
+      input = input.split(op).join('')
+    }
 
     const ranges = input.match(/\[(.*?)]/g)
     const chars = input.replace(/\[(.*?)]/g, '')
