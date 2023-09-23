@@ -7,6 +7,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 
 const useTransitionCreation = (): { createTransitionStart: Coordinate, createTransitionEnd: Coordinate } => {
   const createTransition = useProjectStore(s => s.createTransition)
+  const moveTransition = useProjectStore(s => s.moveTransition)
   const tool = useToolStore(s => s.tool)
 
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
@@ -17,6 +18,15 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
   const [createTransitionEnd, setCreateTransitionEnd] = useState<PosTuple>(null)
   const [moveTransitionState, setMoveTransitionState] = useState<AutomataState>(null)
   const [isMoveStart, setIsMoveStart] = useState(false)
+  const [transitionsToUpdate, setTransitionsToUpdate] = useState<number[]>(null)
+
+  const reattachTransitions = (updateTransitionIds: number[], from: number, to: number) => {
+    const { transitions } = useProjectStore.getState()?.project ?? {}
+    const transitionsScope = transitions.filter(t => updateTransitionIds.includes(t.id))
+    transitionsScope.forEach(t => {
+      moveTransition({ id: t.id, from, to })
+    })
+  }
 
   useEvent('state:mousedown', e => {
     if (tool === 'transition' && e.detail.originalEvent.button === 0) {
@@ -38,15 +48,17 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
   }, [createTransitionState])
 
   useEvent('state:mouseup', e => {
-    if (moveTransitionState && e.detail.originalEvent.button === 0) {
+    if (moveTransitionState && transitionsToUpdate && e.detail.originalEvent.button === 0) {
       const otherId = e.detail.state.id
-      let movedTransitionId = -1
       if (isMoveStart) {
-        movedTransitionId = createTransition({ from: moveTransitionState.id, to: otherId })
+        reattachTransitions(transitionsToUpdate, moveTransitionState.id, otherId)
       } else {
-        movedTransitionId = createTransition({ from: otherId, to: moveTransitionState.id })
+        reattachTransitions(transitionsToUpdate, otherId, moveTransitionState.id)
       }
-      console.log(movedTransitionId)
+      setMoveTransitionState(null)
+      setTransitionsToUpdate(null)
+      setCreateTransitionStart(null)
+      setCreateTransitionEnd(null)
     }
   }, [moveTransitionState])
 
@@ -60,6 +72,8 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
     if (tool === 'cursor' && moveTransitionState) {
       if (isMoveStart) {
         setCreateTransitionStart([e.detail.viewX, e.detail.viewY])
+      } else {
+        setCreateTransitionEnd([e.detail.viewX, e.detail.viewY])
       }
     }
   }, [tool, moveTransitionState])
@@ -69,12 +83,14 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
       setCreateTransitionEnd(null)
       setCreateTransitionStart(null)
       setCreateTransitionState(null)
+      setMoveTransitionState(null)
     }
   }, [])
 
   useEvent('transitionhandle:mousedown', e => {
     const isMovingStart = e.detail.transitionInfo.isMovingStart
     setIsMoveStart(isMovingStart)
+    setTransitionsToUpdate(e.detail.transitionInfo.transitionIds)
     const states = useProjectStore.getState().project?.states ?? []
     if (isMovingStart) {
       setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.fromId))
