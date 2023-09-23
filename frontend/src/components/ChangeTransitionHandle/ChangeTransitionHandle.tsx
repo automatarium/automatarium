@@ -1,9 +1,11 @@
 import { MouseEvent, useEffect, useMemo, useState } from 'react'
-import { handleStyle } from './changeTransitionHandleStyle'
+
 import { BOX_HANDLE_SIZE } from '/src/config/rendering'
 import { useProjectStore } from '/src/stores'
 import { Coordinate } from '/src/types/ProjectTypes'
 import { dispatchCustomEvent } from '/src/util/events'
+
+import { handleStyle } from './changeTransitionHandleStyle'
 
 type TransitionChangeHandleProps = {
   edges: Coordinate[]
@@ -11,14 +13,14 @@ type TransitionChangeHandleProps = {
   isReflexive: boolean
 }
 
-type RectCoords = { start: Coordinate, end: Coordinate }
+type HandleCoordinates = { start: Coordinate, end: Coordinate }
 
 const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, ...props }: TransitionChangeHandleProps) => {
   const [isSameEdge, setIsSameEdge] = useState(true)
   const [from, setFrom] = useState<number>()
   const [to, setTo] = useState<number>()
 
-  const calcEdgeUnitVector = (t: RectCoords) => {
+  const calcEdgeUnitVector = (t: HandleCoordinates) => {
     const vec = [t.end.x - t.start.x, t.end.y - t.start.y]
     const mag = Math.sqrt(vec[0] ** 2 + vec[1] ** 2)
     return [vec[0] / mag, vec[1] / mag]
@@ -63,7 +65,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, .
   }
 
   // Middle-ise co-ordinates
-  const t: RectCoords = useMemo(() => {
+  const t = useMemo<HandleCoordinates>(() => {
     return {
       start: {
         x: edges[0].x,
@@ -76,7 +78,7 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, .
     }
   }, [edges])
 
-  const tc: RectCoords = useMemo(() => {
+  const tc = useMemo<HandleCoordinates>(() => {
     const m = 4
     if (isReflexive) {
       return {
