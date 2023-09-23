@@ -8,6 +8,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 const useTransitionCreation = (): { createTransitionStart: Coordinate, createTransitionEnd: Coordinate } => {
   const createTransition = useProjectStore(s => s.createTransition)
   const moveTransition = useProjectStore(s => s.moveTransition)
+  const commit = useProjectStore(s => s.commit)
   const tool = useToolStore(s => s.tool)
 
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
@@ -26,6 +27,8 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
     transitionsScope.forEach(t => {
       moveTransition({ id: t.id, from, to })
     })
+    // Update state
+    commit()
   }
 
   useEvent('state:mousedown', e => {
