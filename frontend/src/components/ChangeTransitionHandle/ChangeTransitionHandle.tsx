@@ -45,7 +45,8 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
           transitionIds: selectedTransitions,
           fromId: from,
           toId: to,
-          isMovingStart: true
+          isMovingStart: true,
+          otherPosition: t.end
         }
       })
     }
@@ -59,7 +60,8 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, ...props }: Tr
           transitionIds: selectedTransitions,
           fromId: from,
           toId: to,
-          isMovingStart: false
+          isMovingStart: false,
+          otherPosition: t.start
         }
       })
     }

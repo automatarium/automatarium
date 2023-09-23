@@ -74,9 +74,9 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
   useEvent('svg:mousemove', e => {
     if (tool === 'cursor' && moveTransitionState) {
       if (isMoveStart) {
-        setCreateTransitionEnd([e.detail.viewX, e.detail.viewY])
-      } else {
         setCreateTransitionStart([e.detail.viewX, e.detail.viewY])
+      } else {
+        setCreateTransitionEnd([e.detail.viewX, e.detail.viewY])
       }
     }
   }, [tool, moveTransitionState])
@@ -97,10 +97,10 @@ const useTransitionCreation = (): { createTransitionStart: Coordinate, createTra
     const states = useProjectStore.getState().project?.states ?? []
     if (isMovingStart) {
       setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.toId))
-      setCreateTransitionStart(screenToViewSpace(e.detail.originalEvent.clientX, e.detail.originalEvent.clientY))
+      setCreateTransitionEnd([e.detail.transitionInfo.otherPosition.x, e.detail.transitionInfo.otherPosition.y])
     } else {
       setMoveTransitionState(states.find(s => s.id === e.detail.transitionInfo.fromId))
-      setCreateTransitionEnd(screenToViewSpace(e.detail.originalEvent.clientX, e.detail.originalEvent.clientY))
+      setCreateTransitionStart([e.detail.transitionInfo.otherPosition.x, e.detail.transitionInfo.otherPosition.y])
     }
   })
 

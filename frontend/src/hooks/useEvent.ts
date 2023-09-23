@@ -18,7 +18,7 @@ export type CommentEventData = { originalEvent: MouseEvent, comment: { id: numbe
  */
 export type TransitionEventData = { originalEvent: MouseEvent, transition: PositionedTransition }
 export type EdgeEventData = { originalEvent: MouseEvent, transitions: PositionedTransition[] }
-export type TransitionHandleEventData = { originalEvent: MouseEvent, transitionInfo: { transitionIds: number[], fromId: number, toId: number, isMovingStart: boolean } }
+export type TransitionHandleEventData = { originalEvent: MouseEvent, transitionInfo: { transitionIds: number[], fromId: number, toId: number, isMovingStart: boolean, otherPosition: Coordinate } }
 /**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
