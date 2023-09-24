@@ -96,6 +96,7 @@
     "type": "TM",
     "statePrefix": "q",
     "acceptanceCriteria": "both",
-    "color": "purple"
+    "color": "purple",
+    "orOperator": "|"
   }
 }
