@@ -7,8 +7,9 @@ import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
 import { possibleOrOperators } from '/src/util/orOperators'
+import { DirectionRadioButtons } from '/src/components/Button/DirectionRadioButtons'
 
-import { InputWrapper, SubmitButton } from './inputDialogsStyle'
+import { InputWrapper, SubmitButton, TMSubmitButton } from './inputDialogsStyle'
 import {
   assertType,
   AutomataState,
@@ -86,7 +87,7 @@ const InputDialogs = () => {
   const inputWriteRef = useRef()
   const inputDirectionRef = useRef()
   const [write, setWrite] = useState('')
-  const [direction, setDirection] = useState<TMDirection | ''>('R')
+  const [direction, setDirection] = useState<TMDirection>('R')
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -285,14 +286,6 @@ const InputDialogs = () => {
     setWrite(input[input.length - 1] ?? '')
   }
 
-  const handleDirectionIn = (e: InputEvent) => {
-    // ^$ is regex for empty string, essentially allowing user to backspace input on top of
-    // the 'r', 'l', and 's' characters
-    const input = e.target.value.toString().match(/[rls]|^$/gi)
-    const value = input[input.length - 1].toUpperCase()
-    setDirection(value as TMDirection)
-  }
-
   if (!dialog) return null
 
   /**
@@ -400,17 +393,14 @@ const InputDialogs = () => {
             />
           </InputWrapper>
           <InputWrapper>
-            <Input
-              ref={inputDirectionRef}
-              value={direction}
-              onChange={handleDirectionIn}
-              onKeyUp={handleSave}
-              placeholder={'↔\t(direction)'}
-              style={TRANSITION_INPUT_STYLE}
+            <DirectionRadioButtons
+              direction={direction}
+              setDirection={setDirection}
+              handleSave={handleSave}
             />
-            <SubmitButton onClick={save}>
+            <TMSubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
-            </SubmitButton>
+            </TMSubmitButton>
           </InputWrapper>
         </Dropdown>
       )

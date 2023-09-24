@@ -23,3 +23,8 @@ export const SubmitButton = styled('button')`
   width: 2.5em;
   cursor: pointer;
 `
+
+export const TMSubmitButton = styled(SubmitButton)`
+  color: white;
+  right: 0em;
+`
