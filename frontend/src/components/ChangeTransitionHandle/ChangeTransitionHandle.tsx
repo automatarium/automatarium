@@ -20,6 +20,8 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, .
   const [from, setFrom] = useState<number>()
   const [to, setTo] = useState<number>()
 
+  const { transitions } = useProjectStore.getState()?.project ?? {}
+
   const calcEdgeUnitVector = (t: HandleCoordinates) => {
     const vec = [t.end.x - t.start.x, t.end.y - t.start.y]
     const mag = Math.sqrt(vec[0] ** 2 + vec[1] ** 2)
@@ -27,12 +29,11 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, .
   }
 
   useEffect(() => {
-    const { transitions } = useProjectStore.getState()?.project ?? {}
     const transitionsScope = transitions.filter(t => selectedTransitions.includes(t.id))
     setIsSameEdge(transitionsScope.every(t => t.from === transitionsScope[0].from && t.to === transitionsScope[0].to))
     setFrom(transitionsScope[0].from)
     setTo(transitionsScope[0].to)
-  }, [selectedTransitions])
+  }, [transitions, selectedTransitions])
 
   const handleStartMouseDown = (e: MouseEvent) => {
     if (isSameEdge) {
