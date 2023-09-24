@@ -28,7 +28,7 @@ export const DirectionRadioInput = styled('input')`
   position: relative;
   cursor: pointer;
   padding-right: 0.2em;
-
+  
   &:checked:before {
     content: "";
     position: absolute;
