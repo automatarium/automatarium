@@ -19,6 +19,23 @@ export const DirectionRadioButtons = ({
   handleSave,
   name
 }: DirectionProps) => {
+  const handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    switch (e.key.toUpperCase()) {
+      case 'R':
+        setDirection('R')
+        break
+      case 'L':
+        setDirection('L')
+        break
+      case 'S':
+        setDirection('S')
+        break
+      default:
+        handleSave(e)
+        break
+    }
+  }
+
   return (
     <DirectionRadioGroup>
       <DirectionLabel htmlFor={`${name}-direction-R`}>
@@ -29,7 +46,7 @@ export const DirectionRadioButtons = ({
           value="R"
           checked={direction === 'R'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
-          onKeyUp={handleSave}
+          onKeyUp={handleKeyUp}
         />
         R
       </DirectionLabel>
@@ -41,7 +58,7 @@ export const DirectionRadioButtons = ({
           value="L"
           checked={direction === 'L'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
-          onKeyUp={handleSave}
+          onKeyUp={handleKeyUp}
         />
         L
       </DirectionLabel>
@@ -53,7 +70,7 @@ export const DirectionRadioButtons = ({
           value="S"
           checked={direction === 'S'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
-          onKeyUp={handleSave}
+          onKeyUp={handleKeyUp}
         />
         S
       </DirectionLabel>
