@@ -45,7 +45,7 @@ const TraceStepBubble = ({ stateID, input, index }: TraceStepBubbleProps) => {
           <Pointer />
           <TickerTape $index={index}>
             <SerratedEdge />
-            {input?.split('').map((symbol, i) => <TickerTapeCell key={i} $consumed={i < index}>
+            {input?.split('').map((symbol, i) => <TickerTapeCell key={i} $consumed={i < index - 1 }>
               {symbol}
             </TickerTapeCell>)}
             <SerratedEdge flipped />

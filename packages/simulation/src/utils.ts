@@ -46,13 +46,10 @@ export const expandTransitions = <T extends BaseAutomataTransition>(transitions:
 }
 
 /**
- * Performs any expansions needed for a graph (i.e. expands any transitions if its a FSA/PDA graph)
+ * Performs any expansions needed for a graph
  */
 export const expandGraph = <T extends ProjectGraph>(graph: T): T => {
-  if (['FSA', 'PDA'].includes(graph.projectType)) {
-    return { ...graph, transitions: expandTransitions(graph.transitions) }
-  }
-  return graph
+  return { ...graph, transitions: expandTransitions(graph.transitions) }
 }
 
 /**
@@ -111,9 +108,7 @@ export function buildProblem <M extends ProjectGraph> (graph: M, input: string):
   return new GraphType(
     initialNode,
     states,
-    // Only FSA and PDA graphs need to have transitions expanded
-    // This should've been done by the frontend, but we do it here just encase
-    (graph.projectType === 'TM' ? graph.transitions : expandTransitions(graph.transitions)) as T[]
+    expandTransitions(graph.transitions) as T[]
   )
 }
 

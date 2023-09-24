@@ -23,5 +23,6 @@
     "version": "0.0.1",
     "automatariumVersion": "0.0.1"
   },
-  "config": { "type": "FSA", "statePrefix": "q", "acceptanceCriteria": "both", "color": "", "playbackInterval": 1000 }
+  "config": { "type": "FSA", "statePrefix": "q", "acceptanceCriteria": "both", "color": "",
+    "orOperator": "|", "playbackInterval": 1000 }
 }

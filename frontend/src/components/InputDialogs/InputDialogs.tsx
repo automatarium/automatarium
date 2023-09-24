@@ -6,6 +6,7 @@ import { useProjectStore, useViewStore } from '/src/stores'
 import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
+import { formatInput, splitCharsWithOr } from '/src/util/orOperators'
 
 import { InputWrapper, SubmitButton } from './inputDialogsStyle'
 import {
@@ -84,7 +85,6 @@ const InputDialogs = () => {
 
   const inputWriteRef = useRef()
   const inputDirectionRef = useRef()
-  const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
   const [direction, setDirection] = useState<TMDirection | ''>('R')
   const editTransition = useProjectStore(s => s.editTransition)
@@ -94,6 +94,7 @@ const InputDialogs = () => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
+  const orOperator = useProjectStore(s => s.project.config.orOperator)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
@@ -107,7 +108,7 @@ const InputDialogs = () => {
     switch (projectType) {
       case 'TM':
         assertType<TMAutomataTransition>(transition)
-        setRead(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setWrite(transition?.write ?? '')
         setDirection(transition?.direction)
         setDialog({
@@ -120,7 +121,7 @@ const InputDialogs = () => {
         break
       case 'PDA':
         assertType<PDAAutomataTransition>(transition)
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
         setDialog({
@@ -132,7 +133,7 @@ const InputDialogs = () => {
         })
         break
       case 'FSA':
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setDialog({
           visible: true,
           x: screenMidPoint[0],
@@ -143,30 +144,24 @@ const InputDialogs = () => {
     }
 
     focusInput()
-  }, arr)
-
-  /**
-   * Rearranges a read string so that all single characters come before ranges.
-   * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
-   * This is just want it was like before so assuming there is a design reason
-   */
-  const formatRangeChars = (input: string): string => {
-    const ranges = input.match(/\[(.*?)]/g)
-    const chars = input.replace(/\[(.*?)]/g, '')
-    return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
-  }
+  }, [arr, orOperator])
 
   const saveTransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatRangeChars(value)
+      read: formatInput(value, orOperator)
     })
     commit()
     hideDialog()
   }
 
   const saveTMTransition = () => {
-    editTransition({ id: dialog.id, read, write, direction: direction || 'R' } as TMAutomataTransition)
+    editTransition({
+      id: dialog.id,
+      read: formatInput(value, orOperator),
+      write,
+      direction: direction || 'R'
+    } as TMAutomataTransition)
     commit()
     hideDialog()
   }
@@ -174,9 +169,9 @@ const InputDialogs = () => {
   const savePDATransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatRangeChars(value),
-      pop: formatRangeChars(valuePop),
-      push: formatRangeChars(valuePush)
+      read: formatInput(value, orOperator),
+      pop: valuePop,
+      push: valuePush
     } as PDAAutomataTransition)
     commit()
     hideDialog()
@@ -265,11 +260,6 @@ const InputDialogs = () => {
     stateName: saveStateName,
     stateLabel: saveStateLabel
   } as Record<DialogType, () => void>)[dialog?.type]
-
-  const handleReadIn = (e: InputEvent) => {
-    const input = e.target.value.toString()
-    setRead(input[input.length - 1] ?? '')
-  }
 
   const handleWriteIn = (e: InputEvent) => {
     const input = e.target.value.toString()
@@ -373,8 +363,8 @@ const InputDialogs = () => {
           <InputWrapper>
             <Input
               ref={inputRef}
-              value={read}
-              onChange={handleReadIn}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
               style={TRANSITION_INPUT_STYLE}

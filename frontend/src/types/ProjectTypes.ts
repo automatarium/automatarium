@@ -27,6 +27,7 @@ export interface ProjectConfig {
     acceptanceCriteria: string,
     // Could be made into enum
     color: ColourName | '',
+    orOperator: string,
     statePrefix: string,
     type: ProjectType
 }

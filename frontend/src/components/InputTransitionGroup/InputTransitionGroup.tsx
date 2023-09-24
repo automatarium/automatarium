@@ -24,6 +24,7 @@ import {
   TMDirection,
   assertType
 } from '/src/types/ProjectTypes'
+import { splitCharsWithOr, formatInput } from '/src/util/orOperators'
 
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
@@ -51,6 +52,7 @@ const InputTransitionGroup = () => {
 
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
+  const orOperator = useProjectStore(s => s.project.config.orOperator)
 
   const editTransition = useProjectStore(s => s.editTransition)
   const createTransition = useProjectStore(s => s.createTransition)
@@ -82,7 +84,7 @@ const InputTransitionGroup = () => {
     ).map(t => t.id)
     setIdList([...allIdList])
     setModalOpen(true)
-  })
+  }, [orOperator])
 
   const retrieveTransitions = () => {
     const { transitions } = useProjectStore.getState()?.project ?? {}
@@ -158,7 +160,7 @@ const InputTransitionGroup = () => {
 
   const saveNewFSATransition = () => {
     const newId = createNewTransition()
-    editTransition({ id: newId, read: readValue } as FSAAutomataTransition)
+    editTransition({ id: newId, read: formatInput(readValue, orOperator) } as FSAAutomataTransition)
     resetInputFields()
   }
 
@@ -189,7 +191,7 @@ const InputTransitionGroup = () => {
     const newId = createNewTransition()
     editTransition({
       id: newId,
-      read: readValue,
+      read: formatInput(readValue, orOperator),
       pop: popValue,
       push: pushValue
     } as PDAAutomataTransition)
@@ -247,15 +249,15 @@ const InputTransitionGroup = () => {
     const newId = createNewTransition()
     editTransition({
       id: newId,
-      read: readValue,
+      read: formatInput(readValue, orOperator),
       write: writeValue,
       direction: dirValue === '' ? 'R' : dirValue
     } as TMAutomataTransition)
     resetInputFields()
   }
 
-  /** TMs operate with the assumption of reading and writing one character */
-  const tmReadWriteValidate = (e: ChangeEvent<HTMLInputElement>) => {
+  /** TMs operate with the assumption of writing one character */
+  const tmWriteValidate = (e: ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value.toString()
     return input[input.length - 1] ?? ''
   }
@@ -274,10 +276,7 @@ const InputTransitionGroup = () => {
       <Input
         ref={inputRef}
         value={readValue}
-        onChange={e => {
-          const r = tmReadWriteValidate(e)
-          setReadValue(r)
-        }}
+        onChange={e => { setReadValue(e.target.value) }}
         onClick={() => setSelectedIndex(-1)}
         onKeyUp={handleKeyUp}
         onFocus={e => e.target.select()}
@@ -289,7 +288,7 @@ const InputTransitionGroup = () => {
       <Input
         value={writeValue}
         onChange={e => {
-          const w = tmReadWriteValidate(e)
+          const w = tmWriteValidate(e)
           setWriteValue(w)
         }}
         onClick={() => setSelectedIndex(-1)}
@@ -346,9 +345,9 @@ const InputTransitionGroup = () => {
           {transitionsList.map((t, i) => <InputWrapper key={i}>
           <Input
               ref={transitionListRef[i] ?? null}
-              value={t.read}
+              value={splitCharsWithOr(t.read, orOperator)}
               onChange={e => {
-                saveFSATransition({ id: t.id, read: e.target.value })
+                saveFSATransition({ id: t.id, read: formatInput(e.target.value, orOperator) })
                 setSelectedIndex(i)
               }}
               onClick={() => setSelectedIndex(i)}
@@ -371,11 +370,11 @@ const InputTransitionGroup = () => {
             <InputSpacingWrapper>
               <Input
                 ref={transitionListRef[i] ?? null}
-                value={t.read}
+                value={splitCharsWithOr(t.read, orOperator)}
                 onChange={e => {
                   savePDATransition({
                     id: t.id,
-                    read: e.target.value,
+                    read: formatInput(e.target.value, orOperator),
                     pop: t.pop,
                     push: t.push
                   })
@@ -440,12 +439,11 @@ const InputTransitionGroup = () => {
             <InputSpacingWrapper>
               <Input
                 ref={transitionListRef[i] ?? null}
-                value={t.read}
+                value={splitCharsWithOr(t.read, orOperator)}
                 onChange={e => {
-                  const r = tmReadWriteValidate(e)
                   saveTMTransition({
                     id: t.id,
-                    read: r,
+                    read: formatInput(e.target.value, orOperator),
                     write: t.write,
                     direction: t.direction
                   })
@@ -462,7 +460,7 @@ const InputTransitionGroup = () => {
               <Input
                 value={t.write}
                 onChange={e => {
-                  const w = tmReadWriteValidate(e)
+                  const w = tmWriteValidate(e)
                   saveTMTransition({
                     id: t.id,
                     read: t.read,

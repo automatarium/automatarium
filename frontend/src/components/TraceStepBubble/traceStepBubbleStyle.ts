@@ -39,7 +39,7 @@ export const TickerTape = styled('div')<{$index: number}>`
   flex-direction: row;
   width: max-content;
 
-  transform: translateX(calc(${p => -p.$index + 2} * var(--cell-width)));
+  transform: translateX(calc(${p => -p.$index + 4} * var(--cell-width)));
   transition: transform .1s;
 `
 
