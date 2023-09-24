@@ -102,7 +102,7 @@ const InputDialogs = () => {
         assertType<TMAutomataTransition>(transition)
         setValue(transition?.read ?? '')
         setWrite(transition?.write ?? '')
-        setDirection(transition?.direction)
+        setDirection(transition?.direction ?? "R");
         setDialog({
           visible: true,
           x: screenMidPoint[0] - 100, // Hack. Not Nice.

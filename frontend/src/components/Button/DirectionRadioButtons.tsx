@@ -28,7 +28,6 @@ export const DirectionRadioButtons = ({
           checked={direction === 'R'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
           onKeyUp={handleSave}
-          tabIndex={0}
         />
         R
       </DirectionLabel>
@@ -41,7 +40,6 @@ export const DirectionRadioButtons = ({
           checked={direction === 'L'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
           onKeyUp={handleSave}
-          tabIndex={1}
         />
         L
       </DirectionLabel>
@@ -54,7 +52,6 @@ export const DirectionRadioButtons = ({
           checked={direction === 'S'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
           onKeyUp={handleSave}
-          tabIndex={2}
         />
         S
       </DirectionLabel>
