@@ -1,13 +1,15 @@
 import { MouseEvent, useContext } from 'react'
 import { useProjectStore } from '../../stores'
+import ChangeTransitionHandlebars from '../ChangeTransitionHandle/ChangeTransitionHandle'
+import { ghostStyles, pathSelectedClass, pathStyles } from './transitionSetStyle'
+import { REFLEXIVE_X_OFFSET, REFLEXIVE_Y_OFFSET, STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION } from '/src/config/rendering'
 import { MarkerContext } from '/src/providers'
-import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
-import { movePointTowards, lerpPoints, size } from '/src/util/points'
-import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
+import { dispatchCustomEvent } from '/src/util/events'
+import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
+import { splitCharsWithOr } from '/src/util/orOperators'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -27,14 +29,6 @@ const makeTransitionText = (type: ProjectType, orOperator: string, t: Positioned
     case 'FSA':
       return splitCharsWithOr(t.read, orOperator) || 'λ'
   }
-}
-
-// If the read length is greater than 1, add OR symbols between each character
-const splitCharsWithOr = (text: string, orOperator: string): string => {
-  if (!text || text.length <= 1) return text
-  const joinStr = `  ${orOperator}  `
-  // Don't insert OR symbols inside ranges
-  return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
 }
 
 // Direction that a transition can bend
@@ -241,6 +235,14 @@ const Transition = ({
       onDoubleClick={handleEdgeDoubleClick}
       strokeWidth={20}
     />}
+
+    {/* Handles to drag the edge */}
+    {setSelected && <ChangeTransitionHandlebars
+        edges={edges}
+        selectedTransitions={selectedTransitions}
+        isReflexive={isReflexive}
+      />
+    }
 
     <text
       {...midPoint}

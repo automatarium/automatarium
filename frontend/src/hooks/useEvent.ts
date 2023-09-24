@@ -1,4 +1,4 @@
-import { useEffect, useCallback, DependencyList, MouseEvent } from 'react'
+import { DependencyList, MouseEvent, useCallback, useEffect } from 'react'
 import { SidePanelKey } from '/src/components/Sidepanel/Panels'
 import { PositionedTransition } from '/src/util/states'
 
@@ -18,6 +18,7 @@ export type CommentEventData = { originalEvent: MouseEvent, comment: { id: numbe
  */
 export type TransitionEventData = { originalEvent: MouseEvent, transition: PositionedTransition }
 export type EdgeEventData = { originalEvent: MouseEvent, transitions: PositionedTransition[] }
+export type TransitionHandleEventData = { originalEvent: MouseEvent, transitionInfo: { transitionIds: number[], fromId: number, toId: number, isMovingStart: boolean, otherPosition: Coordinate } }
 /**
  * Mapping of events to what data the event accepts.
  * If making a custom event just add it here first
@@ -65,6 +66,12 @@ export interface CustomEvents {
   'edge:mousedown': EdgeEventData,
   'edge:mouseup': EdgeEventData,
   'edge:dblclick': EdgeEventData,
+  /**
+   * On the edge handle for when you want to drag transitions
+   * from one state to another
+   */
+  'transitionhandle:mouseup': TransitionHandleEventData,
+  'transitionhandle:mousedown': TransitionHandleEventData,
   'showWarning': string,
   'modal:deleteConfirm': null,
   'modal:import': null,
