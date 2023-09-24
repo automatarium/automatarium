@@ -9,7 +9,7 @@ import { lerpPoints } from '/src/util/points'
 import { possibleOrOperators } from '/src/util/orOperators'
 import { DirectionRadioButtons } from '/src/components/Button/DirectionRadioButtons'
 
-import { InputWrapper, SubmitButton, TMSubmitButton } from './inputDialogsStyle'
+import { InputWrapper, SubmitButton, TMSubmitButton, TransitionInputStyle, TMInputStyle } from './inputDialogsStyle'
 import {
   assertType,
   AutomataState,
@@ -17,15 +17,6 @@ import {
   ProjectComment, TMAutomataTransition,
   TMDirection
 } from '/src/types/ProjectTypes'
-
-/**
- * The default input styling for transition inputs
- */
-const TRANSITION_INPUT_STYLE = {
-  width: 'calc(12ch + 3.5em)',
-  margin: '0 .4em',
-  paddingRight: '2.5em'
-}
 
 /**
  * All types that a dialog could be
@@ -323,7 +314,7 @@ const InputDialogs = () => {
               onChange={e => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -341,7 +332,7 @@ const InputDialogs = () => {
               onChange={e => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
@@ -351,7 +342,7 @@ const InputDialogs = () => {
               onChange={e => setValuePop(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(pop)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
@@ -361,7 +352,7 @@ const InputDialogs = () => {
               onChange={e => setValuePush(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(push)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -379,7 +370,7 @@ const InputDialogs = () => {
               onChange={(e) => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TMInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
@@ -389,7 +380,7 @@ const InputDialogs = () => {
               onChange={handleWriteIn}
               onKeyUp={handleSave}
               placeholder={'λ\t(write)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TMInputStyle}
             />
           </InputWrapper>
           <InputWrapper>

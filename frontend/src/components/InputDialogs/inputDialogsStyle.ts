@@ -1,5 +1,16 @@
 import { styled } from 'goober'
 
+export const TransitionInputStyle = {
+  width: 'calc(12ch + 3.5em)',
+  margin: '0 .4em',
+  paddingRight: '2.5em'
+};
+
+export const TMInputStyle = {
+  ...TransitionInputStyle,
+  width: 'calc(13ch + 3.5em)'
+};
+
 export const InputWrapper = styled('div')`
   position: relative;
   display: flex;
