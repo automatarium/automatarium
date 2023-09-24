@@ -11,8 +11,9 @@ import {
 } from 'react'
 import { InputSeparator, InputSpacingWrapper } from './inputTransitionGroupStyle'
 import Button from '/src/components/Button/Button'
+import { DirectionRadioButtons } from '../Button/DirectionRadioButtons'
 import Input from '/src/components/Input/Input'
-import { InputWrapper, SubmitButton } from '/src/components/InputDialogs/inputDialogsStyle'
+import { InputWrapper, SubmitButton, TMSubmitButton } from '/src/components/InputDialogs/inputDialogsStyle'
 import Modal from '/src/components/Modal/Modal'
 import { useEvent } from '/src/hooks'
 import { useProjectStore } from '/src/stores'
@@ -101,7 +102,7 @@ const InputTransitionGroup = () => {
     setPopValue('')
     setPushValue('')
     setWriteValue('')
-    setDirValue('')
+    setDirValue('R')
   }
 
   const createNewTransition = () => {
@@ -206,7 +207,7 @@ const InputTransitionGroup = () => {
         onKeyUp={handleKeyUp}
         onFocus={e => e.target.select()}
         placeholder={'λ\t(read)'}
-        />
+      />
     </InputSpacingWrapper>
     <InputSeparator>,</InputSeparator>
     <InputSpacingWrapper>
@@ -217,7 +218,7 @@ const InputTransitionGroup = () => {
         onKeyUp={handleKeyUp}
         onFocus={e => e.target.select()}
         placeholder={'λ\t(pop)'}
-        />
+      />
     </InputSpacingWrapper>
     <InputSeparator>;</InputSeparator>
     <InputSpacingWrapper>
@@ -228,7 +229,7 @@ const InputTransitionGroup = () => {
         onKeyUp={handleKeyUp}
         onFocus={e => e.target.select()}
         placeholder={'λ\t(push)'}
-        />
+      />
     </InputSpacingWrapper>
     <SubmitButton onClick={saveNewTransition}>
       <CornerDownLeft size='18px' />
@@ -249,7 +250,7 @@ const InputTransitionGroup = () => {
       id: newId,
       read: readValue,
       write: writeValue,
-      direction: dirValue === '' ? 'R' : dirValue
+      direction: dirValue || 'R'
     } as TMAutomataTransition)
     resetInputFields()
   }
@@ -260,62 +261,52 @@ const InputTransitionGroup = () => {
     return input[input.length - 1] ?? ''
   }
 
-  /** Copied over from InputDialogs handleDirectionIn @see InputDialogs.tsx */
-  const tmDirectionValidate = (e: ChangeEvent<HTMLInputElement>) => {
-    const input = e.target.value.toString().match(/[rls]|^$/gi)
-    // TODO: catch error and show user a dialog saying its invalid rather than forcing to R
-    if (input === null) return 'R' as TMDirection
-    const value = input[input.length - 1].toUpperCase()
-    return value as TMDirection
-  }
-
-  const blankTMInput = () => <InputWrapper>
-    <InputSpacingWrapper>
-      <Input
-        ref={inputRef}
-        value={readValue}
-        onChange={e => {
-          const r = tmReadWriteValidate(e)
-          setReadValue(r)
-        }}
-        onClick={() => setSelectedIndex(-1)}
-        onKeyUp={handleKeyUp}
-        onFocus={e => e.target.select()}
-        placeholder={'λ\t(read)'}
+  const blankTMInput = () => (
+    <InputWrapper>
+      <InputSpacingWrapper>
+        <Input
+          ref={inputRef}
+          value={readValue}
+          onChange={e => {
+            const r = tmReadWriteValidate(e)
+            setReadValue(r)
+          }}
+          onClick={() => setSelectedIndex(-1)}
+          onKeyUp={handleKeyUp}
+          onFocus={e => e.target.select()}
+          placeholder={'λ\t(read)'}
         />
-    </InputSpacingWrapper>
-    <InputSeparator>,</InputSeparator>
-    <InputSpacingWrapper>
-      <Input
-        value={writeValue}
-        onChange={e => {
-          const w = tmReadWriteValidate(e)
-          setWriteValue(w)
-        }}
-        onClick={() => setSelectedIndex(-1)}
-        onKeyUp={handleKeyUp}
-        onFocus={e => e.target.select()}
-        placeholder={'λ\t(write)'}
+      </InputSpacingWrapper>
+      <InputSeparator>,</InputSeparator>
+      <InputSpacingWrapper>
+        <Input
+          value={writeValue}
+          onChange={e => {
+            const w = tmReadWriteValidate(e)
+            setWriteValue(w)
+          }}
+          onClick={() => setSelectedIndex(-1)}
+          onKeyUp={handleKeyUp}
+          onFocus={e => e.target.select()}
+          placeholder={'λ\t(write)'}
         />
-    </InputSpacingWrapper>
-    <InputSeparator>;</InputSeparator>
-    <InputSpacingWrapper>
-      <Input
-        value={dirValue}
-        onChange={e => {
-          const d = tmDirectionValidate(e)
-          setDirValue(d)
-        }}
-        onClick={() => setSelectedIndex(-1)}
-        onKeyUp={handleKeyUp}
-        onFocus={e => e.target.select()}
-        placeholder={'R\t(direction)'}
+      </InputSpacingWrapper>
+      <InputSeparator>;</InputSeparator>
+      <InputSpacingWrapper>
+        <DirectionRadioButtons
+          direction={dirValue as TMDirection}
+          setDirection={setDirValue}
+          handleSave={handleKeyUp}
+          name={'new-TM-transition'}
         />
-    </InputSpacingWrapper>
-    <SubmitButton onClick={saveNewTransition}>
-      <CornerDownLeft size='18px' />
-    </SubmitButton>
-  </InputWrapper>
+      </InputSpacingWrapper>
+      <InputSpacingWrapper>
+        <TMSubmitButton onClick={saveNewTransition}>
+          <CornerDownLeft size="18px" />
+        </TMSubmitButton>
+      </InputSpacingWrapper>
+    </InputWrapper>
+  )
 
   const saveNewTransition = () => {
     switch (projectType) {
@@ -344,7 +335,7 @@ const InputTransitionGroup = () => {
         assertType<Array<FSAAutomataTransition>>(transitionsList)
         return <>
           {transitionsList.map((t, i) => <InputWrapper key={i}>
-          <Input
+            <Input
               ref={transitionListRef[i] ?? null}
               value={t.read}
               onChange={e => {
@@ -355,12 +346,12 @@ const InputTransitionGroup = () => {
               onKeyUp={handleKeyUp}
               onFocus={e => e.target.select()}
               placeholder={'λ'}
-          />
-          <SubmitButton onClick={() => deleteTransition(i)}>
-            <X size='18px'/>
-          </SubmitButton>
+            />
+            <SubmitButton onClick={() => deleteTransition(i)}>
+              <X size='18px' />
+            </SubmitButton>
           </InputWrapper>).reverse()}
-          <hr/>
+          <hr />
           Add a new transition?
           {blankFSAInput()}
         </>
@@ -385,7 +376,7 @@ const InputTransitionGroup = () => {
                 onKeyUp={handleKeyUp}
                 onFocus={e => e.target.select()}
                 placeholder={'λ'}
-                />
+              />
             </InputSpacingWrapper>
             <InputSeparator>,</InputSeparator>
             <InputSpacingWrapper>
@@ -455,7 +446,7 @@ const InputTransitionGroup = () => {
                 onKeyUp={handleKeyUp}
                 onFocus={e => e.target.select()}
                 placeholder={'λ'}
-                />
+              />
             </InputSpacingWrapper>
             <InputSeparator>,</InputSeparator>
             <InputSpacingWrapper>
@@ -475,34 +466,33 @@ const InputTransitionGroup = () => {
                 onKeyUp={handleKeyUp}
                 onFocus={e => e.target.select()}
                 placeholder={'λ'}
-                />
+              />
             </InputSpacingWrapper>
             <InputSeparator>;</InputSeparator>
             <InputSpacingWrapper>
-              <Input
-                value={t.direction}
-                onChange={e => {
-                  const d = tmDirectionValidate(e)
+              <DirectionRadioButtons
+                direction={t.direction}
+                setDirection={(newDirection) => {
                   saveTMTransition({
                     id: t.id,
                     read: t.read,
                     write: t.write,
-                    direction: d
+                    direction: newDirection
                   })
                   setSelectedIndex(i)
                 }}
-                onClick={() => setSelectedIndex(i)}
-                onKeyUp={handleKeyUp}
-                onFocus={e => e.target.select()}
-                placeholder={'↔'}
-                />
+                name={`transition-group-${t.id}`}
+                handleSave={handleKeyUp}
+              />
             </InputSpacingWrapper>
-            <SubmitButton onClick={() => deleteTransition(i)}>
-              <X size='18px'/>
-            </SubmitButton>
+            <InputSpacingWrapper>
+              <TMSubmitButton onClick={() => deleteTransition(i)}>
+                <X size='18px' />
+              </TMSubmitButton>
+            </InputSpacingWrapper>
           </InputWrapper>
           ).reverse()}
-          <hr/>
+          <hr />
           Add a new transition?
           {blankTMInput()}
         </>
@@ -512,10 +502,10 @@ const InputTransitionGroup = () => {
   return <Modal
     title='Transition Edge Editor'
     description={
-        'Editing transition from ' +
-        fromName + ' to ' +
-        toName + '.'
-      }
+      'Editing transition from ' +
+      fromName + ' to ' +
+      toName + '.'
+    }
     isOpen={modalOpen}
     onClose={() => {
       commit()

@@ -10,20 +10,22 @@ interface DirectionProps {
   direction: TMDirection;
   setDirection: (value: TMDirection) => void;
   handleSave: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  name: string;
 }
 
 export const DirectionRadioButtons = ({
   direction,
   setDirection,
-  handleSave
+  handleSave,
+  name
 }: DirectionProps) => {
   return (
     <DirectionRadioGroup>
-      <DirectionLabel htmlFor="direction-R">
+      <DirectionLabel htmlFor={`${name}-direction-R`}>
         <DirectionRadioInput
-          id="direction-R"
+          id={`${name}-direction-R`}
           type="radio"
-          name="direction"
+          name={name}
           value="R"
           checked={direction === 'R'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
@@ -31,11 +33,11 @@ export const DirectionRadioButtons = ({
         />
         R
       </DirectionLabel>
-      <DirectionLabel htmlFor="direction-L">
+      <DirectionLabel htmlFor={`${name}-direction-L`}>
         <DirectionRadioInput
-          id="direction-L"
+          id={`${name}-direction-L`}
           type="radio"
-          name="direction"
+          name={name}
           value="L"
           checked={direction === 'L'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}
@@ -43,11 +45,11 @@ export const DirectionRadioButtons = ({
         />
         L
       </DirectionLabel>
-      <DirectionLabel htmlFor="direction-S">
+      <DirectionLabel htmlFor={`${name}-direction-S`}>
         <DirectionRadioInput
-          id="direction-S"
+          id={`${name}-direction-S`}
           type="radio"
-          name="direction"
+          name={name}
           value="S"
           checked={direction === 'S'}
           onChange={(e) => setDirection(e.target.value as TMDirection)}

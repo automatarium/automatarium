@@ -9,7 +9,15 @@ import { lerpPoints } from '/src/util/points'
 import { possibleOrOperators } from '/src/util/orOperators'
 import { DirectionRadioButtons } from '/src/components/Button/DirectionRadioButtons'
 
-import { InputWrapper, SubmitButton, TMSubmitButton, TransitionInputStyle, TMInputStyle } from './inputDialogsStyle'
+import {
+  InputWrapper,
+  SubmitButton,
+  TMSubmitButton,
+  TransitionInputStyle,
+  TMInputStyle,
+  RadioWrapper
+} from './inputDialogsStyle'
+
 import {
   assertType,
   AutomataState,
@@ -102,7 +110,7 @@ const InputDialogs = () => {
         assertType<TMAutomataTransition>(transition)
         setValue(transition?.read ?? '')
         setWrite(transition?.write ?? '')
-        setDirection(transition?.direction ?? "R");
+        setDirection(transition?.direction ?? 'R')
         setDialog({
           visible: true,
           x: screenMidPoint[0] - 100, // Hack. Not Nice.
@@ -384,11 +392,14 @@ const InputDialogs = () => {
             />
           </InputWrapper>
           <InputWrapper>
-            <DirectionRadioButtons
-              direction={direction}
-              setDirection={setDirection}
-              handleSave={handleSave}
-            />
+            <RadioWrapper>
+              <DirectionRadioButtons
+                direction={direction}
+                setDirection={setDirection}
+                handleSave={handleSave}
+                name={`transition-${dialog.id}`}
+              />
+            </RadioWrapper>
             <TMSubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
             </TMSubmitButton>
