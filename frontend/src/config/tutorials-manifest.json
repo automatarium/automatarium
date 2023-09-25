@@ -1,53 +1,36 @@
 {
   "id": "tutorials",
   "title": "Tutorials",
-  "description": "Tutorials main section",
+  "description": "Here are tutorials on how to use Automatarium",
   "type": "section",
   "items": [
     {
-      "id": "parent1",
-      "title": "Section",
-      "description": "Meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow meow",
-      "type": "section",
-      "thumbnail": "https://http.cat/images/200.jpg",
-      "items": [
-        {
-          "id": "item1.1",
-          "title": "Item 1",
-          "description": "<b>Lorem ipsum</b> dolor sit amet, consectetur adipiscing elit. Phasellus id odio a nisi auctor pulvinar. Aliquam luctus risus et nibh pharetra semper. Vestibulum quis hendrerit arcu. Sed elementum blandit dui. Curabitur blandit mauris non mi volutpat venenatis. Praesent rutrum nulla massa, a rutrum metus pellentesque vitae. Ut tincidunt laoreet tellus eu vulputate. Aenean mollis eleifend quam, non condimentum sem euismod vitae. Duis consectetur accumsan rutrum. Vivamus orci mauris, laoreet quis nisi a, finibus pellentesque magna. In suscipit, nisi et consectetur vestibulum, purus mi suscipit justo, efficitur cursus augue leo condimentum diam. In ut metus rhoncus, elementum ante viverra, posuere dolor. Mauris tristique ornare nisi ac posuere. Etiam ac dictum diam, et pellentesque elit. Vestibulum scelerisque ante erat, a gravida orci laoreet sed. Vestibulum finibus sem vel lorem posuere, ac feugiat libero congue. ",
-          "type": "item",
-          "link": "morenonsense"
-          
-        },
-        {
-          "id": "item1.2",
-          "title": "Item 2",
-          "description": "22222",
-          "type": "item",
-          "link": "nonsense"
-        },
-        {
-          "id": "lettuce",
-          "title": "Lettuce?",
-          "description": "",
-          "type": "item",
-          "thumbnail": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTvStJLJhnPMn2dQ05ecz5qLFsykm71rkLZBRsLEFECbzMaBuh9STMl5TTwaa8g_UcZEX6Cm08yW85nPJM",
-          "link": "https://youtu.be/VP5kC9fJAUE?si=Bw51Ah-Y53T2_al_"
-        },
-        {
-          "id": "section1.2",
-          "title": "Parent1.2",
-          "type": "section",
-          "items": []
-        }
-      ]
+      "id": "fsa-walkthrough",
+      "title": "FSA Tutorial",
+      "description": "In this tutorial we will do a walkthrough on how to create a Finite State Automaton in Automatarium.",
+      "type": "item",
+      "link": "https://youtu.be/eYXXIuv-Joo"
     },
     {
-      "id": "item2",
-      "title": "Go home",
-      "description": "jokes",
+      "id": "pda-walkthrough",
+      "title": "PDA Tutorial",
+      "description": "In this tutorial we will do a walkthrough on how to create a Pushdown Automaton in Automatarium.",
       "type": "item",
-      "link": "https://automatarium.tdib.xyz/"
+      "link": "https://youtu.be/TMkRywWW_hs"
+    },
+    {
+      "id": "tm-walkthrough",
+      "title": "TM Tutorial",
+      "description": "In this tutorial we will do a walkthrough on how to create a Turing Machine in Automatarium.",
+      "type": "item",
+      "link": "https://youtu.be/kX0W6pmdTfo"
+    },
+    {
+      "id": "adv",
+      "title": "Advanced Features",
+      "description": "TBD. Stay tuned for more!",
+      "type": "section",
+      "items": []
     }
   ]
 }
