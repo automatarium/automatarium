@@ -17,7 +17,7 @@ const TutorialCard = ({ title, blurb, image, ...props }: CardProps) => {
     {image && <CardImage $cardClass={cardClass}><img src={image} alt={title} /></CardImage>}
     <CardTitleAndText $cardClass={cardClass}>
       <CardTitle>{title}</CardTitle>
-      {hasBlurb && <p dangerouslySetInnerHTML={{ __html: blurb }}></p>}
+      {hasBlurb && <p>{blurb}</p>}
     </CardTitleAndText>
   </CardContainer>
 }
