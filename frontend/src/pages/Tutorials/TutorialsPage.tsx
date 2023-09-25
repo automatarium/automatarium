@@ -74,11 +74,15 @@ const TutorialsPage = () => {
             : <Button onClick={() => navigate('/')}>Return home</Button>}
         </TitleRow>
 
-        {<p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
+        {/* Section description goes above (unknown number of cards) */}
+        {pageInfo.type === 'section' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
 
         {pageInfo.type === 'section'
           ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
           : <EmbeddedVideo link={pageInfo.link} />}
+
+        {/* Video description goes below */}
+        {pageInfo.type === 'item' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
       </ Main>
       <Banner>
         <p>Ready to start building?</p>

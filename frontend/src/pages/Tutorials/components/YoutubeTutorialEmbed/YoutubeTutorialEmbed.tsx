@@ -26,14 +26,17 @@ const EmbeddedVideo = ({ link }) => {
 
   const vidId = parseId(link)
 
-  return vidId && <iframe
-      width={aspectRatios[0]}
-      height={aspectRatios[1]}
-      src={`https://www.youtube.com/embed/${vidId}`}
-      allow="accelerometer; clipboard-write; encrypted-media"
-      allowFullScreen
-      title="Tutorial Video"
-    />
+  return vidId && <>
+      <p />
+      <iframe
+        width={aspectRatios[0]}
+        height={aspectRatios[1]}
+        src={`https://www.youtube.com/embed/${vidId}`}
+        allow="accelerometer; clipboard-write; encrypted-media"
+        allowFullScreen
+        title="Tutorial Video"
+      />
+    </>
 }
 
 export default EmbeddedVideo
