@@ -22,10 +22,10 @@ const makeTransitionText = (type: ProjectType, orOperator: string, t: Positioned
   switch (type) {
     case 'TM':
       assertType<TMAutomataTransition>(t)
-      return `${splitCharsWithOr(t.read, orOperator) || 'λ'},${t.write || 'λ'};${t.direction || 'λ'}`
+      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.write || 'λ'} ; ${t.direction || 'λ'}`
     case 'PDA':
       assertType<PDAAutomataTransition>(t)
-      return `${splitCharsWithOr(t.read, orOperator) || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
+      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.pop || 'λ'} ; ${t.push || 'λ'}`
     case 'FSA':
       return splitCharsWithOr(t.read, orOperator) || 'λ'
   }
