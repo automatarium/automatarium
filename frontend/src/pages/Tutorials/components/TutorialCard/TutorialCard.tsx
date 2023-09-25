@@ -2,22 +2,22 @@ import { CardContainer, CardImage, CardTitle, CardTitleAndText } from './tutoria
 
 type CardProps = {
   title: string
-  description: string
+  blurb: string
   image: string
   onClick: () => void
 }
 
-const TutorialCard = ({ title, description, image, ...props }: CardProps) => {
+const TutorialCard = ({ title, blurb, image, ...props }: CardProps) => {
   // 4 modes: text only, image and text, image and title, title only
-  const hasDescription = description && description.length > 0
+  const hasBlurb = blurb && blurb.length > 0
   const cardClass = image
-    ? hasDescription ? 'img-text' : 'img-only'
-    : hasDescription ? 'text-only' : 'title-only'
+    ? hasBlurb ? 'img-text' : 'img-only'
+    : hasBlurb ? 'text-only' : 'title-only'
   return <CardContainer $cardClass={cardClass} {...props}>
     {image && <CardImage $cardClass={cardClass}><img src={image} alt={title} /></CardImage>}
     <CardTitleAndText $cardClass={cardClass}>
       <CardTitle>{title}</CardTitle>
-      {hasDescription && <p dangerouslySetInnerHTML={{ __html: description }}></p>}
+      {hasBlurb && <p dangerouslySetInnerHTML={{ __html: blurb }}></p>}
     </CardTitleAndText>
   </CardContainer>
 }

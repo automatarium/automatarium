@@ -1,34 +1,39 @@
 {
   "id": "tutorials",
   "title": "Tutorials",
+  "blurb": "",
   "description": "Here are tutorials on how to use Automatarium",
   "type": "section",
   "items": [
     {
       "id": "fsa-walkthrough",
       "title": "FSA Tutorial",
-      "description": "In this tutorial we will do a walkthrough on how to create a Finite State Automaton in Automatarium.",
+      "blurb": "In this tutorial we will do a walkthrough on how to create a Finite State Automaton in Automatarium.",
+      "description": "",
       "type": "item",
       "link": "https://youtu.be/eYXXIuv-Joo"
     },
     {
       "id": "pda-walkthrough",
       "title": "PDA Tutorial",
-      "description": "In this tutorial we will do a walkthrough on how to create a Pushdown Automaton in Automatarium.",
+      "blurb": "In this tutorial we will do a walkthrough on how to create a Pushdown Automaton in Automatarium.",
+      "description": "",
       "type": "item",
       "link": "https://youtu.be/TMkRywWW_hs"
     },
     {
       "id": "tm-walkthrough",
       "title": "TM Tutorial",
-      "description": "In this tutorial we will do a walkthrough on how to create a Turing Machine in Automatarium.",
+      "blurb": "In this tutorial we will do a walkthrough on how to create a Turing Machine in Automatarium.",
+      "description": "",
       "type": "item",
       "link": "https://youtu.be/kX0W6pmdTfo"
     },
     {
       "id": "adv",
       "title": "Advanced Features",
-      "description": "TBD. Stay tuned for more!",
+      "blurb": "TBD. Stay tuned for more!",
+      "description": "",
       "type": "section",
       "items": []
     }

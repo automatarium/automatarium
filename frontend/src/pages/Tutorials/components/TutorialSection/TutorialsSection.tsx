@@ -1,8 +1,8 @@
 import { useSearchParams } from 'react-router-dom'
 
+import { TutorialCard } from '../'
 import { TutorialSection } from '../../TutorialsPage'
 import { CardsList } from './tutorialsSectionStyle'
-import { TutorialCard } from '../'
 
 type TutorialSectionProps = {
   pageInfo: TutorialSection
@@ -18,7 +18,7 @@ const TutorialsSection = ({ pageInfo, pagePath }: TutorialSectionProps) => {
       <TutorialCard
         key={child.id}
         title={child.title}
-        description={child.description}
+        blurb={child.blurb}
         image={child.thumbnail}
         onClick={() => setSearchParams([...pagePath, child.id].join('&'))} />
     )}
