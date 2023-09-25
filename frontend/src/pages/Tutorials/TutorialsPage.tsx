@@ -74,7 +74,7 @@ const TutorialsPage = () => {
             : <Button onClick={() => navigate('/')}>Return home</Button>}
         </TitleRow>
 
-        {<p>{pageInfo.description}</p>}
+        {<p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
 
         {pageInfo.type === 'section'
           ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
