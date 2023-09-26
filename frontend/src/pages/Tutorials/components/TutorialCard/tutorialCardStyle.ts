@@ -67,4 +67,8 @@ export const CardImage = styled('div')<{$cardClass: string}>`
     display: block;
     object-fit: contain;
   }
+
+  ${p => p.$cardClass === 'text-only' && `
+    background: var(--grid-pattern-light);
+  `}
 `

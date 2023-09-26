@@ -1,4 +1,5 @@
 import { CardContainer, CardImage, CardTitle, CardTitleAndText } from './tutorialCardStyle'
+import { Logo } from '/src/components'
 
 type CardProps = {
   title: string
@@ -14,7 +15,7 @@ const TutorialCard = ({ title, blurb, image, ...props }: CardProps) => {
     ? hasBlurb ? 'img-text' : 'img-only'
     : hasBlurb ? 'text-only' : 'title-only'
   return <CardContainer $cardClass={cardClass} {...props}>
-    {image && <CardImage $cardClass={cardClass}><img src={image} alt={title} /></CardImage>}
+    <CardImage $cardClass={cardClass}>{image ? <img src={image} alt={title} /> : <Logo size='8rem' />}</CardImage>
     <CardTitleAndText $cardClass={cardClass}>
       <CardTitle>{title}</CardTitle>
       {hasBlurb && <p>{blurb}</p>}
