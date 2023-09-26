@@ -1,8 +1,9 @@
 import { useSearchParams } from 'react-router-dom'
 
 import { TutorialCard } from '../'
-import { TutorialSection } from '../../TutorialsPage'
+import { TutorialLeaf, TutorialSection } from '../../TutorialsPage'
 import { CardsList } from './tutorialsSectionStyle'
+import { isYoutube as getYtId } from '../utils'
 
 type TutorialSectionProps = {
   pageInfo: TutorialSection
@@ -14,13 +15,17 @@ const TutorialsSection = ({ pageInfo, pagePath }: TutorialSectionProps) => {
   const [_, setSearchParams] = useSearchParams()
 
   return <CardsList>
-    {pageInfo.items.map((child) =>
-      <TutorialCard
+    {pageInfo.items.map((child: TutorialLeaf) => {
+      const thumb = (child.type === 'item' && !child.thumbnail && getYtId(child.link))
+        ? `https://i3.ytimg.com/vi/${getYtId(child.link)}/mqdefault.jpg`
+        : child.thumbnail
+      return <TutorialCard
         key={child.id}
         title={child.title}
         blurb={child.blurb}
-        image={child.thumbnail}
+        image={thumb}
         onClick={() => setSearchParams([...pagePath, child.id].join('&'))} />
+    }
     )}
   </CardsList>
 }

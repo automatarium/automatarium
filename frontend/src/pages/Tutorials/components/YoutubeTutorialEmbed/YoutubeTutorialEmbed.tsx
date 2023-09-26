@@ -1,12 +1,8 @@
 import { useLayoutEffect, useState } from 'react'
+import { isYoutube } from '../utils'
 
 const EmbeddedVideo = ({ link }) => {
   const [aspectRatios, setAspectRatio] = useState([560, 315])
-
-  const parseId = (link: string) => {
-    const tokens = link.split('/') ?? null
-    return tokens.find(tk => tk === 'youtu.be') === undefined ? null : tokens[tokens.length - 1]
-  }
 
   const updateRatios = () => {
     const usableWidth = window.innerWidth > 1200 ? 1136 : window.innerWidth - 64
@@ -24,7 +20,7 @@ const EmbeddedVideo = ({ link }) => {
     }
   }, [])
 
-  const vidId = parseId(link)
+  const vidId = isYoutube(link)
 
   return vidId && <>
       <p />
