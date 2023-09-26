@@ -1,0 +1,41 @@
+{
+  "id": "tutorials",
+  "title": "Tutorials",
+  "blurb": "",
+  "description": "Here are tutorials on how to use Automatarium",
+  "type": "section",
+  "items": [
+    {
+      "id": "fsa-walkthrough",
+      "title": "FSA Tutorial",
+      "blurb": "In this tutorial we will do a walkthrough on how to create a Finite State Automaton in Automatarium.",
+      "description": "<p>GitHub: <a href='https://github.com/automatarium/automatarium'>https://github.com/automatarium/automatarium</a></p><p>Contact: <a href='mailto:automatarium.manager@gmail.com'>automatarium.manager@gmail.com</a></p><p>Voice: Russel from <a href='https://play.ht/'>https://play.ht/</a></p>",
+      "type": "item",
+      "link": "https://youtu.be/eYXXIuv-Joo"
+    },
+    {
+      "id": "pda-walkthrough",
+      "title": "PDA Tutorial",
+      "blurb": "In this tutorial we will do a walkthrough on how to create a Pushdown Automaton in Automatarium.",
+      "description": "<p>GitHub: <a href='https://github.com/automatarium/automatarium'>https://github.com/automatarium/automatarium</a></p><p>Contact: <a href='mailto:automatarium.manager@gmail.com'>automatarium.manager@gmail.com</a></p><p>Voice: Russel from <a href='https://play.ht/'>https://play.ht/</a></p>",
+      "type": "item",
+      "link": "https://youtu.be/TMkRywWW_hs"
+    },
+    {
+      "id": "tm-walkthrough",
+      "title": "TM Tutorial",
+      "blurb": "In this tutorial we will do a walkthrough on how to create a Turing Machine in Automatarium.",
+      "description": "<p>GitHub: <a href='https://github.com/automatarium/automatarium'>https://github.com/automatarium/automatarium</a></p><p>Contact: <a href='mailto:automatarium.manager@gmail.com'>automatarium.manager@gmail.com</a></p><p>Voice: Russel from <a href='https://play.ht/'>https://play.ht/</a></p>",
+      "type": "item",
+      "link": "https://youtu.be/kX0W6pmdTfo"
+    },
+    {
+      "id": "adv",
+      "title": "Advanced Features",
+      "blurb": "TBD. Stay tuned for more!",
+      "description": "We'll be adding more tutorial videos on the nuances of Automatarium soon!",
+      "type": "section",
+      "items": []
+    }
+  ]
+}

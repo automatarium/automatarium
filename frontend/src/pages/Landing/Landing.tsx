@@ -17,8 +17,10 @@ const Landing = () => (
         <div className="text">
           <p>Automatarium is a student-built platform for automata and formal language theory.</p>
           <p>Work easily with a simple and intuitive design built for ease of use and accessibility.</p>
-          <p>It's free to use, and syncs your projects and preferences across all your devices.</p>
+          <p>It's free to use, and when you're done, share your project with the world with a link.</p>
           <Button to="/new">Start building!</Button>
+          <p>First time here? Check out our tutorials!</p>
+          <Button to='/tutorials'>Tutorials</Button>
         </div>
       </Section>
 
