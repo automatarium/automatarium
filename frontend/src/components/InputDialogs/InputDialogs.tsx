@@ -6,8 +6,18 @@ import { useProjectStore, useViewStore } from '/src/stores'
 import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
+import { formatInput, splitCharsWithOr } from '/src/util/orOperators'
+import { DirectionRadioButtons } from '/src/components/Button/DirectionRadioButtons'
 
-import { InputWrapper, SubmitButton } from './inputDialogsStyle'
+import {
+  InputWrapper,
+  SubmitButton,
+  TMSubmitButton,
+  TransitionInputStyle,
+  TMInputStyle,
+  RadioWrapper
+} from './inputDialogsStyle'
+
 import {
   assertType,
   AutomataState,
@@ -15,15 +25,6 @@ import {
   ProjectComment, TMAutomataTransition,
   TMDirection
 } from '/src/types/ProjectTypes'
-
-/**
- * The default input styling for transition inputs
- */
-const TRANSITION_INPUT_STYLE = {
-  width: 'calc(12ch + 3.5em)',
-  margin: '0 .4em',
-  paddingRight: '2.5em'
-}
 
 /**
  * All types that a dialog could be
@@ -84,9 +85,8 @@ const InputDialogs = () => {
 
   const inputWriteRef = useRef()
   const inputDirectionRef = useRef()
-  const [read, setRead] = useState('')
   const [write, setWrite] = useState('')
-  const [direction, setDirection] = useState<TMDirection | ''>('R')
+  const [direction, setDirection] = useState<TMDirection>('R')
   const editTransition = useProjectStore(s => s.editTransition)
   const removeTransitions = useProjectStore(s => s.removeTransitions)
   const commit = useProjectStore(s => s.commit)
@@ -94,6 +94,7 @@ const InputDialogs = () => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
+  const orOperator = useProjectStore(s => s.project.config.orOperator)
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
@@ -107,9 +108,9 @@ const InputDialogs = () => {
     switch (projectType) {
       case 'TM':
         assertType<TMAutomataTransition>(transition)
-        setRead(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setWrite(transition?.write ?? '')
-        setDirection(transition?.direction)
+        setDirection(transition?.direction ?? 'R')
         setDialog({
           visible: true,
           x: screenMidPoint[0] - 100, // Hack. Not Nice.
@@ -120,7 +121,7 @@ const InputDialogs = () => {
         break
       case 'PDA':
         assertType<PDAAutomataTransition>(transition)
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
         setDialog({
@@ -132,7 +133,7 @@ const InputDialogs = () => {
         })
         break
       case 'FSA':
-        setValue(transition?.read ?? '')
+        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
         setDialog({
           visible: true,
           x: screenMidPoint[0],
@@ -143,30 +144,24 @@ const InputDialogs = () => {
     }
 
     focusInput()
-  }, arr)
-
-  /**
-   * Rearranges a read string so that all single characters come before ranges.
-   * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
-   * This is just want it was like before so assuming there is a design reason
-   */
-  const formatRangeChars = (input: string): string => {
-    const ranges = input.match(/\[(.*?)]/g)
-    const chars = input.replace(/\[(.*?)]/g, '')
-    return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
-  }
+  }, [arr, orOperator])
 
   const saveTransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatRangeChars(value)
+      read: formatInput(value, orOperator)
     })
     commit()
     hideDialog()
   }
 
   const saveTMTransition = () => {
-    editTransition({ id: dialog.id, read, write, direction: direction || 'R' } as TMAutomataTransition)
+    editTransition({
+      id: dialog.id,
+      read: formatInput(value, orOperator),
+      write,
+      direction: direction || 'R'
+    } as TMAutomataTransition)
     commit()
     hideDialog()
   }
@@ -174,9 +169,9 @@ const InputDialogs = () => {
   const savePDATransition = () => {
     editTransition({
       id: dialog.id,
-      read: formatRangeChars(value),
-      pop: formatRangeChars(valuePop),
-      push: formatRangeChars(valuePush)
+      read: formatInput(value, orOperator),
+      pop: valuePop,
+      push: valuePush
     } as PDAAutomataTransition)
     commit()
     hideDialog()
@@ -266,22 +261,9 @@ const InputDialogs = () => {
     stateLabel: saveStateLabel
   } as Record<DialogType, () => void>)[dialog?.type]
 
-  const handleReadIn = (e: InputEvent) => {
-    const input = e.target.value.toString()
-    setRead(input[input.length - 1] ?? '')
-  }
-
   const handleWriteIn = (e: InputEvent) => {
     const input = e.target.value.toString()
     setWrite(input[input.length - 1] ?? '')
-  }
-
-  const handleDirectionIn = (e: InputEvent) => {
-    // ^$ is regex for empty string, essentially allowing user to backspace input on top of
-    // the 'r', 'l', and 's' characters
-    const input = e.target.value.toString().match(/[rls]|^$/gi)
-    const value = input[input.length - 1].toUpperCase()
-    setDirection(value as TMDirection)
   }
 
   if (!dialog) return null
@@ -321,7 +303,7 @@ const InputDialogs = () => {
               onChange={e => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -339,7 +321,7 @@ const InputDialogs = () => {
               onChange={e => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
@@ -349,7 +331,7 @@ const InputDialogs = () => {
               onChange={e => setValuePop(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(pop)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
@@ -359,7 +341,7 @@ const InputDialogs = () => {
               onChange={e => setValuePush(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(push)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TransitionInputStyle}
             />
             <SubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
@@ -373,11 +355,11 @@ const InputDialogs = () => {
           <InputWrapper>
             <Input
               ref={inputRef}
-              value={read}
-              onChange={handleReadIn}
+              value={value}
+              onChange={(e) => setValue(e.target.value)}
               onKeyUp={handleSave}
               placeholder={'λ\t(read)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TMInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
@@ -387,21 +369,21 @@ const InputDialogs = () => {
               onChange={handleWriteIn}
               onKeyUp={handleSave}
               placeholder={'λ\t(write)'}
-              style={TRANSITION_INPUT_STYLE}
+              style={TMInputStyle}
             />
           </InputWrapper>
           <InputWrapper>
-            <Input
-              ref={inputDirectionRef}
-              value={direction}
-              onChange={handleDirectionIn}
-              onKeyUp={handleSave}
-              placeholder={'↔\t(direction)'}
-              style={TRANSITION_INPUT_STYLE}
-            />
-            <SubmitButton onClick={save}>
+            <RadioWrapper>
+              <DirectionRadioButtons
+                direction={direction}
+                setDirection={setDirection}
+                handleSave={handleSave}
+                name={`transition-${dialog.id}`}
+              />
+            </RadioWrapper>
+            <TMSubmitButton onClick={save}>
               <CornerDownLeft size="18px" />
-            </SubmitButton>
+            </TMSubmitButton>
           </InputWrapper>
         </Dropdown>
       )

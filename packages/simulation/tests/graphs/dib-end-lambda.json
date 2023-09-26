@@ -79,6 +79,7 @@
     "statePrefix": "q",
     "acceptanceCriteria": "both",
     "color": "",
-    "playbackInterval": 1000
+    "playbackInterval": 1000,
+    "orOperator": "|"
   }
 }

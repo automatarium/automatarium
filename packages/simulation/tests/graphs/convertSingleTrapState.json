@@ -84,6 +84,7 @@
     "type": "FSA",
     "statePrefix": "q",
     "acceptanceCriteria": "both",
-    "color": "orange"
+    "color": "orange",
+    "orOperator": "|"
   }
 }

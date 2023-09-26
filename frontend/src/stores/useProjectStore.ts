@@ -22,6 +22,7 @@ import {
   APP_VERSION,
   SCHEMA_VERSION,
   DEFAULT_STATE_PREFIX,
+  DEFAULT_OR_OPERATOR,
   DEFAULT_PROJECT_TYPE,
   DEFAULT_ACCEPTANCE_CRITERIA,
   DEFAULT_PROJECT_COLOR
@@ -70,6 +71,7 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
   config: {
     type: projectType,
     statePrefix: DEFAULT_STATE_PREFIX,
+    orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
     color: DEFAULT_PROJECT_COLOR[projectType]
   }
@@ -106,6 +108,7 @@ interface ProjectStore {
   setName: (name: string) => void,
   createTransition: (transition: Omit<BaseAutomataTransition, 'id' | 'read'>) => number,
   editTransition: (transition: Omit<BaseAutomataTransition, 'from' | 'to'>) => void,
+  moveTransition: (transition: Omit<BaseAutomataTransition, 'read'>) => void,
   createComment: (comment: Omit<ProjectComment, 'id'>) => number,
   updateComment: (comment: Partial<ProjectComment>) => void,
   updateComments: (comments: Partial<ProjectComment>[]) => void,
@@ -223,6 +226,14 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   editTransition: newTransition => set(produce(({ project }: { project: StoredProject }) => {
+    // Refactor types to enums later
+    const ti = project.transitions.findIndex(t => t.id === newTransition.id)
+    // Merge the new transition info with existing transition info
+    project.transitions[ti] = { ...project.transitions[ti], ...newTransition }
+  })),
+
+  // Same as edit but restricted to from/to edits. Should they be the same function?
+  moveTransition: newTransition => set(produce(({ project }: { project: StoredProject }) => {
     // Refactor types to enums later
     const ti = project.transitions.findIndex(t => t.id === newTransition.id)
     // Merge the new transition info with existing transition info
@@ -426,7 +437,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       initialState: project.initialState,
       projectType: project.projectType,
       states: project.states,
-      transitions: project.projectType === 'TM' ? project.transitions : expandTransitions(project.transitions)
+      transitions: expandTransitions(project.transitions)
     } as ProjectGraph
   },
 

@@ -11,3 +11,7 @@ export const InputSpacingWrapper = styled('span')`
 export const InputSeparator = styled('span')`
   font-weight: bold;
 `
+
+export const Heading = styled('div')`
+  padding: 0.4em;
+`

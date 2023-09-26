@@ -39,15 +39,21 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
 
       // Undefined means its out of tape bounds, so we treat that has a lambda transition
       const symbol = tapeTrace[tapePointer] ?? ''
-      const nextTape = this.progressTape(node, transition)
+      let nextTape = this.progressTape(node, transition)
 
       // If there is no next state
       if (
-        nextState === undefined || (!transition.read.includes(symbol)) || nextTape.pointer < 0
+        nextState === undefined || (!transition.read.includes(symbol))
       ) {
         continue
       }
-      if (transition.read === symbol) {
+      // Add a lambda on the tape to the start of the known tape
+      if (nextTape.pointer < 0) {
+        nextTape = { pointer: 0, trace: ['', ...nextTape.trace] }
+      }
+      // Progress when the transition's read matches the symbol exactly
+      // If it doesn't, progress only if the symbol is non-empty and contained within the read
+      if (transition.read === symbol || (symbol.length > 0 && transition.read.includes(symbol))) {
         const graphState = new TMState(
           nextState.id,
           nextState.isFinal,
