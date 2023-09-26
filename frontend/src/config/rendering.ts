@@ -11,3 +11,4 @@ export const REFLEXIVE_X_OFFSET = 75
 export const PASTE_POSITION_OFFSET = 10
 export const TEMPLATE_THUMBNAIL_WIDTH = 9 // em
 export const PROJECT_THUMBNAIL_WIDTH = 12 // em
+export const BOX_HANDLE_SIZE = 4

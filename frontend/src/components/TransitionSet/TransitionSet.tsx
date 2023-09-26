@@ -1,13 +1,15 @@
 import { MouseEvent, useContext } from 'react'
 import { useProjectStore } from '../../stores'
+import ChangeTransitionHandlebars from '../ChangeTransitionHandle/ChangeTransitionHandle'
+import { ghostStyles, pathSelectedClass, pathStyles } from './transitionSetStyle'
+import { REFLEXIVE_X_OFFSET, REFLEXIVE_Y_OFFSET, STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION } from '/src/config/rendering'
 import { MarkerContext } from '/src/providers'
-import { STATE_CIRCLE_RADIUS, TRANSITION_SEPERATION, REFLEXIVE_Y_OFFSET, REFLEXIVE_X_OFFSET } from '/src/config/rendering'
-import { movePointTowards, lerpPoints, size } from '/src/util/points'
-import { dispatchCustomEvent } from '/src/util/events'
 import { useSelectionStore } from '/src/stores'
-import { pathStyles, pathSelectedClass, ghostStyles } from './transitionSetStyle'
+import { dispatchCustomEvent } from '/src/util/events'
+import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
+import { splitCharsWithOr } from '/src/util/orOperators'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -15,17 +17,17 @@ import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataT
  * - PDA: read,pop;direction
  * - FSA: read
  */
-const makeTransitionText = (type: ProjectType, t: PositionedTransition): string => {
+const makeTransitionText = (type: ProjectType, orOperator: string, t: PositionedTransition): string => {
   // Since the type can't be narrowed, we need to narrow ourselves inside the blocks
   switch (type) {
     case 'TM':
       assertType<TMAutomataTransition>(t)
-      return `${t.read || 'λ'},${t.write || 'λ'};${t.direction || 'λ'}`
+      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.write || 'λ'} ; ${t.direction || 'λ'}`
     case 'PDA':
       assertType<PDAAutomataTransition>(t)
-      return `${t.read || 'λ'},${t.pop || 'λ'};${t.push || 'λ'}`
+      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.pop || 'λ'} ; ${t.push || 'λ'}`
     case 'FSA':
-      return t.read || 'λ'
+      return splitCharsWithOr(t.read, orOperator) || 'λ'
   }
 }
 
@@ -138,6 +140,7 @@ const Transition = ({
 
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
+  const orOperator = useProjectStore(s => s.project?.config?.orOperator)
 
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
@@ -193,6 +196,19 @@ const Transition = ({
   // 'under' transitions require more spacing
   const initialOffset = ((bendDirection === 'under' ? 1 : 0.3) * offsetDirection) + 'em'
 
+  const formatOrSymbols = (text: string) => {
+    const elements: React.ReactNode[] = []
+    const parts = text.split(orOperator)
+
+    parts.forEach((part, index) => {
+      elements.push(<tspan key={`part-${index}`}>{part}</tspan>)
+      if (index !== parts.length - 1) {
+        elements.push(<tspan key={`operator-${index}`} fill="#999">{orOperator}</tspan>)
+      }
+    })
+    return elements
+  }
+
   return <g>
     {/* The edge itself */}
     <path
@@ -220,6 +236,14 @@ const Transition = ({
       strokeWidth={20}
     />}
 
+    {/* Handles to drag the edge */}
+    {setSelected && <ChangeTransitionHandlebars
+        edges={edges}
+        selectedTransitions={selectedTransitions}
+        isReflexive={isReflexive}
+      />
+    }
+
     <text
       {...midPoint}
       transform={rotate(degrees, midPoint)}
@@ -233,7 +257,7 @@ const Transition = ({
             onMouseUp={handleTransitionMouseUp(t)}
             onDoubleClick={handleTransitionDoubleClick(t)}
             x={midPoint.x}>
-              {makeTransitionText(projectType, t)}
+            {formatOrSymbols(makeTransitionText(projectType, orOperator, t))}
           </tspan>
         })}
     </text>

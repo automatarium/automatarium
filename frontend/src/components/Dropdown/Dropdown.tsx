@@ -103,7 +103,7 @@ const Dropdown = ({
       $visible={visible}
       ref={dropdownRef}
       // Close dropdown if focus leaves
-      onBlur={e => !subMenu && visible && !e.currentTarget.contains(e.relatedTarget) && onClose()}
+      onBlur={e => !subMenu && visible && !e.currentTarget.contains(e.relatedTarget)}
       {...props}
     >
       {items?.map((item, i) => {
