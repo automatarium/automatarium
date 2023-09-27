@@ -58,7 +58,6 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
           nextState.id,
           nextState.isFinal,
           nextTape
-          // read: symbol
         )
         const successor = new Node(graphState, node)
         successors.push(successor)
