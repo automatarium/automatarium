@@ -9,7 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
-import { splitCharsWithOr } from '/src/util/orOperators'
+import { splitCharsWithOr } from '/src/util/stringManipulations'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation

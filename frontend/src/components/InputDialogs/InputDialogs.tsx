@@ -6,7 +6,7 @@ import { useProjectStore, useViewStore } from '/src/stores'
 import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
-import { formatInput, splitCharsWithOr } from '/src/util/orOperators'
+import { formatInput, splitCharsWithOr } from '/src/util/stringManipulations'
 import { DirectionRadioButtons } from '/src/components/Button/DirectionRadioButtons'
 
 import {

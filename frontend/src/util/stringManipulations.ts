@@ -41,41 +41,45 @@ export const splitCharsWithOr = (text: string, orOperator: string): string => {
   return parts.join(joinStr);
 }
 
-/**
- * Removes OR operators and rearranges the read string when a range is present
- * All single characters come before ranges
- * e.g. [a-b]ad[l-k] becomes ad[a-b][l-k]
- */
-export const formatInput = (input: string, orOperator: string): string => {
-  // Remove whitespace
-  input = input.replace(/\s+/g, '');
+export const removeWhitespace = (input: string): string => {
+  return input.replace(/\s+/g, '');
+}
 
-  // Remove or operators
+export const removeOrOperators = (input: string, orOperator: string): string => {
   for (const op of possibleOrOperators(orOperator)) {
     input = input.split(op).join('');
   }
+  return input;
+}
 
-  // Extract ranges
+export const removeDuplicateChars = (input: string): string => {
+  return Array.from(new Set(input.split(''))).join('');
+}
+
+export const extractRanges = (input: string): [string, string[]] => {
   const ranges = input.match(/\[(.*?)]/g) || [];
   input = input.replace(/\[(.*?)]/g, '');
+  return [input, ranges];
+}
 
-  // Extract all valid exclusions
+// Exclusions are denoted with ! followed by the character to exclude
+export const extractAndRemoveExclusions = (input: string): [string, string] => {
   const exclusionMatches = input.match(/!+([^!])/g) || [];
-
-  // Remove those valid exclusions from the input
   for (const match of exclusionMatches) {
     input = input.replace(match, '');
   }
-
-  // Remove all standalone `!` symbols
   input = input.replace(/!+/g, '');
-
-  // Construct the unique exclusions
   const uniqueExclusions = Array.from(new Set(exclusionMatches.map(match => '!' + match[match.length - 1]))).join('');
-
-  // Add back ranges
-  return `${input}${uniqueExclusions}${ranges.join('')}`;
+  return [input, uniqueExclusions];
 }
 
 
-
+// If the input is 'a[w-z]a!!b', the output will be 'a!b[w-z]'
+export const formatInput = (input: string, orOperator: string): string => {
+  input = removeWhitespace(input);
+  input = removeOrOperators(input, orOperator);
+  input = removeDuplicateChars(input)
+  const [inputWithoutRanges, ranges] = extractRanges(input);
+  const [finalInput, uniqueExclusions] = extractAndRemoveExclusions(inputWithoutRanges);
+  return `${finalInput}${uniqueExclusions}${ranges.join('')}`;
+}

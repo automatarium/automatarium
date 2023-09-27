@@ -33,7 +33,7 @@ import {
   TMDirection,
   assertType
 } from '/src/types/ProjectTypes'
-import { splitCharsWithOr, formatInput } from '/src/util/orOperators'
+import { splitCharsWithOr, formatInput } from '/src/util/stringManipulations'
 
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
