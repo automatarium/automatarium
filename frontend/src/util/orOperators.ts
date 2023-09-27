@@ -33,8 +33,12 @@ export const splitCharsWithOr = (text: string, orOperator: string): string => {
   let joinStr = ' '
   if (orOperator !== ' ') { joinStr = ` ${orOperator} ` }
 
-  // Don't insert OR symbols inside ranges
-  return text.split(/(\[.*?])|(?=.)/g).filter(Boolean).join(joinStr)
+  // Don't insert OR symbols inside ranges or between NOT operator (!) and following character 
+  const regex = /(\[.*?])|(!+[a-zA-Z])|([a-zA-Z])/g
+  let matches = Array.from(text.matchAll(regex))
+  let parts = matches.map(match => match[0])
+
+  return parts.join(joinStr);
 }
 
 /**
@@ -44,14 +48,34 @@ export const splitCharsWithOr = (text: string, orOperator: string): string => {
  */
 export const formatInput = (input: string, orOperator: string): string => {
   // Remove whitespace
-  input = input.replace(/\s+/g, '')
+  input = input.replace(/\s+/g, '');
 
-  // Remove all possible OR operators from the input
+  // Remove or operators
   for (const op of possibleOrOperators(orOperator)) {
-    input = input.split(op).join('')
+    input = input.split(op).join('');
   }
 
-  const ranges = input.match(/\[(.*?)]/g)
-  const chars = input.replace(/\[(.*?)]/g, '')
-  return `${Array.from(new Set(chars)).join('')}${ranges ? ranges.join('') : ''}`
+  // Extract ranges
+  const ranges = input.match(/\[(.*?)]/g) || [];
+  input = input.replace(/\[(.*?)]/g, '');
+
+  // Extract all valid exclusions
+  const exclusionMatches = input.match(/!+([^!])/g) || [];
+
+  // Remove those valid exclusions from the input
+  for (const match of exclusionMatches) {
+    input = input.replace(match, '');
+  }
+
+  // Remove all standalone `!` symbols
+  input = input.replace(/!+/g, '');
+
+  // Construct the unique exclusions
+  const uniqueExclusions = Array.from(new Set(exclusionMatches.map(match => '!' + match[match.length - 1]))).join('');
+
+  // Add back ranges
+  return `${input}${uniqueExclusions}${ranges.join('')}`;
 }
+
+
+
