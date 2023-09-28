@@ -26,7 +26,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   const updateWidth = useCallback(() => {
     // Magic numbers come from the size of toolbar, min size of canvas and size of side panel
     const minSize = 398 + 760 + 64
-    const usableWidth = window.innerWidth < minSize ? 760 : window.innerWidth - 398 + 64
+    const usableWidth = window.innerWidth < minSize ? 760 : window.innerWidth - 398 - 64
     setBoxWidth(usableWidth)
   }, [window.innerWidth])
 
@@ -36,28 +36,19 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
     return () => window.removeEventListener('resize', updateWidth)
   }, [])
 
-  /**
-   * Number that can fit into BB, BBFit = bbWidth / 35
-   * If at the start we have slice(0, BBFit/2)
-   * If at the end we have slice(trace.length - BBFit/2, trace.length - 1)
-   * start = If pointer > BBFit/2 then pointer - BBFit/2 else pointer
-   * end = If trace.length - pointer < BBFit/2 then trace.length - 1
-   */
   useEffect(() => {
-    const offset = 5
+    const offset = 2
     const endOffset = 2
     const startOffset = 1
     const maxTapeLength = Math.floor(boxWidth / 35) - offset - endOffset - startOffset
     if (trace.length > maxTapeLength) {
       const halfFit = Math.ceil(maxTapeLength / 2)
-      const start = (
-        pointer - startOffset > halfFit
-          ? pointer - halfFit - startOffset
-          : 0)
-      const end = (
-        trace.length - pointer < halfFit + endOffset
-          ? trace.length
-          : halfFit + pointer + endOffset)
+
+      const canSeeStart = pointer - startOffset < halfFit
+      const canSeeEnd = trace.length - pointer < halfFit + endOffset
+      const start = canSeeStart ? 0 : pointer - halfFit - startOffset
+      const end = canSeeEnd ? trace.length : halfFit + pointer + endOffset
+
       setTapeTrace(trace.slice(start, end))
       setEffectiveIndex(pointer - start)
       setEffectiveEnd(end)
