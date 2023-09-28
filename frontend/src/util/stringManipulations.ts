@@ -44,16 +44,19 @@ export const splitCharsWithOr = (text: string, orOperator: string): string => {
 
 // Gets symbols that are preceded by an exclusion operator (!)
 export const extractSymbolsToExclude = (input: string): string[] => {
-  const matches = input.match(/(!\.)|(!\(([^&)]+&)*[^&)]+\))|(!\[[^\]]+])/g) || []
+  const matches = input.match(/(!\.)|(!\(([^&)]+&)*[^&)]*\))|(!\[[^\]]*\])|(![^()[\]]+)|!\(|!\[/g) || []
 
-  return matches.map((match: string) => {
+  return matches.flatMap((match: string) => {
     if (match.startsWith('!(')) {
-      return match.slice(2, -1).replace(/&/g, '')
+      if (match === '!(') return ['(']
+      return match.slice(2, -1).split('&').flatMap(s => s.length > 1 ? s.split('') : s)
     } else if (match.startsWith('![')) {
-      return expandReadSymbols(match.slice(2, -1))
-    } else {
-      return match[1]
+      if (match === '![') return ['[']
+      return expandReadSymbols(match.slice(2, -1)).split('')
+    } else if (match.startsWith('!')) {
+      return match.slice(1).split('')
     }
+    return []
   })
 }
 
@@ -86,7 +89,15 @@ export const exclusionInput = (input: string): string => {
   const exclamationWithRange = input.match(/!\[[^\]]+]/)
   const singleExclamation = input.match(/!./)
 
-  if (exclamationWithParentheses) { return exclamationWithParentheses[0] }
+  // Check if the pattern inside parentheses strictly adheres to single characters separated by &
+  if (exclamationWithParentheses) {
+    const content = exclamationWithParentheses[0].slice(2, -1)
+    if (content.split('&').every(part => part.length === 1)) {
+      return exclamationWithParentheses[0]
+    } else {
+      return '!('
+    }
+  }
 
   if (exclamationWithRange) { return exclamationWithRange[0] }
 

@@ -2,8 +2,10 @@ import { Tape } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
 import { TMAutomataTransition } from 'frontend/src/types/ProjectTypes'
 
+import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
+
 export class TMState extends State {
-  constructor (
+  constructor(
     id: number,
     isFinal: boolean,
     public tape?: Tape
@@ -11,20 +13,20 @@ export class TMState extends State {
     super(id, isFinal)
   }
 
-  key () {
+  key() {
     const traceAdd = this.tape.trace.toString() ?? ''
     return String(this.id + ',' + this.tape.pointer + ',' + traceAdd)
   }
 }
 
 export class TMGraph extends Graph<TMState, TMAutomataTransition> {
-  public isFinalState (node: Node<TMState>) {
+  public isFinalState(node: Node<TMState>) {
     return (
       node.state.isFinal
     )
   }
 
-  public getSuccessors (node: Node<TMState>) {
+  public getSuccessors(node: Node<TMState>) {
     const transitions = this.transitions.filter(
       (transition) => transition.from === node.state.id
     )
@@ -41,9 +43,12 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       const symbol = tapeTrace[tapePointer] ?? ''
       let nextTape = this.progressTape(node, transition)
 
+      const symbolsToExclude = extractSymbolsToExclude(transition.read)
       // If there is no next state
       if (
-        nextState === undefined || (!transition.read.includes(symbol))
+        (nextState === undefined) ||
+        ((symbolsToExclude.length === 0) && (!transition.read.includes(symbol))) ||
+        ((symbolsToExclude.length > 0) && (symbolsToExclude.includes(symbol)))
       ) {
         continue
       }
@@ -53,7 +58,11 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       }
       // Progress when the transition's read matches the symbol exactly
       // If it doesn't, progress only if the symbol is non-empty and contained within the read
-      if (transition.read === symbol || (symbol.length > 0 && transition.read.includes(symbol))) {
+      if (
+        (symbolsToExclude.length > 0 && !symbolsToExclude.includes(symbol)) ||
+        (transition.read === symbol) ||
+        (symbol.length > 0 && transition.read.includes(symbol))
+      ) {
         const graphState = new TMState(
           nextState.id,
           nextState.isFinal,
@@ -66,7 +75,7 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
     return successors
   }
 
-  private progressTape (node: Node<TMState>, transition: TMAutomataTransition) {
+  private progressTape(node: Node<TMState>, transition: TMAutomataTransition) {
     const tapeTrace = node.state.tape.trace
     const write = transition.write
     const direction = transition.direction

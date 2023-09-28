@@ -1,5 +1,6 @@
 import { Graph, Node, State } from './interfaces/graph'
 import { FSAAutomataTransition } from 'frontend/src/types/ProjectTypes'
+import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
 export class FSAState extends State {
   constructor (
     id: number,
@@ -31,22 +32,31 @@ export class FSAGraph extends Graph<FSAState, FSAAutomataTransition> {
       )
       const lambdaTransition = transition.read.length === 0
       const symbol = node.state.remaining[0]
+      const symbolsToExclude = extractSymbolsToExclude(transition.read)
       if (
-        nextState === undefined ||
-                (!lambdaTransition && !transition.read.includes(symbol))
+        (nextState === undefined) ||
+        ((symbolsToExclude.length === 0) && (!transition.read.includes(symbol))) ||
+        ((symbolsToExclude.length > 0) && (symbolsToExclude.includes(symbol)))
       ) {
         continue
       }
-      const graphState = new FSAState(
-        nextState.id,
-        nextState.isFinal,
-        lambdaTransition ? '' : symbol,
-        lambdaTransition
-          ? node.state.remaining
-          : node.state.remaining.slice(1)
-      )
-      const successor = new Node(graphState, node)
-      successors.push(successor)
+
+      if (
+        (symbolsToExclude.length > 0 && !symbolsToExclude.includes(symbol)) ||
+        (transition.read === symbol) ||
+        (symbol.length > 0 && transition.read.includes(symbol))
+      ) {
+        const graphState = new FSAState(
+          nextState.id,
+          nextState.isFinal,
+          lambdaTransition ? '' : symbol,
+          lambdaTransition
+            ? node.state.remaining
+            : node.state.remaining.slice(1)
+        )
+        const successor = new Node(graphState, node)
+        successors.push(successor)
+      }
     }
     return successors
   }
