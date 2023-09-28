@@ -20,8 +20,20 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   const [red, setRed] = useState(false)
   const [boxWidth, setBoxWidth] = useState(900)
   const [tapeTrace, setTapeTrace] = useState(trace)
+  const [lastPointer, setLastPointer] = useState(0)
   const [effectiveIndex, setEffectiveIndex] = useState(0)
   const [effectiveEnd, setEffectiveEnd] = useState(trace.length)
+  const [inTransition, setInTransition] = useState(false)
+
+  const startTransition = (newTrace: string[], newEnd: number) => {
+    setInTransition(true)
+    setTimeout(() => {
+      setTapeTrace(newTrace)
+      setEffectiveEnd(newEnd)
+      setInTransition(false)
+    }, 200)
+  }
+  // INCREASE THE POINTER, WAIT THEN UPDATE THE TAPE
 
   const updateWidth = useCallback(() => {
     // Magic numbers come from the size of toolbar, min size of canvas and size of side panel
@@ -49,9 +61,17 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
       const start = canSeeStart ? 0 : pointer - halfFit - startOffset
       const end = canSeeEnd ? trace.length : halfFit + pointer + endOffset
 
-      setTapeTrace(trace.slice(start, end))
+      const right = lastPointer <= pointer 
+      setLastPointer(pointer)
       setEffectiveIndex(pointer - start)
-      setEffectiveEnd(end)
+      if (!canSeeStart && !canSeeEnd) {
+        setTapeTrace(trace.slice(right ? start : start - 1, right ? end - 1 : end))
+        startTransition(trace.slice(start, end), end)
+      } else {
+        setInTransition(true)
+        setTapeTrace(trace.slice(start, end))
+        setEffectiveEnd(end)
+      }
     } else {
       setTapeTrace(trace)
       setEffectiveIndex(pointer)
@@ -68,7 +88,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
             <div>
                 <Pointer />
                 <TickerTapeContainer>
-                    <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} >
+                    <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} $inTransition={inTransition}>
                         {effectiveIndex === pointer && <SerratedEdge />}
                             {tapeTrace.map((symbol, i) => <TickerTapeCell key={i}>
                                 {symbol}
