@@ -22,6 +22,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   const [boxWidth, setBoxWidth] = useState(900)
   const [tapeTrace, setTapeTrace] = useState(trace)
   const [effectiveIndex, setEffectiveIndex] = useState(0)
+  const [effectiveEnd, setEffectiveEnd] = useState(trace.length)
 
   const tapeRef = useRef<HTMLDivElement>()
 
@@ -53,12 +54,14 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
       const halfFit = Math.ceil(maxTapeLength / 2)
       const start = pointer - 2 > halfFit ? pointer - halfFit - 2 : 0
       const end = trace.length - pointer < halfFit + 3 ? trace.length : halfFit + pointer + 3
-      console.log(`${pointer} => ${start}, ${end}`)
+      console.log(`${pointer} => ${start}, ${end}; ei: ${effectiveIndex}`)
       setTapeTrace(trace.slice(start, end))
       setEffectiveIndex(pointer - start)
+      setEffectiveEnd(end)
     } else {
       setTapeTrace(trace)
       setEffectiveIndex(pointer)
+      setEffectiveEnd(trace.length)
     }
   }, [boxWidth, pointer, trace])
 
@@ -72,11 +75,11 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
                 <Pointer />
                 <TickerTapeContainer>
                     <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} >
-                        <SerratedEdge />
+                        {effectiveIndex === pointer && <SerratedEdge />}
                             {tapeTrace.map((symbol, i) => <TickerTapeCell key={i}>
                                 {symbol}
                             </TickerTapeCell>)}
-                        <SerratedEdge flipped />
+                        {trace.length === effectiveEnd && <SerratedEdge flipped />}
                     </TickerTape>
                 </TickerTapeContainer>
             </div>
