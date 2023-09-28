@@ -84,20 +84,20 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
     setRed(isEnd && !accepted)
   }, [accepted, isEnd])
   return (
-        <Container style={{ background: green ? '#689540' : red ? '#d30303' : 'var(--toolbar)' }} >
-            <div>
-                <Pointer />
-                <TickerTapeContainer>
-                    <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} $inTransition={inTransition}>
-                        {effectiveIndex === pointer && <SerratedEdge />}
-                            {tapeTrace.map((symbol, i) => <TickerTapeCell key={i}>
-                                {symbol}
-                            </TickerTapeCell>)}
-                        {trace.length === effectiveEnd && <SerratedEdge flipped />}
-                    </TickerTape>
-                </TickerTapeContainer>
-            </div>
-        </Container>
+    <Container style={{ background: green ? '#689540' : red ? '#d30303' : 'var(--toolbar)' }} >
+      <div>
+        <Pointer />
+        <TickerTapeContainer>
+          <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} $inTransition={inTransition}>
+            {effectiveIndex === pointer && <SerratedEdge />}
+              {tapeTrace.map((symbol, i) => <TickerTapeCell key={i}>
+                {symbol}
+              </TickerTapeCell>)}
+            {trace.length === effectiveEnd && <SerratedEdge flipped />}
+          </TickerTape>
+        </TickerTapeContainer>
+      </div>
+    </Container>
   )
 }
 
