@@ -31,7 +31,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
       setTapeTrace(newTrace)
       setEffectiveEnd(newEnd)
       setInTransition(false)
-    }, 200)
+    }, 20)
   }
   // INCREASE THE POINTER, WAIT THEN UPDATE THE TAPE
 
@@ -61,7 +61,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
       const start = canSeeStart ? 0 : pointer - halfFit - startOffset
       const end = canSeeEnd ? trace.length : halfFit + pointer + endOffset
 
-      const right = lastPointer <= pointer 
+      const right = lastPointer <= pointer
       setLastPointer(pointer)
       setEffectiveIndex(pointer - start)
       if (!canSeeStart && !canSeeEnd) {
