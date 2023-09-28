@@ -21,6 +21,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   const [red, setRed] = useState(false)
   const [boxWidth, setBoxWidth] = useState(900)
   const [tapeTrace, setTapeTrace] = useState(trace)
+  const [effectiveIndex, setEffectiveIndex] = useState(0)
 
   const tapeRef = useRef<HTMLDivElement>()
 
@@ -46,16 +47,18 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
    * end = If trace.length - pointer < BBFit/2 then trace.length - 1
    */
   useEffect(() => {
-    const maxTapeLength = Math.floor(boxWidth / 35) - 3
+    const maxTapeLength = Math.floor(boxWidth / 35) - 5
     console.log(`Culled: ${tapeTrace.length} Full: ${trace.length} Max: ${maxTapeLength}`)
     if (trace.length > maxTapeLength) {
-      const halfFit = Math.floor(maxTapeLength / 2)
-      const start = pointer > halfFit ? pointer - halfFit : 0
-      const end = trace.length - pointer < halfFit + 3 ? trace.length - 1 : halfFit + pointer + 3
+      const halfFit = Math.ceil(maxTapeLength / 2)
+      const start = pointer - 2 > halfFit ? pointer - halfFit - 2 : 0
+      const end = trace.length - pointer < halfFit + 3 ? trace.length : halfFit + pointer + 3
       console.log(`${pointer} => ${start}, ${end}`)
       setTapeTrace(trace.slice(start, end))
+      setEffectiveIndex(pointer - start)
     } else {
       setTapeTrace(trace)
+      setEffectiveIndex(pointer)
     }
   }, [boxWidth, pointer, trace])
 
@@ -68,7 +71,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
             <div ref={tapeRef}>
                 <Pointer />
                 <TickerTapeContainer>
-                    <TickerTape $index={pointer} $tapeLength={tapeTrace.length} >
+                    <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} >
                         <SerratedEdge />
                             {tapeTrace.map((symbol, i) => <TickerTapeCell key={i}>
                                 {symbol}
