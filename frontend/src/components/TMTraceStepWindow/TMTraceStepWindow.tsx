@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 
 import {
   Container,
@@ -19,21 +19,58 @@ interface TMTraceStepWindowProps {
 const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindowProps) => {
   const [green, setGreen] = useState(false)
   const [red, setRed] = useState(false)
+  const [boxWidth, setBoxWidth] = useState(900)
+  const [tapeTrace, setTapeTrace] = useState(trace)
+
+  const tapeRef = useRef<HTMLDivElement>()
+
+  const onContainerResize = useCallback(() => {
+    const boundingBox = tapeRef.current?.getBoundingClientRect()
+    if (boundingBox) setBoxWidth(boundingBox.width)
+  }, [])
+
+  useEffect(() => {
+    if (tapeRef.current) {
+      const resizeObserver = new ResizeObserver(onContainerResize)
+      resizeObserver.observe(tapeRef.current)
+
+      return () => resizeObserver.disconnect()
+    }
+  }, [tapeRef.current])
+
+  /**
+   * Number that can fit into BB, BBFit = bbWidth / 35
+   * If at the start we have slice(0, BBFit/2)
+   * If at the end we have slice(trace.length - BBFit/2, trace.length - 1)
+   * start = If pointer > BBFit/2 then pointer - BBFit/2 else pointer
+   * end = If trace.length - pointer < BBFit/2 then trace.length - 1
+   */
+  useEffect(() => {
+    const maxTapeLength = Math.floor(boxWidth / 35) - 3
+    console.log(`Culled: ${tapeTrace.length} Full: ${trace.length} Max: ${maxTapeLength}`)
+    if (trace.length > maxTapeLength) {
+      const halfFit = Math.floor(maxTapeLength / 2)
+      const start = pointer > halfFit ? pointer - halfFit : 0
+      const end = trace.length - pointer < halfFit + 3 ? trace.length - 1 : halfFit + pointer + 3
+      console.log(`${pointer} => ${start}, ${end}`)
+      setTapeTrace(trace.slice(start, end))
+    } else {
+      setTapeTrace(trace)
+    }
+  }, [boxWidth, pointer, trace])
 
   useEffect(() => {
     setGreen(isEnd && accepted)
     setRed(isEnd && !accepted)
   }, [accepted, isEnd])
   return (
-        <>
-        {trace.length &&
         <Container style={{ background: green ? '#689540' : red ? '#d30303' : 'var(--toolbar)' }} >
-            <div>
+            <div ref={tapeRef}>
                 <Pointer />
                 <TickerTapeContainer>
-                    <TickerTape $index={pointer} $tapeLength={trace.length} >
+                    <TickerTape $index={pointer} $tapeLength={tapeTrace.length} >
                         <SerratedEdge />
-                            {trace.map((symbol, i) => <TickerTapeCell key={i}>
+                            {tapeTrace.map((symbol, i) => <TickerTapeCell key={i}>
                                 {symbol}
                             </TickerTapeCell>)}
                         <SerratedEdge flipped />
@@ -41,8 +78,6 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
                 </TickerTapeContainer>
             </div>
         </Container>
-        }
-    </>
   )
 }
 

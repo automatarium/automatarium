@@ -23,6 +23,7 @@ export const TickerTapeContainer = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-self:start;
 `
 
 // Involves spooky math function for transform. Pen and paper type stuff.
