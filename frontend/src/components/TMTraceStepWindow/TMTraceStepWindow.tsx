@@ -61,7 +61,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
       // Pointer is at the midpoint so calc the number of cells to get
       const halfFit = Math.ceil(maxTapeLength / 2)
 
-      const canSeeStart = pointer - startOffset < halfFit
+      const canSeeStart = pointer - startOffset <= halfFit
       const canSeeEnd = trace.length - pointer < halfFit + endOffset
 
       const start = canSeeStart ? 0 : pointer - halfFit - startOffset
