@@ -18,19 +18,22 @@ interface TMTraceStepWindowProps {
 const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindowProps) => {
   const [green, setGreen] = useState(false)
   const [red, setRed] = useState(false)
-  const [boxWidth, setBoxWidth] = useState(900)
+
+  const [boxWidth, setBoxWidth] = useState(760)
   const [tapeTrace, setTapeTrace] = useState(trace)
-  const [lastPointer, setLastPointer] = useState(0)
   const [effectiveIndex, setEffectiveIndex] = useState(0)
   const [effectiveEnd, setEffectiveEnd] = useState(trace.length)
-  const [inTransition, setInTransition] = useState(false)
+
+  const [lastPointer, setLastPointer] = useState(0)
+  const [inTransition, setInTransition] = useState(true)
 
   const startTransition = (newTrace: string[], newEnd: number) => {
     setInTransition(true)
     setTimeout(() => {
+      // This will snap the tape so it doesn't do the steering jitter
+      setInTransition(false)
       setTapeTrace(newTrace)
       setEffectiveEnd(newEnd)
-      setInTransition(false)
     }, 20)
   }
   // INCREASE THE POINTER, WAIT THEN UPDATE THE TAPE
@@ -49,30 +52,40 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   }, [])
 
   useEffect(() => {
+    // Some offsets so the tape looks slightly more continuous
     const offset = 2
     const endOffset = 2
     const startOffset = 1
     const maxTapeLength = Math.floor(boxWidth / 35) - offset - endOffset - startOffset
     if (trace.length > maxTapeLength) {
+      // Pointer is at the midpoint so calc the number of cells to get
       const halfFit = Math.ceil(maxTapeLength / 2)
 
       const canSeeStart = pointer - startOffset < halfFit
       const canSeeEnd = trace.length - pointer < halfFit + endOffset
+
       const start = canSeeStart ? 0 : pointer - halfFit - startOffset
       const end = canSeeEnd ? trace.length : halfFit + pointer + endOffset
 
+      // Save the last pointer to determine if you headed left or right
       const right = lastPointer <= pointer
       setLastPointer(pointer)
       setEffectiveIndex(pointer - start)
       if (!canSeeStart && !canSeeEnd) {
+        // If headed right remove from end, else remove from start
         setTapeTrace(trace.slice(right ? start : start - 1, right ? end - 1 : end))
+        // The css function should now run the transition,
+        // after the timeout the state will be updated and the animation finished
         startTransition(trace.slice(start, end), end)
       } else {
+        // If we can see the start or end, it is clear the tape is moving
         setInTransition(true)
         setTapeTrace(trace.slice(start, end))
         setEffectiveEnd(end)
       }
     } else {
+      // If the tape fits do the normal thang
+      setInTransition(true)
       setTapeTrace(trace)
       setEffectiveIndex(pointer)
       setEffectiveEnd(trace.length)
