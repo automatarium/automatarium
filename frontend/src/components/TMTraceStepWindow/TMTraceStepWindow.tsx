@@ -1,12 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import {
   Container,
-  TickerTapeContainer,
-  TickerTape,
-  TickerTapeCell,
+  PointerContainer,
   SerratedEdgeContainer,
-  PointerContainer
+  TickerTape, TickerTapeCell,
+  TickerTapeContainer
 } from './tmTraceStepWindowStyle'
 
 interface TMTraceStepWindowProps {
@@ -24,21 +23,18 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   const [effectiveIndex, setEffectiveIndex] = useState(0)
   const [effectiveEnd, setEffectiveEnd] = useState(trace.length)
 
-  const tapeRef = useRef<HTMLDivElement>()
-
-  const onContainerResize = useCallback(() => {
-    const boundingBox = tapeRef.current?.getBoundingClientRect()
-    if (boundingBox) setBoxWidth(boundingBox.width)
-  }, [])
+  const updateWidth = useCallback(() => {
+    // Magic numbers come from the size of toolbar, min size of canvas and size of side panel
+    const minSize = 398 + 760 + 64
+    const usableWidth = window.innerWidth < minSize ? 760 : window.innerWidth - 398 + 64
+    setBoxWidth(usableWidth)
+  }, [window.innerWidth])
 
   useEffect(() => {
-    if (tapeRef.current) {
-      const resizeObserver = new ResizeObserver(onContainerResize)
-      resizeObserver.observe(tapeRef.current)
-
-      return () => resizeObserver.disconnect()
-    }
-  }, [tapeRef.current])
+    updateWidth()
+    window.addEventListener('resize', updateWidth)
+    return () => window.removeEventListener('resize', updateWidth)
+  }, [])
 
   /**
    * Number that can fit into BB, BBFit = bbWidth / 35
@@ -48,13 +44,20 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
    * end = If trace.length - pointer < BBFit/2 then trace.length - 1
    */
   useEffect(() => {
-    const maxTapeLength = Math.floor(boxWidth / 35) - 5
-    console.log(`Culled: ${tapeTrace.length} Full: ${trace.length} Max: ${maxTapeLength}`)
+    const offset = 5
+    const endOffset = 2
+    const startOffset = 1
+    const maxTapeLength = Math.floor(boxWidth / 35) - offset - endOffset - startOffset
     if (trace.length > maxTapeLength) {
       const halfFit = Math.ceil(maxTapeLength / 2)
-      const start = pointer - 2 > halfFit ? pointer - halfFit - 2 : 0
-      const end = trace.length - pointer < halfFit + 3 ? trace.length : halfFit + pointer + 3
-      console.log(`${pointer} => ${start}, ${end}; ei: ${effectiveIndex}`)
+      const start = (
+        pointer - startOffset > halfFit
+          ? pointer - halfFit - startOffset
+          : 0)
+      const end = (
+        trace.length - pointer < halfFit + endOffset
+          ? trace.length
+          : halfFit + pointer + endOffset)
       setTapeTrace(trace.slice(start, end))
       setEffectiveIndex(pointer - start)
       setEffectiveEnd(end)
@@ -71,7 +74,7 @@ const TMTraceStepWindow = ({ trace, pointer, accepted, isEnd }: TMTraceStepWindo
   }, [accepted, isEnd])
   return (
         <Container style={{ background: green ? '#689540' : red ? '#d30303' : 'var(--toolbar)' }} >
-            <div ref={tapeRef}>
+            <div>
                 <Pointer />
                 <TickerTapeContainer>
                     <TickerTape $index={effectiveIndex} $tapeLength={tapeTrace.length} >
