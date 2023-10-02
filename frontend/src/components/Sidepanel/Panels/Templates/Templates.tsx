@@ -24,6 +24,7 @@ const Templates = () => {
   const templates = (useTemplatesStore(s => s.templates)).filter(temp => temp.projectType === project.projectType)
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const setTemplate = useTemplateStore(s => s.setTemplate)
+  const deleteTemplate = useTemplatesStore(s => s.deleteTemplate)
   const template = useTemplateStore(s => s.template)
   const selectedStatesIds = useSelectionStore(s => s.selectedStates)
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
@@ -107,6 +108,10 @@ const Templates = () => {
                 width={TEMPLATE_THUMBNAIL_WIDTH}
                 image={thumbs[`tmp${temp._id}`]}
                 $istemplate={true}
+                $deleteTemplate={e => {
+                  e.stopPropagation()
+                  deleteTemplate(temp._id)
+                }}
                 isSelectedTemplate={template && template._id === temp._id}
                 onClick={() => pickTemplate(temp._id)}
               />
