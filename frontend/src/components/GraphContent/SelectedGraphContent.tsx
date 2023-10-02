@@ -21,6 +21,7 @@ const SelectedGraphContent = () => {
     {/* Render all sets of edges */}
     {locatedTransitions.map((transitions, i) => <TransitionSet
       transitions={transitions}
+      isTemplate={true}
       key={i}
     />)}
 

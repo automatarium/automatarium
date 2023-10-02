@@ -51,7 +51,7 @@ const toRightOf = (a: Coordinate, b: Coordinate) => {
   return a.x === b.x ? a.y < b.y : a.x > b.x
 }
 
-const TransitionSet = ({ transitions, isGhost = false } : {transitions: PositionedTransition[], isGhost?: boolean}) => {
+const TransitionSet = ({ transitions, isGhost = false, isTemplate = false } : {transitions: PositionedTransition[], isGhost?: boolean, isTemplate?: boolean}) => {
   const projectType = useProjectStore(s => s.project.config.type)
   // Split the transitions into the two directions (left->right and right->left)
   // This makes the code easier since we don't need to handle direction changes
@@ -75,6 +75,7 @@ const TransitionSet = ({ transitions, isGhost = false } : {transitions: Position
         transitions={toRender}
         id={first.id}
         projectType={projectType}
+        isTemplate={isTemplate}
         {...props}
       />
     }
@@ -98,6 +99,7 @@ type TransitionProps = {
   fullWidth?: boolean,
   bendDirection?: BendDirection,
   suppressEvents?: boolean
+  isTemplate?: boolean
 }
 
 /**
@@ -134,7 +136,8 @@ const Transition = ({
   projectType,
   bendDirection = 'straight',
   fullWidth = false,
-  suppressEvents = false
+  suppressEvents = false,
+  isTemplate = false
 } : TransitionProps) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
 
@@ -237,7 +240,7 @@ const Transition = ({
     />}
 
     {/* Handles to drag the edge */}
-    {setSelected && <ChangeTransitionHandlebars
+    {!isTemplate && setSelected && <ChangeTransitionHandlebars
         edges={edges}
         selectedTransitions={selectedTransitions}
         isReflexive={isReflexive}
