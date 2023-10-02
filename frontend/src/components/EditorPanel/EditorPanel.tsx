@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import StateCircle from '../StateCircle/StateCircle'
+import StateCircle from '/src/components/StateCircle/StateCircle'
 import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs, InputTransitionGroup } from '/src/components'
 import {
   useEvent,
@@ -17,7 +17,8 @@ import {
 import { SelectionEvent } from '/src/hooks/useResourceSelection'
 import { useSelectionStore, useTemplateStore } from '/src/stores'
 import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
-import TemplateGhost from '../Template/TemplateGhost'
+import TemplateGhost from '/src/components/Template/TemplateGhost'
+import SelectedGraphContent from '/src/components/GraphContent/SelectedGraphContent'
 
 const EditorPanel = () => {
   const [renderSelection, setRenderSelection] = useState(false)
@@ -112,6 +113,9 @@ const EditorPanel = () => {
 
   useEvent('selectiongraph:show', () => {
     setRenderSelection(true)
+    setTimeout(() => {
+      // dispatch event to create template image to thumbnail store
+    }, 50)
   })
 
   useEvent('selectiongraph:hide', () => {
@@ -145,7 +149,9 @@ const EditorPanel = () => {
       <SelectionBox />
     </GraphView>
     {/** Temporarily render selected for image export */}
-    {renderSelection && <GraphView $selectedOnly={true}><></></GraphView>}
+    {renderSelection && <GraphView $selectedOnly={true}>
+        <SelectedGraphContent />
+      </GraphView>}
     <ContextMenus />
     <InputDialogs />
     <InputTransitionGroup />
