@@ -77,8 +77,9 @@ export interface CustomEvents {
   'modal:import': null,
   'showSharing': null,
   'stackVisualiser:toggle': { state: boolean },
-  'selectiongraph:show': null,
-  'selectiongraph:hide': null,
+  'createTemplateThumbnail': string,
+  'storeTemplateThumbnail': string,
+  'selectionGraph:hide': null,
 }
 
 /**

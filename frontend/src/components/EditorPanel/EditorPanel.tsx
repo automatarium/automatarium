@@ -1,24 +1,25 @@
 import { useState } from 'react'
+import { ContextMenus, GraphContent, GraphView, InputDialogs, InputTransitionGroup, SelectionBox, TransitionSet } from '/src/components'
+import SelectedGraphContent from '/src/components/GraphContent/SelectedGraphContent'
 import StateCircle from '/src/components/StateCircle/StateCircle'
-import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs, InputTransitionGroup } from '/src/components'
+import TemplateGhost from '/src/components/Template/TemplateGhost'
 import {
-  useEvent,
-  useStateDragging,
+  useCommentCreation,
   useCommentDragging,
   useCommentSelection,
+  useContextMenus,
+  useEvent,
   useStateCreation,
-  useTransitionCreation,
-  useCommentCreation,
+  useStateDragging,
   useStateSelection,
-  useTransitionSelection,
   useTemplateInsert,
-  useContextMenus
+  useTransitionCreation,
+  useTransitionSelection
 } from '/src/hooks'
+import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
 import { SelectionEvent } from '/src/hooks/useResourceSelection'
 import { useSelectionStore, useTemplateStore } from '/src/stores'
-import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
-import TemplateGhost from '/src/components/Template/TemplateGhost'
-import SelectedGraphContent from '/src/components/GraphContent/SelectedGraphContent'
+import { dispatchCustomEvent } from '/src/util/events'
 
 const EditorPanel = () => {
   const [renderSelection, setRenderSelection] = useState(false)
@@ -111,14 +112,12 @@ const EditorPanel = () => {
     setTransitions(e.detail.transitions.map(t => t.id))
   })
 
-  useEvent('selectiongraph:show', () => {
+  useEvent('createTemplateThumbnail', (e) => {
     setRenderSelection(true)
-    setTimeout(() => {
-      // dispatch event to create template image to thumbnail store
-    }, 50)
+    dispatchCustomEvent('storeTemplateThumbnail', e.detail)
   })
 
-  useEvent('selectiongraph:hide', () => {
+  useEvent('selectionGraph:hide', () => {
     setRenderSelection(false)
   })
 

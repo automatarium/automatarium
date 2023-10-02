@@ -1,4 +1,4 @@
-import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore, useToolStore } from '/src/stores'
+import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore, useToolStore, useThumbnailStore } from '/src/stores'
 import { SectionLabel, Input, Button, ProjectCard } from '/src/components'
 import { CardList } from '/src/pages/NewFile/components'
 import { selectionToCopyTemplate } from '/src/hooks/useActions'
@@ -12,6 +12,7 @@ import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { WarningLabel } from '../TestingLab/testingLabStyle'
 import { Tool } from '/src/stores/useToolStore'
+import { dispatchCustomEvent } from '/src/util/events'
 
 export const stopTemplateInsert = (setTemplate: (template: Template) => void, setTool: (tool: Tool) => void) => {
   setTemplate(null)
@@ -28,6 +29,8 @@ const Templates = () => {
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
   const selectedTransitionsIds = useSelectionStore(s => s.selectedTransitions)
   const setTool = useToolStore(s => s.setTool)
+
+  const thumbs = useThumbnailStore(s => s.thumbnails)
 
   const [templateNameInput, setTemplateNameInput] = useState('')
   const [error, setError] = useState('')
@@ -64,6 +67,7 @@ const Templates = () => {
     newTemplate._id = crypto.randomUUID()
     newTemplate.name = templateName
     newTemplate.date = new Date().getTime()
+    dispatchCustomEvent('createTemplateThumbnail', newTemplate._id)
     addTemplate(newTemplate)
     setTemplateNameInput('')
     setError('')
@@ -101,6 +105,7 @@ const Templates = () => {
                 name={temp.name}
                 date={dayjs(temp.date)}
                 width={TEMPLATE_THUMBNAIL_WIDTH}
+                image={thumbs[`tmp${temp._id}`]}
                 $istemplate={true}
                 isSelectedTemplate={template && template._id === temp._id}
                 onClick={() => pickTemplate(temp._id)}

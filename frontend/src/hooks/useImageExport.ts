@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 
-import { useEvent } from '/src/hooks'
-import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
+import { dispatchCustomEvent } from '../util/events'
 import COLORS, { ColourName } from '/src/config/colors'
-import { Size } from '/src/types/ProjectTypes'
+import { useEvent } from '/src/hooks'
+import { useExportStore, useProjectStore, useThumbnailStore } from '/src/stores'
 import { Background } from '/src/stores/useExportStore'
+import { Size } from '/src/types/ProjectTypes'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
@@ -40,7 +41,7 @@ export const svgToCanvas = ({ height, width, svg }: Size & {svg: string}) => new
 })
 
 interface GetSvgStringProps {
-  svgElementTag?: string
+  svgElementTag?: 'automatarium-graph' | 'selected-graph'
   margin?: number
   background?: Background
   color?: ColourName | ''
@@ -160,13 +161,21 @@ const useImageExport = () => {
     }
   }, [project.meta.name])
 
-  // Generate thumbnail
+  // Generate project thumbnail
   useEffect(() => {
     window.setTimeout(() => {
       const { svg } = getSvgString()
       setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg))
     }, 200)
   }, [project])
+
+  useEvent('storeTemplateThumbnail', e => {
+    window.setTimeout(() => {
+      const { svg } = getSvgString({ svgElementTag: 'selected-graph' })
+      setThumbnail(`tmp${e.detail}`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg))
+      dispatchCustomEvent('selectionGraph:hide', null)
+    }, 200)
+  })
 }
 
 export default useImageExport
