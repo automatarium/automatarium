@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 
 import { Wrapper } from './templatesStyle'
 import { Description } from '/src/components/Preference/preferenceStyle'
-import React, { useMemo, useState } from 'react'
+import React, { useCallback, useMemo, useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { WarningLabel } from '../TestingLab/testingLabStyle'
@@ -47,7 +47,7 @@ const Templates = () => {
     setTool(null)
   }
 
-  const createTemplate = () => {
+  const createTemplate = useCallback(() => {
     const templateName = templateNameInput
     // Show errors
     if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
@@ -80,7 +80,7 @@ const Templates = () => {
     addTemplate(newTemplate)
     setTemplateNameInput('')
     setError('')
-  }
+  }, [selectedTransitionsIds, selectedStatesIds, selectedCommentsIds])
 
   return <>
     <SectionLabel>Create a Template</SectionLabel>
