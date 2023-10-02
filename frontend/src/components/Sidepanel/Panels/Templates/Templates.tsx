@@ -49,7 +49,7 @@ const Templates = () => {
   const createTemplate = useCallback(() => {
     const templateName = templateNameInput
     // Show errors
-    if (selectedStatesIds.length === 0 && selectedCommentsIds.length === 0 && selectedTransitionsIds.length === 0) {
+    if (selectedStatesIds.length < 1) {
       setError('Please select states and/or transitions before clicking "Add".')
       return
     }
