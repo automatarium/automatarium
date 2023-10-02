@@ -76,7 +76,9 @@ export interface CustomEvents {
   'modal:deleteConfirm': null,
   'modal:import': null,
   'showSharing': null,
-  'stackVisualiser:toggle': { state: boolean }
+  'stackVisualiser:toggle': { state: boolean },
+  'selectiongraph:show': null,
+  'selectiongraph:hide': null,
 }
 
 /**

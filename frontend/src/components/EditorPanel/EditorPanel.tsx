@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import StateCircle from '../StateCircle/StateCircle'
 import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs, InputTransitionGroup } from '/src/components'
 import {
@@ -19,6 +20,8 @@ import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } 
 import TemplateGhost from '../Template/TemplateGhost'
 
 const EditorPanel = () => {
+  const [renderSelection, setRenderSelection] = useState(false)
+
   // Interactivity hooks
   const { select: selectState } = useStateSelection()
   const { select: selectTransition } = useTransitionSelection()
@@ -107,6 +110,14 @@ const EditorPanel = () => {
     setTransitions(e.detail.transitions.map(t => t.id))
   })
 
+  useEvent('selectiongraph:show', () => {
+    setRenderSelection(true)
+  })
+
+  useEvent('selectiongraph:hide', () => {
+    setRenderSelection(false)
+  })
+
   return <>
     <GraphView>
       {/* Render in-creation transition. Since we aren't rendering text it doesn't matter what the project is */}
@@ -133,6 +144,8 @@ const EditorPanel = () => {
       {/* Render selection marquee */}
       <SelectionBox />
     </GraphView>
+    {/** Temporarily render selected for image export */}
+    {renderSelection && <GraphView $selectedOnly={true}><></></GraphView>}
     <ContextMenus />
     <InputDialogs />
     <InputTransitionGroup />
