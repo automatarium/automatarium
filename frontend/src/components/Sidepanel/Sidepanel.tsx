@@ -46,7 +46,7 @@ const panels: PanelItem[] = [
     element: <Options />
   },
   {
-    label: 'Templates (Beta)',
+    label: 'Templates',
     value: 'templates',
     icon: <Star />,
     element: <Templates />

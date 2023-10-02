@@ -50,14 +50,14 @@ const Templates = () => {
     const templateName = templateNameInput
     // Show errors
     if (selectedStatesIds.length < 1) {
-      setError('Please select states and/or transitions before clicking "Add".')
+      setError('Please select at least one state before clicking "Add".')
       return
     }
     if (selectedTransitionsIds.length > 0) {
       const { transitions } = useProjectStore.getState()?.project ?? { transitions: [] }
       const selectedTransitions = transitions.filter(t => selectedTransitionsIds.includes(t.id))
       if (!selectedTransitions.every(t => selectedStatesIds.includes(t.from) && selectedStatesIds.includes(t.to))) {
-        setError('Transitions require a from and to state to attach to')
+        setError('Transitions must include its connected states')
         return
       }
     }
