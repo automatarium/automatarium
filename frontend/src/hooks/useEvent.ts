@@ -74,6 +74,7 @@ export interface CustomEvents {
   'transitionhandle:mousedown': TransitionHandleEventData,
   'showWarning': string,
   'modal:deleteConfirm': null,
+  'modal:editorConfirmation': { title: string, description: string, tid: string },
   'modal:import': null,
   'showSharing': null,
   'stackVisualiser:toggle': { state: boolean },
