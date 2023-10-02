@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 
 import { Wrapper } from './templatesStyle'
 import { Description } from '/src/components/Preference/preferenceStyle'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { WarningLabel } from '../TestingLab/testingLabStyle'
@@ -21,7 +21,8 @@ export const stopTemplateInsert = (setTemplate: (template: Template) => void, se
 
 const Templates = () => {
   const project = useProjectStore(s => s.project)
-  const templates = (useTemplatesStore(s => s.templates)).filter(temp => temp.projectType === project.projectType)
+  const templatesFromStore = useTemplatesStore(s => s.templates)
+  const templates = useMemo(() => templatesFromStore.filter(temp => temp.projectType === project.projectType), [project, templatesFromStore])
   const addTemplate = useTemplatesStore(s => s.upsertTemplate)
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const template = useTemplateStore(s => s.template)

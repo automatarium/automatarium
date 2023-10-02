@@ -2,6 +2,7 @@ import StateCircle from '/src/components/StateCircle/StateCircle'
 import TransitionSet from '/src/components/TransitionSet/TransitionSet'
 import { getGroupedTransitions } from './utils'
 import { useProjectStore, useSelectionStore } from '/src/stores'
+import { useMemo } from 'react'
 
 const SelectedGraphContent = () => {
   const project = useProjectStore(s => s.project)
@@ -9,10 +10,12 @@ const SelectedGraphContent = () => {
   const selectedTransitionIds = useSelectionStore(s => s.selectedTransitions)
   const selectedStateIds = useSelectionStore(s => s.selectedStates)
 
-  const selectedTransitions = transitions.filter(t => selectedTransitionIds.includes(t.id))
-  const selectedStates = states.filter(s => selectedStateIds.includes(s.id))
+  const selectedTransitions = useMemo(() => transitions.filter(t => selectedTransitionIds.includes(t.id)), [transitions])
+  const selectedStates = useMemo(() => states.filter(s => selectedStateIds.includes(s.id)), [states])
 
-  const locatedTransitions = getGroupedTransitions(selectedTransitions, selectedStates)
+  const locatedTransitions = useMemo(() =>
+    getGroupedTransitions(selectedTransitions, selectedStates),
+  [selectedStateIds, selectedTransitionIds])
 
   return <>
     {/* Render all sets of edges */}
