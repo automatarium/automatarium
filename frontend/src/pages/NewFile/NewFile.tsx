@@ -53,7 +53,7 @@ const NewFile = () => {
   // Remove old thumbnails
   useEffect(() => {
     if (projects.length) {
-      Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id) && removeThumbnail(id))
+      Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => `${p._id}-light` === id || `${p._id}-dark` === id) && removeThumbnail(id))
     }
   }, [projects, thumbnails])
 
