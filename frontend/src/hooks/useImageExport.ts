@@ -40,6 +40,7 @@ export const svgToCanvas = ({ height, width, svg }: Size & {svg: string}) => new
 })
 
 interface GetSvgStringProps {
+  svgElementTag?: string
   margin?: number
   background?: Background
   color?: ColourName | ''
@@ -48,17 +49,18 @@ interface GetSvgStringProps {
 
 // Extract the SVG graph as a string
 export const getSvgString = ({
+  svgElementTag = 'automatarium-graph',
   margin = 20,
   background = 'none',
   color = null,
   darkMode = false
 }: GetSvgStringProps = {}) => {
   // Clone the SVG element
-  const svgElement = document.querySelector('#automatarium-graph') as SVGGraphicsElement
+  const svgElement = document.querySelector(`#${svgElementTag}`) as SVGGraphicsElement
   const clonedSvgElement = svgElement.cloneNode(true) as SVGGraphicsElement
 
   // Set viewbox
-  const b = (document.querySelector('#automatarium-graph > g') as SVGGraphicsElement).getBBox()
+  const b = (svgElement.querySelector('g') as SVGGraphicsElement).getBBox()
   margin = Number(margin ?? 0) + 1
   const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin * 2, b.height + margin * 2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
