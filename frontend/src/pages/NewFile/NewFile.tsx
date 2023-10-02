@@ -45,6 +45,12 @@ const NewFile = () => {
   // Will likely be extended to 'Your Projects' list
   // If matching system theme, don't append a theme to css vars
   const theme = preferences.theme === 'system' ? '' : `-${preferences.theme}`
+  const getThumbTheme = useCallback((id: string) => {
+    const thumbTheme = preferences.theme === 'system'
+      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? 'dark' : 'light'
+      : preferences.theme
+    return `${id}-${thumbTheme}`
+  }, [preferences.theme])
   const stylingVals = {
     stateFill: `var(--state-bg${theme})`,
     strokeColor: `var(--stroke${theme})`
@@ -128,7 +134,7 @@ const NewFile = () => {
           name={p?.meta?.name ?? '<Untitled>'}
           type={p?.config?.type ?? '???'}
           date={dayjs(p?.meta?.dateEdited)}
-          image={thumbnails[p._id]}
+          image={thumbnails[getThumbTheme(p._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadProject(p)}
           $kebabClick={(event) => {

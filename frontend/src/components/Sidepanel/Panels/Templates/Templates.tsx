@@ -1,4 +1,4 @@
-import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore, useToolStore, useThumbnailStore } from '/src/stores'
+import { useTemplatesStore, useTemplateStore, useSelectionStore, useProjectStore, useToolStore, useThumbnailStore, usePreferencesStore } from '/src/stores'
 import { SectionLabel, Input, Button, ProjectCard } from '/src/components'
 import { CardList } from '/src/pages/NewFile/components'
 import { selectionToCopyTemplate } from '/src/hooks/useActions'
@@ -31,6 +31,14 @@ const Templates = () => {
   const setTool = useToolStore(s => s.setTool)
 
   const thumbs = useThumbnailStore(s => s.thumbnails)
+  const theme = usePreferencesStore(s => s.preferences).theme
+
+  const getThumbTheme = useCallback((id: string) => {
+    const thumbTheme = theme === 'system'
+      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? 'dark' : 'light'
+      : theme
+    return `tmp${id}-${thumbTheme}`
+  }, [theme])
 
   const [templateNameInput, setTemplateNameInput] = useState('')
   const [error, setError] = useState('')
@@ -113,7 +121,7 @@ const Templates = () => {
                 name={temp.name}
                 date={dayjs(temp.date)}
                 width={TEMPLATE_THUMBNAIL_WIDTH}
-                image={thumbs[`tmp${temp._id}`]}
+                image={thumbs[getThumbTheme(temp._id)]}
                 $istemplate={true}
                 $deleteTemplate={e => {
                   e.stopPropagation()
