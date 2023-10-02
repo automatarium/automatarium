@@ -3,7 +3,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Logo } from '/src/components'
 
-import { MoreVertical } from 'lucide-react'
+import { MoreVertical, Trash } from 'lucide-react'
 import { ButtonHTMLAttributes, Ref } from 'react'
 import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleAndKebab, TypeBadge } from './projectCardStyle'
 import { ProjectType } from '/src/types/ProjectTypes'
@@ -22,6 +22,7 @@ type ProjectCardProps = {
   onClick?: ButtonHTMLAttributes<HTMLButtonElement>['onClick']
   $kebabClick?: ButtonHTMLAttributes<HTMLAnchorElement>['onClick'],
   $kebabRef?: Ref<HTMLAnchorElement>
+  $deleteTemplate?: ButtonHTMLAttributes<HTMLAnchorElement>['onClick']
   disabled?: boolean,
 }
 
@@ -37,11 +38,17 @@ const ProjectCard = ({ name, type, date, image, isSelectedTemplate = false, ...p
     <CardDetail>
       <TitleAndKebab>
         <strong>{name}</strong>
-        <div>
-          <a onClick={props.$kebabClick} ref={props.$kebabRef}>
-            <MoreVertical/>
-          </a>
-        </div>
+        {props.$istemplate
+          ? <div>
+            <a onClick={props.$deleteTemplate}>
+              <Trash />
+            </a>
+          </div>
+          : <div>
+            <a onClick={props.$kebabClick} ref={props.$kebabRef}>
+              <MoreVertical/>
+            </a>
+          </div>}
       </TitleAndKebab>
       {date && <span>{date instanceof dayjs ? dayjs().to(date) : date as string}</span>}
     </CardDetail>
