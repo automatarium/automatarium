@@ -8,7 +8,7 @@ import { PositionedTransition, locateTransition } from '/src/util/states'
 
 const TemplateGhost = ({ template, mousePos }: {template: Template, mousePos: Coordinate}) => {
   const templateCopy = structuredClone(template)
-  moveStatesToMouse(mousePos, templateCopy.states)
+  moveStatesToMouse(mousePos, templateCopy.states, templateCopy.comments)
   // Next few lines are from GraphContent.tsx, perhaps should make this its own function?
   const groupedTransitions = Object.values(groupBy(templateCopy.transitions, t => [t.from, t.to].sort((a, b) => b - a))) as AutomataTransition[][]
   const locatedTransitions = groupedTransitions
