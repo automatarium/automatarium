@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Button, Modal } from '/src/components'
 import { useEvent } from '/src/hooks'
-import { useTemplatesStore } from '/src/stores'
+import { useTemplatesStore, useThumbnailStore } from '/src/stores'
 
 type EditorConfirmationProps = {
   isOpen: boolean
@@ -14,6 +14,7 @@ const TemplateDelConfDialog = ({ isOpen, setOpen, setClose }: EditorConfirmation
   const [description, setDescription] = useState('')
   const [tid, setTid] = useState<string>()
   const deleteTemplate = useTemplatesStore(s => s.deleteTemplate)
+  const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
 
   useEvent('modal:editorConfirmation', ({ detail: { title, description, tid } }) => {
     setTitle(title)
@@ -33,6 +34,7 @@ const TemplateDelConfDialog = ({ isOpen, setOpen, setClose }: EditorConfirmation
           <Button secondary onClick={setClose}>Cancel</Button>
           <Button onClick={() => {
             deleteTemplate(tid)
+            removeThumbnail(`tmp${tid}`)
             setClose()
           }}>Confirm</Button>
         </>}
