@@ -54,6 +54,14 @@ const Templates = () => {
       setError('Please select states and/or transitions before clicking "Add".')
       return
     }
+    if (selectedTransitionsIds.length > 0) {
+      const { transitions } = useProjectStore.getState()?.project ?? { transitions: [] }
+      const selectedTransitions = transitions.filter(t => selectedTransitionsIds.includes(t.id))
+      if (!selectedTransitions.some(t => selectedStatesIds.includes(t.from) && selectedStatesIds.includes(t.to))) {
+        setError('Transitions require a from and to state to attach to')
+        return
+      }
+    }
     if (templateName === '') {
       setError('Template name cannot be empty.')
       return
