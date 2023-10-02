@@ -7,7 +7,7 @@ import dayjs from 'dayjs'
 
 import { Wrapper } from './templatesStyle'
 import { Description } from '/src/components/Preference/preferenceStyle'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Template } from '/src/types/ProjectTypes'
 import { TEMPLATE_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { WarningLabel } from '../TestingLab/testingLabStyle'
@@ -31,6 +31,7 @@ const Templates = () => {
   const setTool = useToolStore(s => s.setTool)
 
   const thumbs = useThumbnailStore(s => s.thumbnails)
+  const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
 
   const [templateNameInput, setTemplateNameInput] = useState('')
   const [error, setError] = useState('')
@@ -72,6 +73,13 @@ const Templates = () => {
     setTemplateNameInput('')
     setError('')
   }
+
+  // Remove old thumbnails
+  useEffect(() => {
+    if (templates.length) {
+      Object.keys(thumbs).forEach(id => id.startsWith('tmp') && !templates.some(p => `tmp${p._id}` === id) && removeThumbnail(`tmp${id}`))
+    }
+  }, [templates, thumbs])
 
   return <>
     <SectionLabel>Create a Template</SectionLabel>
