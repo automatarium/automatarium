@@ -76,7 +76,7 @@ const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: G
   }, [])
 
   // Keep track of resizes
-  useEffect(() => {
+  !$isTemplate && useEffect(() => {
     if (svgRef.current) {
       // Update reference
       setSvgElement(svgRef.current)
@@ -101,7 +101,7 @@ const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: G
   }, [svgRef.current])
 
   // Add a resize observer to the wrapper div
-  useEffect(() => {
+  !$isTemplate && useEffect(() => {
     if (wrapperRef.current) {
       const resizeObserver = new ResizeObserver(onContainerResize)
       resizeObserver.observe(wrapperRef.current)
