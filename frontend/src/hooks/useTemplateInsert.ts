@@ -1,6 +1,6 @@
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useSelectionStore, useTemplateStore } from '/src/stores'
-import { AutomataState } from '/src/types/ProjectTypes'
+import { AutomataState, ProjectComment, Template } from '/src/types/ProjectTypes'
 import { InsertGroupResponseType } from '../stores/useProjectStore'
 import { snapPosition } from '/src/util/points'
 import { useState } from 'react'
@@ -31,7 +31,7 @@ const useTemplateInsert = () => {
     setShowGhost(false)
     if (template !== null && e.detail.didTargetSVG && e.detail.originalEvent.button === 0) {
       const copyTemplate = structuredClone(template)
-      moveStatesToMouse(positionFromEvent(e), copyTemplate.states)
+      moveStatesToMouse(positionFromEvent(e), copyTemplate.states, copyTemplate.comments)
       const insertResponse = insertGroup(copyTemplate, true)
       console.log(insertResponse)
       if (insertResponse.type === InsertGroupResponseType.SUCCESS) {
@@ -54,7 +54,7 @@ const positionFromEvent = (e: CustomEvent) => {
   return doSnap ? snapPosition(pos) : pos
 }
 
-export const moveStatesToMouse = (mousePos: {x: number, y: number}, states: AutomataState[]) => {
+export const moveStatesToMouse = (mousePos: {x: number, y: number}, states: AutomataState[], comments: ProjectComment[]) => {
   // Find the leftmost state (lowest x val)
   const originState = states.reduce((previous, current) => {
     return current.x < previous.x ? current : previous
@@ -65,6 +65,12 @@ export const moveStatesToMouse = (mousePos: {x: number, y: number}, states: Auto
     state.x += offsetX
     state.y += offsetY
   })
+  if (comments) {
+    comments.forEach(comment => {
+      comment.x += offsetX
+      comment.y += offsetY
+    })
+  }
 }
 
 export default useTemplateInsert
