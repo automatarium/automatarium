@@ -1,21 +1,23 @@
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useActions, useEvent } from '/src/hooks'
-import { useToolStore, useProjectStore, useExportStore, useViewStore } from '/src/stores'
-import { haveInputFocused } from '/src/util/actions'
-import { Menubar, Sidepanel, Toolbar, EditorPanel, BottomPanel } from '/src/components'
-import { ShortcutGuide, ExportImage, ShareUrl, ImportDialog } from '/src/pages'
 import { Content, EditorContent } from './editorStyle'
+import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar } from '/src/components'
+import { useActions, useEvent } from '/src/hooks'
+import { ExportImage, ImportDialog, ShareUrl, ShortcutGuide } from '/src/pages'
+import { useExportStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
+import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 import { useAutosaveProject } from '../../hooks'
+import TemplateDelConfDialog from './components/TempleteDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 
 const Editor = () => {
   const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState<Tool>()
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
@@ -102,6 +104,12 @@ const Editor = () => {
       <ExportImage />
 
       <ShareUrl />
+
+      <TemplateDelConfDialog
+        isOpen={confirmDialogOpen}
+        setOpen={() => setConfirmDialogOpen(true)}
+        setClose={() => setConfirmDialogOpen(false)}
+      />
 
       <ImportDialog navigateFunction={navigate} />
 

@@ -23,15 +23,18 @@ export const TickerTapeContainer = styled('div')`
   display: flex;
   flex-direction: row;
   justify-content: center;
+  align-self:start;
 `
 
 // Involves spooky math function for transform. Pen and paper type stuff.
-export const TickerTape = styled('div')<{$tapeLength: number, $index: number}>`
+export const TickerTape = styled('div')<{$tapeLength: number, $index: number, $inTransition: boolean}>`
   display: flex;
   flex-direction: row;
   transform: translateX(calc((${p => p.$tapeLength - 1}/2) * var(--cell-width) + ${p => -p.$index} * var(--cell-width)));
   width: max-content;
-  transition: transform .2s;
+  ${p => p.$inTransition && `
+    transition: transform .2s;
+  `}
 `
 
 export const TickerTapeCell = styled('span')`
