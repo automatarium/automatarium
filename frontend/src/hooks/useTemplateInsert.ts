@@ -33,7 +33,6 @@ const useTemplateInsert = () => {
       const copyTemplate = structuredClone(template)
       moveStatesToMouse(positionFromEvent(e), copyTemplate.states, copyTemplate.comments)
       const insertResponse = insertGroup(copyTemplate, true)
-      console.log(insertResponse)
       if (insertResponse.type === InsertGroupResponseType.SUCCESS) {
         selectComments(insertResponse.body.comments.map(comment => comment.id))
         selectStates(insertResponse.body.states.map(state => state.id))
