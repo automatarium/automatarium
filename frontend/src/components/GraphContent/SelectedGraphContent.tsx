@@ -1,4 +1,3 @@
-import { useMemo } from 'react'
 import { getGroupedTransitions } from './utils'
 import CommentRect from '/src/components/CommentRect/CommentRect'
 import StateCircle from '/src/components/StateCircle/StateCircle'
@@ -12,13 +11,11 @@ const SelectedGraphContent = () => {
   const selectedStateIds = useSelectionStore(s => s.selectedStates)
   const selectedCommentsIds = useSelectionStore(s => s.selectedComments)
 
-  const selectedTransitions = useMemo(() => transitions.filter(t => selectedTransitionIds.includes(t.id)), [transitions])
-  const selectedStates = useMemo(() => states.filter(s => selectedStateIds.includes(s.id)), [states])
-  const selectedComments = useMemo(() => comments.filter(c => selectedCommentsIds.includes(c.id)), [comments, selectedCommentsIds])
+  const selectedTransitions = transitions.filter(t => selectedTransitionIds.includes(t.id))
+  const selectedStates = states.filter(s => selectedStateIds.includes(s.id))
+  const selectedComments = comments.filter(c => selectedCommentsIds.includes(c.id))
 
-  const locatedTransitions = useMemo(() =>
-    getGroupedTransitions(selectedTransitions, selectedStates),
-  [selectedStateIds, selectedTransitionIds])
+  const locatedTransitions = getGroupedTransitions(selectedTransitions, selectedStates)
 
   return <>
     {/* Render all sets of edges */}
