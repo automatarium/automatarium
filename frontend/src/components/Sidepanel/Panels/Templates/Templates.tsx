@@ -56,7 +56,7 @@ const Templates = () => {
     if (selectedTransitionsIds.length > 0) {
       const { transitions } = useProjectStore.getState()?.project ?? { transitions: [] }
       const selectedTransitions = transitions.filter(t => selectedTransitionsIds.includes(t.id))
-      if (!selectedTransitions.some(t => selectedStatesIds.includes(t.from) && selectedStatesIds.includes(t.to))) {
+      if (!selectedTransitions.every(t => selectedStatesIds.includes(t.from) && selectedStatesIds.includes(t.to))) {
         setError('Transitions require a from and to state to attach to')
         return
       }
@@ -79,7 +79,7 @@ const Templates = () => {
     addTemplate(newTemplate)
     setTemplateNameInput('')
     setError('')
-  }, [selectedTransitionsIds, selectedStatesIds, selectedCommentsIds])
+  }, [selectedTransitionsIds, selectedStatesIds, selectedCommentsIds, templateNameInput, templates])
 
   return <>
     <SectionLabel>Create a Template</SectionLabel>
