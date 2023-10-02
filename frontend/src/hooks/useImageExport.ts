@@ -166,7 +166,7 @@ const useImageExport = () => {
     window.setTimeout(() => {
       const { svg: svgLight } = getSvgString({ darkMode: false })
       const { svg: svgDark } = getSvgString({ darkMode: true })
-      setThumbnail(`${project._id}-light`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgLight))
+      setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgLight))
       setThumbnail(`${project._id}-dark`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgDark))
     }, 200)
   }, [project])
@@ -175,7 +175,7 @@ const useImageExport = () => {
     window.setTimeout(() => {
       const { svg: svgLight } = getSvgString({ svgElementTag: 'selected-graph', darkMode: false })
       const { svg: svgDark } = getSvgString({ svgElementTag: 'selected-graph', darkMode: true })
-      setThumbnail(`tmp${e.detail}-light`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgLight))
+      setThumbnail(`tmp${e.detail}`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgLight))
       setThumbnail(`tmp${e.detail}-dark`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgDark))
       dispatchCustomEvent('selectionGraph:hide', null)
     }, 200)

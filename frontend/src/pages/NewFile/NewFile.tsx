@@ -47,9 +47,9 @@ const NewFile = () => {
   const theme = preferences.theme === 'system' ? '' : `-${preferences.theme}`
   const getThumbTheme = useCallback((id: string) => {
     const thumbTheme = preferences.theme === 'system'
-      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? 'dark' : 'light'
-      : preferences.theme
-    return `${id}-${thumbTheme}`
+      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? '-dark' : ''
+      : preferences.theme === 'dark' ? '-dark' : ''
+    return `${id}${thumbTheme}`
   }, [preferences.theme])
   const stylingVals = {
     stateFill: `var(--state-bg${theme})`,
@@ -59,7 +59,7 @@ const NewFile = () => {
   // Remove old thumbnails
   useEffect(() => {
     if (projects.length) {
-      Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => `${p._id}-light` === id || `${p._id}-dark` === id) && removeThumbnail(id))
+      Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
     }
   }, [projects, thumbnails])
 

@@ -35,9 +35,9 @@ const Templates = () => {
 
   const getThumbTheme = useCallback((id: string) => {
     const thumbTheme = theme === 'system'
-      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? 'dark' : 'light'
-      : theme
-    return `tmp${id}-${thumbTheme}`
+      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? '-dark' : ''
+      : theme === 'dark' ? '-dark' : ''
+    return `tmp${id}${thumbTheme}`
   }, [theme])
 
   const [templateNameInput, setTemplateNameInput] = useState('')
