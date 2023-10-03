@@ -3,7 +3,7 @@ import { FSAAutomataTransition } from 'frontend/src/types/ProjectTypes'
 import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
 
 export class FSAState extends State {
-  constructor(
+  constructor (
     id: number,
     isFinal: boolean,
     readonly read: string | null = null,
@@ -12,17 +12,17 @@ export class FSAState extends State {
     super(id, isFinal)
   }
 
-  key() {
+  key () {
     return String(this.id + this.remaining)
   }
 }
 
 export class FSAGraph extends Graph<FSAState, FSAAutomataTransition> {
-  public isFinalState(node: Node<FSAState>) {
+  public isFinalState (node: Node<FSAState>) {
     return node.state.isFinal && node.state.remaining.length === 0
   }
 
-  public getSuccessors(node: Node<FSAState>) {
+  public getSuccessors (node: Node<FSAState>) {
     const transitions = this.transitions.filter(
       (transition) => transition.from === node.state.id
     )

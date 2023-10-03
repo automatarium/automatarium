@@ -1,5 +1,3 @@
-import { expandReadSymbols } from '@automatarium/simulation'
-
 export const possibleOrOperators = (orOperator: string): string[] => {
   switch (orOperator) {
     case '+':
@@ -44,15 +42,14 @@ export const splitCharsWithOr = (text: string, orOperator: string): string => {
 
 // Gets symbols that are preceded by an exclusion operator (!)
 export const extractSymbolsToExclude = (input: string): string[] => {
-  const matches = input.match(/(!\.)|(!\(([^&)]+&)*[^&)]*\))|(!\[[^\]]*\])|(![^()[\]]+)|!\(|!\[/g) || []
+  const matches = input.match(/(!\.)|(!\(([^&)]+&)*[^&)]*\))|(![^()[\]]+)|!\(|!\[/g) || []
 
   return matches.flatMap((match: string) => {
     if (match.startsWith('!(')) {
       if (match === '!(') return ['(']
       return match.slice(2, -1).split('&').flatMap(s => s.length > 1 ? s.split('') : s)
-    } else if (match.startsWith('![')) {
-      if (match === '![') return ['[']
-      return expandReadSymbols(match.slice(2, -1)).split('')
+    } else if (match === '![') {
+      return ['[']
     } else if (match.startsWith('!')) {
       return match.slice(1).split('')
     }

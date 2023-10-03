@@ -4,7 +4,7 @@ import { TMAutomataTransition } from 'frontend/src/types/ProjectTypes'
 import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
 
 export class TMState extends State {
-  constructor(
+  constructor (
     id: number,
     isFinal: boolean,
     public tape?: Tape
@@ -12,20 +12,20 @@ export class TMState extends State {
     super(id, isFinal)
   }
 
-  key() {
+  key () {
     const traceAdd = this.tape.trace.toString() ?? ''
     return String(this.id + ',' + this.tape.pointer + ',' + traceAdd)
   }
 }
 
 export class TMGraph extends Graph<TMState, TMAutomataTransition> {
-  public isFinalState(node: Node<TMState>) {
+  public isFinalState (node: Node<TMState>) {
     return (
       node.state.isFinal
     )
   }
 
-  public getSuccessors(node: Node<TMState>) {
+  public getSuccessors (node: Node<TMState>) {
     const transitions = this.transitions.filter(
       (transition) => transition.from === node.state.id
     )
@@ -75,7 +75,7 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
     return successors
   }
 
-  private progressTape(node: Node<TMState>, transition: TMAutomataTransition) {
+  private progressTape (node: Node<TMState>, transition: TMAutomataTransition) {
     const tapeTrace = node.state.tape.trace
     const write = transition.write
     const direction = transition.direction
