@@ -18,7 +18,11 @@ interface Records {
 
 const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const graphClone = structuredClone(graph)
-  const vArray = graphClone.states
+  const cloneStates = graphClone.states
+  // Remove the initial state from the vertices to move so we build around it
+  const vArray = graphClone.initialState
+    ? cloneStates.filter(s => s.id !== graphClone.initialState)
+    : cloneStates
   const c = [0.0, 0.0]
   const records = {} as Records
 
@@ -36,7 +40,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const rMax = 120 * vArray.length
 
   const gravitationalConstant = 1.0 / 16.0
-  const optimalEdgeLength = 200.0
+  const optimalEdgeLength = 50.0
   const o2 = optimalEdgeLength ** 2
 
   // Iterate until done
