@@ -17,7 +17,8 @@ interface Records {
 }
 
 const GemLayoutAlgorithm = (graph: ProjectGraph) => {
-  const vArray = graph.states
+  const graphClone = structuredClone(graph)
+  const vArray = graphClone.states
   const c = [0.0, 0.0]
   const records = {} as Records
 
@@ -25,7 +26,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     const r = {
       point: { x: v.x, y: v.y },
       temperature: 4,
-      numAdjacent: graph.transitions.filter(t => t.from === v.id || t.to === v.id).length
+      numAdjacent: graphClone.transitions.filter(t => t.from === v.id || t.to === v.id).length
     } as Record
     c[0] += r.point.x
     c[1] += r.point.y
@@ -82,7 +83,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
         p[1] += delta[1] * o2 / d2
       }
       // Is adjacent?
-      if (!graph.transitions.some(t => (t.from === vertex.id && t.to === otherVertex.id) || (t.from === otherVertex.id && t.to === vertex.id))) {
+      if (!graphClone.transitions.some(t => (t.from === vertex.id && t.to === otherVertex.id) || (t.from === otherVertex.id && t.to === vertex.id))) {
         continue
       }
       p[0] -= delta[0] * d2 / (o2 * theta)
@@ -102,7 +103,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
       c[1] += p[1]
     }
   }
-  return graph
+  return graphClone
 }
 
 export default GemLayoutAlgorithm
