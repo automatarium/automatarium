@@ -94,12 +94,9 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
       const absp = Math.sqrt(Math.abs(p[0] ** 2 + p[1] ** 2))
       p[1] *= vRecord.temperature / absp
       p[0] *= vRecord.temperature / absp
-      console.log(`=Cycle ${i} vertices in list ${vertexIndices.length}`)
-      console.log(`Vertex: (${vertex.x}, ${vertex.y}), p: ${p}`)
       // Update position
       vertex.x += p[0]
       vertex.y += p[1]
-      console.log(`result: vArray: (${vertex.x}, ${vertex.y})`)
       // Update barycenter
       c[0] += p[0]
       c[1] += p[1]
