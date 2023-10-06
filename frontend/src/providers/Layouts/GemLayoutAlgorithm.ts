@@ -1,5 +1,6 @@
 /**
- * Taking this from the JFLAP source code
+ * Ported from the JFLAP source code
+ * GEMLayoutAlgorithm by Thomas Finley
  */
 
 import { ProjectGraph } from '/src/types/ProjectTypes'
@@ -8,8 +9,8 @@ type Point = { x: number, y: number }
 
 interface Record {
   point: Point
-  temperature: 4.0
-  numAdjacent: number
+  temperature: number
+  adjacentList: number[]
 }
 
 interface Records {
@@ -20,17 +21,26 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const graphClone = structuredClone(graph)
   const cloneStates = graphClone.states
   // Remove the initial state from the vertices to move so we build around it
-  const vArray = graphClone.initialState
-    ? cloneStates.filter(s => s.id !== graphClone.initialState)
-    : cloneStates
+  const vArray = cloneStates.filter(s => s.id !== graphClone.initialState)
   const c = [0.0, 0.0]
   const records = {} as Records
 
   vArray.forEach(v => {
+    const adjacentStateIds = []
+    for (const t of graphClone.transitions.filter(t => t.from === v.id)) {
+      if (!adjacentStateIds.includes(t.to)) {
+        adjacentStateIds.push(t.to)
+      }
+    }
+    for (const t of graphClone.transitions.filter(t => t.to === v.id)) {
+      if (!adjacentStateIds.includes(t.from)) {
+        adjacentStateIds.push(t.from)
+      }
+    }
     const r = {
       point: { x: v.x, y: v.y },
       temperature: 4,
-      numAdjacent: graphClone.transitions.filter(t => t.from === v.id || t.to === v.id).length
+      adjacentList: adjacentStateIds
     } as Record
     c[0] += r.point.x
     c[1] += r.point.y
@@ -40,7 +50,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const rMax = 120 * vArray.length
 
   const gravitationalConstant = 1.0 / 16.0
-  const optimalEdgeLength = 50.0
+  const optimalEdgeLength = 100.0
   const o2 = optimalEdgeLength ** 2
 
   // Iterate until done
@@ -61,7 +71,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     const point = vRecord.point
 
     // Compute impulse
-    const theta = vRecord.numAdjacent * (1.0 + vRecord.numAdjacent / 2.0)
+    const theta = vRecord.adjacentList.length * (1.0 + vRecord.adjacentList.length / 2.0)
     const p = [
       (c[0] / vArray.length - point.x) * gravitationalConstant * theta,
       (c[1] / vArray.length - point.y) * gravitationalConstant * theta
@@ -71,9 +81,8 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     p[0] += Math.random() * 10.0 - 5.0
     p[1] += Math.random() * 10.0 - 5.0
     // Forces exerted by other nodes
-    for (let j = 0; j < vArray.length; ++j) {
-      const otherVertex = vArray[j]
-      if (otherVertex.id === vertex.id) { continue }
+    vArray.forEach(otherVertex => {
+      if (otherVertex.id === vertex.id) { return }
       const otherPoint = { x: otherVertex.x, y: otherVertex.y } as Point
       const delta = [point.x - otherPoint.x, point.y - otherPoint.y]
       // Nudge state so they will separate
@@ -87,12 +96,12 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
         p[1] += delta[1] * o2 / d2
       }
       // Is adjacent?
-      if (!graphClone.transitions.some(t => (t.from === vertex.id && t.to === otherVertex.id) || (t.from === otherVertex.id && t.to === vertex.id))) {
-        continue
+      if (!vRecord.adjacentList.includes(otherVertex.id)) {
+        return
       }
       p[0] -= delta[0] * d2 / (o2 * theta)
       p[1] -= delta[1] * d2 / (o2 * theta)
-    }
+    })
 
     // Adjust position and temperature
     if (p[0] !== 0.0 || p[1] !== 0.0) {
