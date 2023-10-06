@@ -2,7 +2,7 @@
  * Taking this from the JFLAP source code
  */
 
-import { AutomataState, ProjectGraph } from '/src/types/ProjectTypes'
+import { ProjectGraph } from '/src/types/ProjectTypes'
 
 type Point = { x: number, y: number }
 
@@ -39,18 +39,19 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const o2 = optimalEdgeLength ** 2
 
   // Iterate until done
-  let vertices = [] as AutomataState[]
+  let vertexIndices = [...Array(vArray.length).keys()]
   for (let i = 0; i < rMax; ++i) {
-    if (vertices.length === 0) {
-      vertices = [...vArray]
-      if (vertices.length === 0) {
+    if (vertexIndices.length === 0) {
+      vertexIndices = [...Array(vArray.length).keys()]
+      if (vertexIndices.length === 0) {
         return
       }
     }
 
     // Chose a vertex
-    const index = Math.floor(Math.random() * vertices.length)
-    const vertex = vertices.splice(index, 1)[0]
+    const nextChoice = Math.floor(Math.random() * vertexIndices.length)
+    const vertexIndex = vertexIndices.splice(nextChoice, 1)[0]
+    const vertex = vArray[vertexIndex]
     const vRecord = records[vertex.id]
     const point = vRecord.point
 
@@ -67,7 +68,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     // Forces exerted by other nodes
     for (let j = 0; j < vArray.length; ++j) {
       const otherVertex = vArray[j]
-      if (otherVertex === vertex) { continue }
+      if (otherVertex.id === vertex.id) { continue }
       const otherPoint = { x: otherVertex.x, y: otherVertex.y } as Point
       const delta = [point.x - otherPoint.x, point.y - otherPoint.y]
       // Nudge state so they will separate
@@ -93,9 +94,12 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
       const absp = Math.sqrt(Math.abs(p[0] ** 2 + p[1] ** 2))
       p[1] *= vRecord.temperature / absp
       p[0] *= vRecord.temperature / absp
+      console.log(`=Cycle ${i} vertices in list ${vertexIndices.length}`)
+      console.log(`Vertex: (${vertex.x}, ${vertex.y}), p: ${p}`)
       // Update position
-      vArray[index].x += p[0]
-      vArray[index].y += p[1]
+      vertex.x += p[0]
+      vertex.y += p[1]
+      console.log(`result: vArray: (${vertex.x}, ${vertex.y})`)
       // Update barycenter
       c[0] += p[0]
       c[1] += p[1]
