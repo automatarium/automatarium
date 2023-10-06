@@ -10,6 +10,7 @@ type Point = { x: number, y: number }
 interface Record {
   point: Point
   temperature: 4.0
+  numAdjacent: number
 }
 
 interface Records {
@@ -22,7 +23,11 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const records = {} as Records
 
   vArray.forEach(v => {
-    const r = { point: { x: v.x, y: v.y }, temperature: 4 } as Record
+    const r = {
+      point: { x: v.x, y: v.y },
+      temperature: 4,
+      numAdjacent: graph.transitions.filter(t => t.from === v.id || t.to === v.id).length
+    } as Record
     c[0] += r.point.x
     c[1] += r.point.y
     records[v.id] = r
@@ -50,8 +55,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     const point = vRecord.point
 
     // Compute impulse
-    const numAdjacent = graph.transitions.filter(t => t.from === vertex.id || t.to === vertex.id).length
-    const theta = numAdjacent * (1.0 + numAdjacent / 2.0)
+    const theta = vRecord.numAdjacent * (1.0 + vRecord.numAdjacent / 2.0)
     const p = [
       (c[0] / vArray.length - point.x) * gravitationalConstant * theta,
       (c[1] / vArray.length - point.y) * gravitationalConstant * theta
