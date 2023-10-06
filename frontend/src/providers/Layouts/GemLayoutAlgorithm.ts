@@ -9,13 +9,11 @@ type Point = { x: number, y: number }
 
 interface Record {
   point: Point
-  lastImpulse: [0.0, 0.0]
   temperature: 4.0
-  skew: 0.0
 }
 
 interface Records {
-  [key: string]: Record
+  [key: number]: Record
 }
 
 const GemLayoutAlgorithm = (graph: ProjectGraph) => {
@@ -33,7 +31,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const rMax = 120 * vArray.length
 
   const gravitationalConstant = 1.0 / 16.0
-  const optimalEdgeLength = 100.0
+  const optimalEdgeLength = 200.0
 
   // Iterate until done
   let vertices = [] as AutomataState[]

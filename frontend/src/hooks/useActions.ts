@@ -300,8 +300,9 @@ const useActions = (registerHotkeys = false) => {
     },
     AUTO_LAYOUT: {
       handler: () => {
-        console.log('Auto Layout')
         updateGraph(useAutoLayout(project))
+        console.log('Auto Layout')
+        commit()
       }
     },
     OPEN_DOCS: {
