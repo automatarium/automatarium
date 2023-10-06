@@ -301,7 +301,7 @@ const useActions = (registerHotkeys = false) => {
     AUTO_LAYOUT: {
       handler: () => {
         console.log('Auto Layout')
-        useAutoLayout()
+        updateGraph(useAutoLayout(project))
       }
     },
     OPEN_DOCS: {

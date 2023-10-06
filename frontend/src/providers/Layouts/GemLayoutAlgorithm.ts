@@ -2,7 +2,6 @@
  * Taking this from the JFLAP source code
  */
 
-import { randomInt } from 'crypto'
 import { AutomataState, ProjectGraph } from '/src/types/ProjectTypes'
 
 type Point = { x: number, y: number }
@@ -24,7 +23,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const records = {} as Records
 
   vArray.forEach(v => {
-    const r = { point: { x: v.x, y: v.y } } as Record
+    const r = { point: { x: v.x, y: v.y }, temperature: 4 } as Record
     c[0] += r.point.x
     c[1] += r.point.y
     records[v.id] = r
@@ -46,7 +45,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     }
 
     // Chose a vertex
-    const index = randomInt(vertices.length)
+    const index = Math.floor(Math.random() * vertices.length)
     const vertex = vertices[index]
     const vRecord = records[vertex.id]
     const point = vRecord.point
