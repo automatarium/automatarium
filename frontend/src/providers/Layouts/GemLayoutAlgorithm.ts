@@ -66,6 +66,11 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
       if (otherVertex === vertex) { continue }
       const otherPoint = { x: otherVertex.x, y: otherVertex.y } as Point
       const delta = [point.x - otherPoint.x, point.y - otherPoint.y]
+      // Nudge state so they will separate
+      if (delta[0] === 0 && delta[1] === 0) {
+        delta[0] += 1
+        delta[1] += 1
+      }
       const d2 = delta[0] ** 2 + delta[1] ** 2
       const o2 = optimalEdgeLength ** 2
       if (delta[0] !== 0.0 || delta[1] !== 0.0) {
