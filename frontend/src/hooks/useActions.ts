@@ -1,18 +1,21 @@
 import { MouseEvent, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore } from '/src/stores'
-import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
+import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
+import { reorderStates } from '@automatarium/simulation/src/reorder'
+
+import { decodeData } from '../util/encoding'
+import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
+import { showWarning } from '/src/components/Warning/Warning'
+import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
+import { useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
+import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
+import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
-import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
-import { reorderStates } from '@automatarium/simulation/src/reorder'
-import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
-import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
-import { showWarning } from '/src/components/Warning/Warning'
-import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
-import { decodeData } from '../util/encoding'
+
+import useAutoLayout from '/src/hooks/useAutoLayout'
 
 /**
  * Combination of keys. Used to call an action
@@ -296,8 +299,10 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     AUTO_LAYOUT: {
-      disabled: () => true,
-      handler: () => console.log('Auto Layout')
+      handler: () => {
+        console.log('Auto Layout')
+        useAutoLayout()
+      }
     },
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
