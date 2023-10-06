@@ -3,6 +3,7 @@
  */
 
 import { AutomataState, ProjectGraph } from '/src/types/ProjectTypes'
+import clone from 'lodash.clonedeep'
 
 type Point = { x: number, y: number }
 
@@ -38,7 +39,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   let vertices = [] as AutomataState[]
   for (let i = 0; i < rMax; ++i) {
     if (vertices.length === 0) {
-      vertices = vArray
+      vertices = clone(vArray)
       if (vertices.length === 0) {
         return
       }
@@ -46,7 +47,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
 
     // Chose a vertex
     const index = Math.floor(Math.random() * vertices.length)
-    const vertex = vertices[index]
+    const vertex = vertices.splice(index, 1)[0]
     const vRecord = records[vertex.id]
     const point = vRecord.point
 
@@ -87,8 +88,8 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
       p[1] *= vRecord.temperature / absp
       p[0] *= vRecord.temperature / absp
       // Update position
-      vertex.x += p[0]
-      vertex.y += p[1]
+      vArray[index].x += p[0]
+      vArray[index].y += p[1]
       // Update barycenter
       c[0] += p[0]
       c[1] += p[1]
