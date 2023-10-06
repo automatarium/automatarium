@@ -3,7 +3,6 @@
  */
 
 import { AutomataState, ProjectGraph } from '/src/types/ProjectTypes'
-import clone from 'lodash.clonedeep'
 
 type Point = { x: number, y: number }
 
@@ -37,12 +36,13 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
 
   const gravitationalConstant = 1.0 / 16.0
   const optimalEdgeLength = 200.0
+  const o2 = optimalEdgeLength ** 2
 
   // Iterate until done
   let vertices = [] as AutomataState[]
   for (let i = 0; i < rMax; ++i) {
     if (vertices.length === 0) {
-      vertices = clone(vArray)
+      vertices = [...vArray]
       if (vertices.length === 0) {
         return
       }
@@ -76,7 +76,6 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
         delta[1] += 1
       }
       const d2 = delta[0] ** 2 + delta[1] ** 2
-      const o2 = optimalEdgeLength ** 2
       if (delta[0] !== 0.0 || delta[1] !== 0.0) {
         p[0] += delta[0] * o2 / d2
         p[1] += delta[1] * o2 / d2
