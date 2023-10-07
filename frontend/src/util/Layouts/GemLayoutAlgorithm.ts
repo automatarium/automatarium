@@ -3,19 +3,8 @@
  * GEMLayoutAlgorithm by Thomas Finley
  */
 
+import { Point, Record, Records } from './types'
 import { ProjectGraph } from '/src/types/ProjectTypes'
-
-type Point = { x: number, y: number }
-
-interface Record {
-  point: Point
-  temperature: number
-  adjacentList: number[]
-}
-
-interface Records {
-  [key: number]: Record
-}
 
 const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const graphClone = structuredClone(graph)
@@ -37,7 +26,7 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     }
     const r = {
       point: { x: v.x, y: v.y },
-      temperature: 4,
+      omega: 4,
       adjacentList: adjacentStateIds
     } as Record
     c[0] += r.point.x
@@ -104,8 +93,8 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
     // Adjust position and temperature
     if (p[0] !== 0.0 || p[1] !== 0.0) {
       const absp = Math.sqrt(Math.abs(p[0] ** 2 + p[1] ** 2))
-      p[1] *= vRecord.temperature / absp
-      p[0] *= vRecord.temperature / absp
+      p[1] *= vRecord.omega / absp
+      p[0] *= vRecord.omega / absp
       // Update position
       vertex.x += p[0]
       vertex.y += p[1]
