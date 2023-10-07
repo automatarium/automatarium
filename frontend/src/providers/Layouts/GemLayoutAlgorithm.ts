@@ -27,13 +27,11 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
 
   vArray.forEach(v => {
     const adjacentStateIds = []
-    for (const t of graphClone.transitions.filter(t => t.from === v.id)) {
-      if (!adjacentStateIds.includes(t.to)) {
+    for (const t of graphClone.transitions) {
+      if (t.from === v.id && !adjacentStateIds.includes(t.to)) {
         adjacentStateIds.push(t.to)
       }
-    }
-    for (const t of graphClone.transitions.filter(t => t.to === v.id)) {
-      if (!adjacentStateIds.includes(t.from)) {
+      if (t.to === v.id && !adjacentStateIds.includes(t.from)) {
         adjacentStateIds.push(t.from)
       }
     }
@@ -87,11 +85,11 @@ const GemLayoutAlgorithm = (graph: ProjectGraph) => {
       const delta = [point.x - otherPoint.x, point.y - otherPoint.y]
       // Nudge state so they will separate
       if (delta[0] === 0 && delta[1] === 0) {
-        delta[0] += 1
-        delta[1] += 1
+        delta[0] += Math.random() * 10.0 - 5.0
+        delta[1] += Math.random() * 10.0 - 5.0
       }
       const d2 = delta[0] ** 2 + delta[1] ** 2
-      if (delta[0] !== 0.0 || delta[1] !== 0.0) {
+      if (d2 !== 0) {
         p[0] += delta[0] * o2 / d2
         p[1] += delta[1] * o2 / d2
       }
