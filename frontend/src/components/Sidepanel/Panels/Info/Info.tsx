@@ -13,7 +13,7 @@ const Info = () => {
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
   const graph = useProjectStore(s => s.getGraph())
-  const projectType = useProjectStore((s) => s.project.config.type)
+  const projectType = useProjectStore(s => s.project.config.type)
 
   // Function to get name of state from an id
   const getStateName = useCallback((id: number) =>
