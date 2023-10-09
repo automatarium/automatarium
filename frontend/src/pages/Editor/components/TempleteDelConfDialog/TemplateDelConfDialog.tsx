@@ -34,7 +34,8 @@ const TemplateDelConfDialog = ({ isOpen, setOpen, setClose }: EditorConfirmation
           <Button secondary onClick={setClose}>Cancel</Button>
           <Button onClick={() => {
             deleteTemplate(tid)
-            removeThumbnail(`tmp${tid}`)
+            removeThumbnail(`tmp${tid}-light`)
+            removeThumbnail(`tmp${tid}-dark`)
             setClose()
           }}>Confirm</Button>
         </>}

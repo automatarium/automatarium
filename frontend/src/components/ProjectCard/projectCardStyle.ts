@@ -30,7 +30,7 @@ export const CardImage = styled('div')<{$image?: boolean}>`
   align-items: center;
   justify-content: center;
   position: relative;
-  background: var(--grid-bg-light);
+  background: var(--grid-bg);
 
   svg {
     width: 60%;
@@ -46,7 +46,7 @@ export const CardImage = styled('div')<{$image?: boolean}>`
   }
 
   ${props => !props.$image && `
-    background: var(--grid-pattern-light);
+    background: var(--grid-pattern);
     background-size: 1.875em 1.875em;
     background-position: .4735em .4735em;
   `}
