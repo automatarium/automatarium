@@ -75,7 +75,7 @@ const TestingLab = () => {
               : simulateFSA(graph, input ?? '')
       // Formats a symbol. Makes an empty symbol become a lambda
       const formatSymbol = (char?: string): string =>
-        char === null || char === "" ? "λ" : char;
+        char === null || char === '' ? 'λ' : char
       return {
         ...result,
         // We need format the symbols in the trace so any empty symbols become lambdas

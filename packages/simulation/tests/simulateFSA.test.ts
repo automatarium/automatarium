@@ -294,10 +294,10 @@ describe('Automata dib-end-lambda', () => {
   })
 })
 
-// Accepts 3-character strings not starting with 'a', without '123' as the second character, 
+// Accepts 3-character strings not starting with 'a', without '123' as the second character,
 // and ending in a non-alphabetical character
 describe('Exclusion automata', () => {
-  test('Rejects "abc" with correct trace' , () => {
+  test('Rejects "abc" with correct trace', () => {
     const { accepted, trace } = simulateFSA(exclusionTransitions as FSAProjectGraph, 'abc')
     const to = trace.map(step => step.to)
     const read = trace.map(step => step.read)
@@ -341,5 +341,4 @@ describe('Exclusion automata', () => {
     expect(to).toStrictEqual([0, 1, 2, 3])
     expect(read).toStrictEqual([null, '1', '0', '1'])
   })
-
 })
