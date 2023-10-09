@@ -66,6 +66,7 @@ const Info = () => {
     }
     return map
   }, [states, alphabet, graph])
+
   return <>
     <SectionLabel>Alphabet</SectionLabel>
     <Wrapper>
@@ -73,6 +74,17 @@ const Info = () => {
         {alphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
       </SymbolList>
     </Wrapper>
+
+   {projectType === 'PDA' && (
+      <>
+        <SectionLabel>Stack Alphabet</SectionLabel>
+        <Wrapper>
+          <SymbolList>
+            {stackAlphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
+          </SymbolList>
+        </Wrapper>
+      </>
+   )}
 
     <SectionLabel>State Transition Table</SectionLabel>
     <Wrapper>
