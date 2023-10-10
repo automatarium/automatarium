@@ -34,12 +34,9 @@ export const splitCharsWithOr = (text: string, orOperator: string): string => {
   if (!text || text.length <= 1) return text
 
   const joinStr = orOperator !== ' ' ? ` ${orOperator} ` : ' '
+  const parts = text.match(/(\[.*?])|(![^ ]+)|([^! ])/g) || []
 
-  const parts = text.match(/(\[.*?])|(![^!]*)|(.)+/g) || []
-
-  return parts.map(part =>
-    (part.length === 1 && part !== '!') || part.startsWith('!') ? part : part.split('').join(joinStr)
-  ).join(joinStr)
+  return parts.join(joinStr)
 }
 
 // Gets symbols that are preceded by an exclusion operator (!)
