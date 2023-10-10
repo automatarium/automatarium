@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
+import autoLayout from '@automatarium/simulation/src/autoLayout'
 
 import { decodeData } from '../util/encoding'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
@@ -14,8 +15,6 @@ import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/s
 import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
-
-import useAutoLayout from '/src/hooks/useAutoLayout'
 
 /**
  * Combination of keys. Used to call an action
@@ -300,7 +299,7 @@ const useActions = (registerHotkeys = false) => {
     },
     AUTO_LAYOUT: {
       handler: () => {
-        updateGraph(useAutoLayout(project))
+        updateGraph(autoLayout(project))
         commit()
       }
     },

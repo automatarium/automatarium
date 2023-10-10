@@ -3,8 +3,8 @@
  * 'A Technique for Drawing Directed Graphs' by Gansner E.R. et. al.
  */
 import { Record, Records } from './types'
-import { STATE_CIRCLE_RADIUS } from '/src/config/rendering'
-import { ProjectGraph } from '/src/types/ProjectTypes'
+import { STATE_CIRCLE_RADIUS } from 'frontend/src/config/rendering'
+import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 type Edge = [number, number]
 type AdjacencyList = Map<number, [number, number][]>

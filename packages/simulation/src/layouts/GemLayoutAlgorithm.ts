@@ -4,7 +4,7 @@
  */
 
 import { Point, Record, Records } from './types'
-import { ProjectGraph } from '/src/types/ProjectTypes'
+import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 const GemLayoutAlgorithm = (graph: ProjectGraph) => {
   const graphClone = structuredClone(graph)

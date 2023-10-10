@@ -1,10 +1,10 @@
-import GemLayoutAlgorithm from '/src/util/Layouts/GemLayoutAlgorithm'
-import { ProjectGraph } from '/src/types/ProjectTypes'
+import GemLayoutAlgorithm from './layouts/GemLayoutAlgorithm'
+import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 type LayoutName = 'gem'
 type LayoutAlgorithm = (graph: ProjectGraph) => ProjectGraph
 
-const useAutoLayout = (graph: ProjectGraph, algorithm: LayoutName = 'gem') => {
+const autoLayout = (graph: ProjectGraph, algorithm: LayoutName = 'gem') => {
   const algorithms = new Map<string, LayoutAlgorithm>([
     ['gem', GemLayoutAlgorithm]
   ])
@@ -12,4 +12,4 @@ const useAutoLayout = (graph: ProjectGraph, algorithm: LayoutName = 'gem') => {
   return algorithms.get(algorithm)(graph)
 }
 
-export default useAutoLayout
+export default autoLayout
