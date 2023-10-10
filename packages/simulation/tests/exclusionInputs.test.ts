@@ -48,6 +48,16 @@ describe('Exclusion extraction edge cases', () => {
   })
 })
 
+describe('Extract excluded symbols from range', () => {
+  test('Should extract an array containing a, b, c from ![a-c]', () => {
+    expectExtraction('![a-c]', ['a', 'b', 'c'])
+  })
+
+  test('Should extract an array containing 5, 6, 7, 8 from ![5-8]', () => {
+    expectExtraction('![5-8]', ['5', '6', '7', '8'])
+  })
+})
+
 describe('Extract excluded symbols from expression in parentheses', () => {
   test('Should extract an array containing a and b from !(a&b)', () => {
     expectExtraction('!(a&b)', ['a', 'b'])
@@ -95,7 +105,7 @@ describe('Format exclusion range', () => {
 })
 
 describe('Format exclusion edge cases', () => {
-  test('Should only return one exlusion operator when multiple are present', () => {
+  test('Should only return one exclusion operator when multiple are present', () => {
     expectExclusionFormat('!!!!!', '!')
   })
 
