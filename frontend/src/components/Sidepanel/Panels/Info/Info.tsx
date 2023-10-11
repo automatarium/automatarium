@@ -56,6 +56,7 @@ const Info = () => {
     }
     return map
   }, [states, alphabet, graph])
+
   return <>
     <SectionLabel>Alphabet</SectionLabel>
     <Wrapper>
