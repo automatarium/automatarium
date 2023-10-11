@@ -1,6 +1,7 @@
 import { Tape } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
 import { TMAutomataTransition } from 'frontend/src/types/ProjectTypes'
+import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
 
 export class TMState extends State {
   constructor (
@@ -41,9 +42,13 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       const symbol = tapeTrace[tapePointer] ?? ''
       let nextTape = this.progressTape(node, transition)
 
+      // Get any symbols preceded by an exclusion operator
+      const symbolsToExclude = extractSymbolsToExclude(transition.read)
       // If there is no next state
       if (
-        nextState === undefined || (!transition.read.includes(symbol))
+        (nextState === undefined) ||
+        ((symbolsToExclude.length === 0) && (!transition.read.includes(symbol))) ||
+        ((symbolsToExclude.length > 0) && (symbolsToExclude.includes(symbol)))
       ) {
         continue
       }
@@ -53,12 +58,15 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       }
       // Progress when the transition's read matches the symbol exactly
       // If it doesn't, progress only if the symbol is non-empty and contained within the read
-      if (transition.read === symbol || (symbol.length > 0 && transition.read.includes(symbol))) {
+      if (
+        (symbolsToExclude.length > 0 && !symbolsToExclude.includes(symbol)) ||
+        (transition.read === symbol) ||
+        (symbol.length > 0 && transition.read.includes(symbol))
+      ) {
         const graphState = new TMState(
           nextState.id,
           nextState.isFinal,
           nextTape
-          // read: symbol
         )
         const successor = new Node(graphState, node)
         successors.push(successor)

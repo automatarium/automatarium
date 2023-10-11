@@ -1,0 +1,73 @@
+{
+  "projectType": "FSA",
+  "_id": "92d351d7-e7d6-4f56-924c-fa350c4c80e0",
+  "states": [
+    {
+      "x": 180,
+      "y": 270,
+      "id": 0,
+      "isFinal": false
+    },
+    {
+      "x": 375,
+      "y": 270,
+      "id": 1,
+      "isFinal": false
+    },
+    {
+      "x": 600,
+      "y": 270,
+      "id": 2,
+      "isFinal": false
+    },
+    {
+      "x": 840,
+      "y": 270,
+      "id": 3,
+      "isFinal": true
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 0,
+      "read": "!a"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 1,
+      "read": "!(1&2&3)"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "id": 2,
+      "read": "![a-z]"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Exclusion Transitions",
+    "dateCreated": 1696317531949,
+    "dateEdited": 1696317531949,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "orOperator": "|",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

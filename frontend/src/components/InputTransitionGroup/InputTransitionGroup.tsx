@@ -33,7 +33,7 @@ import {
   TMDirection,
   assertType
 } from '/src/types/ProjectTypes'
-import { splitCharsWithOr, formatInput } from '/src/util/orOperators'
+import { formatOutput, formatInput } from '/src/util/stringManipulations'
 
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
@@ -385,7 +385,7 @@ const InputTransitionGroup = () => {
                 <InputWrapper key={i}>
                   <Input
                     ref={transitionListRef[i] ?? null}
-                    value={splitCharsWithOr(t.read, orOperator)}
+                    value={formatOutput(t.read, orOperator)}
                     onChange={(e) => {
                       saveFSATransition({
                         id: t.id,
@@ -419,7 +419,7 @@ const InputTransitionGroup = () => {
                   <InputSpacingWrapper>
                     <Input
                       ref={transitionListRef[i] ?? null}
-                      value={splitCharsWithOr(t.read, orOperator)}
+                      value={formatOutput(t.read, orOperator)}
                       onChange={(e) => {
                         savePDATransition({
                           id: t.id,
@@ -494,7 +494,7 @@ const InputTransitionGroup = () => {
                   <InputSpacingWrapper>
                     <Input
                       ref={transitionListRef[i] ?? null}
-                      value={splitCharsWithOr(t.read, orOperator)}
+                      value={formatOutput(t.read, orOperator)}
                       onChange={(e) => {
                         saveTMTransition({
                           id: t.id,

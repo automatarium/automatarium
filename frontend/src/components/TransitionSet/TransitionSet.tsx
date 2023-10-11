@@ -9,7 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
-import { splitCharsWithOr } from '/src/util/orOperators'
+import { formatOutput } from '/src/util/stringManipulations'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -22,12 +22,12 @@ const makeTransitionText = (type: ProjectType, orOperator: string, t: Positioned
   switch (type) {
     case 'TM':
       assertType<TMAutomataTransition>(t)
-      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.write || 'λ'} ; ${t.direction || 'λ'}`
+      return `${formatOutput(t.read, orOperator) || 'λ'} , ${t.write || 'λ'} ; ${t.direction || 'λ'}`
     case 'PDA':
       assertType<PDAAutomataTransition>(t)
-      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.pop || 'λ'} ; ${t.push || 'λ'}`
+      return `${formatOutput(t.read, orOperator) || 'λ'} , ${t.pop || 'λ'} ; ${t.push || 'λ'}`
     case 'FSA':
-      return splitCharsWithOr(t.read, orOperator) || 'λ'
+      return formatOutput(t.read, orOperator) || 'λ'
   }
 }
 

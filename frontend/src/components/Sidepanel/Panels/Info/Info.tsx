@@ -6,7 +6,7 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
-import { PDAProjectGraph } from '/src/types/ProjectTypes'
+import { TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
@@ -22,13 +22,20 @@ const Info = () => {
   )
 
   // Determine alphabet
-  const alphabet = useMemo(() =>
-    Array.from(new Set(graph.transitions
-      .map(tr => tr.read)
-      .reduce((a, b) => [...a, ...b], [] as string[])
-      .sort() as string[]
-    ))
-  , [transitions])
+  const alphabet = useMemo(() => {
+    return Array.from(
+      new Set(
+      (graph.transitions as TMAutomataTransition[])
+        .reduce((acc, tr) => {
+          // Type assertion here
+          return tr.read.startsWith('!')
+            ? [...acc, tr.read]
+            : [...acc, ...tr.read.split('')]
+        }, [] as string[])
+        .sort() as string[]
+      )
+    )
+  }, [transitions])
 
   // Determine stack alphabet
   const stackAlphabet = useMemo(() => {

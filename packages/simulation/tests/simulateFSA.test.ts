@@ -11,6 +11,7 @@ import dibSplitJoin from './graphs/dib-split-join.json'
 import dib from './graphs/dib.json'
 import lambdaOnly from './graphs/lambda-only.json'
 import dibEndLambda from './graphs/dib-end-lambda.json'
+import exclusionTransitions from './graphs/exclusionTransitions.json'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 // Accepts dib or dip with even number of ps
@@ -290,5 +291,54 @@ describe('Automata dib-end-lambda', () => {
     expect(accepted).toBeFalse()
     expect(to).toStrictEqual([0, 1, 2])
     expect(read).toStrictEqual([null, 'd', 'i'])
+  })
+})
+
+// Accepts 3-character strings not starting with 'a', without '123' as the second character,
+// and ending in a non-alphabetical character
+describe('Exclusion automata', () => {
+  test('Rejects "abc" with correct trace', () => {
+    const { accepted, trace } = simulateFSA(exclusionTransitions as FSAProjectGraph, 'abc')
+    const to = trace.map(step => step.to)
+    const read = trace.map(step => step.read)
+    expect(accepted).toBeFalse()
+    expect(to).toStrictEqual([0])
+    expect(read).toStrictEqual([null])
+  })
+
+  test('Rejects "b100" with correct trace', () => {
+    const { accepted, trace } = simulateFSA(exclusionTransitions as FSAProjectGraph, 'b100')
+    const to = trace.map(step => step.to)
+    const read = trace.map(step => step.read)
+    expect(accepted).toBeFalse()
+    expect(to).toStrictEqual([0, 1])
+    expect(read).toStrictEqual([null, 'b'])
+  })
+
+  test('Rejects "123" with correct trace', () => {
+    const { accepted, trace } = simulateFSA(exclusionTransitions as FSAProjectGraph, '123')
+    const to = trace.map(step => step.to)
+    const read = trace.map(step => step.read)
+    expect(accepted).toBeFalse()
+    expect(to).toStrictEqual([0, 1])
+    expect(read).toStrictEqual([null, '1'])
+  })
+
+  test('Rejects "fsa" with correct trace', () => {
+    const { accepted, trace } = simulateFSA(exclusionTransitions as FSAProjectGraph, 'fsa')
+    const to = trace.map(step => step.to)
+    const read = trace.map(step => step.read)
+    expect(accepted).toBeFalse()
+    expect(to).toStrictEqual([0, 1, 2])
+    expect(read).toStrictEqual([null, 'f', 's'])
+  })
+
+  test('Accepts "101" with correct trace', () => {
+    const { accepted, trace } = simulateFSA(exclusionTransitions as FSAProjectGraph, '101')
+    const to = trace.map(step => step.to)
+    const read = trace.map(step => step.read)
+    expect(accepted).toBeTrue()
+    expect(to).toStrictEqual([0, 1, 2, 3])
+    expect(read).toStrictEqual([null, '1', '0', '1'])
   })
 })
