@@ -6,7 +6,7 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
-import { TMAutomataTransition, PDAProjectGraph } from "/src/types/ProjectTypes"
+import { TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
