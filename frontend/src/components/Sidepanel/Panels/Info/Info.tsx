@@ -6,6 +6,7 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
+import { TMAutomataTransition } from '/src/types/ProjectTypes'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
@@ -23,13 +24,14 @@ const Info = () => {
   const alphabet = useMemo(() => {
     return Array.from(
       new Set(
-        graph.transitions
-          .reduce((acc, tr) => {
-            return tr.read.startsWith('!')
-              ? [...acc, tr.read]
-              : [...acc, ...tr.read.split('')]
-          }, [] as string[])
-          .sort()
+      (graph.transitions as TMAutomataTransition[])
+        .reduce((acc, tr) => {
+          // Type assertion here
+          return tr.read.startsWith('!')
+            ? [...acc, tr.read]
+            : [...acc, ...tr.read.split('')]
+        }, [] as string[])
+        .sort() as string[]
       )
     )
   }, [transitions])
