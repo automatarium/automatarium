@@ -118,7 +118,6 @@ export const formatInput = (input: string, orOperator: string): string => {
   input = removeWhitespace(inputWithoutRanges)
   input = removeOrOperators(input, orOperator)
   input = removeDuplicateChars(input)
-  console.log(`${input}${ranges.join('')}`)
 
   return `${input}${ranges.join('')}`
 }
