@@ -6,13 +6,14 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
-import { TMAutomataTransition } from '/src/types/ProjectTypes'
+import { TMAutomataTransition, PDAProjectGraph } from "/src/types/ProjectTypes"
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
   const states = useProjectStore(s => s.project?.states)
   const transitions = useProjectStore(s => s.project?.transitions)
   const graph = useProjectStore(s => s.getGraph())
+  const projectType = useProjectStore(s => s.project.config.type)
 
   // Function to get name of state from an id
   const getStateName = useCallback((id: number) =>
@@ -35,6 +36,20 @@ const Info = () => {
       )
     )
   }, [transitions])
+
+  // Determine stack alphabet
+  const stackAlphabet = useMemo(() => {
+    if (projectType !== 'PDA') return []
+
+    const pdaGraph = graph as PDAProjectGraph
+    const stackAlphabetSet = new Set<string>()
+
+    pdaGraph.transitions.forEach((transition) => {
+      if (transition.pop) stackAlphabetSet.add(transition.pop)
+      if (transition.push) stackAlphabetSet.add(transition.push)
+    })
+    return Array.from(stackAlphabetSet).sort()
+  }, [graph.transitions])
 
   const transitionMap = useMemo(() => {
     const map = new Map<[StateID, string], StateID[]>() // (ID, Symbol) -> ID[]
@@ -66,6 +81,17 @@ const Info = () => {
         {alphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
       </SymbolList>
     </Wrapper>
+
+   {projectType === 'PDA' && (
+      <>
+        <SectionLabel>Stack Alphabet</SectionLabel>
+        <Wrapper>
+          <SymbolList>
+            {stackAlphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
+          </SymbolList>
+        </Wrapper>
+      </>
+   )}
 
     <SectionLabel>State Transition Table</SectionLabel>
     <Wrapper>
