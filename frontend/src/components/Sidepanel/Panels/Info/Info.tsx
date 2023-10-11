@@ -20,13 +20,19 @@ const Info = () => {
   )
 
   // Determine alphabet
-  const alphabet = useMemo(() =>
-    Array.from(new Set(graph.transitions
-      .map(tr => tr.read)
-      .reduce((a, b) => [...a, ...b], [] as string[])
-      .sort() as string[]
-    ))
-  , [transitions])
+  const alphabet = useMemo(() => {
+    return Array.from(
+      new Set(
+        graph.transitions
+          .reduce((acc, tr) => {
+            return tr.read.startsWith('!')
+              ? [...acc, tr.read]
+              : [...acc, ...tr.read.split('')]
+          }, [] as string[])
+          .sort()
+      )
+    )
+  }, [transitions])
 
   const transitionMap = useMemo(() => {
     const map = new Map<[StateID, string], StateID[]>() // (ID, Symbol) -> ID[]
