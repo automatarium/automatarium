@@ -6,7 +6,7 @@ import { useProjectStore, useViewStore } from '/src/stores'
 import useEvent from '/src/hooks/useEvent'
 import { locateTransition } from '/src/util/states'
 import { lerpPoints } from '/src/util/points'
-import { formatInput, splitCharsWithOr } from '/src/util/stringManipulations'
+import { formatInput, formatOutput } from '/src/util/stringManipulations'
 import { DirectionRadioButtons } from '/src/components/Button/DirectionRadioButtons'
 
 import {
@@ -108,7 +108,7 @@ const InputDialogs = () => {
     switch (projectType) {
       case 'TM':
         assertType<TMAutomataTransition>(transition)
-        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
+        setValue(formatOutput(transition?.read, orOperator) ?? '')
         setWrite(transition?.write ?? '')
         setDirection(transition?.direction ?? 'R')
         setDialog({
@@ -121,7 +121,7 @@ const InputDialogs = () => {
         break
       case 'PDA':
         assertType<PDAAutomataTransition>(transition)
-        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
+        setValue(formatOutput(transition?.read, orOperator) ?? '')
         setValuePush(transition?.push ?? '')
         setValuePop(transition?.pop ?? '')
         setDialog({
@@ -133,7 +133,7 @@ const InputDialogs = () => {
         })
         break
       case 'FSA':
-        setValue(splitCharsWithOr(transition?.read, orOperator) ?? '')
+        setValue(formatOutput(transition?.read, orOperator) ?? '')
         setDialog({
           visible: true,
           x: screenMidPoint[0],

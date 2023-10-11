@@ -1,5 +1,10 @@
 import { expandReadSymbols } from '@automatarium/simulation/src/parseGraph'
 
+const EXCL_PARENTHESES_REG = /!\(([^&)]+&)+[^&)]+\)/g
+const RANGE_REG = /\[(.*?)]/g
+const SPLIT_CHAR_REG = /(\[.*?])|(![^ ]+)|([^! ])/g
+const SYMBOLS_TO_EXCLUDE_REG = /(!\.)|(!\(([^&)]+&)*[^&)]*\))|(!\[[^\]]+\])|(![^()[\]]+)|!\(|!\[/g
+
 export const possibleOrOperators = (orOperator: string): string[] => {
   switch (orOperator) {
     case '+':
@@ -30,18 +35,38 @@ export const possibleOrOperators = (orOperator: string): string[] => {
   }
 }
 
+export const formatOutput = (text: string, orOperator: string): string => {
+  if (!text) return text
+  text = splitCharsWithOr(text, orOperator)
+  return addSpaces(text)
+}
+
 export const splitCharsWithOr = (text: string, orOperator: string): string => {
-  if (!text || text.length <= 1) return text
+  if (text.length <= 1) return text
 
   const joinStr = orOperator !== ' ' ? ` ${orOperator} ` : ' '
-  const parts = text.match(/(\[.*?])|(![^ ]+)|([^! ])/g) || []
+  const parts = text.match(SPLIT_CHAR_REG) || []
 
   return parts.join(joinStr)
 }
 
+// Inserts spaces between values within parentheses for exclusion inputs
+// e.g. !(a&b&c) -> !(a & b & c)
+export const addSpaces = (input: string): string => {
+  const matches = input.match(EXCL_PARENTHESES_REG)
+
+  if (!matches) return input
+
+  for (const match of matches) {
+    const formattedMatch = match.replace(/&/g, ' & ')
+    input = input.replace(match, formattedMatch)
+  }
+  return input
+}
+
 // Gets symbols that are preceded by an exclusion operator (!)
 export const extractSymbolsToExclude = (input: string): string[] => {
-  const matches = input.match(/(!\.)|(!\(([^&)]+&)*[^&)]*\))|(!\[[^\]]+\])|(![^()[\]]+)|!\(|!\[/g) || []
+  const matches = input.match(SYMBOLS_TO_EXCLUDE_REG) || []
 
   return matches.flatMap((match: string) => {
     if (match.startsWith('!(')) {
@@ -74,24 +99,28 @@ export const removeDuplicateChars = (input: string): string => {
 }
 
 export const extractRanges = (input: string): [string, string[]] => {
-  const ranges = input.match(/\[(.*?)]/g) || []
-  input = input.replace(/\[(.*?)]/g, '')
+  const ranges = input.match(RANGE_REG) || []
+  input = input.replace(RANGE_REG, '')
   return [input, ranges]
 }
 
 // Exclusions are denoted with ! followed by the character(s) to exclude
 export const exclusionInput = (input: string): string => {
   // For more than one character to exclude, they should be enclosed in parentheses and separated by &
-  const exclamationWithParentheses = input.match(/!\(([^&)]+&)+[^&)]+\)/)
+  const exclamationWithParentheses = input.match(EXCL_PARENTHESES_REG)
   // Or they should be enclosed within square brackets to denote a range
   const exclamationWithRange = input.match(/!\[[^\]]+]/)
   const singleExclamation = input.match(/!./)
 
   // Check if the pattern inside parentheses strictly adheres to single characters separated by &
   if (exclamationWithParentheses) {
-    const content = exclamationWithParentheses[0].slice(2, -1)
-    if (content.split('&').every(part => part.length === 1)) {
-      return exclamationWithParentheses[0]
+    const content = exclamationWithParentheses[0]
+      .slice(2, -1)
+      .split('&')
+      // Trim whitespace
+      .map(p => p.trim())
+    if (content.every(part => part.length === 1)) {
+      return '!(' + content.join('&') + ')'
     } else {
       return '!('
     }
