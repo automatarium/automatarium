@@ -203,8 +203,8 @@ const InputTransitionGroup = () => {
     <InputWrapper>
       <Input
         ref={inputRef}
-        value={readValue}
-        onChange={(e) => setReadValue(e.target.value)}
+        value={formatOutput(readValue, orOperator)}
+        onChange={(e) => setReadValue(formatInput(e.target.value, orOperator))}
         onClick={() => setSelectedIndex(-1)}
         onKeyUp={handleKeyUp}
         onFocus={(e) => e.target.select()}
@@ -240,8 +240,8 @@ const InputTransitionGroup = () => {
       <InputSpacingWrapper>
         <Input
           ref={inputRef}
-          value={readValue}
-          onChange={(e) => setReadValue(e.target.value)}
+          value={formatOutput(readValue, orOperator)}
+          onChange={(e) => setReadValue(formatInput(e.target.value, orOperator))}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
           onFocus={(e) => e.target.select()}
@@ -311,9 +311,9 @@ const InputTransitionGroup = () => {
       <InputSpacingWrapper>
         <Input
           ref={inputRef}
-          value={readValue}
+          value={formatOutput(readValue, orOperator)}
           onChange={(e) => {
-            setReadValue(e.target.value)
+            setReadValue(formatInput(e.target.value, orOperator))
           }}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
