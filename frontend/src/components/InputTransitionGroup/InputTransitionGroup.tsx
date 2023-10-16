@@ -97,7 +97,6 @@ const InputTransitionGroup = () => {
           t.to === scopeTo)
         .map((t) => t.id)
       setIdList([...allIdList])
-      setTransitionsList([...transitions.filter((t) => allIdList.includes(t.id))])
       setModalOpen(true)
     }, [transitions, states]
   )
