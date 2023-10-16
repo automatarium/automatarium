@@ -461,6 +461,71 @@ const InputTransitionGroup = () => {
     </InputWrapper>
   )
 
+  const tmInputFields = useCallback((t: TMAutomataTransition, i: number) => <InputWrapper key={i}>
+    <InputSpacingWrapper>
+      <Input
+        ref={transitionListRef[i] ?? null}
+        value={readList[i]}
+        onChange={(e) => {
+          upsertList(readList, setReadList, e.target.value, i)
+          setSelectedIndex(i)
+        }}
+        onClick={() => setSelectedIndex(i)}
+        onKeyUp={handleKeyUp}
+        onFocus={(e) => e.target.select()}
+        onBlur={() => saveTMTransition({
+          id: t.id,
+          read: formatInput(readList[i], orOperator),
+          write: t.write,
+          direction: t.direction
+        })}
+        placeholder={'λ'}
+      />
+    </InputSpacingWrapper>
+    <InputSeparator>,</InputSeparator>
+    <InputSpacingWrapper>
+      <Input
+        value={scdList[i]}
+        onChange={(e) => {
+          upsertList(scdList, setScdList, tmWriteValidate(e), i)
+          setSelectedIndex(i)
+        }}
+        onClick={() => setSelectedIndex(i)}
+        onKeyUp={handleKeyUp}
+        onFocus={(e) => e.target.select()}
+        onBlur={() => saveTMTransition({
+          id: t.id,
+          read: t.read,
+          write: scdList[i],
+          direction: t.direction
+        })}
+        placeholder={'λ'}
+      />
+    </InputSpacingWrapper>
+    <InputSeparator>;</InputSeparator>
+    <InputSpacingWrapper>
+      <DirectionRadioButtons
+        direction={t.direction}
+        setDirection={(newDirection) => {
+          saveTMTransition({
+            id: t.id,
+            read: t.read,
+            write: t.write,
+            direction: newDirection
+          })
+          setSelectedIndex(i)
+        }}
+        name={`transition-group-${t.id}`}
+        handleSave={handleKeyUp}
+      />
+    </InputSpacingWrapper>
+    <InputSpacingWrapper>
+      <TMSubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
+        <X size="18px" />
+      </TMSubmitButton>
+    </InputSpacingWrapper>
+  </InputWrapper>, [readList, scdList, thdList])
+
   const saveNewTransition = () => {
     switch (projectType) {
       case 'FSA':
@@ -508,73 +573,7 @@ const InputTransitionGroup = () => {
         assertType<Array<TMAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList
-              .map((t, i) => (
-                <InputWrapper key={i}>
-                  <InputSpacingWrapper>
-                    <Input
-                      ref={transitionListRef[i] ?? null}
-                      value={formatOutput(t.read, orOperator)}
-                      onChange={(e) => {
-                        saveTMTransition({
-                          id: t.id,
-                          read: formatInput(e.target.value, orOperator),
-                          write: t.write,
-                          direction: t.direction
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>,</InputSeparator>
-                  <InputSpacingWrapper>
-                    <Input
-                      value={t.write}
-                      onChange={(e) => {
-                        const w = tmWriteValidate(e)
-                        saveTMTransition({
-                          id: t.id,
-                          read: t.read,
-                          write: w,
-                          direction: t.direction
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>;</InputSeparator>
-                  <InputSpacingWrapper>
-                    <DirectionRadioButtons
-                      direction={t.direction}
-                      setDirection={(newDirection) => {
-                        saveTMTransition({
-                          id: t.id,
-                          read: t.read,
-                          write: t.write,
-                          direction: newDirection
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      name={`transition-group-${t.id}`}
-                      handleSave={handleKeyUp}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSpacingWrapper>
-                    <TMSubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
-                      <X size="18px" />
-                    </TMSubmitButton>
-                  </InputSpacingWrapper>
-                </InputWrapper>
-              ))
-              .reverse()}
+            {transitionsList.map((t, i) => tmInputFields(t, i)).reverse()}
             <hr />
             <Heading>Add a new transition?</Heading>
             {blankTMInput()}
