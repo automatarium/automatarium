@@ -101,7 +101,7 @@ const InputTransitionGroup = () => {
       setIdList([...allIdList])
       setTransitionsList([...transitions.filter((t) => allIdList.includes(t.id))])
       setModalOpen(true)
-    }, [transitions, states, orOperator]
+    }, [transitions, states]
   )
 
   const retrieveTransitions = useCallback(() => {
