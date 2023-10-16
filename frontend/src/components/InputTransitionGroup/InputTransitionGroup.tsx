@@ -313,8 +313,7 @@ const InputTransitionGroup = () => {
           ref={inputRef}
           value={readValue}
           onChange={(e) => {
-            const r = tmWriteValidate(e)
-            setReadValue(r)
+            setReadValue(e.target.value)
           }}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
