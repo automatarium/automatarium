@@ -33,7 +33,7 @@ export const formatHotkey = (hotkey: HotKey): string => [
   hotkey.meta && (isWindows ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   hotkey.alt && (isWindows ? 'Alt' : '⌥'),
   hotkey.shift && (isWindows ? 'Shift' : '⇧'),
-  hotkey.key?.toUpperCase()
+  hotkey.key === 'Escape' ? 'ESC' : hotkey.key?.toUpperCase()
 ].filter(Boolean).join(isWindows ? '+' : ' ')
 
 /**
@@ -213,7 +213,7 @@ const useActions = (registerHotkeys = false) => {
       handler: selectAll
     },
     SELECT_NONE: {
-      hotkeys: [{ key: 'a', shift: true, meta: true }],
+      hotkeys: [{ key: 'Escape' }],
       handler: selectNone
     },
     DELETE: {
