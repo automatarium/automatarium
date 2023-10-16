@@ -205,7 +205,7 @@ const InputTransitionGroup = () => {
         onFocus={(e) => e.target.select()}
         placeholder={'λ (New transition)'}
       />
-      <SubmitButton onClick={saveNewTransition}>
+      <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
         <CornerDownLeft size="18px" />
       </SubmitButton>
     </InputWrapper>
@@ -265,7 +265,7 @@ const InputTransitionGroup = () => {
           placeholder={'λ\t(push)'}
         />
       </InputSpacingWrapper>
-      <SubmitButton onClick={saveNewTransition}>
+      <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
         <CornerDownLeft size="18px" />
       </SubmitButton>
     </InputWrapper>
@@ -340,7 +340,7 @@ const InputTransitionGroup = () => {
         />
       </InputSpacingWrapper>
       <InputSpacingWrapper>
-        <TMSubmitButton onClick={saveNewTransition}>
+        <TMSubmitButton onClick={saveNewTransition} tabIndex={-1}>
           <CornerDownLeft size="18px" />
         </TMSubmitButton>
       </InputSpacingWrapper>
@@ -392,7 +392,7 @@ const InputTransitionGroup = () => {
                     onFocus={(e) => e.target.select()}
                     placeholder={'λ'}
                   />
-                  <SubmitButton onClick={() => deleteTransition(i)}>
+                  <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
                     <X size="18px" />
                   </SubmitButton>
                 </InputWrapper>
@@ -467,7 +467,7 @@ const InputTransitionGroup = () => {
                       placeholder={'λ'}
                     />
                   </InputSpacingWrapper>
-                  <SubmitButton onClick={() => deleteTransition(i)}>
+                  <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
                     <X size="18px" />
                   </SubmitButton>
                 </InputWrapper>
@@ -542,7 +542,7 @@ const InputTransitionGroup = () => {
                     />
                   </InputSpacingWrapper>
                   <InputSpacingWrapper>
-                    <TMSubmitButton onClick={() => deleteTransition(i)}>
+                    <TMSubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
                       <X size="18px" />
                     </TMSubmitButton>
                   </InputSpacingWrapper>
