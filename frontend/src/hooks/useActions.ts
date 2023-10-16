@@ -306,6 +306,9 @@ const useActions = (registerHotkeys = false) => {
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
     },
+    TUTORIAL_VIDEOS: {
+      handler: () => window.open('/tutorials', '_blank')
+    },
     KEYBOARD_SHORTCUTS: {
       hotkeys: [{ key: '/', meta: true }],
       handler: () => dispatchCustomEvent('modal:shortcuts', null)

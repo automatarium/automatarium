@@ -188,6 +188,10 @@ const menus: ContextItems = [
         action: 'OPEN_DOCS'
       },
       {
+        label: 'Tutorial videos',
+        action: 'TUTORIAL_VIDEOS'
+      },
+      {
         label: 'Keyboard shortcuts',
         action: 'KEYBOARD_SHORTCUTS'
       },
