@@ -288,6 +288,10 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: '4', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
+    TEMPLATES: {
+      hotkeys: [{ key: '5', shift: true }],
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'templates' })
+    },
     CONVERT_TO_DFA: {
       disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {

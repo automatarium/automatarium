@@ -155,6 +155,10 @@ const menus: ContextItems = [
       {
         label: 'File options',
         action: 'FILE_OPTIONS'
+      },
+      {
+        label: 'Templates',
+        action: 'TEMPLATES'
       }
     ]
   },
