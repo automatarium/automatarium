@@ -76,31 +76,29 @@ const InputTransitionGroup = () => {
     ({ detail: { ids } }) => {
       // Get transitions from store
       const { transitions, states } = useProjectStore.getState()?.project ?? {}
-      // Do preliminary store updates
-      setIdList([...ids])
       const transitionsScope = transitions.filter((t) => ids.includes(t.id))
       // Somehow you can select nothing sometimes. This prevents a crash
       if (transitionsScope.length === 0) return null
       // All of these should be part of the same transition edge
-      const f = transitionsScope[0].from
-      const t = transitionsScope[0].to
-      const fName = states.find((s) => s.id === f).name ?? '' + statePrefix + f
-      const tName = states.find((s) => s.id === t).name ?? '' + statePrefix + t
-      setFromState(f)
-      setToState(t)
+      const scopeFrom = transitionsScope[0].from
+      const scopeTo = transitionsScope[0].to
+      const fName = states.find((s) => s.id === scopeFrom).name ?? '' + statePrefix + scopeFrom
+      const tName = states.find((s) => s.id === scopeTo).name ?? '' + statePrefix + scopeTo
+      setFromState(scopeFrom)
+      setToState(scopeTo)
       setFromName(fName)
       setToName(tName)
-      setTransitionsList(transitionsScope)
       // Update ID list to include *ALL* transitions on this edge, including unselected
       // This will run the side effect of re-retrieving the updated id list when done
       const allIdList = transitions
         .filter(
           (t) =>
-            t.from === transitionsScope[0].from &&
-            t.to === transitionsScope[0].to
+            t.from === scopeFrom &&
+            t.to === scopeTo
         )
         .map((t) => t.id)
       setIdList([...allIdList])
+      setTransitionsList([...transitions.filter((t) => allIdList.includes(t.id))])
       setModalOpen(true)
     },
     [orOperator]
@@ -115,6 +113,7 @@ const InputTransitionGroup = () => {
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
     retrieveTransitions()
+    console.log(`idList updated ${transitionsList?.length}`)
     setTransitionListRef(
       Array.from({ length: transitionsList?.length ?? 0 }, () =>
         createRef<HTMLInputElement>()
@@ -145,8 +144,9 @@ const InputTransitionGroup = () => {
   const handleIndexDown = () => {
     const nextIndex = selectedIndex < 0 ? -1 : selectedIndex - 1
     const nextInputRef =
-      nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
+    nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
     const ro = nextInputRef as RefObject<HTMLInputElement>
+    console.log(`${selectedIndex}->${nextIndex}::${transitionListRef?.length}`)
     setSelectedIndex(nextIndex)
     ro?.current.focus()
   }
@@ -159,6 +159,7 @@ const InputTransitionGroup = () => {
           : selectedIndex + 1
       const prevInputRef = transitionListRef[prevIndex]
       const ro = prevInputRef as RefObject<HTMLInputElement>
+      console.log(`${selectedIndex}->${prevIndex}::${transitionListRef?.length}`)
       setSelectedIndex(prevIndex)
       ro?.current.focus()
     }
