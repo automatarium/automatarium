@@ -77,12 +77,10 @@ const InputTransitionGroup = () => {
   // Get data from event dispatch
   useEvent(
     'editTransitionGroup',
-    ({ detail: { ids } }) => {
+    ({ detail: { ctx } }) => {
       // Get one transition from the set to get the from and to state Ids
-      const scopedTransition = transitions.find((t) => ids.includes(t.id))
-      // Somehow you can select nothing sometimes. This prevents a crash
-      if (!scopedTransition) return null
-      // All of these should be part of the same transition edge
+      const scopedTransition = transitions.find((t) => ctx === t.id)
+      // Get state connection information for the modal
       const scopeFrom = scopedTransition.from
       const scopeTo = scopedTransition.to
       const fName = states.find((s) => s.id === scopeFrom).name ?? '' + statePrefix + scopeFrom
