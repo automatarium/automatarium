@@ -143,7 +143,7 @@ const Transition = ({
 
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
-  const orOperator = useProjectStore(s => s.project?.config?.orOperator)
+  const orOperator = useProjectStore(s => s.project?.config?.orOperator) ?? '|'
 
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley

@@ -64,7 +64,7 @@ const InputTransitionGroup = () => {
 
   const statePrefix = useProjectStore((s) => s.project.config.statePrefix)
   const projectType = useProjectStore((s) => s.project.config.type)
-  const orOperator = useProjectStore((s) => s.project.config.orOperator)
+  const orOperator = useProjectStore((s) => s.project.config.orOperator) ?? '|'
 
   const editTransition = useProjectStore((s) => s.editTransition)
   const createTransition = useProjectStore((s) => s.createTransition)
