@@ -2,8 +2,8 @@ import { StoreApi, create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
 interface ContextStore {
-  context: number
-  setContext: (id: number) => void
+  context: number | null
+  setContext: (id: number | null) => void
   clearContext: () => void
 }
 
@@ -11,7 +11,7 @@ interface ContextStore {
 // This aims to solve that issue
 const useContextStore = create<ContextStore>()(persist((set: StoreApi<ContextStore>['setState']) => ({
   context: null as number,
-  setContext: (id: number) => set({ context: id }),
+  setContext: (id: number | null) => set({ context: id }),
   clearContext: () => set({ context: null })
 }), {
   name: 'automatarium-context'
