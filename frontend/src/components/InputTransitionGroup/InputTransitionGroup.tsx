@@ -213,8 +213,8 @@ const InputTransitionGroup = () => {
     <InputWrapper>
       <Input
         ref={inputRef}
-        value={formatOutput(readValue, orOperator)}
-        onChange={(e) => setReadValue(formatInput(e.target.value, orOperator))}
+        value={readValue}
+        onChange={(e) => setReadValue(e.target.value)}
         onClick={() => setSelectedIndex(-1)}
         onKeyUp={handleKeyUp}
         onFocus={(e) => e.target.select()}
@@ -226,8 +226,7 @@ const InputTransitionGroup = () => {
     </InputWrapper>
   )
 
-  const fsaInputField = (id: number, i: number) => {
-    console.log(readList)
+  const fsaInputField = useCallback((t: FSAAutomataTransition, i: number) => {
     return <InputWrapper key={i}>
       <Input
         ref={transitionListRef[i] ?? null}
@@ -241,7 +240,7 @@ const InputTransitionGroup = () => {
         onFocus={(e) => e.target.select()}
         onBlur={() => {
           saveFSATransition({
-            id,
+            id: t.id,
             read: formatInput(readList[i], orOperator)
           })
         }}
@@ -251,7 +250,7 @@ const InputTransitionGroup = () => {
         <X size="18px" />
       </SubmitButton>
     </InputWrapper>
-  }
+  }, [readList])
 
   /**
    * Functions for PDAs
@@ -416,7 +415,7 @@ const InputTransitionGroup = () => {
         assertType<Array<FSAAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList.map((t, i) => fsaInputField(t.id, i)).reverse()}
+            {transitionsList.map((t, i) => fsaInputField(t, i)).reverse()}
             <hr />
             Add a new transition?
             {blankFSAInput()}
