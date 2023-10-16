@@ -48,6 +48,9 @@ const InputTransitionGroup = () => {
   const [transitionsList, setTransitionsList] = useState<
     Array<BaseAutomataTransition> | undefined
   >()
+  const [readList, setReadList] = useState<string[]>()
+  const [scdList, setScdList] = useState<string[]>()
+  const [thdList, setThdList] = useState<string[]>()
 
   const [fromName, setFromName] = useState<string>()
   const [toName, setToName] = useState<string>()
@@ -72,12 +75,11 @@ const InputTransitionGroup = () => {
   const removeTransitions = useProjectStore((s) => s.removeTransitions)
   const commit = useProjectStore((s) => s.commit)
 
-  const { transitions, states } = useProjectStore.getState()?.project ?? {}
-
   // Get data from event dispatch
   useEvent(
     'editTransitionGroup',
     ({ detail: { ctx } }) => {
+      const { transitions, states } = useProjectStore.getState()?.project ?? {}
       // Get one transition from the set to get the from and to state Ids
       const scopedTransition = transitions.find((t) => ctx === t.id)
       // Get state connection information for the modal
@@ -98,13 +100,27 @@ const InputTransitionGroup = () => {
         .map((t) => t.id)
       setIdList([...allIdList])
       setModalOpen(true)
-    }, [transitions, states]
+    }, []
   )
 
-  const retrieveTransitions = useCallback(() => {
+  const retrieveTransitions = () => {
+    const { transitions } = useProjectStore.getState()?.project ?? {}
     const transitionsScope = transitions.filter((t) => idList.includes(t.id))
     setTransitionsList([...transitionsScope])
-  }, [idList, transitions])
+    setReadList(transitionsScope.map(t => formatOutput(t.read, orOperator)))
+    switch (projectType) {
+      case 'PDA':
+        assertType<PDAAutomataTransition[]>(transitionsScope)
+        setScdList(transitionsScope.map(t => t.pop))
+        setThdList(transitionsScope.map(t => t.push))
+        break
+      case 'TM':
+        assertType<TMAutomataTransition[]>(transitionsScope)
+        setScdList(transitionsScope.map(t => t.write))
+        setThdList(transitionsScope.map(t => t.direction))
+        break
+    }
+  }
 
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
@@ -209,6 +225,33 @@ const InputTransitionGroup = () => {
       </SubmitButton>
     </InputWrapper>
   )
+
+  const fsaInputField = (id: number, i: number) => {
+    console.log(readList)
+    return <InputWrapper key={i}>
+      <Input
+        ref={transitionListRef[i] ?? null}
+        value={readList[i]}
+        onChange={e => {
+          setReadList([...readList.slice(0, i), e.target.value, ...readList.slice(i + 1)])
+          setSelectedIndex(i)
+        }}
+        onClick={() => setSelectedIndex(i)}
+        onKeyUp={handleKeyUp}
+        onFocus={(e) => e.target.select()}
+        onBlur={() => {
+          saveFSATransition({
+            id,
+            read: formatInput(readList[i], orOperator)
+          })
+        }}
+        placeholder={'λ'}
+      />
+      <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
+        <X size="18px" />
+      </SubmitButton>
+    </InputWrapper>
+  }
 
   /**
    * Functions for PDAs
@@ -373,30 +416,7 @@ const InputTransitionGroup = () => {
         assertType<Array<FSAAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList
-              .map((t, i) => (
-                <InputWrapper key={i}>
-                  <Input
-                    ref={transitionListRef[i] ?? null}
-                    value={formatOutput(t.read, orOperator)}
-                    onChange={(e) => {
-                      saveFSATransition({
-                        id: t.id,
-                        read: formatInput(e.target.value, orOperator)
-                      })
-                      setSelectedIndex(i)
-                    }}
-                    onClick={() => setSelectedIndex(i)}
-                    onKeyUp={handleKeyUp}
-                    onFocus={(e) => e.target.select()}
-                    placeholder={'λ'}
-                  />
-                  <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
-                    <X size="18px" />
-                  </SubmitButton>
-                </InputWrapper>
-              ))
-              .reverse()}
+            {transitionsList.map((t, i) => fsaInputField(t.id, i)).reverse()}
             <hr />
             Add a new transition?
             {blankFSAInput()}
