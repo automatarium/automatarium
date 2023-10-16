@@ -103,7 +103,7 @@ const InputTransitionGroup = () => {
     }, []
   )
 
-  const retrieveTransitions = () => {
+  const retrieveTransitions = useCallback(() => {
     const { transitions } = useProjectStore.getState()?.project ?? {}
     const transitionsScope = transitions.filter((t) => idList.includes(t.id))
     setTransitionsList([...transitionsScope])
@@ -120,16 +120,18 @@ const InputTransitionGroup = () => {
         setThdList(transitionsScope.map(t => t.direction))
         break
     }
-  }
+    setTransitionListRef(
+      Array.from({ length: transitionsList?.length ?? 0 }, () =>
+        createRef<HTMLInputElement>()
+      ))
+  }, [idList, projectType])
 
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
     retrieveTransitions()
-    setTransitionListRef(
-      Array.from({ length: transitionsList?.length ?? 0 }, () =>
-        createRef<HTMLInputElement>()
-      )
-    )
+    window.setTimeout(() => {
+      console.log(`ID List Changed: ${transitionsList?.length}`)
+    }, 100)
   }, [idList])
 
   const resetInputFields = () => {
@@ -154,8 +156,8 @@ const InputTransitionGroup = () => {
 
   const handleIndexDown = () => {
     const nextIndex = selectedIndex < 0 ? -1 : selectedIndex - 1
-    const nextInputRef =
-    nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
+    const nextInputRef = nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
+    console.log(`${selectedIndex}->${nextIndex}::${transitionListRef.length}`)
     const ro = nextInputRef as RefObject<HTMLInputElement>
     setSelectedIndex(nextIndex)
     ro?.current.focus()
@@ -163,11 +165,11 @@ const InputTransitionGroup = () => {
 
   const handleIndexUp = () => {
     if (selectedIndex < transitionListRef?.length - 1) {
-      const prevIndex =
-        selectedIndex === transitionListRef?.length - 1 ?? 0
-          ? transitionListRef?.length - 1 ?? 0
-          : selectedIndex + 1
+      const prevIndex = selectedIndex === transitionListRef?.length - 1 ?? 0
+        ? transitionListRef?.length - 1 ?? 0
+        : selectedIndex + 1
       const prevInputRef = transitionListRef[prevIndex]
+      console.log(`${selectedIndex}->${prevIndex}::${transitionListRef.length}`)
       const ro = prevInputRef as RefObject<HTMLInputElement>
       setSelectedIndex(prevIndex)
       ro?.current.focus()
@@ -224,7 +226,10 @@ const InputTransitionGroup = () => {
         onChange={(e) => setReadValue(e.target.value)}
         onClick={() => setSelectedIndex(-1)}
         onKeyUp={handleKeyUp}
-        onFocus={(e) => e.target.select()}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(-1)
+        }}
         placeholder={'λ (New transition)'}
       />
       <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
@@ -240,11 +245,13 @@ const InputTransitionGroup = () => {
         value={readList[i]}
         onChange={e => {
           upsertList(readList, setReadList, e.target.value, i)
-          setSelectedIndex(i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
-        onFocus={(e) => e.target.select()}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(i)
+        }}
         onBlur={() => saveFSATransition({
           id: t.id,
           read: formatInput(readList[i], orOperator)
@@ -255,7 +262,7 @@ const InputTransitionGroup = () => {
         <X size="18px" />
       </SubmitButton>
     </InputWrapper>
-  }, [readList])
+  }, [readList, selectedIndex])
 
   /**
    * Functions for PDAs
@@ -285,7 +292,10 @@ const InputTransitionGroup = () => {
           onChange={(e) => setReadValue(formatInput(e.target.value, orOperator))}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(read)'}
         />
       </InputSpacingWrapper>
@@ -296,7 +306,10 @@ const InputTransitionGroup = () => {
           onChange={(e) => setPopValue(e.target.value)}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(pop)'}
         />
       </InputSpacingWrapper>
@@ -307,7 +320,10 @@ const InputTransitionGroup = () => {
           onChange={(e) => setPushValue(e.target.value)}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(push)'}
         />
       </InputSpacingWrapper>
@@ -325,11 +341,13 @@ const InputTransitionGroup = () => {
           value={readList[i]}
           onChange={(e) => {
             upsertList(readList, setReadList, e.target.value, i)
-            setSelectedIndex(i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(i)
+          }}
           onBlur={() => savePDATransition({
             id: t.id,
             read: formatInput(readList[i], orOperator),
@@ -345,11 +363,13 @@ const InputTransitionGroup = () => {
           value={scdList[i]}
           onChange={(e) => {
             upsertList(scdList, setScdList, e.target.value, i)
-            setSelectedIndex(i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(i)
+          }}
           onBlur={() => savePDATransition({
             id: t.id,
             read: t.read,
@@ -365,11 +385,13 @@ const InputTransitionGroup = () => {
           value={thdList[i]}
           onChange={(e) => {
             upsertList(thdList, setThdList, e.target.value, i)
-            setSelectedIndex(i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(i)
+          }}
           onBlur={() => savePDATransition({
             id: t.id,
             read: t.read,
@@ -426,7 +448,10 @@ const InputTransitionGroup = () => {
           }}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(read)'}
         />
       </InputSpacingWrapper>
@@ -440,7 +465,10 @@ const InputTransitionGroup = () => {
           }}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(write)'}
         />
       </InputSpacingWrapper>
@@ -448,7 +476,10 @@ const InputTransitionGroup = () => {
       <InputSpacingWrapper>
         <DirectionRadioButtons
           direction={dirValue as TMDirection}
-          setDirection={setDirValue}
+          setDirection={e => {
+            setDirValue(e)
+            setSelectedIndex(-1)
+          }}
           handleSave={handleKeyUp}
           name={'new-TM-transition'}
         />
@@ -468,11 +499,13 @@ const InputTransitionGroup = () => {
         value={readList[i]}
         onChange={(e) => {
           upsertList(readList, setReadList, e.target.value, i)
-          setSelectedIndex(i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
-        onFocus={(e) => e.target.select()}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(i)
+        }}
         onBlur={() => saveTMTransition({
           id: t.id,
           read: formatInput(readList[i], orOperator),
@@ -488,11 +521,13 @@ const InputTransitionGroup = () => {
         value={scdList[i]}
         onChange={(e) => {
           upsertList(scdList, setScdList, tmWriteValidate(e), i)
-          setSelectedIndex(i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
-        onFocus={(e) => e.target.select()}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(i)
+        }}
         onBlur={() => saveTMTransition({
           id: t.id,
           read: t.read,
