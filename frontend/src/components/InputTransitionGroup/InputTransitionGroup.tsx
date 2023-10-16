@@ -192,6 +192,13 @@ const InputTransitionGroup = () => {
     }
   }
 
+  /** Helper function to simplify slicing lists.
+   *  Slices a new copy of the the list and sets it using the setter function
+   */
+  const upsertList = <T, >(state: T[], setter: (newList: T[]) => void, v: T, i: number) => {
+    setter([...state.slice(0, i), v, ...state.slice(i + 1)])
+  }
+
   /**
    * Functions for FSAs
    */
@@ -232,18 +239,16 @@ const InputTransitionGroup = () => {
         ref={transitionListRef[i] ?? null}
         value={readList[i]}
         onChange={e => {
-          setReadList([...readList.slice(0, i), e.target.value, ...readList.slice(i + 1)])
+          upsertList(readList, setReadList, e.target.value, i)
           setSelectedIndex(i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
         onFocus={(e) => e.target.select()}
-        onBlur={() => {
-          saveFSATransition({
-            id: t.id,
-            read: formatInput(readList[i], orOperator)
-          })
-        }}
+        onBlur={() => saveFSATransition({
+          id: t.id,
+          read: formatInput(readList[i], orOperator)
+        })}
         placeholder={'λ'}
       />
       <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
@@ -311,6 +316,74 @@ const InputTransitionGroup = () => {
       </SubmitButton>
     </InputWrapper>
   )
+
+  const pdaInputFields = useCallback((t: PDAAutomataTransition, i: number) => {
+    return <InputWrapper key={i}>
+      <InputSpacingWrapper>
+        <Input
+          ref={transitionListRef[i] ?? null}
+          value={readList[i]}
+          onChange={(e) => {
+            upsertList(readList, setReadList, e.target.value, i)
+            setSelectedIndex(i)
+          }}
+          onClick={() => setSelectedIndex(i)}
+          onKeyUp={handleKeyUp}
+          onFocus={(e) => e.target.select()}
+          onBlur={() => savePDATransition({
+            id: t.id,
+            read: formatInput(readList[i], orOperator),
+            pop: t.pop,
+            push: t.push
+          })}
+          placeholder={'λ'}
+        />
+      </InputSpacingWrapper>
+      <InputSeparator>,</InputSeparator>
+      <InputSpacingWrapper>
+        <Input
+          value={scdList[i]}
+          onChange={(e) => {
+            upsertList(scdList, setScdList, e.target.value, i)
+            setSelectedIndex(i)
+          }}
+          onClick={() => setSelectedIndex(i)}
+          onKeyUp={handleKeyUp}
+          onFocus={(e) => e.target.select()}
+          onBlur={() => savePDATransition({
+            id: t.id,
+            read: t.read,
+            pop: scdList[i],
+            push: t.push
+          })}
+          placeholder={'λ'}
+        />
+      </InputSpacingWrapper>
+      <InputSeparator>;</InputSeparator>
+      <InputSpacingWrapper>
+        <Input
+          value={thdList[i]}
+          onChange={(e) => {
+            upsertList(thdList, setThdList, e.target.value, i)
+            setSelectedIndex(i)
+          }}
+          onClick={() => setSelectedIndex(i)}
+          onKeyUp={handleKeyUp}
+          onFocus={(e) => e.target.select()}
+          onBlur={() => savePDATransition({
+            id: t.id,
+            read: t.read,
+            pop: t.pop,
+            push: thdList[i]
+          })}
+          placeholder={'λ'}
+        />
+      </InputSpacingWrapper>
+      <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
+        <X size="18px" />
+      </SubmitButton>
+    </InputWrapper>
+  }, [readList, scdList, thdList])
 
   /**
    * Functions for TMs
@@ -425,72 +498,7 @@ const InputTransitionGroup = () => {
         assertType<Array<PDAAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList
-              .map((t, i) => (
-                <InputWrapper key={i}>
-                  <InputSpacingWrapper>
-                    <Input
-                      ref={transitionListRef[i] ?? null}
-                      value={formatOutput(t.read, orOperator)}
-                      onChange={(e) => {
-                        savePDATransition({
-                          id: t.id,
-                          read: formatInput(e.target.value, orOperator),
-                          pop: t.pop,
-                          push: t.push
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>,</InputSeparator>
-                  <InputSpacingWrapper>
-                    <Input
-                      value={t.pop}
-                      onChange={(e) => {
-                        savePDATransition({
-                          id: t.id,
-                          read: t.read,
-                          pop: e.target.value,
-                          push: t.push
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>;</InputSeparator>
-                  <InputSpacingWrapper>
-                    <Input
-                      value={t.push}
-                      onChange={(e) => {
-                        savePDATransition({
-                          id: t.id,
-                          read: t.read,
-                          pop: t.pop,
-                          push: e.target.value
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
-                    <X size="18px" />
-                  </SubmitButton>
-                </InputWrapper>
-              ))
-              .reverse()}
+            {transitionsList.map((t, i) => pdaInputFields(t, i)).reverse()}
             <hr />
             <Heading>Add a new transition?</Heading>
             {blankPDAInput()}
