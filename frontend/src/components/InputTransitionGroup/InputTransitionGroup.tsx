@@ -5,6 +5,7 @@ import {
   Ref,
   RefObject,
   createRef,
+  useCallback,
   useEffect,
   useRef,
   useState
@@ -70,12 +71,13 @@ const InputTransitionGroup = () => {
   const createTransition = useProjectStore((s) => s.createTransition)
   const removeTransitions = useProjectStore((s) => s.removeTransitions)
   const commit = useProjectStore((s) => s.commit)
+
+  const { transitions, states } = useProjectStore.getState()?.project ?? {}
+
   // Get data from event dispatch
   useEvent(
     'editTransitionGroup',
     ({ detail: { ids } }) => {
-      // Get transitions from store
-      const { transitions, states } = useProjectStore.getState()?.project ?? {}
       // Get one transition from the set to get the from and to state Ids
       const scopedTransition = transitions.find((t) => ids.includes(t.id))
       // Somehow you can select nothing sometimes. This prevents a crash
@@ -99,14 +101,13 @@ const InputTransitionGroup = () => {
       setIdList([...allIdList])
       setTransitionsList([...transitions.filter((t) => allIdList.includes(t.id))])
       setModalOpen(true)
-    }, [orOperator]
+    }, [transitions, states, orOperator]
   )
 
-  const retrieveTransitions = () => {
-    const { transitions } = useProjectStore.getState()?.project ?? {}
+  const retrieveTransitions = useCallback(() => {
     const transitionsScope = transitions.filter((t) => idList.includes(t.id))
     setTransitionsList([...transitionsScope])
-  }
+  }, [idList, transitions])
 
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
