@@ -232,6 +232,7 @@ const useActions = (registerHotkeys = false) => {
           removeComments(selectedCommentsIds)
           selectNone()
           commit()
+          dispatchCustomEvent('ctx:close', null)
         }
       }
     },
