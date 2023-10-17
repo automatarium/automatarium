@@ -155,6 +155,10 @@ const menus: ContextItems = [
       {
         label: 'File options',
         action: 'FILE_OPTIONS'
+      },
+      {
+        label: 'Templates',
+        action: 'TEMPLATES'
       }
     ]
   },
@@ -182,6 +186,10 @@ const menus: ContextItems = [
       {
         label: 'View documentation',
         action: 'OPEN_DOCS'
+      },
+      {
+        label: 'Tutorial videos',
+        action: 'TUTORIAL_VIDEOS'
       },
       {
         label: 'Keyboard shortcuts',

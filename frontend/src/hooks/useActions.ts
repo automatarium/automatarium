@@ -33,7 +33,7 @@ export const formatHotkey = (hotkey: HotKey): string => [
   hotkey.meta && (isWindows ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   hotkey.alt && (isWindows ? 'Alt' : '⌥'),
   hotkey.shift && (isWindows ? 'Shift' : '⇧'),
-  hotkey.key?.toUpperCase()
+  hotkey.key === 'Escape' ? 'ESC' : hotkey.key?.toUpperCase()
 ].filter(Boolean).join(isWindows ? '+' : ' ')
 
 /**
@@ -212,6 +212,10 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: 'a', meta: true }],
       handler: selectAll
     },
+    SELECT_NONE: {
+      hotkeys: [{ key: 'Escape' }],
+      handler: selectNone
+    },
     DELETE: {
       hotkeys: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
@@ -288,6 +292,10 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: '4', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
+    TEMPLATES: {
+      hotkeys: [{ key: '5', shift: true }],
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'templates' })
+    },
     CONVERT_TO_DFA: {
       disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {
@@ -301,6 +309,9 @@ const useActions = (registerHotkeys = false) => {
     },
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
+    },
+    TUTORIAL_VIDEOS: {
+      handler: () => window.open('/tutorials', '_blank')
     },
     KEYBOARD_SHORTCUTS: {
       hotkeys: [{ key: '/', meta: true }],
