@@ -143,7 +143,7 @@ const Transition = ({
 
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
-  const orOperator = useProjectStore(s => s.project?.config?.orOperator)
+  const orOperator = useProjectStore(s => s.project?.config?.orOperator) ?? '|'
 
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
@@ -162,32 +162,34 @@ const Transition = ({
   const handleTransitionMouseUp = (t: PositionedTransition) => (e: MouseEvent) =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: t
+      transition: t,
+      ctx: t.id
     })
   const handleTransitionMouseDown = (t: PositionedTransition) => (e: MouseEvent) =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: t
+      transition: t,
+      ctx: t.id
     })
   const handleTransitionDoubleClick = (t: PositionedTransition) => (e: MouseEvent) => {
     dispatchCustomEvent('editTransition', { id: t.id })
     // Needs to be a different event since this takes the whole transition object but editTransition only supports IDs
     // The need for the whole object is so that it is inline with the other events
-    dispatchCustomEvent('transition:dblclick', { originalEvent: e, transition: t })
+    dispatchCustomEvent('transition:dblclick', { originalEvent: e, transition: t, ctx: t.id })
   }
 
   // Callbacks for the edge
   const handleEdgeMouseUp = (e: MouseEvent) => {
-    dispatchCustomEvent('edge:mouseup', { originalEvent: e, transitions })
+    dispatchCustomEvent('edge:mouseup', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
   }
 
   const handleEdgeMouseDown = (e: MouseEvent) =>
-    dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
+    dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
 
   const handleEdgeDoubleClick = (e: MouseEvent) => {
     // Edit only first transition on dbl-click
     dispatchCustomEvent('editTransition', { id: transitions[0].id })
-    dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions })
+    dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
   }
 
   // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend

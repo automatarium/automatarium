@@ -51,7 +51,8 @@ const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: G
       originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
-      viewY
+      viewY,
+      ctx: null
     })
   }, [])
 
@@ -61,7 +62,8 @@ const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: G
       originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
-      viewY
+      viewY,
+      ctx: null
     })
   }, [])
 
@@ -71,7 +73,8 @@ const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: G
       originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
-      viewY
+      viewY,
+      ctx: null
     })
   }, [])
 

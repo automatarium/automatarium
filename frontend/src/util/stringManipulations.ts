@@ -37,6 +37,8 @@ export const possibleOrOperators = (orOperator: string): string[] => {
 
 export const formatOutput = (text: string, orOperator: string): string => {
   if (!text) return text
+  // Add default operator for older projects as it will display as undefined
+  if (!orOperator) { orOperator = '|' }
   text = splitCharsWithOr(text, orOperator)
   return addSpaces(text)
 }

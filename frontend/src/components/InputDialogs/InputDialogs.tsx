@@ -94,7 +94,7 @@ const InputDialogs = () => {
   const screenToViewSpace = useViewStore(s => s.screenToViewSpace)
   const statePrefix = useProjectStore(s => s.project.config.statePrefix)
   const projectType = useProjectStore(s => s.project.config.type)
-  const orOperator = useProjectStore(s => s.project.config.orOperator)
+  const orOperator = useProjectStore(s => s.project.config.orOperator) ?? '|'
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]

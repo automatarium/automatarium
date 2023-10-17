@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore, useContextStore } from '/src/stores'
 import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
@@ -378,9 +378,10 @@ const useActions = (registerHotkeys = false) => {
     EDIT_TRANSITIONS_GROUP: {
       disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
-        const selectedTransitions = useSelectionStore.getState().selectedTransitions
-        if (selectedTransitions === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransitionGroup', { ids: selectedTransitions }), 100)
+        const ctx = useContextStore.getState().context
+        if (ctx === null) return
+        window.setTimeout(() => dispatchCustomEvent('editTransitionGroup', { ctx }), 100)
+        useContextStore.getState().clearContext()
       }
     },
     FLIP_TRANSITION: {
