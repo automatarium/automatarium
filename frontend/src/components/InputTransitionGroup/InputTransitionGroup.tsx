@@ -47,8 +47,10 @@ const InputTransitionGroup = () => {
   const [toState, setToState] = useState<number>()
   const [transitionsList, setTransitionsList] = useState<BaseAutomataTransition[]>()
   const [readList, setReadList] = useState<string[]>()
-  const [scdList, setScdList] = useState<string[]>()
-  const [thdList, setThdList] = useState<string[]>()
+  /** Pop/Write */
+  const [col2List, setCol2List] = useState<string[]>()
+  /** Push/Direction */
+  const [col3List, setCol3List] = useState<string[]>()
 
   const [fromName, setFromName] = useState<string>()
   const [toName, setToName] = useState<string>()
@@ -109,13 +111,13 @@ const InputTransitionGroup = () => {
     switch (projectType) {
       case 'PDA':
         assertType<PDAAutomataTransition[]>(transitionsScope)
-        setScdList(transitionsScope.map(t => t.pop))
-        setThdList(transitionsScope.map(t => t.push))
+        setCol2List(transitionsScope.map(t => t.pop))
+        setCol3List(transitionsScope.map(t => t.push))
         break
       case 'TM':
         assertType<TMAutomataTransition[]>(transitionsScope)
-        setScdList(transitionsScope.map(t => t.write))
-        setThdList(transitionsScope.map(t => t.direction))
+        setCol2List(transitionsScope.map(t => t.write))
+        setCol3List(transitionsScope.map(t => t.direction))
         break
     }
   }, [idList, projectType])
@@ -355,9 +357,9 @@ const InputTransitionGroup = () => {
       <InputSeparator>,</InputSeparator>
       <InputSpacingWrapper>
         <Input
-          value={scdList[i]}
+          value={col2List[i]}
           onChange={(e) => {
-            sliceListState(scdList, setScdList, e.target.value, i)
+            sliceListState(col2List, setCol2List, e.target.value, i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
@@ -368,7 +370,7 @@ const InputTransitionGroup = () => {
           onBlur={() => savePDATransition({
             id: t.id,
             read: t.read,
-            pop: scdList[i],
+            pop: col2List[i],
             push: t.push
           })}
           placeholder={'λ'}
@@ -377,9 +379,9 @@ const InputTransitionGroup = () => {
       <InputSeparator>;</InputSeparator>
       <InputSpacingWrapper>
         <Input
-          value={thdList[i]}
+          value={col3List[i]}
           onChange={(e) => {
-            sliceListState(thdList, setThdList, e.target.value, i)
+            sliceListState(col3List, setCol3List, e.target.value, i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
@@ -391,7 +393,7 @@ const InputTransitionGroup = () => {
             id: t.id,
             read: t.read,
             pop: t.pop,
-            push: thdList[i]
+            push: col3List[i]
           })}
           placeholder={'λ'}
         />
@@ -513,9 +515,9 @@ const InputTransitionGroup = () => {
     <InputSeparator>,</InputSeparator>
     <InputSpacingWrapper>
       <Input
-        value={scdList[i]}
+        value={col2List[i]}
         onChange={(e) => {
-          sliceListState(scdList, setScdList, tmWriteValidate(e), i)
+          sliceListState(col2List, setCol2List, tmWriteValidate(e), i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
@@ -526,7 +528,7 @@ const InputTransitionGroup = () => {
         onBlur={() => saveTMTransition({
           id: t.id,
           read: t.read,
-          write: scdList[i],
+          write: col2List[i],
           direction: t.direction
         })}
         placeholder={'λ'}
