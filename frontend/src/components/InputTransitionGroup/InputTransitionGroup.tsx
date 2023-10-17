@@ -45,9 +45,7 @@ const InputTransitionGroup = () => {
 
   const [fromState, setFromState] = useState<number>()
   const [toState, setToState] = useState<number>()
-  const [transitionsList, setTransitionsList] = useState<
-    Array<BaseAutomataTransition> | undefined
-  >()
+  const [transitionsList, setTransitionsList] = useState<BaseAutomataTransition[]>()
   const [readList, setReadList] = useState<string[]>()
   const [scdList, setScdList] = useState<string[]>()
   const [thdList, setThdList] = useState<string[]>()
@@ -120,18 +118,18 @@ const InputTransitionGroup = () => {
         setThdList(transitionsScope.map(t => t.direction))
         break
     }
+  }, [idList, projectType])
+
+  useEffect(() => {
     setTransitionListRef(
       Array.from({ length: transitionsList?.length ?? 0 }, () =>
         createRef<HTMLInputElement>()
       ))
-  }, [idList, projectType])
+  }, [transitionsList])
 
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
     retrieveTransitions()
-    window.setTimeout(() => {
-      console.log(`ID List Changed: ${transitionsList?.length}`)
-    }, 100)
   }, [idList])
 
   const resetInputFields = () => {
@@ -157,7 +155,6 @@ const InputTransitionGroup = () => {
   const handleIndexDown = () => {
     const nextIndex = selectedIndex < 0 ? -1 : selectedIndex - 1
     const nextInputRef = nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
-    console.log(`${selectedIndex}->${nextIndex}::${transitionListRef.length}`)
     const ro = nextInputRef as RefObject<HTMLInputElement>
     setSelectedIndex(nextIndex)
     ro?.current.focus()
@@ -169,7 +166,6 @@ const InputTransitionGroup = () => {
         ? transitionListRef?.length - 1 ?? 0
         : selectedIndex + 1
       const prevInputRef = transitionListRef[prevIndex]
-      console.log(`${selectedIndex}->${prevIndex}::${transitionListRef.length}`)
       const ro = prevInputRef as RefObject<HTMLInputElement>
       setSelectedIndex(prevIndex)
       ro?.current.focus()
@@ -197,7 +193,7 @@ const InputTransitionGroup = () => {
   /** Helper function to simplify slicing lists.
    *  Slices a new copy of the the list and sets it using the setter function
    */
-  const upsertList = <T, >(state: T[], setter: (newList: T[]) => void, v: T, i: number) => {
+  const sliceListState = <T, >(state: T[], setter: (newList: T[]) => void, v: T, i: number) => {
     setter([...state.slice(0, i), v, ...state.slice(i + 1)])
   }
 
@@ -238,13 +234,13 @@ const InputTransitionGroup = () => {
     </InputWrapper>
   )
 
-  const fsaInputField = useCallback((t: FSAAutomataTransition, i: number) => {
+  const fsaInputField = (t: FSAAutomataTransition, i: number) => {
     return <InputWrapper key={i}>
       <Input
         ref={transitionListRef[i] ?? null}
         value={readList[i]}
         onChange={e => {
-          upsertList(readList, setReadList, e.target.value, i)
+          sliceListState(readList, setReadList, e.target.value, i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
@@ -262,8 +258,7 @@ const InputTransitionGroup = () => {
         <X size="18px" />
       </SubmitButton>
     </InputWrapper>
-  }, [readList, selectedIndex])
-
+  }
   /**
    * Functions for PDAs
    */
@@ -333,14 +328,14 @@ const InputTransitionGroup = () => {
     </InputWrapper>
   )
 
-  const pdaInputFields = useCallback((t: PDAAutomataTransition, i: number) => {
+  const pdaInputFields = (t: PDAAutomataTransition, i: number) => {
     return <InputWrapper key={i}>
       <InputSpacingWrapper>
         <Input
           ref={transitionListRef[i] ?? null}
           value={readList[i]}
           onChange={(e) => {
-            upsertList(readList, setReadList, e.target.value, i)
+            sliceListState(readList, setReadList, e.target.value, i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
@@ -362,7 +357,7 @@ const InputTransitionGroup = () => {
         <Input
           value={scdList[i]}
           onChange={(e) => {
-            upsertList(scdList, setScdList, e.target.value, i)
+            sliceListState(scdList, setScdList, e.target.value, i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
@@ -384,7 +379,7 @@ const InputTransitionGroup = () => {
         <Input
           value={thdList[i]}
           onChange={(e) => {
-            upsertList(thdList, setThdList, e.target.value, i)
+            sliceListState(thdList, setThdList, e.target.value, i)
           }}
           onClick={() => setSelectedIndex(i)}
           onKeyUp={handleKeyUp}
@@ -405,7 +400,7 @@ const InputTransitionGroup = () => {
         <X size="18px" />
       </SubmitButton>
     </InputWrapper>
-  }, [readList, scdList, thdList])
+  }
 
   /**
    * Functions for TMs
@@ -492,13 +487,13 @@ const InputTransitionGroup = () => {
     </InputWrapper>
   )
 
-  const tmInputFields = useCallback((t: TMAutomataTransition, i: number) => <InputWrapper key={i}>
+  const tmInputFields = (t: TMAutomataTransition, i: number) => <InputWrapper key={i}>
     <InputSpacingWrapper>
       <Input
         ref={transitionListRef[i] ?? null}
         value={readList[i]}
         onChange={(e) => {
-          upsertList(readList, setReadList, e.target.value, i)
+          sliceListState(readList, setReadList, e.target.value, i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
@@ -520,7 +515,7 @@ const InputTransitionGroup = () => {
       <Input
         value={scdList[i]}
         onChange={(e) => {
-          upsertList(scdList, setScdList, tmWriteValidate(e), i)
+          sliceListState(scdList, setScdList, tmWriteValidate(e), i)
         }}
         onClick={() => setSelectedIndex(i)}
         onKeyUp={handleKeyUp}
@@ -559,7 +554,7 @@ const InputTransitionGroup = () => {
         <X size="18px" />
       </TMSubmitButton>
     </InputSpacingWrapper>
-  </InputWrapper>, [readList, scdList, thdList])
+  </InputWrapper>
 
   const saveNewTransition = () => {
     switch (projectType) {
