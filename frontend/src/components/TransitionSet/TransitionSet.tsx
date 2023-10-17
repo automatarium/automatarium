@@ -249,6 +249,15 @@ const Transition = ({
       />
     }
 
+    {/* Bigger invisible handles to help click the tiny circle */}
+    {!isTemplate && setSelected && <ChangeTransitionHandlebars
+        edges={edges}
+        selectedTransitions={selectedTransitions}
+        isReflexive={isReflexive}
+        isInvisible
+      />
+    }
+
     <text
       {...midPoint}
       transform={rotate(degrees, midPoint)}
