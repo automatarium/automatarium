@@ -372,7 +372,7 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
         if (selectedTransition === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition }), 100)
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition, new: false }), 100)
       }
     },
     EDIT_TRANSITIONS_GROUP: {

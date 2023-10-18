@@ -172,7 +172,7 @@ const Transition = ({
       ctx: t.id
     })
   const handleTransitionDoubleClick = (t: PositionedTransition) => (e: MouseEvent) => {
-    dispatchCustomEvent('editTransition', { id: t.id })
+    dispatchCustomEvent('editTransition', { id: t.id, new: false })
     // Needs to be a different event since this takes the whole transition object but editTransition only supports IDs
     // The need for the whole object is so that it is inline with the other events
     dispatchCustomEvent('transition:dblclick', { originalEvent: e, transition: t, ctx: t.id })
@@ -188,7 +188,7 @@ const Transition = ({
 
   const handleEdgeDoubleClick = (e: MouseEvent) => {
     // Edit only first transition on dbl-click
-    dispatchCustomEvent('editTransition', { id: transitions[0].id })
+    dispatchCustomEvent('editTransition', { id: transitions[0].id, new: false })
     dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
   }
 
