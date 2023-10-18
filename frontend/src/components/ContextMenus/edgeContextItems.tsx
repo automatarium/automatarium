@@ -17,7 +17,6 @@ const edgeContextItems: ContextItems = [
   'hr',
   {
     label: 'Delete edge',
-    shortcut: '⌫',
     action: 'DELETE_EDGE'
   }
 ]
