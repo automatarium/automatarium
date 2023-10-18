@@ -393,6 +393,17 @@ const useActions = (registerHotkeys = false) => {
         commit()
       }
     },
+    FLIP_EDGE: {
+      handler: () => {
+        const ctx = useContextStore.getState().context
+        if (ctx === null) return
+        const projectTransitions = useProjectStore.getState().project?.transitions ?? []
+        const transitionCtx = projectTransitions.find(t => t.id === ctx)
+        const scope = projectTransitions.filter(t => t.from === transitionCtx.from && t.to === transitionCtx.to)
+        flipTransitions(scope.map(t => t.id))
+        commit()
+      }
+    },
     CREATE_COMMENT: {
       handler: (e: MouseEvent) => window.setTimeout(() => dispatchCustomEvent('editComment', { x: e.clientX, y: e.clientY }), 100)
     },
