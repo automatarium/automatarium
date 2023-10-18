@@ -240,13 +240,7 @@ const useActions = (registerHotkeys = false) => {
     DELETE_EDGE: {
       disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
-        const tIds = selectedTransitionsIds
-        const { transitions } = useProjectStore.getState()?.project ?? {}
-        const oneTransitionOnEdge = transitions.find(t => tIds.includes(t.id))
-        // Expand IDs to include ALL on the edge
-        const allTransitionIdsOnEdge = transitions.filter(
-          t => t.from === oneTransitionOnEdge.from && t.to === oneTransitionOnEdge.to
-        ).map(t => t.id)
+        const allTransitionIdsOnEdge = useEdgeContext().getTransitionsFromContext().map(t => t.id)
         removeTransitions(allTransitionIdsOnEdge)
         selectNone()
         commit()
