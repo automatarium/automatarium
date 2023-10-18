@@ -5,17 +5,18 @@ import { useProjectStore } from '/src/stores'
 import { Coordinate } from '/src/types/ProjectTypes'
 import { dispatchCustomEvent } from '/src/util/events'
 
-import { handleStyle } from './changeTransitionHandleStyle'
+import { handleStyle, invisibleStyle } from './changeTransitionHandleStyle'
 
 type TransitionChangeHandleProps = {
   edges: Coordinate[]
   selectedTransitions: number[]
   isReflexive: boolean
+  isInvisible?: boolean
 }
 
 type HandleCoordinates = { start: Coordinate, end: Coordinate }
 
-const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, ...props }: TransitionChangeHandleProps) => {
+const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, isInvisible = false, ...props }: TransitionChangeHandleProps) => {
   const [isSameEdge, setIsSameEdge] = useState(true)
   const [from, setFrom] = useState<number>()
   const [to, setTo] = useState<number>()
@@ -95,17 +96,30 @@ const ChangeTransitionHandlebars = ({ edges, selectedTransitions, isReflexive, .
     }
   }, [t])
 
+  if (isInvisible) {
+    return isSameEdge && <g {...props}>
+      <circle
+        transform={`translate(${tc.start.x}, ${tc.start.y})`}
+        r={10}
+        style={invisibleStyle}
+        onMouseDown={handleStartMouseDown} />
+      <circle
+        transform={`translate(${tc.end.x}, ${tc.end.y})`}
+        r={10}
+        style={invisibleStyle}
+        onMouseDown={handleEndMouseDown} />
+    </g>
+  }
+
   return isSameEdge && <g {...props}>
     <circle
       transform={`translate(${tc.start.x}, ${tc.start.y})`}
       r={BOX_HANDLE_SIZE}
-      style={handleStyle}
-      onMouseDown={handleStartMouseDown} />
+      style={handleStyle} />
     <circle
       transform={`translate(${tc.end.x}, ${tc.end.y})`}
       r={BOX_HANDLE_SIZE}
-      style={handleStyle}
-      onMouseDown={handleEndMouseDown} />
+      style={handleStyle} />
   </g>
 }
 

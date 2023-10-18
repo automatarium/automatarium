@@ -17,7 +17,11 @@ const useResourceSelection = (getSelected: () => number[], makeSetter: () => (x:
       // Things like transitions need to be able to send multiple ID's so that they don't
       // need to send individual events for each transition (This is for stacked transitions).
       const ids: number[] = 'ids' in e.detail ? e.detail.ids : [e.detail[eventKey].id]
-      const alreadySelected = ids.some(id => selected.includes(id))
+      // If the selected is a single id then its a list of one item, so it's a search that
+      // selected has that one ID
+      // If it's an edge then all ids need to be in selected for it to be counted as selected
+      // `.every` works for both cases rather than some
+      const alreadySelected = ids.every(id => selected.includes(id))
       const usedShift = e.detail.originalEvent.shiftKey
       if (alreadySelected && usedShift) {
         // If shifting on an already selected item then we can remove it

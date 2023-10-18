@@ -6,7 +6,7 @@ const transitionContextItems: ContextItems = [
     action: 'EDIT_TRANSITION'
   },
   {
-    label: 'Flip transition',
+    label: 'Flip selected transitions',
     action: 'FLIP_TRANSITION'
   },
   'hr',

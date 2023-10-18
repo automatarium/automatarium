@@ -13,6 +13,7 @@ import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 import { decodeData } from '../util/encoding'
+import useEdgeContext from './useEdgeContext'
 
 /**
  * Combination of keys. Used to call an action
@@ -232,19 +233,14 @@ const useActions = (registerHotkeys = false) => {
           removeComments(selectedCommentsIds)
           selectNone()
           commit()
+          dispatchCustomEvent('ctx:close', null)
         }
       }
     },
     DELETE_EDGE: {
       disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
-        const tIds = selectedTransitionsIds
-        const { transitions } = useProjectStore.getState()?.project ?? {}
-        const oneTransitionOnEdge = transitions.find(t => tIds.includes(t.id))
-        // Expand IDs to include ALL on the edge
-        const allTransitionIdsOnEdge = transitions.filter(
-          t => t.from === oneTransitionOnEdge.from && t.to === oneTransitionOnEdge.to
-        ).map(t => t.id)
+        const allTransitionIdsOnEdge = useEdgeContext().getTransitionsFromContext().map(t => t.id)
         removeTransitions(allTransitionIdsOnEdge)
         selectNone()
         commit()
@@ -368,11 +364,19 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     EDIT_TRANSITION: {
-      disabled: () => useSelectionStore.getState()?.selectedTransitions?.length !== 1,
+      disabled: () => useContextStore.getState()?.context === null,
       handler: () => {
-        const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
+        const selectedTransition = useEdgeContext().getTransitionFromContext()
         if (selectedTransition === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition, new: false }), 100)
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id, new: false }), 100)
+      }
+    },
+    EDIT_FIRST: {
+      disabled: () => useContextStore.getState()?.context === null,
+      handler: () => {
+        const selectedTransition = useEdgeContext().getTransitionsFromContext()[0]
+        if (selectedTransition === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id, new: false }), 100)
       }
     },
     EDIT_TRANSITIONS_GROUP: {
@@ -389,6 +393,14 @@ const useActions = (registerHotkeys = false) => {
         const selectedTransitions = useSelectionStore.getState().selectedTransitions
         if (selectedTransitions === undefined || selectedTransitions?.length === 0) return
         flipTransitions(selectedTransitions)
+        commit()
+      }
+    },
+    FLIP_EDGE: {
+      disabled: () => useContextStore.getState()?.context === null,
+      handler: () => {
+        const scope = useEdgeContext().getTransitionsFromContext()
+        flipTransitions(scope.map(t => t.id))
         commit()
       }
     },

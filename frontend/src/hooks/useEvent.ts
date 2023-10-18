@@ -54,6 +54,7 @@ export interface CustomEvents {
   'ctx:transition': Coordinate,
   'ctx:comment': Coordinate,
   'ctx:edge': Coordinate,
+  'ctx:close': null,
   'bottomPanel:open': { panel: string },
   'bottomPanel:close': null,
   'comment:mousedown': CommentEventData,
