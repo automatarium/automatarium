@@ -11,6 +11,11 @@ const edgeContextItems: ContextItems = [
   },
   'hr',
   {
+    label: 'Edit first transition',
+    action: 'EDIT_FIRST'
+  },
+  'hr',
+  {
     label: 'Delete edge',
     shortcut: '⌫',
     action: 'DELETE_EDGE'

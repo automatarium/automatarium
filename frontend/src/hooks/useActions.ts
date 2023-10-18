@@ -13,6 +13,7 @@ import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 import { decodeData } from '../util/encoding'
+import useEdgeContext from './useEdgeContext'
 
 /**
  * Combination of keys. Used to call an action
@@ -377,12 +378,9 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     EDIT_FIRST: {
+      disabled: () => useContextStore.getState()?.context === null,
       handler: () => {
-        const ctx = useContextStore.getState().context
-        if (ctx === null) return
-        const projectTransitions = useProjectStore.getState().project?.transitions ?? []
-        const transitionCtx = projectTransitions.find(t => t.id === ctx)
-        const selectedTransition = projectTransitions.filter(t => t.from === transitionCtx.from && t.to === transitionCtx.to)[0]
+        const selectedTransition = useEdgeContext().getTransitionsFromContext()[0]
         if (selectedTransition === undefined) return
         window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
       }
@@ -405,12 +403,9 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     FLIP_EDGE: {
+      disabled: () => useContextStore.getState()?.context === null,
       handler: () => {
-        const ctx = useContextStore.getState().context
-        if (ctx === null) return
-        const projectTransitions = useProjectStore.getState().project?.transitions ?? []
-        const transitionCtx = projectTransitions.find(t => t.id === ctx)
-        const scope = projectTransitions.filter(t => t.from === transitionCtx.from && t.to === transitionCtx.to)
+        const scope = useEdgeContext().getTransitionsFromContext()
         flipTransitions(scope.map(t => t.id))
         commit()
       }
