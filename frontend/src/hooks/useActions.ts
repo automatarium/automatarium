@@ -364,11 +364,11 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     EDIT_TRANSITION: {
-      disabled: () => useSelectionStore.getState()?.selectedTransitions?.length !== 1,
+      disabled: () => useContextStore.getState()?.context === null,
       handler: () => {
-        const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
+        const selectedTransition = useEdgeContext().getTransitionFromContext()
         if (selectedTransition === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition }), 100)
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
       }
     },
     EDIT_FIRST: {
