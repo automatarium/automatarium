@@ -376,6 +376,17 @@ const useActions = (registerHotkeys = false) => {
         window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition }), 100)
       }
     },
+    EDIT_FIRST: {
+      handler: () => {
+        const ctx = useContextStore.getState().context
+        if (ctx === null) return
+        const projectTransitions = useProjectStore.getState().project?.transitions ?? []
+        const transitionCtx = projectTransitions.find(t => t.id === ctx)
+        const selectedTransition = projectTransitions.filter(t => t.from === transitionCtx.from && t.to === transitionCtx.to)[0]
+        if (selectedTransition === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
+      }
+    },
     EDIT_TRANSITIONS_GROUP: {
       disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
