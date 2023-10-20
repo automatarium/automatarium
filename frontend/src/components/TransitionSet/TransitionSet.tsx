@@ -9,7 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
-import { splitCharsWithOr } from '/src/util/orOperators'
+import { formatOutput } from '/src/util/stringManipulations'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -22,12 +22,12 @@ const makeTransitionText = (type: ProjectType, orOperator: string, t: Positioned
   switch (type) {
     case 'TM':
       assertType<TMAutomataTransition>(t)
-      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.write || 'λ'} ; ${t.direction || 'λ'}`
+      return `${formatOutput(t.read, orOperator) || 'λ'} , ${t.write || 'λ'} ; ${t.direction || 'λ'}`
     case 'PDA':
       assertType<PDAAutomataTransition>(t)
-      return `${splitCharsWithOr(t.read, orOperator) || 'λ'} , ${t.pop || 'λ'} ; ${t.push || 'λ'}`
+      return `${formatOutput(t.read, orOperator) || 'λ'} , ${t.pop || 'λ'} ; ${t.push || 'λ'}`
     case 'FSA':
-      return splitCharsWithOr(t.read, orOperator) || 'λ'
+      return formatOutput(t.read, orOperator) || 'λ'
   }
 }
 
@@ -51,7 +51,7 @@ const toRightOf = (a: Coordinate, b: Coordinate) => {
   return a.x === b.x ? a.y < b.y : a.x > b.x
 }
 
-const TransitionSet = ({ transitions, isGhost = false } : {transitions: PositionedTransition[], isGhost?: boolean}) => {
+const TransitionSet = ({ transitions, isGhost = false, isTemplate = false } : {transitions: PositionedTransition[], isGhost?: boolean, isTemplate?: boolean}) => {
   const projectType = useProjectStore(s => s.project.config.type)
   // Split the transitions into the two directions (left->right and right->left)
   // This makes the code easier since we don't need to handle direction changes
@@ -75,6 +75,7 @@ const TransitionSet = ({ transitions, isGhost = false } : {transitions: Position
         transitions={toRender}
         id={first.id}
         projectType={projectType}
+        isTemplate={isTemplate}
         {...props}
       />
     }
@@ -98,6 +99,7 @@ type TransitionProps = {
   fullWidth?: boolean,
   bendDirection?: BendDirection,
   suppressEvents?: boolean
+  isTemplate?: boolean
 }
 
 /**
@@ -134,13 +136,14 @@ const Transition = ({
   projectType,
   bendDirection = 'straight',
   fullWidth = false,
-  suppressEvents = false
+  suppressEvents = false,
+  isTemplate = false
 } : TransitionProps) => {
   const { standardArrowHead, selectedArrowHead } = useContext(MarkerContext)
 
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
-  const orOperator = useProjectStore(s => s.project?.config?.orOperator)
+  const orOperator = useProjectStore(s => s.project?.config?.orOperator) ?? '|'
 
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
@@ -159,32 +162,34 @@ const Transition = ({
   const handleTransitionMouseUp = (t: PositionedTransition) => (e: MouseEvent) =>
     dispatchCustomEvent('transition:mouseup', {
       originalEvent: e,
-      transition: t
+      transition: t,
+      ctx: t.id
     })
   const handleTransitionMouseDown = (t: PositionedTransition) => (e: MouseEvent) =>
     dispatchCustomEvent('transition:mousedown', {
       originalEvent: e,
-      transition: t
+      transition: t,
+      ctx: t.id
     })
   const handleTransitionDoubleClick = (t: PositionedTransition) => (e: MouseEvent) => {
     dispatchCustomEvent('editTransition', { id: t.id })
     // Needs to be a different event since this takes the whole transition object but editTransition only supports IDs
     // The need for the whole object is so that it is inline with the other events
-    dispatchCustomEvent('transition:dblclick', { originalEvent: e, transition: t })
+    dispatchCustomEvent('transition:dblclick', { originalEvent: e, transition: t, ctx: t.id })
   }
 
   // Callbacks for the edge
   const handleEdgeMouseUp = (e: MouseEvent) => {
-    dispatchCustomEvent('edge:mouseup', { originalEvent: e, transitions })
+    dispatchCustomEvent('edge:mouseup', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
   }
 
   const handleEdgeMouseDown = (e: MouseEvent) =>
-    dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions })
+    dispatchCustomEvent('edge:mousedown', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
 
   const handleEdgeDoubleClick = (e: MouseEvent) => {
     // Edit only first transition on dbl-click
     dispatchCustomEvent('editTransition', { id: transitions[0].id })
-    dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions })
+    dispatchCustomEvent('edge:dblclick', { originalEvent: e, transitions, ctx: transitions[0]?.id ?? null })
   }
 
   // Calculate text offset. We want transitions that curve under to extend downwards and over/straight to extend
@@ -237,10 +242,19 @@ const Transition = ({
     />}
 
     {/* Handles to drag the edge */}
-    {setSelected && <ChangeTransitionHandlebars
+    {!isTemplate && setSelected && <ChangeTransitionHandlebars
         edges={edges}
         selectedTransitions={selectedTransitions}
         isReflexive={isReflexive}
+      />
+    }
+
+    {/* Bigger invisible handles to help click the tiny circle */}
+    {!isTemplate && setSelected && <ChangeTransitionHandlebars
+        edges={edges}
+        selectedTransitions={selectedTransitions}
+        isReflexive={isReflexive}
+        isInvisible
       />
     }
 

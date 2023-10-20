@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore, useContextStore } from '/src/stores'
 import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
 import { haveInputFocused } from '/src/util/actions'
@@ -13,6 +13,7 @@ import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { showWarning } from '/src/components/Warning/Warning'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 import { decodeData } from '../util/encoding'
+import useEdgeContext from './useEdgeContext'
 
 /**
  * Combination of keys. Used to call an action
@@ -33,7 +34,7 @@ export const formatHotkey = (hotkey: HotKey): string => [
   hotkey.meta && (isWindows ? (isWindows ? 'Ctrl' : '⌃') : '⌘'),
   hotkey.alt && (isWindows ? 'Alt' : '⌥'),
   hotkey.shift && (isWindows ? 'Shift' : '⇧'),
-  hotkey.key?.toUpperCase()
+  hotkey.key === 'Escape' ? 'ESC' : hotkey.key?.toUpperCase()
 ].filter(Boolean).join(isWindows ? '+' : ' ')
 
 /**
@@ -212,6 +213,10 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: 'a', meta: true }],
       handler: selectAll
     },
+    SELECT_NONE: {
+      hotkeys: [{ key: 'Escape' }],
+      handler: selectNone
+    },
     DELETE: {
       hotkeys: [{ key: 'Delete' }, { key: 'Backspace' }],
       handler: () => {
@@ -228,19 +233,14 @@ const useActions = (registerHotkeys = false) => {
           removeComments(selectedCommentsIds)
           selectNone()
           commit()
+          dispatchCustomEvent('ctx:close', null)
         }
       }
     },
     DELETE_EDGE: {
       disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
-        const tIds = selectedTransitionsIds
-        const { transitions } = useProjectStore.getState()?.project ?? {}
-        const oneTransitionOnEdge = transitions.find(t => tIds.includes(t.id))
-        // Expand IDs to include ALL on the edge
-        const allTransitionIdsOnEdge = transitions.filter(
-          t => t.from === oneTransitionOnEdge.from && t.to === oneTransitionOnEdge.to
-        ).map(t => t.id)
+        const allTransitionIdsOnEdge = useEdgeContext().getTransitionsFromContext().map(t => t.id)
         removeTransitions(allTransitionIdsOnEdge)
         selectNone()
         commit()
@@ -288,6 +288,10 @@ const useActions = (registerHotkeys = false) => {
       hotkeys: [{ key: '4', shift: true }],
       handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'options' })
     },
+    TEMPLATES: {
+      hotkeys: [{ key: '5', shift: true }],
+      handler: () => dispatchCustomEvent('sidepanel:open', { panel: 'templates' })
+    },
     CONVERT_TO_DFA: {
       disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {
@@ -301,6 +305,9 @@ const useActions = (registerHotkeys = false) => {
     },
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
+    },
+    TUTORIAL_VIDEOS: {
+      handler: () => window.open('/tutorials', '_blank')
     },
     KEYBOARD_SHORTCUTS: {
       hotkeys: [{ key: '/', meta: true }],
@@ -357,19 +364,28 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     EDIT_TRANSITION: {
-      disabled: () => useSelectionStore.getState()?.selectedTransitions?.length !== 1,
+      disabled: () => useContextStore.getState()?.context === null,
       handler: () => {
-        const selectedTransition = useSelectionStore.getState().selectedTransitions?.[0]
+        const selectedTransition = useEdgeContext().getTransitionFromContext()
         if (selectedTransition === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition }), 100)
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
+      }
+    },
+    EDIT_FIRST: {
+      disabled: () => useContextStore.getState()?.context === null,
+      handler: () => {
+        const selectedTransition = useEdgeContext().getTransitionsFromContext()[0]
+        if (selectedTransition === undefined) return
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
       }
     },
     EDIT_TRANSITIONS_GROUP: {
       disabled: () => useSelectionStore.getState()?.selectedTransitions?.length === 0,
       handler: () => {
-        const selectedTransitions = useSelectionStore.getState().selectedTransitions
-        if (selectedTransitions === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransitionGroup', { ids: selectedTransitions }), 100)
+        const ctx = useContextStore.getState().context
+        if (ctx === null) return
+        window.setTimeout(() => dispatchCustomEvent('editTransitionGroup', { ctx }), 100)
+        useContextStore.getState().clearContext()
       }
     },
     FLIP_TRANSITION: {
@@ -377,6 +393,14 @@ const useActions = (registerHotkeys = false) => {
         const selectedTransitions = useSelectionStore.getState().selectedTransitions
         if (selectedTransitions === undefined || selectedTransitions?.length === 0) return
         flipTransitions(selectedTransitions)
+        commit()
+      }
+    },
+    FLIP_EDGE: {
+      disabled: () => useContextStore.getState()?.context === null,
+      handler: () => {
+        const scope = useEdgeContext().getTransitionsFromContext()
+        flipTransitions(scope.map(t => t.id))
         commit()
       }
     },

@@ -65,5 +65,10 @@ export const expandReadSymbols = (read: string): string => {
   // Find literals
   const symbols = read.split('').filter((s) => LITERAL_REG.test(s))
 
-  return Array.from(new Set([...symbols, ...rangeSymbols])).sort().join('')
+  if (read.includes('!')) {
+    // Don't sort if there is an exclusion operator present
+    return Array.from(new Set([...symbols, ...rangeSymbols])).join('')
+  } else {
+    return Array.from(new Set([...symbols, ...rangeSymbols])).sort().join('')
+  }
 }

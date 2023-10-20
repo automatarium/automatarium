@@ -37,7 +37,8 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
   const handleEvent = (eventName: keyof CustomEvents) => (e: MouseEvent) => {
     dispatchCustomEvent(eventName, {
       originalEvent: e,
-      state: { id, name, cx, cy }
+      state: { id, name, cx, cy },
+      ctx: id
     })
   }
 

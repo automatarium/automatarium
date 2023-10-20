@@ -1,24 +1,29 @@
-import StateCircle from '../StateCircle/StateCircle'
-import { GraphContent, GraphView, SelectionBox, TransitionSet, ContextMenus, InputDialogs, InputTransitionGroup } from '/src/components'
+import { useState } from 'react'
+import { ContextMenus, GraphContent, GraphView, InputDialogs, InputTransitionGroup, SelectionBox, TransitionSet } from '/src/components'
+import SelectedGraphContent from '/src/components/GraphContent/SelectedGraphContent'
+import StateCircle from '/src/components/StateCircle/StateCircle'
+import TemplateGhost from '/src/components/Template/TemplateGhost'
 import {
-  useEvent,
-  useStateDragging,
+  useCommentCreation,
   useCommentDragging,
   useCommentSelection,
+  useContextMenus,
+  useEvent,
   useStateCreation,
-  useTransitionCreation,
-  useCommentCreation,
+  useStateDragging,
   useStateSelection,
-  useTransitionSelection,
   useTemplateInsert,
-  useContextMenus
+  useTransitionCreation,
+  useTransitionSelection
 } from '/src/hooks'
+import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
 import { SelectionEvent } from '/src/hooks/useResourceSelection'
 import { useSelectionStore, useTemplateStore } from '/src/stores'
-import { CommentEventData, EdgeEventData, StateEventData, TransitionEventData } from '/src/hooks/useEvent'
-import TemplateGhost from '../Template/TemplateGhost'
+import { dispatchCustomEvent } from '/src/util/events'
 
 const EditorPanel = () => {
+  const [renderSelection, setRenderSelection] = useState(false)
+
   // Interactivity hooks
   const { select: selectState } = useStateSelection()
   const { select: selectTransition } = useTransitionSelection()
@@ -107,6 +112,15 @@ const EditorPanel = () => {
     setTransitions(e.detail.transitions.map(t => t.id))
   })
 
+  useEvent('createTemplateThumbnail', (e) => {
+    setRenderSelection(true)
+    dispatchCustomEvent('storeTemplateThumbnail', e.detail)
+  })
+
+  useEvent('selectionGraph:hide', () => {
+    setRenderSelection(false)
+  })
+
   return <>
     <GraphView>
       {/* Render in-creation transition. Since we aren't rendering text it doesn't matter what the project is */}
@@ -133,6 +147,10 @@ const EditorPanel = () => {
       {/* Render selection marquee */}
       <SelectionBox />
     </GraphView>
+    {/** Temporarily render selected for image export */}
+    {renderSelection && <GraphView $selectedOnly={true}>
+        <SelectedGraphContent />
+      </GraphView>}
     <ContextMenus />
     <InputDialogs />
     <InputTransitionGroup />

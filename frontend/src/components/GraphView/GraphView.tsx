@@ -13,9 +13,10 @@ import { calculateZoomFit } from '/src/hooks/useActions'
 
 interface GraphViewProps extends HTMLAttributes<SVGElement>{
   children: ReactNode
+  $selectedOnly?: boolean
 }
 
-const GraphView = ({ children, ...props }: GraphViewProps) => {
+const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: GraphViewProps) => {
   const wrapperRef = useRef<HTMLDivElement>()
   const svgRef = useRef<SVGSVGElement>()
   const { position, size, scale, setViewSize, setSvgElement, screenToViewSpace } = useViewStore()
@@ -50,7 +51,8 @@ const GraphView = ({ children, ...props }: GraphViewProps) => {
       originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
-      viewY
+      viewY,
+      ctx: null
     })
   }, [])
 
@@ -60,7 +62,8 @@ const GraphView = ({ children, ...props }: GraphViewProps) => {
       originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
-      viewY
+      viewY,
+      ctx: null
     })
   }, [])
 
@@ -70,12 +73,13 @@ const GraphView = ({ children, ...props }: GraphViewProps) => {
       originalEvent: e as unknown as React.MouseEvent,
       didTargetSVG: e.target === svgRef?.current,
       viewX,
-      viewY
+      viewY,
+      ctx: null
     })
   }, [])
 
   // Keep track of resizes
-  useEffect(() => {
+  !$isTemplate && useEffect(() => {
     if (svgRef.current) {
       // Update reference
       setSvgElement(svgRef.current)
@@ -100,7 +104,7 @@ const GraphView = ({ children, ...props }: GraphViewProps) => {
   }, [svgRef.current])
 
   // Add a resize observer to the wrapper div
-  useEffect(() => {
+  !$isTemplate && useEffect(() => {
     if (wrapperRef.current) {
       const resizeObserver = new ResizeObserver(onContainerResize)
       resizeObserver.observe(wrapperRef.current)
@@ -123,13 +127,14 @@ const GraphView = ({ children, ...props }: GraphViewProps) => {
   const gridVisible = usePreferencesStore(state => state.preferences.showGrid)
 
   const viewBox = `${position.x} ${position.y} ${scale * size.width} ${scale * size.height}`
+  const svgId = $isTemplate ? 'selected-graph' : 'automatarium-graph'
   return (
     <Wrapper ref={wrapperRef} id='editor-panel-wrapper'>
       <Svg
         version="1.1"
         xmlns="http://www.w3.org/2000/svg"
         xmlnsXlink="http://www.w3.org/1999/xlink"
-        id="automatarium-graph"
+        id={svgId}
 
         onContextMenu={e => e.preventDefault()}
         viewBox={viewBox}

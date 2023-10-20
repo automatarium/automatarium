@@ -33,7 +33,8 @@ const CommentRect = ({ id, x, y, text }: CommentRectProps) => {
   const dispatchMouseEvent = (name: keyof CustomEvents) => (e: MouseEvent) =>
     dispatchCustomEvent(name, {
       originalEvent: e,
-      comment: { id, text }
+      comment: { id, text },
+      ctx: id
     })
 
   return <foreignObject x={x} y={y} {...size}>

@@ -39,8 +39,8 @@ describe('Expand literals', () => {
     expectExpansion('abb', 'ab')
   })
 
-  test('Should pass through !@#$%^&*()_+-=', () => {
-    expectExpansion('!@#$%^&*()_+-=', '!#$%&()*+-=@^_')
+  test('Should not sort when exclusion operator present !@#$%^&*()_+-=', () => {
+    expectExpansion('!@#$%^&*()_+-=', '!@#$%^&*()_+-=')
   })
 
   test('Return empty for zero-length string', () => {

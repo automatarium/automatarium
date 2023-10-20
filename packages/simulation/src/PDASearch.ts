@@ -1,6 +1,7 @@
 import { Graph, Node, State } from './interfaces/graph'
 import { Stack } from './graph'
 import { PDAAutomataTransition } from 'frontend/src/types/ProjectTypes'
+import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
 
 export class PDAState extends State {
   constructor (
@@ -43,13 +44,16 @@ export class PDAGraph extends Graph<PDAState, PDAAutomataTransition> {
       let invalidPop = false
       const lambdaTransition = transition.read.length === 0
       const symbol = node.state.remaining[0]
+      // Get any symbols preceded by an exclusion operator
+      const symbolsToExclude = extractSymbolsToExclude(transition.read)
       const pop = transition.pop
       const push = transition.push
 
       // If there is no next state
       if (
         nextState === undefined ||
-                (!lambdaTransition && !transition.read.includes(symbol))
+        (!lambdaTransition && !transition.read.includes(symbol) && (symbolsToExclude.length === 0)) ||
+        (!lambdaTransition && (symbolsToExclude.length > 0) && (symbolsToExclude.includes(symbol)))
       ) {
         continue
       }

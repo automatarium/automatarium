@@ -1,10 +1,11 @@
 import { useEffect } from 'react'
 
-import { useEvent } from '/src/hooks'
-import { useProjectStore, useExportStore, useThumbnailStore } from '/src/stores'
+import { dispatchCustomEvent } from '../util/events'
 import COLORS, { ColourName } from '/src/config/colors'
-import { Size } from '/src/types/ProjectTypes'
+import { useEvent } from '/src/hooks'
+import { useExportStore, useProjectStore, useThumbnailStore } from '/src/stores'
 import { Background } from '/src/stores/useExportStore'
+import { Size } from '/src/types/ProjectTypes'
 
 const SVG_NS = 'http://www.w3.org/2000/svg'
 
@@ -40,6 +41,7 @@ export const svgToCanvas = ({ height, width, svg }: Size & {svg: string}) => new
 })
 
 interface GetSvgStringProps {
+  svgElementTag?: 'automatarium-graph' | 'selected-graph'
   margin?: number
   background?: Background
   color?: ColourName | ''
@@ -48,17 +50,18 @@ interface GetSvgStringProps {
 
 // Extract the SVG graph as a string
 export const getSvgString = ({
+  svgElementTag = 'automatarium-graph',
   margin = 20,
   background = 'none',
   color = null,
   darkMode = false
 }: GetSvgStringProps = {}) => {
   // Clone the SVG element
-  const svgElement = document.querySelector('#automatarium-graph') as SVGGraphicsElement
+  const svgElement = document.querySelector(`#${svgElementTag}`) as SVGGraphicsElement
   const clonedSvgElement = svgElement.cloneNode(true) as SVGGraphicsElement
 
   // Set viewbox
-  const b = (document.querySelector('#automatarium-graph > g') as SVGGraphicsElement).getBBox()
+  const b = (svgElement.querySelector('g') as SVGGraphicsElement).getBBox()
   margin = Number(margin ?? 0) + 1
   const [x, y, width, height] = [b.x - margin, b.y - margin, b.width + margin * 2, b.height + margin * 2]
   clonedSvgElement.setAttribute('viewBox', `${x} ${y} ${width} ${height}`)
@@ -158,13 +161,25 @@ const useImageExport = () => {
     }
   }, [project.meta.name])
 
-  // Generate thumbnail
+  // Generate project thumbnail
   useEffect(() => {
     window.setTimeout(() => {
-      const { svg } = getSvgString()
-      setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svg))
+      const { svg: svgLight } = getSvgString({ darkMode: false })
+      const { svg: svgDark } = getSvgString({ darkMode: true })
+      setThumbnail(project._id, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgLight))
+      setThumbnail(`${project._id}-dark`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgDark))
     }, 200)
   }, [project])
+
+  useEvent('storeTemplateThumbnail', e => {
+    window.setTimeout(() => {
+      const { svg: svgLight } = getSvgString({ svgElementTag: 'selected-graph', darkMode: false })
+      const { svg: svgDark } = getSvgString({ svgElementTag: 'selected-graph', darkMode: true })
+      setThumbnail(`tmp${e.detail}`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgLight))
+      setThumbnail(`tmp${e.detail}-dark`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgDark))
+      dispatchCustomEvent('selectionGraph:hide', null)
+    }, 200)
+  })
 }
 
 export default useImageExport

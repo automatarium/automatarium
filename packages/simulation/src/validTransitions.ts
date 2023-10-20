@@ -3,7 +3,7 @@ import closureWithPredicate from './closureWithPredicate'
 import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { TransitionMapping } from './utils'
 
-export type ValidTransition<T extends BaseAutomataTransition> = { transition: T, trace: { to: number, read: string }[]}
+export type ValidTransition<T extends BaseAutomataTransition> = { transition: T, trace: { to: number, read: string }[] }
 
 /**
  * Compute the list of transitions that are directly or indirectly navigable from a given starting state using a specific input symbol.
