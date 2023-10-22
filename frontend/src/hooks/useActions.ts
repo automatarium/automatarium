@@ -293,7 +293,8 @@ const useActions = (registerHotkeys = false) => {
     CONVERT_TO_DFA: {
       disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {
-        updateGraph(convertNFAtoDFA(project as FSAProjectGraph))
+        const dfa = convertNFAtoDFA(project as FSAProjectGraph)
+        updateGraph(autoLayout(dfa))
         commit()
       }
     },
