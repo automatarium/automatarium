@@ -20,6 +20,7 @@ const GraphvizLayoutAlgorithm = (graph: ProjectGraph) => {
   const rankSep = 5
 
   console.log(`${nodeB}, ${nodeSep}, ${rankSep}`)
+  console.log(edges)
 
   const records = {} as Records
 
