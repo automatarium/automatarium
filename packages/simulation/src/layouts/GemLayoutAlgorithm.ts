@@ -1,6 +1,9 @@
 /**
- * Ported from the JFLAP source code
  * GEMLayoutAlgorithm by Thomas Finley
+ * Ported and adapted from the JFLAP source code
+ *
+ * JFLAP is maintained by Associate Professor Susan H. Rodger of Duke University
+ *
  */
 
 import { Point, Record, Records } from './types'
