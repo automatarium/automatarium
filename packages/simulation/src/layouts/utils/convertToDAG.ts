@@ -15,10 +15,10 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
 
   // Make graph acyclic
   // Ignore reflexive transitions
-  const noReflex = graphClone.transitions.filter(t => !(t.from === t.to))
+  graphClone.transitions = graphClone.transitions.filter(t => t.from !== t.to)
   // Merge edges and assign weight according to number of transitions
   const edges = new Map<number, [[number, number]]>()
-  for (const t of noReflex) {
+  for (const t of graphClone.transitions) {
     if (edges.has(t.from)) {
       if (edges.get(t.from).some(p => p[0] === t.to)) {
         edges.get(t.from).find(p => p[0] === t.to)[1] += 1
