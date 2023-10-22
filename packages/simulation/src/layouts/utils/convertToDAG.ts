@@ -119,11 +119,16 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   const reverseEdge = (edges: AdjacencyList, edgeKey: Edge) => {
     // Update adjacency list
     const edge = edgeKey.split(',').map(v => parseInt(v))
-    const toReverseWeight = edges.get(edge[0]).find(e => e[0] === edge[1])
+    const toReverseWeight = structuredClone(edges.get(edge[0]).find(e => e[0] === edge[1]))
+    toReverseWeight[0] = edge[0]
     // Check if there was a transition from 1 -> 0
     if (edges.has(edge[1])) {
       const otherValue = edges.get(edge[1]).find(e => e[0] === edge[0])
-      otherValue[1] = otherValue[1] + toReverseWeight[1]
+      if (otherValue) {
+        otherValue[1] = otherValue[1] + toReverseWeight[1]
+      } else {
+        edges.set(edge[1], [...edges.get(edge[1]), toReverseWeight])
+      }
     } else {
       edges.set(edge[1], [toReverseWeight])
     }
