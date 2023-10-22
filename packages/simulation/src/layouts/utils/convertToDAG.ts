@@ -30,16 +30,15 @@ export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: A
   return transitions
 }
 
+// Make graph acyclic
 export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList] => {
   const graphClone = structuredClone(graph)
   const cloneStates = graphClone.states
 
-  // Make graph acyclic
-  // Ignore reflexive transitions
-  graphClone.transitions = graphClone.transitions.filter(t => t.from !== t.to)
   // Merge edges and assign weight according to number of transitions
   const edges = new Map<number, [number, number][]>()
-  for (const t of graphClone.transitions) {
+  // Ignore reflexive transitions
+  for (const t of graphClone.transitions.filter(t => t.from !== t.to)) {
     if (edges.has(t.from)) {
       if (edges.get(t.from).some(p => p[0] === t.to)) {
         edges.get(t.from).find(p => p[0] === t.to)[1] += 1
@@ -121,9 +120,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   const reverseEdge = (graph: ProjectGraph, edges: AdjacencyList, edgeKey: Edge) => {
     const transitionsToReverse = graph.transitions.filter(t => t.to === edges[0] && t.from === edges[1])
     transitionsToReverse.forEach(t => {
-      const tmp = t.to
-      t.to = t.from
-      t.from = tmp
+      [t.to, t.from] = [t.from, t.to]
     })
     // Update adjacency list
     const edge = edgeKey.split(',').map(v => parseInt(v))
