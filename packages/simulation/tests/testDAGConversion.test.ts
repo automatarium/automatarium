@@ -9,7 +9,7 @@ import simpleSolution from './graphs/convertToDAGSimpleSolution.json'
 
 /** Same reason as NFA to DFA tests */
 type Graph = Omit<ProjectGraph, 'projectType'> & {projectType: string}
-const convert = (g: Graph) => convertToDAG(g as ProjectGraph)
+const convert = (g: Graph) => convertToDAG(g as ProjectGraph)[0]
 
 describe('Test that DAG conversion is correct', () => {
   const expectDAG = (initial: Graph, result: Graph) => {

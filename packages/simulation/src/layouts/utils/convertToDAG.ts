@@ -1,6 +1,10 @@
 import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 type Edge = string
+/** Weighted Adjacency list. Weighting is the original graph's out degree.
+ * @key is the transition `from` state id
+ * @value is the values [ `to` state id, weighting ]
+ */
 type AdjacencyList = Map<number, [number, number][]>
 type CyclesCounter = Map<Edge, number>
 type DetectCyclesProblem = {
@@ -20,7 +24,7 @@ export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: A
   return transitions
 }
 
-export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
+export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList] => {
   const graphClone = structuredClone(graph)
   const cloneStates = graphClone.states
 
@@ -155,5 +159,5 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
   // Update result
   graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
 
-  return graphClone
+  return [graphClone, edges]
 }

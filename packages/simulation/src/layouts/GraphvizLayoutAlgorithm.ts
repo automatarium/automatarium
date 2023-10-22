@@ -8,7 +8,8 @@ import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { convertToDAG } from './utils/convertToDAG'
 
 const GraphvizLayoutAlgorithm = (graph: ProjectGraph) => {
-  const graphClone = structuredClone(convertToDAG(graph))
+  const [dag, edges] = convertToDAG(graph)
+  const graphClone = structuredClone(dag)
   const cloneStates = graphClone.states
 
   // Size of bounding box of a node
