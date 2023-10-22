@@ -1,24 +1,34 @@
 import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
-/** Edge needs to be a string as a tuple `[f, t]` is passed by reference.
- *  Use `[f, t].join(',')` for the key.
+/**
+ * Edge needs to be a string as a tuple `[f, t]` is passed by reference.
+ * Use `[f, t].join(',')` for the key.
  */
 type Edge = string
-/** Weighted Adjacency list. Weighting is the original graph's out degree.
- * @key is the transition `from` state id
- * @value is the values [ `to` state id, weighting ]
+/**
+ * Weighted Adjacency list. Weighting is the original graph's out degree.
+ * @param key the transition `from` state id
+ * @param value the values [ `to` state id, weighting ]
  */
-type AdjacencyList = Map<number, [number, number][]>
+export type AdjacencyList = Map<number, [number, number][]>
 /**
  * Mapping of edge to number of cycles counted
  */
 type CyclesCounter = Map<Edge, number>
+/**
+ * Problem information for detecting and counting cycles
+ */
 type DetectCyclesProblem = {
   adjacencyList: AdjacencyList
   states: number[]
   cyclesCounter: CyclesCounter
 }
 
+/**
+ * Takes an adjacency list and returns it as a list of transitions
+ * @param graph In progress graph to get the read and id values from
+ * @param adjacencyList Weighted adjacency list @see AdjacencyList
+ */
 export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: AdjacencyList) => {
   const transitions = <BaseAutomataTransition[]>[]
   adjacencyList.forEach((adjList, k) => {
@@ -32,27 +42,6 @@ export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: A
 
 // Make graph acyclic
 export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList] => {
-  const graphClone = structuredClone(graph)
-  const cloneStates = graphClone.states
-
-  // Merge edges and assign weight according to number of transitions
-  const edges = new Map<number, [number, number][]>()
-  // Ignore reflexive transitions
-  for (const t of graphClone.transitions.filter(t => t.from !== t.to)) {
-    if (edges.has(t.from)) {
-      if (edges.get(t.from).some(p => p[0] === t.to)) {
-        edges.get(t.from).find(p => p[0] === t.to)[1] += 1
-      } else {
-        edges.get(t.from).push([t.to, 1])
-      }
-    } else {
-      edges.set(t.from, [[t.to, 1]])
-    }
-  }
-
-  // Collapse edges to first transition
-  graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
-
   /**
    * Priority:
    *  initialState -> finalStates (random) -> random state
@@ -156,6 +145,29 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
       edges.delete(edge[0])
     }
   }
+
+  /** Start actual code */
+  // We don't want to edit the original graph reference as we are just rearranging
+  const graphClone = structuredClone(graph)
+  const cloneStates = graphClone.states
+
+  // Merge edges and assign weight according to number of transitions
+  const edges = new Map<number, [number, number][]>()
+  // Ignore reflexive transitions
+  for (const t of graphClone.transitions.filter(t => t.from !== t.to)) {
+    if (edges.has(t.from)) {
+      if (edges.get(t.from).some(p => p[0] === t.to)) {
+        edges.get(t.from).find(p => p[0] === t.to)[1] += 1
+      } else {
+        edges.get(t.from).push([t.to, 1])
+      }
+    } else {
+      edges.set(t.from, [[t.to, 1]])
+    }
+  }
+
+  // Collapse edges to first transition
+  graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
 
   const cyclesCounter = new Map<string, number>()
   const initialState = getInitialState(graphClone)
