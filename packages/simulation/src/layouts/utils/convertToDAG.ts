@@ -83,24 +83,23 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
     if (visited.length > 0 && problem.states.every(v => visited.includes(v))) {
       return problem.cyclesCounter
     }
-    const nextAdjList = problem.adjacencyList.get(currentState)
-    const nextFrontier = nextAdjList // undefined or a [[number, number]]
-      ? [...frontier, ...nextAdjList.map(p => p[0]).sort()]
-      : [...frontier]
     const nextVisited = [...visited, currentState]
-
-    let nextState = nextFrontier.shift()
-    // Get the next state that won't result in a cycle
-    while (nextVisited.includes(nextState)) {
-      // Number of times a state will form a cycle is counted
-      const edgeKey = [currentState, nextState].join(',')
-      problem.cyclesCounter.set(edgeKey, problem.cyclesCounter.get(edgeKey) + 1)
-      // Empty frontier
-      if (nextFrontier.length <= 0) {
-        return problem.cyclesCounter
-      }
-      nextState = nextFrontier.shift()
+    const nextAdjList = problem.adjacencyList.get(currentState)
+    // Add all adjacent states not in visited
+    const frontierAdditions = []
+    if (nextAdjList) {
+      nextAdjList.forEach(p => {
+        const id = p[0]
+        if (nextVisited.includes(id)) {
+          // If visited then is a cycle
+          const edgeKey = [currentState, id].join(',')
+          problem.cyclesCounter.set(edgeKey, problem.cyclesCounter.get(edgeKey) + 1)
+        }
+        frontierAdditions.push(id)
+      })
     }
+    const nextFrontier = [...frontier, ...frontierAdditions.sort()]
+    const nextState = nextFrontier.shift()
     return getStateCycles(nextState, problem, nextVisited, nextFrontier)
   }
 
@@ -129,11 +128,18 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
       edges.set(edge[1], [toReverseWeight])
     }
     // Filter out the removed value
-    edges.set(edge[0], edges.get(edge[0]).filter(e => e[0] !== edge[1]))
+    const newAdjacents = edges.get(edge[0]).filter(e => e[0] !== edge[1])
+    if (newAdjacents.length > 0) {
+      edges.set(edge[0], newAdjacents)
+    } else {
+      // Delete edge if there's no more
+      edges.delete(edge[0])
+    }
   }
 
   const cyclesCounter = new Map<string, number>()
   const initialState = getInitialState(graphClone)
+  const stateIds = graphClone.states.map(s => s.id)
   // Repeat until all cycles are resolved
   let done = false
   while (!done) {
@@ -147,7 +153,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
       initialState,
       {
         adjacencyList: edges,
-        states: graphClone.states.map(s => s.id),
+        states: stateIds,
         cyclesCounter
       },
       [],
