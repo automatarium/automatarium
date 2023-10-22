@@ -1,0 +1,91 @@
+{
+  "projectType": "FSA",
+  "_id": "735c566b-376e-4697-a798-021852fe8147",
+  "states": [
+    {
+      "x": 330,
+      "y": 270,
+      "id": 0,
+      "isFinal": false
+    },
+    {
+      "x": 525,
+      "y": 270,
+      "id": 4,
+      "isFinal": true
+    },
+    {
+      "x": 435,
+      "y": 105,
+      "id": 1,
+      "isFinal": false
+    },
+    {
+      "x": 645,
+      "y": 105,
+      "id": 2,
+      "isFinal": false
+    },
+    {
+      "x": 735,
+      "y": 270,
+      "id": 3,
+      "isFinal": false
+    }
+  ],
+  "transitions": [
+    {
+      "from": 4,
+      "to": 0,
+      "id": 0,
+      "read": "a"
+    },
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "read": "b"
+    },
+    {
+      "from": 1,
+      "to": 2,
+      "id": 2,
+      "read": "c"
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "id": 3,
+      "read": "d"
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "id": 4,
+      "read": "e"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Lovely White Lion",
+    "dateCreated": 1697965423659,
+    "dateEdited": 1697965423659,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "orOperator": "|",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

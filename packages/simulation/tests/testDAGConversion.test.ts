@@ -5,9 +5,13 @@ import ignoreReflex from './graphs/convertToDAGIgnoreReflex.json'
 import mergeEdge from './graphs/convertToDAGMergeEdge.json'
 import simpleCycleResolution from './graphs/convertToDAGCycleResolved.json'
 import twoCycles from './graphs/convertToDAGTwoCycles.json'
+import triangle from './graphs/convertToDAGTriangle.json'
+import simpleFuture from './graphs/convertToDAGFutureCycle.json'
 
 import simpleSolution from './graphs/convertToDAGSimpleSolution.json'
 import twoCyclesSolution from './graphs/convertToDAGTwoCyclesSolution.json'
+import triangleSolution from './graphs/convertToDAGTriangleSolution.json'
+import simpleFutureSolution from './graphs/convertToDAGFutureCycleSolution.json'
 
 /** Same reason as NFA to DFA tests */
 type Graph = Omit<ProjectGraph, 'projectType'> & {projectType: string}
@@ -32,5 +36,11 @@ describe('Test that DAG conversion is correct', () => {
   })
   test('Test two simple cycles are resolved correctly', () => {
     expectDAG(twoCycles, twoCyclesSolution)
+  })
+  test('Test more complex cycle resolution', () => {
+    expectDAG(triangle, triangleSolution)
+  })
+  test('Test cycle resolution on long cycle', () => {
+    expectDAG(simpleFuture, simpleFutureSolution)
   })
 })
