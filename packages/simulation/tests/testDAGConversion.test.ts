@@ -9,6 +9,7 @@ import triangle from './graphs/convertToDAGTriangle.json'
 import simpleFuture from './graphs/convertToDAGFutureCycle.json'
 
 import simpleSolution from './graphs/convertToDAGSimpleSolution.json'
+import simpleCycleSolution from './graphs/convertToDAGCycleResolveSolution.json'
 import twoCyclesSolution from './graphs/convertToDAGTwoCyclesSolution.json'
 import triangleSolution from './graphs/convertToDAGTriangleSolution.json'
 import simpleFutureSolution from './graphs/convertToDAGFutureCycleSolution.json'
@@ -32,7 +33,7 @@ describe('Test that DAG conversion is correct', () => {
     expectDAG(mergeEdge, simpleSolution)
   })
   test('Test that a single cycle is resolved', () => {
-    expectDAG(simpleCycleResolution, simpleSolution)
+    expectDAG(simpleCycleResolution, simpleCycleSolution)
   })
   test('Test two simple cycles are resolved correctly', () => {
     expectDAG(twoCycles, twoCyclesSolution)

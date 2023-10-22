@@ -83,7 +83,10 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
     if (visited.length > 0 && problem.states.every(v => visited.includes(v))) {
       return problem.cyclesCounter
     }
-    const nextVisited = [...visited, currentState]
+    const nextVisited = visited.includes(currentState)
+      ? [...visited]
+      : [...visited, currentState]
+
     const nextAdjList = problem.adjacencyList.get(currentState)
     // Add all adjacent states not in visited
     const frontierAdditions = []
@@ -94,12 +97,16 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
           // If visited then is a cycle
           const edgeKey = [currentState, id].join(',')
           problem.cyclesCounter.set(edgeKey, problem.cyclesCounter.get(edgeKey) + 1)
+        } else {
+          frontierAdditions.push(id)
         }
-        frontierAdditions.push(id)
       })
     }
-    const nextFrontier = [...frontier, ...frontierAdditions.sort()]
-    const nextState = nextFrontier.shift()
+    const nextFrontier = [...frontier, ...frontierAdditions]
+    if (nextFrontier.length < 1) {
+      return problem.cyclesCounter
+    }
+    const nextState = nextFrontier.pop()
     return getStateCycles(nextState, problem, nextVisited, nextFrontier)
   }
 
@@ -182,7 +189,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   }
 
   // Update result
-  graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
+  graphClone.transitions = adjacencyListToTransitions(graphClone, edges).sort(t => t.id)
 
   return [graphClone, edges]
 }
