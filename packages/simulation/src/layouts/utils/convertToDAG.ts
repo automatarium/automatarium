@@ -1,12 +1,23 @@
 import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
-type Edge = [number, number]
+type Edge = string
 type AdjacencyList = Map<number, [number, number][]>
 type CyclesCounter = Map<Edge, number>
 type DetectCyclesProblem = {
   adjacencyList: AdjacencyList
   states: number[]
   cyclesCounter: CyclesCounter
+}
+
+export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: AdjacencyList) => {
+  const transitions = []
+  adjacencyList.forEach((adjList, k) => {
+    adjList.forEach(adj => {
+      const [from, to] : [number, number] = [k, adj[0]]
+      transitions.push(graph.transitions.find(t => t.from === from && t.to === to))
+    })
+  })
+  return transitions
 }
 
 export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
@@ -31,18 +42,11 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
   }
 
   // Collapse edges to first transition
-  const collapsed = []
-  edges.forEach((adjList, k) => {
-    adjList.forEach(adj => {
-      const [from, to] : [number, number] = [k, adj[0]]
-      collapsed.push(graphClone.transitions.find(t => t.from === from && t.to === to))
-    })
-  })
-  graphClone.transitions = collapsed
+  graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
 
   const getInitialState = (graph: ProjectGraph): number => {
     // Choose source node
-    if (graph.initialState) {
+    if (graph.initialState || graph.initialState === 0) {
       return graph.initialState
     }
     // Choose sink node
@@ -63,7 +67,7 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
    * */
   const getStateCycles = (currentState: number, problem: DetectCyclesProblem, visited: number[], frontier: number[]): CyclesCounter => {
     // Base case all states have been traversed and no cycles were found
-    if (visited.every(v => problem.states.includes(v))) {
+    if (visited.length > 0 && problem.states.every(v => visited.includes(v))) {
       return problem.cyclesCounter
     }
     const nextAdjList = problem.adjacencyList.get(currentState)
@@ -74,9 +78,10 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
 
     let nextState = nextFrontier.shift()
     // Get the next state that won't result in a cycle
-    while (visited.includes(nextState)) {
+    while (nextVisited.includes(nextState)) {
       // Number of times a state will form a cycle is counted
-      problem.cyclesCounter.set([currentState, nextState], problem.cyclesCounter.get([currentState, nextState]) + 1)
+      const edgeKey = [currentState, nextState].join(',')
+      problem.cyclesCounter.set(edgeKey, problem.cyclesCounter.get(edgeKey) + 1)
       // Empty frontier
       if (nextFrontier.length <= 0) {
         return problem.cyclesCounter
@@ -97,25 +102,27 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
     return maxPair[0]
   }
 
-  const reverseEdge = (graph: ProjectGraph, edges: AdjacencyList, edge: Edge) => {
+  const reverseEdge = (graph: ProjectGraph, edges: AdjacencyList, edgeKey: Edge) => {
     const transitionsToReverse = graph.transitions.filter(t => t.to === edges[0] && t.from === edges[1])
     transitionsToReverse.forEach(t => {
       const tmp = t.to
       t.to = t.from
       t.from = tmp
     })
+    const edge = edgeKey.split(',').map(v => parseInt(v))
     const toReverseWeight = edges.get(edge[0]).find(e => e[0] === edge[1])
     // Check if there was a transition from 1 -> 0
     if (edges.has(edge[1])) {
-      const otherValue = edges.get(edge[1]).find(e => e[0] === edges[0])
+      const otherValue = edges.get(edge[1]).find(e => e[0] === edge[0])
       otherValue[1] = otherValue[1] + toReverseWeight[1]
     } else {
       edges.set(edge[1], [toReverseWeight])
     }
+    // Filter out the removed value
     edges.set(edge[0], edges.get(edge[0]).filter(e => e[0] !== edge[1]))
   }
 
-  const cyclesCounter = new Map<[number, number], number>()
+  const cyclesCounter = new Map<string, number>()
   // Get initial node
   const initialState = getInitialState(graphClone)
   let done = false
@@ -123,7 +130,7 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
     // Reset cycles counter
     cloneStates.forEach(from => {
       cloneStates.forEach(to => {
-        cyclesCounter.set([from.id, to.id], 0)
+        if (from !== to) cyclesCounter.set([from.id, to.id].join(','), 0)
       })
     })
     const result = getStateCycles(
@@ -144,6 +151,9 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
       reverseEdge(graphClone, edges, maximalCycler)
     }
   }
+
+  // Update result
+  graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
 
   return graphClone
 }

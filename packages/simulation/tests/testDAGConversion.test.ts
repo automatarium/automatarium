@@ -3,6 +3,7 @@ import { convertToDAG } from '../src/layouts/utils/convertToDAG'
 
 import ignoreReflex from './graphs/convertToDAGIgnoreReflex.json'
 import mergeEdge from './graphs/convertToDAGMergeEdge.json'
+import simpleCycleResolution from './graphs/convertToDAGCycleResolved.json'
 
 import simpleSolution from './graphs/convertToDAGSimpleSolution.json'
 
@@ -23,5 +24,8 @@ describe('Test that DAG conversion is correct', () => {
   })
   test('Test edges are merged to single transition', () => {
     expectDAG(mergeEdge, simpleSolution)
+  })
+  test('Test that a single cycle is resolved', () => {
+    expectDAG(simpleCycleResolution, simpleSolution)
   })
 })
