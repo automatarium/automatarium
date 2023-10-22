@@ -1,4 +1,4 @@
-import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 /** Edge needs to be a string as a tuple `[f, t]` is passed by reference.
  *  Use `[f, t].join(',')` for the key.
@@ -20,14 +20,14 @@ type DetectCyclesProblem = {
 }
 
 export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: AdjacencyList) => {
-  const transitions = []
+  const transitions = <BaseAutomataTransition[]>[]
   adjacencyList.forEach((adjList, k) => {
     adjList.forEach(adj => {
       const [from, to] : [number, number] = [k, adj[0]]
       transitions.push(graph.transitions.find(t => t.from === from && t.to === to))
     })
   })
-  return transitions
+  return transitions.sort((a, b) => a.id - b.id)
 }
 
 // Make graph acyclic
@@ -189,7 +189,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   }
 
   // Update result
-  graphClone.transitions = adjacencyListToTransitions(graphClone, edges).sort(t => t.id)
+  graphClone.transitions = adjacencyListToTransitions(graphClone, edges)
 
   return [graphClone, edges]
 }
