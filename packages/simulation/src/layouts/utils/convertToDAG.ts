@@ -135,5 +135,7 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
     }
   }
 
+  console.log(graphClone)
+
   return graphClone
 }

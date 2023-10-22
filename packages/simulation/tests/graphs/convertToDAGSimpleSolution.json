@@ -21,12 +21,6 @@
       "to": 1,
       "id": 0,
       "read": "a"
-    },
-    {
-      "from": 0,
-      "to": 0,
-      "id": 1,
-      "read": "a"
     }
   ],
   "comments": [],
@@ -39,7 +33,7 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "Test For Ignoring Reflexive Transitions",
+    "name": "Solution With One Transition",
     "dateCreated": 1697965423659,
     "dateEdited": 1697965423659,
     "version": "1.0.0",

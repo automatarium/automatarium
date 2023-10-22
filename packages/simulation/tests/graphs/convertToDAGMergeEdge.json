@@ -24,9 +24,9 @@
     },
     {
       "from": 0,
-      "to": 0,
+      "to": 1,
       "id": 1,
-      "read": "a"
+      "read": "b"
     }
   ],
   "comments": [],
@@ -39,7 +39,7 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "Lovely White Lion",
+    "name": "Test for multiple transitions on edge being merged",
     "dateCreated": 1697965423659,
     "dateEdited": 1697965423659,
     "version": "1.0.0",

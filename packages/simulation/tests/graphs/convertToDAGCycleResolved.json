@@ -23,10 +23,10 @@
       "read": "a"
     },
     {
-      "from": 0,
+      "from": 1,
       "to": 0,
       "id": 1,
-      "read": "a"
+      "read": "b"
     }
   ],
   "comments": [],
@@ -39,7 +39,7 @@
   },
   "initialState": 0,
   "meta": {
-    "name": "Test For Ignoring Reflexive Transitions",
+    "name": "Test for resolving cycle in graph",
     "dateCreated": 1697965423659,
     "dateEdited": 1697965423659,
     "version": "1.0.0",
