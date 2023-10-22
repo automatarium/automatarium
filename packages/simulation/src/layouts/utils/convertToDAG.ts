@@ -116,9 +116,17 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   }
 
   /** Reverse all transitions in the directed edge then updates the adjacency list. */
-  const reverseEdge = (edges: AdjacencyList, edgeKey: Edge) => {
-    // Update adjacency list
+  const reverseEdge = (graph: ProjectGraph, edges: AdjacencyList, edgeKey: Edge) => {
     const edge = edgeKey.split(',').map(v => parseInt(v))
+    const transitionsToReverse = graph.transitions.filter(t => t.to === edge[1] && t.from === edge[0])
+    const transitionsNotToReverse = graph.transitions.filter(t => t.to !== edge[1] || t.from !== edge[0])
+    transitionsToReverse.forEach(t => {
+      const tmp = t.to
+      t.to = t.from
+      t.from = tmp
+    })
+    graph.transitions = [...transitionsToReverse, ...transitionsNotToReverse]
+    // Update adjacency list
     const toReverseWeight = structuredClone(edges.get(edge[0]).find(e => e[0] === edge[1]))
     toReverseWeight[0] = edge[0]
     // Check if there was a transition from 1 -> 0
@@ -169,7 +177,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
       // Maximal is null
       done = true
     } else {
-      reverseEdge(edges, maximalCycler)
+      reverseEdge(graphClone, edges, maximalCycler)
     }
   }
 
