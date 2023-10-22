@@ -17,7 +17,7 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
   // Ignore reflexive transitions
   graphClone.transitions = graphClone.transitions.filter(t => t.from !== t.to)
   // Merge edges and assign weight according to number of transitions
-  const edges = new Map<number, [[number, number]]>()
+  const edges = new Map<number, [number, number][]>()
   for (const t of graphClone.transitions) {
     if (edges.has(t.from)) {
       if (edges.get(t.from).some(p => p[0] === t.to)) {
@@ -29,6 +29,16 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
       edges.set(t.from, [[t.to, 1]])
     }
   }
+
+  // Collapse edges to first transition
+  const collapsed = []
+  edges.forEach((adjList, k) => {
+    adjList.forEach(adj => {
+      const [from, to] : [number, number] = [k, adj[0]]
+      collapsed.push(graphClone.transitions.find(t => t.from === from && t.to === to))
+    })
+  })
+  graphClone.transitions = collapsed
 
   const getInitialState = (graph: ProjectGraph): number => {
     // Choose source node
@@ -134,8 +144,6 @@ export const convertToDAG = (graph: ProjectGraph) : ProjectGraph => {
       reverseEdge(graphClone, edges, maximalCycler)
     }
   }
-
-  console.log(graphClone)
 
   return graphClone
 }
