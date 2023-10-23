@@ -5,12 +5,13 @@ import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/Project
  * Use `[f, t].join(',')` for the key.
  */
 type Edge = string
+type AdjacentWeight = { id: number, weight: number }
 /**
  * Weighted Adjacency list. Weighting is the original graph's out degree.
  * @param key the transition `from` state id
  * @param value the values [ `to` state id, weighting ]
  */
-export type AdjacencyList = Map<number, [number, number][]>
+export type AdjacencyList = Map<number, AdjacentWeight[]>
 /**
  * Mapping of edge to number of cycles counted
  */
@@ -33,7 +34,7 @@ export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: A
   const transitions = <BaseAutomataTransition[]>[]
   adjacencyList.forEach((adjList, k) => {
     adjList.forEach(adj => {
-      const [from, to] : [number, number] = [k, adj[0]]
+      const [from, to] : [number, number] = [k, adj.id]
       transitions.push(graph.transitions.find(t => t.from === from && t.to === to))
     })
   })
@@ -81,7 +82,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
     const frontierAdditions = []
     if (nextAdjList) {
       nextAdjList.forEach(p => {
-        const id = p[0]
+        const id = p.id
         if (nextVisited.includes(id)) {
           // If visited then is a cycle
           const edgeKey = [currentState, id].join(',')
@@ -113,9 +114,9 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
 
   /** Reverse all transitions in the directed edge then updates the adjacency list. */
   const reverseEdge = (graph: ProjectGraph, edges: AdjacencyList, edgeKey: Edge) => {
-    const edge = edgeKey.split(',').map(v => parseInt(v))
-    const transitionsToReverse = graph.transitions.filter(t => t.to === edge[1] && t.from === edge[0])
-    const transitionsNotToReverse = graph.transitions.filter(t => t.to !== edge[1] || t.from !== edge[0])
+    const [from, to] = edgeKey.split(',').map(v => parseInt(v))
+    const transitionsToReverse = graph.transitions.filter(t => t.to === to && t.from === from)
+    const transitionsNotToReverse = graph.transitions.filter(t => t.to !== to || t.from !== from)
     transitionsToReverse.forEach(t => {
       const tmp = t.to
       t.to = t.from
@@ -123,26 +124,26 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
     })
     graph.transitions = [...transitionsToReverse, ...transitionsNotToReverse]
     // Update adjacency list
-    const toReverseWeight = structuredClone(edges.get(edge[0]).find(e => e[0] === edge[1]))
-    toReverseWeight[0] = edge[0]
+    const toReverseWeight = structuredClone(edges.get(from).find(e => e.id === to))
+    toReverseWeight.id = from
     // Check if there was a transition from 1 -> 0
-    if (edges.has(edge[1])) {
-      const otherValue = edges.get(edge[1]).find(e => e[0] === edge[0])
+    if (edges.has(to)) {
+      const otherValue = edges.get(to).find(e => e.id === from)
       if (otherValue) {
-        otherValue[1] = otherValue[1] + toReverseWeight[1]
+        otherValue.weight = otherValue.weight + toReverseWeight.weight
       } else {
-        edges.set(edge[1], [...edges.get(edge[1]), toReverseWeight])
+        edges.set(to, [...edges.get(to), toReverseWeight])
       }
     } else {
-      edges.set(edge[1], [toReverseWeight])
+      edges.set(to, [toReverseWeight])
     }
     // Filter out the removed value
-    const newAdjacents = edges.get(edge[0]).filter(e => e[0] !== edge[1])
+    const newAdjacents = edges.get(from).filter(e => e.id !== to)
     if (newAdjacents.length > 0) {
-      edges.set(edge[0], newAdjacents)
+      edges.set(from, newAdjacents)
     } else {
       // Delete edge if there's no more
-      edges.delete(edge[0])
+      edges.delete(from)
     }
   }
 
@@ -152,17 +153,17 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   const cloneStates = graphClone.states
 
   // Merge edges and assign weight according to number of transitions
-  const edges = new Map<number, [number, number][]>()
+  const edges = new Map<number, AdjacentWeight[]>()
   // Ignore reflexive transitions
   for (const t of graphClone.transitions.filter(t => t.from !== t.to)) {
     if (edges.has(t.from)) {
-      if (edges.get(t.from).some(p => p[0] === t.to)) {
-        edges.get(t.from).find(p => p[0] === t.to)[1] += 1
+      if (edges.get(t.from).some(p => p.id === t.to)) {
+        edges.get(t.from).find(p => p.id === t.to)[1] += 1
       } else {
-        edges.get(t.from).push([t.to, 1])
+        edges.get(t.from).push({ id: t.to, weight: 1 })
       }
     } else {
-      edges.set(t.from, [[t.to, 1]])
+      edges.set(t.from, [{ id: t.to, weight: 1 }])
     }
   }
 
