@@ -162,12 +162,20 @@ const shortcuts: Category[] = [
         action: 'TESTING_LAB'
       },
       {
+        label: 'Stepping lab',
+        action: 'STEPPING_LAB'
+      },
+      {
         label: 'File info',
         action: 'FILE_INFO'
       },
       {
         label: 'File options',
         action: 'FILE_OPTIONS'
+      },
+      {
+        label: 'Templates',
+        action: 'TEMPLATES'
       },
       {
         label: 'Move view',

@@ -33,6 +33,10 @@ const ContextMenus = () => {
     setContext({ visible: true, x, y, items: edgeContextItems })
   }, [])
 
+  useEvent('ctx:close', () => {
+    setContext({ ...context, visible: false })
+  }, [])
+
   if (!context?.visible) return null
   return (
     <Dropdown

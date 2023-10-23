@@ -8,16 +8,16 @@ import { Coordinate } from '/src/types/ProjectTypes'
  * Mouse event that includes the original event but also adds extra info like where in the view the click was
  * and if it was clicking the SVG
  */
-export type SVGMouseEventData = { originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number }
+export type SVGMouseEventData = { originalEvent: MouseEvent, didTargetSVG: boolean, viewX: number, viewY: number, ctx: null }
 
-export type StateEventData = { originalEvent: MouseEvent, state: { id: number, name: string, cx: number, cy: number } }
+export type StateEventData = { originalEvent: MouseEvent, state: { id: number, name: string, cx: number, cy: number }, ctx: null | number }
 
-export type CommentEventData = { originalEvent: MouseEvent, comment: { id: number, text: string } }
+export type CommentEventData = { originalEvent: MouseEvent, comment: { id: number, text: string }, ctx: null | number }
 /**
  * Contains information about the click along with the transition that was clicked
  */
-export type TransitionEventData = { originalEvent: MouseEvent, transition: PositionedTransition }
-export type EdgeEventData = { originalEvent: MouseEvent, transitions: PositionedTransition[] }
+export type TransitionEventData = { originalEvent: MouseEvent, transition: PositionedTransition, ctx: null | number }
+export type EdgeEventData = { originalEvent: MouseEvent, transitions: PositionedTransition[], ctx: null | number }
 export type TransitionHandleEventData = { originalEvent: MouseEvent, transitionInfo: { transitionIds: number[], fromId: number, toId: number, isMovingStart: boolean, otherPosition: Coordinate } }
 /**
  * Mapping of events to what data the event accepts.
@@ -30,7 +30,7 @@ export interface CustomEvents {
   'editStateLabel': { id: number },
   'modal:preferences': null,
   'exportImage': { type: string, clipboard?: boolean } | null,
-  'editTransitionGroup': { ids: Array<number> },
+  'editTransitionGroup': { ctx: number },
   /**
    * Event to open a side panel.
    * @see SidePanelKey for available panels
@@ -54,6 +54,7 @@ export interface CustomEvents {
   'ctx:transition': Coordinate,
   'ctx:comment': Coordinate,
   'ctx:edge': Coordinate,
+  'ctx:close': null,
   'bottomPanel:open': { panel: string },
   'bottomPanel:close': null,
   'comment:mousedown': CommentEventData,

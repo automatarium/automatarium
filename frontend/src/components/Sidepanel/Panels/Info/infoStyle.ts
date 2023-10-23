@@ -10,12 +10,14 @@ export const Wrapper = styled('div')`
 `
 
 export const Symbol = styled('div')`
-  display: flex;
+  display: inline-block;
   align-items: center;
   text-align: center;
   justify-content: center;
-  width: 2em;
-  aspect-ratio: 1 / 1;
+  min-width: 2em;
+  height: 2em;
+  line-height: 2em;
+  padding: 0 0.5em;
   background: var(--toolbar);
   border-radius: .2rem;
   box-sizing: border-box;

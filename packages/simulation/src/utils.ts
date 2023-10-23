@@ -42,7 +42,14 @@ export type TransitionMapping<P extends ProjectGraph> =
  * @see expandReadSymbols
  */
 export const expandTransitions = <T extends BaseAutomataTransition>(transitions: T[]): T[] => {
-  return transitions.map(t => ({ ...t, read: expandReadSymbols(t.read ?? '') }))
+  return transitions.map(t => {
+    if (t.read && t.read.startsWith('!') && t.read.length > 1) {
+      // Skip expansion for exclusion inputs
+      return t
+    }
+    // Otherwise, proceed with the expansion
+    return { ...t, read: expandReadSymbols(t.read ?? '') }
+  })
 }
 
 /**

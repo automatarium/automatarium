@@ -5,6 +5,7 @@ import {
   Ref,
   RefObject,
   createRef,
+  useCallback,
   useEffect,
   useRef,
   useState
@@ -33,7 +34,7 @@ import {
   TMDirection,
   assertType
 } from '/src/types/ProjectTypes'
-import { splitCharsWithOr, formatInput } from '/src/util/orOperators'
+import { formatOutput, formatInput } from '/src/util/stringManipulations'
 
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
@@ -44,9 +45,12 @@ const InputTransitionGroup = () => {
 
   const [fromState, setFromState] = useState<number>()
   const [toState, setToState] = useState<number>()
-  const [transitionsList, setTransitionsList] = useState<
-    Array<BaseAutomataTransition> | undefined
-  >()
+  const [transitionsList, setTransitionsList] = useState<BaseAutomataTransition[]>()
+  const [readList, setReadList] = useState<string[]>()
+  /** Pop/Write */
+  const [col2List, setCol2List] = useState<string[]>()
+  /** Push/Direction */
+  const [col3List, setCol3List] = useState<string[]>()
 
   const [fromName, setFromName] = useState<string>()
   const [toName, setToName] = useState<string>()
@@ -64,62 +68,70 @@ const InputTransitionGroup = () => {
 
   const statePrefix = useProjectStore((s) => s.project.config.statePrefix)
   const projectType = useProjectStore((s) => s.project.config.type)
-  const orOperator = useProjectStore((s) => s.project.config.orOperator)
+  const orOperator = useProjectStore((s) => s.project.config.orOperator) ?? '|'
 
   const editTransition = useProjectStore((s) => s.editTransition)
   const createTransition = useProjectStore((s) => s.createTransition)
   const removeTransitions = useProjectStore((s) => s.removeTransitions)
   const commit = useProjectStore((s) => s.commit)
+
   // Get data from event dispatch
   useEvent(
     'editTransitionGroup',
-    ({ detail: { ids } }) => {
-      // Get transitions from store
+    ({ detail: { ctx } }) => {
       const { transitions, states } = useProjectStore.getState()?.project ?? {}
-      // Do preliminary store updates
-      setIdList([...ids])
-      const transitionsScope = transitions.filter((t) => ids.includes(t.id))
-      // Somehow you can select nothing sometimes. This prevents a crash
-      if (transitionsScope.length === 0) return null
-      // All of these should be part of the same transition edge
-      const f = transitionsScope[0].from
-      const t = transitionsScope[0].to
-      const fName = states.find((s) => s.id === f).name ?? '' + statePrefix + f
-      const tName = states.find((s) => s.id === t).name ?? '' + statePrefix + t
-      setFromState(f)
-      setToState(t)
+      // Get one transition from the set to get the from and to state Ids
+      const scopedTransition = transitions.find((t) => ctx === t.id)
+      // Get state connection information for the modal
+      const scopeFrom = scopedTransition.from
+      const scopeTo = scopedTransition.to
+      const fName = states.find((s) => s.id === scopeFrom).name ?? '' + statePrefix + scopeFrom
+      const tName = states.find((s) => s.id === scopeTo).name ?? '' + statePrefix + scopeTo
+      setFromState(scopeFrom)
+      setToState(scopeTo)
       setFromName(fName)
       setToName(tName)
-      setTransitionsList(transitionsScope)
       // Update ID list to include *ALL* transitions on this edge, including unselected
       // This will run the side effect of re-retrieving the updated id list when done
       const allIdList = transitions
-        .filter(
-          (t) =>
-            t.from === transitionsScope[0].from &&
-            t.to === transitionsScope[0].to
-        )
+        .filter((t) =>
+          t.from === scopeFrom &&
+          t.to === scopeTo)
         .map((t) => t.id)
       setIdList([...allIdList])
       setModalOpen(true)
-    },
-    [orOperator]
+    }, []
   )
 
-  const retrieveTransitions = () => {
+  const retrieveTransitions = useCallback(() => {
     const { transitions } = useProjectStore.getState()?.project ?? {}
     const transitionsScope = transitions.filter((t) => idList.includes(t.id))
     setTransitionsList([...transitionsScope])
-  }
+    setReadList(transitionsScope.map(t => formatOutput(t.read, orOperator)))
+    switch (projectType) {
+      case 'PDA':
+        assertType<PDAAutomataTransition[]>(transitionsScope)
+        setCol2List(transitionsScope.map(t => t.pop))
+        setCol3List(transitionsScope.map(t => t.push))
+        break
+      case 'TM':
+        assertType<TMAutomataTransition[]>(transitionsScope)
+        setCol2List(transitionsScope.map(t => t.write))
+        setCol3List(transitionsScope.map(t => t.direction))
+        break
+    }
+  }, [idList, projectType])
+
+  useEffect(() => {
+    setTransitionListRef(
+      Array.from({ length: transitionsList?.length ?? 0 }, () =>
+        createRef<HTMLInputElement>()
+      ))
+  }, [transitionsList])
 
   // Re-retrieve transitions when the id list changes (i.e. on new transition)
   useEffect(() => {
     retrieveTransitions()
-    setTransitionListRef(
-      Array.from({ length: transitionsList?.length ?? 0 }, () =>
-        createRef<HTMLInputElement>()
-      )
-    )
   }, [idList])
 
   const resetInputFields = () => {
@@ -144,8 +156,7 @@ const InputTransitionGroup = () => {
 
   const handleIndexDown = () => {
     const nextIndex = selectedIndex < 0 ? -1 : selectedIndex - 1
-    const nextInputRef =
-      nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
+    const nextInputRef = nextIndex >= 0 ? transitionListRef[nextIndex] : inputRef
     const ro = nextInputRef as RefObject<HTMLInputElement>
     setSelectedIndex(nextIndex)
     ro?.current.focus()
@@ -153,10 +164,9 @@ const InputTransitionGroup = () => {
 
   const handleIndexUp = () => {
     if (selectedIndex < transitionListRef?.length - 1) {
-      const prevIndex =
-        selectedIndex === transitionListRef?.length - 1 ?? 0
-          ? transitionListRef?.length - 1 ?? 0
-          : selectedIndex + 1
+      const prevIndex = selectedIndex === transitionListRef?.length - 1 ?? 0
+        ? transitionListRef?.length - 1 ?? 0
+        : selectedIndex + 1
       const prevInputRef = transitionListRef[prevIndex]
       const ro = prevInputRef as RefObject<HTMLInputElement>
       setSelectedIndex(prevIndex)
@@ -180,6 +190,13 @@ const InputTransitionGroup = () => {
         handleIndexUp()
         break
     }
+  }
+
+  /** Helper function to simplify slicing lists.
+   *  Slices a new copy of the the list and sets it using the setter function
+   */
+  const sliceListState = <T, >(state: T[], setter: (newList: T[]) => void, v: T, i: number) => {
+    setter([...state.slice(0, i), v, ...state.slice(i + 1)])
   }
 
   /**
@@ -207,15 +224,43 @@ const InputTransitionGroup = () => {
         onChange={(e) => setReadValue(e.target.value)}
         onClick={() => setSelectedIndex(-1)}
         onKeyUp={handleKeyUp}
-        onFocus={(e) => e.target.select()}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(-1)
+        }}
         placeholder={'λ (New transition)'}
       />
-      <SubmitButton onClick={saveNewTransition}>
+      <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
         <CornerDownLeft size="18px" />
       </SubmitButton>
     </InputWrapper>
   )
 
+  const fsaInputField = (t: FSAAutomataTransition, i: number) => {
+    return <InputWrapper key={i}>
+      <Input
+        ref={transitionListRef[i] ?? null}
+        value={readList[i]}
+        onChange={e => {
+          sliceListState(readList, setReadList, e.target.value, i)
+        }}
+        onClick={() => setSelectedIndex(i)}
+        onKeyUp={handleKeyUp}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(i)
+        }}
+        onBlur={() => saveFSATransition({
+          id: t.id,
+          read: formatInput(readList[i], orOperator)
+        })}
+        placeholder={'λ'}
+      />
+      <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
+        <X size="18px" />
+      </SubmitButton>
+    </InputWrapper>
+  }
   /**
    * Functions for PDAs
    */
@@ -244,7 +289,10 @@ const InputTransitionGroup = () => {
           onChange={(e) => setReadValue(e.target.value)}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(read)'}
         />
       </InputSpacingWrapper>
@@ -255,7 +303,10 @@ const InputTransitionGroup = () => {
           onChange={(e) => setPopValue(e.target.value)}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(pop)'}
         />
       </InputSpacingWrapper>
@@ -266,15 +317,92 @@ const InputTransitionGroup = () => {
           onChange={(e) => setPushValue(e.target.value)}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(push)'}
         />
       </InputSpacingWrapper>
-      <SubmitButton onClick={saveNewTransition}>
+      <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
         <CornerDownLeft size="18px" />
       </SubmitButton>
     </InputWrapper>
   )
+
+  const pdaInputFields = (t: PDAAutomataTransition, i: number) => {
+    return <InputWrapper key={i}>
+      <InputSpacingWrapper>
+        <Input
+          ref={transitionListRef[i] ?? null}
+          value={readList[i]}
+          onChange={(e) => {
+            sliceListState(readList, setReadList, e.target.value, i)
+          }}
+          onClick={() => setSelectedIndex(i)}
+          onKeyUp={handleKeyUp}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(i)
+          }}
+          onBlur={() => savePDATransition({
+            id: t.id,
+            read: formatInput(readList[i], orOperator),
+            pop: t.pop,
+            push: t.push
+          })}
+          placeholder={'λ'}
+        />
+      </InputSpacingWrapper>
+      <InputSeparator>,</InputSeparator>
+      <InputSpacingWrapper>
+        <Input
+          value={col2List[i]}
+          onChange={(e) => {
+            sliceListState(col2List, setCol2List, e.target.value, i)
+          }}
+          onClick={() => setSelectedIndex(i)}
+          onKeyUp={handleKeyUp}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(i)
+          }}
+          onBlur={() => savePDATransition({
+            id: t.id,
+            read: t.read,
+            pop: col2List[i],
+            push: t.push
+          })}
+          placeholder={'λ'}
+        />
+      </InputSpacingWrapper>
+      <InputSeparator>;</InputSeparator>
+      <InputSpacingWrapper>
+        <Input
+          value={col3List[i]}
+          onChange={(e) => {
+            sliceListState(col3List, setCol3List, e.target.value, i)
+          }}
+          onClick={() => setSelectedIndex(i)}
+          onKeyUp={handleKeyUp}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(i)
+          }}
+          onBlur={() => savePDATransition({
+            id: t.id,
+            read: t.read,
+            pop: t.pop,
+            push: col3List[i]
+          })}
+          placeholder={'λ'}
+        />
+      </InputSpacingWrapper>
+      <SubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
+        <X size="18px" />
+      </SubmitButton>
+    </InputWrapper>
+  }
 
   /**
    * Functions for TMs
@@ -313,12 +441,14 @@ const InputTransitionGroup = () => {
           ref={inputRef}
           value={readValue}
           onChange={(e) => {
-            const r = tmWriteValidate(e)
-            setReadValue(r)
+            setReadValue(e.target.value)
           }}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(read)'}
         />
       </InputSpacingWrapper>
@@ -332,7 +462,10 @@ const InputTransitionGroup = () => {
           }}
           onClick={() => setSelectedIndex(-1)}
           onKeyUp={handleKeyUp}
-          onFocus={(e) => e.target.select()}
+          onFocus={(e) => {
+            e.target.select()
+            setSelectedIndex(-1)
+          }}
           placeholder={'λ\t(write)'}
         />
       </InputSpacingWrapper>
@@ -340,18 +473,90 @@ const InputTransitionGroup = () => {
       <InputSpacingWrapper>
         <DirectionRadioButtons
           direction={dirValue as TMDirection}
-          setDirection={setDirValue}
+          setDirection={e => {
+            setDirValue(e)
+            setSelectedIndex(-1)
+          }}
           handleSave={handleKeyUp}
           name={'new-TM-transition'}
         />
       </InputSpacingWrapper>
       <InputSpacingWrapper>
-        <TMSubmitButton onClick={saveNewTransition}>
+        <TMSubmitButton onClick={saveNewTransition} tabIndex={-1}>
           <CornerDownLeft size="18px" />
         </TMSubmitButton>
       </InputSpacingWrapper>
     </InputWrapper>
   )
+
+  const tmInputFields = (t: TMAutomataTransition, i: number) => <InputWrapper key={i}>
+    <InputSpacingWrapper>
+      <Input
+        ref={transitionListRef[i] ?? null}
+        value={readList[i]}
+        onChange={(e) => {
+          sliceListState(readList, setReadList, e.target.value, i)
+        }}
+        onClick={() => setSelectedIndex(i)}
+        onKeyUp={handleKeyUp}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(i)
+        }}
+        onBlur={() => saveTMTransition({
+          id: t.id,
+          read: formatInput(readList[i], orOperator),
+          write: t.write,
+          direction: t.direction
+        })}
+        placeholder={'λ'}
+      />
+    </InputSpacingWrapper>
+    <InputSeparator>,</InputSeparator>
+    <InputSpacingWrapper>
+      <Input
+        value={col2List[i]}
+        onChange={(e) => {
+          sliceListState(col2List, setCol2List, tmWriteValidate(e), i)
+        }}
+        onClick={() => setSelectedIndex(i)}
+        onKeyUp={handleKeyUp}
+        onFocus={(e) => {
+          e.target.select()
+          setSelectedIndex(i)
+        }}
+        onBlur={() => saveTMTransition({
+          id: t.id,
+          read: t.read,
+          write: col2List[i],
+          direction: t.direction
+        })}
+        placeholder={'λ'}
+      />
+    </InputSpacingWrapper>
+    <InputSeparator>;</InputSeparator>
+    <InputSpacingWrapper>
+      <DirectionRadioButtons
+        direction={t.direction}
+        setDirection={(newDirection) => {
+          saveTMTransition({
+            id: t.id,
+            read: t.read,
+            write: t.write,
+            direction: newDirection
+          })
+          setSelectedIndex(i)
+        }}
+        name={`transition-group-${t.id}`}
+        handleSave={handleKeyUp}
+      />
+    </InputSpacingWrapper>
+    <InputSpacingWrapper>
+      <TMSubmitButton onClick={() => deleteTransition(i)} tabIndex={-1}>
+        <X size="18px" />
+      </TMSubmitButton>
+    </InputSpacingWrapper>
+  </InputWrapper>
 
   const saveNewTransition = () => {
     switch (projectType) {
@@ -380,30 +585,7 @@ const InputTransitionGroup = () => {
         assertType<Array<FSAAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList
-              .map((t, i) => (
-                <InputWrapper key={i}>
-                  <Input
-                    ref={transitionListRef[i] ?? null}
-                    value={splitCharsWithOr(t.read, orOperator)}
-                    onChange={(e) => {
-                      saveFSATransition({
-                        id: t.id,
-                        read: formatInput(e.target.value, orOperator)
-                      })
-                      setSelectedIndex(i)
-                    }}
-                    onClick={() => setSelectedIndex(i)}
-                    onKeyUp={handleKeyUp}
-                    onFocus={(e) => e.target.select()}
-                    placeholder={'λ'}
-                  />
-                  <SubmitButton onClick={() => deleteTransition(i)}>
-                    <X size="18px" />
-                  </SubmitButton>
-                </InputWrapper>
-              ))
-              .reverse()}
+            {transitionsList.map((t, i) => fsaInputField(t, i)).reverse()}
             <hr />
             Add a new transition?
             {blankFSAInput()}
@@ -413,72 +595,7 @@ const InputTransitionGroup = () => {
         assertType<Array<PDAAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList
-              .map((t, i) => (
-                <InputWrapper key={i}>
-                  <InputSpacingWrapper>
-                    <Input
-                      ref={transitionListRef[i] ?? null}
-                      value={splitCharsWithOr(t.read, orOperator)}
-                      onChange={(e) => {
-                        savePDATransition({
-                          id: t.id,
-                          read: formatInput(e.target.value, orOperator),
-                          pop: t.pop,
-                          push: t.push
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>,</InputSeparator>
-                  <InputSpacingWrapper>
-                    <Input
-                      value={t.pop}
-                      onChange={(e) => {
-                        savePDATransition({
-                          id: t.id,
-                          read: t.read,
-                          pop: e.target.value,
-                          push: t.push
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>;</InputSeparator>
-                  <InputSpacingWrapper>
-                    <Input
-                      value={t.push}
-                      onChange={(e) => {
-                        savePDATransition({
-                          id: t.id,
-                          read: t.read,
-                          pop: t.pop,
-                          push: e.target.value
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <SubmitButton onClick={() => deleteTransition(i)}>
-                    <X size="18px" />
-                  </SubmitButton>
-                </InputWrapper>
-              ))
-              .reverse()}
+            {transitionsList.map((t, i) => pdaInputFields(t, i)).reverse()}
             <hr />
             <Heading>Add a new transition?</Heading>
             {blankPDAInput()}
@@ -488,73 +605,7 @@ const InputTransitionGroup = () => {
         assertType<Array<TMAutomataTransition>>(transitionsList)
         return (
           <>
-            {transitionsList
-              .map((t, i) => (
-                <InputWrapper key={i}>
-                  <InputSpacingWrapper>
-                    <Input
-                      ref={transitionListRef[i] ?? null}
-                      value={splitCharsWithOr(t.read, orOperator)}
-                      onChange={(e) => {
-                        saveTMTransition({
-                          id: t.id,
-                          read: formatInput(e.target.value, orOperator),
-                          write: t.write,
-                          direction: t.direction
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>,</InputSeparator>
-                  <InputSpacingWrapper>
-                    <Input
-                      value={t.write}
-                      onChange={(e) => {
-                        const w = tmWriteValidate(e)
-                        saveTMTransition({
-                          id: t.id,
-                          read: t.read,
-                          write: w,
-                          direction: t.direction
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      onClick={() => setSelectedIndex(i)}
-                      onKeyUp={handleKeyUp}
-                      onFocus={(e) => e.target.select()}
-                      placeholder={'λ'}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSeparator>;</InputSeparator>
-                  <InputSpacingWrapper>
-                    <DirectionRadioButtons
-                      direction={t.direction}
-                      setDirection={(newDirection) => {
-                        saveTMTransition({
-                          id: t.id,
-                          read: t.read,
-                          write: t.write,
-                          direction: newDirection
-                        })
-                        setSelectedIndex(i)
-                      }}
-                      name={`transition-group-${t.id}`}
-                      handleSave={handleKeyUp}
-                    />
-                  </InputSpacingWrapper>
-                  <InputSpacingWrapper>
-                    <TMSubmitButton onClick={() => deleteTransition(i)}>
-                      <X size="18px" />
-                    </TMSubmitButton>
-                  </InputSpacingWrapper>
-                </InputWrapper>
-              ))
-              .reverse()}
+            {transitionsList.map((t, i) => tmInputFields(t, i)).reverse()}
             <hr />
             <Heading>Add a new transition?</Heading>
             {blankTMInput()}
