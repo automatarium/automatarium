@@ -38,8 +38,6 @@ const GraphvizLayoutAlgorithm = (graph: ProjectGraph) => {
   // Minimum vertical separation
   const rankSep = 5
 
-  console.log(`My DAG ${dag}`)
-
   const records = {} as Records
 
   cloneStates.forEach(v => {
@@ -120,28 +118,108 @@ const GraphvizLayoutAlgorithm = (graph: ProjectGraph) => {
     return constructTree(edges)
   }
 
-  const rank = hierarchy(graphClone, edges)
+  const rank = hierarchy(dag, edges)
 
   // ordering
 
   // position
-  const xCoordinate = (root: Node) => {
-    console.log(`I should iterate ${MAX_ITERATIONS} times for each ${root}.`)
-    console.log(`This should take into account size: ${nodeB}, separation: ${nodeSep}, rank separation: ${rankSep}`)
+  const arrange = (root: Level) => {
+    type Vector2 = { x: number, y: number }
+
+    const globalGravity = { x: 0, y: 0 } as Vector2
+    const gravStrength = Math.sqrt(nodeB[0] ** 2 + nodeB[1] ** 2)
+    const ALPHA = 0.3 // 'Learning rate'
+
     const initialiseCoords = (parent: Node) => {
       parent.x = 0
+      parent.y = 0
       parent.children.forEach(child => {
         initialiseCoords(child)
       })
     }
-    initialiseCoords(root)
-    const median = [0, 0]
-    for (let i = 0; i < MAX_ITERATIONS; ++i) {
 
+    const getCoords = (level: Level) => {
+      return level.nodes.map(n => ({ x: n.x, y: n.y } as Vector2))
+    }
+
+    const apply = (level: Level, newCoords: Vector2[]) => {
+      level.nodes.forEach((n, i) => {
+        n.x = (1 - ALPHA) * n.x + ALPHA * newCoords[i].x
+        n.y = (1 - ALPHA) * n.y + ALPHA * newCoords[i].y
+      })
+    }
+
+    /** Recursively update each level gravity and global gravity */
+    const updateGravity = (level: Level) => {
+      if (level === null) { return }
+      level.nodes.forEach(n => {
+        globalGravity.x = (globalGravity.x + n.x) / (n.weight + 1)
+        globalGravity.y = (globalGravity.y + n.y) / (n.weight + 1)
+      })
+      updateGravity(level.next)
+    }
+
+    // Optimise towards rank separation
+    const rankSeparationShift = (base: Level, coords: Vector2[]) => {
+      base.nodes.forEach((n, i) => {
+        if (n.parent === null) { return }
+        coords[i].y += Math.abs(n.parent.y - coords[i].y) - rankSep
+      })
+    }
+
+    // Optimise towards level separation
+    const levelSeparationShift = (base: Level, coords: Vector2[]) => {
+      const sums = base.nodes.reduce((acc, val) => {
+        return [acc[0] + val.x * val.weight, acc[1] + val.weight]
+      }, [0, 0])
+      const currentSeparation = sums[0] / sums[1]
+      const step = nodeSep - currentSeparation
+      base.nodes.forEach((_, i) => {
+        if (i >= base.nodes.length - 1) { return }
+        coords[i + 1].x += coords[i].x + step
+      })
+    }
+
+    // Move towards level and global centre
+    const gravityShift = (base: Level, coords: Vector2[]) => {
+      const gravity = { x: (base.gravity + globalGravity.x) / 2, y: globalGravity.y }
+      coords.forEach(c => {
+        const vec = { x: gravity.x - c.x, y: gravity.y - c.y }
+        const mag = Math.sqrt(vec.x ** 2 + vec.y ** 2)
+        const unitVector = { x: vec.x / mag, y: vec.y / mag }
+        c.x += unitVector.x * gravStrength
+        c.y += unitVector.y * gravStrength
+      })
+    }
+
+    // Align to parent rank coord
+    const parentAlignmentShift = (base: Level, coords: Vector2[]) => {
+      base.nodes.forEach((n, i) => {
+        if (n.parent === null) return
+        const parentX = n.parent.x
+        coords[i].x += parentX - coords[i].x
+      })
+    }
+
+    initialiseCoords(root.nodes[0])
+    for (let _ = 0; _ < MAX_ITERATIONS; ++_) {
+      let level = root
+      while (level !== null) {
+        const coords = getCoords(level)
+        rankSeparationShift(level, coords)
+        levelSeparationShift(level, coords)
+        gravityShift(level, coords)
+        parentAlignmentShift(level, coords)
+        apply(level, coords)
+        level = level.next
+      }
+      updateGravity(root)
     }
   }
 
-  xCoordinate(rank)
+  arrange(rank)
+
+  // Update state positions
 
   return graphClone
 }
