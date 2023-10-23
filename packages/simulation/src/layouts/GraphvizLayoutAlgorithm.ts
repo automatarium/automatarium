@@ -66,8 +66,8 @@ const GraphvizLayoutAlgorithm = (graph: ProjectGraph) => {
     const getSuccessors = (parent: Node, edges: AdjacencyList) : Node[] => {
       const adj = edges.get(parent.id)
       if (!adj) { return [] }
+      adj.sort((a, b) => a.weight + b.weight)// Descending
       const sortedNodes = adj
-        .toSorted((a, b) => a.weight + b.weight) // Descending
         .map(a => {
           const state = states.find(s => s.id === a.id)
           const node = {
