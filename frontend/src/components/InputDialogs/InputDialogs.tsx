@@ -97,14 +97,17 @@ const InputDialogs = () => {
   const orOperator = useProjectStore(s => s.project.config.orOperator) ?? '|'
   const hideDialog = useCallback(() => setDialog({ ...dialog, visible: false }), [dialog])
   const focusInput = useCallback(() => setTimeout(() => inputRef.current?.focus(), 100), [inputRef.current])
+  const [isNew, setIsNew] = useState(true)
   const arr = [inputWriteRef.current, inputDirectionRef.current, inputRef.current]
-  useEvent('editTransition', ({ detail: { id } }) => {
+
+  useEvent('editTransition', ({ detail: { id, new: isNewTransition } }) => {
     const { states, transitions } = useProjectStore.getState()?.project ?? {}
     const transition = transitions.find(t => t.id === id)
     // Find midpoint of transition in screen space
     const pos = locateTransition(transition, states)
     const midPoint = lerpPoints(pos.from, pos.to, 0.5)
     const screenMidPoint = viewToScreenSpace(midPoint.x, midPoint.y)
+    setIsNew(isNewTransition ?? true) // Default a.k.a. previous functionality assumes new
     switch (projectType) {
       case 'TM':
         assertType<TMAutomataTransition>(transition)
@@ -275,7 +278,7 @@ const InputDialogs = () => {
     visible: dialog.visible,
     onClose: () => {
       hideDialog()
-      if (['FSATransition', 'PDATransition', 'TMTransition'].includes(dialog.type)) {
+      if (isNew && ['FSATransition', 'PDATransition', 'TMTransition'].includes(dialog.type)) {
         removeTransitions([dialog.id])
       }
     },
