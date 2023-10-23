@@ -158,7 +158,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   for (const t of graphClone.transitions.filter(t => t.from !== t.to)) {
     if (edges.has(t.from)) {
       if (edges.get(t.from).some(p => p.id === t.to)) {
-        edges.get(t.from).find(p => p.id === t.to)[1] += 1
+        edges.get(t.from).find(p => p.id === t.to).weight += 1
       } else {
         edges.get(t.from).push({ id: t.to, weight: 1 })
       }
