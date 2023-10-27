@@ -48,7 +48,7 @@ Added tools such as NFA $\rightarrow$ DFA, templates, and reordering. Also conve
 
 <details>
 <summary>Group 4 - 2023 Semester 2</summary>
-Current dev team.
+Improved user experience with tutorial videos, project sharing and transition manipulation.
 
 - [Claire Basile](https://github.com/S3865562)
 - [Jack Gardner](https://github.com/JackGardnerRMIT)
