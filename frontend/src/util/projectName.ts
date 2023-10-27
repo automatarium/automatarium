@@ -307,7 +307,8 @@ export const NOUNS = [
   'Marine Iguana',
   'Octopus',
   'Squid',
-  'White Lion'
+  'White Lion',
+  'Cat'
 ]
 
 export const randomProjectName = (): string => {

@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button, Logo, Dropdown } from '/src/components'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
-import { dispatchCustomEvent } from "/src/util/events";
+import { dispatchCustomEvent } from '/src/util/events'
 
 import {
   Wrapper,
@@ -70,7 +70,6 @@ const Menubar = () => {
   const [titleValue, setTitleValue] = useState('')
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
-  const projectId = useProjectStore(s => s.project?._id)
   const setProjectName = useProjectStore(s => s.setName)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
@@ -155,7 +154,7 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          {<Button onClick={() =>  dispatchCustomEvent('showSharing', null)}>Share</Button>}
+          {<Button onClick={() => dispatchCustomEvent('showSharing', null)}>Share</Button>}
         </Actions>
       </Wrapper>
     </>
