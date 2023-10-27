@@ -1,19 +1,20 @@
 import { MouseEvent, useEffect, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { useProjectsStore, useProjectStore, useSelectionStore, useToolStore, useViewStore, useTemplatesStore, useTemplateStore, useContextStore } from '/src/stores'
-import { SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP, COPY_DATA_KEY } from '/src/config/interactions'
 import { convertJFLAPXML } from '@automatarium/jflap-translator'
-import { haveInputFocused } from '/src/util/actions'
-import { dispatchCustomEvent } from '/src/util/events'
-import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
-import { reorderStates } from '@automatarium/simulation/src/reorder'
+import autoLayout from '@automatarium/simulation/src/autoLayout'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
-import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
-import { showWarning } from '/src/components/Warning/Warning'
-import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
+import { reorderStates } from '@automatarium/simulation/src/reorder'
 import { decodeData } from '../util/encoding'
 import useEdgeContext from './useEdgeContext'
+import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
+import { showWarning } from '/src/components/Warning/Warning'
+import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
+import { useContextStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
+import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
+import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
+import { haveInputFocused } from '/src/util/actions'
+import { dispatchCustomEvent } from '/src/util/events'
 
 /**
  * Combination of keys. Used to call an action
@@ -295,13 +296,17 @@ const useActions = (registerHotkeys = false) => {
     CONVERT_TO_DFA: {
       disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {
-        updateGraph(convertNFAtoDFA(project as FSAProjectGraph))
+        const dfa = convertNFAtoDFA(project as FSAProjectGraph)
+        updateGraph(autoLayout(dfa))
         commit()
       }
     },
     AUTO_LAYOUT: {
       disabled: () => true,
-      handler: () => console.log('Auto Layout')
+      handler: () => {
+        updateGraph(autoLayout(project))
+        commit()
+      }
     },
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')

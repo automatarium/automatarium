@@ -1,0 +1,67 @@
+{
+  "projectType": "FSA",
+  "_id": "735c566b-376e-4697-a798-021852fe8147",
+  "states": [
+    {
+      "x": 330,
+      "y": 270,
+      "id": 0,
+      "isFinal": false
+    },
+    {
+      "x": 525,
+      "y": 270,
+      "id": 1,
+      "isFinal": true
+    },
+    {
+      "x": 435,
+      "y": 105,
+      "id": 2,
+      "isFinal": false
+    }
+  ],
+  "transitions": [
+    {
+      "from": 0,
+      "to": 1,
+      "id": 1,
+      "read": "b"
+    },
+    {
+      "from": 0,
+      "to": 2,
+      "id": 4,
+      "read": "a"
+    },
+    {
+      "from": 2,
+      "to": 1,
+      "id": 6,
+      "read": "b"
+    }
+  ],
+  "comments": [],
+  "simResult": [],
+  "tests": {
+    "single": "",
+    "batch": [
+      ""
+    ]
+  },
+  "initialState": 0,
+  "meta": {
+    "name": "Tests triangle cycles",
+    "dateCreated": 1697965423659,
+    "dateEdited": 1697965423659,
+    "version": "1.0.0",
+    "automatariumVersion": "1.0.0"
+  },
+  "config": {
+    "type": "FSA",
+    "statePrefix": "q",
+    "orOperator": "|",
+    "acceptanceCriteria": "both",
+    "color": "orange"
+  }
+}

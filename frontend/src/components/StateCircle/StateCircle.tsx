@@ -26,10 +26,10 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
   const displayName = name || `${statePrefix}${id}`
 
   const labelRef = useRef<SVGTextElement>()
-  const [labelBox, setLabelBox] = useState<{x: number, y: number, width: number, height: number}>()
+  const [labelBox, setLabelBox] = useState({ x: 0, y: 0, width: 0, height: 0 })
 
   useEffect(() => {
-    const { x, y, width, height } = labelRef.current?.getBBox() ?? {}
+    const { x, y, width, height } = labelRef.current?.getBBox() ?? { x: 0, y: 0, width: 0, height: 0 }
     setLabelBox({ x, y: y - 3, width: width + 14, height: height + 6 })
   }, [labelRef.current, label])
 
