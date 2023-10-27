@@ -302,6 +302,7 @@ const useActions = (registerHotkeys = false) => {
       }
     },
     AUTO_LAYOUT: {
+      disabled: () => true,
       handler: () => {
         updateGraph(autoLayout(project))
         commit()
