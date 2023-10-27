@@ -64,7 +64,6 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButto
 const Menubar = () => {
   const navigate = useNavigate()
   const [dropdown, setDropdown] = useState<string>()
-  const [shareModalVisible, setShareModalVisible] = useState(false)
 
   const titleRef = useRef<HTMLInputElement>()
   const [editingTitle, setEditingTitle] = useState(false)
