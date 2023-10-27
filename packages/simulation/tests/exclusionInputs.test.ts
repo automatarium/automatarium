@@ -1,6 +1,6 @@
 /// <reference types="jest-extended" />
 
-import { extractSymbolsToExclude, exclusionInput } from 'frontend/src/util/stringManipulations'
+import { extractSymbolsToExclude, formatExclusionInput } from 'frontend/src/util/stringManipulations'
 
 /**
  * Check that an input is expanded how we expect it to
@@ -12,7 +12,7 @@ const expectExtraction = (input: string, expected: string[]) => {
 }
 
 const expectExclusionFormat = (input: string, expected: string) => {
-  expect(exclusionInput(input)).toEqual(expected)
+  expect(formatExclusionInput(input)).toEqual(expected)
 }
 
 describe('Extract exclusion symbols', () => {
