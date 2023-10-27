@@ -24,7 +24,7 @@ export type TransitionHandleEventData = { originalEvent: MouseEvent, transitionI
  * If making a custom event just add it here first
  */
 export interface CustomEvents {
-  'editTransition': { id: number },
+  'editTransition': { id: number, new?: boolean },
   'editComment': { id?: number, x: number, y: number },
   'editStateName': { id: number },
   'editStateLabel': { id: number },

@@ -373,7 +373,7 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         const selectedTransition = useEdgeContext().getTransitionFromContext()
         if (selectedTransition === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id, new: false }), 100)
       }
     },
     EDIT_FIRST: {
@@ -381,7 +381,7 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         const selectedTransition = useEdgeContext().getTransitionsFromContext()[0]
         if (selectedTransition === undefined) return
-        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id }), 100)
+        window.setTimeout(() => dispatchCustomEvent('editTransition', { id: selectedTransition.id, new: false }), 100)
       }
     },
     EDIT_TRANSITIONS_GROUP: {
