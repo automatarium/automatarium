@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button, Logo, Dropdown } from '/src/components'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
-import ShareModal from './components/ShareModal/ShareModal'
+import { dispatchCustomEvent } from "/src/util/events";
 
 import {
   Wrapper,
@@ -156,10 +156,8 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          {<Button disabled onClick={() => setShareModalVisible(true)}>Share</Button>}
+          {<Button onClick={() =>  dispatchCustomEvent('showSharing', null)}>Share</Button>}
         </Actions>
-
-        <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />
       </Wrapper>
     </>
   )
