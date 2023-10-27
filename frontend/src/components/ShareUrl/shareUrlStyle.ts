@@ -10,4 +10,5 @@ export const CopyRowWrapper = styled('div')`
   align-items: center;
   justify-contents: space-between;
   gap: 0.5em;
+  padding-bottom: 0.5em;
 `
