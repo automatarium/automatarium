@@ -2,15 +2,14 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Content, EditorContent } from './editorStyle'
-import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar } from '/src/components'
+import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
-import { ExportImage, ImportDialog, ShareUrl, ShortcutGuide } from '/src/pages'
 import { useExportStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
 import { useAutosaveProject } from '../../hooks'
-import TemplateDelConfDialog from './components/TempleteDelConfDialog/TemplateDelConfDialog'
+import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 
 const Editor = () => {

@@ -34,3 +34,8 @@ export { default as Input } from './Input/Input'
 export { default as Switch } from './Switch/Switch'
 export { default as Footer } from './Footer/Footer'
 export { default as ProjectCard } from './ProjectCard/ProjectCard'
+
+export { default as ShortcutGuide } from './ShortcutGuide/ShortcutGuide'
+export { default as ExportImage } from './ExportImage/ExportImage'
+export { default as ShareUrl } from './ShareUrl/ShareUrl'
+export { default as ImportDialog } from './ImportDialog/ImportDialog'

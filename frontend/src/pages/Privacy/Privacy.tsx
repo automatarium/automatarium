@@ -12,13 +12,8 @@ const Privacy = () => (
     <h3>Information Collection and Use</h3>
     <p>When you interact with our Service, we may collect the following information from you, as described below:</p>
     <ul>
-      <li><strong>Information you provide:</strong> We collect information from you when you interact with the Service, e.g. making an account, creating a project, sharing a project, etc.</li>
+      <li><strong>Information you provide:</strong> All information in the project, including project name, state names and labels, transition inputs, etc. will be included in the data that you share. We do not see this, but anyone you share your projects with will, so sharing projects are done at your own risk.</li>
       <li><strong>Information collected automatically:</strong> When you interact with our Service, we collect information that is automatically sent to us, this includes your IP address, any information that your browser sends to our Service as well as your activity in the Service</li>
-    </ul>
-    <p>We use the information we collect from you in a way that is consistent with this Privacy Policy.</p>
-    <p>The information we collect is used only in the following manner:</p>
-    <ul>
-      <li>Store your projects and preferences and sync between devices</li>
     </ul>
 
     <h3>Information Disclosure</h3>
@@ -34,10 +29,11 @@ const Privacy = () => (
 
     <h3>Cookies</h3>
     <p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.</p>
-    <p>Cookies are used by Firebase Authentication to keep you signed in on the Service.</p>
+    <p>We currently do not use cookies in Automatarium.</p>
 
     <h3>Links to Other Sites</h3>
     <p>The Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by the Service. Therefore, you are advised to review the Privacy Policy of these websites.</p>
+    <p>Our tutorial videos use the YouTube service. Please review the <a href="https://policies.google.com/privacy">YouTube Privacy Policy</a> if you are unsure.</p>
 
     <h3>Children's Privacy</h3>
     <p>Our services are for users over the age of 13. We do not knowingly collect or store personal information from children (visitors under the age of 13). If you are under the age of 13, you are ineligible to use the Service. If you believe your child has provided us with personal information, we encourage you to contact us immediately, and we will promptly remove such information from our Service.</p>
@@ -46,9 +42,9 @@ const Privacy = () => (
     <p>We reserve the right to update or modify this Privacy Policy at any time and from time to time without prior notice. Please review this policy periodically, and especially before you provide any information. This Privacy Policy was last updated on the date indicated below. Your continued use of the Service after any changes or revisions to this Privacy Policy shall indicate your agreement with the terms of such revised Privacy Policy.</p>
 
     <h3>Contact</h3>
-    <p>For any questions or concerns please contact RMIT University.</p>
+    <p>For any questions or concerns please contact <a href="https://www.rmit.edu.au/contact">RMIT University</a>.</p>
 
-    <p>Last updated: <strong>15th June, 2022</strong></p>
+    <p>Last updated: <strong>28th October, 2023</strong></p>
   </Main>
 )
 

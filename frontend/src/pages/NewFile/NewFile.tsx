@@ -3,9 +3,8 @@ import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard } from '/src/components'
+import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-import { ImportDialog } from '/src/pages'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'

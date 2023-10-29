@@ -6,7 +6,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import { Button, Logo, Dropdown } from '/src/components'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, useProjectsStore } from '/src/stores'
-import ShareModal from './components/ShareModal/ShareModal'
+import { dispatchCustomEvent } from '/src/util/events'
 
 import {
   Wrapper,
@@ -64,14 +64,12 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButto
 const Menubar = () => {
   const navigate = useNavigate()
   const [dropdown, setDropdown] = useState<string>()
-  const [shareModalVisible, setShareModalVisible] = useState(false)
 
   const titleRef = useRef<HTMLInputElement>()
   const [editingTitle, setEditingTitle] = useState(false)
   const [titleValue, setTitleValue] = useState('')
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
-  const projectId = useProjectStore(s => s.project?._id)
   const setProjectName = useProjectStore(s => s.setName)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
@@ -156,10 +154,8 @@ const Menubar = () => {
         </Menu>
 
         <Actions>
-          {<Button disabled onClick={() => setShareModalVisible(true)}>Share</Button>}
+          {<Button onClick={() => dispatchCustomEvent('showSharing', null)}>Share</Button>}
         </Actions>
-
-        <ShareModal isOpen={shareModalVisible} projectId={projectId} onClose={() => setShareModalVisible(false)} />
       </Wrapper>
     </>
   )
