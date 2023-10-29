@@ -29,7 +29,7 @@ const Privacy = () => (
 
     <h3>Cookies</h3>
     <p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.</p>
-    <p>Cookies are used to store your project data on your machine only. Clearing your cookies will remove your projects from Automatarium.</p>
+    <p>We currently do not use cookies in Automatarium.</p>
 
     <h3>Links to Other Sites</h3>
     <p>The Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by the Service. Therefore, you are advised to review the Privacy Policy of these websites.</p>
