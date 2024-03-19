@@ -39,7 +39,7 @@ Development branch. Try not to commit directly to this branch
 Prefix new feature branches with feat. When complete, submit a PR into dev.
 
 🔧 `fix/branch`
-When fixing a bug, prefix branches with bug. When complete, submit a PR into dev.
+When fixing a bug, prefix branches with fix. When complete, submit a PR into dev.
 
 🔮 `refactor/branch`
 For refactoring code. When complete, submit a PR into dev.
