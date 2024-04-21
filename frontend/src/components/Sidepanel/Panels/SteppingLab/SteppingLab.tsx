@@ -1,3 +1,5 @@
+//This is depreciated.
+
 import { Wrapper, ButtonRow } from './steppingLabStyle'
 import { SectionLabel, Input, Button } from '/src/components'
 import { useProjectStore, useSteppingStore } from '/src/stores'
