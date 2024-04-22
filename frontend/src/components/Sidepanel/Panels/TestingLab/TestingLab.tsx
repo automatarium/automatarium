@@ -53,7 +53,7 @@ const TestingLab = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
-  //Add Stepper from SteppingLab
+  // Add Stepper from (old) SteppingLab
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
@@ -263,14 +263,16 @@ const TestingLab = () => {
             disabled={traceIdx <= 0 || automataIsInvalid || noStepper
             }
             onClick={() => {
-              setTraceIdx(0);handleStep('Reset')
+              setTraceIdx(0);
+              handleStep('Reset');
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
             disabled={traceIdx <= 0 || automataIsInvalid || noStepper
             }
             onClick={() => {
-              setTraceIdx(traceIdx - 1);handleStep('Backward')
+              setTraceIdx(traceIdx - 1);
+              handleStep('Backward');
             }} />
 
           <Button icon={<ChevronRight size={23} />}
@@ -281,7 +283,8 @@ const TestingLab = () => {
               if (!simulationResult) {
                 simulateGraph()
               }
-              setTraceIdx(traceIdx + 1);handleStep('Forward')
+              setTraceIdx(traceIdx + 1);
+              handleStep('Forward');
             }} />
 
           <Button icon={<SkipForward size={20} />}

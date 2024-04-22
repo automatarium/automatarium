@@ -1,4 +1,4 @@
-//This is depreciated.
+// This is a depreciated module. I have left this here for now just in case as a reference.
 
 import { Wrapper, ButtonRow } from './steppingLabStyle'
 import { SectionLabel, Input, Button } from '/src/components'
