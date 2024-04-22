@@ -1,5 +1,5 @@
 import { ReactNode, useState, useEffect } from 'react'
-import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2, Star } from 'lucide-react'
+import { ChevronRight, FlaskConical, Info as InfoIcon, Settings2, Star } from 'lucide-react'
 
 import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
@@ -27,12 +27,14 @@ const panels: PanelItem[] = [
     icon: <FlaskConical />,
     element: <TestingLab />
   },
-  /*{
+  /*
+  {
     label: 'Stepping Lab',
     value: 'step',
     icon: <Pause />,
     element: <SteppingLab />
-  },*/
+  },
+  */
   {
     label: 'About Your Automaton',
     value: 'about',
