@@ -84,6 +84,14 @@ const TestingLab = () => {
     }
   }
 
+  useEffect(() => {
+    if (stepper) {
+      handleStep('Reset')
+    }
+  }, [traceInput])
+
+  const noStepper = stepper === null && false
+
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
@@ -247,19 +255,19 @@ const TestingLab = () => {
             setSimulationResult(undefined)
           }}
           value={traceInput ?? ''}
-          placeholder="Enter a value to test"
+          placeholder="λ"
         />
 
         <StepButtons>
           <Button icon={<SkipBack size={20} />}
-            disabled={traceIdx <= 0 || automataIsInvalid
+            disabled={traceIdx <= 0 || automataIsInvalid || noStepper
             }
             onClick={() => {
               setTraceIdx(0);handleStep('Reset')
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
-            disabled={traceIdx <= 0 || automataIsInvalid
+            disabled={traceIdx <= 0 || automataIsInvalid || noStepper
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1);handleStep('Backward')
@@ -267,7 +275,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              traceIdx >= lastTraceIdx || automataIsInvalid
+              traceIdx >= lastTraceIdx || automataIsInvalid || noStepper
             }
             onClick={() => {
               if (!simulationResult) {
@@ -279,7 +287,7 @@ const TestingLab = () => {
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
             disabled={
-                traceIdx >= lastTraceIdx || automataIsInvalid
+                traceIdx >= lastTraceIdx || automataIsInvalid || noStepper
             }
             onClick={() => {
               // Increment tracer index
