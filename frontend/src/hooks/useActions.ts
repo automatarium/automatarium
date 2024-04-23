@@ -353,6 +353,7 @@ const useActions = (registerHotkeys = false) => {
     TOGGLE_STATES_FINAL: {
       disabled: () => useSelectionStore.getState()?.selectedStates?.length === 0,
       handler: () => {
+        window.alert('FINAL STATE TOGGLED')
         const selectedStateIDs = useSelectionStore.getState().selectedStates
         if (selectedStateIDs.length > 0) {
           toggleStatesFinal(selectedStateIDs)
