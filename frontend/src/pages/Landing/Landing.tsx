@@ -1,4 +1,3 @@
-import React, { useState,useEffect } from 'react';
 import { Github } from 'lucide-react'
 
 import { Sections, Section, Banner } from './landingStyle'
@@ -8,37 +7,8 @@ import ExampleAutomaton from './components/ExampleAutomaton'
 import TestingLab from './components/TestingLab'
 
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-import LandingPageTour from '../Tutorials/guidedTour/LandingPageTour'
 
-// Define the banner button CSS class
-const bannerButtonClass = 'highlighted';
-
-const Landing = () => {
-  const [showTour, setShowTour] = useState(false);
-  const [isBannerStep, setIsBannerStep] = useState(false);
-
-  const startTour = () => {
-    setShowTour(true);
-  };
-
-  const closeTour = () => {
-    setShowTour(false);
-  };
-
-  useEffect(() => {
-    // Set showTour to true after a delay (for demonstration purposes)
-    const timeoutId = setTimeout(() => {
-      setShowTour(true);
-    }, 2000); // Adjust the delay as needed
-
-    // Clean up the timeout on component unmount
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-
-
-
-  return (
+const Landing = () => (
   <Main fullWidth style={{ paddingBottom: 0 }}>
     <Header center />
     <Sections>
@@ -48,7 +18,7 @@ const Landing = () => {
           <p>Automatarium is a student-built platform for automata and formal language theory.</p>
           <p>Work easily with a simple and intuitive design built for ease of use and accessibility.</p>
           <p>It's free to use, and when you're done, share your project with the world with a link.</p>
-          <Button to="/new" className={isBannerStep ? bannerButtonClass : ''}>Start building!</Button>
+          <Button to="/new">Start building!</Button>
           <p>First time here? Check out our tutorials!</p>
           <Button to='/tutorials'>Tutorials</Button>
         </div>
@@ -97,24 +67,13 @@ const Landing = () => {
         </div>
       </Section>
 
-      {/* <Banner>
+      <Banner>
         <h3>What are you waiting for?</h3>
         <p>Start building and testing your automata now!</p>
         <Button to="/new">Start building!</Button>
       </Banner>
-    </Sections> */}
-    <Banner>
-          <h3>What are you waiting for?</h3>
-          <p>Start building and testing your automata now!</p>
-          <Button to="/new">Start building!</Button>
-          <Button onClick={startTour}>Take Tour</Button> {/* Button to start the tour */}
-      </Banner>
-     </Sections>
-
-      {/* Render the tour if showTour is true */}
-     {showTour && <LandingPageTour onClose={closeTour} />}
-    </Main>
-  );
-};
+    </Sections>
+  </Main>
+)
 
 export default Landing
