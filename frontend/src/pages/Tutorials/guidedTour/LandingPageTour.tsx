@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 
 import { styled } from 'goober';
 
@@ -13,7 +13,7 @@ const TourOverlay = styled('div')`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0);
     z-index: 9999;
     display: flex;
     justify-content: center;
@@ -33,6 +33,7 @@ const TourContent = styled('div')<TourContentProps>`
     position: absolute;
     left:100px;
     width: 300px;
+    
   `}
 `;
 
@@ -53,12 +54,14 @@ interface Step {
 
 interface TourProps {
   onClose: () => void;
+  Step: (step: number) => void;
 }
 
 
-const LandingPageTour: React.FC<TourProps> = ({ onClose }) => {
+const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const [step, setStep] = useState<number>(0);
-
+  const [step1,calledStep1Function]= useState<number>(0);
+  let calledBannerStep = false;
   // Define tour steps
   const steps: Step[] = [
     {
@@ -72,8 +75,18 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose }) => {
    
     
     },
+    {
+      target: '', 
+      content: 'If you want more indepth tool guides you can go to the tutorial page using the tutorial button',
+   
+    
+    },
     // Add more steps as needed
   ];
+  useEffect(() => {
+   Step(step)  
+
+  }, [step, Step]);
 
   const handleNext = () => {
     if (step < steps.length - 1) {
