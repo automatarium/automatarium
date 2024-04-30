@@ -38,6 +38,7 @@ export type PDAExecutionResult = {
 export type TMExecutionTrace = {
     tape: Tape | null
     to: StateID
+    read: string | null
 }
 
 export type TMExecutionResult = {

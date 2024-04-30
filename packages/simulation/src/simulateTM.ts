@@ -10,13 +10,15 @@ const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
   while (node.parent) {
     trace.push({
       to: node.state.id,
-      tape: node.state.tape
+      tape: node.state.tape,
+      read: node.state.read,
     })
     node = node.parent
   }
   trace.push({
     to: node.state.id,
-    tape: node.state.tape
+    tape: node.state.tape,
+    read: null,
   })
   return trace.reverse()
 }
@@ -37,7 +39,7 @@ export const simulateTM = (
 
   if (!result) {
     return {
-      trace: [{ to: 0, tape: null }],
+      trace: [{ to: 0, read: null, tape: null }],
       accepted: false,
       tape: newTape(input)
     }

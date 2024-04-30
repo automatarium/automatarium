@@ -23,7 +23,9 @@ import {
   FSAExecutionResult,
   FSAExecutionTrace,
   PDAExecutionResult,
-  PDAExecutionTrace
+  PDAExecutionTrace,
+  TMExecutionResult,
+  TMExecutionTrace,
 } from '@automatarium/simulation/src/graph'
 import { assertType } from '/src/types/ProjectTypes'
 
@@ -128,8 +130,8 @@ const TestingLab = () => {
 
   const traceOutput = useMemo(() => {
     // No output before simulating
-    if (!simulationResult || graph.projectType === 'TM') { return '' }
-    assertType<(FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}>(simulationResult)
+    if (!simulationResult) { return '' }
+    assertType<(FSAExecutionResult | PDAExecutionResult | TMExecutionResult) & {transitionCount: number}>(simulationResult)
 
     const { trace, accepted } = simulationResult
     // Return null if not enough states in trace to render transitions
@@ -256,7 +258,7 @@ const TestingLab = () => {
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-        {traceOutput && graph.projectType !== 'TM' && <div>
+        {traceOutput && <div>
           <TracePreview
               result={simulationResult as (FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}}
               step={traceIdx}
