@@ -7,7 +7,8 @@ export class TMState extends State {
   constructor (
     id: number,
     isFinal: boolean,
-    public tape?: Tape
+    public tape?: Tape,
+    readonly read: string | null = null,
   ) {
     super(id, isFinal)
   }
@@ -38,6 +39,8 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       const tapePointer = node.state.tape.pointer
       const tapeTrace = node.state.tape.trace
 
+      const lambdaTransition = transition.read.length === 0
+
       // Undefined means its out of tape bounds, so we treat that has a lambda transition
       const symbol = tapeTrace[tapePointer] ?? ''
       let nextTape = this.progressTape(node, transition)
@@ -66,7 +69,8 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
         const graphState = new TMState(
           nextState.id,
           nextState.isFinal,
-          nextTape
+          nextTape,
+          lambdaTransition ? '' : symbol,
         )
         const successor = new Node(graphState, node)
         successors.push(successor)
