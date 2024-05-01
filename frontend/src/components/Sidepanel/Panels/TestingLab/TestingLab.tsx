@@ -63,25 +63,43 @@ const TestingLab = () => {
     // TODO: Find reasoning behind the magical -1
     const transitionCount = (res: ExecutionResult) =>
       Math.max(1, res.trace.length) - (res.accepted ? 1 : graph.projectType === 'TM' ? 1 : 0)
-
+/*
     if (graph.projectType === 'TM') {
       const result = simulateTM(graph, input)
       return {
         ...result,
         transitionCount: transitionCount(result)
       }
-    } else if (['PDA', 'FSA'].includes(graph.projectType)) {
+      } else */
+    if (['PDA', 'FSA', 'TM'].includes(graph.projectType)) {
+      function simulateAutomata(projectType, graph, input){
+	  var result
+	  switch(graph.projectType){
+	      case('PDA'):
+		  result = simulatePDA(graph, input ?? '')
+		  break
+	      case('FSA'):
+		  result = simulateFSA(graph, input ?? '')
+		  break
+	      case('TM'):
+		  result = simulateTM(graph, input ?? '')
+	  }
+	  return result
+      }
+      const result = simulateAutomata(graph.projectType, graph, input)
+/*
       const result =
             graph.projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
+*/
       // Formats a symbol. Makes an empty symbol become a lambda
       const formatSymbol = (char?: string): string =>
         char === null || char === '' ? 'λ' : char
       return {
         ...result,
         // We need format the symbols in the trace so any empty symbols become lambdas
-        trace: result.trace.map((step: FSAExecutionTrace | PDAExecutionTrace) => ({
+        trace: result.trace.map((step: FSAExecutionTrace | PDAExecutionTrace | TMExecutionTrace) => ({
           to: step.to,
           read: formatSymbol(step.read),
           // Add extra info if its a PDA trace.
@@ -92,8 +110,15 @@ const TestingLab = () => {
                 push: formatSymbol(step.push),
                 currentStack: step.currentStack
               }
-            : {})
-        } as FSAExecutionTrace | PDAExecutionTrace)),
+            : {}),
+	  // Info for TMs
+	  ...('tape' in step
+            ? {
+                tape: step.tape,
+              }
+            : {}),
+	  
+        } as FSAExecutionTrace | PDAExecutionTrace | TMExecutionTrace)),
         transitionCount: transitionCount(result)
       }
     } else {
