@@ -76,7 +76,7 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
           nextTape,
           lambdaTransitionRead ? '' : symbol,
           lambdaTransitionWrite ? '' : writeSymbol,
-	  transition.direction
+          transition.direction
         )
         const successor = new Node(graphState, node)
         successors.push(successor)

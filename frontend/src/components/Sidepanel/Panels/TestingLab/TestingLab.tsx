@@ -25,7 +25,7 @@ import {
   PDAExecutionResult,
   PDAExecutionTrace,
   TMExecutionResult,
-  TMExecutionTrace,
+  TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
 import { assertType } from '/src/types/ProjectTypes'
 
@@ -63,7 +63,7 @@ const TestingLab = () => {
     // TODO: Find reasoning behind the magical -1
     const transitionCount = (res: ExecutionResult) =>
       Math.max(1, res.trace.length) - (res.accepted ? 1 : graph.projectType === 'TM' ? 1 : 0)
-/*
+    /*
     if (graph.projectType === 'TM') {
       const result = simulateTM(graph, input)
       return {
@@ -72,22 +72,22 @@ const TestingLab = () => {
       }
       } else */
     if (['PDA', 'FSA', 'TM'].includes(graph.projectType)) {
-      function simulateAutomata(graph, input){
-	  var result
-	  switch(graph.projectType){
-	      case('PDA'):
-		  result = simulatePDA(graph, input ?? '')
-		  break
-	      case('FSA'):
-		  result = simulateFSA(graph, input ?? '')
-		  break
-	      case('TM'):
-		  result = simulateTM(graph, input ?? '')
-	  }
-	  return result
+      function simulateAutomata (graph, input) {
+        let result
+        switch (graph.projectType) {
+          case ('PDA'):
+            result = simulatePDA(graph, input ?? '')
+            break
+          case ('FSA'):
+            result = simulateFSA(graph, input ?? '')
+            break
+          case ('TM'):
+            result = simulateTM(graph, input ?? '')
+        }
+        return result
       }
       const result = simulateAutomata(graph, input)
-/*
+      /*
       const result =
             graph.projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
@@ -111,15 +111,15 @@ const TestingLab = () => {
                 currentStack: step.currentStack
               }
             : {}),
-	  // Info for TMs
-	  ...('tape' in step
+          // Info for TMs
+          ...('tape' in step
             ? {
                 tape: step.tape,
-		write: formatSymbol(step.write),
-		direction: step.direction,
+                write: formatSymbol(step.write),
+                direction: step.direction
               }
-            : {}),
-	  
+            : {})
+
         } as FSAExecutionTrace | PDAExecutionTrace | TMExecutionTrace)),
         transitionCount: transitionCount(result)
       }
@@ -167,27 +167,26 @@ const TestingLab = () => {
       return null
     }
 
-    function transitionsForAutomata(projectType, trace){
-	var transitions
-	switch(projectType){
-	      case('FSA'):
-	      case('PDA'):
-		transitions = trace
-		    .slice(0, -1)
-		    .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
-		    .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-		    .filter((_x, i) => i < traceIdx)
+    function transitionsForAutomata (projectType, trace) {
+      let transitions
+      switch (projectType) {
+        case ('FSA'):
+        case ('PDA'):
+          transitions = trace
+            .slice(0, -1)
+            .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+            .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+            .filter((_x, i) => i < traceIdx)
 
-		  break
-	      case('TM'):
-		  transitions = trace
-		    .slice(0, -1)
-		    .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
-		    .map(([read, start, end, write, direction]) => `${read},${write};${direction}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-		    .filter((_x, i) => i < traceIdx)
-
-	}
-	return transitions
+          break
+        case ('TM'):
+          transitions = trace
+            .slice(0, -1)
+            .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
+            .map(([read, start, end, write, direction]) => `${read},${write};${direction}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+            .filter((_x, i) => i < traceIdx)
+      }
+      return transitions
     }
 
     // Represent transitions as strings of form 'read: start -> end'
