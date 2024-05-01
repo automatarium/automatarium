@@ -39,6 +39,8 @@ export type TMExecutionTrace = {
     tape: Tape | null
     to: StateID
     read: string | null
+    write: string | null
+    direction: TMDirection | null
 }
 
 export type TMExecutionResult = {

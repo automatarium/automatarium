@@ -72,7 +72,7 @@ const TestingLab = () => {
       }
       } else */
     if (['PDA', 'FSA', 'TM'].includes(graph.projectType)) {
-      function simulateAutomata(projectType, graph, input){
+      function simulateAutomata(graph, input){
 	  var result
 	  switch(graph.projectType){
 	      case('PDA'):
@@ -86,7 +86,7 @@ const TestingLab = () => {
 	  }
 	  return result
       }
-      const result = simulateAutomata(graph.projectType, graph, input)
+      const result = simulateAutomata(graph, input)
 /*
       const result =
             graph.projectType === 'PDA'
@@ -115,6 +115,8 @@ const TestingLab = () => {
 	  ...('tape' in step
             ? {
                 tape: step.tape,
+		write: formatSymbol(step.write),
+		direction: step.direction,
               }
             : {}),
 	  
@@ -165,12 +167,31 @@ const TestingLab = () => {
       return null
     }
 
-    // Represent transitions as strings of form start -> end
-    const transitions = trace
-      .slice(0, -1)
-      .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
-      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-      .filter((_x, i) => i < traceIdx)
+    function transitionsForAutomata(projectType, trace){
+	var transitions
+	switch(projectType){
+	      case('FSA'):
+	      case('PDA'):
+		transitions = trace
+		    .slice(0, -1)
+		    .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+		    .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+		    .filter((_x, i) => i < traceIdx)
+
+		  break
+	      case('TM'):
+		  transitions = trace
+		    .slice(0, -1)
+		    .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
+		    .map(([read, start, end, write, direction]) => `${read},${write};${direction}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+		    .filter((_x, i) => i < traceIdx)
+
+	}
+	return transitions
+    }
+
+    // Represent transitions as strings of form 'read: start -> end'
+    const transitions = transitionsForAutomata(graph.projectType, trace)
 
     // Add rejecting transition if applicable
     const transitionsWithRejected = !accepted && traceIdx === trace.length

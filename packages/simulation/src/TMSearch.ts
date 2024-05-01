@@ -9,6 +9,8 @@ export class TMState extends State {
     isFinal: boolean,
     public tape?: Tape,
     readonly read: string | null = null,
+    readonly write: string | null = null,
+    readonly direction: TMDirection
   ) {
     super(id, isFinal)
   }
@@ -39,10 +41,12 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
       const tapePointer = node.state.tape.pointer
       const tapeTrace = node.state.tape.trace
 
-      const lambdaTransition = transition.read.length === 0
+      const lambdaTransitionRead = transition.read.length === 0
+      const lambdaTransitionWrite = transition.write.length === 0
 
       // Undefined means its out of tape bounds, so we treat that has a lambda transition
       const symbol = tapeTrace[tapePointer] ?? ''
+      const writeSymbol = transition.write ?? ''
       let nextTape = this.progressTape(node, transition)
 
       // Get any symbols preceded by an exclusion operator
@@ -70,7 +74,9 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
           nextState.id,
           nextState.isFinal,
           nextTape,
-          lambdaTransition ? '' : symbol,
+          lambdaTransitionRead ? '' : symbol,
+          lambdaTransitionWrite ? '' : writeSymbol,
+	  transition.direction
         )
         const successor = new Node(graphState, node)
         successors.push(successor)

@@ -12,6 +12,8 @@ const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
       to: node.state.id,
       tape: node.state.tape,
       read: node.state.read,
+      write: node.state.write,
+      direction: node.state.direction,
     })
     node = node.parent
   }
@@ -19,6 +21,8 @@ const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
     to: node.state.id,
     tape: node.state.tape,
     read: null,
+    write: null,
+    direction: null,
   })
   return trace.reverse()
 }
