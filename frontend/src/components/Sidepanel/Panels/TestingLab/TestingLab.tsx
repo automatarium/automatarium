@@ -180,10 +180,16 @@ const TestingLab = () => {
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
-    const closure = closureWithPredicate(graph, graph.initialState, () => true)
-    return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
+    // Hardcoded solution to #359 - Return that a path exists for a graph with one state that is both initial and final without transitions
+    if (graph.states.length === 1 && !noInitialState && !noFinalState && graph.transitions.length === 0) {
+      return true
+    } else {
+      const closure = closureWithPredicate(graph, graph.initialState, () => true)
+      return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
+    }
   }, [graph])
-  if (!pathToFinal) { warnings.push('There is no path to a final state') }
+  // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
+  if (!pathToFinal && (graph.states.length > 1)) { warnings.push('There is no path to a final state') }
 
   // :^)
   const dibEgg = useDibEgg()
