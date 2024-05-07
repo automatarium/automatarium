@@ -40,7 +40,9 @@ const NewFile = () => {
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
-  //boolean for toor
+  ///Tour stuff
+  //boolean for tour
+  const [Step, setStep] = useState(0);
   const [showTour, setShowTour] = useState(false);
   const closeTour = () => {
     setShowTour(false);
@@ -51,12 +53,24 @@ const NewFile = () => {
     // Define the behavior when the tour reaches the banner step
     if (step){
       // setIsBannerStep(true); 
-      // scrollToArea(step);
-      // setStep(step);
+      scrollToArea(step);
+      setStep(step);
     }
-    else{
-      // setIsBannerStep(false); 
+  
+  };
+  const scrollToArea = (step: number) => {
+  
+    if (step ===1){
+    window.scrollTo({ top: 0, behavior: 'smooth' }); 
+   
     }
+    else if (step ===2){
+      window.scrollTo({ top: 1010, behavior: 'smooth' }); 
+      }
+    else if (step ===3){
+        window.scrollTo({ top: 10, behavior: 'smooth' }); 
+      }
+   
   };
 
   // Dynamic styling values for new project thumbnails

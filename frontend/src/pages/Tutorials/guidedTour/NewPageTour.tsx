@@ -32,6 +32,7 @@ const TourContent = styled('div')<TourContentProps>`
 
     ${({tourStep }) => (tourStep===1) && `
     position: absolute;
+    top: 170px;
     right:20px;
     width: 200px;
     
@@ -44,25 +45,26 @@ const TourContent = styled('div')<TourContentProps>`
     `}
     ${({tourStep }) => (tourStep===3) && `
     position: absolute;
-    left:10px;
-    width:200px;
+    left:400px;
+    top:10px;
+    width:300px;
 
     `}
     ${({tourStep }) => (tourStep===4) && `
     position: absolute;
-    right:10px;
+    right:100px;
     width:200px;
 
     `}
     ${({tourStep }) => (tourStep===5) && `
     position: absolute;
-    right:10px;
+    right:100px;
     width:200px;
 
     `}
     ${({tourStep }) => (tourStep===6) && `
     position: absolute;
-    right:0px;
+    right:px;
     width:200px;
 
     `}
@@ -124,24 +126,24 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const steps: Step[] = [
     {
       target: '', // CSS selector for the element to highlight
-      content: 'Here we have you get to choose the what type of project you want to create ',
+      content: 'Here you get to choose what type of project you want to create ',
     },
 
     {
       target: '', 
-      content: 'You can choose from the three types of automatons to create: Finite State Automaton, Push Down Automaton, Turing Machine',
+      content: 'You can choose from three types of automatons to create: Finite State Automaton, Push Down Automaton and Turing Machine',
    
     
     },
     {
       target: '', 
-      content: 'Here you can select your previous saved project',
+      content: 'Here you can select your previous saved projects',
    
     
     },
     {
       target: '', 
-      content: 'You can also import a project from your local drive or through an Url',
+      content: 'You can also import a project from your local drive, through an Url or simply through raw data (note this can be done from the export section when creating your automataon or your json file)',
    
     
     },

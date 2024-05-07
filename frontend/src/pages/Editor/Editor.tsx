@@ -11,6 +11,7 @@ import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisuali
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
+import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -20,6 +21,33 @@ const Editor = () => {
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
+  const [Step, setStep] = useState(0);
+
+  const [showTour, setShowTour] = useState(false);
+  const closeTour = () => {
+    setShowTour(false);
+    
+  };
+  const handleStep = (step: number) => {
+    // Define the behavior when the tour reaches the banner step
+    if (step){
+      // setIsBannerStep(true); 
+      
+      setStep(step);
+    }
+  
+  };
+  
+  useEffect(() => {
+    // Set showTour to true after a delay (for demonstration purposes)
+    const timeoutId = setTimeout(() => {
+      setShowTour(true);
+    }, 2000); // Adjust the delay as needed
+    
+    // Clean up the timeout on component unmount
+    return () => clearTimeout(timeoutId);
+  }, []);
+
   // Check the user has selected a project, navigate to creation page if not
   if (!project) {
     navigate('/new')
@@ -111,7 +139,7 @@ const Editor = () => {
       />
 
       <ImportDialog navigateFunction={navigate} />
-
+      {showTour && <EditorPageTour onClose={closeTour} Step={handleStep}  />}
     </>
   )
 }

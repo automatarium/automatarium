@@ -17,9 +17,12 @@ const Landing = () => {
   const [showTour, setShowTour] = useState(false);
   const [isBannerStep, setIsBannerStep] = useState(false);
   const [Step, setStep] = useState(0);
-  
+
   const scrollToArea = (step: number) => {
-  
+    // const element = document.getElementById('start-build');
+    // if (element) {
+    //   element.scrollIntoView({   behavior: 'smooth', block: 'start' });
+    // }
     if (step ===1){
     window.scrollTo({ top: 10, behavior: 'smooth' }); 
    
@@ -44,7 +47,7 @@ const Landing = () => {
   };
     
   
-  const handleStep = (step: number) => {
+  const handleBannerStep = (step: number) => {
     // Define the behavior when the tour reaches the banner step
     if (step){
       // setIsBannerStep(true); 
@@ -157,7 +160,7 @@ const Landing = () => {
      </Sections>
       
       {/* Render the tour if showTour is true */}
-     {showTour && <LandingPageTour onClose={closeTour} Step={handleStep}  />}
+     {showTour && <LandingPageTour onClose={closeTour} Step={handleBannerStep}  />}
     </Main>
   );
 };
