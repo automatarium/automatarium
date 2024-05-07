@@ -353,16 +353,15 @@ const useActions = (registerHotkeys = false) => {
     TOGGLE_STATES_FINAL: {
       disabled: () => useSelectionStore.getState()?.selectedStates?.length === 0,
       handler: () => {
-        if (project.projectType === "TM") {
+        if (project.projectType === 'TM') {
           // Show popup until confirmed
           if (usePopupsStore.getState().popups?.showFinalState) {
             if (window.confirm('You have toggled a TM Final State. Confirm to not show again.')) {
-              usePopupsStore.getState().setPopups({showFinalState: false})
+              usePopupsStore.getState().setPopups({ showFinalState: false })
             }
-          }
-          else {
+          } else {
             if (window.confirm('Popup is now disabled, confirm to re-enable.')) {
-              usePopupsStore.getState().setPopups({showFinalState: true})
+              usePopupsStore.getState().setPopups({ showFinalState: true })
             }
           }
         }
