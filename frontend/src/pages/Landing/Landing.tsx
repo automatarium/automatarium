@@ -16,29 +16,44 @@ const Landing = () => {
   //creating booleans for tour
   const [showTour, setShowTour] = useState(false);
   const [isBannerStep, setIsBannerStep] = useState(false);
-  const scrollToRef = useRef(null);
-
+  const [Step, setStep] = useState(0);
+  
   const scrollToArea = (step: number) => {
-    // const element = document.getElementById('start-build');
-    // if (element) {
-    //   element.scrollIntoView({   behavior: 'smooth', block: 'start' });
-    // }
+  
     if (step ===1){
     window.scrollTo({ top: 10, behavior: 'smooth' }); 
+   
     }
+    else if (step ===2){
+      window.scrollTo({ top: 10, behavior: 'smooth' }); 
+      }
+    else if (step ===3){
+        window.scrollTo({ top: 600, behavior: 'smooth' }); 
+      }
+    else if (step ===4){
+    window.scrollTo({ top: 600, behavior: 'smooth' }); 
+    }
+    else if (step ===5){
+      window.scrollTo({ top: 600, behavior: 'smooth' }); 
+      }
+    else if (step ===6){
+        window.scrollTo({ top: 1200, behavior: 'smooth' }); 
+        }
+
+
   };
     
   
-  const handleBannerStep = (step: number) => {
+  const handleStep = (step: number) => {
     // Define the behavior when the tour reaches the banner step
-    if (step ===1){
-      setIsBannerStep(true); 
+    if (step){
+      // setIsBannerStep(true); 
       scrollToArea(step);
+      setStep(step);
     }
     else{
       setIsBannerStep(false); 
     }
-    
   };
 
   const startTour = () => {
@@ -74,13 +89,18 @@ const Landing = () => {
           <p>It's free to use, and when you're done, share your project with the world with a link.</p>
           <Button  id="start-build" to="/new"
             style={{
-              backgroundColor: isBannerStep ? 'blue':"",
-              color: isBannerStep ? 'black' : 'white',
-              zIndex:1
+              backgroundColor: (Step ===1) ? '#90EE90':"",
+              color: (Step ===1) ? 'green' : 'white',
+              
             } }
           >Start building!</Button>
           <p>First time here? Check out our tutorials!</p>
-          <Button to='/tutorials'>Tutorials</Button>
+          <Button to='/tutorials'
+          style={{
+            backgroundColor: (Step ===2) ? '#90EE90':"",
+            color: (Step ===2) ? 'green' : 'white',
+            
+          } }>Tutorials</Button>
         </div>
       </Section>
 
@@ -127,12 +147,6 @@ const Landing = () => {
         </div>
       </Section>
 
-      {/* <Banner>
-        <h3>What are you waiting for?</h3>
-        <p>Start building and testing your automata now!</p>
-        <Button to="/new">Start building!</Button>
-      </Banner>
-    </Sections> */}
     <Banner>
           <h3>What are you waiting for?</h3>
           <p>Start building and testing your automata now!</p>
@@ -143,7 +157,7 @@ const Landing = () => {
      </Sections>
       
       {/* Render the tour if showTour is true */}
-     {showTour && <LandingPageTour onClose={closeTour} Step={handleBannerStep}  />}
+     {showTour && <LandingPageTour onClose={closeTour} Step={handleStep}  />}
     </Main>
   );
 };

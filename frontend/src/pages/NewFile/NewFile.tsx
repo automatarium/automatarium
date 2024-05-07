@@ -16,6 +16,7 @@ import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -39,6 +40,24 @@ const NewFile = () => {
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
+  //boolean for toor
+  const [showTour, setShowTour] = useState(false);
+  const closeTour = () => {
+    setShowTour(false);
+    
+  };
+
+  const handleStep = (step: number) => {
+    // Define the behavior when the tour reaches the banner step
+    if (step){
+      // setIsBannerStep(true); 
+      // scrollToArea(step);
+      // setStep(step);
+    }
+    else{
+      // setIsBannerStep(false); 
+    }
+  };
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -60,6 +79,9 @@ const NewFile = () => {
     if (projects.length) {
       Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
     }
+    const timeoutId = setTimeout(() => {
+      setShowTour(true);
+    }, 2000)
   }, [projects, thumbnails])
 
   // Create and update refs when projects changes
@@ -176,7 +198,8 @@ const NewFile = () => {
         setDeleteConfirmationVisible(false)
       }}
     />
-
+    
+    {showTour && <NewPageTour onClose={closeTour} Step={handleStep}  />}
     <ImportDialog navigateFunction={navigate} />
   </Main>
 }

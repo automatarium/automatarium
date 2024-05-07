@@ -32,19 +32,19 @@ const TourContent = styled('div')<TourContentProps>`
 
     ${({tourStep }) => (tourStep===1) && `
     position: absolute;
-    left:100px;
-    width: 400px;
+    right:20px;
+    width: 200px;
     
    `}
     ${({tourStep }) => (tourStep===2) && `
     position: absolute;
-    left:100px;
-    width: 400px;
+    right:100px;
+    width: 330px;
     
     `}
     ${({tourStep }) => (tourStep===3) && `
     position: absolute;
-    right:10px;
+    left:10px;
     width:200px;
 
     `}
@@ -116,53 +116,36 @@ interface TourProps {
 }
 
 
-const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
+const NewPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const [step, setStep] = useState<number>(0);
   const [step1,calledStep1Function]= useState<number>(0);
   let calledBannerStep = false;
   // Define tour steps
   const steps: Step[] = [
     {
-      target: '.text', // CSS selector for the element to highlight
-      content: 'Welcome! Would you like to have tour of the landing page?',
+      target: '', // CSS selector for the element to highlight
+      content: 'Here we have you get to choose the what type of project you want to create ',
     },
 
     {
-      target: '.banner', 
-      content: 'Automatarium is a tool that allows the user to visualize concepts of Formal languages and Automata Theory, to get started you can select the start building button ',
+      target: '', 
+      content: 'You can choose from the three types of automatons to create: Finite State Automaton, Push Down Automaton, Turing Machine',
    
     
     },
     {
       target: '', 
-      content: 'If you want more indepth tool guides you can go to the tutorial page using the tutorial button',
+      content: 'Here you can select your previous saved project',
    
     
     },
     {
       target: '', 
-      content: 'Here we have a testing table',
+      content: 'You can also import a project from your local drive or through an Url',
    
     
     },
-    {
-      target: '', 
-      content: 'You can see a glimpse of how some of the tools of Automatarium work, try the step function, it will reveal how the dfa shown above will run given it\'s input ',
    
-    
-    },
-    {
-      target: '', 
-      content: 'or you can press the skip button to see the end result  ',
-   
-    
-    },
-    {
-      target: '', 
-      content: 'You can access your recent projects here when you have started building your own automatons',
-
-    },
-    
    
     // Add more steps as needed
   ];
@@ -209,5 +192,5 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   );
 };
 
-export default LandingPageTour;
+export default NewPageTour;
 
