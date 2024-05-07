@@ -10,7 +10,7 @@ import useEdgeContext from './useEdgeContext'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 import { showWarning } from '/src/components/Warning/Warning'
 import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
-import { useContextStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
+import { useContextStore, usePopupsStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
 import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
 import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
@@ -353,7 +353,19 @@ const useActions = (registerHotkeys = false) => {
     TOGGLE_STATES_FINAL: {
       disabled: () => useSelectionStore.getState()?.selectedStates?.length === 0,
       handler: () => {
-        window.alert('FINAL STATE TOGGLED')
+        if (project.projectType === "TM") {
+          // Show popup until confirmed
+          if (usePopupsStore.getState().popups?.showFinalState) {
+            if (window.confirm('You have toggled a TM Final State. Confirm to not show again.')) {
+              usePopupsStore.getState().setPopups({showFinalState: false})
+            }
+          }
+          else {
+            if (window.confirm('Popup is now disabled, confirm to re-enable.')) {
+              usePopupsStore.getState().setPopups({showFinalState: true})
+            }
+          }
+        }
         const selectedStateIDs = useSelectionStore.getState().selectedStates
         if (selectedStateIDs.length > 0) {
           toggleStatesFinal(selectedStateIDs)
