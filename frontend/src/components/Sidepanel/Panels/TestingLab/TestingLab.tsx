@@ -38,6 +38,7 @@ const TestingLab = () => {
   const [traceIdx, setTraceIdx] = useState(0)
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
+  const [enableManualStepping, setEnableManualStepping] = useState(false)
 
   // Graph state
   const graph = useProjectStore(s => s.getGraph())
@@ -331,6 +332,19 @@ const TestingLab = () => {
             checked={showTraceTape}
             disabled={automataIsInvalid}
             onChange={e => setShowTraceTape(e.target.checked)}
+          />
+        </Preference>
+        )}
+        {(
+        <Preference
+          label={'Manual stepping'}
+          style={{ marginBlock: 0 }}
+        >
+          <Switch
+            type="checkbox"
+            checked={enableManualStepping}
+            disabled={automataIsInvalid}
+            onChange={e => setEnableManualStepping(e.target.checked)}
           />
         </Preference>
         )}
