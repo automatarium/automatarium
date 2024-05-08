@@ -21,6 +21,27 @@ const TourOverlay = styled('div')`
     align-items: center;
 `;
 
+const TourButton = styled('button')`
+  padding: 10px 20px;
+  background-color: #cbccc6;
+  color: #black; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px; 
+
+  &:hover {
+    background-color: #fbfcfa; /* Darker blue color on hover */
+  }
+
+  &:disabled {
+    background-color: #26261f; 
+    color: white;
+    cursor: not-allowed;
+  }
+`;
+
 const TourContent = styled('div')<TourContentProps>`
     background-color: #fff;
     padding: 20px;
@@ -32,7 +53,7 @@ const TourContent = styled('div')<TourContentProps>`
 
     ${({tourStep }) => (tourStep===1) && `
     position: absolute;
-    top: 170px;
+    top: 140px;
     right:20px;
     width: 200px;
     
@@ -78,31 +99,6 @@ const Banner = styled('banner')`
     colour:orange;
 
 `;
-const Arrow = styled('div')`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-`;
-
-const LeftArrow = styled(Arrow)`
-  border-width: 10px 0 10px 15px;
-  border-color: transparent transparent transparent #fff;
-  
-  top: 50%;
-  transform: translateY(-50%);
-
-`;
-
-const RightArrow = styled(Arrow)`
-  border-width: 10px 15px 10px 0;
-  border-color: transparent #fff transparent transparent;
-  right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 20px;
-  border-left: 1px solid #fff; 
-`;
 
 
 
@@ -131,7 +127,7 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
 
     {
       target: '', 
-      content: 'You can choose from three types of automatons to create: Finite State Automaton, Push Down Automaton and Turing Machine',
+      content: 'You can choose from three types of automatons to create: Finite State Automaton, Push Down Automaton and Turing Machines',
    
     
     },
@@ -181,11 +177,9 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
         <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>  
           <p>{steps[step].content}</p>
           <div className="tour-navigation">
-            <button onClick={handlePrevious} disabled={step === 0}>Previous</button>
-
-            <button onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</button>
-
-            <button onClick={handleSkip} >Skip Tour</button>
+              <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
+              <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
+              <TourButton onClick={handleSkip}>Skip Tour</TourButton>
           </div>
           
         </TourContent>

@@ -68,39 +68,29 @@ const TourContent = styled('div')<TourContentProps>`
     `}
 `;
 
-const Banner = styled('banner')`
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
-    float: right;
-    colour:orange;
+const TourButton = styled('button')`
+  padding: 10px 20px;
+  background-color: #cbccc6;
+  color: #black; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px; 
 
-`;
-const Arrow = styled('div')`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-`;
+  &:hover {
+    background-color: #fbfcfa; /* Darker blue color on hover */
+  }
 
-const LeftArrow = styled(Arrow)`
-  border-width: 10px 0 10px 15px;
-  border-color: transparent transparent transparent #fff;
-  
-  top: 50%;
-  transform: translateY(-50%);
-
+  &:disabled {
+    background-color: #26261f; 
+    color: white;
+    cursor: not-allowed;
+  }
 `;
 
-const RightArrow = styled(Arrow)`
-  border-width: 10px 15px 10px 0;
-  border-color: transparent #fff transparent transparent;
-  right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 20px;
-  border-left: 1px solid #fff; 
-`;
+
+
 
 
 
@@ -124,7 +114,7 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const steps: Step[] = [
     {
       target: '.text', // CSS selector for the element to highlight
-      content: 'Welcome! Would you like to have tour of the landing page?',
+      content: 'Welcome to The landing page!',
     },
 
     {
@@ -196,11 +186,9 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
         <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>  
           <p>{steps[step].content}</p>
           <div className="tour-navigation">
-            <button onClick={handlePrevious} disabled={step === 0}>Previous</button>
-
-            <button onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</button>
-
-            <button onClick={handleSkip} >Skip Tour</button>
+            <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
+            <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
+            <TourButton onClick={handleSkip}>Skip Tour</TourButton>
           </div>
           
         </TourContent>

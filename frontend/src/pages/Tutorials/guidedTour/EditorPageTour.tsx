@@ -5,12 +5,15 @@ import { ToolPopup,ToolName, ToolHotkey, Animation  } from '/src/components/Tool
 import { Tool } from '/src/stores/useToolStore';
 
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
-import { MousePointer2 } from 'lucide-react';
 import cursorAnimation from '../../../components/Toolbar/animations/cursor.json'
 import handAnimation from '../../../components/Toolbar/animations/hand.json'
 import stateAnimation from '../../../components/Toolbar/animations/state.json'
 import transitionAnimation from '../../../components/Toolbar/animations/transition.json'
 import commentAnimation from '../../../components/Toolbar/animations/comment.json'
+
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown } from 'lucide-react'
+import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2, Star } from 'lucide-react'
+import { Info } from '/src/components/Sidepanel/Panels';
 
 
 interface TourContentProps {
@@ -51,39 +54,29 @@ const TourContent = styled('div')<TourContentProps>`
 
 `;
 
-const Banner = styled('banner')`
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
-    float: right;
-    colour:orange;
+const TourButton = styled('button')`
+  padding: 10px 20px;
+  background-color: #cbccc6;
+  color: #black; 
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin: 5px; 
 
-`;
-const Arrow = styled('div')`
-  position: absolute;
-  width: 0;
-  height: 0;
-  border-style: solid;
-`;
+  &:hover {
+    background-color: #fbfcfa; /* Darker blue color on hover */
+  }
 
-const LeftArrow = styled(Arrow)`
-  border-width: 10px 0 10px 15px;
-  border-color: transparent transparent transparent #fff;
-  
-  top: 50%;
-  transform: translateY(-50%);
-
+  &:disabled {
+    background-color: #26261f; 
+    color: white;
+    cursor: not-allowed;
+  }
 `;
 
-const RightArrow = styled(Arrow)`
-  border-width: 10px 15px 10px 0;
-  border-color: transparent #fff transparent transparent;
-  right: -20px;
-  top: 50%;
-  transform: translateY(-50%);
-  margin-left: 20px;
-  border-left: 1px solid #fff; 
-`;
+
+
 
 
 
@@ -133,7 +126,7 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const steps: Step[] = [
     {
       target: '', // CSS selector for the element to highlight
-      content: 'This is the editor Page. You will get to build your Automatons here, let me step you through the built in functionality.',
+      content: 'This is the editor Page. You will get to build your Automatons here, here is a quick guide to the tools you will use.',
     },
 
     {
@@ -149,13 +142,13 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'The State Tool (which is in the form of a cirlce) will allow the user to create states any number of times ',
+      content: 'The State Tool will allow the user to create states any number of times ',
    
     
     },
     {
       target: '', 
-      content: 'The Transition Tool (which is the form of an arrow) will allow the user to creates transition between states ',
+      content: 'The Transition Tool will allow the user to creates transition between states ',
    
     
     },
@@ -167,7 +160,19 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'You can also import a project from your local drive, through an Url or simply through raw data (note this can be done from the export section when creating your automataon or your json file)',
+      content: 'The testing lab will alow you to test your automaton with different inputs',
+   
+    
+    },
+    {
+      target: '', 
+      content: 'The "About Your Automaton Feature will showcase detailed functionality information of your automaton ',
+   
+    
+    },
+    {
+      target: '', 
+      content: 'The File options will allow you to change any prefrences to State Identifiers, Operators and Project themes ',
    
     
     },
@@ -202,46 +207,37 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
 
   type ToolPopupType = {visible: boolean, y: number, tool: ToolItem}
   // const [toolPopup, setToolPopup] = useState<ToolPopupType>({} as ToolPopupType)
+  const icons = [<MousePointer2 />, <Hand />, <Circle />, <ArrowUpRight />, <MessageSquare />,<FlaskConical/>,<InfoIcon/>,<Settings2/>,<Star/>];
+  const other = [<Info/>]
+  const animations = [cursorAnimation, handAnimation, stateAnimation, transitionAnimation, commentAnimation];
+
 
   return (
     <TourOverlay>
 
         <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>  
-          <p>{steps[step].content}</p>
-          <div className="tour-navigation">
-            <button onClick={handlePrevious} disabled={step === 0}>Previous</button>
-
-            <button onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</button>
-
-            <button onClick={handleSkip} >Skip Tour</button>
-          </div>
-
-          {step === 1 && (
-            <Animation>
-              <Lottie loop animationData={cursorAnimation} play={true} />
-            </Animation>
-         )}
-          {step === 2 && (
-            <Animation>
-              <Lottie loop animationData={handAnimation} play={true} />
-            </Animation>
-         )}
-          {step === 3 && (
-            <Animation>
-              <Lottie loop animationData={stateAnimation} play={true} />
-            </Animation>
-         )}
-         {step === 4 && (
-            <Animation>
-              <Lottie loop animationData={transitionAnimation} play={true} />
-            </Animation>
-         )}
-             {step === 5 && (
-            <Animation>
-              <Lottie loop animationData={commentAnimation} play={true} />
-            </Animation>
-         )}
+         
           
+           {/* Render the icon based on the step */}
+      {icons[step - 1]}
+
+      {step === 7 &&
+      (other[0])}
+      
+      <p>{steps[step].content}</p>
+      
+      {/* Render the animation based on the step */}
+      {step >= 1 && step <= 5 && (
+        <Animation>
+          <Lottie loop animationData={animations[step - 1]} play={true} />
+        </Animation>
+      )}
+      
+      <div className="tour-navigation">
+        <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
+        <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
+        <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+      </div>
         </TourContent>
      </TourOverlay>
    
