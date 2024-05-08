@@ -172,6 +172,8 @@ const TestingLab = () => {
       switch (projectType) {
         case ('FSA'):
         case ('PDA'):
+          // TODO add more detail for PDA trace (stack pushing/popping)
+          assertType<(FSAExecutionTrace[] | PDAExecutionTrace[])>(trace)
           transitions = trace
             .slice(0, -1)
             .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
@@ -180,6 +182,7 @@ const TestingLab = () => {
 
           break
         case ('TM'):
+          assertType<(TMExecutionTrace[])>(trace)
           transitions = trace
             .slice(0, -1)
             .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
@@ -192,7 +195,7 @@ const TestingLab = () => {
     // Represent transitions as strings of form 'read: start -> end'
     const transitions = transitionsForAutomata(graph.projectType, trace)
     
-    var transitionsWithRejected = ''
+    var transitionsWithRejected = ['']
     if ('remaining' in simulationResult){  
         // Add rejecting transition if applicable
         transitionsWithRejected = !accepted && traceIdx === trace.length
