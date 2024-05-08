@@ -10,7 +10,7 @@ export class TMState extends State {
     public tape?: Tape,
     readonly direction: TMDirection | null = null,
     readonly read: string | null = null,
-    readonly write: string | null = null,
+    readonly write: string | null = null
   ) {
     super(id, isFinal)
   }
@@ -76,7 +76,7 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
           nextTape,
           transition.direction,
           lambdaTransitionRead ? '' : symbol,
-          lambdaTransitionWrite ? '' : writeSymbol,
+          lambdaTransitionWrite ? '' : writeSymbol
         )
         const successor = new Node(graphState, node)
         successors.push(successor)

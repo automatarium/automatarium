@@ -36,7 +36,7 @@ export const simulateTM = (
     return {
       accepted: false,
       tape: newTape(input),
-      trace: [],
+      trace: []
     }
   }
   const result = breadthFirstSearch(problem)

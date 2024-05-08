@@ -194,19 +194,19 @@ const TestingLab = () => {
 
     // Represent transitions as strings of form 'read: start -> end'
     const transitions = transitionsForAutomata(graph.projectType, trace)
-    
-    var transitionsWithRejected = ['']
-    if ('remaining' in simulationResult){  
-        // Add rejecting transition if applicable
-        transitionsWithRejected = !accepted && traceIdx === trace.length
-          ? [...transitions,
-              simulationResult.remaining[0]
-                ? `${simulationResult.remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
-                : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
-          : transitions
+
+    let transitionsWithRejected = ['']
+    if ('remaining' in simulationResult) {
+      // Add rejecting transition if applicable
+      transitionsWithRejected = !accepted && traceIdx === trace.length
+        ? [...transitions,
+            simulationResult.remaining[0]
+              ? `${simulationResult.remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
+              : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
+        : transitions
     } else {
-	// TODO add failed transition text for turing machines 
-        transitionsWithRejected = transitions
+      // TODO add failed transition text for turing machines
+      transitionsWithRejected = transitions
     }
 
     // Add 'REJECTED'/'ACCEPTED' label
