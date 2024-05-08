@@ -10,9 +10,9 @@ import { useEvent } from '/src/hooks'
 // import { usePreferencesStore } from '/src/stores'
 // import { Preferences } from '/src/stores/usePreferencesStore'
 
-const defaultValues = {
-  showFinalState: true
-}
+// const defaultValues = {
+//   showFinalState: true
+// }
 
 const FinalStatePopup = () => {
   const [isOpen, setIsOpen] = useState(false)
