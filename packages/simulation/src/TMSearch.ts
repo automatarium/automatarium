@@ -1,6 +1,6 @@
 import { Tape } from './graph'
 import { Graph, Node, State } from './interfaces/graph'
-import { TMAutomataTransition } from 'frontend/src/types/ProjectTypes'
+import { TMAutomataTransition, TMDirection } from 'frontend/src/types/ProjectTypes'
 import { extractSymbolsToExclude } from 'frontend/src/util/stringManipulations'
 
 export class TMState extends State {
@@ -8,9 +8,9 @@ export class TMState extends State {
     id: number,
     isFinal: boolean,
     public tape?: Tape,
+    readonly direction: TMDirection | null = null,
     readonly read: string | null = null,
     readonly write: string | null = null,
-    readonly direction: TMDirection
   ) {
     super(id, isFinal)
   }
@@ -74,9 +74,9 @@ export class TMGraph extends Graph<TMState, TMAutomataTransition> {
           nextState.id,
           nextState.isFinal,
           nextTape,
+          transition.direction,
           lambdaTransitionRead ? '' : symbol,
           lambdaTransitionWrite ? '' : writeSymbol,
-          transition.direction
         )
         const successor = new Node(graphState, node)
         successors.push(successor)

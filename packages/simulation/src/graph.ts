@@ -1,3 +1,5 @@
+import { TMDirection } from 'frontend/src/types/ProjectTypes'
+
 export type ReadSymbol = string;
 export type StateID = number;
 
