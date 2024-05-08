@@ -33,8 +33,8 @@ const FinalStatePopup = () => {
 
   return (
     <Modal
-      title="Important"
-      description="Description"
+      title="IMPORTANT"
+      description="The default Turing Machine behaviour is to halt upon reaching a final state. You can modify this setting below this text or by accessing the preferences menu at any time."
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       role="alertdialog" // Prevents closing by clicking away

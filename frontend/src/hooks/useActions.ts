@@ -355,10 +355,10 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         if (project.projectType === 'TM') {
           // Show popup until confirmed
-          if (usePopupsStore.getState().popups?.showFinalState) {
-            if (window.confirm('You have toggled a TM Final State. Confirm to not show again.')) {
-              usePopupsStore.getState().setPopups({ showFinalState: false })
-            }
+          const showFinalState = usePopupsStore.getState().popups?.showFinalState
+          if (showFinalState) {
+            dispatchCustomEvent('modal:finalstate', null)
+            usePopupsStore.getState().setPopups({ showFinalState: false })
           } else {
             if (window.confirm('Popup is now disabled, confirm to re-enable.')) {
               usePopupsStore.getState().setPopups({ showFinalState: true })
