@@ -1,12 +1,14 @@
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useState } from 'react'
+// import { useEffect, useState } from 'react'
+// import { useForm } from 'react-hook-form'
 
-import { SectionLabel, Modal, Preference } from '/src/components'
+// import { SectionLabel, Modal, Preference } from '/src/components'
+import { Modal } from '/src/components'
 import { useEvent } from '/src/hooks'
 
-import { Section } from './finalStatePopupStyle'
-import { usePreferencesStore } from '/src/stores'
-import { Preferences } from '/src/stores/usePreferencesStore'
+// import { Section } from './finalStatePopupStyle'
+// import { usePreferencesStore } from '/src/stores'
+// import { Preferences } from '/src/stores/usePreferencesStore'
 
 const defaultValues = {
   showFinalState: true
