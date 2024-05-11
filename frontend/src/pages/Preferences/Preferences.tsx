@@ -12,7 +12,8 @@ const defaultValues = {
   theme: 'system',
   color: 'match',
   showGrid: true,
-  ctrlZoom: true
+  ctrlZoom: true,
+  pauseTM: true
 }
 
 const Preferences = () => {
@@ -92,6 +93,13 @@ const Preferences = () => {
             description="Allows panning using a trackpad"
           >
             <Switch type="checkbox" {...register('ctrlZoom')} />
+          </Preference>
+
+          <Preference
+            label="TM Pause on Final State"
+            description="Toggles pausing for trace step for TM"
+          >
+            <Switch type="checkbox" {...register('pauseTM')} />  
           </Preference>
         </Section>
       </form>

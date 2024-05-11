@@ -8,6 +8,7 @@ export interface Preferences {
   color: ColourName | 'match'
   showGrid: boolean
   ctrlZoom: boolean
+  pauseTM: boolean
 }
 
 interface PreferencesStore {
@@ -19,7 +20,8 @@ const defaultPreferences: Preferences = {
   theme: 'system',
   color: 'match',
   showGrid: true,
-  ctrlZoom: !navigator.platform?.match(/Win/) // Default to false on windows, which more often has a mouse
+  ctrlZoom: !navigator.platform?.match(/Win/), // Default to false on windows, which more often has a mouse
+  pauseTM: true
 }
 
 const usePreferencesStore = create<PreferencesStore>()(persist((set: SetState<PreferencesStore>) => ({

@@ -27,6 +27,8 @@ import {
 } from '@automatarium/simulation/src/graph'
 import { assertType } from '/src/types/ProjectTypes'
 
+import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
+
 type SimulationResult = ExecutionResult & {transitionCount: number}
 
 export const ThemeContext = createContext({})
@@ -52,6 +54,8 @@ const TestingLab = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
+  // Preference option to pause/unpause TM at Final State
+  const preferences = usePreferencesStore(state => state.preferences);
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
@@ -63,7 +67,7 @@ const TestingLab = () => {
       Math.max(1, res.trace.length) - (res.accepted ? 1 : graph.projectType === 'TM' ? 1 : 0)
 
     if (graph.projectType === 'TM') {
-      const result = simulateTM(graph, input)
+      const result = simulateTM(graph, input, preferences)
       return {
         ...result,
         transitionCount: transitionCount(result)
