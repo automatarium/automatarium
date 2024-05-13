@@ -134,8 +134,7 @@ const TestingLab = () => {
     setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
   }
 
-  // Execute graph
-  const simulateGraph = useCallback(() => {
+  function simulateGraphAuto () {
     const result = runSimulation(traceInput)
     // The `in` is just to type narrow for TS
     if ('tape' in result) {
@@ -149,14 +148,28 @@ const TestingLab = () => {
       }
     }
     return result
-  }, [graph, traceInput])
+  }
+
+  function simulateGraphManual () {
+    // TODO actually implement manual stepping
+    return simulateGraphAuto()
+  }
+
+  // Execute graph
+  const simulateGraph = useCallback(() => {
+    if (enableManualStepping) {
+      return simulateGraphManual()
+    } else {
+      return simulateGraphAuto()
+    }
+  }, [graph, traceInput, enableManualStepping])
 
   // Determine last position allowed
   const lastTraceIdx = simulationResult?.transitionCount
 
   const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
 
-  const traceOutput = useMemo(() => {
+  function traceOutputAuto () {
     // No output before simulating
     if (!simulationResult) { return '' }
     assertType<(FSAExecutionResult | PDAExecutionResult | TMExecutionResult) & {transitionCount: number}>(simulationResult)
@@ -212,7 +225,19 @@ const TestingLab = () => {
 
     // Add 'REJECTED'/'ACCEPTED' label
     return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
-  }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName])
+  }
+
+  function traceOutputManual () {
+    return 'Tracing it manually!'
+  }
+
+  const traceOutput = useMemo(() => {
+    if (enableManualStepping) {
+      return traceOutputManual()
+    } else {
+      return traceOutputAuto()
+    }
+  }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
 
   useEffect(() => {
     simulateGraph()
