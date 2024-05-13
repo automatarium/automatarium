@@ -348,9 +348,9 @@ const TestingLab = () => {
           />
         </Preference>
         )}
-      {enableManualStepping &&
-        '<Button>a,X;R: q0 -> q1</Button>'
-      }
+      {enableManualStepping && (
+        <Button>{'a,X;R: q0 -> q1'}</Button>
+      )}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
