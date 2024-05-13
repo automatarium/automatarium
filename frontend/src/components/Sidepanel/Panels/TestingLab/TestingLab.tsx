@@ -175,8 +175,6 @@ const TestingLab = () => {
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const noFinalState = !graph?.states.find(s => s.isFinal)
   const warnings = []
-  if (noInitialState) { warnings.push('There is no initial state') }
-  if (noFinalState) { warnings.push('There are no final states') }
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
@@ -189,7 +187,10 @@ const TestingLab = () => {
     }
   }, [graph])
   // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
-  if (!pathToFinal && (graph.states.length > 1)) { warnings.push('There is no path to a final state') }
+  if (noInitialState) { warnings.push('There is no initial state') }
+  if (noFinalState) { warnings.push('There are no final states') }
+  else if (!pathToFinal) { warnings.push('There is no path to final state') }
+  
 
   // :^)
   const dibEgg = useDibEgg()
