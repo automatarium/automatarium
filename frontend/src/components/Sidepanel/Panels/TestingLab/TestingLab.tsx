@@ -228,7 +228,8 @@ const TestingLab = () => {
   }
 
   function traceOutputManual () {
-    return 'Tracing it manually!'
+    // TODO fix for manual
+    return traceOutputAuto()
   }
 
   const traceOutput = useMemo(() => {
