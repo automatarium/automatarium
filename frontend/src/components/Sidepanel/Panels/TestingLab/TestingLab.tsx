@@ -3,8 +3,8 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
-import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/simulation'
+import { useProjectStore, usePDAVisualiserStore, useSteppingStore } from '/src/stores'
+import { closureWithPredicate, graphStepper, simulateFSA, simulatePDA } from '@automatarium/simulation'
 
 import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
@@ -25,9 +25,10 @@ import {
   PDAExecutionResult,
   PDAExecutionTrace
 } from '@automatarium/simulation/src/graph'
-import { assertType } from '/src/types/ProjectTypes'
+import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, assertType } from '/src/types/ProjectTypes'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
+type StepType = 'Forward' | 'Backward' | 'Reset'
 
 export const ThemeContext = createContext({})
 
@@ -51,6 +52,43 @@ const TestingLab = () => {
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
+
+  // Add Stepper from (old) SteppingLab
+  const stepper = useMemo(() => {
+    // Graph stepper for PDA currently requires changes to BFS stack logic
+    // to handle non-determinism so branching stops on the first rejected transition.
+    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
+  }, [graph, traceInput])
+  const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
+
+  const handleStep = (stepType: StepType) => {
+    let frontier = []
+    if (stepper) {
+      switch (stepType) {
+        case 'Forward':
+          frontier = stepper.forward()
+          break
+        case 'Backward':
+          frontier = stepper.backward()
+          break
+        case 'Reset':
+          frontier = stepper.reset()
+          break
+        default:
+          break
+      }
+
+      if (frontier && frontier.length > 0) {
+        setSteppedStates(frontier)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (stepper) {
+      handleStep('Reset')
+    }
+  }, [traceInput])
 
   /**
    * Runs the correct simulation result for a trace input and returns the result.
@@ -215,7 +253,7 @@ const TestingLab = () => {
             setSimulationResult(undefined)
           }}
           value={traceInput ?? ''}
-          placeholder="Enter a value to test"
+          placeholder="λ"
         />
 
         <StepButtons>
@@ -224,6 +262,7 @@ const TestingLab = () => {
             }
             onClick={() => {
               setTraceIdx(0)
+              handleStep('Reset')
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
@@ -231,6 +270,7 @@ const TestingLab = () => {
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
+              handleStep('Backward')
             }} />
 
           <Button icon={<ChevronRight size={23} />}
@@ -242,6 +282,7 @@ const TestingLab = () => {
                 simulateGraph()
               }
               setTraceIdx(traceIdx + 1)
+              handleStep('Forward')
             }} />
 
           <Button icon={<SkipForward size={20} />}
