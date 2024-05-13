@@ -178,19 +178,13 @@ const TestingLab = () => {
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
-    // Hardcoded solution to #359 - Return that a path exists for a graph with one state that is both initial and final without transitions
-    if (graph.states.length === 1 && !noInitialState && !noFinalState && graph.transitions.length === 0) {
-      return true
-    } else {
-      const closure = closureWithPredicate(graph, graph.initialState, () => true)
-      return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
-    }
+    // Solution to #359 - Concat the intial state to solve the problem that a legal 1 state (both initial and final) 0 transition machine can accept λ
+    const closure = closureWithPredicate(graph, graph.initialState, () => true)
+    return Array.from(closure).concat({ state: graph.initialState, transitions: [] }).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
   // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
   if (noInitialState) { warnings.push('There is no initial state') }
-  if (noFinalState) { warnings.push('There are no final states') }
-  else if (!pathToFinal) { warnings.push('There is no path to final state') }
-  
+  if (noFinalState) { warnings.push('There are no final states') } else if (!pathToFinal) { warnings.push('There is no path to final state') }
 
   // :^)
   const dibEgg = useDibEgg()
