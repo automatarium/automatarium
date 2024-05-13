@@ -292,7 +292,7 @@ const TestingLab = () => {
 
           <Button icon={<ChevronRight size={23} />}
             disabled={
-              traceIdx >= lastTraceIdx || automataIsInvalid
+              traceIdx >= lastTraceIdx || automataIsInvalid || enableManualStepping
             }
             onClick={() => {
               if (!simulationResult) {
@@ -304,7 +304,7 @@ const TestingLab = () => {
           <Button icon={<SkipForward size={20} />}
             // eslint-disable-next-line no-mixed-operators
             disabled={
-                traceIdx >= lastTraceIdx || automataIsInvalid
+                traceIdx >= lastTraceIdx || automataIsInvalid || enableManualStepping
             }
             onClick={() => {
               // Increment tracer index
@@ -348,6 +348,9 @@ const TestingLab = () => {
           />
         </Preference>
         )}
+      {enableManualStepping &&
+        '<Button>a,X;R: q0 -> q1</Button>'
+      }
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
