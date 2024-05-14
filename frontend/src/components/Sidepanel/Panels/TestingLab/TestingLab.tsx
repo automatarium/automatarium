@@ -27,9 +27,9 @@ import {
   TMExecutionResult,
   TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
-import { Graph, Node } from '@automatarium/simulation/src/interfaces/graph'
+import { Graph, Node, State } from '@automatarium/simulation/src/interfaces/graph'
 import { buildProblem } from '@automatarium/simulation/src/utils'
-import { assertType } from '/src/types/ProjectTypes'
+import { BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
 
@@ -41,9 +41,9 @@ const TestingLab = () => {
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
   const [enableManualStepping, setEnableManualStepping] = useState(false)
-  const [problem, setProblem] = useState<Graph | undefined>()
-  const [currentManualNode, setCurrentManualNode] = useState<Node | Undefined>()
-  const [currentManualSuccessors, setCurrentManualSuccessors] = useState<Node[]>([])
+  const [problem, setProblem] = useState<Graph<State,BaseAutomataTransition> | undefined>()
+  const [currentManualNode, setCurrentManualNode] = useState<Node<State> | undefined>()
+  const [currentManualSuccessors, setCurrentManualSuccessors] = useState<Node<State>[]>([])
   // const [manualExecutionTrace, setManualExecutionTrace] = useState([])
 
   // Graph state
