@@ -27,6 +27,8 @@ import {
   TMExecutionResult,
   TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
+import { Graph, Node } from '@automatarium/simulation/src/interfaces/graph'
+import { buildProblem } from '@automatarium/simulation/src/utils'
 import { assertType } from '/src/types/ProjectTypes'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
@@ -39,6 +41,10 @@ const TestingLab = () => {
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
   const [enableManualStepping, setEnableManualStepping] = useState(false)
+  const [problem, setProblem] = useState<Graph | undefined>()
+  const [currentManualNode, setCurrentManualNode] = useState<Node | Undefined>()
+  const [currentManualSuccessors, setCurrentManualSuccessors] = useState<Node[]>([])
+  // const [manualExecutionTrace, setManualExecutionTrace] = useState([])
 
   // Graph state
   const graph = useProjectStore(s => s.getGraph())
@@ -239,6 +245,21 @@ const TestingLab = () => {
       return traceOutputAuto()
     }
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
+
+  useEffect(() => {
+    if (enableManualStepping) {
+      // Seems like buildProblem causes graph to change, causing recursive calls
+      // const graphCopy = {...graph}
+      // const problem = buildProblem(graphCopy, traceInput)
+      const problem = null // TEMP
+      if (problem != null) {
+        setProblem(problem)
+        console.log(problem)
+      } else {
+        console.log('Problem not created properly!')
+      }
+    }
+  }, [graph, enableManualStepping])
 
   useEffect(() => {
     simulateGraph()
