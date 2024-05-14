@@ -172,7 +172,7 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'The File options will allow you to change any prefrences to State Identifiers, Operators and Project themes.',
+      content: 'The File options will allow you to change any preferences to State Identifiers, Operators and Project themes.',
    
     
     },

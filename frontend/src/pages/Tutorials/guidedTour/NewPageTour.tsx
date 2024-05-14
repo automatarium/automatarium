@@ -94,14 +94,7 @@ const TourContent = styled('div')<TourContentProps>`
     `}
 `;
 
-const Banner = styled('banner')`
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px;
-    float: right;
-    colour:orange;
 
-`;
 
 
 
@@ -142,7 +135,7 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'You can also import a project from your local drive, via Url or simply through raw data from a Json file (note a file to be imported can be created from the export section when creating your automataon).',
+      content: 'You can also import a project from your local drive, via Url or simply through raw data from a Json file (note a file to be imported can be created from the export section when creating your automaton).',
    
     
     },
