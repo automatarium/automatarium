@@ -142,40 +142,46 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'The State Tool will allow you to create states any number of times ',
+      content: 'The State Tool will allow you to create states, which can be done any number of times.',
    
     
     },
     {
       target: '', 
-      content: 'The Transition Tool will allow you to create transition between states ',
+      content: 'The Transition Tool will allow you to create transition between states. ',
    
     
     },
     {
       target: '', 
-      content: 'You can also add your personal comments with the Comment Tool',
+      content: 'You can also add your personal comments with the Comment Tool.',
    
     
     },
     {
       target: '', 
-      content: 'The testing lab will alow you to test your automaton with different inputs',
+      content: 'The testing lab will alow you to test your automaton with different inputs.',
    
     
     },
     {
       target: '', 
-      content: 'The "About Your Automaton Feature will showcase detailed functionality information of your automaton ',
+      content: 'The "About Your Automaton Feature will showcase detailed information about your automaton. ',
    
     
     },
     {
       target: '', 
-      content: 'The File options will allow you to change any prefrences to State Identifiers, Operators and Project themes ',
+      content: 'The File options will allow you to change any prefrences to State Identifiers, Operators and Project themes.',
    
     
     },
+    {
+      target: '', 
+      content: 'The Template option will allow you to save a template of states for future use. Here you can also access your saved templates.',
+   
+    
+    }
 
    
    

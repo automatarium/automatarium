@@ -23,7 +23,7 @@ const TourOverlay = styled('div')`
 `;
 
 const TourButton = styled('button')`
-  pointer-events: auto;
+
   padding: 10px 20px;
   background-color: #cbccc6;
   color: #black; 
@@ -45,6 +45,7 @@ const TourButton = styled('button')`
 `;
 
 const TourContent = styled('div')<TourContentProps>`
+    pointer-events: auto;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -124,24 +125,24 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const steps: Step[] = [
     {
       target: '', // CSS selector for the element to highlight
-      content: 'Here you get to choose what type of project you want to create ',
+      content: 'Here you get to choose what type of projects you want to create.',
     },
 
     {
       target: '', 
-      content: 'You can choose from three types of automatons to create: Finite State Automaton, Push Down Automaton and Turing Machines',
+      content: 'You can choose from three types of automatons: Finite State Automaton, Push Down Automaton or a Turing Machine.',
    
     
     },
     {
       target: '', 
-      content: 'Here you can select your previous saved projects',
+      content: 'Here you can select your previous saved projects.',
    
     
     },
     {
       target: '', 
-      content: 'You can also import a project from your local drive, through an Url or simply through raw data (note this can be done from the export section when creating your automataon or your json file)',
+      content: 'You can also import a project from your local drive, via Url or simply through raw data from a Json file (note a file to be imported can be created from the export section when creating your automataon).',
    
     
     },

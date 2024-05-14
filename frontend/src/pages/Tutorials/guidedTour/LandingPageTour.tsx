@@ -116,18 +116,18 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
   const steps: Step[] = [
     {
       target: '.text', // CSS selector for the element to highlight
-      content: 'Welcome to The landing page!',
+      content: 'Welcome to the Landing Page!',
     },
 
     {
       target: '.banner', 
-      content: 'Automatarium is a tool that allows you to visualize concepts of Formal languages and Automata Theory, to get started you can select the start building button ',
+      content: 'Automatarium is a tool that allows you to visualize concepts of Formal languages and Automata Theory. To get started you can select the start building button. ',
    
     
     },
     {
       target: '', 
-      content: 'If you want more indepth tool guides you can go to the tutorial page using the tutorial button',
+      content: 'If you want more indepth tool guides you can go to the tutorial page using the tutorial button.',
    
     
     },
@@ -139,7 +139,7 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'You can see a glimpse of how some of the tools of Automatarium work. Try the STEP buttons, it will reveal how the dfa shown above will run given it\'s input step by step. ',
+      content: 'You can see a glimpse of how some of the tools of Automatarium work. Try the STEP buttons, it will reveal how the dfa shown above will run given it\'s input.',
    
     
     },
