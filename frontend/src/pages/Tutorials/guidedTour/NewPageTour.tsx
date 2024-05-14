@@ -19,9 +19,11 @@ const TourOverlay = styled('div')`
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
 `;
 
 const TourButton = styled('button')`
+  pointer-events: auto;
   padding: 10px 20px;
   background-color: #cbccc6;
   color: #black; 

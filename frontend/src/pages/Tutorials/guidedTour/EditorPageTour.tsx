@@ -136,19 +136,19 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'The Hand tool allows the user to move around the screen.',
+      content: 'The Hand tool allows you to move around the screen.',
    
     
     },
     {
       target: '', 
-      content: 'The State Tool will allow the user to create states any number of times ',
+      content: 'The State Tool will allow you to create states any number of times ',
    
     
     },
     {
       target: '', 
-      content: 'The Transition Tool will allow the user to creates transition between states ',
+      content: 'The Transition Tool will allow you to create transition between states ',
    
     
     },

@@ -19,9 +19,11 @@ const TourOverlay = styled('div')`
     display: flex;
     justify-content: center;
     align-items: center;
+    pointer-events: none;
 `;
 
 const TourContent = styled('div')<TourContentProps>`
+    pointer-events: auto;
     background-color: #fff;
     padding: 20px;
     border-radius: 10px;
@@ -62,7 +64,7 @@ const TourContent = styled('div')<TourContentProps>`
     `}
     ${({tourStep }) => (tourStep===6) && `
     position: absolute;
-    right:0px;
+    right:10px;
     width:200px;
 
     `}
@@ -119,7 +121,7 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
 
     {
       target: '.banner', 
-      content: 'Automatarium is a tool that allows the user to visualize concepts of Formal languages and Automata Theory, to get started you can select the start building button ',
+      content: 'Automatarium is a tool that allows you to visualize concepts of Formal languages and Automata Theory, to get started you can select the start building button ',
    
     
     },
@@ -137,13 +139,14 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'You can see a glimpse of how some of the tools of Automatarium work, try the step function, it will reveal how the dfa shown above will run given it\'s input ',
+      content: 'You can see a glimpse of how some of the tools of Automatarium work. Try the STEP buttons, it will reveal how the dfa shown above will run given it\'s input step by step. ',
    
     
     },
+   
     {
       target: '', 
-      content: 'or you can press the skip button to see the end result  ',
+      content: 'You can always press the skip button to see the end result  ',
    
     
     },

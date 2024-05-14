@@ -66,6 +66,7 @@ const Landing = () => {
   const closeTour = () => {
     setShowTour(false);
     setIsBannerStep(false); 
+    setStep(0);
   };
 
   useEffect(() => {
@@ -94,7 +95,6 @@ const Landing = () => {
             style={{
               backgroundColor: (Step ===1) ? '#90EE90':"",
               color: (Step ===1) ? 'green' : 'white',
-              
             } }
           >Start building!</Button>
           <p>First time here? Check out our tutorials!</p>
@@ -119,7 +119,7 @@ const Landing = () => {
       </Banner>
 
       <Section $reverse>
-        <TestingLab />
+        <TestingLab Step={Step} />
         <div className="text">
           <h3>Fully-featured testing lab</h3>
           <p>Automatarium provides a simple but powerful testing lab. Step through inputs and see a live trace of what is happening. Try changing the input in the example and see what happens.</p>
