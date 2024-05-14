@@ -30,7 +30,8 @@ import {
 import { Graph, Node, State } from '@automatarium/simulation/src/interfaces/graph'
 import { BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from '@automatarium/simulation/src/utils'
-import { assertType } from '/src/types/ProjectTypes'
+import { BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
+import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
 
@@ -234,6 +235,9 @@ const TestingLab = () => {
     return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }
 
+  // TODO Take the manual transitions and actually pipe them into here
+  const validTransitionsFromCurrentState:string[] = ['a,X;R: q0 -> q1', 'b,λ;L: q0 -> q2']
+
   function traceOutputManual () {
     // TODO fix for manual
     return traceOutputAuto()
@@ -313,6 +317,22 @@ const TestingLab = () => {
   const inputIdx = currentTrace.map(tr => 'read' in tr && tr.read !== 'λ' ? 1 : 0).reduce((a, b) => a + b, 0) ?? 0
   const currentStateID = currentTrace?.[currentTrace.length - 1]?.to ?? graph?.initialState
   const automataIsInvalid = noInitialState || noFinalState || !pathToFinal
+
+  // Display the valid transitions that could be manually chosen
+  const buttonsArray:JSX.Element[] = []
+  validTransitionsFromCurrentState.forEach(t => {
+    // Add transition to the form of <Button>{'a,X;R: q0 -> q1'}</Button>
+    // Currently, all buttons move to first successor if available
+    buttonsArray.push(<Button onClick={() => {
+      if (currentManualSuccessors.length > 0) {
+        setCurrentManualNode(currentManualSuccessors[0])
+        setTraceIdx(traceIdx + 1)
+        console.log(['New node set!', currentManualNode, currentManualSuccessors])
+      } else {
+        console.log(['invalid successor', currentManualNode, currentManualSuccessors])
+      }
+    }}>{t}</Button>)
+  })
 
   return (
     <>
@@ -411,18 +431,7 @@ const TestingLab = () => {
           />
         </Preference>
         )}
-      {enableManualStepping && (
-        <Button onClick={() => {
-          if (currentManualSuccessors.length > 0) {
-            setCurrentManualNode(currentManualSuccessors[0])
-            setTraceIdx(traceIdx + 1)
-            console.log(['New node set!', currentManualNode, currentManualSuccessors])
-          } else {
-            console.log(['invalid successor', currentManualNode, currentManualSuccessors])
-          }
-        }}>
-          {'Successor 1'}</Button>
-      )}
+      {enableManualStepping && (buttonsArray)}
       </Wrapper>
 
       <SectionLabel>Multi-run</SectionLabel>
