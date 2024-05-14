@@ -27,7 +27,8 @@ import {
   TMExecutionResult,
   TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
-import { Graph, Node } from '@automatarium/simulation/src/interfaces/graph'
+import { Graph, Node, State } from '@automatarium/simulation/src/interfaces/graph'
+import { BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from '@automatarium/simulation/src/utils'
 import { assertType } from '/src/types/ProjectTypes'
 
@@ -41,9 +42,9 @@ const TestingLab = () => {
   const [multiTraceOutput, setMultiTraceOutput] = useState([])
   const [showTraceTape, setShowTraceTape] = useState(false)
   const [enableManualStepping, setEnableManualStepping] = useState(false)
-  const [problem, setProblem] = useState<Graph | undefined>()
-  const [currentManualNode, setCurrentManualNode] = useState<Node | Undefined>()
-  const [currentManualSuccessors, setCurrentManualSuccessors] = useState<Node[]>([])
+  const [problem, setProblem] = useState<Graph<State, BaseAutomataTransition> | undefined>()
+  const [currentManualNode, setCurrentManualNode] = useState<Node<State> | undefined>()
+  const [currentManualSuccessors, setCurrentManualSuccessors] = useState<Node<State>[]>([])
   // const [manualExecutionTrace, setManualExecutionTrace] = useState([])
 
   // Graph state
@@ -246,20 +247,35 @@ const TestingLab = () => {
     }
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
 
+  // Creates problem and sets it, should run every time trace/graph changes while enableManualStepping is enabled
+  // (doesn't work 100%, may have to cause update by changing input)
   useEffect(() => {
     if (enableManualStepping) {
-      // Seems like buildProblem causes graph to change, causing recursive calls
-      // const graphCopy = {...graph}
-      // const problem = buildProblem(graphCopy, traceInput)
-      const problem = null // TEMP
-      if (problem != null) {
-        setProblem(problem)
-        console.log(problem)
+      const _problem = buildProblem(graph, traceInput)
+      if (_problem != null) {
+        console.log('currentManualNode reset')
+        setProblem(_problem)
+        setCurrentManualNode(_problem.initial)
+        setTraceIdx(0)
       } else {
         console.log('Problem not created properly!')
       }
     }
-  }, [graph, enableManualStepping])
+  }, [enableManualStepping, traceInput]) // TODO add more dependencies, tried graph but caused recursive calls
+
+  // Runs every time new node is selected while enableManualStepping is enabled
+  useEffect(() => {
+    if (enableManualStepping) {
+      // Detection of if final state has been reached
+      if (problem && problem.isFinalState(currentManualNode)) {
+        console.log(['Huzzah, final state has been reached!', currentManualNode])
+      }
+      // Updates array of successors
+      if (currentManualNode != null && problem) {
+        setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
+      }
+    }
+  }, [traceInput, problem, currentManualNode])
 
   useEffect(() => {
     simulateGraph()
@@ -396,7 +412,16 @@ const TestingLab = () => {
         </Preference>
         )}
       {enableManualStepping && (
-        <Button>{'a,X;R: q0 -> q1'}</Button>
+        <Button onClick={() => {
+          if (currentManualSuccessors.length > 0) {
+            setCurrentManualNode(currentManualSuccessors[0])
+            setTraceIdx(traceIdx + 1)
+            console.log(['New node set!', currentManualNode, currentManualSuccessors])
+          } else {
+            console.log(['invalid successor', currentManualNode, currentManualSuccessors])
+          }
+        }}>
+          {'Successor 1'}</Button>
       )}
       </Wrapper>
 
