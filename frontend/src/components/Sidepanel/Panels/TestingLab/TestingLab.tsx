@@ -327,19 +327,14 @@ const TestingLab = () => {
   const automataIsInvalid = noInitialState || noFinalState || !pathToFinal
 
   // Display the valid transitions that could be manually chosen
-  const buttonsArray:JSX.Element[] = []
-  validTransitionsFromCurrentState.forEach(t => {
+  const buttonsArray:JSX.Element[] = []  
+  currentManualSuccessors.forEach(t => {
     // Add transition to the form of <Button>{'a,X;R: q0 -> q1'}</Button>
-    // Currently, all buttons move to first successor if available
     buttonsArray.push(<Button onClick={() => {
-      if (currentManualSuccessors.length > 0) {
-        setCurrentManualNode(currentManualSuccessors[0])
-        setTraceIdx(traceIdx + 1)
-        console.log(['New node set!', currentManualNode, currentManualSuccessors])
-      } else {
-        console.log(['invalid successor', currentManualNode, currentManualSuccessors])
-      }
-    }}>{t}</Button>)
+      setCurrentManualNode(t)
+      setTraceIdx(traceIdx + 1)
+      console.log(['New node set!', currentManualNode, currentManualSuccessors])
+    }}>{nodeTransitionString(t)}</Button>)
   })
 
   return (
