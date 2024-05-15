@@ -15,6 +15,10 @@ export class FSAState extends State {
   key () {
     return String(this.id + this.remaining)
   }
+
+  toTransitionString(){
+    return `${this.read}`
+  }
 }
 
 export class FSAGraph extends Graph<FSAState, FSAAutomataTransition> {

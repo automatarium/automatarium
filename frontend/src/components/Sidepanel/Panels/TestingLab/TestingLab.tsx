@@ -177,6 +177,14 @@ const TestingLab = () => {
 
   const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
 
+  function nodeTransitionString(node: Node): string{
+    if (node.parent != null){
+      return `${node.state.toTransitionString()}: ${getStateName(node.parent.state.id) ?? statePrefix + node.parent.state.id} -> ${getStateName(node.state.id) ?? statePrefix + node.state.id}`
+    } else {
+      return ""
+    }
+  }
+
   function traceOutputAuto () {
     // No output before simulating
     if (!simulationResult) { return '' }
@@ -272,7 +280,7 @@ const TestingLab = () => {
     if (enableManualStepping) {
       // Detection of if final state has been reached
       if (problem && problem.isFinalState(currentManualNode)) {
-        console.log(['Huzzah, final state has been reached!', currentManualNode])
+        console.log(['Huzzah, final state has been reached!', currentManualNode, nodeTransitionString(currentManualNode)])
       }
       // Updates array of successors
       if (currentManualNode != null && problem) {

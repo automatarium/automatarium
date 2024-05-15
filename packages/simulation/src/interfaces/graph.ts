@@ -5,6 +5,7 @@ export abstract class State {
   protected constructor (readonly id: number, readonly isFinal: boolean) {}
 
     abstract key(): string;
+    abstract toTransitionString(): string;
 }
 
 export class Node<S extends State> {

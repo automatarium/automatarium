@@ -22,6 +22,11 @@ export class PDAState extends State {
     // They are divided by the ID so that collisions won't occur if a dividing character appears
     return String(this.remaining + this.id.toString() + this.stack.join(''))
   }
+
+  toTransitionString(){
+    return `${this.read}`
+  }
+
 }
 
 export class PDAGraph extends Graph<PDAState, PDAAutomataTransition> {
