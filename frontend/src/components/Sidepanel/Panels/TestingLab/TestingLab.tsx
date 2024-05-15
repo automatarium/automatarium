@@ -274,6 +274,25 @@ const TestingLab = () => {
       }
     }
   }, [enableManualStepping, traceInput]) // TODO add more dependencies, tried graph but caused recursive calls
+  
+  // To move execution path back when backtracking
+  useEffect(() => {
+    if (enableManualStepping){
+      let nodeChainLength = 0
+      let currentNode = currentManualNode
+      while (currentNode){
+        nodeChainLength += 1
+        currentNode = currentNode.parent
+      }
+      // If traceIdx is larger than nodes in manual execution, then shrink
+      if (nodeChainLength > traceIdx + 1){
+        let amountToShrink = nodeChainLength - (traceIdx + 1)
+        for (let i = 0; i < amountToShrink; i++){
+          setCurrentManualNode(currentManualNode.parent)
+        }
+      }
+    }
+  }, [traceIdx])
 
   // Runs every time new node is selected while enableManualStepping is enabled
   useEffect(() => {
