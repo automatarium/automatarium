@@ -20,8 +20,11 @@ export class TMState extends State {
     return String(this.id + ',' + this.tape.pointer + ',' + traceAdd)
   }
 
-  toTransitionString(){
-    return `${this.read},${this.write};${this.direction}`
+  toTransitionString () {
+    // TODO find better place to put function
+    const formatSymbol = (char?: string): string =>
+      char === null || char === '' ? 'λ' : char
+    return `${formatSymbol(this.read)},${formatSymbol(this.write)};${formatSymbol(this.direction)}`
   }
 }
 

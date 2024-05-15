@@ -28,10 +28,9 @@ import {
   TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
 import { Graph, Node, State } from '@automatarium/simulation/src/interfaces/graph'
-import { BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from '@automatarium/simulation/src/utils'
 import { BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
-import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
+// import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
 
@@ -177,11 +176,11 @@ const TestingLab = () => {
 
   const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
 
-  function nodeTransitionString(node: Node): string{
-    if (node.parent != null){
+  function nodeTransitionString (node: Node<State>): string {
+    if (node.parent != null) {
       return `${node.state.toTransitionString()}: ${getStateName(node.parent.state.id) ?? statePrefix + node.parent.state.id} -> ${getStateName(node.state.id) ?? statePrefix + node.state.id}`
     } else {
-      return ""
+      return ''
     }
   }
 
@@ -243,9 +242,6 @@ const TestingLab = () => {
     return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }
 
-  // TODO Take the manual transitions and actually pipe them into here
-  const validTransitionsFromCurrentState:string[] = ['a,X;R: q0 -> q1', 'b,λ;L: q0 -> q2']
-
   function traceOutputManual () {
     // TODO fix for manual
     return traceOutputAuto()
@@ -274,20 +270,20 @@ const TestingLab = () => {
       }
     }
   }, [enableManualStepping, traceInput]) // TODO add more dependencies, tried graph but caused recursive calls
-  
+
   // To move execution path back when backtracking
   useEffect(() => {
-    if (enableManualStepping){
+    if (enableManualStepping) {
       let nodeChainLength = 0
       let currentNode = currentManualNode
-      while (currentNode){
+      while (currentNode) {
         nodeChainLength += 1
         currentNode = currentNode.parent
       }
       // If traceIdx is larger than nodes in manual execution, then shrink
-      if (nodeChainLength > traceIdx + 1){
-        let amountToShrink = nodeChainLength - (traceIdx + 1)
-        for (let i = 0; i < amountToShrink; i++){
+      if (nodeChainLength > traceIdx + 1) {
+        const amountToShrink = nodeChainLength - (traceIdx + 1)
+        for (let i = 0; i < amountToShrink; i++) {
           setCurrentManualNode(currentManualNode.parent)
         }
       }
@@ -346,7 +342,7 @@ const TestingLab = () => {
   const automataIsInvalid = noInitialState || noFinalState || !pathToFinal
 
   // Display the valid transitions that could be manually chosen
-  const buttonsArray:JSX.Element[] = []  
+  const buttonsArray:JSX.Element[] = []
   currentManualSuccessors.forEach(t => {
     // Add transition to the form of <Button>{'a,X;R: q0 -> q1'}</Button>
     buttonsArray.push(<Button onClick={() => {

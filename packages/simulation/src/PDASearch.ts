@@ -23,10 +23,12 @@ export class PDAState extends State {
     return String(this.remaining + this.id.toString() + this.stack.join(''))
   }
 
-  toTransitionString(){
-    return `${this.read}`
+  toTransitionString () {
+    // TODO find better place to put function
+    const formatSymbol = (char?: string): string =>
+      char === null || char === '' ? 'λ' : char
+    return `${formatSymbol(this.read)}`
   }
-
 }
 
 export class PDAGraph extends Graph<PDAState, PDAAutomataTransition> {

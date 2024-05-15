@@ -16,8 +16,12 @@ export class FSAState extends State {
     return String(this.id + this.remaining)
   }
 
-  toTransitionString(){
-    return `${this.read}`
+  toTransitionString () {
+    // TODO find better place to put function
+    const formatSymbol = (char?: string): string =>
+      char === null || char === '' ? 'λ' : char
+
+    return `${formatSymbol(this.read)}`
   }
 }
 
