@@ -55,7 +55,7 @@ const TestingLab = () => {
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
   // Preference option to pause/unpause TM at Final State
-  const preferences = usePreferencesStore(state => state.preferences);
+  const preferences = usePreferencesStore(state => state.preferences)
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
