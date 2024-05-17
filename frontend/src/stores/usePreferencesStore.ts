@@ -1,7 +1,7 @@
 import { create, SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { ColourName } from '/src/config/colors'
-import { AutomatariumTheme } from '/src/types/ProjectTypes'
+import { ColourName } from '../config/colors'
+import { AutomatariumTheme } from '../types/ProjectTypes'
 
 export interface Preferences {
   theme: AutomatariumTheme
