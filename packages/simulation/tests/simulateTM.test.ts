@@ -14,7 +14,7 @@ import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
 // })
 
 function simulate (graph, input: string): TMExecutionResult {
-  const preferences = usePreferencesStore(state => state.preferences);
+  const preferences = usePreferencesStore(state => state.preferences)
   return simulateTM(graph as TMProjectGraph, input, preferences)
 }
 
