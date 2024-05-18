@@ -196,19 +196,25 @@ const TestingLab = () => {
       return null
     }
 
+    // Given nodeTransitionString(), does that make this function redundant, since we *may* be able to merge them later?
     function transitionsForAutomata (projectType, trace) {
       let transitions
       switch (projectType) {
         case ('FSA'):
-        case ('PDA'):
-          // TODO add more detail for PDA trace (stack pushing/popping)
-          assertType<(FSAExecutionTrace[] | PDAExecutionTrace[])>(trace)
+          assertType<(FSAExecutionTrace[])>(trace)
           transitions = trace
             .slice(0, -1)
             .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
             .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
             .filter((_x, i) => i < traceIdx)
-
+          break
+        case ('PDA'):
+          assertType<(PDAExecutionTrace[])>(trace)
+          transitions = trace
+            .slice(0, -1)
+            .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.pop, trace[i + 1]?.push])
+            .map(([read, start, end, pop, push]) => `${read},${pop};${push}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+            .filter((_x, i) => i < traceIdx)
           break
         case ('TM'):
           assertType<(TMExecutionTrace[])>(trace)
@@ -270,6 +276,7 @@ const TestingLab = () => {
       }
     }
   }, [enableManualStepping, traceInput]) // TODO add more dependencies, tried graph but caused recursive calls
+  // ... well yeah. graph is already in the method? -J
 
   // To move execution path back when backtracking
   useEffect(() => {

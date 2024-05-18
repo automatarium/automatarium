@@ -27,7 +27,7 @@ export class PDAState extends State {
     // TODO find better place to put function
     const formatSymbol = (char?: string): string =>
       char === null || char === '' ? 'λ' : char
-    return `${formatSymbol(this.read)}`
+    return `${formatSymbol(this.read)},${formatSymbol(this.pop)};${formatSymbol(this.push)}`
   }
 }
 
