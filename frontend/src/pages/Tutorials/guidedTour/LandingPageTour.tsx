@@ -127,7 +127,7 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step  }) => {
     },
     {
       target: '', 
-      content: 'If you want more indepth tool guides you can go to the tutorial page using the tutorial button.',
+      content: 'If you want more in-depth tool guides you can go to the tutorial page using the tutorial button.',
    
     
     },
