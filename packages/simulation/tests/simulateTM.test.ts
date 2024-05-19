@@ -6,23 +6,26 @@ import { TMExecutionResult } from '../src/graph'
 import { describe } from 'node:test'
 import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
-
+import { AutomatariumTheme } from 'frontend/src/types/ProjectTypes'
+import { ColourName } from 'frontend/src/config'
 
 // Shim to allow for structuredClone alternative (See https://github.com/jsdom/jsdom/issues/3363)
 // This should work for our cases
 // global.structuredClone = jest.fn(val => {
 //   return JSON.parse(JSON.stringify(val))
 // })
+const theme: AutomatariumTheme = 'system'
+const color: ColourName = 'red'
 const defaultValues = {
-  theme: 'system',
-  color: 'match',
+  theme: theme,
+  color: color,
   showGrid: true,
   ctrlZoom: true,
   pauseTM: true
 }
 
 function simulate (graph, input: string): TMExecutionResult {
-  const preferences = usePreferencesStore(state => state.preferences);
+  const preferences = usePreferencesStore(state => state.preferences)
   return simulateTM(graph as TMProjectGraph, input, defaultValues)
 }
 

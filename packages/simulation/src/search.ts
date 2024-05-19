@@ -43,7 +43,7 @@ export const breadthFirstSearchNoPause = <S extends State, T extends BaseAutomat
   while (!frontier.isEmpty()) {
     // Bang is necessary because TS doesn't understand that the frontier is not empty here
     node = frontier.remove()
-    
+
     for (const successor of graph.getSuccessors(node)) {
       if (!reached.has(successor.state.key())) {
         frontier.add(successor)

@@ -99,7 +99,7 @@ const Preferences = () => {
             label="TM Pause on Final State"
             description="Toggles pausing for trace step for TM"
           >
-            <Switch type="checkbox" {...register('pauseTM')} />  
+            <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>
         </Section>
       </form>

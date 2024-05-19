@@ -28,7 +28,7 @@ export const simulateTM = (
   preferences: Preferences
 ): TMExecutionResult => {
   const problem = buildProblem(graph, input) as TMGraph
-  
+
   if (!problem) {
     return {
       accepted: false,
@@ -37,7 +37,7 @@ export const simulateTM = (
     }
   }
   if (preferences.pauseTM) {
-    const result = breadthFirstSearch(problem)  
+    const result = breadthFirstSearch(problem)
     if (!result) {
       return {
         trace: [{ to: 0, tape: null }],
@@ -50,8 +50,7 @@ export const simulateTM = (
       tape: result.state.tape,
       trace: generateTrace(result)
     }
-  }
-  else {
+  } else {
     const result = breadthFirstSearchNoPause(problem)
     if (!result) {
       return {
@@ -66,5 +65,4 @@ export const simulateTM = (
       trace: generateTrace(result)
     }
   }
-  
 }
