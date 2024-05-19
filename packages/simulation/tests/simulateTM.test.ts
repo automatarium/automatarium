@@ -7,15 +7,23 @@ import { describe } from 'node:test'
 import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
 
+
 // Shim to allow for structuredClone alternative (See https://github.com/jsdom/jsdom/issues/3363)
 // This should work for our cases
 // global.structuredClone = jest.fn(val => {
 //   return JSON.parse(JSON.stringify(val))
 // })
+const defaultValues = {
+  theme: 'system',
+  color: 'match',
+  showGrid: true,
+  ctrlZoom: true,
+  pauseTM: true
+}
 
 function simulate (graph, input: string): TMExecutionResult {
   const preferences = usePreferencesStore(state => state.preferences);
-  return simulateTM(graph as TMProjectGraph, input, preferences)
+  return simulateTM(graph as TMProjectGraph, input, defaultValues)
 }
 
 describe('Machine that moves left', () => {
