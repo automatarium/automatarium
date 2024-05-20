@@ -1,37 +1,44 @@
-import { useState } from 'react'
-// import { useEffect, useState } from 'react'
-// import { useForm } from 'react-hook-form'
+import { useEffect, useState } from 'react'
+import { useForm } from 'react-hook-form'
 
-// import { SectionLabel, Modal, Preference } from '/src/components'
-import { Modal } from '/src/components'
+import { Button, Modal, SectionLabel, Preference, Switch } from '/src/components'
 import { useEvent } from '/src/hooks'
+import { usePopupsStore, usePreferencesStore } from '/src/stores'
 
-// import { Section } from './finalStatePopupStyle'
-// import { usePreferencesStore } from '/src/stores'
-// import { Preferences } from '/src/stores/usePreferencesStore'
+import { Section } from './finalStatePopupStyle'
+import { Preferences } from '/src/stores/usePreferencesStore'
 
-// const defaultValues = {
-//   showFinalState: true
-// }
+const defaultValues = {
+  pauseTM: true
+}
+
+interface PauseOption {
+  pauseTM: boolean
+}
 
 const FinalStatePopup = () => {
   const [isOpen, setIsOpen] = useState(false)
 
-  // const preferences = usePreferencesStore(state => state.preferences)
-  // const setPreferences = usePreferencesStore(state => state.setPreferences)
+  const setPopups = usePopupsStore(state => state.setPopups)
+  const preferences = usePreferencesStore(state => state.preferences)
+  const setPreferences = usePreferencesStore(state => state.setPreferences)
 
-  // const { register, handleSubmit, reset } = useForm({ defaultValues })
+  const { register, handleSubmit, reset } = useForm({ defaultValues })
 
-  // const onSubmit = (values: Preferences) => {
-  //   setPreferences(values)
-  //   setIsOpen(false)
-  // }
+  const onSubmit = (values: PauseOption) => {
+    // Get current preferences and modify only pauseTM
+    const newPreferences = { ...preferences, pauseTM: values.pauseTM }
+    setPreferences(newPreferences)
+    setPopups({ showFinalState: false })  // Don't show popup again after submitting
+    setIsOpen(false)
+  }
 
-  // useEffect(() => {
-  //   reset(preferences)
-  // }, [preferences, isOpen])
+  useEffect(() => {
+    console.log(preferences)
+    reset({pauseTM: preferences.pauseTM})
+  }, [preferences, isOpen])
 
-  useEvent('modal:finalstate', () => setIsOpen(true), [])
+  useEvent('modal:finalstate', () => {setIsOpen(true)}, [])
 
   return (
     <Modal
@@ -40,56 +47,23 @@ const FinalStatePopup = () => {
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       role="alertdialog" // Prevents closing by clicking away
+      actions={<>
+        <Button secondary onClick={() => setIsOpen(false)}>Close without saving</Button>
+        <Button type="submit" form="popups_form">Save preference</Button>
+      </>}
       style={{ paddingInline: 0 }}
     >
-      {/* <form id="preferences_form" onSubmit={handleSubmit(onSubmit)}>
-        <SectionLabel>Appearance</SectionLabel>
-        <Section>
-          <Preference
-            label="Theme"
-            description="Up late? Switch to dark mode"
-          >
-            <Input type="select" small {...register('theme')}>
-              <option value="system">Match system</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-            </Input>
-          </Preference>
-
-          <Preference
-            label="Colour accent"
-            description="Roses are red, Automatarium is blue"
-          >
-            <Input type="select" small {...register('color')}>
-              <option value="match">Match file theme</option>
-              <option value="red">Red</option>
-              <option value="orange">Orange</option>
-              <option value="green">Green</option>
-              <option value="teal">Teal</option>
-              <option value="blue">Blue</option>
-              <option value="purple">Purple</option>
-              <option value="pink">Pink</option>
-            </Input>
-          </Preference>
-        </Section>
-
+      <form id="popups_form" onSubmit={handleSubmit(onSubmit)}>
         <SectionLabel>Behaviour</SectionLabel>
         <Section>
           <Preference
-            label="Enable grid"
-            description="This also enables snapping"
+            label="TM Pause on Final State 2"
+            description="Toggles pausing for trace step for TM 2"
           >
-            <Switch type="checkbox" {...register('showGrid')} />
-          </Preference>
-
-          <Preference
-            label="Zoom with the control key"
-            description="Allows panning using a trackpad"
-          >
-            <Switch type="checkbox" {...register('ctrlZoom')} />
+            <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>
         </Section>
-      </form> */}
+      </form>
     </Modal>
   )
 }

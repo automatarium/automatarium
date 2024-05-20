@@ -358,7 +358,6 @@ const useActions = (registerHotkeys = false) => {
           const showFinalState = usePopupsStore.getState().popups?.showFinalState
           if (showFinalState) {
             dispatchCustomEvent('modal:finalstate', null)
-            usePopupsStore.getState().setPopups({ showFinalState: false })
           } else {
             if (window.confirm('Popup is now disabled, confirm to re-enable.')) {
               usePopupsStore.getState().setPopups({ showFinalState: true })
