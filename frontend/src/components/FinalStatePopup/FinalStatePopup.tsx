@@ -6,7 +6,6 @@ import { useEvent } from '/src/hooks'
 import { usePopupsStore, usePreferencesStore } from '/src/stores'
 
 import { Section } from './finalStatePopupStyle'
-import { Preferences } from '/src/stores/usePreferencesStore'
 
 const defaultValues = {
   pauseTM: true
@@ -29,16 +28,16 @@ const FinalStatePopup = () => {
     // Get current preferences and modify only pauseTM
     const newPreferences = { ...preferences, pauseTM: values.pauseTM }
     setPreferences(newPreferences)
-    setPopups({ showFinalState: false })  // Don't show popup again after submitting
+    setPopups({ showFinalState: false })// Don't show popup again after submitting
     setIsOpen(false)
   }
 
   useEffect(() => {
     console.log(preferences)
-    reset({pauseTM: preferences.pauseTM})
+    reset({ pauseTM: preferences.pauseTM })
   }, [preferences, isOpen])
 
-  useEvent('modal:finalstate', () => {setIsOpen(true)}, [])
+  useEvent('modal:finalstate', () => setIsOpen(true), [])
 
   return (
     <Modal
