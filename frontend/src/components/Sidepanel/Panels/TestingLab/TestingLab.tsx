@@ -249,8 +249,31 @@ const TestingLab = () => {
   }
 
   function traceOutputManual () {
-    // TODO fix for manual
-    return traceOutputAuto()
+    if (!problem || !currentManualNode) { return '' }
+    
+    let traceOutput = ""
+    let currentNode: Node<State> = currentManualNode
+
+    // As nodes are setup like stack, add transition string to start of array
+    while (currentNode){
+        transitionString = nodeTransitionString(currentNode)
+	if (transitionString != '' && traceOutput == ''){
+          traceOutput = transitionString + traceOutput
+        } else if (transitionString != ''){
+          traceOutput = transitionString + '\n' + traceOutput
+        }
+        currentNode = currentNode.parent
+    }
+
+    // Add accepted or rejected tag if applicible
+    if (problem.isFinalState(currentManualNode)){
+      traceOutput += '\n\nACCEPTED'
+    } else if (currentManualSuccessors.length == 0){
+      traceOutput += '\n\nREJECTED'
+    }
+
+
+    return traceOutput
   }
 
   const traceOutput = useMemo(() => {
