@@ -59,6 +59,7 @@ const App = () => {
   const setPreferences = usePreferencesStore(state => state.setPreferences)
   if (typeof preferences.pauseTM === 'undefined') {
     // Add the pauseTM preference with a default value
+    console.log('Added PauseTM to deprecated preference store.')
     setPreferences({ ...preferences, pauseTM: true });
   }
   
