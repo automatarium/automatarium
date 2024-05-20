@@ -81,8 +81,7 @@ const TestingLab = () => {
         console.log('Problem not created properly!')
       }
     }
-  }, [enableManualStepping, traceInput]) // TODO add more dependencies, tried graph but caused recursive calls
-  // ... well yeah. graph is already in the method? -J
+  }, [enableManualStepping, traceInput, lastChangeDate])
 
   // To move execution path back when backtracking
   useEffect(() => {
