@@ -5,7 +5,7 @@ import { breadthFirstSearch } from './search'
 import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
-const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
+export const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   const trace: PDAExecutionTrace[] = []
   while (node.parent) {
     trace.push({
@@ -27,6 +27,33 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
     invalidPop: false
   })
   return trace.reverse()
+}
+
+export const generateStack = (trace: PDAExecutionTrace[]) => {
+  for (let i = 0; i < trace.length; i++) {
+    // Handle pop symbol first
+    if (trace[i].pop !== '') {
+      // Pop if symbol matches top of stack
+      if (trace[i].pop === tempStack[tempStack.length - 1]) {
+        tempStack.pop()
+      } else if (tempStack.length === 0) {
+        // Else operation is invalid
+        // Empty stack case
+        // Consider providing feedback to user during the trace
+        trace[i].invalidPop = true
+      } else if (trace[i].pop !== tempStack[tempStack.length - 1]) {
+        // Non-matching symbol case
+        // Consider providing feedback to user during the trace
+        trace[i].invalidPop = true
+      }
+    }
+    // Handle push symbol if it exists
+    if (trace[i].push !== '') {
+      tempStack.push(trace[i].push)
+    }
+    trace[i].currentStack = JSON.parse(JSON.stringify(tempStack))
+  }
+  return tempStack
 }
 
 export const simulatePDA = (
@@ -60,30 +87,8 @@ export const simulatePDA = (
     *       - It's a double up now but the PDAStackVisualiser still uses it
     */
   const trace = generateTrace(result)
-  for (let i = 0; i < trace.length; i++) {
-    // Handle pop symbol first
-    if (trace[i].pop !== '') {
-      // Pop if symbol matches top of stack
-      if (trace[i].pop === tempStack[tempStack.length - 1]) {
-        tempStack.pop()
-      } else if (tempStack.length === 0) {
-        // Else operation is invalid
-        // Empty stack case
-        // Consider providing feedback to user during the trace
-        trace[i].invalidPop = true
-      } else if (trace[i].pop !== tempStack[tempStack.length - 1]) {
-        // Non-matching symbol case
-        // Consider providing feedback to user during the trace
-        trace[i].invalidPop = true
-      }
-    }
-    // Handle push symbol if it exists
-    if (trace[i].push !== '') {
-      tempStack.push(trace[i].push)
-    }
-    trace[i].currentStack = JSON.parse(JSON.stringify(tempStack))
-  }
-  const stack = tempStack
+  
+  const stack = generateStack(trace)
 
   return {
     accepted: result.state.isFinal && result.state.remaining === '' && stack.length === 0,
