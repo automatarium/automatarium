@@ -122,9 +122,6 @@ const TestingLab = () => {
             if (!enableManualStepping){
               result = simulatePDA(graph, input ?? '')
             } else {
-              if (!node){
-                node = graph.problem.initial
-              }
               let trace = generateTracePDA(node)
               let stack = generateStack(trace)
               result = {
@@ -139,9 +136,6 @@ const TestingLab = () => {
             if (!enableManualStepping){
               result = simulateFSA(graph, input ?? '')
             } else {
-              if (!node){
-                node = graph.problem.initial
-              }
               let trace = generateTraceFSA(node)
               result = {
                 accepted: node.state.isFinal && node.state.remaining === '',
@@ -154,9 +148,6 @@ const TestingLab = () => {
             if (!enableManualStepping){
               result = simulateTM(graph, input ?? '')
             } else {
-              if (!node){
-                node = graph.problem.initial
-              }
               let trace = generateTraceTM(node)
               result = {
                 accepted: node.state.isFinal,
@@ -186,7 +177,19 @@ const TestingLab = () => {
       }
       } else */
     if (['PDA', 'FSA', 'TM'].includes(graph.projectType)) {
-      const node: Node<State> | null = enableManualStepping ? (currentManualNode ?? buildProblem(graph, input ?? '').initial) : null
+      let node = null
+      if (enableManualStepping){
+        let _problem = problem
+        // chance problem hasn't been created yet & node hasn't been, set to defaults if not found
+        if (!_problem){
+          _problem = buildProblem(graph, input ?? '')
+        }
+        node = currentManualNode ?? _problem.initial
+        // Sets node for simulation to be next one so ui doesn't say problem in progress is rejected
+        if (!_problem.isFinalState(node) && _problem.getSuccessors(node).length != 0){
+          node = _problem.getSuccessors(node)[0]
+        }
+      }
       const result = simulateAutomata(graph, input ?? '', node)
       /*
       const result =
