@@ -96,8 +96,8 @@ const Preferences = () => {
           </Preference>
 
           <Preference
-            label="TM Pause on Final State"
-            description="Toggles pausing for trace step for TM"
+            label="TM Halt on Final State"
+            description="Toggles halting for trace step for TM"
           >
             <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>

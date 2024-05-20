@@ -43,13 +43,13 @@ const FinalStatePopup = () => {
   return (
     <Modal
       title="IMPORTANT"
-      description="The default Turing Machine behaviour is to halt upon reaching a final state. You can modify this setting below this text or by accessing the preferences menu at any time."
+      description="Default Turing Machine behaviour is to halt upon reaching a final state. Modify below or in the preferences menu."
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       role="alertdialog" // Prevents closing by clicking away
       actions={<>
         <Button secondary onClick={() => setIsOpen(false)}>Close without saving</Button>
-        <Button type="submit" form="popups_form">Save preference</Button>
+        <Button type="submit" form="popups_form">Save and don't show again</Button>
       </>}
       style={{ paddingInline: 0 }}
     >
@@ -57,8 +57,8 @@ const FinalStatePopup = () => {
         <SectionLabel>Behaviour</SectionLabel>
         <Section>
           <Preference
-            label="TM Pause on Final State 2"
-            description="Toggles pausing for trace step for TM 2"
+            label="TM Halt on Final State"
+            description="Toggles halting for trace step for TM"
           >
             <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>
