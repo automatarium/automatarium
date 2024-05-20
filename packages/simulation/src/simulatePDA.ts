@@ -29,7 +29,13 @@ export const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   return trace.reverse()
 }
 
+// Simulate stack operations
+/*
+    *  Note:- this was a workaround for when BFS didn't consider the stack
+    *       - It's a double up now but the PDAStackVisualiser still uses it
+    */
 export const generateStack = (trace: PDAExecutionTrace[]) => {
+  const tempStack: Stack = []
   for (let i = 0; i < trace.length; i++) {
     // Handle pop symbol first
     if (trace[i].pop !== '') {
@@ -60,7 +66,6 @@ export const simulatePDA = (
   graph: PDAProjectGraph,
   input: string
 ): PDAExecutionResult => {
-  const tempStack: Stack = []
   const problem = buildProblem(graph, input)
   if (!problem) {
     return {
@@ -81,13 +86,8 @@ export const simulatePDA = (
       stack: []
     }
   }
-  // Simulate stack operations
-  /*
-    *  Note:- this was a workaround for when BFS didn't consider the stack
-    *       - It's a double up now but the PDAStackVisualiser still uses it
-    */
+
   const trace = generateTrace(result)
-  
   const stack = generateStack(trace)
 
   return {

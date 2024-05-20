@@ -30,7 +30,10 @@ import {
   TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
 import { Graph, Node, State } from '@automatarium/simulation/src/interfaces/graph'
-import { buildProblem, newTape } from '@automatarium/simulation/src/utils'
+import { FSAState } from '@automatarium/simulation/src/FSASearch'
+import { PDAState } from '@automatarium/simulation/src/PDASearch'
+import { TMState } from '@automatarium/simulation/src/TMSearch'
+import { buildProblem } from '@automatarium/simulation/src/utils'
 import { BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
 
@@ -64,7 +67,6 @@ const TestingLab = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
-  
   // Creates problem and sets it, should run every time trace/graph changes while enableManualStepping is enabled
   // (doesn't work 100%, may have to cause update by changing input)
   useEffect(() => {
@@ -104,10 +106,6 @@ const TestingLab = () => {
   // Runs every time new node is selected while enableManualStepping is enabled
   useEffect(() => {
     if (enableManualStepping) {
-      // Detection of if final state has been reached
-      if (problem && problem.isFinalState(currentManualNode)) {
-        console.log(['Huzzah, final state has been reached!', currentManualNode, nodeTransitionString(currentManualNode)])
-      }
       // Updates array of successors
       if (currentManualNode != null && problem) {
         setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
@@ -115,50 +113,53 @@ const TestingLab = () => {
     }
   }, [traceInput, problem, currentManualNode])
 
-  const simulateAutomata = (graph, input: string, node: Node<State> | null = null) => {
-        let result
-        switch (graph.projectType) {
-          case ('PDA'):
-            if (!enableManualStepping){
-              result = simulatePDA(graph, input ?? '')
-            } else {
-              let trace = generateTracePDA(node)
-              let stack = generateStack(trace)
-              result = {
-                accepted: node.state.isFinal && node.state.remaining === '' && stack.length === 0,
-                remaining: node.state.remaining,
-                trace: trace,
-                stack: stack,
-              }         
-            }
-            break
-          case ('FSA'):
-            if (!enableManualStepping){
-              result = simulateFSA(graph, input ?? '')
-            } else {
-              let trace = generateTraceFSA(node)
-              result = {
-                accepted: node.state.isFinal && node.state.remaining === '',
-                remaining: node.state.remaining,
-                trace: trace,         
-              }               
-            }
-            break
-          case ('TM'):
-            if (!enableManualStepping){
-              result = simulateTM(graph, input ?? '')
-            } else {
-              let trace = generateTraceTM(node)
-              result = {
-                accepted: node.state.isFinal,
-                tape: node.state.tape,
-                trace: trace,         
-              } 
-            }
-          }  
-        console.log(["result is:", result, enableManualStepping, node, currentManualNode])
-        return result
-      }
+  const simulateAutomata = (graph, input: string, node: Node<FSAState|PDAState|TMState> | null = null) => {
+    let result
+    switch (graph.projectType) {
+      case ('PDA'):
+        if (!enableManualStepping) {
+          result = simulatePDA(graph, input ?? '')
+        } else {
+          assertType<Node<PDAState>>(node)
+          const trace = generateTracePDA(node)
+          const stack = generateStack(trace)
+          result = {
+            accepted: node.state.isFinal && node.state.remaining === '' && stack.length === 0,
+            remaining: node.state.remaining,
+            trace,
+            stack
+          }
+        }
+        break
+      case ('FSA'):
+        if (!enableManualStepping) {
+          result = simulateFSA(graph, input ?? '')
+        } else {
+          assertType<Node<FSAState>>(node)
+          const trace = generateTraceFSA(node)
+          result = {
+            accepted: node.state.isFinal && node.state.remaining === '',
+            remaining: node.state.remaining,
+            trace
+          }
+        }
+        break
+      case ('TM'):
+        if (!enableManualStepping) {
+          result = simulateTM(graph, input ?? '')
+        } else {
+          assertType<Node<TMState>>(node)
+          const trace = generateTraceTM(node)
+          result = {
+            accepted: node.state.isFinal,
+            tape: node.state.tape,
+            trace
+          }
+        }
+    }
+    console.log(['result is:', result, enableManualStepping, node, currentManualNode])
+    return result
+  }
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
@@ -168,35 +169,21 @@ const TestingLab = () => {
     // TODO: Find reasoning behind the magical -1
     const transitionCount = (res: ExecutionResult) =>
       Math.max(1, res.trace.length) - (res.accepted ? 1 : graph.projectType === 'TM' ? 1 : 0)
-    /*
-    if (graph.projectType === 'TM') {
-      const result = simulateTM(graph, input)
-      return {
-        ...result,
-        transitionCount: transitionCount(result)
-      }
-      } else */
     if (['PDA', 'FSA', 'TM'].includes(graph.projectType)) {
       let node = null
-      if (enableManualStepping){
+      if (enableManualStepping) {
         let _problem = problem
         // chance problem hasn't been created yet & node hasn't been, set to defaults if not found
-        if (!_problem){
+        if (!_problem) {
           _problem = buildProblem(graph, input ?? '')
         }
         node = currentManualNode ?? _problem.initial
         // Sets node for simulation to be next one so ui doesn't say problem in progress is rejected
-        if (!_problem.isFinalState(node) && _problem.getSuccessors(node).length != 0){
+        if (!_problem.isFinalState(node) && _problem.getSuccessors(node).length !== 0) {
           node = _problem.getSuccessors(node)[0]
         }
       }
       const result = simulateAutomata(graph, input ?? '', node)
-      /*
-      const result =
-            graph.projectType === 'PDA'
-              ? simulatePDA(graph, input ?? '')
-              : simulateFSA(graph, input ?? '')
-*/
       // Formats a symbol. Makes an empty symbol become a lambda
       const formatSymbol = (char?: string): string =>
         char === null || char === '' ? 'λ' : char
@@ -232,32 +219,12 @@ const TestingLab = () => {
     }
   }
 
-  const manualExecToSimResult = (node: Node<State>, input: string): SimulationResult => {
-    fakeTrace: Array<FSAExecutionTrace | PDAExecutionTrace | TMExecutionTrace> = []
-    switch (graph.projectType) {
-      case ('FSA'):
-        fakeTrace = generateTraceFSA(node)
-        break
-      case ('PDA'):
-        fakeTrace = generateTracePDA(node)
-        break
-      case ('TM'):
-        fakeTrace = generateTraceTM(node)
-        break
-    }
-    let currentNode: Node<State> = node
-    while (currentNode){
-
-      currentNode = currentNode.parent
-    }
-  }
-
   /** Runs all multi trace inputs and updates the output */
   const rerunMultiTraceInput = () => {
     setMultiTraceOutput(multiTraceInput.map(input => runSimulation(input)))
   }
 
-  function simulateGraphAuto () {
+  const simulateGraph = useCallback(() => {
     const result = runSimulation(traceInput)
     // The `in` is just to type narrow for TS
     if ('tape' in result) {
@@ -271,20 +238,6 @@ const TestingLab = () => {
       }
     }
     return result
-  }
-
-  function simulateGraphManual () {
-    // TODO actually implement manual stepping
-    return simulateGraphAuto()
-  }
-
-  // Execute graph
-  const simulateGraph = useCallback(() => {
-    if (enableManualStepping) {
-      return simulateGraphManual()
-    } else {
-      return simulateGraphAuto()
-    }
   }, [graph, traceInput, enableManualStepping, currentManualNode])
 
   // To force simulation to update
@@ -298,14 +251,14 @@ const TestingLab = () => {
   const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
 
   function nodeTransitionString (node: Node<State>): string {
-    if (node.parent != null) {
+    if (node.parent !== null) {
       return `${node.state.toTransitionString()}: ${getStateName(node.parent.state.id) ?? statePrefix + node.parent.state.id} -> ${getStateName(node.state.id) ?? statePrefix + node.state.id}`
     } else {
       return ''
     }
   }
 
-  function traceOutputAuto () {
+  const traceOutput = useMemo(() => {
     // No output before simulating
     if (!simulationResult) { return '' }
     assertType<(FSAExecutionResult | PDAExecutionResult | TMExecutionResult) & {transitionCount: number}>(simulationResult)
@@ -367,46 +320,7 @@ const TestingLab = () => {
 
     // Add 'REJECTED'/'ACCEPTED' label
     return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
-  }
-
-  function traceOutputManual () {
-    if (!problem || !currentManualNode) { return '' }
-    
-    let traceOutput = ""
-    let currentNode: Node<State> = currentManualNode
-
-    // As nodes are setup like stack, add transition string to start of array
-    while (currentNode){
-        transitionString = nodeTransitionString(currentNode)
-	if (transitionString != '' && traceOutput == ''){
-          traceOutput = transitionString + traceOutput
-        } else if (transitionString != ''){
-          traceOutput = transitionString + '\n' + traceOutput
-        }
-        currentNode = currentNode.parent
-    }
-
-    // Add accepted or rejected tag if applicible
-    if (problem.isFinalState(currentManualNode)){
-      traceOutput += '\n\nACCEPTED'
-    } else if (currentManualSuccessors.length == 0){
-      traceOutput += '\n\nREJECTED'
-    }
-
-
-    return traceOutput
-  }
-
-  const traceOutput = useMemo(() => {
-    if (enableManualStepping) {
-      //return traceOutputManual()
-      return traceOutputAuto()
-    } else {
-      return traceOutputAuto()
-    }
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
-
-
 
   useEffect(() => {
     simulateGraph()
