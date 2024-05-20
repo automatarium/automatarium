@@ -318,7 +318,7 @@ const TestingLab = () => {
     }
 
     // Add 'REJECTED'/'ACCEPTED' label
-    return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx || (enableManualStepping && currentManualSuccessors.length === 0)) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
 
   useEffect(() => {
