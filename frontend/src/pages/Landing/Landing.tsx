@@ -1,4 +1,4 @@
-import React, { useState,useEffect, useRef  } from 'react';
+import React, { useState, useEffect, useRef } from 'react'
 import { Github } from 'lucide-react'
 
 import { Sections, Section, Banner } from './landingStyle'
@@ -10,76 +10,62 @@ import TestingLab from './components/TestingLab'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import LandingPageTour from '../Tutorials/guidedTour/LandingPageTour'
 
-
-
 const Landing = () => {
-  //creating booleans for tour
-  const [showTour, setShowTour] = useState(false);
-  const [isBannerStep, setIsBannerStep] = useState(false);
-  const [Step, setStep] = useState(0);
+  // creating booleans for tour
+  const [showTour, setShowTour] = useState(false)
+  const [isBannerStep, setIsBannerStep] = useState(false)
+  const [Step, setStep] = useState(0)
 
   const scrollToArea = (step: number) => {
     // const element = document.getElementById('start-build');
     // if (element) {
     //   element.scrollIntoView({   behavior: 'smooth', block: 'start' });
     // }
-    if (step ===1){
-    window.scrollTo({ top: 10, behavior: 'smooth' }); 
-   
+    if (step === 1) {
+      window.scrollTo({ top: 10, behavior: 'smooth' })
+    } else if (step === 2) {
+      window.scrollTo({ top: 10, behavior: 'smooth' })
+    } else if (step === 3) {
+      window.scrollTo({ top: 600, behavior: 'smooth' })
+    } else if (step === 4) {
+      window.scrollTo({ top: 600, behavior: 'smooth' })
+    } else if (step === 5) {
+      window.scrollTo({ top: 600, behavior: 'smooth' })
+    } else if (step === 6) {
+      window.scrollTo({ top: 1200, behavior: 'smooth' })
     }
-    else if (step ===2){
-      window.scrollTo({ top: 10, behavior: 'smooth' }); 
-      }
-    else if (step ===3){
-        window.scrollTo({ top: 600, behavior: 'smooth' }); 
-      }
-    else if (step ===4){
-    window.scrollTo({ top: 600, behavior: 'smooth' }); 
-    }
-    else if (step ===5){
-      window.scrollTo({ top: 600, behavior: 'smooth' }); 
-      }
-    else if (step ===6){
-        window.scrollTo({ top: 1200, behavior: 'smooth' }); 
-        }
+  }
 
-
-  };
-    
-  
   const handleBannerStep = (step: number) => {
     // Define the behavior when the tour reaches the banner step
-    if (step){
-      // setIsBannerStep(true); 
-      scrollToArea(step);
-      setStep(step);
+    if (step) {
+      // setIsBannerStep(true);
+      scrollToArea(step)
+      setStep(step)
+    } else {
+      setIsBannerStep(false)
     }
-    else{
-      setIsBannerStep(false); 
-    }
-  };
+  }
 
   const startTour = () => {
-    setShowTour(true);
-  };
+    setShowTour(true)
+  }
 
   const closeTour = () => {
-    setShowTour(false);
-    setIsBannerStep(false); 
-    setStep(0);
-  };
+    setShowTour(false)
+    setIsBannerStep(false)
+    setStep(0)
+  }
 
   useEffect(() => {
     // Set showTour to true after a delay (for demonstration purposes)
     const timeoutId = setTimeout(() => {
-      setShowTour(true);
-    }, 2000); // Adjust the delay as needed
-    
+      setShowTour(true)
+    }, 2000) // Adjust the delay as needed
+
     // Clean up the timeout on component unmount
-    return () => clearTimeout(timeoutId);
-  }, []);
-
-
+    return () => clearTimeout(timeoutId)
+  }, [])
 
   return (
   <Main fullWidth style={{ paddingBottom: 0 }}>
@@ -91,18 +77,18 @@ const Landing = () => {
           <p>Automatarium is a student-built platform for automata and formal language theory.</p>
           <p>Work easily with a simple and intuitive design built for ease of use and accessibility.</p>
           <p>It's free to use, and when you're done, share your project with the world with a link.</p>
-          <Button  id="start-build" to="/new"
+          <Button id="start-build" to="/new"
             style={{
-              backgroundColor: (Step ===1) ? '#90EE90':"",
-              color: (Step ===1) ? 'green' : 'white',
+              backgroundColor: (Step === 1) ? '#90EE90' : '',
+              color: (Step === 1) ? 'green' : 'white'
             } }
           >Start building!</Button>
           <p>First time here? Check out our tutorials!</p>
           <Button to='/tutorials'
           style={{
-            backgroundColor: (Step ===2) ? '#90EE90':"",
-            color: (Step ===2) ? 'green' : 'white',
-            
+            backgroundColor: (Step === 2) ? '#90EE90' : '',
+            color: (Step === 2) ? 'green' : 'white'
+
           } }>Tutorials</Button>
         </div>
       </Section>
@@ -158,12 +144,11 @@ const Landing = () => {
           <Button onClick={startTour}>Take Tour</Button> {/* Button to start the tour */}
       </Banner>
      </Sections>
-      
+
       {/* Render the tour if showTour is true */}
-     {showTour && <LandingPageTour onClose={closeTour} Step={handleBannerStep}  />}
+     {showTour && <LandingPageTour onClose={closeTour} Step={handleBannerStep} />}
     </Main>
-  );
-};
+  )
+}
 
 export default Landing
-

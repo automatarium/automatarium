@@ -40,38 +40,31 @@ const NewFile = () => {
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
-  ///Tour stuff
-  //boolean for tour
-  const [Step, setStep] = useState(0);
-  const [showTour, setShowTour] = useState(false);
+  /// Tour stuff
+  // boolean for tour
+  const [Step, setStep] = useState(0)
+  const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
-    setShowTour(false);
-    
-  };
+    setShowTour(false)
+  }
 
   const handleStep = (step: number) => {
     // Define the behavior when the tour reaches the banner step
-    if (step){
-      // setIsBannerStep(true); 
-      scrollToArea(step);
-      setStep(step);
+    if (step) {
+      // setIsBannerStep(true);
+      scrollToArea(step)
+      setStep(step)
     }
-  
-  };
+  }
   const scrollToArea = (step: number) => {
-  
-    if (step ===1){
-    window.scrollTo({ top: 0, behavior: 'smooth' }); 
-   
+    if (step === 1) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (step === 2) {
+      window.scrollTo({ top: 1010, behavior: 'smooth' })
+    } else if (step === 3) {
+      window.scrollTo({ top: 10, behavior: 'smooth' })
     }
-    else if (step ===2){
-      window.scrollTo({ top: 1010, behavior: 'smooth' }); 
-      }
-    else if (step ===3){
-        window.scrollTo({ top: 10, behavior: 'smooth' }); 
-      }
-   
-  };
+  }
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -94,7 +87,7 @@ const NewFile = () => {
       Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
     }
     const timeoutId = setTimeout(() => {
-      setShowTour(true);
+      setShowTour(true)
     }, 2000)
   }, [projects, thumbnails])
 
@@ -212,8 +205,8 @@ const NewFile = () => {
         setDeleteConfirmationVisible(false)
       }}
     />
-    
-    {showTour && <NewPageTour onClose={closeTour} Step={handleStep}  />}
+
+    {showTour && <NewPageTour onClose={closeTour} Step={handleStep} />}
     <ImportDialog navigateFunction={navigate} />
   </Main>
 }
