@@ -271,11 +271,9 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     set(produce(({ project }: { project: StoredProject }) => {
       project.states.push({ ...state, id, isFinal: state.isFinal ?? false })
       if (project.states.length === 1) {
-        project.initialState = id;
+        project.initialState = id
       }
-      
     }))
-    
     return id
   },
 
