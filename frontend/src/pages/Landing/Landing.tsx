@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Github } from 'lucide-react'
 
 import { Sections, Section, Banner } from './landingStyle'
@@ -13,7 +13,6 @@ import LandingPageTour from '../Tutorials/guidedTour/LandingPageTour'
 const Landing = () => {
   // creating booleans for tour
   const [showTour, setShowTour] = useState(false)
-  const [isBannerStep, setIsBannerStep] = useState(false)
   const [Step, setStep] = useState(0)
 
   const scrollToArea = (step: number) => {
@@ -42,8 +41,6 @@ const Landing = () => {
       // setIsBannerStep(true);
       scrollToArea(step)
       setStep(step)
-    } else {
-      setIsBannerStep(false)
     }
   }
 
@@ -53,7 +50,6 @@ const Landing = () => {
 
   const closeTour = () => {
     setShowTour(false)
-    setIsBannerStep(false)
     setStep(0)
   }
 

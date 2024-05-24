@@ -21,19 +21,9 @@ const Editor = () => {
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
-  const [Step, setStep] = useState(0)
-
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
-  }
-  const handleStep = (step: number) => {
-    // Define the behavior when the tour reaches the banner step
-    if (step) {
-      // setIsBannerStep(true);
-
-      setStep(step)
-    }
   }
 
   useEffect(() => {
@@ -127,7 +117,7 @@ const Editor = () => {
       <ShortcutGuide />
 
       <ExportImage />
-
+m
       <ShareUrl />
 
       <TemplateDelConfDialog
@@ -137,7 +127,7 @@ const Editor = () => {
       />
 
       <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour} Step={handleStep} />}
+      {showTour && <EditorPageTour onClose={closeTour}/>}
     </>
   )
 }

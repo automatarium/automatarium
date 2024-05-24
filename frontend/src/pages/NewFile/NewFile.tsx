@@ -41,8 +41,7 @@ const NewFile = () => {
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
   /// Tour stuff
-  // boolean for tour
-  const [Step, setStep] = useState(0)
+
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
@@ -53,7 +52,6 @@ const NewFile = () => {
     if (step) {
       // setIsBannerStep(true);
       scrollToArea(step)
-      setStep(step)
     }
   }
   const scrollToArea = (step: number) => {
@@ -86,7 +84,7 @@ const NewFile = () => {
     if (projects.length) {
       Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
     }
-    const timeoutId = setTimeout(() => {
+    setTimeout(() => {
       setShowTour(true)
     }, 2000)
   }, [projects, thumbnails])

@@ -106,8 +106,6 @@ interface TourProps {
 
 const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
   const [step, setStep] = useState<number>(0)
-  const [step1, calledStep1Function] = useState<number>(0)
-  const calledBannerStep = false
   // Define tour steps
   const steps: Step[] = [
     {

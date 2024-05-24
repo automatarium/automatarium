@@ -103,8 +103,6 @@ interface TourProps {
 
 const LandingPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
   const [step, setStep] = useState<number>(0)
-  const [step1, calledStep1Function] = useState<number>(0)
-  const calledBannerStep = false
   // Define tour steps
   const steps: Step[] = [
     {
@@ -140,7 +138,7 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
     },
     {
       target: '',
-      content: 'You can access your recent projects here when you have started building your own automatons'
+      content: 'You can access your recent projects here, when you have started building your own automatons'
 
     }
 

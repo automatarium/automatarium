@@ -1,8 +1,7 @@
-import React, { useState, useEffect, ReactNode } from 'react'
+import React, { useState } from 'react'
 
 import { styled } from 'goober'
-import { ToolPopup, ToolName, ToolHotkey, Animation } from '/src/components/Toolbar/toolbarStyle'
-import { Tool } from '/src/stores/useToolStore'
+import { Animation } from '/src/components/Toolbar/toolbarStyle'
 
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
 import cursorAnimation from '../../../components/Toolbar/animations/cursor.json'
@@ -11,7 +10,7 @@ import stateAnimation from '../../../components/Toolbar/animations/state.json'
 import transitionAnimation from '../../../components/Toolbar/animations/transition.json'
 import commentAnimation from '../../../components/Toolbar/animations/comment.json'
 
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, ChevronDown, ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2, Star } from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, FlaskConical, Info as InfoIcon, Settings2, Star } from 'lucide-react'
 
 import { Info } from '/src/components/Sidepanel/Panels'
 
@@ -19,12 +18,6 @@ interface TourContentProps {
     isBannerStep: boolean;
     tourStep: number;
   }
-
-interface ToolPopupType {
-  visible: boolean;
-  y: number;
-  tool: ToolItem;
-}
 
 // Define styled components
 const TourOverlay = styled('div')`
@@ -79,39 +72,12 @@ interface Step {
 
 interface TourProps {
   onClose: () => void;
-  Step: (step: number) => void;
+
 }
 
-interface ToolItem {
-  label: string
-  hotkey: string
-  description: string
-  value: Tool
-  icon: ReactNode
-  animation: object
-}
-
-const EditorPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
+const EditorPageTour: React.FC<TourProps> = ({ onClose }) => {
   const [step, setStep] = useState<number>(0)
-  const [step1, calledStep1Function] = useState<number>(0)
-  const [toolPopup, setToolPopup] = useState<ToolPopupType>({
-    visible: false,
-    y: 0,
-    tool: {} as ToolItem
-  })
 
-  const toolItems: ToolItem[] = [
-    {
-      label: 'Cursor tool',
-      hotkey: 'V',
-      description: 'Select and move items',
-      value: 'cursor',
-      icon: <MousePointer2 />,
-      animation: cursorAnimation
-    }
-    // Add other tool items here...
-  ]
-  const calledBannerStep = false
   // Define tour steps
   const steps: Step[] = [
     {
@@ -167,9 +133,6 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
 
     // Add more steps as needed
   ]
-  useEffect(() => {
-    Step(step)
-  }, [step, Step])
 
   const handleNext = () => {
     if (step < steps.length - 1) {
@@ -190,10 +153,19 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
     }
   }
 
-  type ToolPopupType = {visible: boolean, y: number, tool: ToolItem}
-  // const [toolPopup, setToolPopup] = useState<ToolPopupType>({} as ToolPopupType)
-  const icons = [<MousePointer2 />, <Hand />, <Circle />, <ArrowUpRight />, <MessageSquare />, <FlaskConical/>, <InfoIcon/>, <Settings2/>, <Star/>]
-  const other = [<Info/>]
+  const icons = [
+    <MousePointer2 key="MousePointer2" />,
+    <Hand key="Hand" />,
+    <Circle key="Circle" />,
+    <ArrowUpRight key="ArrowUpRight" />,
+    <MessageSquare key="MessageSquare" />,
+    <FlaskConical key="FlaskConical" />,
+    <InfoIcon key="InfoIcon" />,
+    <Settings2 key="Settings" />,
+    <Star key="Star" />
+  ]
+
+  const other = [<Info key="Info"/>]
   const animations = [cursorAnimation, handAnimation, stateAnimation, transitionAnimation, commentAnimation]
 
   return (
