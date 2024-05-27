@@ -27,13 +27,16 @@ const Editor = () => {
   }
 
   useEffect(() => {
+    const tourShown = localStorage.getItem('tourEditorShown')
+    if (!tourShown) {
     // Set showTour to true after a delay (for demonstration purposes)
-    const timeoutId = setTimeout(() => {
-      setShowTour(true)
-    }, 2000) // Adjust the delay as needed
-
-    // Clean up the timeout on component unmount
-    return () => clearTimeout(timeoutId)
+      const timeoutId = setTimeout(() => {
+        setShowTour(true)
+      }, 1000) // Adjust the delay as needed
+      localStorage.setItem('tourEditorShown', 'true')
+      // Clean up the timeout on component unmount
+      return () => clearTimeout(timeoutId)
+    }
   }, [])
 
   // Check the user has selected a project, navigate to creation page if not

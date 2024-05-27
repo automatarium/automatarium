@@ -84,9 +84,14 @@ const NewFile = () => {
     if (projects.length) {
       Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
     }
-    setTimeout(() => {
-      setShowTour(true)
-    }, 2000)
+    const tourShown = localStorage.getItem('tourNewShown')
+    if (!tourShown) {
+      const timeoutId = setTimeout(() => {
+        setShowTour(true)
+      }, 1000)
+      localStorage.setItem('tourNewShown', 'true')
+      return () => clearTimeout(timeoutId)
+    }
   }, [projects, thumbnails])
 
   // Create and update refs when projects changes

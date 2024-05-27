@@ -55,12 +55,15 @@ const Landing = () => {
 
   useEffect(() => {
     // Set showTour to true after a delay (for demonstration purposes)
-    const timeoutId = setTimeout(() => {
-      setShowTour(true)
-    }, 2000) // Adjust the delay as needed
-
-    // Clean up the timeout on component unmount
-    return () => clearTimeout(timeoutId)
+    const tourShown = localStorage.getItem('tourShown')
+    if (!tourShown) {
+      const timeoutId = setTimeout(() => {
+        setShowTour(true)
+      }, 1000) // Adjust the delay as needed
+      localStorage.setItem('tourShown', 'true')
+      // Clean up the timeout on component unmount
+      return () => clearTimeout(timeoutId)
+    }
   }, [])
 
   return (
