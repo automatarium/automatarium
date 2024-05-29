@@ -80,6 +80,8 @@ const TestingLab = () => {
       } else {
         console.log('Problem not created properly!')
       }
+    } else {
+      setTraceIdx(0)
     }
   }, [enableManualStepping, traceInput, lastChangeDate])
 
