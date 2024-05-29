@@ -469,88 +469,90 @@ const TestingLab = () => {
       {enableManualStepping && (buttonsArray)}
       </Wrapper>
 
-      <SectionLabel>Multi-run</SectionLabel>
-        <Wrapper>
-          {multiTraceInput.map((value, index) => (
-            <MultiTraceRow key={index}>
-              {multiTraceOutput?.[index]?.accepted !== undefined && (
-                <StatusIcon $accepted={multiTraceOutput[index].accepted}>
-                  {multiTraceOutput[index].accepted ? <CheckCircle2 /> : <XCircle />}
-                </StatusIcon>
-              )}
-              <Input
-                onChange={e => {
-                  updateMultiTraceInput(index, e.target.value)
-                  setMultiTraceOutput([])
-                }}
-                value={value}
-                placeholder="λ"
-                color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
-                onPaste={e => {
-                  const paste = e.clipboardData.getData('text')
-                  if (!paste.includes('\n')) return
+      {!enableManualStepping && <>
+        <SectionLabel>Multi-run</SectionLabel>
+          <Wrapper>
+            {multiTraceInput.map((value, index) => (
+              <MultiTraceRow key={index}>
+                {multiTraceOutput?.[index]?.accepted !== undefined && (
+                  <StatusIcon $accepted={multiTraceOutput[index].accepted}>
+                    {multiTraceOutput[index].accepted ? <CheckCircle2 /> : <XCircle />}
+                  </StatusIcon>
+                )}
+                <Input
+                  onChange={e => {
+                    updateMultiTraceInput(index, e.target.value)
+                    setMultiTraceOutput([])
+                  }}
+                  value={value}
+                  placeholder="λ"
+                  color={multiTraceOutput?.[index]?.accepted !== undefined ? (multiTraceOutput[index].accepted ? 'success' : 'error') : undefined}
+                  onPaste={e => {
+                    const paste = e.clipboardData.getData('text')
+                    if (!paste.includes('\n')) return
 
-                  e.preventDefault()
-                  const lines = paste.split(/\r?\n/).filter(l => l !== '')
-                  lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
-                }}
-                onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
-                  assertType<HTMLElement>(e.target)
-                  if (e.key === 'Enter' && !e.repeat) {
-                    if (e.metaKey || e.ctrlKey) {
-                      // Run shortcut
-                      rerunMultiTraceInput()
-                    } else {
-                      addMultiTraceInput()
-                      window.setTimeout(() => (e.target as HTMLElement).closest('div').parentElement?.querySelector<HTMLElement>('div:last-of-type > input')?.focus(), 50)
-                    }
-                  }
-                  if (e.key === 'Backspace' && value === '' && !e.repeat) {
-                    if (multiTraceInput.length === 1) return
                     e.preventDefault()
-                    e.target?.focus()
-                    if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
+                    const lines = paste.split(/\r?\n/).filter(l => l !== '')
+                    lines.forEach((l, i) => i === 0 ? updateMultiTraceInput(index, l) : addMultiTraceInput(l))
+                  }}
+                  onKeyDown={(e: KeyboardEvent<HTMLInputElement>) => {
+                    assertType<HTMLElement>(e.target)
+                    if (e.key === 'Enter' && !e.repeat) {
+                      if (e.metaKey || e.ctrlKey) {
+                        // Run shortcut
+                        rerunMultiTraceInput()
+                      } else {
+                        addMultiTraceInput()
+                        window.setTimeout(() => (e.target as HTMLElement).closest('div').parentElement?.querySelector<HTMLElement>('div:last-of-type > input')?.focus(), 50)
+                      }
+                    }
+                    if (e.key === 'Backspace' && value === '' && !e.repeat) {
+                      if (multiTraceInput.length === 1) return
+                      e.preventDefault()
+                      e.target?.focus()
+                      if (e.target.closest('div').parentElement?.querySelector('div:last-of-type > input') === e.target) {
+                        (e.target?.closest('div')?.previousSibling as HTMLElement)?.querySelector('input')?.focus()
+                      }
+                      removeMultiTraceInput(index)
+                      setMultiTraceOutput([])
+                    }
+                    if (e.key === 'ArrowUp') {
                       (e.target?.closest('div')?.previousSibling as HTMLElement)?.querySelector('input')?.focus()
                     }
-                    removeMultiTraceInput(index)
+                    if (e.key === 'ArrowDown') {
+                      (e.target?.closest('div')?.nextSibling as HTMLElement)?.querySelector('input')?.focus()
+                    }
+                  }}
+                />
+                <RemoveButton
+                  onClick={e => {
+                    const container = (e.target as HTMLElement).closest('div')
+                    const next = (((container?.nextSibling as HTMLElement)?.tagName === 'DIV' || multiTraceInput.length === 1) ? container : container?.previousSibling) as HTMLElement
+                    if (multiTraceInput.length === 1) {
+                      updateMultiTraceInput(index, '')
+                    } else {
+                      removeMultiTraceInput(index)
+                    }
+                    next?.querySelector('input')?.focus()
                     setMultiTraceOutput([])
-                  }
-                  if (e.key === 'ArrowUp') {
-                    (e.target?.closest('div')?.previousSibling as HTMLElement)?.querySelector('input')?.focus()
-                  }
-                  if (e.key === 'ArrowDown') {
-                    (e.target?.closest('div')?.nextSibling as HTMLElement)?.querySelector('input')?.focus()
-                  }
-                }}
-              />
-              <RemoveButton
-                onClick={e => {
-                  const container = (e.target as HTMLElement).closest('div')
-                  const next = (((container?.nextSibling as HTMLElement)?.tagName === 'DIV' || multiTraceInput.length === 1) ? container : container?.previousSibling) as HTMLElement
-                  if (multiTraceInput.length === 1) {
-                    updateMultiTraceInput(index, '')
-                  } else {
-                    removeMultiTraceInput(index)
-                  }
-                  next?.querySelector('input')?.focus()
-                  setMultiTraceOutput([])
-                }}
-                title="Remove"
-              ><Trash2 /></RemoveButton>
-            </MultiTraceRow>
-          ))}
-          <Button
-            secondary
-            onClick={() => {
-              addMultiTraceInput()
-              setMultiTraceOutput([])
-            }}
-            icon={<Plus />}
-          />
-          <Button onClick={() => {
-            rerunMultiTraceInput()
-          }}>Run</Button>
-      </Wrapper>
+                  }}
+                  title="Remove"
+                ><Trash2 /></RemoveButton>
+              </MultiTraceRow>
+            ))}
+            <Button
+              secondary
+              onClick={() => {
+                addMultiTraceInput()
+                setMultiTraceOutput([])
+              }}
+              icon={<Plus />}
+            />
+            <Button onClick={() => {
+              rerunMultiTraceInput()
+            }}>Run</Button>
+        </Wrapper>
+        </>}
     </>
   )
 }
