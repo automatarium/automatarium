@@ -67,53 +67,6 @@ const TestingLab = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
-  // Creates problem and sets it, should run every time trace/graph changes while enableManualStepping is enabled
-  // (doesn't work 100%, may have to cause update by changing input)
-  useEffect(() => {
-    if (enableManualStepping) {
-      const _problem = buildProblem(graph, traceInput)
-      if (_problem != null) {
-        console.log('currentManualNode reset')
-        setProblem(_problem)
-        setCurrentManualNode(_problem.initial)
-        setTraceIdx(0)
-      } else {
-        console.log('Problem not created properly!')
-      }
-    } else {
-      setTraceIdx(0)
-    }
-  }, [enableManualStepping, traceInput, lastChangeDate])
-
-  // To move execution path back when backtracking
-  useEffect(() => {
-    if (enableManualStepping) {
-      let nodeChainLength = 0
-      let currentNode = currentManualNode
-      while (currentNode) {
-        nodeChainLength += 1
-        currentNode = currentNode.parent
-      }
-      // If traceIdx is larger than nodes in manual execution, then shrink
-      if (nodeChainLength > traceIdx + 1) {
-        const amountToShrink = nodeChainLength - (traceIdx + 1)
-        for (let i = 0; i < amountToShrink; i++) {
-          setCurrentManualNode(currentManualNode.parent)
-        }
-      }
-    }
-  }, [traceIdx])
-
-  // Runs every time new node is selected while enableManualStepping is enabled
-  useEffect(() => {
-    if (enableManualStepping) {
-      // Updates array of successors
-      if (currentManualNode != null && problem) {
-        setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
-      }
-    }
-  }, [traceInput, problem, currentManualNode])
-
   const simulateAutomata = (graph, input: string, node: Node<FSAState|PDAState|TMState> | null = null) => {
     let result
     switch (graph.projectType) {
@@ -241,22 +194,49 @@ const TestingLab = () => {
     return result
   }, [graph, traceInput, enableManualStepping, currentManualNode])
 
-  // To force simulation to update
-  useEffect(() => {
-    simulateGraph()
-  }, [traceInput, enableManualStepping, currentManualNode])
-
   // Determine last position allowed
   const lastTraceIdx = simulationResult?.transitionCount
 
   const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
 
+  // Returns a string representing the transition from parent to current node, or empty string if no parent
   function nodeTransitionString (node: Node<State>): string {
     if (node.parent !== null) {
       return `${node.state.toTransitionString()}: ${getStateName(node.parent.state.id) ?? statePrefix + node.parent.state.id} -> ${getStateName(node.state.id) ?? statePrefix + node.state.id}`
     } else {
       return ''
     }
+  }
+
+  // Returns array of strings representing the transitions in the trace
+  function traceTransitionsString (projectType, trace) {
+    let transitions
+    switch (projectType) {
+      case ('FSA'):
+        assertType<(FSAExecutionTrace[])>(trace)
+        transitions = trace
+          .slice(0, -1)
+          .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+          .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+          .filter((_x, i) => i < traceIdx)
+        break
+      case ('PDA'):
+        assertType<(PDAExecutionTrace[])>(trace)
+        transitions = trace
+          .slice(0, -1)
+          .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.pop, trace[i + 1]?.push])
+          .map(([read, start, end, pop, push]) => `${read},${pop};${push}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+          .filter((_x, i) => i < traceIdx)
+        break
+      case ('TM'):
+        assertType<(TMExecutionTrace[])>(trace)
+        transitions = trace
+          .slice(0, -1)
+          .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
+          .map(([read, start, end, write, direction]) => `${read},${write};${direction}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+          .filter((_x, i) => i < traceIdx)
+    }
+    return transitions
   }
 
   const traceOutput = useMemo(() => {
@@ -271,39 +251,8 @@ const TestingLab = () => {
       return null
     }
 
-    // Given nodeTransitionString(), does that make this function redundant, since we *may* be able to merge them later?
-    function transitionsForAutomata (projectType, trace) {
-      let transitions
-      switch (projectType) {
-        case ('FSA'):
-          assertType<(FSAExecutionTrace[])>(trace)
-          transitions = trace
-            .slice(0, -1)
-            .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
-            .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-            .filter((_x, i) => i < traceIdx)
-          break
-        case ('PDA'):
-          assertType<(PDAExecutionTrace[])>(trace)
-          transitions = trace
-            .slice(0, -1)
-            .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.pop, trace[i + 1]?.push])
-            .map(([read, start, end, pop, push]) => `${read},${pop};${push}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-            .filter((_x, i) => i < traceIdx)
-          break
-        case ('TM'):
-          assertType<(TMExecutionTrace[])>(trace)
-          transitions = trace
-            .slice(0, -1)
-            .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
-            .map(([read, start, end, write, direction]) => `${read},${write};${direction}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-            .filter((_x, i) => i < traceIdx)
-      }
-      return transitions
-    }
-
     // Represent transitions as strings of form 'read: start -> end'
-    const transitions = transitionsForAutomata(graph.projectType, trace)
+    const transitions = traceTransitionsString(graph.projectType, trace)
 
     let transitionsWithRejected = ['']
     if ('remaining' in simulationResult) {
@@ -323,6 +272,58 @@ const TestingLab = () => {
     return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx || (enableManualStepping && currentManualSuccessors.length === 0)) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
 
+  // Creates problem and sets it, should run every time trace/graph changes while enableManualStepping is enabled
+  useEffect(() => {
+    if (enableManualStepping) {
+      const _problem = buildProblem(graph, traceInput)
+      if (_problem != null) {
+        console.log('currentManualNode reset')
+        setProblem(_problem)
+        setCurrentManualNode(_problem.initial)
+        setTraceIdx(0)
+      } else {
+        console.log('Problem not created properly!')
+      }
+    } else {
+      setTraceIdx(0)
+    }
+  }, [enableManualStepping, traceInput, lastChangeDate])
+
+  // To move execution path back when backtracking while enableManualStepping is enabled
+  useEffect(() => {
+    if (enableManualStepping) {
+      let nodeChainLength = 0
+      let currentNode = currentManualNode
+      while (currentNode) {
+        nodeChainLength += 1
+        currentNode = currentNode.parent
+      }
+      // If traceIdx is larger than nodes in manual execution, then shrink
+      if (nodeChainLength > traceIdx + 1) {
+        const amountToShrink = nodeChainLength - (traceIdx + 1)
+        for (let i = 0; i < amountToShrink; i++) {
+          setCurrentManualNode(currentManualNode.parent)
+        }
+      }
+    }
+  }, [traceIdx])
+
+  // Runs every time new node is selected while enableManualStepping is enabled
+  useEffect(() => {
+    if (enableManualStepping) {
+      // Updates array of successors
+      if (currentManualNode != null && problem) {
+        setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
+      }
+    }
+  }, [traceInput, problem, currentManualNode])
+
+  // To force simulation to update
+  useEffect(() => {
+    simulateGraph()
+  }, [traceInput, enableManualStepping, currentManualNode])
+
+  // Resets simultation on graph change
   useEffect(() => {
     simulateGraph()
     setMultiTraceOutput([])
