@@ -15,8 +15,8 @@ import { ColourName } from 'frontend/src/config'
 const theme: AutomatariumTheme = 'system'
 const color: ColourName = 'red'
 const defaultValues = {
-  theme: theme,
-  color: color,
+  theme,
+  color,
   showGrid: true,
   ctrlZoom: true,
   pauseTM: true
