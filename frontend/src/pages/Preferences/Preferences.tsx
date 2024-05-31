@@ -27,6 +27,7 @@ const Preferences = () => {
   const onSubmit = (values: Preferences) => {
     setPreferences(values)
     setIsOpen(false)
+    window.location.reload();
   }
 
   useEffect(() => {
