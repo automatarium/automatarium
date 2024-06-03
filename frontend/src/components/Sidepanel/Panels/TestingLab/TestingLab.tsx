@@ -469,8 +469,14 @@ const TestingLab = () => {
           />
         </Preference>
         )}
-      {enableManualStepping && (buttonsArray)}
       </Wrapper>
+
+          {enableManualStepping && (currentManualSuccessors.length !== 0) && <>
+              <SectionLabel>Transitions</SectionLabel>
+              <Wrapper>
+              {(buttonsArray)}
+                        </Wrapper>
+      </>}
 
       {!enableManualStepping && <>
         <SectionLabel>Multi-run</SectionLabel>
