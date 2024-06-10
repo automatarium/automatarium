@@ -35,7 +35,7 @@ import { PDAState } from '@automatarium/simulation/src/PDASearch'
 import { TMState } from '@automatarium/simulation/src/TMSearch'
 import { buildProblem } from '@automatarium/simulation/src/utils'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
-import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, assertType } from '/src/types/ProjectTypes'
+import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
 type StepType = 'Forward' | 'Backward' | 'Reset'
@@ -141,17 +141,19 @@ const TestingLab = () => {
           break
       }
 
-      if (frontier && frontier.length > 0) {
+      if (frontier && frontier.length > 0 && (!enableManualStepping)) {
         setSteppedStates(frontier)
       }
     }
   }
 
   useEffect(() => {
-    if (stepper) {
+    if (enableManualStepping) {
+      setSteppedStates([])
+    } else if (stepper) {
       handleStep('Reset')
     }
-  }, [traceInput])
+  }, [traceInput, enableManualStepping])
 
   /**
    * Runs the correct simulation result for a trace input and returns the result.
