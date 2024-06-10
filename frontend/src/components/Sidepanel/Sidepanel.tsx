@@ -1,11 +1,11 @@
 import { ReactNode, useState, useEffect } from 'react'
-import { ChevronRight, FlaskConical, Pause, Info as InfoIcon, Settings2, Star } from 'lucide-react'
+import { ChevronRight, FlaskConical, Info as InfoIcon, Settings2, Star } from 'lucide-react'
 
 import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
-import { TestingLab, SteppingLab, Info, Options, Templates } from './Panels'
+import { TestingLab, Info, Options, Templates } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
 import { stopTemplateInsert } from './Panels/Templates/Templates'
 
@@ -27,12 +27,14 @@ const panels: PanelItem[] = [
     icon: <FlaskConical />,
     element: <TestingLab />
   },
+  /*
   {
     label: 'Stepping Lab',
     value: 'step',
     icon: <Pause />,
     element: <SteppingLab />
   },
+  */
   {
     label: 'About Your Automaton',
     value: 'about',
@@ -77,9 +79,9 @@ const Sidepanel = () => {
     }
   }, [activePanel])
 
-  // Clear the stepped states if the stepping lab is no longer in use
+  // Clear the stepped states if the stepping/testing lab is no longer in use
   useEffect(() => {
-    if (activePanel?.value !== 'step') {
+    if (activePanel?.value !== 'step' && activePanel?.value !== 'test') {
       setSteppedStates([])
     }
   }, [activePanel])

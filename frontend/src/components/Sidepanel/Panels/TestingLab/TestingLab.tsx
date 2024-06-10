@@ -3,8 +3,8 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
-import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/simulation'
+import { useProjectStore, usePDAVisualiserStore, useSteppingStore } from '/src/stores'
+import { closureWithPredicate, graphStepper, simulateFSA, simulatePDA } from '@automatarium/simulation'
 
 import { generateTrace as generateTraceFSA } from '@automatarium/simulation/src/simulateFSA'
 import { generateTrace as generateTracePDA, generateStack } from '@automatarium/simulation/src/simulatePDA'
@@ -34,10 +34,11 @@ import { FSAState } from '@automatarium/simulation/src/FSASearch'
 import { PDAState } from '@automatarium/simulation/src/PDASearch'
 import { TMState } from '@automatarium/simulation/src/TMSearch'
 import { buildProblem } from '@automatarium/simulation/src/utils'
-import { BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
+import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, assertType } from '/src/types/ProjectTypes'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
+type StepType = 'Forward' | 'Backward' | 'Reset'
 
 export const ThemeContext = createContext({})
 
@@ -114,6 +115,44 @@ const TestingLab = () => {
     console.log(['result is:', result, enableManualStepping, node, currentManualNode])
     return result
   }
+
+  // Add Stepper from (old) SteppingLab
+  const stepper = useMemo(() => {
+    // Graph stepper for PDA currently requires changes to BFS stack logic
+    // to handle non-determinism so branching stops on the first rejected transition.
+    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
+  }, [graph, traceInput])
+  const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
+
+  const handleStep = (stepType: StepType) => {
+    let frontier = []
+    if (stepper) {
+      switch (stepType) {
+        case 'Forward':
+          frontier = stepper.forward()
+          break
+        case 'Backward':
+          frontier = stepper.backward()
+          break
+        case 'Reset':
+          frontier = stepper.reset()
+          break
+        default:
+          break
+      }
+
+      if (frontier && frontier.length > 0) {
+        setSteppedStates(frontier)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (stepper) {
+      handleStep('Reset')
+    }
+  }, [traceInput])
+
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
@@ -342,15 +381,16 @@ const TestingLab = () => {
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const noFinalState = !graph?.states.find(s => s.isFinal)
   const warnings = []
-  if (noInitialState) { warnings.push('There is no initial state') }
-  if (noFinalState) { warnings.push('There are no final states') }
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
+    // Solution to #359 - Concat the intial state to solve the problem that a legal 1 state (both initial and final) 0 transition machine can accept λ
     const closure = closureWithPredicate(graph, graph.initialState, () => true)
-    return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
+    return Array.from(closure).concat({ state: graph.initialState, transitions: [] }).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
-  if (!pathToFinal) { warnings.push('There is no path to a final state') }
+  // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
+  if (noInitialState) { warnings.push('There is no initial state') }
+  if (noFinalState) { warnings.push('There are no final states') } else if (!pathToFinal) { warnings.push('There is no path to final state') }
 
   // :^)
   const dibEgg = useDibEgg()
@@ -393,7 +433,7 @@ const TestingLab = () => {
             setSimulationResult(undefined)
           }}
           value={traceInput ?? ''}
-          placeholder="Enter a value to test"
+          placeholder="λ"
         />
 
         <StepButtons>
@@ -402,6 +442,7 @@ const TestingLab = () => {
             }
             onClick={() => {
               setTraceIdx(0)
+              handleStep('Reset')
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
@@ -409,6 +450,7 @@ const TestingLab = () => {
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
+              handleStep('Backward')
             }} />
 
           <Button icon={<ChevronRight size={23} />}
@@ -420,6 +462,7 @@ const TestingLab = () => {
                 simulateGraph()
               }
               setTraceIdx(traceIdx + 1)
+              handleStep('Forward')
             }} />
 
           <Button icon={<SkipForward size={20} />}
