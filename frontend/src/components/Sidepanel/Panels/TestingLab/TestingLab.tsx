@@ -112,7 +112,7 @@ const TestingLab = () => {
           }
         }
     }
-    console.log(['result is:', result, enableManualStepping, node, currentManualNode])
+    
     return result
   }
 
