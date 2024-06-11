@@ -410,7 +410,7 @@ const TestingLab = () => {
     buttonsArray.push(<Button onClick={() => {
       setCurrentManualNode(t)
       setTraceIdx(traceIdx + 1)
-      console.log(['New node set!', currentManualNode, currentManualSuccessors])
+     
     }}>{nodeTransitionString(t)}</Button>)
   })
 
