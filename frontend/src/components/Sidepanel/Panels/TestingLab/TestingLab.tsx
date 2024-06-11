@@ -318,7 +318,7 @@ const TestingLab = () => {
     if (enableManualStepping) {
       const _problem = buildProblem(graph, traceInput)
       if (_problem != null) {
-        console.log('currentManualNode reset')
+    
         setProblem(_problem)
         setCurrentManualNode(_problem.initial)
         setTraceIdx(0)
