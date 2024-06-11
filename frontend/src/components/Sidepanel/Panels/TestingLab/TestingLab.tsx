@@ -112,7 +112,7 @@ const TestingLab = () => {
           }
         }
     }
-    
+
     return result
   }
 
@@ -318,12 +318,9 @@ const TestingLab = () => {
     if (enableManualStepping) {
       const _problem = buildProblem(graph, traceInput)
       if (_problem != null) {
-    
         setProblem(_problem)
         setCurrentManualNode(_problem.initial)
         setTraceIdx(0)
-      } else {
-        
       }
     } else {
       setTraceIdx(0)
@@ -410,7 +407,6 @@ const TestingLab = () => {
     buttonsArray.push(<Button onClick={() => {
       setCurrentManualNode(t)
       setTraceIdx(traceIdx + 1)
-     
     }}>{nodeTransitionString(t)}</Button>)
   })
 
