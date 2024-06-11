@@ -323,7 +323,7 @@ const TestingLab = () => {
         setCurrentManualNode(_problem.initial)
         setTraceIdx(0)
       } else {
-        console.log('Problem not created properly!')
+        
       }
     } else {
       setTraceIdx(0)
