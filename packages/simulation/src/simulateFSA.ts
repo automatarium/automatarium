@@ -5,7 +5,7 @@ import { breadthFirstSearch } from './search'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
-const generateTrace = (node: Node<FSAState>): FSAExecutionTrace[] => {
+export const generateTrace = (node: Node<FSAState>): FSAExecutionTrace[] => {
   const trace: FSAExecutionTrace[] = []
   while (node.parent) {
     trace.push({

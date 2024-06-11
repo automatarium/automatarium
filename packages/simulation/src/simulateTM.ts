@@ -5,7 +5,7 @@ import { breadthFirstSearch } from './search'
 import { buildProblem, newTape } from './utils'
 import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 
-const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
+export const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
   const trace: TMExecutionTrace[] = []
   while (node.parent) {
     trace.push({
