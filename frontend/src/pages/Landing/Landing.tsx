@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react'
 import { Github } from 'lucide-react'
 
 import { Sections, Section, Banner } from './landingStyle'
@@ -7,8 +8,65 @@ import ExampleAutomaton from './components/ExampleAutomaton'
 import TestingLab from './components/TestingLab'
 
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
+import LandingPageTour from '../Tutorials/guidedTour/LandingPageTour'
 
-const Landing = () => (
+const Landing = () => {
+  // creating booleans for tour
+  const [showTour, setShowTour] = useState(false)
+  const [Step, setStep] = useState(0)
+
+  const scrollToArea = (step: number) => {
+    // const element = document.getElementById('start-build');
+    // if (element) {
+    //   element.scrollIntoView({   behavior: 'smooth', block: 'start' });
+    // }
+    if (step === 1) {
+      window.scrollTo({ top: 10, behavior: 'smooth' })
+    } else if (step === 2) {
+      window.scrollTo({ top: 10, behavior: 'smooth' })
+    } else if (step === 3) {
+      window.scrollTo({ top: 600, behavior: 'smooth' })
+    } else if (step === 4) {
+      window.scrollTo({ top: 600, behavior: 'smooth' })
+    } else if (step === 5) {
+      window.scrollTo({ top: 600, behavior: 'smooth' })
+    } else if (step === 6) {
+      window.scrollTo({ top: 1200, behavior: 'smooth' })
+    }
+  }
+
+  const handleBannerStep = (step: number) => {
+    // Define the behavior when the tour reaches the banner step
+    if (step) {
+      // setIsBannerStep(true);
+      scrollToArea(step)
+      setStep(step)
+    }
+  }
+
+  const startTour = () => {
+    setShowTour(true)
+  }
+
+  const closeTour = () => {
+    setShowTour(false)
+    setStep(0)
+  }
+
+  useEffect(() => {
+    // Set showTour to true after a delay (for demonstration purposes)
+    const tourShown = localStorage.getItem('tourShown')
+    if (!tourShown) {
+      const timeoutId = setTimeout(() => {
+        setShowTour(true)
+      }, 1000) // Adjust the delay as needed
+      localStorage.setItem('tourShown', 'true')
+      // Clean up the timeout on component unmount
+      return () => clearTimeout(timeoutId)
+    }
+  }, [])
+
+  return (
   <Main fullWidth style={{ paddingBottom: 0 }}>
     <Header center />
     <Sections>
@@ -18,9 +76,19 @@ const Landing = () => (
           <p>Automatarium is a student-built platform for automata and formal language theory.</p>
           <p>Work easily with a simple and intuitive design built for ease of use and accessibility.</p>
           <p>It's free to use, and when you're done, share your project with the world with a link.</p>
-          <Button to="/new">Start building!</Button>
+          <Button id="start-build" to="/new"
+            style={{
+              backgroundColor: (Step === 1) ? '#90EE90' : '',
+              color: (Step === 1) ? 'green' : 'white'
+            } }
+          >Start building!</Button>
           <p>First time here? Check out our tutorials!</p>
-          <Button to='/tutorials'>Tutorials</Button>
+          <Button to='/tutorials'
+          style={{
+            backgroundColor: (Step === 2) ? '#90EE90' : '',
+            color: (Step === 2) ? 'green' : 'white'
+
+          } }>Tutorials</Button>
         </div>
       </Section>
 
@@ -36,7 +104,7 @@ const Landing = () => (
       </Banner>
 
       <Section $reverse>
-        <TestingLab />
+        <TestingLab Step={Step} />
         <div className="text">
           <h3>Fully-featured testing lab</h3>
           <p>Automatarium provides a simple but powerful testing lab. Step through inputs and see a live trace of what is happening. Try changing the input in the example and see what happens.</p>
@@ -67,13 +135,19 @@ const Landing = () => (
         </div>
       </Section>
 
-      <Banner>
-        <h3>What are you waiting for?</h3>
-        <p>Start building and testing your automata now!</p>
-        <Button to="/new">Start building!</Button>
+    <Banner>
+          <h3>What are you waiting for?</h3>
+          <p>Start building and testing your automata now!</p>
+          <Button to="/new">Start building!</Button>
+          <p>Take a tour of the landing page</p>
+          <Button onClick={startTour}>Take Tour</Button> {/* Button to start the tour */}
       </Banner>
-    </Sections>
-  </Main>
-)
+     </Sections>
+
+      {/* Render the tour if showTour is true */}
+     {showTour && <LandingPageTour onClose={closeTour} Step={handleBannerStep} />}
+    </Main>
+  )
+}
 
 export default Landing

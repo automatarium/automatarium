@@ -16,6 +16,7 @@ import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -39,6 +40,29 @@ const NewFile = () => {
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
+  /// Tour stuff
+
+  const [showTour, setShowTour] = useState(false)
+  const closeTour = () => {
+    setShowTour(false)
+  }
+
+  const handleStep = (step: number) => {
+    // Define the behavior when the tour reaches the banner step
+    if (step) {
+      // setIsBannerStep(true);
+      scrollToArea(step)
+    }
+  }
+  const scrollToArea = (step: number) => {
+    if (step === 1) {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else if (step === 2) {
+      window.scrollTo({ top: 1010, behavior: 'smooth' })
+    } else if (step === 3) {
+      window.scrollTo({ top: 10, behavior: 'smooth' })
+    }
+  }
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -59,6 +83,14 @@ const NewFile = () => {
   useEffect(() => {
     if (projects.length) {
       Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
+    }
+    const tourShown = localStorage.getItem('tourNewShown')
+    if (!tourShown) {
+      const timeoutId = setTimeout(() => {
+        setShowTour(true)
+      }, 1000)
+      localStorage.setItem('tourNewShown', 'true')
+      return () => clearTimeout(timeoutId)
     }
   }, [projects, thumbnails])
 
@@ -177,6 +209,7 @@ const NewFile = () => {
       }}
     />
 
+    {showTour && <NewPageTour onClose={closeTour} Step={handleStep} />}
     <ImportDialog navigateFunction={navigate} />
   </Main>
 }

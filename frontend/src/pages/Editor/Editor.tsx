@@ -11,6 +11,7 @@ import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisuali
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
+import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -20,6 +21,24 @@ const Editor = () => {
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
+  const [showTour, setShowTour] = useState(false)
+  const closeTour = () => {
+    setShowTour(false)
+  }
+
+  useEffect(() => {
+    const tourShown = localStorage.getItem('tourEditorShown')
+    if (!tourShown) {
+    // Set showTour to true after a delay (for demonstration purposes)
+      const timeoutId = setTimeout(() => {
+        setShowTour(true)
+      }, 1000) // Adjust the delay as needed
+      localStorage.setItem('tourEditorShown', 'true')
+      // Clean up the timeout on component unmount
+      return () => clearTimeout(timeoutId)
+    }
+  }, [])
+
   // Check the user has selected a project, navigate to creation page if not
   if (!project) {
     navigate('/new')
@@ -101,7 +120,7 @@ const Editor = () => {
       <ShortcutGuide />
 
       <ExportImage />
-
+m
       <ShareUrl />
 
       <TemplateDelConfDialog
@@ -111,7 +130,7 @@ const Editor = () => {
       />
 
       <ImportDialog navigateFunction={navigate} />
-
+      {showTour && <EditorPageTour onClose={closeTour}/>}
     </>
   )
 }
