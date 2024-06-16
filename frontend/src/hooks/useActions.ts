@@ -361,9 +361,10 @@ const useActions = (registerHotkeys = false) => {
           if (showFinalState) {
             dispatchCustomEvent('modal:finalstate', null)
           } else {
-            if (window.confirm('Popup is now disabled, confirm to re-enable.')) {
-              usePopupsStore.getState().setPopups({ showFinalState: true })
-            }
+            // TEST CODE FOR POPUP - NOT TO BE ENABLED ON DEV VERSION
+            // if (window.confirm('Popup is now disabled, confirm to re-enable.')) {
+            //   usePopupsStore.getState().setPopups({ showFinalState: true })
+            // }
           }
         }
         const selectedStateIDs = useSelectionStore.getState().selectedStates
