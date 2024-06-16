@@ -3,8 +3,8 @@ import { SkipBack, ChevronLeft, ChevronRight, SkipForward, Plus, Trash2, CheckCi
 
 import { useDibEgg } from '/src/hooks'
 import { SectionLabel, Button, Input, TracePreview, TraceStepBubble, Preference, Switch } from '/src/components'
-import { useProjectStore, usePDAVisualiserStore } from '/src/stores'
-import { closureWithPredicate, simulateFSA, simulatePDA } from '@automatarium/simulation'
+import { useProjectStore, usePDAVisualiserStore, useSteppingStore } from '/src/stores'
+import { closureWithPredicate, graphStepper, simulateFSA, simulatePDA } from '@automatarium/simulation'
 
 import { simulateTM } from '@automatarium/simulation/src/simulateTM'
 import useTMSimResultStore from '../../../../stores/useTMSimResultStore'
@@ -23,13 +23,16 @@ import {
   FSAExecutionResult,
   FSAExecutionTrace,
   PDAExecutionResult,
-  PDAExecutionTrace
+  PDAExecutionTrace,
+  TMExecutionResult,
+  TMExecutionTrace
 } from '@automatarium/simulation/src/graph'
-import { assertType } from '/src/types/ProjectTypes'
+import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, assertType } from '/src/types/ProjectTypes'
 
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
+type StepType = 'Forward' | 'Backward' | 'Reset'
 
 export const ThemeContext = createContext({})
 
@@ -56,6 +59,43 @@ const TestingLab = () => {
 
   // Preference option to pause/unpause TM at Final State
   const preferences = usePreferencesStore(state => state.preferences)
+
+  // Add Stepper from (old) SteppingLab
+  const stepper = useMemo(() => {
+    // Graph stepper for PDA currently requires changes to BFS stack logic
+    // to handle non-determinism so branching stops on the first rejected transition.
+    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
+  }, [graph, traceInput])
+  const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
+
+  const handleStep = (stepType: StepType) => {
+    let frontier = []
+    if (stepper) {
+      switch (stepType) {
+        case 'Forward':
+          frontier = stepper.forward()
+          break
+        case 'Backward':
+          frontier = stepper.backward()
+          break
+        case 'Reset':
+          frontier = stepper.reset()
+          break
+        default:
+          break
+      }
+
+      if (frontier && frontier.length > 0) {
+        setSteppedStates(frontier)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (stepper) {
+      handleStep('Reset')
+    }
+  }, [traceInput])
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
@@ -65,25 +105,43 @@ const TestingLab = () => {
     // TODO: Find reasoning behind the magical -1
     const transitionCount = (res: ExecutionResult) =>
       Math.max(1, res.trace.length) - (res.accepted ? 1 : graph.projectType === 'TM' ? 1 : 0)
-
+    /*
     if (graph.projectType === 'TM') {
       const result = simulateTM(graph, input, preferences)
       return {
         ...result,
         transitionCount: transitionCount(result)
       }
-    } else if (['PDA', 'FSA'].includes(graph.projectType)) {
+      } else */
+    if (['PDA', 'FSA', 'TM'].includes(graph.projectType)) {
+      function simulateAutomata (graph, input) {
+        let result
+        switch (graph.projectType) {
+          case ('PDA'):
+            result = simulatePDA(graph, input ?? '')
+            break
+          case ('FSA'):
+            result = simulateFSA(graph, input ?? '')
+            break
+          case ('TM'):
+            result = simulateTM(graph, input ?? '', preferences)
+        }
+        return result
+      }
+      const result = simulateAutomata(graph, input)
+      /*
       const result =
             graph.projectType === 'PDA'
               ? simulatePDA(graph, input ?? '')
               : simulateFSA(graph, input ?? '')
+*/
       // Formats a symbol. Makes an empty symbol become a lambda
       const formatSymbol = (char?: string): string =>
         char === null || char === '' ? 'λ' : char
       return {
         ...result,
         // We need format the symbols in the trace so any empty symbols become lambdas
-        trace: result.trace.map((step: FSAExecutionTrace | PDAExecutionTrace) => ({
+        trace: result.trace.map((step: FSAExecutionTrace | PDAExecutionTrace | TMExecutionTrace) => ({
           to: step.to,
           read: formatSymbol(step.read),
           // Add extra info if its a PDA trace.
@@ -94,8 +152,17 @@ const TestingLab = () => {
                 push: formatSymbol(step.push),
                 currentStack: step.currentStack
               }
+            : {}),
+          // Info for TMs
+          ...('tape' in step
+            ? {
+                tape: step.tape,
+                write: formatSymbol(step.write),
+                direction: step.direction
+              }
             : {})
-        } as FSAExecutionTrace | PDAExecutionTrace)),
+
+        } as FSAExecutionTrace | PDAExecutionTrace | TMExecutionTrace)),
         transitionCount: transitionCount(result)
       }
     } else {
@@ -132,8 +199,8 @@ const TestingLab = () => {
 
   const traceOutput = useMemo(() => {
     // No output before simulating
-    if (!simulationResult || graph.projectType === 'TM') { return '' }
-    assertType<(FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}>(simulationResult)
+    if (!simulationResult) { return '' }
+    assertType<(FSAExecutionResult | PDAExecutionResult | TMExecutionResult) & {transitionCount: number}>(simulationResult)
 
     const { trace, accepted } = simulationResult
     // Return null if not enough states in trace to render transitions
@@ -142,20 +209,47 @@ const TestingLab = () => {
       return null
     }
 
-    // Represent transitions as strings of form start -> end
-    const transitions = trace
-      .slice(0, -1)
-      .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
-      .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
-      .filter((_x, i) => i < traceIdx)
+    function transitionsForAutomata (projectType, trace) {
+      let transitions
+      switch (projectType) {
+        case ('FSA'):
+        case ('PDA'):
+          // TODO add more detail for PDA trace (stack pushing/popping)
+          assertType<(FSAExecutionTrace[] | PDAExecutionTrace[])>(trace)
+          transitions = trace
+            .slice(0, -1)
+            .map<[string, number, number]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to])
+            .map(([read, start, end]) => `${read}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+            .filter((_x, i) => i < traceIdx)
 
-    // Add rejecting transition if applicable
-    const transitionsWithRejected = !accepted && traceIdx === trace.length
-      ? [...transitions,
-          simulationResult.remaining[0]
-            ? `${simulationResult.remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
-            : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
-      : transitions
+          break
+        case ('TM'):
+          assertType<(TMExecutionTrace[])>(trace)
+          transitions = trace
+            .slice(0, -1)
+            .map<[string, number, number, string, string]>((_, i) => [trace[i + 1]?.read, trace[i]?.to, trace[i + 1]?.to, trace[i + 1]?.write, trace[i + 1]?.direction])
+            .map(([read, start, end, write, direction]) => `${read},${write};${direction}: ${getStateName(start) ?? statePrefix + start} -> ${getStateName(end) ?? statePrefix + end}`)
+            .filter((_x, i) => i < traceIdx)
+      }
+      return transitions
+    }
+
+    // Represent transitions as strings of form 'read: start -> end'
+    const transitions = transitionsForAutomata(graph.projectType, trace)
+
+    let transitionsWithRejected = ['']
+    if ('remaining' in simulationResult) {
+      // Add rejecting transition if applicable
+      transitionsWithRejected = !accepted && traceIdx === trace.length
+        ? [...transitions,
+            simulationResult.remaining[0]
+              ? `${simulationResult.remaining[0]}: ${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`
+              : `\n${getStateName(trace[trace.length - 1].to) ?? statePrefix + trace[trace.length - 1].to} ->|`]
+        : transitions
+    } else {
+      // TODO add failed transition text for turing machines
+      transitionsWithRejected = transitions
+    }
 
     // Add 'REJECTED'/'ACCEPTED' label
     return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
@@ -179,15 +273,16 @@ const TestingLab = () => {
   const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
   const noFinalState = !graph?.states.find(s => s.isFinal)
   const warnings = []
-  if (noInitialState) { warnings.push('There is no initial state') }
-  if (noFinalState) { warnings.push('There are no final states') }
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
+    // Solution to #359 - Concat the intial state to solve the problem that a legal 1 state (both initial and final) 0 transition machine can accept λ
     const closure = closureWithPredicate(graph, graph.initialState, () => true)
-    return Array.from(closure).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
+    return Array.from(closure).concat({ state: graph.initialState, transitions: [] }).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
-  if (!pathToFinal) { warnings.push('There is no path to a final state') }
+  // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
+  if (noInitialState) { warnings.push('There is no initial state') }
+  if (noFinalState) { warnings.push('There are no final states') } else if (!pathToFinal) { warnings.push('There is no path to final state') }
 
   // :^)
   const dibEgg = useDibEgg()
@@ -219,7 +314,7 @@ const TestingLab = () => {
             setSimulationResult(undefined)
           }}
           value={traceInput ?? ''}
-          placeholder="Enter a value to test"
+          placeholder="λ"
         />
 
         <StepButtons>
@@ -228,6 +323,7 @@ const TestingLab = () => {
             }
             onClick={() => {
               setTraceIdx(0)
+              handleStep('Reset')
             }} />
 
           <Button icon={<ChevronLeft size={23} />}
@@ -235,6 +331,7 @@ const TestingLab = () => {
             }
             onClick={() => {
               setTraceIdx(traceIdx - 1)
+              handleStep('Backward')
             }} />
 
           <Button icon={<ChevronRight size={23} />}
@@ -246,6 +343,7 @@ const TestingLab = () => {
                 simulateGraph()
               }
               setTraceIdx(traceIdx + 1)
+              handleStep('Forward')
             }} />
 
           <Button icon={<SkipForward size={20} />}
@@ -260,7 +358,7 @@ const TestingLab = () => {
               dibEgg(traceInput, result.accepted)
             }} />
         </StepButtons>
-        {traceOutput && graph.projectType !== 'TM' && <div>
+        {traceOutput && <div>
           <TracePreview
               result={simulationResult as (FSAExecutionResult | PDAExecutionResult) & {transitionCount: number}}
               step={traceIdx}

@@ -1,3 +1,5 @@
+import { TMDirection } from 'frontend/src/types/ProjectTypes'
+
 export type ReadSymbol = string;
 export type StateID = number;
 
@@ -38,6 +40,9 @@ export type PDAExecutionResult = {
 export type TMExecutionTrace = {
     tape: Tape | null
     to: StateID
+    read: string | null
+    write: string | null
+    direction: TMDirection | null
 }
 
 export type TMExecutionResult = {

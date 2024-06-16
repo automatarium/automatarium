@@ -161,10 +161,12 @@ const shortcuts: Category[] = [
         label: 'Testing lab',
         action: 'TESTING_LAB'
       },
+      /*
       {
         label: 'Stepping lab',
         action: 'STEPPING_LAB'
       },
+      */
       {
         label: 'File info',
         action: 'FILE_INFO'
