@@ -354,7 +354,11 @@ const TestingLab = () => {
     if (enableManualStepping) {
       // Updates array of successors
       if (currentManualNode != null && problem) {
-        setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
+        if (preferences.pauseTM && problem.isFinalState(currentManualNode)) {
+          setCurrentManualSuccessors([])
+        } else {
+          setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
+        }
       }
     }
   }, [traceInput, problem, currentManualNode])
