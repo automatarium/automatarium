@@ -19,6 +19,13 @@ export class TMState extends State {
     const traceAdd = this.tape.trace.toString() ?? ''
     return String(this.id + ',' + this.tape.pointer + ',' + traceAdd)
   }
+
+  toTransitionString () {
+    // TODO find better place to put function
+    const formatSymbol = (char?: string): string =>
+      char === null || char === '' ? 'λ' : char
+    return `${formatSymbol(this.read)},${formatSymbol(this.write)};${formatSymbol(this.direction)}`
+  }
 }
 
 export class TMGraph extends Graph<TMState, TMAutomataTransition> {

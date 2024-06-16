@@ -23,7 +23,7 @@ const graph: FSAProjectGraph = {
   initialState: 0
 }
 
-const TestingLab = () => {
+const TestingLab = ({ Step }) => {
   const [input, setInput] = useState('ab')
   const [idx, setIdx] = useState(0)
   const [result, setResult] = useState<FSAExecutionResult & {transitionCount: number}>()
@@ -94,14 +94,23 @@ const TestingLab = () => {
         />
 
         <Button
+        style={{
+          backgroundColor: (Step === 4) ? '#90EE90' : '',
+          color: (Step === 4) ? 'green' : 'white'
+        }}
           icon={<ChevronLeft size={23} />}
           disabled={idx <= 0}
           onClick={() => setIdx(idx - 1)}
         />
 
         <Button
+          style={{
+            backgroundColor: (Step === 4) ? '#90EE90' : '',
+            color: (Step === 4) ? 'green' : 'white'
+          } }
           icon={<ChevronRight size={23} />}
           disabled={idx >= result?.transitionCount}
+
           onClick={() => {
             if (!result) {
               simulateGraph()
@@ -111,6 +120,10 @@ const TestingLab = () => {
         />
 
         <Button
+          style={{
+            backgroundColor: (Step === 5) ? '#90EE90' : '',
+            color: (Step === 5) ? 'green' : 'white'
+          } }
           icon={<SkipForward size={20} />}
           disabled={idx === result?.transitionCount && idx !== 0}
           onClick={() => {
@@ -125,7 +138,9 @@ const TestingLab = () => {
         <div>
           <TracePreview result={result} step={idx} states={graph.states} />
           <TraceConsole><pre>{trace}</pre></TraceConsole>
+
         </div>
+
       )}
     </Wrapper>
   )

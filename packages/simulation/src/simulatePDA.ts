@@ -5,7 +5,7 @@ import { breadthFirstSearch } from './search'
 import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
-const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
+export const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   const trace: PDAExecutionTrace[] = []
   while (node.parent) {
     trace.push({
@@ -29,37 +29,13 @@ const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
   return trace.reverse()
 }
 
-export const simulatePDA = (
-  graph: PDAProjectGraph,
-  input: string
-): PDAExecutionResult => {
-  const tempStack: Stack = []
-  const problem = buildProblem(graph, input)
-  if (!problem) {
-    return {
-      accepted: false,
-      remaining: input,
-      trace: [],
-      stack: []
-    }
-  }
-
-  const result = breadthFirstSearch(problem)
-
-  if (!result) {
-    return {
-      trace: [{ to: 0, read: null, pop: '', push: '', currentStack: [], invalidPop: false }],
-      accepted: false, // empty stack is part of accepted condition
-      remaining: input,
-      stack: []
-    }
-  }
-  // Simulate stack operations
-  /*
+// Simulate stack operations
+/*
     *  Note:- this was a workaround for when BFS didn't consider the stack
     *       - It's a double up now but the PDAStackVisualiser still uses it
     */
-  const trace = generateTrace(result)
+export const generateStack = (trace: PDAExecutionTrace[]) => {
+  const tempStack: Stack = []
   for (let i = 0; i < trace.length; i++) {
     // Handle pop symbol first
     if (trace[i].pop !== '') {
@@ -83,7 +59,36 @@ export const simulatePDA = (
     }
     trace[i].currentStack = JSON.parse(JSON.stringify(tempStack))
   }
-  const stack = tempStack
+  return tempStack
+}
+
+export const simulatePDA = (
+  graph: PDAProjectGraph,
+  input: string
+): PDAExecutionResult => {
+  const problem = buildProblem(graph, input)
+  if (!problem) {
+    return {
+      accepted: false,
+      remaining: input,
+      trace: [],
+      stack: []
+    }
+  }
+
+  const result = breadthFirstSearch(problem)
+
+  if (!result) {
+    return {
+      trace: [{ to: 0, read: null, pop: '', push: '', currentStack: [], invalidPop: false }],
+      accepted: false, // empty stack is part of accepted condition
+      remaining: input,
+      stack: []
+    }
+  }
+
+  const trace = generateTrace(result)
+  const stack = generateStack(trace)
 
   return {
     accepted: result.state.isFinal && result.state.remaining === '' && stack.length === 0,

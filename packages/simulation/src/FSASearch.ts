@@ -15,6 +15,14 @@ export class FSAState extends State {
   key () {
     return String(this.id + this.remaining)
   }
+
+  toTransitionString () {
+    // TODO find better place to put function
+    const formatSymbol = (char?: string): string =>
+      char === null || char === '' ? 'λ' : char
+
+    return `${formatSymbol(this.read)}`
+  }
 }
 
 export class FSAGraph extends Graph<FSAState, FSAAutomataTransition> {

@@ -6,7 +6,7 @@ import { buildProblem, newTape } from './utils'
 import { TMProjectGraph } from 'frontend/src/types/ProjectTypes'
 import { Preferences } from 'frontend/src/stores/usePreferencesStore'
 
-const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
+export const generateTrace = (node: Node<TMState>): TMExecutionTrace[] => {
   const trace: TMExecutionTrace[] = []
   while (node.parent) {
     trace.push({
