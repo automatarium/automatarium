@@ -54,6 +54,14 @@ const App = () => {
     document.body.classList.toggle('dark', themePref === 'dark')
   }, [themePref])
 
+  // Check if the pauseTM preference is missing
+  const preferences = usePreferencesStore(state => state.preferences)
+  const setPreferences = usePreferencesStore(state => state.setPreferences)
+  if (typeof preferences.pauseTM === 'undefined') {
+    // Add the pauseTM preference with a default value
+    setPreferences({ ...preferences, pauseTM: true })
+  }
+
   useEgg()
 
   return <>

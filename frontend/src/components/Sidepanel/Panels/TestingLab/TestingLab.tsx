@@ -37,6 +37,8 @@ import { buildProblem } from '@automatarium/simulation/src/utils'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
 import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
+import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
+
 type SimulationResult = ExecutionResult & {transitionCount: number}
 type StepType = 'Forward' | 'Backward' | 'Reset'
 
@@ -68,6 +70,8 @@ const TestingLab = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
+  // Preference option to pause/unpause TM at Final State
+  const preferences = usePreferencesStore(state => state.preferences)
   const simulateAutomata = (graph, input: string, node: Node<FSAState|PDAState|TMState> | null = null) => {
     let result
     switch (graph.projectType) {
@@ -101,7 +105,7 @@ const TestingLab = () => {
         break
       case ('TM'):
         if (!enableManualStepping) {
-          result = simulateTM(graph, input ?? '')
+          result = simulateTM(graph, input ?? '', preferences)
         } else {
           assertType<Node<TMState>>(node)
           const trace = generateTraceTM(node)
@@ -154,7 +158,6 @@ const TestingLab = () => {
       handleStep('Reset')
     }
   }, [traceInput, enableManualStepping])
-
   /**
    * Runs the correct simulation result for a trace input and returns the result.
    * The simulation function to use depends on the project name
@@ -351,7 +354,11 @@ const TestingLab = () => {
     if (enableManualStepping) {
       // Updates array of successors
       if (currentManualNode != null && problem) {
-        setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
+        if (preferences.pauseTM && problem.isFinalState(currentManualNode)) {
+          setCurrentManualSuccessors([])
+        } else {
+          setCurrentManualSuccessors(problem.getSuccessors(currentManualNode))
+        }
       }
     }
   }, [traceInput, problem, currentManualNode])

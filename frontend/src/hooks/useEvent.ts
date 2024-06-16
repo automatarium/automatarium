@@ -37,6 +37,7 @@ export interface CustomEvents {
    */
   'sidepanel:open': { panel: SidePanelKey },
   'modal:shortcuts': null,
+  'modal:finalstate': null,
   'svg:mousedown': SVGMouseEventData,
   'svg:mouseup': SVGMouseEventData,
   'svg:mousemove': SVGMouseEventData,

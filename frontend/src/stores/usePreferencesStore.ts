@@ -1,13 +1,14 @@
 import { create, SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { ColourName } from '/src/config/colors'
-import { AutomatariumTheme } from '/src/types/ProjectTypes'
+import { ColourName } from '../config/colors'
+import { AutomatariumTheme } from '../types/ProjectTypes'
 
 export interface Preferences {
   theme: AutomatariumTheme
   color: ColourName | 'match'
   showGrid: boolean
   ctrlZoom: boolean
+  pauseTM: boolean
 }
 
 interface PreferencesStore {
@@ -19,7 +20,8 @@ const defaultPreferences: Preferences = {
   theme: 'system',
   color: 'match',
   showGrid: true,
-  ctrlZoom: !navigator.platform?.match(/Win/) // Default to false on windows, which more often has a mouse
+  ctrlZoom: !navigator.platform?.match(/Win/), // Default to false on windows, which more often has a mouse
+  pauseTM: true
 }
 
 const usePreferencesStore = create<PreferencesStore>()(persist((set: SetState<PreferencesStore>) => ({

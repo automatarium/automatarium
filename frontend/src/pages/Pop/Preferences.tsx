@@ -12,8 +12,7 @@ const defaultValues = {
   theme: 'system',
   color: 'match',
   showGrid: true,
-  ctrlZoom: true,
-  pauseTM: true
+  ctrlZoom: true
 }
 
 const Preferences = () => {
@@ -27,7 +26,6 @@ const Preferences = () => {
   const onSubmit = (values: Preferences) => {
     setPreferences(values)
     setIsOpen(false)
-    window.location.reload()
   }
 
   useEffect(() => {
@@ -94,13 +92,6 @@ const Preferences = () => {
             description="Allows panning using a trackpad"
           >
             <Switch type="checkbox" {...register('ctrlZoom')} />
-          </Preference>
-
-          <Preference
-            label="TM Halt on Final State"
-            description="Toggles halting for trace step for TM"
-          >
-            <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>
         </Section>
       </form>

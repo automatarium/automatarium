@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Content, EditorContent } from './editorStyle'
-import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide } from '/src/components'
+import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
 import { useExportStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
@@ -118,6 +118,8 @@ const Editor = () => {
       </Content>
 
       <ShortcutGuide />
+
+      <FinalStatePopup />
 
       <ExportImage />
 m
