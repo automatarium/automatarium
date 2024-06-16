@@ -58,6 +58,18 @@ Improved user experience with tutorial videos, project sharing and transition ma
 
 </details>
 
+<details>
+<summary>Group 5 - 2024 Semester 1</summary>
+Improved user experience with guided tours, added manual stepping, early halting and other QoL changes.
+
+- [Antoni Giannakopoulos](https://github.com/AntiToni)
+- [Antony Kurian](https://github.com/AntonyReji)
+- [Kelvin Cam Khon Duong Ly](https://github.com/KelvinDuongLy)
+- [Jordan Sorrenti](https://github.com/s3782534)
+- [Julien Di Lorenzo](https://github.com/s3897720)
+
+</details>
+
 For a full list of contributors see: https://github.com/automatarium/automatarium/graphs/contributors
 
 ## License
