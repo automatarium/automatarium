@@ -122,7 +122,6 @@ const Editor = () => {
       <FinalStatePopup />
 
       <ExportImage />
-m
       <ShareUrl />
 
       <TemplateDelConfDialog
