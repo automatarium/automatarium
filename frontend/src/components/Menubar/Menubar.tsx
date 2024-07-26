@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useMemo, HTMLAttributes } from 'react'
+import { useState, useEffect, useRef, HTMLAttributes } from 'react'
 import { useNavigate } from 'react-router-dom'
 import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
@@ -61,7 +61,7 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButto
   )
 }
 
-const Menubar = () => {
+const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const navigate = useNavigate()
   const [dropdown, setDropdown] = useState<string>()
 
@@ -73,11 +73,6 @@ const Menubar = () => {
   const setProjectName = useProjectStore(s => s.setName)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
-
-  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
-  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
-  // Determine whether saving
-  const isSaving = useMemo(() => !(!lastChangeDate || dayjs(lastSaveDate).isAfter(lastChangeDate)), [lastChangeDate, lastSaveDate])
 
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
@@ -111,7 +106,7 @@ const Menubar = () => {
         <Menu>
           <a href="/new" onClick={e => {
             e.preventDefault()
-            if (isSaving) {
+            if (!isSaving) {
               // If there are unsaved changes, save and then navigate
               saveProject()
             }
