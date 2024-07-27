@@ -71,6 +71,8 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
   const setProjectName = useProjectStore(s => s.setName)
+  const lastChangeDate = useProjectStore(s => s.lastChangeDate)
+  const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
 
@@ -95,10 +97,10 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   }
 
   useEvent('beforeunload', e => {
-    if (!isSaving) return
+    if (lastSaveDate > lastChangeDate) return
     e.preventDefault()
     return 'Your project isn\'t saved yet, are you sure you want to leave?'
-  }, [isSaving], { options: { capture: true }, target: window })
+  }, [lastSaveDate, lastChangeDate], { options: { capture: true }, target: window })
 
   return (
     <>
@@ -106,8 +108,9 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
         <Menu>
           <a href="/new" onClick={e => {
             e.preventDefault()
-            if (!isSaving) {
-              // If there are unsaved changes, save and then navigate
+            const project = useProjectStore.getState().project
+            const totalItems = project.comments.length + project.states.length + project.transitions.length
+            if (totalItems > 0) {
               saveProject()
             }
             navigate('/new')
