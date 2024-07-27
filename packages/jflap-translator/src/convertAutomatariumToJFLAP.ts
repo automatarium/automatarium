@@ -28,9 +28,9 @@ const mapStates = (states: AutomataState[], initialStateId: number, statePrefix:
     id: state.id,
     name: state.name ?? `${statePrefix}${state.id}`
   },
-  label: { _text: state.label },
   x: { _text: state.x },
   y: { _text: state.y },
+  ...(state.label ? { label: { _text: state.label }} : {}),
   ...(state.isFinal ? { final: {} } : {}),
   ...(state.id === initialStateId ? { initial: {} } : {})
 }))
