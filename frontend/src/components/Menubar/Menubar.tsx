@@ -75,6 +75,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
+  const deleteProject = useProjectsStore(s => s.deleteProject)
 
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
@@ -112,6 +113,8 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             const totalItems = project.comments.length + project.states.length + project.transitions.length
             if (totalItems > 0) {
               saveProject()
+            } else {
+              deleteProject(project._id)
             }
             navigate('/new')
           }}>
