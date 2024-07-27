@@ -23,16 +23,18 @@ const makeStateLabel = (states: number[]): string => {
 export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
   // Just in case
   if (nfa.initialState === null) return nfa
-  // Build an adjency list for the NFA to make operations easier.
+  // Build an adjacency list for the NFA to make operations easier.
   // It is a mapping of stateID -> (read symbol -> states that reaches).
-  const graphList = new Map<number, Map<string, number[]>>()
+  const graphList = new Map<number, Map<string, Set<number>>>()
   for (const t of nfa.transitions) {
     // Create the second map if it doesn't exist
     if (!graphList.has(t.from)) graphList.set(t.from, new Map())
     // Now add the state in
     const forState = graphList.get(t.from)
-    if (!forState.has(t.read)) forState.set(t.read, [])
-    forState.get(t.read).push(t.to)
+    for (const symbol of t.read) {
+      if (!forState.has(symbol)) forState.set(symbol, new Set())
+      forState.get(symbol).add(t.to)
+    }
   }
 
   /**
@@ -84,7 +86,7 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
   }
 
   // Build information about the graph
-  const alphabet = new Set(nfa.transitions.map(t => t.read))
+  const alphabet = new Set(nfa.transitions.flatMap(t => t.read.split('')))
   const finalStates = new Set(nfa.states.flatMap(s => s.isFinal ? [s.id] : []))
   // Find position of first node. Doesn't matter really, and we should just auto format + zoom to fit
   const initialPos = { x: nfa.states[0].x, y: nfa.states[0].y }
