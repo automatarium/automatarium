@@ -71,7 +71,11 @@ export const TitleWithAction = styled('div')`
 
   a {
     color: var(--white);
-    opacity: 0.75;
+    opacity: 0.5;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 `
 
