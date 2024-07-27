@@ -11,6 +11,8 @@ import convertSingleTrapState from './graphs/convertSingleTrapState.json'
 import convertSingleTrapStateDFA from './graphs/convertSingleTrapStateDFA.json'
 import infiniteLoop from './graphs/infiniteLoop.json'
 import infiniteLoopDFA from './graphs/infiniteLoopDFA.json'
+import issue445Expected from './graphs/issue445DFA.json'
+import issue445Input from './graphs/issue445NFA.json'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 // Required because we can't do `as const` to the imported JSON.
@@ -46,5 +48,8 @@ describe('Check to ensure DFA graph is displayed as expected', () => {
   })
   test('Graph should successfully handle multiple self transitions', () => {
     expectDFA(infiniteLoop, infiniteLoopDFA)
+  })
+  test('Symbols should be deduped first', () => {
+    expectDFA(issue445Input, issue445Expected)
   })
 })
