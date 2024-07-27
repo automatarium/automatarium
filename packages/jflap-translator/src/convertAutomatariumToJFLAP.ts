@@ -23,10 +23,10 @@ const PROJECT_TYPE_MAP: Record<ProjectType, string> = {
   'TM': 'turing'
 }
 
-const mapStates = (states: AutomataState[], initialStateId: number): JFLAPState[] => states.map((state) => ({
+const mapStates = (states: AutomataState[], initialStateId: number, statePrefix: string): JFLAPState[] => states.map((state) => ({
   _attributes: {
     id: state.id,
-    name: state.name
+    name: state.name ?? `${statePrefix}${state.id}`
   },
   label: { _text: state.label },
   x: { _text: state.x },
@@ -107,7 +107,7 @@ export const convertAutomatariumToJFLAP = (automatariumProject: Project): string
     structure: {
       type: PROJECT_TYPE_MAP[automatariumProject.projectType],
       automaton: {
-        state: mapStates(automatariumProject.states, automatariumProject.initialState),
+        state: mapStates(automatariumProject.states, automatariumProject.initialState, automatariumProject.config.statePrefix),
         transition: mapTransitions(automatariumProject.transitions, automatariumProject.projectType),
         note: mapComments(automatariumProject.comments)
       }

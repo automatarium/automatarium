@@ -2,7 +2,7 @@
 export interface JFLAPState {
   _attributes: {
     id: number
-    name?: string
+    name: string
   }
   label?: { _text: string }
   x: { _text: number }
