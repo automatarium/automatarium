@@ -1,4 +1,4 @@
-import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { FSAAutomataTransition, FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Makes a label for a set of states.
@@ -7,6 +7,14 @@ import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
  */
 const makeStateLabel = (states: number[]): string => {
   return states.length === 0 ? 'Trap' : states.sort((a, b) => a - b).join(', ')
+}
+
+/**
+ * Returns all read symbols for a transition
+ */
+const readSymbols = (t: FSAAutomataTransition): string[] => {
+  // Either split all the character, or return a lambda transition
+  return t.read ? t.read.split('') : ['']
 }
 
 /**
@@ -31,7 +39,7 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
     if (!graphList.has(t.from)) graphList.set(t.from, new Map())
     // Now add the state in
     const forState = graphList.get(t.from)
-    for (const symbol of t.read) {
+    for (const symbol of readSymbols(t)) {
       if (!forState.has(symbol)) forState.set(symbol, new Set())
       forState.get(symbol).add(t.to)
     }
@@ -86,7 +94,7 @@ export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
   }
 
   // Build information about the graph
-  const alphabet = new Set(nfa.transitions.flatMap(t => t.read.split('')))
+  const alphabet = new Set(nfa.transitions.flatMap(t => readSymbols(t)))
   const finalStates = new Set(nfa.states.flatMap(s => s.isFinal ? [s.id] : []))
   // Find position of first node. Doesn't matter really, and we should just auto format + zoom to fit
   const initialPos = { x: nfa.states[0].x, y: nfa.states[0].y }
