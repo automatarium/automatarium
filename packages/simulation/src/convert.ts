@@ -1,4 +1,5 @@
 import { FSAAutomataTransition, FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { expandReadSymbols } from './parseGraph'
 
 /**
  * Makes a label for a set of states.
@@ -13,8 +14,7 @@ const makeStateLabel = (states: number[]): string => {
  * Returns all read symbols for a transition
  */
 const readSymbols = (t: FSAAutomataTransition): string[] => {
-  // Either split all the character, or return a lambda transition
-  return t.read ? t.read.split('') : ['']
+  return t.read ? expandReadSymbols(t.read).split('') : ['']
 }
 
 /**
