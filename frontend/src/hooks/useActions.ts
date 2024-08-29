@@ -609,7 +609,7 @@ export const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, 
         ...project,
         meta: {
           ...project.meta,
-          name: project.meta.name ?? input?.name.split('.').slice(0, -1).join('.')
+          name: project.meta.name || input?.name.split('.').slice(0, -1).join('.')
         }
       })
       onFinishLoading()
