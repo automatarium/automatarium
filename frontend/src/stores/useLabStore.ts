@@ -48,14 +48,14 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
   }
 })
 
-export type Lab = {
+export type StoredLab = {
   _id: string,
   description: string,
   projects: LabProject[],
   labTasks: string[],
 }
 
-export const createNewLab = (description: string): Lab => ({
+export const createNewLab = (description: string): StoredLab => ({
   _id: crypto.randomUUID(),
   description,
   projects: [] as LabProject[],
@@ -63,8 +63,8 @@ export const createNewLab = (description: string): Lab => ({
 })
 
 interface LabStore {
-  lab: Lab;
-  setLab: (lab: Lab) => void;
+  lab: StoredLab;
+  setLab: (lab: StoredLab) => void;
   setProjects: (projects: LabProject[]) => void;
   clearProjects: () => void;
   upsertProject: (project: LabProject) => void;
@@ -74,8 +74,8 @@ interface LabStore {
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
-  lab: null as Lab,
-  setLab: (lab: Lab) => set({ lab }),
+  lab: null as StoredLab,
+  setLab: (lab: StoredLab) => set({ lab }),
   setProjects: (projects: LabProject[]) => set((state) => ({lab: { ...state.lab, projects }})),
   clearProjects: () => set((state) => ({lab: { ...state.lab, projects: [] }})),
   upsertProject: (project: LabProject) => set((state) => ({
