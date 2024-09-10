@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { useProjectsStore, useProjectStore, useLabStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useLabStore, useLabsStore } from '/src/stores'
 import dayjs from 'dayjs'
 
 const SAVE_INTERVAL = 5 * 1000
@@ -13,7 +13,8 @@ const SAVE_DIALOG_MIN_TIME = 1.5 * 1000
  */
 const useAutosaveProject = () => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
-  // const upsertLabProject = useLabStore(s => s.upsertProject)
+  const upsertLabProject = useLabStore(s => s.upsertProject) // Lab
+  const upsertLabs = useLabsStore(s => s.upsertLab)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
@@ -29,7 +30,9 @@ const useAutosaveProject = () => {
         const toSave = { ...currP, meta: { ...currP.meta, dateEdited: new Date().getTime() } }
         upsertProject(toSave)
         // Save to lab file
-        // upsertLabProject(toSave)
+        upsertLabProject(toSave)
+        // Save lab to labs locally on local storage
+        upsertLabs(useLabStore.getState().lab)
         setLastSaveDate(new Date().getTime())
         // Hide "Saving..." dialog after a short delay
         setTimeout(() => {
