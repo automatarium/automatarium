@@ -44,7 +44,7 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
     statePrefix: DEFAULT_STATE_PREFIX,
     orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    color: DEFAULT_PROJECT_COLOR[projectType]
+    color: 'pink'
   }
 })
 
@@ -55,7 +55,7 @@ export type StoredLab = {
   labTasks: string[],
 }
 
-export const createNewLab = (description: string): StoredLab => ({
+export const createNewLab = (description: string = 'Write a description here'): StoredLab => ({
   _id: crypto.randomUUID(),
   description,
   projects: [] as LabProject[],
