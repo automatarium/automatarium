@@ -32,41 +32,34 @@ const Editor = () => {
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
     if (!tourShown) {
-    // Set showTour to true after a delay (for demonstration purposes)
       const timeoutId = setTimeout(() => {
         setShowTour(true)
-      }, 1000) // Adjust the delay as needed
+      }, 1000)
       localStorage.setItem('tourEditorShown', 'true')
-      // Clean up the timeout on component unmount
       return () => clearTimeout(timeoutId)
     }
   }, [])
 
-  // Check the user has selected a project, navigate to creation page if not
   if (!project) {
     navigate('/new')
     return null
   }
   const projectType = project.config.type
 
-  // Auto save project as its edited
   const isSaving = useAutosaveProject()
-  // Fetch or set lab instructions (if dynamic)
+
   useEffect(() => {
-    // Simulating fetch of lab instructions
     setInstructions('Step 1: Set up the automaton.\nStep 2: Verify the state transitions.')
   }, [])
-  // Register action hotkey
+
   useActions(true)
 
-  // Project must be set
   useEffect(() => {
     resetExportSettings()
     setViewPositionAndScale({ x: 0, y: 0 }, 1)
   }, [])
-  // Change tool when holding certain keys
+
   useEvent('keydown', e => {
-    // Hotkeys are disabled if an input is focused
     if (haveInputFocused(e)) return
 
     if (!priorTool && e.code === 'Space') {
@@ -80,7 +73,6 @@ const Editor = () => {
   }, [tool, priorTool])
 
   useEvent('keyup', e => {
-    // Hotkeys are disabled if an input is focused
     if (haveInputFocused(e)) return
 
     if (priorTool && e.code === 'Space') {
@@ -93,7 +85,6 @@ const Editor = () => {
     }
   }, [tool, priorTool])
 
-  // Middle mouse pan
   useEvent('svg:mousedown', e => {
     if (!priorTool && e.detail.originalEvent.button === 1) {
       setPriorTool(tool)
@@ -112,6 +103,7 @@ const Editor = () => {
     <>
       <Menubar isSaving={isSaving} />
       <Content>
+        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
         <Toolbar />
         <EditorContent>
           <EditorPanel />
@@ -121,7 +113,6 @@ const Editor = () => {
           <PDAStackVisualiser />
         }
         <Sidepanel />
-        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
       </Content>
       <button onClick={() => setIsLabPanelVisible(!isLabPanelVisible)}>
         Toggle Lab Instructions
