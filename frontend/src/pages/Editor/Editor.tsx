@@ -8,6 +8,7 @@ import { useExportStore, useProjectStore, useToolStore, useViewStore } from '/sr
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
+import LabInstructions from '../../components/Lab/LabInstructions'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
@@ -21,6 +22,8 @@ const Editor = () => {
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
+  const [instructions, setInstructions] = useState<string>('Instructions will be shown here.')
+  const [isLabPanelVisible, setIsLabPanelVisible] = useState<boolean>(true)
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
@@ -48,7 +51,11 @@ const Editor = () => {
 
   // Auto save project as its edited
   const isSaving = useAutosaveProject()
-
+  // Fetch or set lab instructions (if dynamic)
+  useEffect(() => {
+    // Simulating fetch of lab instructions
+    setInstructions('Step 1: Set up the automaton.\nStep 2: Verify the state transitions.')
+  }, [])
   // Register action hotkey
   useActions(true)
 
@@ -114,9 +121,11 @@ const Editor = () => {
           <PDAStackVisualiser />
         }
         <Sidepanel />
-
+        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
       </Content>
-
+      <button onClick={() => setIsLabPanelVisible(!isLabPanelVisible)}>
+        Toggle Lab Instructions
+      </button>
       <ShortcutGuide />
 
       <FinalStatePopup />
