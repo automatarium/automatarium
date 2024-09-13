@@ -19,6 +19,7 @@ import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 import SteppingLab from '/src/components/Sidepanel/Panels/SteppingLab/SteppingLab'
+import LabCard from '/src/components/labCard/labCard'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -71,6 +72,7 @@ const NewFile = () => {
   const setLab = useLabStore(s => s.setLab)
   const setProjects = useLabStore(s => s.setProjects)
   const getLabProject = useLabStore(s => s.getProject)
+  const deleteLab = useLabsStore(s => s.deleteLab)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -127,8 +129,6 @@ const NewFile = () => {
   }
 
   const handleNewLabFile = (type: ProjectType ) => {
-      
-
       // create a new lab and lab project
       const newLab = createNewLab();
       const newLabProject = createNewLabProject(type);
@@ -137,7 +137,7 @@ const NewFile = () => {
       setLab(newLab);
       setProjects([newLabProject]);
 
-      // Set lab project for editor
+      // set lab project for editor
       setProject(getLabProject(0))
 
       // go to the editor
@@ -155,10 +155,7 @@ const NewFile = () => {
     navigate('/editor')
   };
 
-  const handleDeleteLabProject = (pid: string) => {
-    deleteLab(pid)
-    deleteLabProject(pid)
-  }
+  
 
   return <Main wide>
     <HeaderRow>
@@ -240,21 +237,21 @@ const NewFile = () => {
     >
       <NewProjectCard
         title="Finite State Automaton"
-        description="Create questions pertaining to deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
+        description=""
         onClick={() => handleNewLabFile('FSA')}
         height={height}
         image={<FSA {...stylingVals} />}
       />
       <NewProjectCard
         title="Push Down Automaton"
-        description="Create questions pertaining to push-down stack capable of representing context-free grammars."
+        description=""
         onClick={() => handleNewLabFile('PDA')}
         height={height}
         image={<PDA {...stylingVals} />}
       />
       <NewProjectCard
         title="Turing Machine"
-        description="Create questions regarding representing recursively enumerable grammars."
+        description=""
         onClick={() => handleNewLabFile('TM')}
         height={height}
         image={<TM {...stylingVals} />}
@@ -266,34 +263,30 @@ const NewFile = () => {
       style={{ gap: '1.5em .4em' }}
     >
       {labs.map((lab) => 
-      lab.projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map((p, i) => (
-      <ProjectCard
-        key={p._id}
-        name={p?.meta?.name ?? '<Untitled>'}
-        type={p?.config?.type ?? '???'}
-        date={dayjs(p?.meta?.dateEdited)}
-        image={thumbnails[getThumbTheme(p._id)]}
+      <LabCard
+        key={lab._id}
+        name='placeholder'
+        image={thumbnails[getThumbTheme(lab._id)]}
         width={PROJECT_THUMBNAIL_WIDTH}
-        onClick={() => handleLoadLabProject(p)}  
+        onClick={() => handleLoadLab(lab)}  
         $kebabClick={(event) => {
           event.stopPropagation()
           setKebabOpen(true)
-          const thisRef = kebabRefs[i] === null
+          const thisRef = kebabRefs[0] === null
             ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-            : kebabRefs[i].current
+            : kebabRefs[0].current
           const coords = {
             x: thisRef.offsetLeft,
             y: thisRef.offsetTop + thisRef.offsetHeight
           } as Coordinate
           setCoordinates(coords)
           setSelectedProjectId(lab._id)  // Adjusted for lab
-          setSelectedProjectName(p?.meta?.name ?? '<Untitled>')  // Adjusted for lab project
         }}
-        $kebabRef={kebabRefs === undefined ? null : kebabRefs[i]}
+        $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
         $istemplate={false}
-      />
-    ))
-  )}
+        >
+      </LabCard>
+    )}
     {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
     </CardList>
 
