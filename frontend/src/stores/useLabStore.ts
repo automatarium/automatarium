@@ -48,11 +48,20 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
   }
 })
 
+export interface LabMetaData {
+  automatariumVersion: string,
+  dateCreated: number,
+  dateEdited: number,
+  name: string,
+  version: string
+}
+
 export type StoredLab = {
   _id: string,
   description: string,
   projects: LabProject[],
   labTasks: string[],
+  meta: LabMetaData
 }
 
 export const createNewLab = (description: string = 'Write a description here'): StoredLab => ({
@@ -60,6 +69,13 @@ export const createNewLab = (description: string = 'Write a description here'): 
   description,
   projects: [] as LabProject[],
   labTasks: [],
+  meta: {
+    name: randomProjectName(),
+    dateCreated: new Date().getTime(),
+    dateEdited: new Date().getTime(),
+    version: SCHEMA_VERSION,
+    automatariumVersion: APP_VERSION
+  }
 })
 
 interface LabStore {
