@@ -7,7 +7,7 @@ import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useLabStore, useLabsStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
-import {createNewLab, createNewLabProject, LabProject} from 'src/stores/useLabStore'
+import {createNewLab, createNewLabProject, LabProject, StoredLab} from 'src/stores/useLabStore'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard } from './components'
@@ -144,6 +144,11 @@ const NewFile = () => {
   const handleLoadLabProject = (project: LabProject) => {
     const { setProjects } = useLabStore.getState();
     setProjects([project])
+    navigate('/editor')
+  };
+
+  const handleLoadLab = (lab: StoredLab) => {
+    setProject(lab.projects[0])
     navigate('/editor')
   };
 
