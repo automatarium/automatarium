@@ -145,7 +145,6 @@ const NewFile = () => {
   };
 
   const handleLoadLabProject = (project: LabProject) => {
-    const { setProjects } = useLabStore.getState();
     setProjects([project])
     navigate('/editor')
   };
