@@ -29,10 +29,12 @@ const useAutosaveProject = () => {
         setIsSaving(true)
         const toSave = { ...currP, meta: { ...currP.meta, dateEdited: new Date().getTime() } }
         upsertProject(toSave)
-        // Save to lab file
-        upsertLabProject(toSave)
-        // Save lab to labs locally on local storage
-        upsertLabs(useLabStore.getState().lab)
+        if (useLabStore.getState().lab != null) {
+          // Save to lab file
+          upsertLabProject(toSave)
+          // Save lab to labs locally on local storage
+          upsertLabs(useLabStore.getState().lab)
+        }
         setLastSaveDate(new Date().getTime())
         // Hide "Saving..." dialog after a short delay
         setTimeout(() => {
