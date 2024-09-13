@@ -39,6 +39,7 @@ const NewFile = () => {
   }, [])
   const deleteProject = useProjectsStore(s => s.deleteProject)
   const [deleteConfirmationVisible, setDeleteConfirmationVisible] = useState(false)
+  const [deleteLabConfirmationVisible, setDeleteLabConfirmationVisible] = useState(false)
   const [selectedProjectId, setSelectedProjectId] = useState('')
   const [selectedProjectName, setSelectedProjectName] = useState('')
   const [kebabOpen, setKebabOpen] = useState(false)
@@ -155,7 +156,9 @@ const NewFile = () => {
     navigate('/editor')
   };
 
-  
+  const handleDeleteLab = (pid: string) => {
+    deleteLab(pid)
+  }
 
   return <Main wide>
     <HeaderRow>
@@ -305,6 +308,17 @@ const NewFile = () => {
       onConfirm={() => {
         handleDeleteProject(selectedProjectId)
         setDeleteConfirmationVisible(false)
+      }}
+    />
+
+    <DeleteConfirmationDialog
+      projectName={selectedProjectName}
+      isOpen={deleteLabConfirmationVisible}
+      isOpenReducer={setDeleteLabConfirmationVisible}
+      onClose={() => setDeleteLabConfirmationVisible(false)}
+      onConfirm={() => {
+        handleDeleteLab(selectedProjectId)
+        setDeleteLabConfirmationVisible(false)
       }}
     />
 
