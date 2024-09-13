@@ -44,6 +44,9 @@ const NewFile = () => {
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
   /// Tour stuff
 
+  // Get lab project by index
+  const getLabProject = useLabStore(s => s.getProject)
+
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
@@ -130,6 +133,9 @@ const NewFile = () => {
       // set the new lab and lab project
       setLab(newLab);
       setProjects([newLabProject]);
+
+      // Set lab project for editor
+      setProject(getLabProject(0))
 
       // go to the editor
       navigate('/editor');
