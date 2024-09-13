@@ -12,7 +12,7 @@ dayjs.extend(relativeTime)
 type labCardProps = {
     id?: number
     name: string
-    type?: ProjectType | '???' // '???' is used has a default type
+    // type?: ProjectType | '???' // '???' is used has a default type
     image?: string
     isSelectedTemplate?: boolean,
     width: number,
@@ -26,12 +26,12 @@ type labCardProps = {
     disabled?: boolean,
 }
 
-const LabCard = ({ id, name, type, image, isSelectedTemplate = false, ...props }: labCardProps) => {
+const LabCard = ({ id, name, image, isSelectedTemplate = false, ...props }: labCardProps) => {
   const { ...rest } = props
   return <CardContainer {...rest}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
-      {type && <TypeBadge>{type}</TypeBadge>}
+      {/* {type && <TypeBadge>{type}</TypeBadge>} */}
       {/* Highlight a template if it is selected */}
       {isSelectedTemplate && <SelectedTemplateOverlay/>}
     </CardImage>

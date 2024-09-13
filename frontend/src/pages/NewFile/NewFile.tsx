@@ -265,33 +265,35 @@ const NewFile = () => {
       title="Your Labs"
       style={{ gap: '1.5em .4em' }}
     >
-      {labs.map((lab) => 
-      <LabCard
-        key={lab._id}
-        name='placeholder'
-        image={thumbnails[getThumbTheme(lab._id)]}
-        width={PROJECT_THUMBNAIL_WIDTH}
-        onClick={() => handleLoadLab(lab)}  
-        $kebabClick={(event) => {
-          event.stopPropagation()
-          setKebabOpen(true)
-          const thisRef = kebabRefs[0] === null
-            ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-            : kebabRefs[0].current
-          const coords = {
-            x: thisRef.offsetLeft,
-            y: thisRef.offsetTop + thisRef.offsetHeight
-          } as Coordinate
-          setCoordinates(coords)
-          setSelectedProjectId(lab._id)  // Adjusted for lab
-        }}
-        $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
-        $istemplate={false}
-        >
-      </LabCard>
-    )}
+    {labs.map((lab) => {
+      const firstProject = lab.projects[0]; 
+      return (
+        <LabCard
+          key={lab._id}
+          name={firstProject?.meta?.name ?? 'No Projects'} 
+          image={thumbnails[getThumbTheme(lab._id)]}
+          width={PROJECT_THUMBNAIL_WIDTH}
+          onClick={() => handleLoadLab(lab)}  
+          $kebabClick={(event) => {
+            event.stopPropagation();
+            setKebabOpen(true);
+            const thisRef = kebabRefs[0] === null
+              ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
+              : kebabRefs[0].current;
+            const coords = {
+              x: thisRef.offsetLeft,
+              y: thisRef.offsetTop + thisRef.offsetHeight
+            } as Coordinate;
+            setCoordinates(coords);
+            setSelectedProjectId(lab._id); 
+          }}
+          $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
+          $istemplate={false}
+        />
+      );
+    })}
     {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
-    </CardList>
+  </CardList>
 
     <KebabMenu
       x={coordinates.x}
