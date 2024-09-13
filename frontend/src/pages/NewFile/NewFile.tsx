@@ -18,6 +18,7 @@ import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFi
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
+import SteppingLab from '/src/components/Sidepanel/Panels/SteppingLab/SteppingLab'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -44,9 +45,6 @@ const NewFile = () => {
   const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
   /// Tour stuff
 
-  // Get lab project by index
-  const getLabProject = useLabStore(s => s.getProject)
-
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
@@ -68,6 +66,11 @@ const NewFile = () => {
       window.scrollTo({ top: 10, behavior: 'smooth' })
     }
   }
+
+  // Labs
+  const setLab = useLabStore(s => s.setLab)
+  const setProjects = useLabStore(s => s.setProjects)
+  const getLabProject = useLabStore(s => s.getProject)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -124,7 +127,7 @@ const NewFile = () => {
   }
 
   const handleNewLabFile = (type: ProjectType ) => {
-      const { setLab, setProjects } = useLabStore.getState();
+      
 
       // create a new lab and lab project
       const newLab = createNewLab();
@@ -148,7 +151,8 @@ const NewFile = () => {
   };
 
   const handleLoadLab = (lab: StoredLab) => {
-    setProject(lab.projects[0])
+    setLab(lab)
+    setProject(getLabProject(0))
     navigate('/editor')
   };
 
