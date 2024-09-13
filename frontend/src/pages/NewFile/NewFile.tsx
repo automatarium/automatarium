@@ -262,6 +262,50 @@ const NewFile = () => {
     </CardList>
 
     <CardList
+    title="Latest Lab"
+    style={{ gap: '1.5em .4em' }}
+    >
+    {labs
+    // showing the latest lab if more than one lab is stored and nothing if no
+    // labs exist
+      .filter(lab => lab.projects.length > 0) 
+      .sort((a, b) => {
+        const dateA = a.projects[0]?.meta?.dateEdited || 0; 
+        const dateB = b.projects[0]?.meta?.dateEdited || 0;
+        return dateB - dateA; 
+      })
+      .slice(0, 1) 
+      .map((lab) => {
+        const firstProject = lab.projects[0];
+        return (
+          <LabCard
+            key={lab._id}
+            name={firstProject?.meta?.name ?? 'No Projects'}
+            image={thumbnails[getThumbTheme(lab._id)]}
+            width={PROJECT_THUMBNAIL_WIDTH}
+            onClick={() => handleLoadLab(lab)}  
+            $kebabClick={(event) => {
+              event.stopPropagation();
+              setKebabOpen(true);
+              const thisRef = kebabRefs[0] === null
+                ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
+                : kebabRefs[0].current;
+              const coords = {
+                x: thisRef.offsetLeft,
+                y: thisRef.offsetTop + thisRef.offsetHeight
+              } as Coordinate;
+              setCoordinates(coords);
+              setSelectedProjectId(lab._id);
+            }}
+            $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
+            $istemplate={false}
+          />
+        );
+      })}
+    {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
+  </CardList>
+
+    <CardList
       title="Your Labs"
       style={{ gap: '1.5em .4em' }}
     >
