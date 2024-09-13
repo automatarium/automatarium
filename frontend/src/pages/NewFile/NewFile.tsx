@@ -5,8 +5,9 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
+import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useLabStore, useLabsStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
+import {createNewLab, createNewLabProject, LabProject} from 'src/stores/useLabStore'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard } from './components'
@@ -15,13 +16,14 @@ import PDA from './images/PDA'
 import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 
 const NewFile = () => {
   const navigate = useNavigate()
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
+  const labs = useLabsStore(s => s.labs)
   const thumbnails = useThumbnailStore(s => s.thumbnails)
   const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const preferences = usePreferencesStore(state => state.preferences)
@@ -96,8 +98,8 @@ const NewFile = () => {
 
   // Create and update refs when projects changes
   useEffect(() => {
-    setKebabRefs(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
-  }, [projects])
+    setKebabRefs(Array.from({ length: projects.length + labs.length }, () => createRef<HTMLAnchorElement>()))
+  }, [projects, labs])
 
   const handleNewFile = (type: ProjectType) => {
     setProject(createNewProject(type))
@@ -116,6 +118,32 @@ const NewFile = () => {
   const importProject = () => {
     // promptLoadFile(setProject, 'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.', '.jff,.json', () => navigate('/editor'))
     dispatchCustomEvent('modal:import', null)
+  }
+
+  const handleNewLabFile = (type: ProjectType ) => {
+      const { setLab, setProjects } = useLabStore.getState();
+
+      // create a new lab and lab project
+      const newLab = createNewLab();
+      const newLabProject = createNewLabProject(type);
+
+      // set the new lab and lab project
+      setLab(newLab);
+      setProjects([newLabProject]);
+
+      // go to the editor
+      navigate('/editor');
+  };
+
+  const handleLoadLabProject = (project: LabProject) => {
+    const { setProjects } = useLabStore.getState();
+    setProjects([project])
+    navigate('/editor')
+  };
+
+  const handleDeleteLabProject = (pid: string) => {
+    deleteLab(pid)
+    deleteLabProject(pid)
   }
 
   return <Main wide>
@@ -189,6 +217,70 @@ const NewFile = () => {
         />
       )}
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
+    </CardList>
+
+    <CardList
+      title="New Lab"
+      button={<Button onClick={importProject}>Import...</Button>}
+      innerRef={cardsRef}
+    >
+      <NewProjectCard
+        title="Finite State Automaton"
+        description="Create questions pertaining to deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
+        onClick={() => handleNewLabFile('FSA')}
+        height={height}
+        image={<FSA {...stylingVals} />}
+      />
+      <NewProjectCard
+        title="Push Down Automaton"
+        description="Create questions pertaining to push-down stack capable of representing context-free grammars."
+        onClick={() => handleNewLabFile('PDA')}
+        height={height}
+        image={<PDA {...stylingVals} />}
+      />
+      <NewProjectCard
+        title="Turing Machine"
+        description="Create questions regarding representing recursively enumerable grammars."
+        onClick={() => handleNewLabFile('TM')}
+        height={height}
+        image={<TM {...stylingVals} />}
+      />
+    </CardList>
+
+    <CardList
+      title="Your Labs"
+      style={{ gap: '1.5em .4em' }}
+    >
+      {labs.map((lab) => 
+      lab.projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map((p, i) => (
+      <ProjectCard
+        key={p._id}
+        name={p?.meta?.name ?? '<Untitled>'}
+        type={p?.config?.type ?? '???'}
+        date={dayjs(p?.meta?.dateEdited)}
+        image={thumbnails[getThumbTheme(p._id)]}
+        width={PROJECT_THUMBNAIL_WIDTH}
+        onClick={() => handleLoadLabProject(p)}  
+        $kebabClick={(event) => {
+          event.stopPropagation()
+          setKebabOpen(true)
+          const thisRef = kebabRefs[i] === null
+            ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
+            : kebabRefs[i].current
+          const coords = {
+            x: thisRef.offsetLeft,
+            y: thisRef.offsetTop + thisRef.offsetHeight
+          } as Coordinate
+          setCoordinates(coords)
+          setSelectedProjectId(lab._id)  // Adjusted for lab
+          setSelectedProjectName(p?.meta?.name ?? '<Untitled>')  // Adjusted for lab project
+        }}
+        $kebabRef={kebabRefs === undefined ? null : kebabRefs[i]}
+        $istemplate={false}
+      />
+    ))
+  )}
+    {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
     </CardList>
 
     <KebabMenu
