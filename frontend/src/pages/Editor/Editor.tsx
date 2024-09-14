@@ -48,7 +48,7 @@ const Editor = () => {
     return null
   }
 
-  if (lab && getProjectinLab(project._id) == undefined) {
+  if (lab && getProjectinLab(project._id) === undefined) {
     setLab(null)
   }
 
