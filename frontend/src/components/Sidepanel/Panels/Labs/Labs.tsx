@@ -74,7 +74,6 @@ const Labs = () => {
         <Switch
           type="checkbox"
           checked={showLabWindow}
-          disabled={!lab}
           onChange={e => setShowLabWindow(e.target.checked)}
         />
       </Preference>
