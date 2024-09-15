@@ -313,16 +313,16 @@ const NewFile = () => {
       return (
         <LabCard
           key={lab._id}
-          name={firstProject?.meta?.name ?? 'No Projects'} 
+          name={firstProject?.meta?.name ?? '<Untitled>'} 
           image={thumbnails[getThumbTheme(lab._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadLab(lab)}  
           $kebabClick={(event) => {
             event.stopPropagation();
             setKebabOpen(true);
-            const thisRef = kebabRefs[0] === null
+            const thisRef = kebabRefs[index] === null
               ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-              : kebabRefs[0].current;
+              : kebabRefs[index].current;
             const coords = {
               x: thisRef.offsetLeft,
               y: thisRef.offsetTop + thisRef.offsetHeight
