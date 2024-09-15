@@ -1,5 +1,5 @@
 import { ReactNode, useState, useEffect } from 'react'
-import { ChevronRight, FlaskConical, Info as InfoIcon, Settings2, Star } from 'lucide-react'
+import { ChevronRight, FlaskConical, GraduationCap, Info as InfoIcon, Settings2, Star } from 'lucide-react'
 
 import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
@@ -52,6 +52,12 @@ const panels: PanelItem[] = [
     value: 'templates',
     icon: <Star />,
     element: <Templates />
+  },
+  {
+    label: "Edit tutorial lab",
+    value: 'start lab',
+    icon :<GraduationCap/>,
+    element: <TestingLab/>
   }
 ]
 
