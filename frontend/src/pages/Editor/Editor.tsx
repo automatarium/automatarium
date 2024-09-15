@@ -31,6 +31,7 @@ const Editor = () => {
   const lab = useLabStore(s => s.lab)
   const getProjectinLab = useLabStore(s => s.getProjectById)
   const setLab = useLabStore(s => s.setLab)
+  const showLabWindow = useLabStore((state) => state.showLabWindow)
 
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
@@ -111,7 +112,7 @@ const Editor = () => {
     <>
       <Menubar isSaving={isSaving} />
       <Content>
-        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
+        {showLabWindow && <LabInstructions instructions={instructions} />}
         <Toolbar />
         <EditorContent>
           <EditorPanel />
@@ -122,9 +123,6 @@ const Editor = () => {
         }
         <Sidepanel />
       </Content>
-      <button onClick={() => setIsLabPanelVisible(!isLabPanelVisible)}>
-        Toggle Lab Instructions
-      </button>
       <ShortcutGuide />
 
       <FinalStatePopup />

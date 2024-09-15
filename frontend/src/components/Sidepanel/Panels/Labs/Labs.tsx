@@ -6,9 +6,8 @@ import {
   Wrapper,
 } from './labsStyle'
 
-const SteppingLab = () => {
-  const [showLabWindow, setShowLabWindow] = useState(false)
-  const lab = useLabStore(s => s.lab)
+const Labs = () => {
+  const { lab, showLabWindow, setShowLabWindow } = useLabStore()
 
   if (showLabWindow) {
     console.log("Opened lab window")
@@ -19,7 +18,7 @@ const SteppingLab = () => {
     {!lab && <>
     <Wrapper>You're not working on a lab right now</Wrapper>
     </>}
-    {lab && <>
+    {!lab && <>
     <Wrapper></Wrapper>
     <SectionLabel>Lab Setting</SectionLabel>
     <Wrapper>
@@ -53,4 +52,4 @@ const SteppingLab = () => {
   )
 }
 
-export default SteppingLab
+export default Labs
