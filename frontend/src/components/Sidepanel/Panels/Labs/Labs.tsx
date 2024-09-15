@@ -18,7 +18,7 @@ const Labs = () => {
     {!lab && <>
     <Wrapper>You're not working on a lab right now</Wrapper>
     </>}
-    {!lab && <>
+    {lab && <>
     <Wrapper></Wrapper>
     <SectionLabel>Lab Setting</SectionLabel>
     <Wrapper>
