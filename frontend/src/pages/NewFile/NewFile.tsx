@@ -304,7 +304,7 @@ const NewFile = () => {
       return (
         <LabCard
           key={lab._id}
-          name={firstProject?.meta?.name ?? '<Untitled>'} 
+          name={lab?.meta?.name ?? '<Untitled>'} 
           image={thumbnails[getThumbTheme(lab._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadLab(lab)}  
