@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Settings } from 'lucide-react'
+import { Car, Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -20,6 +20,7 @@ import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 import SteppingLab from '/src/components/Sidepanel/Panels/SteppingLab/SteppingLab'
 import LabCard from '/src/components/labCard/labCard'
+import { latest } from 'immer/dist/internal'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -73,6 +74,7 @@ const NewFile = () => {
   const setProjects = useLabStore(s => s.setProjects)
   const getLabProject = useLabStore(s => s.getProject)
   const deleteLab = useLabsStore(s => s.deleteLab)
+  const latestLab = useLabStore.getState().lab
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -260,29 +262,17 @@ const NewFile = () => {
       />
     </CardList>
 
-    <CardList
-    title="Latest Lab"
-    style={{ gap: '1.5em .4em' }}
-    >
-    {labs
-    // showing the latest lab if more than one lab is stored and nothing if no
-    // labs exist
-      .filter(lab => lab.projects.length > 0) 
-      .sort((a, b) => {
-        const dateA = a.projects[0]?.meta?.dateEdited || 0; 
-        const dateB = b.projects[0]?.meta?.dateEdited || 0;
-        return dateB - dateA; 
-      })
-      .slice(0, 1) 
-      .map((lab) => {
-        const firstProject = lab.projects[0];
-        return (
+    {latestLab && (
+      // conditional rendering for latest lab. 
+      // showing the latest lab if more than one lab is stored and nothing if no
+      // labs exist
+        <CardList title="Latest lab" style={{ gap: '1.5em .4em' }}>
           <LabCard
-            key={lab._id}
-            name={firstProject?.meta?.name ?? 'No Projects'}
-            image={thumbnails[getThumbTheme(lab._id)]}
+            key={latestLab._id}
+            name={latestLab?.meta?.name ?? '<Untitled>'}
+            image={thumbnails[getThumbTheme(latestLab._id)]}
             width={PROJECT_THUMBNAIL_WIDTH}
-            onClick={() => handleLoadLab(lab)}  
+            onClick={() => handleLoadLab(latestLab)}
             $kebabClick={(event) => {
               event.stopPropagation();
               setKebabOpen(true);
@@ -294,22 +284,23 @@ const NewFile = () => {
                 y: thisRef.offsetTop + thisRef.offsetHeight
               } as Coordinate;
               setCoordinates(coords);
-              setSelectedProjectId(lab._id);
+              setSelectedProjectId(latestLab._id); 
+              setSelectedProjectName(latestLab.meta.name)
             }}
             $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
             $istemplate={false}
           />
-        );
-      })}
-    {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
-  </CardList>
-
+        {labs.length === 0 && <NoResultSpan></NoResultSpan>}
+        </CardList>
+      )}
+    
     <CardList
       title="Your Labs"
       style={{ gap: '1.5em .4em' }}
     >
-    {labs.map((lab) => {
-      const firstProject = lab.projects[0]; 
+      {
+      labs.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((lab, index) => {
+      const firstProject = lab.projects[0] 
       return (
         <LabCard
           key={lab._id}
