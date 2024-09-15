@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import { Content, EditorContent } from './editorStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
-import { useExportStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
+import { useExportStore, useLabStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
@@ -28,6 +28,9 @@ const Editor = () => {
   const closeTour = () => {
     setShowTour(false)
   }
+  const lab = useLabStore(s => s.lab)
+  const getProjectinLab = useLabStore(s => s.getProjectById)
+  const setLab = useLabStore(s => s.setLab)
 
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
@@ -44,6 +47,11 @@ const Editor = () => {
     navigate('/new')
     return null
   }
+
+  if (lab && getProjectinLab(project._id) === undefined) {
+    setLab(null)
+  }
+
   const projectType = project.config.type
 
   const isSaving = useAutosaveProject()

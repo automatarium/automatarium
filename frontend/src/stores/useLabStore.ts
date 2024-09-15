@@ -48,11 +48,20 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
   }
 })
 
+export interface LabMetaData {
+  automatariumVersion: string,
+  dateCreated: number,
+  dateEdited: number,
+  name: string,
+  version: string
+}
+
 export type StoredLab = {
   _id: string,
   description: string,
   projects: LabProject[],
   labTasks: string[],
+  meta: LabMetaData
 }
 
 export const createNewLab = (description: string = 'Write a description here'): StoredLab => ({
@@ -60,6 +69,13 @@ export const createNewLab = (description: string = 'Write a description here'): 
   description,
   projects: [] as LabProject[],
   labTasks: [],
+  meta: {
+    name: randomProjectName(),
+    dateCreated: new Date().getTime(),
+    dateEdited: new Date().getTime(),
+    version: SCHEMA_VERSION,
+    automatariumVersion: APP_VERSION
+  }
 })
 
 interface LabStore {
@@ -70,7 +86,9 @@ interface LabStore {
   upsertProject: (project: LabProject) => void;
   deleteProject: (pid: string) => void;
   getProject: (index: number) => LabProject | undefined;
+  getProjectById: (id: string) => LabProject | undefined;
   setLabTask: (index: number, task: string) => void;
+  setName: (name: string) => void,
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
@@ -89,6 +107,11 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
   deleteProject: (pid: string) => set((state) => ({lab: {...state.lab,projects: state.lab?.projects.filter(p => p._id !== pid)}
   })),
   getProject: (index: number) => get().lab?.projects[index] || undefined,
+  getProjectById: (id: string) => get().lab?.projects.find(project => project._id === id) || undefined,
+  setName: (name: string) => set((s: LabStore) => ({
+    lab: { ...s.lab, meta: { ...s.lab.meta, name } },
+    lastChangeDate: new Date().getTime()
+  })),
   setLabTask: (index: number, task: string) => set((state) => {
     const updatedTasks = [...state.lab.labTasks];
     if (index >= 0 && index < updatedTasks.length) {

@@ -5,7 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
 import { useEvent } from '/src/hooks'
-import { useProjectStore, useProjectsStore } from '/src/stores'
+import { useProjectStore, useProjectsStore, useLabStore, useLabsStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import {
@@ -77,6 +77,11 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const deleteProject = useProjectsStore(s => s.deleteProject)
 
+  // Lab
+  const upsertLabProject = useLabStore(s => s.upsertProject)
+  const upsertLab = useLabsStore(s => s.upsertLab)
+  // const setLabLastSaveDate = useLabStore(s => s.setLastSaveDate)
+
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
     setEditingTitle(true)
@@ -87,6 +92,16 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
     const project = useProjectStore.getState().project
     upsertProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
     setLastSaveDate(new Date().getTime())
+  }
+
+  const saveLabProject = () => {
+    const project = useProjectStore.getState().project
+    upsertLabProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
+  }
+
+  const saveLab = () => {
+    const lab = useLabStore.getState().lab
+    upsertLab(lab)
   }
 
   const handleSaveProjectName = () => {
@@ -113,6 +128,10 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             const totalItems = project.comments.length + project.states.length + project.transitions.length
             if (totalItems > 0) {
               saveProject()
+              if (useLabStore.getState().lab != null) {
+                saveLabProject()
+                saveLab()
+              }
             } else {
               deleteProject(project._id)
             }
