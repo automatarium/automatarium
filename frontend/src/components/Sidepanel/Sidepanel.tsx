@@ -5,7 +5,7 @@ import { Sidebar } from '..'
 import { useEvent } from '/src/hooks'
 
 import { Wrapper, Panel, Heading, CloseButton } from './sidepanelStyle'
-import { TestingLab, Info, Options, Templates } from './Panels'
+import { TestingLab, Info, Options, Templates, Labs } from './Panels'
 import { SidebarButton } from '/src/components/Sidebar/Sidebar'
 import { stopTemplateInsert } from './Panels/Templates/Templates'
 
@@ -54,10 +54,10 @@ const panels: PanelItem[] = [
     element: <Templates />
   },
   {
-    label: "Edit tutorial lab",
-    value: 'start lab',
+    label: "Labs",
+    value: 'labs',
     icon :<GraduationCap/>,
-    element: <TestingLab/>
+    element: <Labs />
   }
 ]
 
