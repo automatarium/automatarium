@@ -30,7 +30,7 @@ const Editor = () => {
   const lab = useLabStore(s => s.lab)
   const getProjectinLab = useLabStore(s => s.getProjectById)
   const setLab = useLabStore(s => s.setLab)
-  const showLabWindow = useLabStore((state) => state.showLabWindow)
+  const showLabWindow = useLabStore(s => s.showLabWindow)
   const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
 
   useEffect(() => {
@@ -51,9 +51,9 @@ const Editor = () => {
 
   if (lab && getProjectinLab(project._id) === undefined) {
     setLab(null)
+    setShowLabWindow(false)
   }
 
-  setShowLabWindow(false)
 
   const projectType = project.config.type
 
@@ -114,7 +114,7 @@ const Editor = () => {
     <>
       <Menubar isSaving={isSaving} />
       <Content>
-        {showLabWindow && <LabInstructions instructions={instructions} />}
+        {showLabWindow && lab && <LabInstructions instructions={instructions} />}
         <Toolbar />
         <EditorContent>
           <EditorPanel />
