@@ -149,7 +149,7 @@ const NewFile = () => {
   const handleNewLabFile = (type: ProjectType ) => {
       // create a new lab and lab project
       const newLab = createNewLab();
-      const newLabProject = createNewLabProject(type);
+      const newLabProject = createNewLabProject(type, newLab.meta.name);
 
       // set the new lab and lab project
       setLab(newLab);

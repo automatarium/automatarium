@@ -20,7 +20,7 @@ import {
 
 export type LabProject = Project & {_id: string}
 
-export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): LabProject => ({
+export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): LabProject => ({
   projectType,
   _id: crypto.randomUUID(),
   states: [],
@@ -33,7 +33,7 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
   },
   initialState: null,
   meta: {
-    name: randomProjectName(),
+    name: projectName,
     dateCreated: new Date().getTime(),
     dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,
