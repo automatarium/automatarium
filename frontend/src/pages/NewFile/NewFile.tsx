@@ -20,7 +20,6 @@ import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 import SteppingLab from '/src/components/Sidepanel/Panels/SteppingLab/SteppingLab'
 import LabCard from '/src/components/labCard/labCard'
-import { latest } from 'immer/dist/internal'
 
 const NewFile = () => {
   const navigate = useNavigate()
@@ -44,7 +43,10 @@ const NewFile = () => {
   const [selectedProjectName, setSelectedProjectName] = useState('')
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
-  const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
+  const [kebabRefsProjects, setKebabRefsProjects] = useState<Array<RefObject<HTMLAnchorElement>>>([])
+  const [kebabRefsLabs, setKebabRefsLabs] = useState<Array<RefObject<HTMLAnchorElement>>>([])
+  const [kebabRefsLatestLab, setKebabRefsLatestLab] = useState<RefObject<HTMLAnchorElement> | null>(null)
+
   /// Tour stuff
 
   const [showTour, setShowTour] = useState(false)
@@ -106,10 +108,24 @@ const NewFile = () => {
     }
   }, [projects, thumbnails])
 
-  // Create and update refs when projects changes
+  // separate refs to avoid kebab menu showing up in the wrong place
+  // for "Your Projects Section"
   useEffect(() => {
-    setKebabRefs(Array.from({ length: projects.length + labs.length }, () => createRef<HTMLAnchorElement>()))
-  }, [projects, labs])
+    setKebabRefsProjects(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
+  }, [projects])
+
+  // for "Your Labs Section"
+  useEffect(() => {
+    setKebabRefsLabs(Array.from({ length: labs.length }, () => createRef<HTMLAnchorElement>()))
+  }, [labs])
+
+  // for "Your Latest Lab Section"
+  useEffect(() => {
+    if (latestLab) {
+      setKebabRefsLatestLab(createRef<HTMLAnchorElement>())
+    }
+  }, [latestLab])
+
 
   const handleNewFile = (type: ProjectType) => {
     setProject(createNewProject(type))
@@ -215,10 +231,10 @@ const NewFile = () => {
             event.stopPropagation()
             // dispatchCustomEvent('modal:deleteConfirm', null)
             setKebabOpen(true)
-            const thisRef = kebabRefs[i] === null
+            const thisRef = kebabRefsProjects[i] === null
               // Set default values if not done yet to prevent crashes
               ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-              : kebabRefs[i].current
+              : kebabRefsProjects[i].current
             const coords = {
               x: thisRef.offsetLeft,
               y: thisRef.offsetTop + thisRef.offsetHeight
@@ -227,7 +243,7 @@ const NewFile = () => {
             setSelectedProjectId(p._id)
             setSelectedProjectName(p?.meta?.name ?? '<Untitled>')
           }}
-          $kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
+          $kebabRef={ kebabRefsProjects === undefined ? null : kebabRefsProjects[i] }
           $istemplate={false}
         />
       )}
@@ -276,9 +292,7 @@ const NewFile = () => {
             $kebabClick={(event) => {
               event.stopPropagation();
               setKebabOpen(true);
-              const thisRef = kebabRefs[0] === null
-                ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-                : kebabRefs[0].current;
+              const thisRef = kebabRefsLatestLab?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
               const coords = {
                 x: thisRef.offsetLeft,
                 y: thisRef.offsetTop + thisRef.offsetHeight
@@ -287,10 +301,9 @@ const NewFile = () => {
               setSelectedProjectId(latestLab._id); 
               setSelectedProjectName(latestLab.meta.name)
             }}
-            $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
+            $kebabRef={kebabRefsLatestLab}
             $istemplate={false}
           />
-        {labs.length === 0 && <NoResultSpan></NoResultSpan>}
         </CardList>
       )}
     
@@ -300,7 +313,6 @@ const NewFile = () => {
     >
       {
       labs.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((lab, index) => {
-      const firstProject = lab.projects[0] 
       return (
         <LabCard
           key={lab._id}
@@ -311,17 +323,16 @@ const NewFile = () => {
           $kebabClick={(event) => {
             event.stopPropagation();
             setKebabOpen(true);
-            const thisRef = kebabRefs[index] === null
-              ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-              : kebabRefs[index].current;
+            const thisRef = kebabRefsLabs[index]?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
             const coords = {
               x: thisRef.offsetLeft,
               y: thisRef.offsetTop + thisRef.offsetHeight
             } as Coordinate;
             setCoordinates(coords);
             setSelectedProjectId(lab._id); 
+            setSelectedProjectName(latestLab.meta.name);
           }}
-          $kebabRef={kebabRefs === undefined ? null : kebabRefs[0]}
+          $kebabRef={kebabRefsLabs?.[index] ?? null}
           $istemplate={false}
         />
       );
