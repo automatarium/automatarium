@@ -357,7 +357,9 @@ const NewFile = () => {
       onClose={() => setDeleteConfirmationVisible(false)}
       onConfirm={() => {
         handleDeleteProject(selectedProjectId)
-        handleDeleteLab(selectedProjectId)
+        if (latestLab !== null) {
+          handleDeleteLab(selectedProjectId)
+        }
         setDeleteConfirmationVisible(false)
       }}
     />
