@@ -175,7 +175,7 @@ const NewFile = () => {
 
   const handleDeleteLab = (pid: string) => {
     deleteLab(pid)
-    if (latestLab._id === pid) {
+    if (latestLab && latestLab._id === pid) {
       setLab(null)
     }
   }
@@ -357,9 +357,7 @@ const NewFile = () => {
       onClose={() => setDeleteConfirmationVisible(false)}
       onConfirm={() => {
         handleDeleteProject(selectedProjectId)
-        if (latestLab !== null) {
-          handleDeleteLab(selectedProjectId)
-        }
+        handleDeleteLab(selectedProjectId)
         setDeleteConfirmationVisible(false)
       }}
     />
