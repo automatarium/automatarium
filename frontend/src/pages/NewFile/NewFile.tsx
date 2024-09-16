@@ -175,6 +175,9 @@ const NewFile = () => {
 
   const handleDeleteLab = (pid: string) => {
     deleteLab(pid)
+    if (latestLab._id === pid) {
+      setLab(null)
+    }
   }
 
   return <Main wide>
