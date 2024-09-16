@@ -285,7 +285,7 @@ const NewFile = () => {
       // conditional rendering for latest lab. 
       // showing the latest lab if more than one lab is stored and nothing if no
       // labs exist
-        <CardList title="Latest lab" style={{ gap: '1.5em .4em' }}>
+        <CardList title="Ongoing lab" style={{ gap: '1.5em .4em' }}>
           <LabCard
             key={latestLab._id}
             name={latestLab?.meta?.name ?? '<Untitled>'}
