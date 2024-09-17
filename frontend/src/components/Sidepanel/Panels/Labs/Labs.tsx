@@ -132,16 +132,19 @@ const Labs = () => {
   return (
     <>
       <SectionLabel>Current Assessment</SectionLabel>
+      {!lab && <>
+        <Wrapper>You're not working on a lab right now</Wrapper>
+         </>}
+      {lab && <>
       <Wrapper>
         {isTitleEditing ? (
           <>
             <TitleSection>
-              <Input 
-                type="text" 
+              <TextArea 
                 value={titleInput} 
                 onChange={(e) => setTitleInput(e.target.value)} 
-                placeholder="Lab Title" 
-                />
+                rows={1} placeholder="Lab Title" 
+              />
             </TitleSection>
             <TextArea 
               value={titleDescription} 
@@ -208,6 +211,8 @@ const Labs = () => {
         <Button>Export as URL</Button>
       </Wrapper>
     </>
+  }
+  </>
   );
 };
 
