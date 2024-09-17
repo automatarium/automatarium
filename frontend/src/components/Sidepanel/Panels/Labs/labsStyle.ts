@@ -218,7 +218,7 @@ export const ButtonContainer = styled('div')`
     width: 100%;
   }
 
-  Button:nth-child(2) {
+  Button:nth-child(1) {
     background-color: transparent;
     color: var(--primary-dark);
     border: 2.5px solid var(--toolbar); 

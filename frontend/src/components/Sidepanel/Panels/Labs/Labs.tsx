@@ -152,8 +152,8 @@ const Labs = () => {
               rows={4} placeholder="Description" 
               />
             <ButtonContainer>
-              <Button onClick={handleEditSaveClick}>Save</Button>
               <Button onClick={() => setTitleIsEditing(false)}>Cancel</Button> 
+              <Button onClick={handleEditSaveClick}>Save</Button>
             </ButtonContainer>
             
           </>
