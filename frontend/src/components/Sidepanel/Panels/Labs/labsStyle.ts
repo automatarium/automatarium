@@ -52,10 +52,6 @@ export const EditButton = styled('button')`
   justify-content: center;
   transition: background-color 0.3s;
 
-  &:hover {
-    background-color: var(--toolbar); 
-    border-color: var(--primary); 
-  }
 `;
 
 // Button for removing questions
@@ -71,10 +67,10 @@ export const RemoveButton = styled('button')`
   justify-content: center;
   transition: background-color 0.3s;
 
-  &:hover {
-    background-color: var(--toolbar); 
-    border-color: var(--error); 
-  }
+  // &:hover {
+  //   background-color: var(--toolbar); 
+  //   border-color: var(--error); 
+  // }
 `;
 
 // Styles for the Add Question button
