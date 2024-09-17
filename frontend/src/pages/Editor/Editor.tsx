@@ -111,8 +111,8 @@ const Editor = () => {
     <>
       <Menubar isSaving={isSaving} />
       <Content>
-        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
         <Toolbar />
+        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
