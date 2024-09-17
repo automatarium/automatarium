@@ -1,12 +1,13 @@
 import dayjs from 'dayjs'
-import { Settings } from 'lucide-react'
+import { Car, Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore } from '/src/stores'
+import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useLabStore, useLabsStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
+import {createNewLab, createNewLabProject, LabProject, StoredLab} from 'src/stores/useLabStore'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard } from './components'
@@ -15,13 +16,16 @@ import PDA from './images/PDA'
 import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
+import SteppingLab from '/src/components/Sidepanel/Panels/SteppingLab/SteppingLab'
+import LabCard from '/src/components/labCard/labCard'
 
 const NewFile = () => {
   const navigate = useNavigate()
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
+  const labs = useLabsStore(s => s.labs)
   const thumbnails = useThumbnailStore(s => s.thumbnails)
   const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const preferences = usePreferencesStore(state => state.preferences)
@@ -39,7 +43,10 @@ const NewFile = () => {
   const [selectedProjectName, setSelectedProjectName] = useState('')
   const [kebabOpen, setKebabOpen] = useState(false)
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
-  const [kebabRefs, setKebabRefs] = useState<Array<RefObject<HTMLAnchorElement>>>()
+  const [kebabRefsProjects, setKebabRefsProjects] = useState<Array<RefObject<HTMLAnchorElement>>>([])
+  const [kebabRefsLabs, setKebabRefsLabs] = useState<Array<RefObject<HTMLAnchorElement>>>([])
+  const [kebabRefsLatestLab, setKebabRefsLatestLab] = useState<RefObject<HTMLAnchorElement> | null>(null)
+
   /// Tour stuff
 
   const [showTour, setShowTour] = useState(false)
@@ -63,6 +70,13 @@ const NewFile = () => {
       window.scrollTo({ top: 10, behavior: 'smooth' })
     }
   }
+
+  // Labs
+  const setLab = useLabStore(s => s.setLab)
+  const setProjects = useLabStore(s => s.setProjects)
+  const getLabProject = useLabStore(s => s.getProject)
+  const deleteLab = useLabsStore(s => s.deleteLab)
+  const latestLab = useLabStore.getState().lab
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -94,10 +108,24 @@ const NewFile = () => {
     }
   }, [projects, thumbnails])
 
-  // Create and update refs when projects changes
+  // separate refs to avoid kebab menu showing up in the wrong place
+  // for "Your Projects Section"
   useEffect(() => {
-    setKebabRefs(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
+    setKebabRefsProjects(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
   }, [projects])
+
+  // for "Your Labs Section"
+  useEffect(() => {
+    setKebabRefsLabs(Array.from({ length: labs.length }, () => createRef<HTMLAnchorElement>()))
+  }, [labs])
+
+  // for "Your Latest Lab Section"
+  useEffect(() => {
+    if (latestLab) {
+      setKebabRefsLatestLab(createRef<HTMLAnchorElement>())
+    }
+  }, [latestLab])
+
 
   const handleNewFile = (type: ProjectType) => {
     setProject(createNewProject(type))
@@ -116,6 +144,40 @@ const NewFile = () => {
   const importProject = () => {
     // promptLoadFile(setProject, 'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.', '.jff,.json', () => navigate('/editor'))
     dispatchCustomEvent('modal:import', null)
+  }
+
+  const handleNewLabFile = (type: ProjectType ) => {
+      // create a new lab and lab project
+      const newLab = createNewLab();
+      const newLabProject = createNewLabProject(type, newLab.meta.name);
+
+      // set the new lab and lab project
+      setLab(newLab);
+      setProjects([newLabProject]);
+
+      // set lab project for editor
+      setProject(getLabProject(0))
+
+      // go to the editor
+      navigate('/editor');
+  };
+
+  const handleLoadLabProject = (project: LabProject) => {
+    setProjects([project])
+    navigate('/editor')
+  };
+
+  const handleLoadLab = (lab: StoredLab) => {
+    setLab(lab)
+    setProject(getLabProject(0))
+    navigate('/editor')
+  };
+
+  const handleDeleteLab = (pid: string) => {
+    deleteLab(pid)
+    if (latestLab && latestLab._id === pid) {
+      setLab(null)
+    }
   }
 
   return <Main wide>
@@ -172,10 +234,10 @@ const NewFile = () => {
             event.stopPropagation()
             // dispatchCustomEvent('modal:deleteConfirm', null)
             setKebabOpen(true)
-            const thisRef = kebabRefs[i] === null
+            const thisRef = kebabRefsProjects[i] === null
               // Set default values if not done yet to prevent crashes
               ? { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-              : kebabRefs[i].current
+              : kebabRefsProjects[i].current
             const coords = {
               x: thisRef.offsetLeft,
               y: thisRef.offsetTop + thisRef.offsetHeight
@@ -184,12 +246,102 @@ const NewFile = () => {
             setSelectedProjectId(p._id)
             setSelectedProjectName(p?.meta?.name ?? '<Untitled>')
           }}
-          $kebabRef={ kebabRefs === undefined ? null : kebabRefs[i] }
+          $kebabRef={ kebabRefsProjects === undefined ? null : kebabRefsProjects[i] }
           $istemplate={false}
         />
       )}
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
     </CardList>
+
+    <CardList
+      title="New Lab"
+      button={<Button onClick={importProject}>Import...</Button>}
+      innerRef={cardsRef}
+    >
+      <NewProjectCard
+        title="Finite State Automaton"
+        description=""
+        onClick={() => handleNewLabFile('FSA')}
+        height={height}
+        image={<FSA {...stylingVals} />}
+      />
+      <NewProjectCard
+        title="Push Down Automaton"
+        description=""
+        onClick={() => handleNewLabFile('PDA')}
+        height={height}
+        image={<PDA {...stylingVals} />}
+      />
+      <NewProjectCard
+        title="Turing Machine"
+        description=""
+        onClick={() => handleNewLabFile('TM')}
+        height={height}
+        image={<TM {...stylingVals} />}
+      />
+    </CardList>
+
+    {latestLab && (
+      // conditional rendering for latest lab. 
+      // showing the latest lab if more than one lab is stored and nothing if no
+      // labs exist
+        <CardList title="Ongoing Lab" style={{ gap: '1.5em .4em' }}>
+          <LabCard
+            key={latestLab._id}
+            name={latestLab?.meta?.name ?? '<Untitled>'}
+            image={thumbnails[getThumbTheme(latestLab._id)]}
+            width={PROJECT_THUMBNAIL_WIDTH}
+            onClick={() => handleLoadLab(latestLab)}
+            $kebabClick={(event) => {
+              event.stopPropagation();
+              setKebabOpen(true);
+              const thisRef = kebabRefsLatestLab?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
+              const coords = {
+                x: thisRef.offsetLeft,
+                y: thisRef.offsetTop + thisRef.offsetHeight
+              } as Coordinate;
+              setCoordinates(coords);
+              setSelectedProjectId(latestLab._id); 
+              setSelectedProjectName(latestLab.meta.name)
+            }}
+            $kebabRef={kebabRefsLatestLab}
+            $istemplate={false}
+          />
+        </CardList>
+      )}
+    
+    <CardList
+      title="Your Labs"
+      style={{ gap: '1.5em .4em' }}
+    >
+      {
+      labs.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((lab, index) => {
+      return (
+        <LabCard
+          key={lab._id}
+          name={lab?.meta?.name ?? '<Untitled>'} 
+          image={thumbnails[getThumbTheme(lab._id)]}
+          width={PROJECT_THUMBNAIL_WIDTH}
+          onClick={() => handleLoadLab(lab)}  
+          $kebabClick={(event) => {
+            event.stopPropagation();
+            setKebabOpen(true);
+            const thisRef = kebabRefsLabs[index]?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
+            const coords = {
+              x: thisRef.offsetLeft,
+              y: thisRef.offsetTop + thisRef.offsetHeight
+            } as Coordinate;
+            setCoordinates(coords);
+            setSelectedProjectId(lab._id); 
+            setSelectedProjectName(latestLab.meta.name);
+          }}
+          $kebabRef={kebabRefsLabs?.[index] ?? null}
+          $istemplate={false}
+        />
+      );
+    })}
+    {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
+  </CardList>
 
     <KebabMenu
       x={coordinates.x}
@@ -205,6 +357,7 @@ const NewFile = () => {
       onClose={() => setDeleteConfirmationVisible(false)}
       onConfirm={() => {
         handleDeleteProject(selectedProjectId)
+        handleDeleteLab(selectedProjectId)
         setDeleteConfirmationVisible(false)
       }}
     />
