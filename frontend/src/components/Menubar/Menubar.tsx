@@ -150,6 +150,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
                   onBlur={handleSaveProjectName}
                   onKeyDown={e => e.code === 'Enter' && handleSaveProjectName()}
                   ref={titleRef}
+                  disabled={useLabStore.getState().lab != null}
                 />
                   )
                 : (
