@@ -5,7 +5,7 @@ import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
 import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, Select, EditQuestionContainer, OptionButton, OptionInput } from './labsStyle'
 
 const Labs = () => {
-  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, setName, setLabDescription } = useLabStore()
+  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, setName, setLabDescription, setProjects } = useLabStore()
   const upsertLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
   const currentProject = useProjectStore(s => s.project)
@@ -88,6 +88,29 @@ const Labs = () => {
       setProject(remainingProjects[0]); // Set the first remaining project as the current project
     }
   }
+
+  // Drag and drop
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null); // Track the index of the dragged item
+
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index); // Store the index of the dragged question
+  };
+
+  const handleDrop = (dropIndex: number) => {
+    if (draggedIndex === null || draggedIndex === dropIndex) return; // Avoid rearranging if the index hasn't changed
+
+    const updatedProjects = [...lab.projects]; // Clone projects array
+    const [movedProject] = updatedProjects.splice(draggedIndex, 1); // Remove dragged project
+    updatedProjects.splice(dropIndex, 0, movedProject); // Insert it at the drop location
+
+    setProjects(updatedProjects); // Update the project order
+    setDraggedIndex(null); // Reset dragged index
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
+    e.preventDefault(); // Allow drop by preventing the default behavior
+  };
+
   
   return (
     <>
@@ -139,38 +162,41 @@ const Labs = () => {
       <>
       <SectionLabel>Questions</SectionLabel>
       <Wrapper>
-        <Table>
-          <thead>
-            <tr>
-              <th>Question</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {lab.projects.map((q, index) => (
-              <tr 
+      <Table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lab.projects.map((q, index) => (
+            <tr
               key={q._id}
+              draggable
+              onDragStart={() => handleDragStart(index)}
+              onDrop={() => handleDrop(index)}
+              onDragOver={handleDragOver}
               style={{
-                backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent', // Highlight if it's the current project
+                backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent',
               }}
-              >
-                <td>{`Question ${index + 1}`}</td>
-                <td>
-                  <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
-                  <RemoveButton 
-                    onClick={() => handleDeleteQuestion(q)}
-                    disabled={lab.projects.length <= 1}
-                  >
-                    Remove
-                  </RemoveButton>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <AddQuestionButton onClick={handleAddQuestion}>+ Add question</AddQuestionButton>
-
-      </Wrapper>
+            >
+              <td>{`Question ${index + 1}`}</td>
+              <td>
+                <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
+                <RemoveButton
+                  onClick={() => handleDeleteQuestion(q)}
+                  disabled={lab.projects.length <= 1}
+                >
+                  Remove
+                </RemoveButton>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      <AddQuestionButton onClick={handleAddQuestion}>+ Add question</AddQuestionButton>
+    </Wrapper>
     </>
 
 
