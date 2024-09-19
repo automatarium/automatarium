@@ -74,7 +74,8 @@ const Labs = () => {
     // Delete projects from lab
     deleteProject(_lab._id)
     if (_lab._id === currentProject._id) {
-      setProject(lab.projects[0])
+      const remainingProjects = lab.projects.filter((proj) => proj._id !== _lab._id);
+      setProject(remainingProjects[0]); // Set the first remaining project as the current project
     }
   }
   
