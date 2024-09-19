@@ -73,6 +73,9 @@ const Labs = () => {
   const handleDeleteQuestion = (_lab: LabProject) => {
     // Delete projects from lab
     deleteProject(_lab._id)
+    if (_lab._id === currentProject._id) {
+      setProject(lab.projects[0])
+    }
   }
   
   return (
@@ -145,7 +148,7 @@ const Labs = () => {
                   <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
                   <RemoveButton 
                     onClick={() => handleDeleteQuestion(q)}
-                    disabled={lab.projects.length <= 1 || currentProject && currentProject._id === q._id}
+                    disabled={lab.projects.length <= 1}
                   >
                     Remove
                   </RemoveButton>
