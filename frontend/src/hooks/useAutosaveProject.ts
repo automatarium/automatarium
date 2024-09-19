@@ -28,12 +28,15 @@ const useAutosaveProject = () => {
       if ((!lastSaveDate || dayjs(lastChangeDate).isAfter(lastSaveDate)) && totalItems > 0) {
         setIsSaving(true)
         const toSave = { ...currP, meta: { ...currP.meta, dateEdited: new Date().getTime() } }
-        upsertProject(toSave)
+        
         if (useLabStore.getState().lab != null) {
           // Save to lab file
           upsertLabProject(toSave)
           // Save lab to labs locally on local storage
           upsertLabs(useLabStore.getState().lab)
+        }
+        else { 
+          upsertProject(toSave)
         }
         setLastSaveDate(new Date().getTime())
         // Hide "Saving..." dialog after a short delay
