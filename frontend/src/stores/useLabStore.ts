@@ -83,6 +83,8 @@ export const createNewLab = (description: string = 'Write a description here'): 
 
 interface LabStore {
   lab: StoredLab | null;
+  lastChangeDate: number,
+  showLabWindow: boolean;
   setLab: (lab: StoredLab) => void;
   setProjects: (projects: LabProject[]) => void;
   clearProjects: () => void;
@@ -92,8 +94,9 @@ interface LabStore {
   getProjectById: (id: string) => LabProject | undefined;
   setLabTask: (index: number, task: string) => void;
   setName: (name: string) => void;
-  showLabWindow: boolean;
+  
   setShowLabWindow: (show: boolean) => void;
+  setLabDescription: (description: string) => void;
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
@@ -124,10 +127,15 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
     }
     return { lab: { ...state.lab, labTasks: updatedTasks } };
   }),
+  setLabDescription: (description: string) => set((state) => ({
+    lab: { ...state.lab, description },
+    lastChangeDate: new Date().getTime(),
+  })),
   showLabWindow: false,
+  lastChangeDate: null,
   setShowLabWindow: (show: boolean) => set(() => ({ showLabWindow: show })),
 }), {
-  name: 'automatarium-lab', 
+  name: 'automatarium-lab',
 }));
 
 

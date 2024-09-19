@@ -1,39 +1,56 @@
 import { SectionLabel, Preference, Switch, Button, Input } from '/src/components'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useLabStore, useProjectStore } from '/src/stores'
-import {createNewLab, createNewLabProject, LabProject, StoredLab} from 'src/stores/useLabStore'
-import {  } from '/src/stores'
+import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
 import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, Select, EditQuestionContainer, OptionButton, OptionInput } from './labsStyle'
 
 const Labs = () => {
-  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject } = useLabStore()
+  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, setName, setLabDescription } = useLabStore()
   const setProject = useProjectStore(s => s.set)
+  const currentProject = useProjectStore(s => s.project)
  
   
-// Part 1 . Current assessment part const
-  const [titleInput, setTitleInput] = useState('Sample Assessment Title');
-  const [titleDescription, setTitleDescription] = useState('This is description of Assessment');
-  const [isTitleEditing, setTitleIsEditing] = useState(false); // Single state for editing mode
+  // Current assessment description and title
+  const [isTitleEditing, setTitleIsEditing] = useState(false);
+  const [titleInput, setTitleInput] = useState('');
+  const [titleDescription, setTitleDescription] = useState('');
+
+  // Load lab values into local state when lab changes
+  useEffect(() => {
+    if (lab) {
+      setTitleInput(lab.meta.name || ''); // Populate title input
+      setTitleDescription(lab.description || ''); // Populate description input
+    }
+  }, [lab]);
+
+  // Open edit mode and reset the input fields
+  const handleEditClick = () => {
+    if (lab) {
+      setTitleInput(lab.meta.name || ''); // Reset title input
+      setTitleDescription(lab.description || ''); // Reset description input
+    }
+    setTitleIsEditing(true); // Enable edit mode
+  };
+
+  // Save the new title and description to the store
+  const handleEditSaveClick = () => {
+    setName(titleInput);
+    setLabDescription(titleDescription);
+    setTitleIsEditing(false); // Exit edit mode after saving
+  };
+
+  // Cancel editing and reset the input fields to the stored values
+  const handleCancelClick = () => {
+    if (lab) {
+      setTitleInput(lab.meta.name || ''); // Reset title input
+      setTitleDescription(lab.description || ''); // Reset description input
+    }
+    setTitleIsEditing(false); // Exit edit mode without saving
+  };
 
 
-// Part 1 . Current assessment part func 
-  // Title 
-    // Handle input change for the title
-    const handleTitleInput = (event) => {  // title input 
-      setTitleInput(event.target.value);
-    };
-    const handleDescriptionInput = (event) => {   // input save
-      setTitleDescription(event.target.value);
-    }; 
-    const handleEditSaveClick = () => {  // switch the edit / read mode of title
-      if (isTitleEditing) {
-        setTitleIsEditing(false);
-      } else {
-        setTitleIsEditing(true);
-      }
-    };
 
-
+  // Table of questions
   const handleAddQuestion = () => {
     // Create lab project for new question
     const newLabProject = createNewLabProject("FSA", lab.meta.name);
@@ -46,6 +63,9 @@ const Labs = () => {
   }
 
   const handleEditQuestion = (_lab: LabProject) => {
+    // TODO: Check if current project has unsaved changes and confirm with user
+
+
     // Set the project for the editor
     setProject(_lab)
   }
@@ -53,7 +73,6 @@ const Labs = () => {
   const handleDeleteQuestion = (_lab: LabProject) => {
     // Delete projects from lab
     deleteProject(_lab._id)
-    setProject(lab.projects[0])
   }
   
   return (
@@ -63,37 +82,38 @@ const Labs = () => {
         <Wrapper>You're not working on a lab right now</Wrapper>
          </>}
       {lab && <>
-      <Wrapper>
-        {isTitleEditing ? (
-          <>
-            <TitleSection>
-              <TextArea 
-                value={titleInput} 
-                onChange={(e) => setTitleInput(e.target.value)} 
-                rows={1} placeholder="Lab Title" 
-              />
-            </TitleSection>
+        <Wrapper>
+      {isTitleEditing ? (
+        <>
+          <TitleSection>
             <TextArea 
-              value={titleDescription} 
-              onChange={(e) => setTitleDescription(e.target.value)} 
-              rows={4} placeholder="Description" 
-              />
-            <ButtonContainer>
-              <Button onClick={() => setTitleIsEditing(false)}>Cancel</Button> 
-              <Button onClick={handleEditSaveClick}>Save</Button>
-            </ButtonContainer>
-            
-          </>
-        ) : (
-          <>
-            <TitleSection>
-              <h2>{titleInput}</h2>
-            </TitleSection>
-            <p>{titleDescription}</p>
-            <Button onClick={handleEditSaveClick}>Edit</Button>
-          </>
-        )}
-      </Wrapper>
+              value={titleInput} 
+              onChange={(e) => setTitleInput(e.target.value)} 
+              rows={1} 
+              placeholder="Lab Title" 
+            />
+          </TitleSection>
+          <TextArea 
+            value={titleDescription} 
+            onChange={(e) => setTitleDescription(e.target.value)} 
+            rows={4} 
+            placeholder="Description" 
+          />
+          <ButtonContainer>
+            <Button onClick={handleCancelClick}>Cancel</Button> 
+            <Button onClick={handleEditSaveClick}>Save</Button>
+          </ButtonContainer>
+        </>
+      ) : (
+        <>
+          <TitleSection>
+            <h2>{lab?.meta.name || 'Lab Title'}</h2> {/* Display current lab title */}
+          </TitleSection>
+          <p>{lab?.description || 'Lab Description'}</p> {/* Display current lab description */}
+          <Button onClick={handleEditClick}>Edit</Button> {/* Toggle edit mode */}
+        </>
+      )}
+    </Wrapper>
 
       <SectionLabel>Lab Settings</SectionLabel>
       <Wrapper>
@@ -113,12 +133,22 @@ const Labs = () => {
             </tr>
           </thead>
           <tbody>
-            {lab.projects.map((q) => (
-              <tr>
-                <td>{q.meta.name}</td>
+            {lab.projects.map((q, index) => (
+              <tr 
+              key={q._id}
+              style={{
+                backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent', // Highlight if it's the current project
+              }}
+              >
+                <td>{`Question ${index + 1}`}</td>
                 <td>
                   <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
-                  <RemoveButton onClick={() => handleDeleteQuestion(q)}>Remove</RemoveButton>
+                  <RemoveButton 
+                    onClick={() => handleDeleteQuestion(q)}
+                    disabled={lab.projects.length <= 1 || currentProject && currentProject._id === q._id}
+                  >
+                    Remove
+                  </RemoveButton>
                 </td>
               </tr>
             ))}
