@@ -63,7 +63,6 @@ export type StoredLab = {
   labTasks: string[],
   meta: LabMetaData,
   showLabWindow: boolean,
-  currentQuestion: number
 }
 
 export const createNewLab = (description: string = 'Write a description here'): StoredLab => ({
