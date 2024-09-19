@@ -6,7 +6,7 @@ import {  } from '/src/stores'
 import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, Select, EditQuestionContainer, OptionButton, OptionInput } from './labsStyle'
 
 const Labs = () => {
-  const { lab, showLabWindow, setShowLabWindow, upsertProject } = useLabStore()
+  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject } = useLabStore()
   const setProject = useProjectStore(s => s.set)
  
   
@@ -34,14 +34,6 @@ const Labs = () => {
     };
 
 
-
-
-  const [questions, setQuestions] = useState([
-    "Question 1 content", "question 2 content", ""
-  ]);
-
-
-
   const handleAddQuestion = () => {
     // Create lab project for new question
     const newLabProject = createNewLabProject("FSA", lab.meta.name);
@@ -51,6 +43,17 @@ const Labs = () => {
 
     // Set the project for the editor
     setProject(newLabProject)
+  }
+
+  const handleEditQuestion = (_lab: LabProject) => {
+    // Set the project for the editor
+    setProject(_lab)
+  }
+
+  const handleDeleteQuestion = (_lab: LabProject) => {
+    // Delete projects from lab
+    deleteProject(_lab._id)
+    setProject(lab.projects[0])
   }
   
   return (
@@ -114,8 +117,8 @@ const Labs = () => {
               <tr>
                 <td>{q.meta.name}</td>
                 <td>
-                  <EditButton onClick={() => console.log("Edit button clicked")}>Edit</EditButton>
-                  <RemoveButton onClick={() => console.log("Remove button clicked")}>Remove</RemoveButton>
+                  <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
+                  <RemoveButton onClick={() => handleDeleteQuestion(q)}>Remove</RemoveButton>
                 </td>
               </tr>
             ))}
