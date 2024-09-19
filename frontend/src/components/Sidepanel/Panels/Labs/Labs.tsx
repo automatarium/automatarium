@@ -72,8 +72,13 @@ const Labs = () => {
   }
 
   const handleEditQuestion = (_lab: LabProject) => {
-    // TODO: Check if current project has unsaved changes and confirm with user
+    // Save current changes before moving to another question
+    saveLab()
+    // Set the project for the editor
+    setProject(_lab)
+  }
 
+  const handleOpenQuestion = (_lab: LabProject) => {
     // Save current changes before moving to another question
     saveLab()
     // Set the project for the editor
@@ -173,10 +178,11 @@ const Labs = () => {
           {lab.projects.map((q, index) => (
             <tr
               key={q._id}
-              draggable
+              draggable={currentProject && currentProject._id === q._id}
               onDragStart={() => handleDragStart(index)}
               onDrop={() => handleDrop(index)}
               onDragOver={handleDragOver}
+              onClick={() => handleOpenQuestion(q)}
               style={{
                 backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent',
               }}
