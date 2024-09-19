@@ -78,7 +78,6 @@ export const createNewLab = (description: string = 'Write a description here'): 
     automatariumVersion: APP_VERSION
   },
   showLabWindow: false,
-  currentQuestion: 1
 
 })
 
