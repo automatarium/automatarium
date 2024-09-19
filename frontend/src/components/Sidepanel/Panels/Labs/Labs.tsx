@@ -1,11 +1,12 @@
 import { SectionLabel, Preference, Switch, Button, Input } from '/src/components'
 import { useState, useEffect } from 'react'
-import { useLabStore, useProjectStore } from '/src/stores'
+import { useLabStore, useLabsStore, useProjectStore } from '/src/stores'
 import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
 import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, Select, EditQuestionContainer, OptionButton, OptionInput } from './labsStyle'
 
 const Labs = () => {
   const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, setName, setLabDescription } = useLabStore()
+  const upsertLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
   const currentProject = useProjectStore(s => s.project)
  
@@ -49,6 +50,14 @@ const Labs = () => {
   };
 
 
+  const saveLab = () => {
+    const project = useProjectStore.getState().project
+    upsertProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
+    const lab = useLabStore.getState().lab
+    upsertLab(lab)
+  }
+
+
 
   // Table of questions
   const handleAddQuestion = () => {
@@ -65,7 +74,8 @@ const Labs = () => {
   const handleEditQuestion = (_lab: LabProject) => {
     // TODO: Check if current project has unsaved changes and confirm with user
 
-
+    // Save current changes before moving to another question
+    saveLab()
     // Set the project for the editor
     setProject(_lab)
   }
