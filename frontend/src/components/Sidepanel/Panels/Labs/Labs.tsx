@@ -188,9 +188,8 @@ const Labs = () => {
               onDragStart={() => handleDragStart(index)}
               onDrop={() => handleDrop(index)}
               onDragOver={handleDragOver}
-              // onClick={() => handleOpenQuestion(q)}
               >
-                <td>{`Question ${index + 1}`}</td>
+                <td onClick={() => handleOpenQuestion(q)}>{`Question ${index + 1}`}</td>
                 <td>
                   <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
                   <RemoveButton 
