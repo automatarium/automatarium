@@ -6,11 +6,14 @@ interface LabInstructionsProps {
 }
 
 const LabInstructionsWrapper = styled('div')`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Pushes pagination to the bottom */
   width: 250px;
   padding: 16px;
-  background-color: var(--toolbar); /* Using the same color scheme */
+  background-color: var(--surface); /* Using the same color scheme */
   border-right: 1px solid var(--surface);
-  height: 100%;
+  height: 86vh;
   overflow-y: auto;
   color: var(--white); /* Text color */
 `
@@ -68,7 +71,10 @@ const Textarea = styled('textarea')`
 const PaginationWrapper = styled('div')`
   display: flex;
   justify-content: center;
-  margin-top: 16px;
+  align-items: center;
+  gap: 8px;
+  margin-top: auto; /* Ensures pagination sticks to the bottom */
+  padding-top: 16px;
 `
 
 const PaginationButton = styled('button')`
@@ -77,7 +83,6 @@ const PaginationButton = styled('button')`
   border: 1px solid var(--white);
   padding: 0.2em 0.5rem;
   cursor: pointer;
-  margin: 0 4px;
   font-size: 14px;
   border-radius: 0.3em;
 
@@ -89,6 +94,21 @@ const PaginationButton = styled('button')`
   &:disabled {
     background-color: var(--surface);
     cursor: not-allowed;
+  }
+`
+
+const SelectBox = styled('select')`
+  background-color: var(--surface);
+  color: var(--white);
+  border: 1px solid var(--white);
+  padding: 0.2em;
+  font-size: 14px;
+  border-radius: 0.3em;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--white);
+    color: var(--toolbar);
   }
 `
 
@@ -105,10 +125,14 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
     setInstructions(e.target.value)
   }
 
-  const handlePageChange = (direction: 'prev' | 'next') => {
-    const newIndex = direction === 'next' ? currentQuestionIndex + 1 : currentQuestionIndex - 1
-    setCurrentQuestionIndex(newIndex)
-    setInstructions(questions[newIndex])
+  const handlePageChange = (index: number) => {
+    setCurrentQuestionIndex(index)
+    setInstructions(questions[index])
+  }
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedQuestion = parseInt(e.target.value, 10)
+    handlePageChange(selectedQuestion)
   }
 
   const formattedInstructions = instructions.split('\n').map((line, index) => (
@@ -120,35 +144,52 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
 
   return (
     <LabInstructionsWrapper>
-      <TitleWrapper>
-        <Title>Question {currentQuestionIndex + 1}</Title>
-        <EditButton $active={isEditing} onClick={toggleEdit}>
-          {isEditing ? 'Save' : 'Edit'}
-        </EditButton>
-      </TitleWrapper>
-      <Content>
-        {isEditing ? (
-          <Textarea
-            value={instructions}
-            onChange={handleInstructionsChange}
-          />
-        ) : (
-          formattedInstructions
-        )}
-      </Content>
-      {/* Pagination Buttons */}
+      <div>
+        <TitleWrapper>
+          <Title>Question {currentQuestionIndex + 1}</Title>
+          <EditButton $active={isEditing} onClick={toggleEdit}>
+            {isEditing ? 'Save' : 'Edit'}
+          </EditButton>
+        </TitleWrapper><hr />
+        <Content>
+          {isEditing ? (
+            <Textarea
+              value={instructions}
+              onChange={handleInstructionsChange}
+            />
+          ) : (
+            formattedInstructions
+          )}
+        </Content>
+      </div>
+      
       <PaginationWrapper>
+        {/* Move back "<" */}
         <PaginationButton
-          onClick={() => handlePageChange('prev')}
+          onClick={() => handlePageChange(currentQuestionIndex - 1)}
           disabled={currentQuestionIndex === 0}
         >
-          Previous
+          &lt;
         </PaginationButton>
+
+        {/* Select box to choose a question */}
+        <SelectBox
+          value={currentQuestionIndex}
+          onChange={handleSelectChange}
+        >
+          {questions.map((_, index) => (
+            <option key={index} value={index}>
+               {index + 1}
+            </option>
+          ))}
+        </SelectBox>
+
+        {/* Move forward ">" */}
         <PaginationButton
-          onClick={() => handlePageChange('next')}
+          onClick={() => handlePageChange(currentQuestionIndex + 1)}
           disabled={currentQuestionIndex === questions.length - 1}
         >
-          Next
+          &gt;
         </PaginationButton>
       </PaginationWrapper>
     </LabInstructionsWrapper>
