@@ -33,7 +33,15 @@ const Editor = () => {
   const showLabWindow = useLabStore(s => s.showLabWindow)
   const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
 
-  const questions = lab?.labTasks.map((task, index) => ({ number: index + 1, description: task })) || []
+  //number:  lab._id + 1, description: lab.description 
+  const questions = lab.projects.map((project, index) => ({
+    number: index + 1, // Project number starting from 1
+    description: lab.description 
+  }));
+  
+  console.log(questions)
+  
+
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
     if (!tourShown) {
@@ -108,7 +116,6 @@ const Editor = () => {
     }
   }, [tool, priorTool])
 
-  
 
   return (
     <>

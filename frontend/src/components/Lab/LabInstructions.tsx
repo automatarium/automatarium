@@ -114,53 +114,53 @@ const SelectBox = styled('select')`
 `
 
 const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
-  const { lab, setLabDescription } = useLabStore() // Fetch lab details from the store
-  const [isEditing, setIsEditing] = useState(false)
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [instructions, setInstructions] = useState(questions?.[currentQuestionIndex]?.description || '')
-  const [description, setDescription] = useState(lab?.description || 'Description not available')
+  const { lab, setLabDescription } = useLabStore();
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [instructions, setInstructions] = useState(questions[0]?.description || '');
+  const [description, setDescription] = useState(lab?.description || 'Description not available');
 
   useEffect(() => {
     if (lab) {
-      setDescription(lab.description || 'No description provided')
+      setDescription(lab.description || 'No description provided');
     }
-  }, [lab])
+  }, [lab]);
 
   useEffect(() => {
-    if (questions?.length > 0) {
-      setInstructions(questions[currentQuestionIndex]?.description || 'No question description available')
+    if (questions.length > 0) {
+      setInstructions(questions[currentQuestionIndex]?.description || 'No question description available');
     }
-  }, [questions, currentQuestionIndex])
+  }, [questions, currentQuestionIndex]);
 
   const toggleEdit = () => {
-    setIsEditing(!isEditing)
-  }
+    setIsEditing(!isEditing);
+  };
 
   const handleInstructionsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInstructions(e.target.value)
-  }
+    setInstructions(e.target.value);
+  };
 
   const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value)
-  }
+    setDescription(e.target.value);
+  };
 
   const handlePageChange = (index: number) => {
-    setCurrentQuestionIndex(index)
-  }
+    setCurrentQuestionIndex(index);
+  };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedQuestion = parseInt(e.target.value, 10)
-    handlePageChange(selectedQuestion)
-  }
+    const selectedQuestion = parseInt(e.target.value, 10);
+    handlePageChange(selectedQuestion);
+  };
 
   const saveDescription = () => {
-    setLabDescription(description) // Save updated description in the store
-    toggleEdit()
-  }
+    setLabDescription(description); // Save updated description in the store
+    toggleEdit();
+  };
 
   // If there are no questions or lab data yet, show a loading or fallback message
   if (!questions || questions.length === 0 || !lab) {
-    return <LabInstructionsWrapper>Loading lab instructions...</LabInstructionsWrapper>
+    return <LabInstructionsWrapper>Loading lab instructions...</LabInstructionsWrapper>;
   }
 
   const formattedInstructions = instructions.split('\n').map((line, index) => (
@@ -168,14 +168,14 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
       {line}
       <br />
     </React.Fragment>
-  ))
+  ));
 
   return (
     <LabInstructionsWrapper>
       <div>
         <TitleWrapper>
           <Title>Question {questions[currentQuestionIndex].number}</Title>
-          <EditButton $active={isEditing} onClick={toggleEdit}>
+          <EditButton $active={isEditing} onClick={saveDescription}>
             {isEditing ? 'Save' : 'Edit'}
           </EditButton>
         </TitleWrapper>
@@ -188,15 +188,12 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
                 onChange={handleDescriptionChange}
                 placeholder="Edit lab description here"
               />
-              <Textarea
-                value={instructions}
-                onChange={handleInstructionsChange}
-              />
-              <button onClick={saveDescription}>Save Description</button>
+              
+              
             </>
           ) : (
             <>
-              <p>{description}</p>
+              
               {formattedInstructions}
             </>
           )}
@@ -230,7 +227,7 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
         </PaginationButton>
       </PaginationWrapper>
     </LabInstructionsWrapper>
-  )
-}
+  );
+};
 
-export default LabInstructions
+export default LabInstructions;
