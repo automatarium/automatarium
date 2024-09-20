@@ -80,6 +80,13 @@ const Labs = () => {
     setProject(_lab)
   }
 
+  const handleOpenQuestion = (_lab: LabProject) => {
+    // Save current changes before moving to another question
+    saveLab()
+    // Set the project for the editor
+    setProject(_lab)
+  }
+
   const handleDeleteQuestion = (_lab: LabProject) => {
     // Delete projects from lab
     deleteProject(_lab._id)
@@ -153,10 +160,11 @@ const Labs = () => {
               style={{
                 backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent', // Highlight if it's the current project
               }}
+              onClick={() => handleOpenQuestion(q)}
               >
                 <td>{`Question ${index + 1}`}</td>
                 <td>
-                  <EditButton onClick={() => handleEditQuestion(q)}>Open</EditButton>
+                  <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
                   <RemoveButton 
                     onClick={() => handleDeleteQuestion(q)}
                     disabled={lab.projects.length <= 1}
