@@ -23,7 +23,6 @@ const Editor = () => {
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
   const [instructions, setInstructions] = useState<string>('Instructions will be shown here.')
-  const [isLabPanelVisible, setIsLabPanelVisible] = useState<boolean>(true)
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
@@ -31,6 +30,8 @@ const Editor = () => {
   const lab = useLabStore(s => s.lab)
   const getProjectinLab = useLabStore(s => s.getProjectById)
   const setLab = useLabStore(s => s.setLab)
+  const showLabWindow = useLabStore(s => s.showLabWindow)
+  const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
 
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
@@ -50,7 +51,9 @@ const Editor = () => {
 
   if (lab && getProjectinLab(project._id) === undefined) {
     setLab(null)
+    setShowLabWindow(false)
   }
+
 
   const projectType = project.config.type
 
@@ -112,7 +115,7 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {isLabPanelVisible && <LabInstructions instructions={instructions} />}
+        {showLabWindow && lab && <LabInstructions instructions={instructions} />}
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
@@ -122,9 +125,6 @@ const Editor = () => {
         }
         <Sidepanel />
       </Content>
-      <button onClick={() => setIsLabPanelVisible(!isLabPanelVisible)}>
-        Toggle Lab Instructions
-      </button>
       <ShortcutGuide />
 
       <FinalStatePopup />

@@ -127,10 +127,12 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             const project = useProjectStore.getState().project
             const totalItems = project.comments.length + project.states.length + project.transitions.length
             if (totalItems > 0) {
-              saveProject()
               if (useLabStore.getState().lab != null) {
                 saveLabProject()
                 saveLab()
+              }
+              else {
+                saveProject()
               }
             } else {
               deleteProject(project._id)
@@ -150,6 +152,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
                   onBlur={handleSaveProjectName}
                   onKeyDown={e => e.code === 'Enter' && handleSaveProjectName()}
                   ref={titleRef}
+                  disabled={useLabStore.getState().lab != null}
                 />
                   )
                 : (

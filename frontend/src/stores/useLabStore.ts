@@ -61,7 +61,8 @@ export type StoredLab = {
   description: string,
   projects: LabProject[],
   labTasks: string[],
-  meta: LabMetaData
+  meta: LabMetaData,
+  showLabWindow: boolean,
 }
 
 export const createNewLab = (description: string = 'Write a description here'): StoredLab => ({
@@ -75,11 +76,15 @@ export const createNewLab = (description: string = 'Write a description here'): 
     dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,
     automatariumVersion: APP_VERSION
-  }
+  },
+  showLabWindow: false,
+
 })
 
 interface LabStore {
-  lab: StoredLab;
+  lab: StoredLab | null;
+  lastChangeDate: number,
+  showLabWindow: boolean;
   setLab: (lab: StoredLab) => void;
   setProjects: (projects: LabProject[]) => void;
   clearProjects: () => void;
@@ -88,7 +93,10 @@ interface LabStore {
   getProject: (index: number) => LabProject | undefined;
   getProjectById: (id: string) => LabProject | undefined;
   setLabTask: (index: number, task: string) => void;
-  setName: (name: string) => void,
+  setName: (name: string) => void;
+  
+  setShowLabWindow: (show: boolean) => void;
+  setLabDescription: (description: string) => void;
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
@@ -118,9 +126,16 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
       updatedTasks[index] = task;
     }
     return { lab: { ...state.lab, labTasks: updatedTasks } };
-  })
+  }),
+  setLabDescription: (description: string) => set((state) => ({
+    lab: { ...state.lab, description },
+    lastChangeDate: new Date().getTime(),
+  })),
+  showLabWindow: false,
+  lastChangeDate: null,
+  setShowLabWindow: (show: boolean) => set(() => ({ showLabWindow: show })),
 }), {
-  name: 'automatarium-lab', 
+  name: 'automatarium-lab',
 }));
 
 
