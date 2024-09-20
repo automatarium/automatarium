@@ -33,6 +33,7 @@ const Editor = () => {
   const showLabWindow = useLabStore(s => s.showLabWindow)
   const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
 
+  const questions = lab?.labTasks.map((task, index) => ({ number: index + 1, description: task })) || []
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
     if (!tourShown) {
@@ -59,15 +60,6 @@ const Editor = () => {
 
   const isSaving = useAutosaveProject()
 
-  const questions = [
-    'Step 1: Set up the automaton.\nStep 2: Verify the state transitions.',
-    'Step 1: Create the initial state.\nStep 2: Add transitions between states.',
-    'Step 1: Define the acceptance criteria.\nStep 2: Run the automaton.'
-  ]
-
-  useEffect(() => {
-    setInstructions('Step 1: Set up the automaton.\nStep 2: Verify the state transitions.')
-  }, [])
 
   useActions(true)
 
@@ -115,6 +107,8 @@ const Editor = () => {
       setPriorTool(undefined)
     }
   }, [tool, priorTool])
+
+  
 
   return (
     <>

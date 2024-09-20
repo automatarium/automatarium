@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { styled } from 'goober'
+import { useLabStore } from '/src/stores'
 
 interface LabInstructionsProps {
-  questions: string[] // Array of questions for pagination
+  questions: { number: number; description: string }[] // Array of questions with numbers and descriptions
 }
 
 const LabInstructionsWrapper = styled('div')`
@@ -113,9 +114,23 @@ const SelectBox = styled('select')`
 `
 
 const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
+  const { lab, setLabDescription } = useLabStore() // Fetch lab details from the store
   const [isEditing, setIsEditing] = useState(false)
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
-  const [instructions, setInstructions] = useState(questions[currentQuestionIndex])
+  const [instructions, setInstructions] = useState(questions?.[currentQuestionIndex]?.description || '')
+  const [description, setDescription] = useState(lab?.description || 'Description not available')
+
+  useEffect(() => {
+    if (lab) {
+      setDescription(lab.description || 'No description provided')
+    }
+  }, [lab])
+
+  useEffect(() => {
+    if (questions?.length > 0) {
+      setInstructions(questions[currentQuestionIndex]?.description || 'No question description available')
+    }
+  }, [questions, currentQuestionIndex])
 
   const toggleEdit = () => {
     setIsEditing(!isEditing)
@@ -125,14 +140,27 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
     setInstructions(e.target.value)
   }
 
+  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setDescription(e.target.value)
+  }
+
   const handlePageChange = (index: number) => {
     setCurrentQuestionIndex(index)
-    setInstructions(questions[index])
   }
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedQuestion = parseInt(e.target.value, 10)
     handlePageChange(selectedQuestion)
+  }
+
+  const saveDescription = () => {
+    setLabDescription(description) // Save updated description in the store
+    toggleEdit()
+  }
+
+  // If there are no questions or lab data yet, show a loading or fallback message
+  if (!questions || questions.length === 0 || !lab) {
+    return <LabInstructionsWrapper>Loading lab instructions...</LabInstructionsWrapper>
   }
 
   const formattedInstructions = instructions.split('\n').map((line, index) => (
@@ -146,25 +174,36 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
     <LabInstructionsWrapper>
       <div>
         <TitleWrapper>
-          <Title>Question {currentQuestionIndex + 1}</Title>
+          <Title>Question {questions[currentQuestionIndex].number}</Title>
           <EditButton $active={isEditing} onClick={toggleEdit}>
             {isEditing ? 'Save' : 'Edit'}
           </EditButton>
-        </TitleWrapper><hr />
+        </TitleWrapper>
+        <hr />
         <Content>
           {isEditing ? (
-            <Textarea
-              value={instructions}
-              onChange={handleInstructionsChange}
-            />
+            <>
+              <Textarea
+                value={description}
+                onChange={handleDescriptionChange}
+                placeholder="Edit lab description here"
+              />
+              <Textarea
+                value={instructions}
+                onChange={handleInstructionsChange}
+              />
+              <button onClick={saveDescription}>Save Description</button>
+            </>
           ) : (
-            formattedInstructions
+            <>
+              <p>{description}</p>
+              {formattedInstructions}
+            </>
           )}
         </Content>
       </div>
-      
+
       <PaginationWrapper>
-        {/* Move back "<" */}
         <PaginationButton
           onClick={() => handlePageChange(currentQuestionIndex - 1)}
           disabled={currentQuestionIndex === 0}
@@ -172,19 +211,17 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
           &lt;
         </PaginationButton>
 
-        {/* Select box to choose a question */}
         <SelectBox
           value={currentQuestionIndex}
           onChange={handleSelectChange}
         >
-          {questions.map((_, index) => (
+          {questions.map((question, index) => (
             <option key={index} value={index}>
-               {index + 1}
+              Question {question.number}
             </option>
           ))}
         </SelectBox>
 
-        {/* Move forward ">" */}
         <PaginationButton
           onClick={() => handlePageChange(currentQuestionIndex + 1)}
           disabled={currentQuestionIndex === questions.length - 1}
