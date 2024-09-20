@@ -59,6 +59,12 @@ const Editor = () => {
 
   const isSaving = useAutosaveProject()
 
+  const questions = [
+    'Step 1: Set up the automaton.\nStep 2: Verify the state transitions.',
+    'Step 1: Create the initial state.\nStep 2: Add transitions between states.',
+    'Step 1: Define the acceptance criteria.\nStep 2: Run the automaton.'
+  ]
+
   useEffect(() => {
     setInstructions('Step 1: Set up the automaton.\nStep 2: Verify the state transitions.')
   }, [])
@@ -115,7 +121,8 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showLabWindow && lab && <LabInstructions instructions={instructions} />}
+        {showLabWindow && lab && <LabInstructions questions={questions} />
+      }
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
