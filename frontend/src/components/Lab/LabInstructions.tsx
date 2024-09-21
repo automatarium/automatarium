@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import { styled } from 'goober'
-import { useLabStore } from '/src/stores'
-
+import React, { useState, useEffect } from 'react';
+import { styled } from 'goober';
+import { useLabStore, useLabsStore, useProjectStore } from '/src/stores';
 
 const LabInstructionsWrapper = styled('div')`
   display: flex;
@@ -14,7 +13,7 @@ const LabInstructionsWrapper = styled('div')`
   height: 86vh;
   overflow-y: auto;
   color: var(--white); /* Text color */
-`
+`;
 
 const TitleWrapper = styled('div')`
   display: flex;
@@ -22,12 +21,12 @@ const TitleWrapper = styled('div')`
   align-items: center;
   border-bottom: 2px solid var(--surface);
   padding-bottom: 8px;
-`
+`;
 
 const Title = styled('h2')`
   margin: 0;
   color: var(--white); /* Title color */
-`
+`;
 
 const EditButton = styled('button')<{$active?: boolean}>`
   background-color: var(--primary);
@@ -48,11 +47,11 @@ const EditButton = styled('button')<{$active?: boolean}>`
     background-color: var(--primary);
     color: var(--white);
   `}
-`
+`;
 
 const Content = styled('div')`
   margin-top: 30px;
-`
+`;
 
 const Textarea = styled('textarea')`
   width: 100%;
@@ -64,7 +63,7 @@ const Textarea = styled('textarea')`
   font-size: 14px;
   border-radius: 0.3em;
   transition: background 0.3s, color 0.3s;
-`
+`;
 
 const PaginationWrapper = styled('div')`
   display: flex;
@@ -73,7 +72,7 @@ const PaginationWrapper = styled('div')`
   gap: 8px;
   margin-top: auto; /* Ensures pagination sticks to the bottom */
   padding-top: 16px;
-`
+`;
 
 const PaginationButton = styled('button')`
   background-color: var(--primary);
@@ -93,7 +92,7 @@ const PaginationButton = styled('button')`
     background-color: var(--surface);
     cursor: not-allowed;
   }
-`
+`;
 
 const SelectBox = styled('select')`
   background-color: var(--surface);
@@ -108,60 +107,66 @@ const SelectBox = styled('select')`
     background-color: var(--white);
     color: var(--toolbar);
   }
-`
+`;
 
 const LabInstructions = () => {
-  const { lab, setLabDescription } = useLabStore();
-  const questions = [];
+  const { lab, upsertQuestion, upsertProject } = useLabStore();
+  const questions = lab.questions;
+  const total_questions = Object.keys(questions).length;
+  const currentProject = useProjectStore(s => s.project);
+  const currentQuestionIndex = lab.projects.indexOf(currentProject)
+  const upsertLab = useLabsStore(s => s.upsertLab)
+  const setProject = useProjectStore(s => s.set)
+
+  
+
   const [isEditing, setIsEditing] = useState(false);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [instructions, setInstructions] = useState(questions[0] || '');
-  const [description, setDescription] = useState(lab?.description || 'Description not available');
+  const [question, setQuestion] = useState('');
 
   useEffect(() => {
     if (lab) {
-      setDescription(lab.description || 'No description provided');
+      setQuestion(questions[currentProject._id] || '');
     }
   }, [lab]);
 
-  useEffect(() => {
-    if (questions.length > 0) {
-      setInstructions(questions[currentQuestionIndex] || 'No question description available');
-    }
-  }, [questions, currentQuestionIndex]);
+  const saveLab = () => {
+    const project = useProjectStore.getState().project
+    upsertProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
+    const lab = useLabStore.getState().lab
+    upsertLab(lab)
+  }
 
   const toggleEdit = () => {
+    if (isEditing) {
+      // Save the updated question via upsertQuestion
+      const currentQuestionId = Object.keys(questions)[currentQuestionIndex];
+      upsertQuestion(currentQuestionId, question);
+      const lab = useLabStore.getState().lab
+      upsertLab(lab)
+    }
     setIsEditing(!isEditing);
   };
 
-  const handleInstructionsChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setInstructions(e.target.value);
-  };
-
-  const handleDescriptionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setDescription(e.target.value);
+  const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setQuestion(e.target.value);
   };
 
   const handlePageChange = (index: number) => {
-    setCurrentQuestionIndex(index);
+    saveLab()
+    setProject(lab.projects[index])
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedQuestion = parseInt(e.target.value, 10);
-    handlePageChange(selectedQuestion);
-  };
-
-  const saveDescription = () => {
-    setLabDescription(description); // Save updated description in the store
-    toggleEdit();
+    const selectedQuestionIndex = parseInt(e.target.value, 10);
+    handlePageChange(selectedQuestionIndex);
   };
 
   // If there are no questions or lab data yet, show a loading or fallback message
-  if (!questions || questions.length === 0 || !lab) {
+  if (!questions || total_questions === 0 || !lab) {
     return <LabInstructionsWrapper>Loading lab instructions...</LabInstructionsWrapper>;
   }
 
-  const formattedInstructions = instructions.split('\n').map((line, index) => (
+  const formattedInstructions = question.split('\n').map((line, index) => (
     <React.Fragment key={index}>
       {line}
       <br />
@@ -172,28 +177,21 @@ const LabInstructions = () => {
     <LabInstructionsWrapper>
       <div>
         <TitleWrapper>
-          <Title>Question </Title>
-          <EditButton $active={isEditing} onClick={saveDescription}>
+          <Title>Question {currentQuestionIndex + 1}</Title>
+          <EditButton $active={isEditing} onClick={toggleEdit}>
             {isEditing ? 'Save' : 'Edit'}
           </EditButton>
         </TitleWrapper>
         <hr />
         <Content>
           {isEditing ? (
-            <>
-              <Textarea
-                value={description}
-                onChange={handleDescriptionChange}
-                placeholder="Edit lab description here"
-              />
-              
-              
-            </>
+            <Textarea
+              value={question}
+              onChange={handleQuestionChange}
+              placeholder="Edit lab instructions here"
+            />
           ) : (
-            <>
-              
-              {formattedInstructions}
-            </>
+            <>{formattedInstructions}</>
           )}
         </Content>
       </div>
@@ -206,20 +204,17 @@ const LabInstructions = () => {
           &lt;
         </PaginationButton>
 
-        <SelectBox
-          value={currentQuestionIndex}
-          onChange={handleSelectChange}
-        >
-          {questions.map((question, index) => (
-            <option key={index} value={index}>
-              Question {question}
+        <SelectBox value={currentQuestionIndex} onChange={handleSelectChange}>
+          {Object.entries(questions).map(([id, question], index) => (
+            <option key={id} value={index}>
+              Question {index + 1}
             </option>
           ))}
         </SelectBox>
 
         <PaginationButton
           onClick={() => handlePageChange(currentQuestionIndex + 1)}
-          disabled={currentQuestionIndex === questions.length - 1}
+          disabled={currentQuestionIndex === total_questions - 1}
         >
           &gt;
         </PaginationButton>

@@ -155,7 +155,7 @@ const NewFile = () => {
       // set the new lab and lab project
       setLab(newLab);
       setProjects([newLabProject]);
-      addQuestion(newLabProject._id, '')
+      addQuestion(newLabProject._id, 'test')
 
       // set lab project for editor
       setProject(getLabProject(0))
