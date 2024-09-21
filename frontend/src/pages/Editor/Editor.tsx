@@ -32,14 +32,6 @@ const Editor = () => {
   const setLab = useLabStore(s => s.setLab)
   const showLabWindow = useLabStore(s => s.showLabWindow)
   const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
-
-  // Check if lab is available and has projects before mapping them
-  const questions = lab?.projects?.map((project, index) => ({
-    number: index + 1, // Project number starting from 1
-    description: lab.description 
-  })) || []; // Provide a default empty array if no lab or projects are available
-  
-  console.log(questions)
   
 
   useEffect(() => {
@@ -122,7 +114,7 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showLabWindow && lab && <LabInstructions questions={questions} />
+        {showLabWindow && lab && <LabInstructions/>
       }
         <EditorContent>
           <EditorPanel />

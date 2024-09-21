@@ -2,9 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { styled } from 'goober'
 import { useLabStore } from '/src/stores'
 
-interface LabInstructionsProps {
-  questions: { number: number; description: string }[] // Array of questions with numbers and descriptions
-}
 
 const LabInstructionsWrapper = styled('div')`
   display: flex;
@@ -113,11 +110,12 @@ const SelectBox = styled('select')`
   }
 `
 
-const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
+const LabInstructions = () => {
   const { lab, setLabDescription } = useLabStore();
+  const questions = lab.labTasks;
   const [isEditing, setIsEditing] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [instructions, setInstructions] = useState(questions[0]?.description || '');
+  const [instructions, setInstructions] = useState(questions[0] || '');
   const [description, setDescription] = useState(lab?.description || 'Description not available');
 
   useEffect(() => {
@@ -128,7 +126,7 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
 
   useEffect(() => {
     if (questions.length > 0) {
-      setInstructions(questions[currentQuestionIndex]?.description || 'No question description available');
+      setInstructions(questions[currentQuestionIndex] || 'No question description available');
     }
   }, [questions, currentQuestionIndex]);
 
@@ -174,7 +172,7 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
     <LabInstructionsWrapper>
       <div>
         <TitleWrapper>
-          <Title>Question {questions[currentQuestionIndex].number}</Title>
+          <Title>Question </Title>
           <EditButton $active={isEditing} onClick={saveDescription}>
             {isEditing ? 'Save' : 'Edit'}
           </EditButton>
@@ -214,7 +212,7 @@ const LabInstructions: React.FC<LabInstructionsProps> = ({ questions }) => {
         >
           {questions.map((question, index) => (
             <option key={index} value={index}>
-              Question {question.number}
+              Question {question}
             </option>
           ))}
         </SelectBox>
