@@ -90,7 +90,7 @@ export const createNewLab = (description: string = 'Write a description here'): 
 
 interface LabStore {
   lab: StoredLab | null;
-  lastChangeDate: number,
+  lastChangeDate: number;
   showLabWindow: boolean;
   setLab: (lab: StoredLab) => void;
   setProjects: (projects: LabProject[]) => void;
@@ -102,13 +102,14 @@ interface LabStore {
   setName: (name: string) => void;
   setShowLabWindow: (show: boolean) => void;
   setLabDescription: (description: string) => void;
+  editLabQuestion: (pid: string, newQuestion: string) => void; 
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
   lab: null as StoredLab,
   setLab: (lab: StoredLab) => set({ lab }),
-  setProjects: (projects: LabProject[]) => set((state) => ({lab: { ...state.lab, projects }})),
-  clearProjects: () => set((state) => ({lab: { ...state.lab, projects: [] }})),
+  setProjects: (projects: LabProject[]) => set((state) => ({ lab: { ...state.lab, projects } })),
+  clearProjects: () => set((state) => ({ lab: { ...state.lab, projects: [] } })),
   upsertProject: (project: LabProject) => set((state) => ({
     lab: {
       ...state.lab,
@@ -117,7 +118,8 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
         : [...state.lab.projects, project]
     }
   })),
-  deleteProject: (pid: string) => set((state) => ({lab: {...state.lab,projects: state.lab?.projects.filter(p => p._id !== pid)}
+  deleteProject: (pid: string) => set((state) => ({
+    lab: { ...state.lab, projects: state.lab?.projects.filter(p => p._id !== pid) }
   })),
   getProject: (index: number) => get().lab?.projects[index] || undefined,
   getProjectById: (id: string) => get().lab?.projects.find(project => project._id === id) || undefined,
@@ -132,9 +134,19 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
   showLabWindow: false,
   lastChangeDate: null,
   setShowLabWindow: (show: boolean) => set(() => ({ showLabWindow: show })),
+  editLabQuestion: (pid: string, newQuestion: string) => set((state) => ({
+    lab: {
+      ...state.lab,
+      projects: state.lab?.projects.map(project => 
+        project._id === pid
+          ? { ...project, lab: { ...project.lab, labQuestion: newQuestion } }
+          : project
+      )
+    },
+    lastChangeDate: new Date().getTime(),
+  })),
 }), {
   name: 'automatarium-lab',
 }));
-
 
 export default useLabStore;
