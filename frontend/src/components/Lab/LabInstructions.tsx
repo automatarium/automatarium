@@ -1,18 +1,29 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { styled } from 'goober';
 import { useLabStore, useLabsStore, useProjectStore } from '/src/stores';
 
-const LabInstructionsWrapper = styled('div')`
+const LabInstructionsWrapper = styled('div')<{ width: string }>`
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Pushes pagination to the bottom */
-  width: 250px;
+  justify-content: space-between;
+  width: ${(props) => props.width}; /* Dynamic width */
   padding: 16px;
-  background-color: var(--surface); /* Using the same color scheme */
+  background-color: var(--surface);
   border-right: 1px solid var(--surface);
   height: 86vh;
   overflow-y: auto;
-  color: var(--white); /* Text color */
+  color: var(--white);
+  position: relative; /* To position the resize handle */
+`;
+
+const ResizeHandle = styled('div')`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 1px;
+  cursor: ew-resize;
+  background-color: var(--primary); /* For visibility */
 `;
 
 const TitleWrapper = styled('div')`
@@ -118,11 +129,34 @@ const LabInstructions = () => {
   const upsertLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
 
-  
+  const [panelWidth, setPanelWidth] = useState('250px');
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
 
   const [isEditing, setIsEditing] = useState(false);
   const [question, setQuestion] = useState('');
 
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Start the resizing process
+    const startX = e.clientX;
+    const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250;
+
+    const handleMouseMove = (moveEvent: MouseEvent) => {
+      const newWidth = startWidth + (moveEvent.clientX - startX);
+      setPanelWidth(`${newWidth}px`);
+    };
+
+    const handleMouseUp = () => {
+      // Clean up event listeners after resizing
+      document.removeEventListener('mousemove', handleMouseMove);
+      document.removeEventListener('mouseup', handleMouseUp);
+    };
+
+    document.addEventListener('mousemove', handleMouseMove);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+  
   useEffect(() => {
     if (lab) {
       setQuestion(questions[currentProject._id] || '');
@@ -163,7 +197,7 @@ const LabInstructions = () => {
 
   // If there are no questions or lab data yet, show a loading or fallback message
   if (!questions || total_questions === 0 || !lab) {
-    return <LabInstructionsWrapper>Loading lab instructions...</LabInstructionsWrapper>;
+    return <LabInstructionsWrapper width={panelWidth}>Loading lab instructions...</LabInstructionsWrapper>;
   }
 
   const formattedInstructions = question.split('\n').map((line, index) => (
@@ -174,7 +208,7 @@ const LabInstructions = () => {
   ));
 
   return (
-    <LabInstructionsWrapper>
+    <LabInstructionsWrapper ref={panelRef} width={panelWidth}>
       <div>
         <TitleWrapper>
           <Title>Question {currentQuestionIndex + 1}</Title>
@@ -219,6 +253,7 @@ const LabInstructions = () => {
           &gt;
         </PaginationButton>
       </PaginationWrapper>
+      <ResizeHandle onMouseDown={handleMouseDown} />
     </LabInstructionsWrapper>
   );
 };
