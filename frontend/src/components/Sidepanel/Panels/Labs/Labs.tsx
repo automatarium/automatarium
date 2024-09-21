@@ -38,7 +38,8 @@ const Labs = () => {
     setName(titleInput);
     setLabDescription(titleDescription);
     setTitleIsEditing(false); // Exit edit mode after saving
-    saveLab()
+    const lab = useLabStore.getState().lab
+    upsertLab(lab)
   };
 
   // Cancel editing and reset the input fields to the stored values
