@@ -33,11 +33,11 @@ const Editor = () => {
   const showLabWindow = useLabStore(s => s.showLabWindow)
   const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
 
-  //number:  lab._id + 1, description: lab.description 
-  const questions = lab.projects.map((project, index) => ({
+  // Check if lab is available and has projects before mapping them
+  const questions = lab?.projects?.map((project, index) => ({
     number: index + 1, // Project number starting from 1
     description: lab.description 
-  }));
+  })) || []; // Provide a default empty array if no lab or projects are available
   
   console.log(questions)
   
