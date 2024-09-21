@@ -162,7 +162,6 @@ const LabInstructions = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [question, setQuestion] = useState('');
 
-  console.log(currentQuestionIndex)
   const handleMouseDown = (e: React.MouseEvent) => {
     // Start the resizing process
     const startX = e.clientX;
