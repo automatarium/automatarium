@@ -18,12 +18,8 @@ import {
   DEFAULT_PROJECT_COLOR
 } from '/src/config'
 
-export interface LabProjectData {
-  labId: string,
-  labQuestion: string,
-}
 
-export type LabProject = Project & {_id: string} & {lab: LabProjectData}
+export type LabProject = Project & {_id: string} 
 
 export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): LabProject => ({
   projectType,
@@ -51,10 +47,6 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
     color: 'pink'
   },
-  lab: {
-    labId: '',
-    labQuestion: ''
-  }
 })
 
 export interface LabMetaData {
@@ -65,10 +57,13 @@ export interface LabMetaData {
   version: string
 }
 
+type LabQuestionsDict = Record<string, string>;
+
 export type StoredLab = {
   _id: string,
   description: string,
   projects: LabProject[],
+  questions: LabQuestionsDict,
   meta: LabMetaData,
   showLabWindow: boolean,
 }
@@ -77,6 +72,7 @@ export const createNewLab = (description: string = 'Write a description here'): 
   _id: crypto.randomUUID(),
   description,
   projects: [] as LabProject[],
+  questions: {} as LabQuestionsDict,
   meta: {
     name: randomProjectName(),
     dateCreated: new Date().getTime(),
@@ -102,7 +98,6 @@ interface LabStore {
   setName: (name: string) => void;
   setShowLabWindow: (show: boolean) => void;
   setLabDescription: (description: string) => void;
-  editLabQuestion: (pid: string, newQuestion: string) => void; 
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
@@ -134,16 +129,15 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
   showLabWindow: false,
   lastChangeDate: null,
   setShowLabWindow: (show: boolean) => set(() => ({ showLabWindow: show })),
-  editLabQuestion: (pid: string, newQuestion: string) => set((state) => ({
+  upsertQuestion: (projectId: string, question: string) => set((state) => ({
     lab: {
       ...state.lab,
-      projects: state.lab?.projects.map(project => 
-        project._id === pid
-          ? { ...project, lab: { ...project.lab, labQuestion: newQuestion } }
-          : project
-      )
-    },
-    lastChangeDate: new Date().getTime(),
+      questions: { 
+        ...state.lab.questions, 
+        [projectId]: question 
+      },
+      lastChangeDate: new Date().getTime(),
+    }
   })),
 }), {
   name: 'automatarium-lab',
