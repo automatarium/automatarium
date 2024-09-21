@@ -99,6 +99,7 @@ interface LabStore {
   setShowLabWindow: (show: boolean) => void;
   setLabDescription: (description: string) => void;
   upsertQuestion: (pid: string, question: string) => void;
+  deleteQuestion: (pid: string) => void;
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
@@ -139,6 +140,15 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
       },
       lastChangeDate: new Date().getTime(),
     }
+  })),
+  deleteQuestion: (pid: string) => set((state) => ({
+    lab: {
+      ...state.lab,
+      questions: Object.fromEntries(
+        Object.entries(state.lab?.questions || {}).filter(([key]) => key !== pid)
+      ),
+    },
+    lastChangeDate: new Date().getTime(),
   })),
 }), {
   name: 'automatarium-lab',

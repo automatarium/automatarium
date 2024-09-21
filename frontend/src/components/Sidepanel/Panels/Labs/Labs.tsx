@@ -5,7 +5,7 @@ import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
 import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, Select, EditQuestionContainer, OptionButton, OptionInput } from './labsStyle'
 
 const Labs = () => {
-  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, setName, setLabDescription, setProjects } = useLabStore()
+  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, upsertQuestion, deleteQuestion, setName, setLabDescription, setProjects } = useLabStore()
   const upsertLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
   const currentProject = useProjectStore(s => s.project)
@@ -68,6 +68,9 @@ const Labs = () => {
     // Insert in current lab's list of project
     upsertProject(newLabProject)
 
+    // Create question in lab's list of question
+    upsertQuestion(newLabProject._id, "")
+
     // Set the project for the editor
     setProject(newLabProject)
   }
@@ -91,6 +94,7 @@ const Labs = () => {
   const handleDeleteQuestion = (_lab: LabProject) => {
     // Delete projects from lab
     deleteProject(_lab._id)
+    deleteQuestion(_lab._id)
     if (_lab._id === currentProject._id) {
       const remainingProjects = lab.projects.filter((proj) => proj._id !== _lab._id);
       setProject(remainingProjects[0]); // Set the first remaining project as the current project
