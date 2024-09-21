@@ -78,17 +78,25 @@ const Labs = () => {
   const handleEditQuestion = (_lab: LabProject) => {
     // TODO: Check if current project has unsaved changes and confirm with user
 
-    // Save current changes before moving to another question
-    saveLab()
-    // Set the project for the editor
-    setProject(_lab)
+    if (_lab._id !== currentProject._id){
+      // Save current changes before moving to another question
+      saveLab()
+      // Set the project for the editor
+      setProject(_lab)
+    }
+
+    if (showLabWindow === false) {
+      setShowLabWindow(true)
+    }
   }
 
   const handleOpenQuestion = (_lab: LabProject) => {
-    // Save current changes before moving to another question
-    saveLab()
-    // Set the project for the editor
-    setProject(_lab)
+    if (_lab._id !== currentProject._id){
+      // Save current changes before moving to another question
+      saveLab()
+      // Set the project for the editor
+      setProject(_lab)
+    }
   }
 
   const handleDeleteQuestion = (_lab: LabProject) => {
@@ -195,7 +203,11 @@ const Labs = () => {
               >
                 <td onClick={() => handleOpenQuestion(q)}>{`Question ${index + 1}`}</td>
                 <td>
-                  <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
+                  <EditButton 
+                    onClick={() => handleEditQuestion(q)}
+                  >
+                    Edit
+                  </EditButton>
                   <RemoveButton 
                     onClick={() => handleDeleteQuestion(q)}
                     disabled={lab.projects.length <= 1}
