@@ -78,25 +78,22 @@ const Labs = () => {
   const handleEditQuestion = (_lab: LabProject) => {
     // TODO: Check if current project has unsaved changes and confirm with user
 
-    if (_lab._id !== currentProject._id){
-      // Save current changes before moving to another question
-      saveLab()
-      // Set the project for the editor
-      setProject(_lab)
-    }
-
+    
+    // Save current changes before moving to another question
+    saveLab()
+    // Set the project for the editor
+    setProject(_lab)
+    // Open lab window
     if (showLabWindow === false) {
       setShowLabWindow(true)
     }
   }
 
   const handleOpenQuestion = (_lab: LabProject) => {
-    if (_lab._id !== currentProject._id){
-      // Save current changes before moving to another question
-      saveLab()
-      // Set the project for the editor
-      setProject(_lab)
-    }
+    // Save current changes before moving to another question
+    saveLab()
+    // Set the project for the editor
+    setProject(_lab)
   }
 
   const handleDeleteQuestion = (_lab: LabProject) => {
