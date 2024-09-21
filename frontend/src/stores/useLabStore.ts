@@ -18,7 +18,12 @@ import {
   DEFAULT_PROJECT_COLOR
 } from '/src/config'
 
-export type LabProject = Project & {_id: string}
+export interface LabProjectData {
+  labId: string,
+  labQuestion: string,
+}
+
+export type LabProject = Project & {_id: string} & {lab: LabProjectData}
 
 export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): LabProject => ({
   projectType,
@@ -45,6 +50,10 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
     orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
     color: 'pink'
+  },
+  lab: {
+    labId: '',
+    labQuestion: ''
   }
 })
 
@@ -60,7 +69,6 @@ export type StoredLab = {
   _id: string,
   description: string,
   projects: LabProject[],
-  labTasks: string[],
   meta: LabMetaData,
   showLabWindow: boolean,
 }
@@ -69,7 +77,6 @@ export const createNewLab = (description: string = 'Write a description here'): 
   _id: crypto.randomUUID(),
   description,
   projects: [] as LabProject[],
-  labTasks: [],
   meta: {
     name: randomProjectName(),
     dateCreated: new Date().getTime(),
@@ -92,9 +99,7 @@ interface LabStore {
   deleteProject: (pid: string) => void;
   getProject: (index: number) => LabProject | undefined;
   getProjectById: (id: string) => LabProject | undefined;
-  setLabTask: (index: number, task: string) => void;
   setName: (name: string) => void;
-  
   setShowLabWindow: (show: boolean) => void;
   setLabDescription: (description: string) => void;
 }
@@ -120,13 +125,6 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
     lab: { ...s.lab, meta: { ...s.lab.meta, name } },
     lastChangeDate: new Date().getTime()
   })),
-  setLabTask: (index: number, task: string) => set((state) => {
-    const updatedTasks = [...state.lab.labTasks];
-    if (index >= 0 && index < updatedTasks.length) {
-      updatedTasks[index] = task;
-    }
-    return { lab: { ...state.lab, labTasks: updatedTasks } };
-  }),
   setLabDescription: (description: string) => set((state) => ({
     lab: { ...state.lab, description },
     lastChangeDate: new Date().getTime(),

@@ -112,7 +112,7 @@ const SelectBox = styled('select')`
 
 const LabInstructions = () => {
   const { lab, setLabDescription } = useLabStore();
-  const questions = lab.labTasks;
+  const questions = [];
   const [isEditing, setIsEditing] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [instructions, setInstructions] = useState(questions[0] || '');
