@@ -14,6 +14,8 @@ const LabInstructionsWrapper = styled('div')<{ width: string }>`
   overflow-y: auto;
   color: var(--white);
   position: relative; /* To position the resize handle */
+  overflow-y: auto;
+  overflow: visible;
 `;
 
 const ResizeHandle = styled('div')`
@@ -21,9 +23,30 @@ const ResizeHandle = styled('div')`
   top: 0;
   right: 0;
   bottom: 0;
-  width: 1px;
+  width: 5px;
   cursor: ew-resize;
-  background-color: var(--primary); /* For visibility */
+  background-color: var(--surface); /* For visibility */
+`;
+
+const CloseButton = styled('button')`
+  position: absolute;
+  top: 17px;
+  right: -14px; /* Half outside the panel (adjust as needed) */
+  padding: 0.2em 0.5rem;
+  background-color: var(--toolbar);
+  color: var(--white);
+  border: none;
+  border-radius: 0.3em;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a slight shadow for emphasis */
+  z-index: 10; /* Ensure it's above other elements */
+
+  
 `;
 
 const TitleWrapper = styled('div')`
@@ -41,6 +64,7 @@ const Title = styled('h2')`
 
 const EditButton = styled('button')<{$active?: boolean}>`
   background-color: var(--primary);
+  margin-right: 10px;
   color: var(--white);
   border: 1px solid var(--primary);
   padding: 0.2em 0.5rem;
@@ -133,7 +157,7 @@ const LabInstructions = () => {
 
   const [panelWidth, setPanelWidth] = useState('250px');
   const panelRef = useRef<HTMLDivElement | null>(null);
-
+  const { setShowLabWindow } = useLabStore();   
 
   const [isEditing, setIsEditing] = useState(false);
   const [question, setQuestion] = useState('');
@@ -157,6 +181,10 @@ const LabInstructions = () => {
 
     document.addEventListener('mousemove', handleMouseMove);
     document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleClose = () => {
+    setShowLabWindow(false); // Close the lab panel
   };
   
   useEffect(() => {
@@ -210,7 +238,9 @@ const LabInstructions = () => {
   ));
 
   return (
+    
     <LabInstructionsWrapper ref={panelRef} width={panelWidth}>
+      <CloseButton onClick={handleClose}>x</CloseButton>
       <div>
         <TitleWrapper>
           <Title>Question {currentQuestionIndex + 1}</Title>
