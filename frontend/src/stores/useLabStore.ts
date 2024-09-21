@@ -98,6 +98,7 @@ interface LabStore {
   setName: (name: string) => void;
   setShowLabWindow: (show: boolean) => void;
   setLabDescription: (description: string) => void;
+  upsertQuestion: (pid: string, question: string) => void;
 }
 
 const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: GetState<LabStore>) => ({
@@ -129,12 +130,12 @@ const useLabStore = create<LabStore>()(persist((set: SetState<LabStore>, get: Ge
   showLabWindow: false,
   lastChangeDate: null,
   setShowLabWindow: (show: boolean) => set(() => ({ showLabWindow: show })),
-  upsertQuestion: (projectId: string, question: string) => set((state) => ({
+  upsertQuestion: (pid: string, question: string) => set((state) => ({
     lab: {
       ...state.lab,
       questions: { 
         ...state.lab.questions, 
-        [projectId]: question 
+        [pid]: question 
       },
       lastChangeDate: new Date().getTime(),
     }

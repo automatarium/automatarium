@@ -77,6 +77,7 @@ const NewFile = () => {
   const getLabProject = useLabStore(s => s.getProject)
   const deleteLab = useLabsStore(s => s.deleteLab)
   const latestLab = useLabStore.getState().lab
+  const addQuestion = useLabStore(s => s.upsertQuestion)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -154,6 +155,7 @@ const NewFile = () => {
       // set the new lab and lab project
       setLab(newLab);
       setProjects([newLabProject]);
+      addQuestion(newLabProject._id, '')
 
       // set lab project for editor
       setProject(getLabProject(0))
