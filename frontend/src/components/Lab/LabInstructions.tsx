@@ -121,11 +121,13 @@ const SelectBox = styled('select')`
 `;
 
 const LabInstructions = () => {
-  const { lab, upsertQuestion, upsertProject } = useLabStore();
+
+  
+  const { lab, upsertQuestion, upsertProject, getProjectById } = useLabStore();
   const questions = lab.questions;
   const total_questions = Object.keys(questions).length;
   const currentProject = useProjectStore(s => s.project);
-  const currentQuestionIndex = lab.projects.indexOf(currentProject)
+  const currentQuestionIndex = lab.projects.findIndex(project => project._id === currentProject._id)
   const upsertLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
 
@@ -136,7 +138,7 @@ const LabInstructions = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [question, setQuestion] = useState('');
 
-
+  console.log(currentQuestionIndex)
   const handleMouseDown = (e: React.MouseEvent) => {
     // Start the resizing process
     const startX = e.clientX;
