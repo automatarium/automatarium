@@ -6,12 +6,20 @@ import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
 import { Wrapper, RemoveButton , EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper} from './labsStyle'
 
 const Labs = () => {
-  const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, upsertQuestion, deleteQuestion, setName, setLabDescription, setProjects } = useLabStore()
-  const upsertLab = useLabsStore(s => s.upsertLab)
+  const setLabProjects = useLabStore(s => s.setProjects)
+  const setLabDescription = useLabStore(s => s.setLabDescription)
+  const setLabName = useLabStore(s => s.setName)
+  const deleteQuestionFromLab = useLabStore(s => s.deleteQuestion)
+  const addQuestionToLab = useLabStore(s => s.upsertQuestion)
+  const deleteProjectFromLab = useLabStore(s => s.deleteProject)
+  const updateProjectToLab = useLabStore(s => s.upsertProject)
+  const currentLab = useLabStore(s => s.lab)
+  const showLabWindow = useLabStore(s => s.showLabWindow)
+  const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
+  const updateLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
   const currentProject = useProjectStore(s => s.project)
  
-  
   // Current assessment description and title
   const [isTitleEditing, setTitleIsEditing] = useState(false);
   const [titleInput, setTitleInput] = useState('');
@@ -26,28 +34,27 @@ const Labs = () => {
   
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false); // Controls modal visibility
-  const [questionType, setQuestionType] = useState<ProjectType>(ProjectType.FSA); // Tracks selected question type
 
   // Load lab values into local state when lab changes
   useEffect(() => {
-    if (lab) {
-      setTitleInput(lab.meta.name || ''); // Populate title input
-      setTitleDescription(lab.description || ''); // Populate description input
+    if (currentLab) {
+      setTitleInput(currentLab.meta.name || ''); // Populate title input
+      setTitleDescription(currentLab.description || ''); // Populate description input
     }
-  }, [lab]);
+  }, [currentLab]);
 
   // Open edit mode and reset the input fields
   const handleEditClick = () => {
-    if (lab) {
-      setTitleInput(lab.meta.name || ''); // Reset title input
-      setTitleDescription(lab.description || ''); // Reset description input
+    if (currentLab) {
+      setTitleInput(currentLab.meta.name || ''); // Reset title input
+      setTitleDescription(currentLab.description || ''); // Reset description input
     }
     setTitleIsEditing(true); // Enable edit mode
   };
 
   // Save the new title and description to the store
   const handleEditSaveClick = () => {
-    setName(titleInput);
+    setLabName(titleInput);
     setLabDescription(titleDescription);
     setTitleIsEditing(false); // Exit edit mode after saving
     saveLab()
@@ -55,22 +62,20 @@ const Labs = () => {
 
   // Cancel editing and reset the input fields to the stored values
   const handleCancelClick = () => {
-    if (lab) {
-      setTitleInput(lab.meta.name || ''); // Reset title input
-      setTitleDescription(lab.description || ''); // Reset description input
+    if (currentLab) {
+      setTitleInput(currentLab.meta.name || ''); // Reset title input
+      setTitleDescription(currentLab.description || ''); // Reset description input
     }
     setTitleIsEditing(false); // Exit edit mode without saving
   };
 
-
+  // Save changes to lab
   const saveLab = () => {
     const project = useProjectStore.getState().project
-    upsertProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
-    const lab = useLabStore.getState().lab
-    upsertLab(lab)
+    updateProjectToLab({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
+    updateLab(currentLab)
   }
 
-  
   // Function to open the modal
   const handleAddQuestionClick = () => {
     setIsModalOpen(true);
@@ -80,17 +85,14 @@ const Labs = () => {
   const { register, handleSubmit } = useForm({ defaultValues: { questionType: ProjectType.FSA } })
 
   const handleAddQuestion = (data) => {
-    const newLabProject = createNewLabProject(data.questionType, lab.meta.name);
-    upsertProject(newLabProject); // Save new project with selected type
-    upsertQuestion(newLabProject._id, '') // Add new question
+    const newLabProject = createNewLabProject(data.questionType, currentLab.meta.name);
+    updateProjectToLab(newLabProject); // Save new project with selected type
+    addQuestionToLab(newLabProject._id, '') // Add new question
     setProject(newLabProject); // Set the project for editing
     setIsModalOpen(false); // Close the modal
   };
 
   const handleEditQuestion = (_lab: LabProject) => {
-    // TODO: Check if current project has unsaved changes and confirm with user
-
-    
     // Save current changes before moving to another question
     saveLab()
     // Set the project for the editor
@@ -109,44 +111,45 @@ const Labs = () => {
   }
 
   const handleDeleteQuestion = (_lab: LabProject) => {
-    // Delete projects from lab
-    deleteProject(_lab._id)
-    deleteQuestion(_lab._id)
+    // Delete project from current lab
+    deleteProjectFromLab(_lab._id)
+    // Delete question from current lab
+    deleteQuestionFromLab(_lab._id)
     if (_lab._id === currentProject._id) {
-      const remainingProjects = lab.projects.filter((proj) => proj._id !== _lab._id);
+      const remainingProjects = currentLab.projects.filter((proj) => proj._id !== _lab._id);
       setProject(remainingProjects[0]); // Set the first remaining project as the current project
     }
   }
 
   // Drag and drop
-  const [draggedIndex, setDraggedIndex] = useState<number | null>(null); // Track the index of the dragged item
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null) // Track the index of the dragged item
 
   const handleDragStart = (index: number) => {
-    setDraggedIndex(index); // Store the index of the dragged question
+    setDraggedIndex(index) // Store the index of the dragged question
   };
 
   const handleDrop = (dropIndex: number) => {
   if (draggedIndex === null || draggedIndex === dropIndex) return; // Avoid rearranging if the index hasn't changed
 
-  const updatedProjects = [...lab.projects]; // Clone projects array
-  const [movedProject] = updatedProjects.splice(draggedIndex, 1); // Remove dragged project
+  const updatedProjects = [...currentLab.projects] // Clone projects array
+  const [movedProject] = updatedProjects.splice(draggedIndex, 1) // Remove dragged project
   updatedProjects.splice(dropIndex, 0, movedProject); // Insert it at the drop location
 
-  setProjects(updatedProjects); // Update the project order
-  setDraggedIndex(null); // Reset dragged index
+  setLabProjects(updatedProjects) // Update the project order
+  setDraggedIndex(null) // Reset dragged index
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
-    e.preventDefault(); // Allow drop by preventing the default behavior
+    e.preventDefault() // Allow drop by preventing the default behavior
   };
   
   return (
     <>
       <SectionLabel>Current Assessment</SectionLabel>
-      {!lab && <>
+      {!currentLab && <>
         <Wrapper>You're not working on a lab right now</Wrapper>
          </>}
-      {lab && <>
+      {currentLab && <>
         <Wrapper>
       {isTitleEditing ? (
         <>
@@ -172,9 +175,9 @@ const Labs = () => {
       ) : (
         <>
           <TitleSection>
-            <h2>{lab?.meta.name || 'Lab Title'}</h2> {/* Display current lab title */}
+            <h2>{currentLab?.meta.name || 'Lab Title'}</h2> {/* Display current lab title */}
           </TitleSection>
-          <p>{lab?.description || 'Lab Description'}</p> {/* Display current lab description */}
+          <p>{currentLab?.description || 'Lab Description'}</p> {/* Display current lab description */}
           <Button onClick={handleEditClick}>Edit</Button> {/* Toggle edit mode */}
         </>
       )}
@@ -186,7 +189,6 @@ const Labs = () => {
         <Switch type="checkbox" checked={showLabWindow} onChange={() => setShowLabWindow(!showLabWindow)}/>
       </Preference>
     </Wrapper>
-
     <>
     <SectionLabel>Questions</SectionLabel>
     <Wrapper>
@@ -198,7 +200,7 @@ const Labs = () => {
           </tr>
         </thead>
         <tbody>
-          {lab.projects.map((q, index) => (
+          {currentLab.projects.map((q, index) => (
             <tr 
             key={q._id}
             style={{
@@ -214,7 +216,7 @@ const Labs = () => {
                 <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
                 <RemoveButton 
                   onClick={() => handleDeleteQuestion(q)}
-                  disabled={lab.projects.length <= 1}
+                  disabled={currentLab.projects.length <= 1}
                 >
                   Remove
                 </RemoveButton>
@@ -224,46 +226,40 @@ const Labs = () => {
         </tbody>
       </Table>
       <Button onClick={handleAddQuestionClick}>+ Add question</Button>
-
     </Wrapper>
-
-    <Modal
-      title="Select Question Type"
-      description="Choose the type of question that you would like to add."
-      isOpen={isModalOpen}
-      onClose={() => setIsModalOpen(false)}
-      actions={
-        <>
-          <Button secondary onClick={() => setIsModalOpen(false)}>Cancel</Button>
-          <Button type="submit" form="question_type_form">Save</Button>
-        </>
-      }
-      style={{ paddingInline: 0 }}
-    >
-      <form id="question_type_form" onSubmit={handleSubmit(handleAddQuestion)}>
-        <SectionLabel>Question Type</SectionLabel>
-        <FieldWrapper>
-          <span>Select Type</span>
-          <Input type="select" small {...register('questionType')}>
-            <option value="FSA">FSA</option>
-            <option value="PDA">PDA</option>
-            <option value="TM">TM</option>
-          </Input>
-        </FieldWrapper>
-      </form>
-    </Modal>
-
-
+      <Modal
+        title="Select Question Type"
+        description="Choose the type of question that you would like to add."
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        actions={
+          <>
+            <Button secondary onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button type="submit" form="question_type_form">Save</Button>
+          </>
+        }
+        style={{ paddingInline: 0 }}
+      >
+        <form id="question_type_form" onSubmit={handleSubmit(handleAddQuestion)}>
+          <SectionLabel>Question Type</SectionLabel>
+          <FieldWrapper>
+            <span>Select Type</span>
+            <Input type="select" small {...register('questionType')}>
+              <option value="FSA">FSA</option>
+              <option value="PDA">PDA</option>
+              <option value="TM">TM</option>
+            </Input>
+          </FieldWrapper>
+        </form>
+      </Modal>
     </>
-
-
       <SectionLabel>Export</SectionLabel>
       <Wrapper>
         <Button>Export as Automatrium lab file</Button>
         <Button>Export as URL</Button>
       </Wrapper>
     </>
-  }
+    }
   </>
   );
 };
