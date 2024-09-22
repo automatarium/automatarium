@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Car, Settings } from 'lucide-react'
+import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -7,25 +7,22 @@ import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useLabStore, useLabsStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
-import {createNewLab, createNewLabProject, LabProject, StoredLab} from 'src/stores/useLabStore'
 import { dispatchCustomEvent } from '/src/util/events'
+import { LabProject, StoredLab, createNewLab, createNewLabProject,  } from 'src/stores/useLabStore'
 
-import { CardList, DeleteConfirmationDialog, NewProjectCard } from './components'
+import { CardList, DeleteConfirmationDialog, NewProjectCard, LabCard } from './components'
 import FSA from './images/FSA'
 import PDA from './images/PDA'
 import TM from './images/TM'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
+import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
-import SteppingLab from '/src/components/Sidepanel/Panels/SteppingLab/SteppingLab'
-import LabCard from '/src/components/labCard/labCard'
 
 const NewFile = () => {
   const navigate = useNavigate()
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
-  const labs = useLabsStore(s => s.labs)
   const thumbnails = useThumbnailStore(s => s.thumbnails)
   const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const preferences = usePreferencesStore(state => state.preferences)
@@ -48,7 +45,6 @@ const NewFile = () => {
   const [kebabRefsLatestLab, setKebabRefsLatestLab] = useState<RefObject<HTMLAnchorElement> | null>(null)
 
   /// Tour stuff
-
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
@@ -72,11 +68,12 @@ const NewFile = () => {
   }
 
   // Labs
+  const labs = useLabsStore(s => s.labs)
   const setLab = useLabStore(s => s.setLab)
-  const setProjects = useLabStore(s => s.setProjects)
+  const setLabProjects = useLabStore(s => s.setProjects)
   const getLabProject = useLabStore(s => s.getProject)
   const deleteLab = useLabsStore(s => s.deleteLab)
-  const latestLab = useLabStore.getState().lab
+  const currentLab = useLabStore(s => s.lab)
   const addQuestion = useLabStore(s => s.upsertQuestion)
 
   // Dynamic styling values for new project thumbnails
@@ -109,23 +106,23 @@ const NewFile = () => {
     }
   }, [projects, thumbnails])
 
-  // separate refs to avoid kebab menu showing up in the wrong place
-  // for "Your Projects Section"
+  // Separate refs to avoid kebab menu showing up in the wrong place
+  // For "Your Projects Section"
   useEffect(() => {
     setKebabRefsProjects(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
   }, [projects])
 
-  // for "Your Labs Section"
+  // For "Your Labs Section"
   useEffect(() => {
     setKebabRefsLabs(Array.from({ length: labs.length }, () => createRef<HTMLAnchorElement>()))
   }, [labs])
 
-  // for "Your Latest Lab Section"
+  // For "Your Latest Lab Section"
   useEffect(() => {
-    if (latestLab) {
+    if (currentLab) {
       setKebabRefsLatestLab(createRef<HTMLAnchorElement>())
     }
-  }, [latestLab])
+  }, [currentLab])
 
 
   const handleNewFile = (type: ProjectType) => {
@@ -148,25 +145,20 @@ const NewFile = () => {
   }
 
   const handleNewLabFile = (type: ProjectType ) => {
-      // create a new lab and lab project
+      // Create a new lab, lab project and question
       const newLab = createNewLab();
       const newLabProject = createNewLabProject(type, newLab.meta.name);
-
-      // set the new lab and lab project
-      setLab(newLab);
-      setProjects([newLabProject]);
       addQuestion(newLabProject._id, '')
 
-      // set lab project for editor
+      // Set the new lab and lab project
+      setLab(newLab);
+      setLabProjects([newLabProject]);
+      
+      // Set lab project for editor
       setProject(getLabProject(0))
 
-      // go to the editor
+      // Go to the editor
       navigate('/editor');
-  };
-
-  const handleLoadLabProject = (project: LabProject) => {
-    setProjects([project])
-    navigate('/editor')
   };
 
   const handleLoadLab = (lab: StoredLab) => {
@@ -177,7 +169,7 @@ const NewFile = () => {
 
   const handleDeleteLab = (pid: string) => {
     deleteLab(pid)
-    if (latestLab && latestLab._id === pid) {
+    if (currentLab && currentLab._id === pid) {
       setLab(null)
     }
   }
@@ -283,17 +275,17 @@ const NewFile = () => {
       />
     </CardList>
 
-    {latestLab && (
+    {currentLab && (
       // conditional rendering for latest lab. 
       // showing the latest lab if more than one lab is stored and nothing if no
       // labs exist
         <CardList title="Ongoing Lab" style={{ gap: '1.5em .4em' }}>
           <LabCard
-            key={latestLab._id}
-            name={latestLab?.meta?.name ?? '<Untitled>'}
-            image={thumbnails[getThumbTheme(latestLab._id)]}
+            key={currentLab._id}
+            name={currentLab?.meta?.name ?? '<Untitled>'}
+            image={thumbnails[getThumbTheme(currentLab._id)]}
             width={PROJECT_THUMBNAIL_WIDTH}
-            onClick={() => handleLoadLab(latestLab)}
+            onClick={() => handleLoadLab(currentLab)}
             $kebabClick={(event) => {
               event.stopPropagation();
               setKebabOpen(true);
@@ -303,8 +295,8 @@ const NewFile = () => {
                 y: thisRef.offsetTop + thisRef.offsetHeight
               } as Coordinate;
               setCoordinates(coords);
-              setSelectedProjectId(latestLab._id); 
-              setSelectedProjectName(latestLab.meta.name)
+              setSelectedProjectId(currentLab._id); 
+              setSelectedProjectName(currentLab.meta.name)
             }}
             $kebabRef={kebabRefsLatestLab}
             $istemplate={false}
@@ -335,7 +327,7 @@ const NewFile = () => {
             } as Coordinate;
             setCoordinates(coords);
             setSelectedProjectId(lab._id); 
-            setSelectedProjectName(latestLab.meta.name);
+            setSelectedProjectName(currentLab.meta.name);
           }}
           $kebabRef={kebabRefsLabs?.[index] ?? null}
           $istemplate={false}
