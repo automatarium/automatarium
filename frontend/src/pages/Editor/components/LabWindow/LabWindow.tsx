@@ -18,83 +18,82 @@ const LabWindow = () => {
   const currentLab = useLabStore(s => s.lab)
   const updateQuestion = useLabStore(s => s.upsertQuestion)
   const updateProject = useLabStore(s => s.upsertProject)
-  const questions = currentLab.questions;
-  const total_questions = Object.keys(questions).length;
-  const currentProject = useProjectStore(s => s.project);
+  const questions = currentLab.questions
+  const total_questions = Object.keys(questions).length
+  const currentProject = useProjectStore(s => s.project)
   const currentQuestionIndex = currentLab.projects.findIndex(project => project._id === currentProject._id)
   const updateLab = useLabsStore(s => s.upsertLab)
   const setProject = useProjectStore(s => s.set)
+  const currentQuestion = questions[currentProject._id]
 
-  const [panelWidth, setPanelWidth] = useState('250px');
-  const panelRef = useRef<HTMLDivElement | null>(null);
-  const { setShowLabWindow } = useLabStore();   
+  const [panelWidth, setPanelWidth] = useState('250px')
+  const panelRef = useRef<HTMLDivElement | null>(null)
+  const { setShowLabWindow } = useLabStore()
 
-  const [isEditing, setIsEditing] = useState(false);
-  const [question, setQuestion] = useState('');
+  const [isEditing, setIsEditing] = useState(false)
+  const [question, setQuestion] = useState(currentQuestion || '')
 
   const handleMouseDown = (e: React.MouseEvent) => {
-    // Start the resizing process
-    const startX = e.clientX;
-    const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250;
+    const startX = e.clientX
+    const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
-      const newWidth = startWidth + (moveEvent.clientX - startX);
-      setPanelWidth(`${newWidth}px`);
+      const newWidth = startWidth + (moveEvent.clientX - startX)
+      setPanelWidth(`${newWidth}px`)
     };
 
     const handleMouseUp = () => {
-      // Clean up event listeners after resizing
-      document.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseup', handleMouseUp);
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
     };
 
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', handleMouseUp);
+    document.addEventListener('mousemove', handleMouseMove)
+    document.addEventListener('mouseup', handleMouseUp)
   };
 
   const handleClose = () => {
-    setShowLabWindow(false); // Close the lab panel
+    setShowLabWindow(false) // Close the lab panel
   };
-  
+
   useEffect(() => {
-    if (currentLab) {
-      setQuestion(questions[currentProject._id] || '');
+    // Ensure that the question is updated when the current question or lab changes
+    if (currentLab && currentProject._id) {
+      setQuestion(questions[currentProject._id] || '')
     }
-  }, [currentLab]);
+  }, [currentLab, currentProject._id])
 
   const saveLab = () => {
     const project = useProjectStore.getState().project
     updateProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
     updateLab(currentLab)
-  }
+  };
 
   const handleEditClick = () => {
     if (isEditing) {
-      // Update question
-      const currentQuestionId = Object.keys(questions)[currentQuestionIndex];
-      updateQuestion(currentQuestionId, question);
+      const currentQuestionId = Object.keys(questions)[currentQuestionIndex]
+      updateQuestion(currentQuestionId, question)
       updateLab(currentLab)
     }
-    setIsEditing(!isEditing);
+    setIsEditing(!isEditing)
   };
 
   const handleQuestionChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setQuestion(e.target.value);
+    setQuestion(e.target.value)
   };
 
   const handlePageChange = (index: number) => {
-    saveLab()
+    saveLab();
     setProject(currentLab.projects[index])
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selectedQuestionIndex = parseInt(e.target.value, 10);
-    handlePageChange(selectedQuestionIndex);
+    const selectedQuestionIndex = parseInt(e.target.value, 10)
+    handlePageChange(selectedQuestionIndex)
   };
 
   // If there are no questions or lab data yet, show a loading or fallback message
   if (!questions || total_questions === 0 || !currentLab) {
-    return <LabWindowWrapper width={panelWidth}>Loading lab instructions...</LabWindowWrapper>;
+    return <LabWindowWrapper width={panelWidth}>Loading lab instructions...</LabWindowWrapper>
   }
 
   const formattedInstructions = question.split('\n').map((line, index) => (
@@ -105,7 +104,6 @@ const LabWindow = () => {
   ));
 
   return (
-    
     <LabWindowWrapper ref={panelRef} width={panelWidth}>
       <CloseButton onClick={handleClose}>x</CloseButton>
       <div>
