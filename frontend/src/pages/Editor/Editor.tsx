@@ -22,7 +22,6 @@ const Editor = () => {
   const resetExportSettings = useExportStore(s => s.reset)
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
-  const [instructions, setInstructions] = useState<string>('Instructions will be shown here.')
   const [showTour, setShowTour] = useState(false)
   const closeTour = () => {
     setShowTour(false)
