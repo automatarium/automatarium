@@ -74,19 +74,19 @@ export const RemoveButton = styled('button')`
 `;
 
 // Styles for the Add Question button
-export const AddQuestionButton = styled('button')`
-  background-color: var(--primary);
-  color: white;
-  border: none;
-  border-radius: 0.3rem;
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  font-size: 1rem;
-  text-align: center;
-  transition: background-color 0.3s;
-  width: 100%;
+// export const AddQuestionButton = styled('button')`
+//   background-color: var(--primary);
+//   color: white;
+//   border: none;
+//   border-radius: 0.3rem;
+//   padding: 0.4rem 0.8rem;
+//   cursor: pointer;
+//   font-size: 1rem;
+//   text-align: center;
+//   transition: background-color 0.3s;
+//   width: 100%;
 
-`;
+// `;
 
 // Table header styles 
 export const TableHeader = styled('thead')`

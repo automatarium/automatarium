@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useLabStore, useLabsStore, useProjectStore } from '/src/stores'
 import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
-import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, FieldWrapper} from './labsStyle'
+import { Wrapper, RemoveButton , EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper} from './labsStyle'
 
 const Labs = () => {
   const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, setName, setLabDescription, setProjects } = useLabStore()
@@ -216,7 +216,7 @@ const Labs = () => {
           ))}
         </tbody>
       </Table>
-      <AddQuestionButton onClick={handleAddQuestionClick}>+ Add question</AddQuestionButton>
+      <Button onClick={handleAddQuestionClick}>+ Add question</Button>
 
     </Wrapper>
 
