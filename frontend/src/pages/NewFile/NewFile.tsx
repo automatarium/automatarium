@@ -8,7 +8,7 @@ import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useLabStore, useLabsStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
-import { LabProject, StoredLab, createNewLab, createNewLabProject,  } from 'src/stores/useLabStore'
+import { StoredLab, createNewLab, createNewLabProject,  } from 'src/stores/useLabStore'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard, LabCard } from './components'
 import FSA from './images/FSA'
