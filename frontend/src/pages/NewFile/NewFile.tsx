@@ -145,14 +145,16 @@ const NewFile = () => {
   }
 
   const handleNewLabFile = (type: ProjectType ) => {
-      // Create a new lab, lab project and question
+      // Create a new lab and lab project 
       const newLab = createNewLab();
       const newLabProject = createNewLabProject(type, newLab.meta.name);
-      addQuestion(newLabProject._id, '')
 
       // Set the new lab and lab project
       setLab(newLab);
       addLabProject(newLabProject);
+
+      // Add question to lab
+      addQuestion(newLabProject._id, '')
       
       // Set lab project for editor
       setProject(getLabProject(0))
