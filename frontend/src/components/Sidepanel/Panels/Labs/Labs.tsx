@@ -82,6 +82,7 @@ const Labs = () => {
   const handleAddQuestion = (data) => {
     const newLabProject = createNewLabProject(data.questionType, lab.meta.name);
     upsertProject(newLabProject); // Save new project with selected type
+    upsertQuestion(newLabProject._id, '') // Add new question
     setProject(newLabProject); // Set the project for editing
     setIsModalOpen(false); // Close the modal
   };
