@@ -1,6 +1,5 @@
 import { create, SetState, GetState } from 'zustand';
 import { persist } from 'zustand/middleware';
-
 import { randomProjectName } from '../util/projectName'
 
 import {
@@ -18,7 +17,9 @@ import {
   DEFAULT_PROJECT_COLOR
 } from '/src/config'
 
-
+/**
+ * A new project type for labs based on the pre-existing project type
+ */
 export type LabProject = Project & {_id: string} 
 
 export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): LabProject => ({
@@ -45,7 +46,8 @@ export const createNewLabProject = (projectType: ProjectType = DEFAULT_PROJECT_T
     statePrefix: DEFAULT_STATE_PREFIX,
     orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    color: 'pink'
+    // All lab projects are set to pink to distinguish the difference between a lab and a normal project
+    color: 'pink' 
   },
 })
 
@@ -59,13 +61,17 @@ export interface LabMetaData {
 
 type LabQuestionsDict = Record<string, string>;
 
+/**
+ * Lab type for storing projects and questions. Projects are stored in an array
+ * and questions are stored as a dictionary where the key is the project ID and
+ * the value is the question itself which is stored as a string type. 
+ */
 export type StoredLab = {
   _id: string,
   description: string,
   projects: LabProject[],
   questions: LabQuestionsDict,
   meta: LabMetaData,
-  showLabWindow: boolean,
 }
 
 export const createNewLab = (description: string = 'Write a description here'): StoredLab => ({
@@ -80,8 +86,6 @@ export const createNewLab = (description: string = 'Write a description here'): 
     version: SCHEMA_VERSION,
     automatariumVersion: APP_VERSION
   },
-  showLabWindow: false,
-
 })
 
 interface LabStore {
