@@ -1,12 +1,13 @@
 import { styled } from 'goober'
+import { useLabStore } from '/src/stores'
 
-export const ContentContainer = styled('div')`
+export const ContentContainer = styled('div')<{$showLabWindow?: boolean}>`
   display: flex;         
   flex-direction: column; 
   align-items: center;   
   justify-content: flex-start; 
   bottom: 1rem;
-  left: 5rem;
+  left: ${p => p.$showLabWindow ? '23rem' : '5rem'}; 
   padding: 1.2rem;
   background: var(--surface);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -14,7 +15,7 @@ export const ContentContainer = styled('div')`
   font-size: 12px;
   font-weight: bold;
   position: fixed;
-`
+`;
 
 export const StackContainer = styled('div')`
   padding: 0.2rem;

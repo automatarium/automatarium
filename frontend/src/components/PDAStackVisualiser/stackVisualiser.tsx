@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useEvent } from '/src/hooks'
-import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore } from '/src/stores'
+import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore, useLabStore } from '/src/stores'
 import { ContentContainer, StackContainer, StackItem, ToggleStackButton, Label } from './stackVisualiserStyle'
 
 const PDAStackVisualiser = () => {
@@ -12,6 +12,9 @@ const PDAStackVisualiser = () => {
   const traceIDx = useTMSimResultStore((s) => s.traceIDx)
   const stackInfo = usePDAVisualiserStore((s) => s.stack)
   const projectType = useProjectStore((s) => s.project.config.type)
+
+  // Lab window
+  const showLabWindow = useLabStore((s) => s.showLabWindow)
 
   // Stack
   const stack: { element: string, key: number }[] = []
@@ -43,7 +46,7 @@ const PDAStackVisualiser = () => {
 
   return (
     projectType === 'PDA' && showStackVisualiser && (
-      <ContentContainer>
+      <ContentContainer $showLabWindow={showLabWindow}>
         <Label>Stack</Label>
         <ToggleStackButton onClick={() => setShowStackTab((e) => !e)}>
           {showStackTab ? '-' : '+'}
