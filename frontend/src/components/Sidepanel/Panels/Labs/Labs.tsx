@@ -92,31 +92,31 @@ const Labs = () => {
     setIsModalOpen(false); // Close the modal
   };
 
-  const handleEditQuestion = (_lab: LabProject) => {
+  const handleEditQuestion = (_project: LabProject) => {
     // Save current changes before moving to another question
     saveLab()
     // Set the project for the editor
-    setProject(_lab)
+    setProject(_project)
     // Open lab window
     if (showLabWindow === false) {
       setShowLabWindow(true)
     }
   }
 
-  const handleOpenQuestion = (_lab: LabProject) => {
+  const handleOpenQuestion = (_project: LabProject) => {
     // Save current changes before moving to another question
     saveLab()
     // Set the project for the editor
-    setProject(_lab)
+    setProject(_project)
   }
 
-  const handleDeleteQuestion = (_lab: LabProject) => {
+  const handleDeleteQuestion = (_project: LabProject) => {
     // Delete project from current lab
-    deleteProjectFromLab(_lab._id)
+    deleteProjectFromLab(_project._id)
     // Delete question from current lab
-    deleteQuestionFromLab(_lab._id)
-    if (_lab._id === currentProject._id) {
-      const remainingProjects = currentLab.projects.filter((proj) => proj._id !== _lab._id);
+    deleteQuestionFromLab(_project._id)
+    if (_project._id === currentProject._id) {
+      const remainingProjects = currentLab.projects.filter((proj) => proj._id !== _project._id);
       setProject(remainingProjects[0]); // Set the first remaining project as the current project
     }
   }
