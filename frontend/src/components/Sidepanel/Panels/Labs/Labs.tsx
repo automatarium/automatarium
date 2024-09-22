@@ -1,8 +1,9 @@
-import { SectionLabel, Preference, Switch, Button, Input } from '/src/components'
+import { SectionLabel, Preference, Switch, Button, Input, Modal} from '/src/components'
 import { useState, useEffect } from 'react'
+import { useForm } from 'react-hook-form'
 import { useLabStore, useLabsStore, useProjectStore } from '/src/stores'
 import { createNewLabProject, LabProject } from 'src/stores/useLabStore'
-import { Wrapper, RemoveButton , EditButton, TextArea, AddQuestionButton, Table, TitleSection, ButtonContainer, Select, EditQuestionContainer, OptionButton, OptionInput } from './labsStyle'
+import { Wrapper, RemoveButton , EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper} from './labsStyle'
 
 const Labs = () => {
   const { lab, showLabWindow, setShowLabWindow, upsertProject, deleteProject, upsertQuestion, deleteQuestion, setName, setLabDescription, setProjects } = useLabStore()
@@ -15,6 +16,17 @@ const Labs = () => {
   const [isTitleEditing, setTitleIsEditing] = useState(false);
   const [titleInput, setTitleInput] = useState('');
   const [titleDescription, setTitleDescription] = useState('');
+
+  // enum for Project Types
+  enum ProjectType {
+    FSA = 'FSA',
+    PDA = 'PDA',
+    TM = 'TM',
+  }
+  
+  // Modal-related state management
+  const [isModalOpen, setIsModalOpen] = useState(false); // Controls modal visibility
+  const [questionType, setQuestionType] = useState<ProjectType>(ProjectType.FSA); // Tracks selected question type
 
   // Load lab values into local state when lab changes
   useEffect(() => {
@@ -58,22 +70,21 @@ const Labs = () => {
     upsertLab(lab)
   }
 
+  
+  // Function to open the modal
+  const handleAddQuestionClick = () => {
+    setIsModalOpen(true);
+  };
 
+  // Form handling using react-hook-form
+  const { register, handleSubmit } = useForm({ defaultValues: { questionType: ProjectType.FSA } })
 
-  // Table of questions
-  const handleAddQuestion = () => {
-    // Create lab project for new question
-    const newLabProject = createNewLabProject("FSA", lab.meta.name);
-
-    // Insert in current lab's list of project
-    upsertProject(newLabProject)
-
-    // Create question in lab's list of question
-    upsertQuestion(newLabProject._id, "")
-
-    // Set the project for the editor
-    setProject(newLabProject)
-  }
+  const handleAddQuestion = (data) => {
+    const newLabProject = createNewLabProject(data.questionType, lab.meta.name);
+    upsertProject(newLabProject); // Save new project with selected type
+    setProject(newLabProject); // Set the project for editing
+    setIsModalOpen(false); // Close the modal
+  };
 
   const handleEditQuestion = (_lab: LabProject) => {
     // TODO: Check if current project has unsaved changes and confirm with user
@@ -106,28 +117,27 @@ const Labs = () => {
     }
   }
 
+  // Drag and drop
+  const [draggedIndex, setDraggedIndex] = useState<number | null>(null); // Track the index of the dragged item
 
-   // Drag and drop
-   const [draggedIndex, setDraggedIndex] = useState<number | null>(null); // Track the index of the dragged item
+  const handleDragStart = (index: number) => {
+    setDraggedIndex(index); // Store the index of the dragged question
+  };
 
-   const handleDragStart = (index: number) => {
-     setDraggedIndex(index); // Store the index of the dragged question
-   };
- 
-   const handleDrop = (dropIndex: number) => {
-    if (draggedIndex === null || draggedIndex === dropIndex) return; // Avoid rearranging if the index hasn't changed
+  const handleDrop = (dropIndex: number) => {
+  if (draggedIndex === null || draggedIndex === dropIndex) return; // Avoid rearranging if the index hasn't changed
 
-    const updatedProjects = [...lab.projects]; // Clone projects array
-    const [movedProject] = updatedProjects.splice(draggedIndex, 1); // Remove dragged project
-    updatedProjects.splice(dropIndex, 0, movedProject); // Insert it at the drop location
+  const updatedProjects = [...lab.projects]; // Clone projects array
+  const [movedProject] = updatedProjects.splice(draggedIndex, 1); // Remove dragged project
+  updatedProjects.splice(dropIndex, 0, movedProject); // Insert it at the drop location
 
-    setProjects(updatedProjects); // Update the project order
-    setDraggedIndex(null); // Reset dragged index
-   };
- 
-   const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
-     e.preventDefault(); // Allow drop by preventing the default behavior
-   };
+  setProjects(updatedProjects); // Update the project order
+  setDraggedIndex(null); // Reset dragged index
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLTableRowElement>) => {
+    e.preventDefault(); // Allow drop by preventing the default behavior
+  };
   
   return (
     <>
@@ -169,56 +179,80 @@ const Labs = () => {
       )}
     </Wrapper>
 
-      <SectionLabel>Lab Settings</SectionLabel>
-      <Wrapper>
-        <Preference label="Open questions to the left">
-          <Switch type="checkbox" checked={showLabWindow} onChange={() => setShowLabWindow(!showLabWindow)}/>
-        </Preference>
-      </Wrapper>
+    <SectionLabel>Lab Settings</SectionLabel>
+    <Wrapper>
+      <Preference label="Open questions to the left">
+        <Switch type="checkbox" checked={showLabWindow} onChange={() => setShowLabWindow(!showLabWindow)}/>
+      </Preference>
+    </Wrapper>
 
-      <>
-      <SectionLabel>Questions</SectionLabel>
-      <Wrapper>
-        <Table>
-          <thead>
-            <tr>
-              <th>Question</th>
-              <th>Actions</th>
+    <>
+    <SectionLabel>Questions</SectionLabel>
+    <Wrapper>
+      <Table>
+        <thead>
+          <tr>
+            <th>Question</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {lab.projects.map((q, index) => (
+            <tr 
+            key={q._id}
+            style={{
+              backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent', // Highlight if it's the current project
+            }}
+            draggable={currentProject && currentProject._id === q._id}
+            onDragStart={() => handleDragStart(index)}
+            onDrop={() => handleDrop(index)}
+            onDragOver={handleDragOver}
+            >
+              <td onClick={() => handleOpenQuestion(q)}>{`Question ${index + 1}`}</td>
+              <td>
+                <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
+                <RemoveButton 
+                  onClick={() => handleDeleteQuestion(q)}
+                  disabled={lab.projects.length <= 1}
+                >
+                  Remove
+                </RemoveButton>
+              </td>
             </tr>
-          </thead>
-          <tbody>
-            {lab.projects.map((q, index) => (
-              <tr 
-              key={q._id}
-              style={{
-                backgroundColor: currentProject && currentProject._id === q._id ? 'var(--toolbar)' : 'transparent', // Highlight if it's the current project
-              }}
-              draggable={currentProject && currentProject._id === q._id}
-              onDragStart={() => handleDragStart(index)}
-              onDrop={() => handleDrop(index)}
-              onDragOver={handleDragOver}
-              >
-                <td onClick={() => handleOpenQuestion(q)}>{`Question ${index + 1}`}</td>
-                <td>
-                  <EditButton 
-                    onClick={() => handleEditQuestion(q)}
-                  >
-                    Edit
-                  </EditButton>
-                  <RemoveButton 
-                    onClick={() => handleDeleteQuestion(q)}
-                    disabled={lab.projects.length <= 1}
-                  >
-                    Remove
-                  </RemoveButton>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <AddQuestionButton onClick={handleAddQuestion}>+ Add question</AddQuestionButton>
+          ))}
+        </tbody>
+      </Table>
+      <Button onClick={handleAddQuestionClick}>+ Add question</Button>
 
-      </Wrapper>
+    </Wrapper>
+
+    <Modal
+      title="Select Question Type"
+      description="Choose the type of question that you would like to add."
+      isOpen={isModalOpen}
+      onClose={() => setIsModalOpen(false)}
+      actions={
+        <>
+          <Button secondary onClick={() => setIsModalOpen(false)}>Cancel</Button>
+          <Button type="submit" form="question_type_form">Save</Button>
+        </>
+      }
+      style={{ paddingInline: 0 }}
+    >
+      <form id="question_type_form" onSubmit={handleSubmit(handleAddQuestion)}>
+        <SectionLabel>Question Type</SectionLabel>
+        <FieldWrapper>
+          <span>Select Type</span>
+          <Input type="select" small {...register('questionType')}>
+            <option value="FSA">FSA</option>
+            <option value="PDA">PDA</option>
+            <option value="TM">TM</option>
+          </Input>
+        </FieldWrapper>
+      </form>
+    </Modal>
+
+
     </>
 
 
