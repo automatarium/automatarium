@@ -70,7 +70,7 @@ const NewFile = () => {
   // Labs
   const labs = useLabsStore(s => s.labs)
   const setLab = useLabStore(s => s.setLab)
-  const setLabProjects = useLabStore(s => s.setProjects)
+  const addLabProject = useLabStore(s => s.upsertProject)
   const getLabProject = useLabStore(s => s.getProject)
   const deleteLab = useLabsStore(s => s.deleteLab)
   const currentLab = useLabStore(s => s.lab)
@@ -152,7 +152,7 @@ const NewFile = () => {
 
       // Set the new lab and lab project
       setLab(newLab);
-      setLabProjects([newLabProject]);
+      addLabProject(newLabProject);
       
       // Set lab project for editor
       setProject(getLabProject(0))
