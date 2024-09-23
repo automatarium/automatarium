@@ -5,10 +5,10 @@ import { useNavigate } from 'react-router-dom'
 
 import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
-import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useLabStore, useLabsStore } from '/src/stores'
+import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
-import { StoredLab, createNewLab, createNewLabProject,  } from 'src/stores/useLabStore'
+import { StoredModule, createNewModule, createNewModuleProject,  } from 'src/stores/useModuleStore'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard, LabCard } from './components'
 import FSA from './images/FSA'
@@ -67,14 +67,14 @@ const NewFile = () => {
     }
   }
 
-  // Labs
-  const labs = useLabsStore(s => s.labs)
-  const setLab = useLabStore(s => s.setLab)
-  const addLabProject = useLabStore(s => s.upsertProject)
-  const getLabProject = useLabStore(s => s.getProject)
-  const deleteLab = useLabsStore(s => s.deleteLab)
-  const currentLab = useLabStore(s => s.lab)
-  const addQuestion = useLabStore(s => s.upsertQuestion)
+  // Modules
+  const modules = useModulesStore(s => s.modules)
+  const setModule = useModuleStore(s => s.setModule)
+  const addModuleProject = useModuleStore(s => s.upsertProject)
+  const getModuleProject = useModuleStore(s => s.getProject)
+  const deleteModule = useModulesStore(s => s.deleteModule)
+  const currentModule = useModuleStore(s => s.module)
+  const addQuestion = useModuleStore(s => s.upsertQuestion)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -114,15 +114,15 @@ const NewFile = () => {
 
   // For "Your Labs Section"
   useEffect(() => {
-    setKebabRefsLabs(Array.from({ length: labs.length }, () => createRef<HTMLAnchorElement>()))
-  }, [labs])
+    setKebabRefsLabs(Array.from({ length: modules.length }, () => createRef<HTMLAnchorElement>()))
+  }, [modules])
 
   // For "Your Latest Lab Section"
   useEffect(() => {
-    if (currentLab) {
+    if (currentModule) {
       setKebabRefsLatestLab(createRef<HTMLAnchorElement>())
     }
-  }, [currentLab])
+  }, [currentModule])
 
 
   const handleNewFile = (type: ProjectType) => {
@@ -145,34 +145,34 @@ const NewFile = () => {
   }
 
   const handleNewLabFile = (type: ProjectType ) => {
-      // Create a new lab and lab project 
-      const newLab = createNewLab();
-      const newLabProject = createNewLabProject(type, newLab.meta.name);
+      // Create a new module and module project 
+      const newModule = createNewModule();
+      const newModuleProject = createNewModuleProject(type, newModule.meta.name);
 
       // Set the new lab and lab project
-      setLab(newLab);
-      addLabProject(newLabProject);
+      setModule(newModule);
+      addModuleProject(newModuleProject);
 
       // Add question to lab
-      addQuestion(newLabProject._id, '')
+      addQuestion(newModuleProject._id, '')
       
       // Set lab project for editor
-      setProject(getLabProject(0))
+      setProject(getModuleProject(0))
 
       // Go to the editor
       navigate('/editor');
   };
 
-  const handleLoadLab = (lab: StoredLab) => {
-    setLab(lab)
-    setProject(getLabProject(0))
+  const handleLoadLab = (module: StoredModule) => {
+    setModule(module)
+    setProject(getModuleProject(0))
     navigate('/editor')
   };
 
   const handleDeleteLab = (pid: string) => {
-    deleteLab(pid)
-    if (currentLab && currentLab._id === pid) {
-      setLab(null)
+    deleteModule(pid)
+    if (currentModule && currentModule._id === pid) {
+      setModule(null)
     }
   }
 
@@ -277,17 +277,17 @@ const NewFile = () => {
       />
     </CardList>
 
-    {currentLab && (
+    {currentModule && (
       // conditional rendering for latest lab. 
       // showing the latest lab if more than one lab is stored and nothing if no
       // labs exist
         <CardList title="Ongoing Lab" style={{ gap: '1.5em .4em' }}>
           <LabCard
-            key={currentLab._id}
-            name={currentLab?.meta?.name ?? '<Untitled>'}
-            image={thumbnails[getThumbTheme(currentLab._id)]}
+            key={currentModule._id}
+            name={currentModule?.meta?.name ?? '<Untitled>'}
+            image={thumbnails[getThumbTheme(currentModule._id)]}
             width={PROJECT_THUMBNAIL_WIDTH}
-            onClick={() => handleLoadLab(currentLab)}
+            onClick={() => handleLoadLab(currentModule)}
             $kebabClick={(event) => {
               event.stopPropagation();
               setKebabOpen(true);
@@ -297,8 +297,8 @@ const NewFile = () => {
                 y: thisRef.offsetTop + thisRef.offsetHeight
               } as Coordinate;
               setCoordinates(coords);
-              setSelectedProjectId(currentLab._id); 
-              setSelectedProjectName(currentLab.meta.name)
+              setSelectedProjectId(currentModule._id); 
+              setSelectedProjectName(currentModule.meta.name)
             }}
             $kebabRef={kebabRefsLatestLab}
             $istemplate={false}
@@ -311,14 +311,14 @@ const NewFile = () => {
       style={{ gap: '1.5em .4em' }}
     >
       {
-      labs.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((lab, index) => {
+      modules.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((module, index) => {
       return (
         <LabCard
-          key={lab._id}
-          name={lab?.meta?.name ?? '<Untitled>'} 
-          image={thumbnails[getThumbTheme(lab._id)]}
+          key={module._id}
+          name={module?.meta?.name ?? '<Untitled>'} 
+          image={thumbnails[getThumbTheme(module._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
-          onClick={() => handleLoadLab(lab)}  
+          onClick={() => handleLoadLab(module)}  
           $kebabClick={(event) => {
             event.stopPropagation();
             setKebabOpen(true);
@@ -328,15 +328,15 @@ const NewFile = () => {
               y: thisRef.offsetTop + thisRef.offsetHeight
             } as Coordinate;
             setCoordinates(coords);
-            setSelectedProjectId(lab._id); 
-            setSelectedProjectName(currentLab.meta.name);
+            setSelectedProjectId(module._id); 
+            setSelectedProjectName(currentModule.meta.name);
           }}
           $kebabRef={kebabRefsLabs?.[index] ?? null}
           $istemplate={false}
         />
       );
     })}
-    {labs.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
+    {modules.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
   </CardList>
 
     <KebabMenu
