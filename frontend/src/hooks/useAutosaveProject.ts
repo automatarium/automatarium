@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { useProjectsStore, useProjectStore, useLabStore, useLabsStore } from '/src/stores'
+import { useProjectsStore, useProjectStore, useModuleStore, useModulesStore } from '/src/stores'
 import dayjs from 'dayjs'
 
 const SAVE_INTERVAL = 5 * 1000
@@ -13,12 +13,13 @@ const SAVE_DIALOG_MIN_TIME = 1.5 * 1000
  */
 const useAutosaveProject = () => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
-  const upsertLabProject = useLabStore(s => s.upsertProject) // Lab
-  const upsertLabs = useLabsStore(s => s.upsertLab)
+  const upsertModuleProject = useModuleStore(s => s.upsertProject) 
+  const upsertModules = useModulesStore(s => s.upsertModule)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const [isSaving, setIsSaving] = useState(false)
+  const currentModule = useModuleStore(s => s.module) 
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -29,11 +30,11 @@ const useAutosaveProject = () => {
         setIsSaving(true)
         const toSave = { ...currP, meta: { ...currP.meta, dateEdited: new Date().getTime() } }
         
-        if (useLabStore.getState().lab != null) {
-          // Save to lab file
-          upsertLabProject(toSave)
-          // Save lab to labs locally on local storage
-          upsertLabs(useLabStore.getState().lab)
+        if (currentModule != null) {
+          // Save to module 
+          upsertModuleProject(toSave)
+          // Save module to modules locally on local storage
+          upsertModules(currentModule)
         }
         else { 
           upsertProject(toSave)

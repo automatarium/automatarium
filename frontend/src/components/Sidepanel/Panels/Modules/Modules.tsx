@@ -147,7 +147,7 @@ const Modules = () => {
     <>
       <SectionLabel>Current Assessment</SectionLabel>
       {!currentModule && <>
-        <Wrapper>You're not working on a lab right now</Wrapper>
+        <Wrapper>You're not working on a module right now</Wrapper>
          </>}
       {currentModule && <>
         <Wrapper>
@@ -183,7 +183,7 @@ const Modules = () => {
       )}
     </Wrapper>
 
-    <SectionLabel>Lab Settings</SectionLabel>
+    <SectionLabel>Module Settings</SectionLabel>
     <Wrapper>
       <Preference label="Open questions to the left">
         <Switch type="checkbox" checked={showModuleWindow} onChange={() => setShowModuleWindow(!showModuleWindow)}/>

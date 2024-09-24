@@ -5,7 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Button, Logo, Dropdown } from '/src/components'
 import { useEvent } from '/src/hooks'
-import { useProjectStore, useProjectsStore, useLabStore, useLabsStore } from '/src/stores'
+import { useProjectStore, useProjectsStore, useModuleStore, useModulesStore } from '/src/stores'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import {
@@ -77,9 +77,10 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const deleteProject = useProjectsStore(s => s.deleteProject)
 
-  // Lab
-  const upsertLabProject = useLabStore(s => s.upsertProject)
-  const upsertLab = useLabsStore(s => s.upsertLab)
+  // Modules
+  const upsertModuleProject = useModuleStore(s => s.upsertProject)
+  const upsertModule = useModulesStore(s => s.upsertModule)
+  const currentModule = useModuleStore(s => s.module)
   // const setLabLastSaveDate = useLabStore(s => s.setLastSaveDate)
 
   const handleEditProjectName = () => {
@@ -96,12 +97,11 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
 
   const saveLabProject = () => {
     const project = useProjectStore.getState().project
-    upsertLabProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
+    upsertModuleProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
   }
 
   const saveLab = () => {
-    const lab = useLabStore.getState().lab
-    upsertLab(lab)
+    upsertModule(currentModule)
   }
 
   const handleSaveProjectName = () => {
@@ -127,7 +127,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             const project = useProjectStore.getState().project
             const totalItems = project.comments.length + project.states.length + project.transitions.length
             if (totalItems > 0) {
-              if (useLabStore.getState().lab != null) {
+              if (currentModule != null) {
                 saveLabProject()
                 saveLab()
               }
@@ -152,7 +152,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
                   onBlur={handleSaveProjectName}
                   onKeyDown={e => e.code === 'Enter' && handleSaveProjectName()}
                   ref={titleRef}
-                  disabled={useLabStore.getState().lab != null}
+                  disabled={currentModule != null}
                 />
                   )
                 : (
