@@ -1,6 +1,6 @@
 import { styled } from 'goober';
 
-export const LabWindowWrapper = styled('div')<{ width: string }>`
+export const ModuleWindowWrapper = styled('div')<{ width: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;

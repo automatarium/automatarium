@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLabStore, useLabsStore, useProjectStore } from '/src/stores';
+import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores';
 import { 
-  LabWindowWrapper, 
+  ModuleWindowWrapper, 
   Textarea, 
   PaginationWrapper, 
   PaginationButton, 
@@ -12,23 +12,23 @@ import {
   Title, 
   EditButton, 
   Content 
-} from './labWindowStyling';
+} from './moduleWindowStyling';
 
-const LabWindow = () => {
-  const currentLab = useLabStore(s => s.lab)
-  const updateQuestion = useLabStore(s => s.upsertQuestion)
-  const updateProject = useLabStore(s => s.upsertProject)
-  const questions = currentLab.questions
+const ModuleWindow = () => {
+  const currentModule = useModuleStore(s => s.module)
+  const updateQuestion = useModuleStore(s => s.upsertQuestion)
+  const updateProject = useModuleStore(s => s.upsertProject)
+  const questions = currentModule.questions
   const total_questions = Object.keys(questions).length
   const currentProject = useProjectStore(s => s.project)
-  const currentQuestionIndex = currentLab.projects.findIndex(project => project._id === currentProject._id)
-  const updateLab = useLabsStore(s => s.upsertLab)
+  const currentQuestionIndex = currentModule.projects.findIndex(project => project._id === currentProject._id)
+  const updateModule = useModulesStore(s => s.upsertModule)
   const setProject = useProjectStore(s => s.set)
   const currentQuestion = questions[currentProject._id]
+  const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
 
   const [panelWidth, setPanelWidth] = useState('250px')
   const panelRef = useRef<HTMLDivElement | null>(null)
-  const { setShowLabWindow } = useLabStore()
 
   const [isEditing, setIsEditing] = useState(false)
   const [question, setQuestion] = useState(currentQuestion || '')
@@ -52,27 +52,27 @@ const LabWindow = () => {
   };
 
   const handleClose = () => {
-    setShowLabWindow(false) // Close the lab panel
+    setShowModuleWindow(false) // Close the module panel
   };
 
   useEffect(() => {
     // Ensure that the question is updated when the current question or lab changes
-    if (currentLab && currentProject._id) {
+    if (currentModule && currentProject._id) {
       setQuestion(questions[currentProject._id] || '')
     }
-  }, [currentLab, currentProject._id])
+  }, [currentModule, currentProject._id])
 
   const saveLab = () => {
     const project = useProjectStore.getState().project
     updateProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
-    updateLab(currentLab)
+    updateModule(currentModule)
   };
 
   const handleEditClick = () => {
     if (isEditing) {
       const currentQuestionId = Object.keys(questions)[currentQuestionIndex]
       updateQuestion(currentQuestionId, question)
-      updateLab(currentLab)
+      updateModule(currentModule)
     }
     setIsEditing(!isEditing)
   };
@@ -83,7 +83,7 @@ const LabWindow = () => {
 
   const handlePageChange = (index: number) => {
     saveLab();
-    setProject(currentLab.projects[index])
+    setProject(currentModule.projects[index])
   };
 
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -91,9 +91,9 @@ const LabWindow = () => {
     handlePageChange(selectedQuestionIndex)
   };
 
-  // If there are no questions or lab data yet, show a loading or fallback message
-  if (!questions || total_questions === 0 || !currentLab) {
-    return <LabWindowWrapper width={panelWidth}>Loading lab instructions...</LabWindowWrapper>
+  // If there are no questions or module data yet, show a loading or fallback message
+  if (!questions || total_questions === 0 || !currentModule) {
+    return <ModuleWindowWrapper width={panelWidth}>Loading lab instructions...</ModuleWindowWrapper>
   }
 
   const formattedInstructions = question.split('\n').map((line, index) => (
@@ -104,7 +104,7 @@ const LabWindow = () => {
   ));
 
   return (
-    <LabWindowWrapper ref={panelRef} width={panelWidth}>
+    <ModuleWindowWrapper ref={panelRef} width={panelWidth}>
       <CloseButton onClick={handleClose}>x</CloseButton>
       <div>
         <TitleWrapper>
@@ -151,8 +151,8 @@ const LabWindow = () => {
         </PaginationButton>
       </PaginationWrapper>
       <ResizeHandle onMouseDown={handleMouseDown} />
-    </LabWindowWrapper>
+    </ModuleWindowWrapper>
   );
 };
 
-export default LabWindow;
+export default ModuleWindow;

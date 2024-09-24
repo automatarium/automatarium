@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom'
 import { Content, EditorContent } from './editorStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
-import { useExportStore, useLabStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
+import { useExportStore, useModuleStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
-import LabWindow from './components/LabWindow/LabWindow'
+import LabWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
@@ -26,11 +26,11 @@ const Editor = () => {
   const closeTour = () => {
     setShowTour(false)
   }
-  const lab = useLabStore(s => s.lab)
-  const getProjectinLab = useLabStore(s => s.getProjectById)
-  const setLab = useLabStore(s => s.setLab)
-  const showLabWindow = useLabStore(s => s.showLabWindow)
-  const setShowLabWindow = useLabStore(s => s.setShowLabWindow)
+  const currentModule = useModuleStore(s => s.module)
+  const getProjectinModule = useModuleStore(s => s.getProjectById)
+  const setModule = useModuleStore(s => s.setModule)
+  const showModuleWindow = useModuleStore(s => s.showModuleWindow)
+  const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
   
 
   useEffect(() => {
@@ -49,9 +49,9 @@ const Editor = () => {
     return null
   }
 
-  if (lab && getProjectinLab(project._id) === undefined) {
-    setLab(null)
-    setShowLabWindow(false)
+  if (currentModule && getProjectinModule(project._id) === undefined) {
+    setModule(null)
+    setShowModuleWindow(false)
   }
 
 
@@ -113,7 +113,7 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showLabWindow && lab && <LabWindow/>
+        {showModuleWindow && currentModule && <LabWindow/>
       }
         <EditorContent>
           <EditorPanel />

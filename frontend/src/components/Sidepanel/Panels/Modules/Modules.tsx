@@ -35,7 +35,7 @@ const Modules = () => {
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false); // Controls modal visibility
 
-  // Load lab values into local state when lab changes
+  // Load lab values into local state when module changes
   useEffect(() => {
     if (currentModule) {
       setTitleInput(currentModule.meta.name || ''); // Populate title input
@@ -69,7 +69,7 @@ const Modules = () => {
     setTitleIsEditing(false); // Exit edit mode without saving
   };
 
-  // Save changes to lab
+  // Save changes to module
   const saveLab = () => {
     const project = useProjectStore.getState().project
     updateProjectToModule({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
@@ -97,7 +97,7 @@ const Modules = () => {
     saveLab()
     // Set the project for the editor
     setProject(_project)
-    // Open lab window
+    // Open module window
     if (showModuleWindow === false) {
       setShowModuleWindow(true)
     }
@@ -111,9 +111,9 @@ const Modules = () => {
   }
 
   const handleDeleteQuestion = (_project: ModuleProject) => {
-    // Delete project from current lab
+    // Delete project from current module
     deleteProjectFromModule(_project._id)
-    // Delete question from current lab
+    // Delete question from current module
     deleteQuestionFromModule(_project._id)
     if (_project._id === currentProject._id) {
       const remainingProjects = currentModule.projects.filter((proj) => proj._id !== _project._id);
