@@ -35,7 +35,7 @@ const Modules = () => {
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false); // Controls modal visibility
 
-  // Load lab values into local state when module changes
+  // Load module values into local state when module changes
   useEffect(() => {
     if (currentModule) {
       setTitleInput(currentModule.meta.name || ''); // Populate title input
@@ -57,7 +57,7 @@ const Modules = () => {
     setModuleName(titleInput);
     setModuleDescription(titleDescription);
     setTitleIsEditing(false); // Exit edit mode after saving
-    saveLab()
+    saveModule()
   };
 
   // Cancel editing and reset the input fields to the stored values
@@ -70,7 +70,7 @@ const Modules = () => {
   };
 
   // Save changes to module
-  const saveLab = () => {
+  const saveModule = () => {
     const project = useProjectStore.getState().project
     updateProjectToModule({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
     updateModule(currentModule)
@@ -85,16 +85,16 @@ const Modules = () => {
   const { register, handleSubmit } = useForm({ defaultValues: { questionType: ProjectType.FSA } })
 
   const handleAddQuestion = (data) => {
-    const newLabProject = createNewModuleProject(data.questionType, currentModule.meta.name);
-    updateProjectToModule(newLabProject); // Save new project with selected type
-    addQuestionToModule(newLabProject._id, '') // Add new question
-    setProject(newLabProject); // Set the project for editing
+    const newModuleProject = createNewModuleProject(data.questionType, currentModule.meta.name);
+    updateProjectToModule(newModuleProject); // Save new project with selected type
+    addQuestionToModule(newModuleProject._id, '') // Add new question
+    setProject(newModuleProject); // Set the project for editing
     setIsModalOpen(false); // Close the modal
   };
 
   const handleEditQuestion = (_project: ModuleProject) => {
     // Save current changes before moving to another question
-    saveLab()
+    saveModule()
     // Set the project for the editor
     setProject(_project)
     // Open module window
@@ -105,7 +105,7 @@ const Modules = () => {
 
   const handleOpenQuestion = (_project: ModuleProject) => {
     // Save current changes before moving to another question
-    saveLab()
+    saveModule()
     // Set the project for the editor
     setProject(_project)
   }
@@ -158,7 +158,7 @@ const Modules = () => {
               value={titleInput} 
               onChange={(e) => setTitleInput(e.target.value)} 
               rows={1} 
-              placeholder="Lab Title" 
+              placeholder="Module Title" 
             />
           </TitleSection>
           <TextArea 
@@ -175,9 +175,9 @@ const Modules = () => {
       ) : (
         <>
           <TitleSection>
-            <h2>{currentModule?.meta.name || 'Lab Title'}</h2> {/* Display current lab title */}
+            <h2>{currentModule?.meta.name || 'Module Title'}</h2> {/* Display current lab title */}
           </TitleSection>
-          <p>{currentModule?.description || 'Lab Description'}</p> {/* Display current lab description */}
+          <p>{currentModule?.description || 'Module Description'}</p> {/* Display current lab description */}
           <Button onClick={handleEditClick}>Edit</Button> {/* Toggle edit mode */}
         </>
       )}
@@ -255,7 +255,7 @@ const Modules = () => {
     </>
       <SectionLabel>Export</SectionLabel>
       <Wrapper>
-        <Button>Export as Automatrium lab file</Button>
+        <Button>Export as Automatrium module file</Button>
         <Button>Export as URL</Button>
       </Wrapper>
     </>

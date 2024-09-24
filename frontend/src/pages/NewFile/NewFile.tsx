@@ -112,12 +112,12 @@ const NewFile = () => {
     setKebabRefsProjects(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
   }, [projects])
 
-  // For "Your Labs Section"
+  // For "Your modules Section"
   useEffect(() => {
     setKebabRefsLabs(Array.from({ length: modules.length }, () => createRef<HTMLAnchorElement>()))
   }, [modules])
 
-  // For "Your Latest Lab Section"
+  // For "Your Latest module Section"
   useEffect(() => {
     if (currentModule) {
       setKebabRefsLatestLab(createRef<HTMLAnchorElement>())
@@ -144,7 +144,7 @@ const NewFile = () => {
     dispatchCustomEvent('modal:import', null)
   }
 
-  const handleNewLabFile = (type: ProjectType ) => {
+  const handleNewModuleFile = (type: ProjectType ) => {
       // Create a new module and module project 
       const newModule = createNewModule();
       const newModuleProject = createNewModuleProject(type, newModule.meta.name);
@@ -163,13 +163,13 @@ const NewFile = () => {
       navigate('/editor');
   };
 
-  const handleLoadLab = (module: StoredModule) => {
+  const handleLoadModule = (module: StoredModule) => {
     setModule(module)
     setProject(getModuleProject(0))
     navigate('/editor')
   };
 
-  const handleDeleteLab = (pid: string) => {
+  const handleDeleteModule = (pid: string) => {
     deleteModule(pid)
     if (currentModule && currentModule._id === pid) {
       setModule(null)
@@ -250,28 +250,28 @@ const NewFile = () => {
     </CardList>
 
     <CardList
-      title="New Lab"
+      title="New Module"
       button={<Button onClick={importProject}>Import...</Button>}
       innerRef={cardsRef}
     >
       <NewProjectCard
         title="Finite State Automaton"
         description=""
-        onClick={() => handleNewLabFile('FSA')}
+        onClick={() => handleNewModuleFile('FSA')}
         height={height}
         image={<FSA {...stylingVals} />}
       />
       <NewProjectCard
         title="Push Down Automaton"
         description=""
-        onClick={() => handleNewLabFile('PDA')}
+        onClick={() => handleNewModuleFile('PDA')}
         height={height}
         image={<PDA {...stylingVals} />}
       />
       <NewProjectCard
         title="Turing Machine"
         description=""
-        onClick={() => handleNewLabFile('TM')}
+        onClick={() => handleNewModuleFile('TM')}
         height={height}
         image={<TM {...stylingVals} />}
       />
@@ -281,13 +281,13 @@ const NewFile = () => {
       // conditional rendering for latest lab. 
       // showing the latest lab if more than one lab is stored and nothing if no
       // labs exist
-        <CardList title="Ongoing Lab" style={{ gap: '1.5em .4em' }}>
+        <CardList title="Ongoing Module" style={{ gap: '1.5em .4em' }}>
           <LabCard
             key={currentModule._id}
             name={currentModule?.meta?.name ?? '<Untitled>'}
             image={thumbnails[getThumbTheme(currentModule._id)]}
             width={PROJECT_THUMBNAIL_WIDTH}
-            onClick={() => handleLoadLab(currentModule)}
+            onClick={() => handleLoadModule(currentModule)}
             $kebabClick={(event) => {
               event.stopPropagation();
               setKebabOpen(true);
@@ -307,7 +307,7 @@ const NewFile = () => {
       )}
     
     <CardList
-      title="Your Labs"
+      title="Your Modules"
       style={{ gap: '1.5em .4em' }}
     >
       {
@@ -318,7 +318,7 @@ const NewFile = () => {
           name={module?.meta?.name ?? '<Untitled>'} 
           image={thumbnails[getThumbTheme(module._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
-          onClick={() => handleLoadLab(module)}  
+          onClick={() => handleLoadModule(module)}  
           $kebabClick={(event) => {
             event.stopPropagation();
             setKebabOpen(true);
@@ -353,7 +353,7 @@ const NewFile = () => {
       onClose={() => setDeleteConfirmationVisible(false)}
       onConfirm={() => {
         handleDeleteProject(selectedProjectId)
-        handleDeleteLab(selectedProjectId)
+        handleDeleteModule(selectedProjectId)
         setDeleteConfirmationVisible(false)
       }}
     />
