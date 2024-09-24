@@ -149,14 +149,14 @@ const NewFile = () => {
       const newModule = createNewModule();
       const newModuleProject = createNewModuleProject(type, newModule.meta.name);
 
-      // Set the new lab and lab project
+      // Set the new module and module project
       setModule(newModule);
       addModuleProject(newModuleProject);
 
-      // Add question to lab
+      // Add question to module
       addQuestion(newModuleProject._id, '')
       
-      // Set lab project for editor
+      // Set module project for editor
       setProject(getModuleProject(0))
 
       // Go to the editor
@@ -336,7 +336,7 @@ const NewFile = () => {
         />
       );
     })}
-    {modules.length === 0 && <NoResultSpan>No labs yet</NoResultSpan>}
+    {modules.length === 0 && <NoResultSpan>No modules yet</NoResultSpan>}
   </CardList>
 
     <KebabMenu
