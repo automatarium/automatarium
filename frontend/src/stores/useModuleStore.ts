@@ -91,7 +91,7 @@ export const createNewModule = (description: string = 'Write a description here'
 interface ModuleStore {
   module: StoredModule | null;
   lastChangeDate: number;
-  showLabWindow: boolean;
+  showModuleWindow: boolean;
   setModule: (module: StoredModule) => void;
   setProjects: (projects: ModuleProject[]) => void;
   clearProjects: () => void;
@@ -132,9 +132,9 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
     module: { ...state.module, description },
     lastChangeDate: new Date().getTime(),
   })),
-  showLabWindow: false,
+  showModuleWindow: false,
   lastChangeDate: null,
-  setShowModuleWindow: (show: boolean) => set(() => ({ showLabWindow: show })),
+  setShowModuleWindow: (show: boolean) => set(() => ({ showModuleWindow: show })),
   upsertQuestion: (pid: string, question: string) => set((state) => ({
     module: {
       ...state.module,
