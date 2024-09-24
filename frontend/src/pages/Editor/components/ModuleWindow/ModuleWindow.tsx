@@ -56,13 +56,13 @@ const ModuleWindow = () => {
   };
 
   useEffect(() => {
-    // Ensure that the question is updated when the current question or lab changes
+    // Ensure that the question is updated when the current question or module changes
     if (currentModule && currentProject._id) {
       setQuestion(questions[currentProject._id] || '')
     }
   }, [currentModule, currentProject._id])
 
-  const saveLab = () => {
+  const saveModule = () => {
     const project = useProjectStore.getState().project
     updateProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
     updateModule(currentModule)
@@ -82,7 +82,7 @@ const ModuleWindow = () => {
   };
 
   const handlePageChange = (index: number) => {
-    saveLab();
+    saveModule();
     setProject(currentModule.projects[index])
   };
 
@@ -93,7 +93,7 @@ const ModuleWindow = () => {
 
   // If there are no questions or module data yet, show a loading or fallback message
   if (!questions || total_questions === 0 || !currentModule) {
-    return <ModuleWindowWrapper width={panelWidth}>Loading lab instructions...</ModuleWindowWrapper>
+    return <ModuleWindowWrapper width={panelWidth}>Loading module instructions...</ModuleWindowWrapper>
   }
 
   const formattedInstructions = question.split('\n').map((line, index) => (
@@ -119,7 +119,7 @@ const ModuleWindow = () => {
             <Textarea
               value={question}
               onChange={handleQuestionChange}
-              placeholder="Edit lab instructions here"
+              placeholder="Edit module instructions here"
             />
           ) : (
             <>{formattedInstructions}</>
