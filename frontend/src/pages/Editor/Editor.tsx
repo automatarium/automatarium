@@ -8,7 +8,7 @@ import { useExportStore, useModuleStore, useProjectStore, useToolStore, useViewS
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
-import LabWindow from './components/ModuleWindow/ModuleWindow'
+import ModuleWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
@@ -113,7 +113,7 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showModuleWindow && currentModule && <LabWindow/>
+        {showModuleWindow && currentModule && <ModuleWindow/>
       }
         <EditorContent>
           <EditorPanel />
