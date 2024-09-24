@@ -5,7 +5,7 @@ import { Logo } from '/src/components'
 
 import { MoreVertical, Trash } from 'lucide-react'
 import { ButtonHTMLAttributes, Ref } from 'react'
-import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleWithAction, TypeBadge } from './labCardStyle'
+import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleWithAction, TypeBadge } from './moduleCardStyle'
 import { ProjectType } from '/src/types/ProjectTypes'
 dayjs.extend(relativeTime)
 
@@ -26,7 +26,7 @@ type labCardProps = {
     disabled?: boolean,
 }
 
-const LabCard = ({ id, name, image, isSelectedTemplate = false, ...props }: labCardProps) => {
+const ModuleCard = ({ id, name, image, isSelectedTemplate = false, ...props }: labCardProps) => {
   const { ...rest } = props
   return <CardContainer {...rest}>
     <CardImage $image={!!image}>
@@ -54,4 +54,4 @@ const LabCard = ({ id, name, image, isSelectedTemplate = false, ...props }: labC
   </CardContainer>
 }
 
-export default LabCard
+export default ModuleCard

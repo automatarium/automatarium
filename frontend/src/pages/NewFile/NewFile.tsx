@@ -10,7 +10,7 @@ import { StoredProject, createNewProject } from '/src/stores/useProjectStore' //
 import { dispatchCustomEvent } from '/src/util/events'
 import { StoredModule, createNewModule, createNewModuleProject,  } from 'src/stores/useModuleStore'
 
-import { CardList, DeleteConfirmationDialog, NewProjectCard, LabCard } from './components'
+import { CardList, DeleteConfirmationDialog, NewProjectCard, ModuleCard } from './components'
 import FSA from './images/FSA'
 import PDA from './images/PDA'
 import TM from './images/TM'
@@ -278,11 +278,11 @@ const NewFile = () => {
     </CardList>
 
     {currentModule && (
-      // conditional rendering for latest lab. 
-      // showing the latest lab if more than one lab is stored and nothing if no
-      // labs exist
+      // conditional rendering for latest module. 
+      // showing the latest module if more than one module is stored and nothing if no
+      // modules exist
         <CardList title="Ongoing Module" style={{ gap: '1.5em .4em' }}>
-          <LabCard
+          <ModuleCard
             key={currentModule._id}
             name={currentModule?.meta?.name ?? '<Untitled>'}
             image={thumbnails[getThumbTheme(currentModule._id)]}
@@ -313,7 +313,7 @@ const NewFile = () => {
       {
       modules.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((module, index) => {
       return (
-        <LabCard
+        <ModuleCard
           key={module._id}
           name={module?.meta?.name ?? '<Untitled>'} 
           image={thumbnails[getThumbTheme(module._id)]}
