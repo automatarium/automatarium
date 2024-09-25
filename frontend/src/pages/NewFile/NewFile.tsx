@@ -77,6 +77,7 @@ const NewFile = () => {
   const addQuestion = useModuleStore(s => s.upsertQuestion)
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
+  const addModule = useModulesStore(s => s.upsertModule)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -159,10 +160,14 @@ const NewFile = () => {
 
       // Add question to module
       addQuestion(newModuleProject._id, '')
+
+      // Store module to local storage under automatarium-modules
+      addModule(newModule)
       
       // Set module project for editor
       setProject(getModuleProject(0))
 
+      // Show module window when navigating to editor
       if (showModuleWindow === false) {
         setShowModuleWindow(true)
       }
