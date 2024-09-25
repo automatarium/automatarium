@@ -77,7 +77,7 @@ const NewFile = () => {
   const addQuestion = useModuleStore(s => s.upsertQuestion)
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
-  const addModule = useModulesStore(s => s.upsertModule)
+  // const addModule = useModulesStore(s => s.upsertModule)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list

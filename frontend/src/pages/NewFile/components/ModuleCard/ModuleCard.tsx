@@ -9,7 +9,6 @@ import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleWit
 dayjs.extend(relativeTime)
 
 type moduleCardProps = {
-    id?: number
     name: string
     // type?: ProjectType | '???' // '???' is used has a default type
     image?: string
@@ -25,7 +24,7 @@ type moduleCardProps = {
     disabled?: boolean,
 }
 
-const ModuleCard = ({ id, name, image, isSelectedTemplate = false, ...props }: moduleCardProps) => {
+const ModuleCard = ({ name, image, isSelectedTemplate = false, ...props }: moduleCardProps) => {
   const { ...rest } = props
   return <CardContainer {...rest}>
     <CardImage $image={!!image}>
