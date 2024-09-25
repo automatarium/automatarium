@@ -9,8 +9,8 @@ interface ModulesStore {
     upsertModule: (module: StoredModule) => void,
     deleteModule: (pid: string) => void,
   }
-  
-  const useModulesStore = create<ModulesStore>()(persist((set: SetState<ModulesStore>) => ({
+
+const useModulesStore = create<ModulesStore>()(persist((set: SetState<ModulesStore>) => ({
   modules: [] as StoredModule[],
   setModules: (modules: StoredModule[]) => set({ modules }),
   clearModules: () => set({ modules: [] }),
@@ -20,8 +20,8 @@ interface ModulesStore {
       : [...state.modules, module]
   })),
   deleteModule: (id: string) => set((state) => ({ modules: state.modules.filter(l => l._id !== id) }))
-  }), {
-    name: 'automatarium-modules'
-  }))
-  
-  export default useModulesStore
+}), {
+  name: 'automatarium-modules'
+}))
+
+export default useModulesStore

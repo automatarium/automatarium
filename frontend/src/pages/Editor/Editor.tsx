@@ -31,7 +31,6 @@ const Editor = () => {
   const setModule = useModuleStore(s => s.setModule)
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
-  
 
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')
@@ -58,13 +57,11 @@ const Editor = () => {
     if (currentModule == null) {
       setShowModuleWindow(false)
     }
-  }, [currentModule, project, getProjectinModule]);
-
+  }, [currentModule, project, getProjectinModule])
 
   const projectType = project.config.type
 
   const isSaving = useAutosaveProject()
-
 
   useActions(true)
 
@@ -112,7 +109,6 @@ const Editor = () => {
       setPriorTool(undefined)
     }
   }, [tool, priorTool])
-
 
   return (
     <>

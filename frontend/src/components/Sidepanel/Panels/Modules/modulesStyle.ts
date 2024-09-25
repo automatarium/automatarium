@@ -1,13 +1,12 @@
-import { styled } from 'goober';
+import { styled } from 'goober'
 
-
-// Wrapper for the Lab section 
+// Wrapper for the Lab section
 export const Wrapper = styled('div')`
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
   margin: 0.5rem;
-`;
+`
 
 export const TitleSection = styled('div')`
   margin-bottom: 0.1rem;
@@ -18,7 +17,7 @@ export const TitleSection = styled('div')`
     font-size: 1.5rem; 
     padding-bottom: 0.5rem;
   }
-`;
+`
 
 // Button container for question actions (add, edit, remove)
 export const QuestionRow = styled('tr')`
@@ -37,7 +36,7 @@ export const QuestionRow = styled('tr')`
     justify-content: flex-end;
     gap: 0.5rem;
   }
-`;
+`
 
 // Button for editing questions
 export const EditButton = styled('button')`
@@ -52,7 +51,7 @@ export const EditButton = styled('button')`
   justify-content: center;
   transition: background-color 0.3s;
 
-`;
+`
 
 // Button for removing questions
 export const RemoveButton = styled('button')`
@@ -71,7 +70,7 @@ export const RemoveButton = styled('button')`
   //   background-color: var(--toolbar); 
   //   border-color: var(--error); 
   // }
-`;
+`
 
 // Styles for the Add Question button
 // export const AddQuestionButton = styled('button')`
@@ -88,7 +87,7 @@ export const RemoveButton = styled('button')`
 
 // `;
 
-// Table header styles 
+// Table header styles
 export const TableHeader = styled('thead')`
   background-color: var(--toolbar);
   color: white;
@@ -97,7 +96,7 @@ export const TableHeader = styled('thead')`
     text-align: left;
     padding: 0.5rem;
   }
-`;
+`
 
 // General Table styling for questions
 export const Table = styled('table')`
@@ -129,8 +128,7 @@ export const Table = styled('table')`
     gap: 0.5rem;
     justify-content: flex-start; 
   }
-`;
-
+`
 
 // Title and description input field styles
 export const Input = styled('input')`
@@ -150,7 +148,7 @@ export const Input = styled('input')`
   }
 
 }
-`;
+`
 
 export const TextArea = styled('textarea')`
   width: 100%;
@@ -168,7 +166,7 @@ export const TextArea = styled('textarea')`
     outline: none;
     border-color: var(--primary); 
   }
-`;
+`
 
 // Export button styles (consistent with other buttons)
 export const ExportButton = styled('button')`
@@ -184,7 +182,7 @@ export const ExportButton = styled('button')`
   &:hover {
     background-color: var(--primary-dark);
   }
-`;
+`
 
 // Styles for warnings (reused from testingLabStyles)
 export const WarningLabel = styled('div')`
@@ -196,8 +194,7 @@ export const WarningLabel = styled('div')`
   align-items: center;
   background: var(--error);
   color: white;
-`;
-
+`
 
 export const ButtonContainer = styled('div')`
   display: flex;
@@ -219,10 +216,9 @@ export const ButtonContainer = styled('div')`
       color: white;
     }
   }
-`;
+`
 
-
-// Generic field wrapper, for add question modal. 
+// Generic field wrapper, for add question modal.
 export const FieldWrapper = styled('div')`
   display: flex;
   align-items: center;
@@ -243,4 +239,4 @@ export const FieldWrapper = styled('div')`
     border: 1px solid var(--border);
     border-radius: 0.25rem;
   }
-`;
+`

@@ -8,7 +8,7 @@ import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
-import { StoredModule, createNewModule, createNewModuleProject,  } from 'src/stores/useModuleStore'
+import { StoredModule, createNewModule, createNewModuleProject } from 'src/stores/useModuleStore'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard, ModuleCard } from './components'
 import FSA from './images/FSA'
@@ -127,7 +127,6 @@ const NewFile = () => {
     }
   }, [currentModule])
 
-
   const handleNewFile = (type: ProjectType) => {
     setShowModuleWindow(false)
     setProject(createNewProject(type))
@@ -149,32 +148,32 @@ const NewFile = () => {
     dispatchCustomEvent('modal:import', null)
   }
 
-  const handleNewModuleFile = (type: ProjectType ) => {
-      // Create a new module and module project 
-      const newModule = createNewModule();
-      const newModuleProject = createNewModuleProject(type, newModule.meta.name);
+  const handleNewModuleFile = (type: ProjectType) => {
+    // Create a new module and module project
+    const newModule = createNewModule()
+    const newModuleProject = createNewModuleProject(type, newModule.meta.name)
 
-      // Set the new module and module project
-      setModule(newModule);
-      addModuleProject(newModuleProject);
+    // Set the new module and module project
+    setModule(newModule)
+    addModuleProject(newModuleProject)
 
-      // Add question to module
-      addQuestion(newModuleProject._id, '')
+    // Add question to module
+    addQuestion(newModuleProject._id, '')
 
-      // Store module to local storage under automatarium-modules
-      addModule(newModule)
-      
-      // Set module project for editor
-      setProject(getModuleProject(0))
+    // Store module to local storage under automatarium-modules
+    addModule(newModule)
 
-      // Show module window when navigating to editor
-      if (showModuleWindow === false) {
-        setShowModuleWindow(true)
-      }
+    // Set module project for editor
+    setProject(getModuleProject(0))
 
-      // Go to the editor
-      navigate('/editor');
-  };
+    // Show module window when navigating to editor
+    if (showModuleWindow === false) {
+      setShowModuleWindow(true)
+    }
+
+    // Go to the editor
+    navigate('/editor')
+  }
 
   const handleLoadModule = (module: StoredModule) => {
     setModule(module)
@@ -183,7 +182,7 @@ const NewFile = () => {
       setShowModuleWindow(true)
     }
     navigate('/editor')
-  };
+  }
 
   const handleDeleteModule = (pid: string) => {
     deleteModule(pid)
@@ -294,9 +293,9 @@ const NewFile = () => {
     </CardList>
 
     {currentModule && (
-      // conditional rendering for latest module. 
-      // showing the latest module if more than one module is stored and nothing if no
-      // modules exist
+    // conditional rendering for latest module.
+    // showing the latest module if more than one module is stored and nothing if no
+    // modules exist
         <CardList title="Ongoing Module" style={{ gap: '1.5em .4em' }}>
           <ModuleCard
             key={currentModule._id}
@@ -305,53 +304,53 @@ const NewFile = () => {
             width={PROJECT_THUMBNAIL_WIDTH}
             onClick={() => handleLoadModule(currentModule)}
             $kebabClick={(event) => {
-              event.stopPropagation();
-              setKebabOpen(true);
+              event.stopPropagation()
+              setKebabOpen(true)
               const thisRef = kebabRefsLatestLab?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
               const coords = {
                 x: thisRef.offsetLeft,
                 y: thisRef.offsetTop + thisRef.offsetHeight
-              } as Coordinate;
-              setCoordinates(coords);
-              setSelectedProjectId(currentModule._id); 
+              } as Coordinate
+              setCoordinates(coords)
+              setSelectedProjectId(currentModule._id)
               setSelectedProjectName(currentModule.meta.name)
             }}
             $kebabRef={kebabRefsLatestLab}
             $istemplate={false}
           />
         </CardList>
-      )}
-    
+    )}
+
     <CardList
       title="Your Modules"
       style={{ gap: '1.5em .4em' }}
     >
       {
-      modules.sort((a,b) => b.meta.dateEdited - a.meta.dateEdited).map((module, index) => {
-      return (
+      modules.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map((module, index) => {
+        return (
         <ModuleCard
           key={module._id}
-          name={module?.meta?.name ?? '<Untitled>'} 
+          name={module?.meta?.name ?? '<Untitled>'}
           image={thumbnails[getThumbTheme(module._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
-          onClick={() => handleLoadModule(module)}  
+          onClick={() => handleLoadModule(module)}
           $kebabClick={(event) => {
-            event.stopPropagation();
-            setKebabOpen(true);
+            event.stopPropagation()
+            setKebabOpen(true)
             const thisRef = kebabRefsLabs[index]?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
             const coords = {
               x: thisRef.offsetLeft,
               y: thisRef.offsetTop + thisRef.offsetHeight
-            } as Coordinate;
-            setCoordinates(coords);
-            setSelectedProjectId(module._id); 
-            setSelectedProjectName(currentModule.meta.name);
+            } as Coordinate
+            setCoordinates(coords)
+            setSelectedProjectId(module._id)
+            setSelectedProjectName(currentModule.meta.name)
           }}
           $kebabRef={kebabRefsLabs?.[index] ?? null}
           $istemplate={false}
         />
-      );
-    })}
+        )
+      })}
     {modules.length === 0 && <NoResultSpan>No modules yet</NoResultSpan>}
   </CardList>
 

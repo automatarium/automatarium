@@ -1,10 +1,10 @@
-import { create, SetState, GetState } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create, SetState, GetState } from 'zustand'
+import { persist } from 'zustand/middleware'
 import { randomProjectName } from '../util/projectName'
 
 import {
   Project,
-  ProjectType,
+  ProjectType
 } from '../types/ProjectTypes'
 
 import {
@@ -13,14 +13,13 @@ import {
   DEFAULT_STATE_PREFIX,
   DEFAULT_OR_OPERATOR,
   DEFAULT_PROJECT_TYPE,
-  DEFAULT_ACCEPTANCE_CRITERIA,
-  DEFAULT_PROJECT_COLOR
+  DEFAULT_ACCEPTANCE_CRITERIA
 } from '/src/config'
 
 /**
  * A new project type for modules based on the pre-existing project type
  */
-export type ModuleProject = Project & {_id: string} 
+export type ModuleProject = Project & {_id: string}
 
 export const createNewModuleProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): ModuleProject => ({
   projectType,
@@ -47,8 +46,8 @@ export const createNewModuleProject = (projectType: ProjectType = DEFAULT_PROJEC
     orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
     // All lab projects are set to pink to distinguish the difference between a lab and a normal project
-    color: 'pink' 
-  },
+    color: 'pink'
+  }
 })
 
 export interface ModuleMetaData {
@@ -64,7 +63,7 @@ type ModuleQuestionsDict = Record<string, string>;
 /**
  * Lab type for storing projects and questions. Projects are stored in an array
  * and questions are stored as a dictionary where the key is the project ID and
- * the value is the question itself which is stored as a string type. 
+ * the value is the question itself which is stored as a string type.
  */
 export type StoredModule = {
   _id: string,
@@ -74,7 +73,7 @@ export type StoredModule = {
   meta: ModuleMetaData,
 }
 
-export const createNewModule = (description: string = 'Write a description here'): StoredModule => ({
+export const createNewModule = (description = 'Write a description here'): StoredModule => ({
   _id: crypto.randomUUID(),
   description,
   projects: [] as ModuleProject[],
@@ -85,7 +84,7 @@ export const createNewModule = (description: string = 'Write a description here'
     dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,
     automatariumVersion: APP_VERSION
-  },
+  }
 })
 
 interface ModuleStore {
@@ -130,7 +129,7 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
   })),
   setModuleDescription: (description: string) => set((state) => ({
     module: { ...state.module, description },
-    lastChangeDate: new Date().getTime(),
+    lastChangeDate: new Date().getTime()
   })),
   showModuleWindow: false,
   lastChangeDate: null,
@@ -138,11 +137,11 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
   upsertQuestion: (pid: string, question: string) => set((state) => ({
     module: {
       ...state.module,
-      questions: { 
-        ...state.module.questions, 
-        [pid]: question 
+      questions: {
+        ...state.module.questions,
+        [pid]: question
       },
-      lastChangeDate: new Date().getTime(),
+      lastChangeDate: new Date().getTime()
     }
   })),
   deleteQuestion: (pid: string) => set((state) => ({
@@ -150,12 +149,12 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
       ...state.module,
       questions: Object.fromEntries(
         Object.entries(state.module?.questions || {}).filter(([key]) => key !== pid)
-      ),
+      )
     },
-    lastChangeDate: new Date().getTime(),
-  })),
+    lastChangeDate: new Date().getTime()
+  }))
 }), {
-  name: 'automatarium-module',
-}));
+  name: 'automatarium-module'
+}))
 
-export default useModuleStore;
+export default useModuleStore

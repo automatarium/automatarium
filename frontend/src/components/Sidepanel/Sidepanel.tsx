@@ -54,9 +54,9 @@ const panels: PanelItem[] = [
     element: <Templates />
   },
   {
-    label: "Modules",
+    label: 'Modules',
     value: 'modules',
-    icon :<GraduationCap/>,
+    icon: <GraduationCap/>,
     element: <Modules />
   }
 ]

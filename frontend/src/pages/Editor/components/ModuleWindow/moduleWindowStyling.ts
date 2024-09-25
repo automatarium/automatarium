@@ -1,5 +1,5 @@
-import { styled } from 'goober';
-import { forwardRef } from 'react';
+import { styled } from 'goober'
+import { forwardRef } from 'react'
 
 export const ModuleWindowWrapper = styled('div', forwardRef)<{ width: string }>`
   display: flex;
@@ -15,7 +15,7 @@ export const ModuleWindowWrapper = styled('div', forwardRef)<{ width: string }>`
   position: relative; /* To position the resize handle */
   overflow-y: auto;
   overflow: visible;
-`;
+`
 
 export const ResizeHandle = styled('div')`
   position: absolute;
@@ -25,7 +25,7 @@ export const ResizeHandle = styled('div')`
   width: 5px;
   cursor: ew-resize;
   background-color: var(--surface); /* For visibility */
-`;
+`
 
 export const CloseButton = styled('button')`
   position: absolute;
@@ -46,7 +46,7 @@ export const CloseButton = styled('button')`
   z-index: 10; /* Ensure it's above other elements */
 
   
-`;
+`
 
 export const TitleWrapper = styled('div')`
   display: flex;
@@ -54,12 +54,12 @@ export const TitleWrapper = styled('div')`
   align-items: center;
   border-bottom: 2px solid var(--surface);
   padding-bottom: 8px;
-`;
+`
 
 export const Title = styled('h2')`
   margin: 0;
   color: var(--white); /* Title color */
-`;
+`
 
 export const EditButton = styled('button')<{$active?: boolean}>`
   background-color: var(--primary);
@@ -81,11 +81,11 @@ export const EditButton = styled('button')<{$active?: boolean}>`
     background-color: var(--primary);
     color: var(--white);
   `}
-`;
+`
 
 export const Content = styled('div')`
   margin-top: 30px;
-`;
+`
 
 export const Textarea = styled('textarea')`
   width: 100%;
@@ -97,7 +97,7 @@ export const Textarea = styled('textarea')`
   font-size: 14px;
   border-radius: 0.3em;
   transition: background 0.3s, color 0.3s;
-`;
+`
 
 export const PaginationWrapper = styled('div')`
   display: flex;
@@ -106,7 +106,7 @@ export const PaginationWrapper = styled('div')`
   gap: 8px;
   margin-top: auto; /* Ensures pagination sticks to the bottom */
   padding-top: 16px;
-`;
+`
 
 export const PaginationButton = styled('button')`
   background-color: var(--primary);
@@ -126,7 +126,7 @@ export const PaginationButton = styled('button')`
     background-color: var(--surface);
     cursor: not-allowed;
   }
-`;
+`
 
 export const SelectBox = styled('select')`
   background-color: var(--surface);
@@ -141,4 +141,4 @@ export const SelectBox = styled('select')`
     background-color: var(--white);
     color: var(--toolbar);
   }
-`;
+`

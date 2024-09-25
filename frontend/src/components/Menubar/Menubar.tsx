@@ -130,8 +130,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
               if (currentModule != null) {
                 saveLabProject()
                 saveLab()
-              }
-              else {
+              } else {
                 saveProject()
               }
             } else {

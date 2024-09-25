@@ -14,7 +14,7 @@ export const ContentContainer = styled('div')<{$showLabWindow?: boolean}>`
   font-size: 12px;
   font-weight: bold;
   position: fixed;
-`;
+`
 
 export const StackContainer = styled('div')`
   padding: 0.2rem;

@@ -1,16 +1,14 @@
-import dayjs, { Dayjs } from 'dayjs'
+import dayjs from 'dayjs'
 import relativeTime from 'dayjs/plugin/relativeTime'
 
 import { Logo } from '/src/components'
 
 import { MoreVertical, Trash } from 'lucide-react'
 import { ButtonHTMLAttributes, Ref } from 'react'
-import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleWithAction, TypeBadge } from './moduleCardStyle'
-import { ProjectType } from '/src/types/ProjectTypes'
+import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleWithAction } from './moduleCardStyle'
 dayjs.extend(relativeTime)
 
 type labCardProps = {
-    id?: number
     name: string
     // type?: ProjectType | '???' // '???' is used has a default type
     image?: string
@@ -26,7 +24,7 @@ type labCardProps = {
     disabled?: boolean,
 }
 
-const ModuleCard = ({ id, name, image, isSelectedTemplate = false, ...props }: labCardProps) => {
+const ModuleCard = ({ name, image, isSelectedTemplate = false, ...props }: labCardProps) => {
   const { ...rest } = props
   return <CardContainer {...rest}>
     <CardImage $image={!!image}>
