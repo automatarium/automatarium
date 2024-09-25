@@ -49,10 +49,16 @@ const Editor = () => {
     return null
   }
 
-  if (currentModule && getProjectinModule(project._id) === undefined) {
-    setModule(null)
-    setShowModuleWindow(false)
-  }
+  useEffect(() => {
+    if (currentModule && getProjectinModule(project._id) === undefined) {
+      setModule(null)
+      setShowModuleWindow(false)
+    }
+
+    if (currentModule == null) {
+      setShowModuleWindow(false)
+    }
+  }, [currentModule, project, getProjectinModule]);
 
 
   const projectType = project.config.type

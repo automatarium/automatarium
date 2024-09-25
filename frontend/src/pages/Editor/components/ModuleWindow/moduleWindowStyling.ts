@@ -1,6 +1,7 @@
 import { styled } from 'goober';
+import { forwardRef } from 'react';
 
-export const ModuleWindowWrapper = styled('div')<{ width: string }>`
+export const ModuleWindowWrapper = styled('div', forwardRef)<{ width: string }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;

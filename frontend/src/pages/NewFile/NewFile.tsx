@@ -75,6 +75,8 @@ const NewFile = () => {
   const deleteModule = useModulesStore(s => s.deleteModule)
   const currentModule = useModuleStore(s => s.module)
   const addQuestion = useModuleStore(s => s.upsertQuestion)
+  const showModuleWindow = useModuleStore(s => s.showModuleWindow)
+  const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -126,11 +128,13 @@ const NewFile = () => {
 
 
   const handleNewFile = (type: ProjectType) => {
+    setShowModuleWindow(false)
     setProject(createNewProject(type))
     navigate('/editor')
   }
 
   const handleLoadProject = (project: StoredProject) => {
+    setShowModuleWindow(false)
     setProject(project)
     navigate('/editor')
   }
@@ -159,6 +163,10 @@ const NewFile = () => {
       // Set module project for editor
       setProject(getModuleProject(0))
 
+      if (showModuleWindow === false) {
+        setShowModuleWindow(true)
+      }
+
       // Go to the editor
       navigate('/editor');
   };
@@ -166,6 +174,9 @@ const NewFile = () => {
   const handleLoadModule = (module: StoredModule) => {
     setModule(module)
     setProject(getModuleProject(0))
+    if (showModuleWindow === false) {
+      setShowModuleWindow(true)
+    }
     navigate('/editor')
   };
 
