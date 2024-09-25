@@ -1,5 +1,4 @@
 import { styled } from 'goober'
-import { useLabStore } from '/src/stores'
 
 export const ContentContainer = styled('div')<{$showLabWindow?: boolean}>`
   display: flex;         
