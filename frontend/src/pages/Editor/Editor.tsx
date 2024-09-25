@@ -56,7 +56,7 @@ const Editor = () => {
 
     if (currentModule == null) {
       setShowModuleWindow(false)
-    }
+    } 
   }, [currentModule, project, getProjectinModule])
 
   const projectType = project.config.type

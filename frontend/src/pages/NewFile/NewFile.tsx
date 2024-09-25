@@ -161,7 +161,7 @@ const NewFile = () => {
     addQuestion(newModuleProject._id, '')
 
     // Store module to local storage under automatarium-modules
-    addModule(newModule)
+    // addModule(newModule)
 
     // Set module project for editor
     setProject(getModuleProject(0))
@@ -344,7 +344,7 @@ const NewFile = () => {
             } as Coordinate
             setCoordinates(coords)
             setSelectedProjectId(module._id)
-            setSelectedProjectName(currentModule.meta.name)
+            setSelectedProjectName(module.meta.name)
           }}
           $kebabRef={kebabRefsLabs?.[index] ?? null}
           $istemplate={false}

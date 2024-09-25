@@ -8,7 +8,8 @@ import { ButtonHTMLAttributes, Ref } from 'react'
 import { CardContainer, CardDetail, CardImage, SelectedTemplateOverlay, TitleWithAction } from './moduleCardStyle'
 dayjs.extend(relativeTime)
 
-type labCardProps = {
+type moduleCardProps = {
+    id?: number
     name: string
     // type?: ProjectType | '???' // '???' is used has a default type
     image?: string
@@ -24,7 +25,7 @@ type labCardProps = {
     disabled?: boolean,
 }
 
-const ModuleCard = ({ name, image, isSelectedTemplate = false, ...props }: labCardProps) => {
+const ModuleCard = ({ id, name, image, isSelectedTemplate = false, ...props }: moduleCardProps) => {
   const { ...rest } = props
   return <CardContainer {...rest}>
     <CardImage $image={!!image}>
