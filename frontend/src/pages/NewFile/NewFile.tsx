@@ -3,7 +3,7 @@ import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components'
+import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
@@ -148,6 +148,10 @@ const NewFile = () => {
     dispatchCustomEvent('modal:import', null)
   }
 
+  const importModule = () => {
+    dispatchCustomEvent('modal:importModule', null)
+  }
+
   const handleNewModuleFile = (type: ProjectType) => {
     // Create a new module and module project
     const newModule = createNewModule()
@@ -266,7 +270,7 @@ const NewFile = () => {
 
     <CardList
       title="New Module"
-      button={<Button onClick={importProject}>Import...</Button>}
+      button={<Button onClick={importModule}>Import...</Button>}
       innerRef={cardsRef}
     >
       <NewProjectCard
@@ -375,6 +379,7 @@ const NewFile = () => {
 
     {showTour && <NewPageTour onClose={closeTour} Step={handleStep} />}
     <ImportDialog navigateFunction={navigate} />
+    <ImportModuleDialog navigateFunction={navigate}/>
   </Main>
 }
 

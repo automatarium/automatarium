@@ -16,6 +16,8 @@ import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
+import { createNewModule } from '../stores/useModuleStore'
+
 /**
  * Combination of keys. Used to call an action
  */
@@ -121,6 +123,11 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_DIALOG: {
       handler: async () => {
         if (window.confirm('Importing will override your current project. Continue anyway?')) { dispatchCustomEvent('modal:import', null) }
+      }
+    },
+    IMPORT_MODULE: {
+      handler: async () => {
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { dispatchCustomEvent('modal:importModule', null) }
       }
     },
     SAVE_FILE: {
@@ -676,6 +683,43 @@ export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[]
     projectType: project.projectType,
     initialStateId: isInitialSelected ? project.initialState : null
   }
+}
+
+export const useParseModuleFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void, onFailedLoading: () => void) => {
+  // Read file data
+  const reader = new FileReader()
+  reader.onloadend = () => {
+    try {
+      const parse = JSON.parse
+      const fileData = parse(reader.result as string)
+      const module = {
+        ...createNewModule(),
+        ...fileData
+      }
+      onData({
+        ...module,
+        meta: {
+          ...module.meta,
+          name: module.meta.name || input?.name.split('.').slice(0, -1).join('.')
+        }
+      })
+      onFinishLoading()
+    } catch (error) {
+      showWarning(`${errorMessage}\n${error}`)
+      console.error(error)
+      onFailedLoading()
+    }
+  }
+  reader.readAsText(input)
+}
+
+export const promptLoadModuleFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
+  // Prompt user for file input
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = accept
+  input.onchange = () => { useParseModuleFile(onData, errorMessage, input.files[0], onFinishLoading, onFailedLoading) }
+  input.click()
 }
 
 export default useActions

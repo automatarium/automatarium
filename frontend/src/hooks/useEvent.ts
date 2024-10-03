@@ -78,6 +78,7 @@ export interface CustomEvents {
   'modal:deleteConfirm': null,
   'modal:editorConfirmation': { title: string, description: string, tid: string },
   'modal:import': null,
+  'modal:importModule': null,
   'showSharing': null,
   'stackVisualiser:toggle': { state: boolean },
   'createTemplateThumbnail': string,
