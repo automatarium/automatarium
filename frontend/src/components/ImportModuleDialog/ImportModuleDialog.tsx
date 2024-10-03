@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { NavigateFunction } from 'react-router-dom'
 
-import { promptLoadFile } from '/src/hooks/useActions'
+import { promptLoadModuleFile } from '/src/hooks/useActions'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 
 import { ErrorText, ImportButtonWrapper } from './importModuleDialogStyle'
@@ -79,7 +79,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
         disabled={loading}
         onClick={() => {
             setLoading(true)
-            promptLoadFile(
+            promptLoadModuleFile(
             onData,
             'The file format provided is not valid. Please only open Automatarium .json',
             '.json',
