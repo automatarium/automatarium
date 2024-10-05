@@ -3,18 +3,18 @@ import { Settings } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard, ImportDialog } from '/src/components'
+import { Button, Header, Main, ProjectCard, ImportDialog, Modal } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
 import { StoredModule, createNewModule, createNewModuleProject } from 'src/stores/useModuleStore'
+import { ModalForm, FormLabel, FormInput, FormSelect, FormTextarea, ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard, ModuleCard } from './components'
 import FSA from './images/FSA'
 import PDA from './images/PDA'
 import TM from './images/TM'
-import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
@@ -78,6 +78,10 @@ const NewFile = () => {
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
   // const addModule = useModulesStore(s => s.upsertModule)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+  const [newModuleType, setModuleType] = useState('FSA')
+  const [moduleName, setModuleName] = useState('')
+  const [moduleDescription, setModuleDescription] = useState('')
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -127,6 +131,11 @@ const NewFile = () => {
     }
   }, [currentModule])
 
+  // Function to open the module modal
+  const handleNewModuleClick = () => {
+    setIsModalOpen(true)
+  }
+
   const handleNewFile = (type: ProjectType) => {
     setShowModuleWindow(false)
     setProject(createNewProject(type))
@@ -148,10 +157,20 @@ const NewFile = () => {
     dispatchCustomEvent('modal:import', null)
   }
 
-  const handleNewModuleFile = (type: ProjectType) => {
+  const handleNewModuleFile = () => {
     // Create a new module and module project
     const newModule = createNewModule()
-    const newModuleProject = createNewModuleProject(type, newModule.meta.name)
+    const newModuleProject = createNewModuleProject()
+
+    if (moduleName === '') {
+      newModule.meta.name = 'Untitled'
+      newModuleProject.meta.name = 'Untitled'
+    } else {
+      newModule.meta.name = moduleName
+      newModuleProject.meta.name = moduleName
+    }
+
+    newModule.description = moduleDescription
 
     // Set the new module and module project
     setModule(newModule)
@@ -159,9 +178,6 @@ const NewFile = () => {
 
     // Add question to module
     addQuestion(newModuleProject._id, '')
-
-    // Store module to local storage under automatarium-modules
-    // addModule(newModule)
 
     // Set module project for editor
     setProject(getModuleProject(0))
@@ -264,39 +280,67 @@ const NewFile = () => {
       {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
     </CardList>
 
-    <CardList
+    <CardList // Using modal to create module
       title="New Module"
       button={<Button onClick={importProject}>Import...</Button>}
       innerRef={cardsRef}
     >
       <NewProjectCard
-        title="Finite State Automaton"
-        description=""
-        onClick={() => handleNewModuleFile('FSA')}
+        title="Create New Module"
+        description="Modules are interactive questions that will help assess your understanding of automata."
+        onClick={handleNewModuleClick}
         height={height}
-        image={<FSA {...stylingVals} />}
-      />
-      <NewProjectCard
-        title="Push Down Automaton"
-        description=""
-        onClick={() => handleNewModuleFile('PDA')}
-        height={height}
-        image={<PDA {...stylingVals} />}
-      />
-      <NewProjectCard
-        title="Turing Machine"
-        description=""
-        onClick={() => handleNewModuleFile('TM')}
-        height={height}
-        image={<TM {...stylingVals} />}
+        image={''}
       />
     </CardList>
+
+    <Modal
+      title='Create New Module'
+      isOpen={isModalOpen}
+      onClose= {() => setIsModalOpen(false)}
+      actions={
+        <>
+        <Button secondary onClick= {() => setIsModalOpen(false)}>Cancel</Button>
+        <Button onClick={handleNewModuleFile}> Create </Button>
+        </>
+      }
+      >
+        <ModalForm>
+        <FormLabel>
+          Select automata type for your first question:
+          <FormSelect value={newModuleType} onChange={(e) => setModuleType(e.target.value)}>
+            <option value='FSA'>Finite State Automaton</option>
+            <option value='PDA'>Push Down Automaton</option>
+            <option value='TM'>Turing Machine</option>
+          </FormSelect>
+        </FormLabel>
+        <FormLabel>
+          Project Name:
+          <FormInput
+            type='text'
+            value={moduleName}
+            onChange={(e) => setModuleName(e.target.value)}
+            placeholder='Enter project name'
+            defaultValue={'Untitled'}
+          />
+        </FormLabel>
+        <FormLabel>
+          Description:
+          <FormTextarea
+            value={moduleDescription}
+            onChange={(e) => setModuleDescription(e.target.value)}
+            placeholder='Enter project description'
+            defaultValue={'Enter project description'}
+          />
+        </FormLabel>
+      </ModalForm>
+    </Modal>
 
     {currentModule && (
     // conditional rendering for latest module.
     // showing the latest module if more than one module is stored and nothing if no
     // modules exist
-        <CardList title="Ongoing Module" style={{ gap: '1.5em .4em' }}>
+        <CardList title='Ongoing Module' style={{ gap: '1.5em .4em' }}>
           <ModuleCard
             key={currentModule._id}
             name={currentModule?.meta?.name ?? '<Untitled>'}
@@ -322,7 +366,7 @@ const NewFile = () => {
     )}
 
     <CardList
-      title="Your Modules"
+      title='Your Modules'
       style={{ gap: '1.5em .4em' }}
     >
       {
