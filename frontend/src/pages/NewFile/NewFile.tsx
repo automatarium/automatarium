@@ -165,7 +165,7 @@ const NewFile = () => {
     if (moduleName === '') {
       newModule.meta.name = 'Untitled'
       newModuleProject.meta.name = 'Untitled'
-    } 
+    }
 
     newModule.description = moduleDescription
 
