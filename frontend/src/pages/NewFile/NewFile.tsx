@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import { Settings } from 'lucide-react'
+import { Settings, HelpCircle } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -10,6 +10,7 @@ import { StoredProject, createNewProject } from '/src/stores/useProjectStore' //
 import { dispatchCustomEvent } from '/src/util/events'
 import { StoredModule, createNewModule, createNewModuleProject } from 'src/stores/useModuleStore'
 import { ModalForm, FormLabel, FormInput, FormSelect, FormTextarea, ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
+import TourButton from '/src/components/TourButton/TourButton'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard, ModuleCard } from './components'
 import FSA from './images/FSA'
@@ -46,6 +47,12 @@ const NewFile = () => {
 
   /// Tour stuff
   const [showTour, setShowTour] = useState(false)
+
+  // Starts the tour
+  const showTourHandler = () => {
+    setShowTour(true)
+  }
+
   const closeTour = () => {
     setShowTour(false)
   }
@@ -102,14 +109,6 @@ const NewFile = () => {
   useEffect(() => {
     if (projects.length) {
       Object.keys(thumbnails).forEach(id => !id.startsWith('tmp') && !projects.some(p => p._id === id || `${p._id}-dark` === id) && removeThumbnail(id))
-    }
-    const tourShown = localStorage.getItem('tourNewShown')
-    if (!tourShown) {
-      const timeoutId = setTimeout(() => {
-        setShowTour(true)
-      }, 1000)
-      localStorage.setItem('tourNewShown', 'true')
-      return () => clearTimeout(timeoutId)
     }
   }, [projects, thumbnails])
 
@@ -416,6 +415,11 @@ const NewFile = () => {
         setDeleteConfirmationVisible(false)
       }}
     />
+
+    <TourButton
+      icon={<HelpCircle />}
+      onClick={showTourHandler}>
+    </TourButton>
 
     {showTour && <NewPageTour onClose={closeTour} Step={handleStep} />}
     <ImportDialog navigateFunction={navigate} />
