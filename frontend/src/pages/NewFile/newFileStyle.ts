@@ -34,3 +34,40 @@ export const PreferencesButton = styled('button')`
   height: 2em;
   width: 2em;
 `
+// styling for creating new lab modal
+export const ModalForm = styled('form')`
+  display: flex;
+  flex-direction: column;
+  // adds space between fields
+  gap: 1rem; 
+`
+
+export const FormLabel = styled('label')`
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+`
+
+export const FormInput = styled('input')`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+`
+
+export const FormSelect = styled('select')`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+`
+
+export const FormTextarea = styled('textarea')`
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  resize: none; 
+  min-height: 100px;
+  overflow-y: auto;
+`
