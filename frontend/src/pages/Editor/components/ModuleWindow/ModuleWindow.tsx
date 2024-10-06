@@ -14,7 +14,8 @@ import {
   Content
 } from './moduleWindowStyling'
 
-const ModuleWindow = () => {
+const ModuleWindow = ({ onPanelWidthChange }) => {
+  
   const currentModule = useModuleStore(s => s.module)
   const updateQuestion = useModuleStore(s => s.upsertQuestion)
   const updateProject = useModuleStore(s => s.upsertProject)
@@ -40,6 +41,7 @@ const ModuleWindow = () => {
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const newWidth = startWidth + (moveEvent.clientX - startX)
       setPanelWidth(`${newWidth}px`)
+      onPanelWidthChange(newWidth)
     }
 
     const handleMouseUp = () => {
