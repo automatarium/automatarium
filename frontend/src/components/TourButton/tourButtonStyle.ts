@@ -23,8 +23,8 @@ export const TourButtonStyleClass = ({ $icon, $secondary, $surface }: WrapperPro
   gap: '.5em',
   padding: $icon ? '.375em' : '.5em 1.2em',
   position: 'fixed',
-  bottom: '35px',
-  right: '35px',
+  bottom: '55px',
+  right: '55px',
   width: '60px', // Set a fixed width
   height: '60px', // Set a fixed height
   textDecoration: 'none',
