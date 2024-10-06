@@ -289,7 +289,7 @@ const NewFile = () => {
         description="Modules are interactive questions that will help assess your understanding of automata."
         onClick={handleNewModuleClick}
         height={height}
-        image={''}
+        image={<FSA {...stylingVals} />}
       />
     </CardList>
 
