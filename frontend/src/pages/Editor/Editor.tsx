@@ -36,6 +36,12 @@ const Editor = () => {
   const handlePanelWidthChange = (newWidth) => {
     setPanelWidth(newWidth)
   }
+  useEffect(() => {
+    // Reset panel width when currentModule changes
+    if (showModuleWindow) {
+      setPanelWidth(250) // Reset to default width
+    }
+  }, [showModuleWindow]) 
 
   useEffect(() => {
     const tourShown = localStorage.getItem('tourEditorShown')

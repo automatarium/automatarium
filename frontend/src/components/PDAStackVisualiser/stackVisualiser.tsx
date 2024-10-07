@@ -29,7 +29,7 @@ const PDAStackVisualiser = ({ panelWidth  }) => {
       }
     }
   }
-
+  
   // Displays the stack
   function displayStack () {
     return stack

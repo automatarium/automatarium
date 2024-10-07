@@ -6,7 +6,7 @@ export const ContentContainer = styled('div')<{$panelWidth?: number , $showLabWi
   align-items: center;   
   justify-content: flex-start; 
   bottom: 1rem;
-  left: ${p => p.$panelWidth ? `${p.$panelWidth + 110}px` : '5rem'}; 
+  left: ${p => p.$showLabWindow && p.$panelWidth ? `${p.$panelWidth + 110}px` : '5rem'}; 
   padding: 1.2rem;
   background: var(--surface);
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);

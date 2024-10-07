@@ -34,6 +34,11 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [question, setQuestion] = useState(currentQuestion || '')
 
+  // Effect to reset panelWidth when the module changes
+  useEffect(() => {
+    setPanelWidth('250px') // Reset to default width or set to any desired value
+  }, [currentModule]) // Trigger when currentModule changes
+
   const handleMouseDown = (e: React.MouseEvent) => {
     const startX = e.clientX
     const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250
