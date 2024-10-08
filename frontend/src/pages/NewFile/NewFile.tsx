@@ -164,6 +164,9 @@ const NewFile = () => {
     if (moduleName === '') {
       newModule.meta.name = 'Untitled'
       newModuleProject.meta.name = 'Untitled'
+    } else {
+      newModule.meta.name = moduleName
+      newModuleProject.meta.name = moduleName
     }
 
     newModule.description = moduleDescription
@@ -373,7 +376,7 @@ const NewFile = () => {
         return (
         <ModuleCard
           key={module._id}
-          name={module?.meta?.name ?? '<Untitled>'}
+          name={module.meta.name ?? '<Untitled>'}
           image={thumbnails[getThumbTheme(module._id)]}
           width={PROJECT_THUMBNAIL_WIDTH}
           onClick={() => handleLoadModule(module)}
