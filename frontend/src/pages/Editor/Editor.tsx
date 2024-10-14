@@ -40,6 +40,18 @@ const Editor = () => {
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
 
+  const [panelWidth, setPanelWidth] = useState(250) // Default panel width
+  const handlePanelWidthChange = (newWidth) => {
+    setPanelWidth(newWidth)
+  }
+  useEffect(() => {
+    // Reset panel width when currentModule changes
+    if (showModuleWindow) {
+      setPanelWidth(250) // Reset to default width
+    }
+  }, [showModuleWindow]) 
+
+
   // useEffect(() => {
   //   const tourShown = localStorage.getItem('tourEditorShown')
   //   if (!tourShown) {
@@ -123,14 +135,14 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showModuleWindow && currentModule && <ModuleWindow/>
+        {showModuleWindow && currentModule && <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
       }
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
         </EditorContent>
         {(projectType === 'PDA') &&
-          <PDAStackVisualiser />
+          <PDAStackVisualiser panelWidth={panelWidth} />
         }
         <Sidepanel />
       </Content>
