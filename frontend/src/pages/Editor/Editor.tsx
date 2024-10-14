@@ -49,8 +49,7 @@ const Editor = () => {
     if (showModuleWindow) {
       setPanelWidth(250) // Reset to default width
     }
-  }, [showModuleWindow]) 
-
+  }, [showModuleWindow])
 
   // useEffect(() => {
   //   const tourShown = localStorage.getItem('tourEditorShown')

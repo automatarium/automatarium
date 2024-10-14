@@ -1,6 +1,6 @@
 import { styled } from 'goober'
 
-export const ContentContainer = styled('div')<{$panelWidth?: number , $showLabWindow?: boolean}>`
+export const ContentContainer = styled('div')<{$panelWidth?: number, $showLabWindow?: boolean}>`
   display: flex;         
   flex-direction: column; 
   align-items: center;   

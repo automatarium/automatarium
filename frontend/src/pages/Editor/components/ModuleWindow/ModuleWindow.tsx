@@ -15,7 +15,6 @@ import {
 } from './moduleWindowStyling'
 
 const ModuleWindow = ({ onPanelWidthChange }) => {
-  
   const currentModule = useModuleStore(s => s.module)
   const updateQuestion = useModuleStore(s => s.upsertQuestion)
   const updateProject = useModuleStore(s => s.upsertProject)
