@@ -3,7 +3,7 @@ import { Settings, HelpCircle } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard, ImportDialog, Modal } from '/src/components'
+import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog, Modal } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
