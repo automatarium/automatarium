@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { HelpCircle } from 'lucide-react'
 
 import { Content, EditorContent } from './editorStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule } from '/src/components'
@@ -13,6 +14,7 @@ import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
+import TourButton from '/src/components/TourButton/TourButton'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -23,25 +25,42 @@ const Editor = () => {
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
   const [showTour, setShowTour] = useState(false)
+
   const closeTour = () => {
     setShowTour(false)
   }
+
+  const showTourHandler = () => {
+    setShowTour(true)
+  }
+
   const currentModule = useModuleStore(s => s.module)
   const getProjectinModule = useModuleStore(s => s.getProjectById)
   const setModule = useModuleStore(s => s.setModule)
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
 
+  const [panelWidth, setPanelWidth] = useState(250) // Default panel width
+  const handlePanelWidthChange = (newWidth) => {
+    setPanelWidth(newWidth)
+  }
   useEffect(() => {
-    const tourShown = localStorage.getItem('tourEditorShown')
-    if (!tourShown) {
-      const timeoutId = setTimeout(() => {
-        setShowTour(true)
-      }, 1000)
-      localStorage.setItem('tourEditorShown', 'true')
-      return () => clearTimeout(timeoutId)
+    // Reset panel width when currentModule changes
+    if (showModuleWindow) {
+      setPanelWidth(250) // Reset to default width
     }
-  }, [])
+  }, [showModuleWindow])
+
+  // useEffect(() => {
+  //   const tourShown = localStorage.getItem('tourEditorShown')
+  //   if (!tourShown) {
+  //     const timeoutId = setTimeout(() => {
+  //       setShowTour(true)
+  //     }, 1000)
+  //     localStorage.setItem('tourEditorShown', 'true')
+  //     return () => clearTimeout(timeoutId)
+  //   }
+  // }, [])
 
   if (!project) {
     navigate('/new')
@@ -115,14 +134,14 @@ const Editor = () => {
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showModuleWindow && currentModule && <ModuleWindow/>
+        {showModuleWindow && currentModule && <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
       }
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
         </EditorContent>
         {(projectType === 'PDA') &&
-          <PDAStackVisualiser />
+          <PDAStackVisualiser panelWidth={panelWidth} />
         }
         <Sidepanel />
       </Content>
@@ -139,6 +158,11 @@ const Editor = () => {
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
       />
+
+    <TourButton
+      icon={<HelpCircle />}
+      onClick={showTourHandler}>
+    </TourButton>
 
       <ImportDialog navigateFunction={navigate} />
       {showTour && <EditorPageTour onClose={closeTour}/>}

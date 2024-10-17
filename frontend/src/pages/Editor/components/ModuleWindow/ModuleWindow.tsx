@@ -14,7 +14,7 @@ import {
   Content
 } from './moduleWindowStyling'
 
-const ModuleWindow = () => {
+const ModuleWindow = ({ onPanelWidthChange }) => {
   const currentModule = useModuleStore(s => s.module)
   const updateQuestion = useModuleStore(s => s.upsertQuestion)
   const updateProject = useModuleStore(s => s.upsertProject)
@@ -33,6 +33,11 @@ const ModuleWindow = () => {
   const [isEditing, setIsEditing] = useState(false)
   const [question, setQuestion] = useState(currentQuestion || '')
 
+  // Effect to reset panelWidth when the module changes
+  useEffect(() => {
+    setPanelWidth('250px') // Reset to default width or set to any desired value
+  }, [currentModule]) // Trigger when currentModule changes
+
   const handleMouseDown = (e: React.MouseEvent) => {
     const startX = e.clientX
     const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250
@@ -40,6 +45,7 @@ const ModuleWindow = () => {
     const handleMouseMove = (moveEvent: MouseEvent) => {
       const newWidth = startWidth + (moveEvent.clientX - startX)
       setPanelWidth(`${newWidth}px`)
+      onPanelWidthChange(newWidth)
     }
 
     const handleMouseUp = () => {
