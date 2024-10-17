@@ -22,7 +22,6 @@ const Share = () => {
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
   const getModuleProject = useModuleStore(s => s.getProject)
-  
 
   useEffect(() => {
     switch (type) {

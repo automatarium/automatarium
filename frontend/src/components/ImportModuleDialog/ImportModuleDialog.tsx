@@ -11,7 +11,6 @@ import { Container } from '/src/pages/Share/shareStyle'
 import { StoredModule } from '/src/stores/useModuleStore'
 import { encodeModule } from '/src/util/encoding'
 
-
 type ImportDialogProps = {
     // This needs to be passed in from the main page
     navigateFunction: NavigateFunction
@@ -46,20 +45,20 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
   }, [urlError])
 
   useEvent('modal:importModule', () => {
-      setModalOpen(true)
-      setLoading(false)
-      setRawError(false)
-      setUrlError(false)
+    setModalOpen(true)
+    setLoading(false)
+    setRawError(false)
+    setUrlError(false)
   })
 
   const resetModal = () => {
-      setUrlValue('')
-      setRawValue('')
-      setLoading(false)
-      setModalOpen(false)
-      setRawError(false)
-      setUrlError(false)
-    }
+    setUrlValue('')
+    setRawValue('')
+    setLoading(false)
+    setModalOpen(false)
+    setRawError(false)
+    setUrlError(false)
+  }
 
   const onData = (module: StoredModule) => {
     setModule(module)
@@ -75,8 +74,8 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
   }
 
   return loading
-  ? <Container><Spinner /></Container>
-  : <Modal
+    ? <Container><Spinner /></Container>
+    : <Modal
       title='Import Module'
       description='Have an existing module?'
       isOpen={modalOpen}
@@ -88,19 +87,19 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
       <Button
         disabled={loading}
         onClick={() => {
-            setLoading(true)
-            promptLoadModuleFile(
+          setLoading(true)
+          promptLoadModuleFile(
             onData,
             'The file format provided is not valid. Please only open Automatarium .aom',
             '.aom',
             () => {
-                resetModal()
-                loadModule()
+              resetModal()
+              loadModule()
             },
             () => {
-                setLoading(false)
+              setLoading(false)
             }
-            )
+          )
         }}
       >
         Browse...
