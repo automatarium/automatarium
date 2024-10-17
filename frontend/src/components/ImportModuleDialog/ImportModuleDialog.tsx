@@ -81,8 +81,8 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
             setLoading(true)
             promptLoadModuleFile(
             onData,
-            'The file format provided is not valid. Please only open Automatarium .json',
-            '.json',
+            'The file format provided is not valid. Please only open Automatarium .aom',
+            '.aom',
             () => {
                 resetModal()
                 loadModule()

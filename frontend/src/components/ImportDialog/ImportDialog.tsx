@@ -78,8 +78,8 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
             setLoading(true)
             promptLoadFile(
               onData,
-              'The file format provided is not valid. Please only open Automatarium .json or JFLAP .jff file formats.',
-              '.jff,.json',
+              'The file format provided is not valid. Please only open Automatarium .json, Automatarium .ao or JFLAP .jff file formats.',
+              '.jff,.json,.ao',
               () => {
                 resetModal()
                 navigate('/editor')

@@ -111,7 +111,7 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open automatarium project', '.json') }
+        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open automatarium project', '.json,.ao') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
@@ -150,7 +150,7 @@ const useActions = (registerHotkeys = false) => {
         const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
         // File extension explicitly added to allow for file names with dots
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.ao'
         a.click()
       }
     },
