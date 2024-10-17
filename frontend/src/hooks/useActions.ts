@@ -16,7 +16,7 @@ import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
-import { createNewModule } from '../stores/useModuleStore'
+import useModuleStore, { createNewModule } from '../stores/useModuleStore'
 
 /**
  * Combination of keys. Used to call an action
@@ -720,6 +720,19 @@ export const promptLoadModuleFile = <T>(onData: (val: T) => void, errorMessage =
   input.accept = accept
   input.onchange = () => { useParseModuleFile(onData, errorMessage, input.files[0], onFinishLoading, onFailedLoading) }
   input.click()
+}
+
+export const exportModuleFile = () => {
+  // Pull module state
+  const project = useModuleStore.getState().module
+
+  // Create a download link and use it
+  const a = document.createElement('a')
+  const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
+  a.href = URL.createObjectURL(file)
+  // File extension explicitly added to allow for file names with dots
+  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.aom'
+  a.click()
 }
 
 export default useActions
