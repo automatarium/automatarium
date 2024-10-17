@@ -13,6 +13,7 @@ import {
   EditButton,
   Content
 } from './moduleWindowStyling'
+import { MarkdownRender } from '/src/components'
 
 const ModuleWindow = ({ onPanelWidthChange }) => {
   const currentModule = useModuleStore(s => s.module)
@@ -130,7 +131,8 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
             />
               )
             : (
-            <>{formattedInstructions}</>
+              <MarkdownRender props= {question}/>
+              // <>{formattedInstructions} </>
               )}
         </Content>
       </div>
