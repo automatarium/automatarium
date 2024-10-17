@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 import { Content, EditorContent } from './editorStyle'
-import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup } from '/src/components'
+import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
 import { useExportStore, useModuleStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
@@ -132,6 +132,7 @@ const Editor = () => {
 
       <ExportImage />
       <ShareUrl />
+      <ShareUrlModule />
 
       <TemplateDelConfDialog
         isOpen={confirmDialogOpen}

@@ -2,13 +2,14 @@ import { useEffect, useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { NavigateFunction } from 'react-router-dom'
 
-import { promptLoadModuleFile } from '/src/hooks/useActions'
+import { promptLoadModuleFile, urlLoadModuleFile } from '/src/hooks/useActions'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 
 import { ErrorText, ImportButtonWrapper } from './importModuleDialogStyle'
 import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { StoredModule } from '/src/stores/useModuleStore'
+import { encodeModule } from '/src/util/encoding'
 
 
 type ImportDialogProps = {
@@ -34,6 +35,15 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
   const [rawError, setRawError] = useState(false)
   const [urlError, setUrlError] = useState(false)
 
+  useEffect(() => {
+    const timeout = setTimeout(() => setRawError(false), 3000)
+    return () => clearTimeout(timeout)
+  }, [rawError])
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setUrlError(false), 3000)
+    return () => clearTimeout(timeout)
+  }, [urlError])
 
   useEvent('modal:importModule', () => {
       setModalOpen(true)
@@ -96,6 +106,59 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
         Browse...
       </Button>
     </ImportButtonWrapper>
+    <hr />
+      From URL (raw/plaintext)
+      <ImportButtonWrapper>
+        <Input
+          value={urlValue}
+          onChange={e => setUrlValue(e.target.value)}
+          placeholder={'www.example.com/paste/raw/CoolFSA.json'}
+        />
+        <Button
+          disabled={loading}
+          onClick={() => {
+            if (urlValue.length > 0) {
+              setLoading(true)
+              urlLoadModuleFile(
+                urlValue,
+                onData,
+                'Automatarium failed to load a module from provided URL.',
+                () => {
+                  resetModal()
+                  navigate('/editor')
+                },
+                () => {
+                  setLoading(false)
+                }
+              )
+            } else {
+              setUrlError(true)
+            }
+          }}
+        >Import</Button>
+      </ImportButtonWrapper>
+      {urlError ? <ErrorText>No URL specified!</ErrorText> : <></>}
+      <hr />
+      From raw data (from the export or your json file)
+      <ImportButtonWrapper>
+        <Input
+          value={rawValue}
+          onChange={e => setRawValue(e.target.value)}
+          placeholder={'Enter raw data here'}
+        />
+        <Button disabled={loading} onClick={() => {
+          if (rawValue.length > 0) {
+            const data = rawValue[0] === '{'
+              // This is a json file. It might not fit on the URL
+              ? encodeModule(JSON.parse(rawValue))
+              : rawValue
+            navigate(`/share/module/${data}`)
+          } else {
+            setRawError(true)
+          }
+        }}>Load</Button>
+      </ImportButtonWrapper>
+      {rawError ? <ErrorText>Can't load nothing!</ErrorText> : <></>}
   </Modal>
 }
 

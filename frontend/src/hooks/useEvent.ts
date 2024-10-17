@@ -80,6 +80,7 @@ export interface CustomEvents {
   'modal:import': null,
   'modal:importModule': null,
   'showSharing': null,
+  'showModuleSharing': null,
   'stackVisualiser:toggle': { state: boolean },
   'createTemplateThumbnail': string,
   'storeTemplateThumbnail': string,

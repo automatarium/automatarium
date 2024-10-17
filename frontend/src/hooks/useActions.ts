@@ -5,7 +5,7 @@ import { convertJFLAPXML, convertAutomatariumToJFLAP } from '@automatarium/jflap
 import autoLayout from '@automatarium/simulation/src/autoLayout'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
-import { decodeData } from '../util/encoding'
+import { decodeData, decodeModule } from '../util/encoding'
 import useEdgeContext from './useEdgeContext'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 import { showWarning } from '/src/components/Warning/Warning'
@@ -733,6 +733,31 @@ export const exportModuleFile = () => {
   // File extension explicitly added to allow for file names with dots
   a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.aom'
   a.click()
+}
+
+export const urlLoadModuleFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file.', onFinishLoading = () => null, onFailedLoading = () => null) => {
+  // Check that the user didn't just pass in the URL that was given from Automatarium
+  const urlTokens = url.split('/') ?? null
+  if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'module') {
+    decodeModule(urlTokens[urlTokens.length - 1]).then((data) => {
+      const asFile = new File([JSON.stringify(data)], 'Shared Project')
+      useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
+    })
+  } else {
+    fetch(url)
+      .then(async (res) => {
+        const resUrlTokens = res.url.split('/')
+        const endpointName = decodeURIComponent(resUrlTokens[resUrlTokens.length - 1])
+        // Give a default filename based on the received URL
+        const asFile = new File([await res.blob()], endpointName)
+        useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
+      })
+      .catch((error) => {
+        showWarning(`Failed to retrieve the file from this URL.\n${error}`)
+        console.error(error)
+        onFailedLoading()
+      })
+  }
 }
 
 export default useActions

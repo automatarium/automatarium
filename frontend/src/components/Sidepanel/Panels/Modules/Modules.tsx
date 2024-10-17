@@ -5,6 +5,7 @@ import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import { createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
 import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper } from './modulesStyle'
 import { exportModuleFile } from '/src/hooks/useActions'
+import { dispatchCustomEvent } from '/src/util/events'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
@@ -265,7 +266,7 @@ const Modules = () => {
         <SectionLabel>Export</SectionLabel>
         <Wrapper>
           <Button onClick={handleExportModule}>Export as Automatrium module file</Button>
-          <Button>Export as URL</Button>
+          <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>Export as URL</Button>
         </Wrapper>
       </>
       }
