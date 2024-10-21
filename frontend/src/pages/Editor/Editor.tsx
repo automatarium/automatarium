@@ -25,6 +25,7 @@ const Editor = () => {
   const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
   const project = useProjectStore(s => s.project)
   const [showTour, setShowTour] = useState(false)
+  const [isSidepanelOpen, setIsSidepanelOpen] = useState(false);
 
   const closeTour = () => {
     setShowTour(false)
@@ -33,6 +34,8 @@ const Editor = () => {
   const showTourHandler = () => {
     setShowTour(true)
   }
+
+  
 
   const currentModule = useModuleStore(s => s.module)
   const getProjectinModule = useModuleStore(s => s.getProjectById)
@@ -79,6 +82,8 @@ const Editor = () => {
   }, [currentModule, project, getProjectinModule])
 
   const projectType = project.config.type
+
+  const buttonRight = isSidepanelOpen ? '410px' : '60px';
 
   const isSaving = useAutosaveProject()
 
@@ -143,7 +148,7 @@ const Editor = () => {
         {(projectType === 'PDA') &&
           <PDAStackVisualiser panelWidth={panelWidth} />
         }
-        <Sidepanel />
+        <Sidepanel onToggle={() => setIsSidepanelOpen((prev) => !prev)} />
       </Content>
       <ShortcutGuide />
 
@@ -158,13 +163,13 @@ const Editor = () => {
         setClose={() => setConfirmDialogOpen(false)}
       />
 
-    <TourButton
-      icon={<HelpCircle />}
-      onClick={showTourHandler}>
-    </TourButton>
-
+      <TourButton
+        icon={<HelpCircle />}
+        onClick={showTourHandler}
+        style={{ position: 'fixed', right: buttonRight, bottom: '55px' }} // Use calculated right position
+      />
       <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour}/>}
+      {showTour && <EditorPageTour onClose={closeTour} />}
     </>
   )
 }

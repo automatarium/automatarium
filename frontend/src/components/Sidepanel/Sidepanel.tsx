@@ -61,19 +61,19 @@ const panels: PanelItem[] = [
   }
 ]
 
-const Sidepanel = () => {
-  const [activePanel, setActivePanel] = useState<PanelItem>()
-  const setTemplate = useTemplateStore(s => s.setTemplate)
-  const setTool = useToolStore(s => s.setTool)
-  const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
-
-  const projectType = useProjectStore(s => s.project.config.type)
+const Sidepanel = ({ onToggle }) => {
+  const [activePanel, setActivePanel] = useState<PanelItem>();
+  const setTemplate = useTemplateStore((s) => s.setTemplate);
+  const setTool = useToolStore((s) => s.setTool);
+  const setSteppedStates = useSteppingStore((s) => s.setSteppedStates);
+  const projectType = useProjectStore((s) => s.project.config.type);
 
   // Open panel via event
-  useEvent('sidepanel:open', e => {
-    const panel = panels.find(p => p.value === e.detail.panel)
-    setActivePanel(activePanel?.value === panel.value ? undefined : panel)
-  }, [activePanel])
+  useEvent('sidepanel:open', (e) => {
+    const panel = panels.find((p) => p.value === e.detail.panel);
+    setActivePanel(activePanel?.value === panel.value ? undefined : panel);
+    onToggle(); // Notify parent about the toggle
+  }, [activePanel, onToggle]);
 
   // Show bottom panel with TM Tape Lab (can make other effects for other project types if
   // the bottom panel wants to be used for something else)
@@ -107,10 +107,13 @@ const Sidepanel = () => {
         <>
           <CloseButton
             onClick={() => {
-              setActivePanel(undefined)
-              stopTemplateInsert(setTemplate, setTool)
+              setActivePanel(undefined);
+              stopTemplateInsert(setTemplate, setTool);
+              onToggle(); // Notify parent about the toggle
             }}
-          ><ChevronRight /></CloseButton>
+          >
+            <ChevronRight />
+          </CloseButton>
           <Panel>
             <div>
               <Heading>{activePanel?.label}</Heading>
@@ -121,12 +124,12 @@ const Sidepanel = () => {
       )}
 
       <Sidebar>
-        {panels.map(panel => (
+        {panels.map((panel) => (
           <SidebarButton
             key={panel.value}
             onClick={() => {
-              setActivePanel(activePanel?.value === panel.value ? undefined : panel)
-              stopTemplateInsert(setTemplate, setTool)
+              setActivePanel(activePanel?.value === panel.value ? undefined : panel);
+              stopTemplateInsert(setTemplate, setTool);
             }}
             $active={activePanel?.value === panel.value}
             title={panel.label}
@@ -136,7 +139,7 @@ const Sidepanel = () => {
         ))}
       </Sidebar>
     </Wrapper>
-  )
-}
+  );
+};
 
-export default Sidepanel
+export default Sidepanel;
