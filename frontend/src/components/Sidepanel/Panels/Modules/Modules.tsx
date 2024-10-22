@@ -21,6 +21,8 @@ const Modules = () => {
   const updateModule = useModulesStore(s => s.upsertModule)
   const setProject = useProjectStore(s => s.set)
   const currentProject = useProjectStore(s => s.project)
+  const setAllProjectNames = useModuleStore(s => s.setAllProjectNames)
+  const setProjectName = useProjectStore(s => s.setName)
 
   // Current assessment description and title
   const [isTitleEditing, setTitleIsEditing] = useState(false)
@@ -58,6 +60,8 @@ const Modules = () => {
   const handleEditSaveClick = () => {
     setModuleName(titleInput)
     setModuleDescription(titleDescription)
+    setProjectName(titleInput) // Save title to current project
+    setAllProjectNames(titleInput) // Save title to all projects stored in module
     setTitleIsEditing(false) // Exit edit mode after saving
     saveModule()
   }

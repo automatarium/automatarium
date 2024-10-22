@@ -103,6 +103,7 @@ interface ModuleStore {
   setModuleDescription: (description: string) => void;
   upsertQuestion: (pid: string, question: string) => void;
   deleteQuestion: (pid: string) => void;
+  setAllProjectNames: (name: string) => void;
 }
 
 const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>, get: GetState<ModuleStore>) => ({
@@ -129,6 +130,19 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
   })),
   setModuleDescription: (description: string) => set((state) => ({
     module: { ...state.module, description },
+    lastChangeDate: new Date().getTime()
+  })),
+  setAllProjectNames: (name: string) => set((state) => ({
+    module: {
+      ...state.module,
+      projects: state.module?.projects.map(project => ({
+        ...project,
+        meta: {
+          ...project.meta,
+          name: name
+        }
+      }))
+    },
     lastChangeDate: new Date().getTime()
   })),
   showModuleWindow: false,
