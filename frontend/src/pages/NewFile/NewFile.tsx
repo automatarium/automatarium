@@ -327,7 +327,6 @@ const NewFile = () => {
             value={moduleName}
             onChange={(e) => setModuleName(e.target.value)}
             placeholder='Enter project name'
-            defaultValue={'Untitled'}
           />
         </FormLabel>
         <FormLabel>
@@ -336,7 +335,6 @@ const NewFile = () => {
             value={moduleDescription}
             onChange={(e) => setModuleDescription(e.target.value)}
             placeholder='Enter project description'
-            defaultValue={'Enter project description'}
           />
         </FormLabel>
       </ModalForm>

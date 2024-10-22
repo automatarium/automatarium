@@ -1,11 +1,11 @@
-import ReactMarkdown from "react-markdown";
+import ReactMarkdown from 'react-markdown'
 
 const MarkdownRender = ({ props }) => {
   return (
     <ReactMarkdown>
     {props}
     </ReactMarkdown>
-  );
+  )
 }
 
-export default MarkdownRender;
+export default MarkdownRender

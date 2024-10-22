@@ -73,8 +73,6 @@ export const Title = styled('h2')`
   font-weight: 600;
 `
 
-
-
 export const Content = styled('div')`
   margin-top: 30px;
 `
@@ -137,7 +135,6 @@ export const PaginationWrapper = styled('div')`
   gap: 8px;
   margin-top: auto; /* Ensures pagination sticks to the bottom */
 `
-
 
 export const SelectBox = styled('select')`
   background-color: var(--surface);
