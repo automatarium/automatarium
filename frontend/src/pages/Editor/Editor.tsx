@@ -75,8 +75,7 @@ const Editor = () => {
     if (currentModule && getProjectinModule(project._id) === undefined) {
       setModule(null)
       setShowModuleWindow(false)
-    }
-    else if (currentModule) {
+    } else if (currentModule) {
       updateModule(currentModule)
     }
   }, [currentModule, project, getProjectinModule])

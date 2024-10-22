@@ -139,7 +139,7 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
         ...project,
         meta: {
           ...project.meta,
-          name: name
+          name
         }
       }))
     },
