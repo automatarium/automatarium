@@ -5,7 +5,7 @@ import { HelpCircle } from 'lucide-react'
 import { Content, EditorContent } from './editorStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
-import { useExportStore, useModuleStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
+import { useExportStore, useModulesStore, useModuleStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
@@ -39,6 +39,7 @@ const Editor = () => {
   const setModule = useModuleStore(s => s.setModule)
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
+  const updateModule = useModulesStore(s => s.upsertModule)
 
   const [panelWidth, setPanelWidth] = useState(250) // Default panel width
   const handlePanelWidthChange = (newWidth) => {
@@ -68,13 +69,15 @@ const Editor = () => {
   }
 
   useEffect(() => {
+    if (currentModule == null) {
+      setShowModuleWindow(false)
+    }
     if (currentModule && getProjectinModule(project._id) === undefined) {
       setModule(null)
       setShowModuleWindow(false)
     }
-
-    if (currentModule == null) {
-      setShowModuleWindow(false)
+    else if (currentModule) {
+      updateModule(currentModule)
     }
   }, [currentModule, project, getProjectinModule])
 
