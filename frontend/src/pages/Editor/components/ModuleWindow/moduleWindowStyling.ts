@@ -6,127 +6,138 @@ export const ModuleWindowWrapper = styled('div', forwardRef)<{ width: string }>`
   flex-direction: column;
   justify-content: space-between;
   width: ${(props) => props.width}; /* Dynamic width */
-  padding: 16px;
   background-color: var(--surface);
   border-right: 1px solid var(--surface);
-  height: 86vh;
   overflow-y: auto;
   color: var(--white);
   position: relative; /* To position the resize handle */
   overflow-y: auto;
-  overflow: visible;
+  overflow: visible; 
+  padding: 0 1em 1em;
 `
 
 export const ResizeHandle = styled('div')`
+  height: 100%;
+
+  background-color: rgb(165, 165, 165);
+  width: 2px;
+
   position: absolute;
   top: 0;
   right: 0;
-  bottom: 0;
-  width: 5px;
+
   cursor: ew-resize;
-  background-color: var(--surface); /* For visibility */
+
+  // these prevent text selection while dragging
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+
+  transition: background-color 0.2s ease-out, width 0.2s ease-out;
+
+  &:hover {
+    width: 3px;
+    background-color: rgb(93, 159, 235);
+  }
 `
 
 export const CloseButton = styled('button')`
   position: absolute;
-  top: 17px;
-  right: -14px; /* Half outside the panel (adjust as needed) */
-  padding: 0.2em 0.5rem;
-  background-color: var(--toolbar);
-  color: var(--white);
-  border: none;
-  border-radius: 0.3em;
-  cursor: pointer;
-  font-size: 18px;
-  line-height: 1;
+  top: .6em;
+  z-index: 1;
+  right: -1em;
+  height: 2em;
+  width: 2em;
+  font: inherit;
+  color: inherit;
+  background: var(--toolbar);
+  border: 0;
   display: flex;
-  justify-content: center;
   align-items: center;
-  box-shadow: 0 0 5px rgba(0, 0, 0, 0.3); /* Add a slight shadow for emphasis */
-  z-index: 10; /* Ensure it's above other elements */
-
-  
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+  border-radius: .3em;
+  cursor: pointer;
 `
 
 export const TitleWrapper = styled('div')`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid var(--surface);
-  padding-bottom: 8px;
 `
 
 export const Title = styled('h2')`
-  margin: 0;
-  color: var(--white); /* Title color */
+  font-size: 1.2em;
+  font-weight: 600;
 `
 
-export const EditButton = styled('button')<{$active?: boolean}>`
-  background-color: var(--primary);
-  margin-right: 10px;
-  color: var(--white);
-  border: 1px solid var(--primary);
-  padding: 0.2em 0.5rem;
-  cursor: pointer;
-  font-size: 14px;
-  border-radius: 0.3em;
-  transition: background 0.3s, color 0.3s;
 
-  &:hover {
-    background-color: var(--white);
-    color: var(--toolbar);
-  }
-
-  ${props => props.$active && `
-    background-color: var(--primary);
-    color: var(--white);
-  `}
-`
 
 export const Content = styled('div')`
   margin-top: 30px;
 `
 
-export const Textarea = styled('textarea')`
+export const ButtonContainer = styled('div')`
+  position: absolute;
+  top: .6em;
+  right: 2em;
+  height: 2em;
+  display: flex;
+  justify-content: center; 
+  gap: 0.5em; 
+
+
+  Button:nth-child(1) {
+    background-color: transparent;
+    color: var(--primary-dark);
+    border: 2.5px solid var(--toolbar); 
+
+    &:hover {
+      background-color: var(--toolbar);
+      color: white;
+    }
+  }
+`
+
+export const EditButton = styled('div')`
+  position: absolute;
+  top: .6em;
+  right: 2em;
+  height: 2em;
+  display: flex;
+  justify-content: center; 
+  gap: 0.5em; 
+`
+
+export const TextArea = styled('textarea')`
   width: 100%;
-  height: 500px;
-  background-color: var(--surface);
-  color: var(--white);
-  border: 1px solid var(--white);
-  padding: 2px;
-  font-size: 14px;
-  border-radius: 0.3em;
-  transition: background 0.3s, color 0.3s;
+  padding: 0.6rem;
+  font-size: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 0.3rem;
+  margin-bottom: 0.8rem;
+  box-sizing: border-box;
+  background-color: var(--toolbar);
+  color: white; 
+  resize: none;
+
+  
+  &:focus {
+    outline: none;
+    border-color: var(--primary); 
+  }
 `
 
 export const PaginationWrapper = styled('div')`
   display: flex;
   justify-content: center;
-  align-items: center;
+
   gap: 8px;
   margin-top: auto; /* Ensures pagination sticks to the bottom */
-  padding-top: 16px;
 `
 
-export const PaginationButton = styled('button')`
-  background-color: var(--primary);
-  color: var(--white);
-  border: 1px solid var(--white);
-  padding: 0.2em 0.5rem;
-  cursor: pointer;
-  font-size: 14px;
-  border-radius: 0.3em;
-
-  &:hover {
-    background-color: var(--white);
-    color: var(--toolbar);
-  }
-
-  &:disabled {
-    background-color: var(--surface);
-    cursor: not-allowed;
-  }
-`
 
 export const SelectBox = styled('select')`
   background-color: var(--surface);
