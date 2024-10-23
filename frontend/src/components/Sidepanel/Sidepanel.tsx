@@ -62,56 +62,73 @@ const panels: PanelItem[] = [
 ]
 
 const Sidepanel = ({ onToggle }) => {
-  const [activePanel, setActivePanel] = useState<PanelItem>();
+  const [activePanel, setActivePanel] = useState<PanelItem | undefined>();
   const setTemplate = useTemplateStore((s) => s.setTemplate);
   const setTool = useToolStore((s) => s.setTool);
   const setSteppedStates = useSteppingStore((s) => s.setSteppedStates);
   const projectType = useProjectStore((s) => s.project.config.type);
 
-  // Open panel via event
+  const cleanupPanel = () => {
+    stopTemplateInsert(setTemplate, setTool);
+    setSteppedStates([]);
+    dispatchCustomEvent('bottomPanel:close', null);
+    dispatchCustomEvent('stackVisualiser:toggle', { state: false });
+  };
+
+  const handleToggle = (panel: PanelItem) => {
+    const isSamePanel = activePanel?.value === panel.value;
+    
+    console.log('Current Active Panel:', activePanel);
+    console.log('Attempting to Toggle Panel:', panel);
+  
+    // Cleanup the previous panel regardless of the state
+    cleanupPanel();
+  
+    if (isSamePanel) {
+      // If the same panel is clicked, close it
+      setActivePanel(undefined);
+      onToggle(false); // Close side panel
+      console.log('Closed Panel:', panel);
+    } else {
+      // If a different panel is clicked, open it
+      setActivePanel(panel);
+      onToggle(true); // Open side panel
+      console.log('Opened Panel:', panel);
+    }
+  };
+
   useEvent('sidepanel:open', (e) => {
     const panel = panels.find((p) => p.value === e.detail.panel);
-    setActivePanel(activePanel?.value === panel.value ? undefined : panel);
-    onToggle(); // Notify parent about the toggle
-  }, [activePanel, onToggle]);
+    handleToggle(panel);
+  }, [activePanel]);
 
-  // Show bottom panel with TM Tape Lab (can make other effects for other project types if
-  // the bottom panel wants to be used for something else)
   useEffect(() => {
     if (projectType === 'TM' && activePanel?.value === 'test') {
-      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
+      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' });
     } else {
-      dispatchCustomEvent('bottomPanel:close', null)
+      dispatchCustomEvent('bottomPanel:close', null);
     }
-  }, [activePanel])
+  }, [activePanel]);
 
-  // Clear the stepped states if the stepping/testing lab is no longer in use
-  useEffect(() => {
-    if (activePanel?.value !== 'step' && activePanel?.value !== 'test') {
-      setSteppedStates([])
-    }
-  }, [activePanel])
+  const handleClose = () => {
+    cleanupPanel();
+    setActivePanel(undefined);
+    onToggle(); // Ensure this is correctly toggling the state
+  };
 
-  // Show the stack visualiser only if the Testing Lab is currently in use
   useEffect(() => {
     if (projectType === 'PDA' && activePanel?.value === 'test') {
-      dispatchCustomEvent('stackVisualiser:toggle', { state: true })
+      dispatchCustomEvent('stackVisualiser:toggle', { state: true });
     } else {
-      dispatchCustomEvent('stackVisualiser:toggle', { state: false })
+      dispatchCustomEvent('stackVisualiser:toggle', { state: false });
     }
-  }, [activePanel])
+  }, [activePanel]);
 
   return (
     <Wrapper>
       {activePanel && (
         <>
-          <CloseButton
-            onClick={() => {
-              setActivePanel(undefined);
-              stopTemplateInsert(setTemplate, setTool);
-              onToggle(); // Notify parent about the toggle
-            }}
-          >
+          <CloseButton onClick={handleClose}>
             <ChevronRight />
           </CloseButton>
           <Panel>
@@ -127,10 +144,7 @@ const Sidepanel = ({ onToggle }) => {
         {panels.map((panel) => (
           <SidebarButton
             key={panel.value}
-            onClick={() => {
-              setActivePanel(activePanel?.value === panel.value ? undefined : panel);
-              stopTemplateInsert(setTemplate, setTool);
-            }}
+            onClick={() => handleToggle(panel)}
             $active={activePanel?.value === panel.value}
             title={panel.label}
           >
