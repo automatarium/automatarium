@@ -10,7 +10,7 @@ import stateAnimation from '../../../components/Toolbar/animations/state.json'
 import transitionAnimation from '../../../components/Toolbar/animations/transition.json'
 import commentAnimation from '../../../components/Toolbar/animations/comment.json'
 
-import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, FlaskConical, Info as InfoIcon, Settings2, Star, GraduationCap} from 'lucide-react'
+import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, FlaskConical, Info as InfoIcon, Settings2, Star, GraduationCap } from 'lucide-react'
 
 import { Info } from '/src/components/Sidepanel/Panels'
 

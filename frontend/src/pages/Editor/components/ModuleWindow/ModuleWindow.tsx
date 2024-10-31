@@ -34,7 +34,6 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
   const [isEditing, setIsEditing] = useState(false)
   const [question, setQuestion] = useState(currentQuestion || '')
 
-
   const handleMouseDown = (e: React.MouseEvent) => {
     const startX = e.clientX
     const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250

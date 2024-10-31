@@ -62,67 +62,67 @@ const panels: PanelItem[] = [
 ]
 
 const Sidepanel = ({ onToggle }) => {
-  const [activePanel, setActivePanel] = useState<PanelItem | undefined>();
-  const setTemplate = useTemplateStore((s) => s.setTemplate);
-  const setTool = useToolStore((s) => s.setTool);
-  const setSteppedStates = useSteppingStore((s) => s.setSteppedStates);
-  const projectType = useProjectStore((s) => s.project.config.type);
+  const [activePanel, setActivePanel] = useState<PanelItem | undefined>()
+  const setTemplate = useTemplateStore((s) => s.setTemplate)
+  const setTool = useToolStore((s) => s.setTool)
+  const setSteppedStates = useSteppingStore((s) => s.setSteppedStates)
+  const projectType = useProjectStore((s) => s.project.config.type)
 
   const cleanupPanel = () => {
-    stopTemplateInsert(setTemplate, setTool);
-    setSteppedStates([]);
-    dispatchCustomEvent('bottomPanel:close', null);
-    dispatchCustomEvent('stackVisualiser:toggle', { state: false });
-  };
+    stopTemplateInsert(setTemplate, setTool)
+    setSteppedStates([])
+    dispatchCustomEvent('bottomPanel:close', null)
+    dispatchCustomEvent('stackVisualiser:toggle', { state: false })
+  }
 
   const handleToggle = (panel: PanelItem) => {
-    const isSamePanel = activePanel?.value === panel.value;
-    
-    console.log('Current Active Panel:', activePanel);
-    console.log('Attempting to Toggle Panel:', panel);
-  
+    const isSamePanel = activePanel?.value === panel.value
+
+    console.log('Current Active Panel:', activePanel)
+    console.log('Attempting to Toggle Panel:', panel)
+
     // Cleanup the previous panel regardless of the state
-    cleanupPanel();
-  
+    cleanupPanel()
+
     if (isSamePanel) {
       // If the same panel is clicked, close it
-      setActivePanel(undefined);
-      onToggle(false); // Close side panel
-      console.log('Closed Panel:', panel);
+      setActivePanel(undefined)
+      onToggle(false) // Close side panel
+      console.log('Closed Panel:', panel)
     } else {
       // If a different panel is clicked, open it
-      setActivePanel(panel);
-      onToggle(true); // Open side panel
-      console.log('Opened Panel:', panel);
+      setActivePanel(panel)
+      onToggle(true) // Open side panel
+      console.log('Opened Panel:', panel)
     }
-  };
+  }
 
   useEvent('sidepanel:open', (e) => {
-    const panel = panels.find((p) => p.value === e.detail.panel);
-    handleToggle(panel);
-  }, [activePanel]);
+    const panel = panels.find((p) => p.value === e.detail.panel)
+    handleToggle(panel)
+  }, [activePanel])
 
   useEffect(() => {
     if (projectType === 'TM' && activePanel?.value === 'test') {
-      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' });
+      dispatchCustomEvent('bottomPanel:open', { panel: 'tmTape' })
     } else {
-      dispatchCustomEvent('bottomPanel:close', null);
+      dispatchCustomEvent('bottomPanel:close', null)
     }
-  }, [activePanel]);
+  }, [activePanel])
 
   const handleClose = () => {
-    cleanupPanel();
-    setActivePanel(undefined);
-    onToggle(); // Ensure this is correctly toggling the state
-  };
+    cleanupPanel()
+    setActivePanel(undefined)
+    onToggle() // Ensure this is correctly toggling the state
+  }
 
   useEffect(() => {
     if (projectType === 'PDA' && activePanel?.value === 'test') {
-      dispatchCustomEvent('stackVisualiser:toggle', { state: true });
+      dispatchCustomEvent('stackVisualiser:toggle', { state: true })
     } else {
-      dispatchCustomEvent('stackVisualiser:toggle', { state: false });
+      dispatchCustomEvent('stackVisualiser:toggle', { state: false })
     }
-  }, [activePanel]);
+  }, [activePanel])
 
   return (
     <Wrapper>
@@ -153,7 +153,7 @@ const Sidepanel = ({ onToggle }) => {
         ))}
       </Sidebar>
     </Wrapper>
-  );
-};
+  )
+}
 
-export default Sidepanel;
+export default Sidepanel
