@@ -17,22 +17,23 @@ import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
 import TourButton from '/src/components/TourButton/TourButton'
 
 const Editor = () => {
-  const navigate = useNavigate()
-  const { tool, setTool } = useToolStore()
-  const [priorTool, setPriorTool] = useState<Tool>()
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
-  const resetExportSettings = useExportStore(s => s.reset)
-  const setViewPositionAndScale = useViewStore(s => s.setViewPositionAndScale)
-  const project = useProjectStore(s => s.project)
-  const [showTour, setShowTour] = useState(false)
+  const navigate = useNavigate();
+  const { tool, setTool } = useToolStore();
+  const [priorTool, setPriorTool] = useState<Tool>();
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const resetExportSettings = useExportStore((s) => s.reset);
+  const setViewPositionAndScale = useViewStore((s) => s.setViewPositionAndScale);
+  const project = useProjectStore((s) => s.project);
+  const [showTour, setShowTour] = useState(false);
+  const [isSidepanelOpen, setIsSidepanelOpen] = useState(false);
 
   const closeTour = () => {
-    setShowTour(false)
-  }
+    setShowTour(false);
+  };
 
   const showTourHandler = () => {
-    setShowTour(true)
-  }
+    setShowTour(true);
+  };
 
   const currentModule = useModuleStore(s => s.module)
   const getProjectinModule = useModuleStore(s => s.getProjectById)
@@ -41,31 +42,22 @@ const Editor = () => {
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
   const updateModule = useModulesStore(s => s.upsertModule)
 
-  const [panelWidth, setPanelWidth] = useState(250) // Default panel width
+  const [panelWidth, setPanelWidth] = useState(250); // Default panel width
+
   const handlePanelWidthChange = (newWidth) => {
-    setPanelWidth(newWidth)
-  }
+    setPanelWidth(newWidth);
+  };
+
   useEffect(() => {
     // Reset panel width when currentModule changes
     if (showModuleWindow) {
-      setPanelWidth(250) // Reset to default width
+      setPanelWidth(250); // Reset to default width
     }
-  }, [showModuleWindow])
-
-  // useEffect(() => {
-  //   const tourShown = localStorage.getItem('tourEditorShown')
-  //   if (!tourShown) {
-  //     const timeoutId = setTimeout(() => {
-  //       setShowTour(true)
-  //     }, 1000)
-  //     localStorage.setItem('tourEditorShown', 'true')
-  //     return () => clearTimeout(timeoutId)
-  //   }
-  // }, [])
+  }, [showModuleWindow]);
 
   if (!project) {
-    navigate('/new')
-    return null
+    navigate("/new");
+    return null;
   }
 
   useEffect(() => {
@@ -78,79 +70,87 @@ const Editor = () => {
     } else if (currentModule) {
       updateModule(currentModule)
     }
-  }, [currentModule, project, getProjectinModule])
+  }, [currentModule, project, getProjectinModule]);
 
-  const projectType = project.config.type
+  const projectType = project.config.type;
+  const [buttonRight, setButtonRight] = useState("60px");
 
-  const isSaving = useAutosaveProject()
+  // Adjust button position when side panel is toggled
+  useEffect(() => {
+    setButtonRight(isSidepanelOpen ? "410px" : "60px");
+  }, [isSidepanelOpen]);
 
-  useActions(true)
+  // Toggle side panel and update button position
+  const handleSidepanelToggle = (isOpen) => {
+    setIsSidepanelOpen(isOpen);
+  };
+
+  const isSaving = useAutosaveProject();
+
+  useActions(true);
 
   useEffect(() => {
-    resetExportSettings()
-    setViewPositionAndScale({ x: 0, y: 0 }, 1)
-  }, [])
+    resetExportSettings();
+    setViewPositionAndScale({ x: 0, y: 0 }, 1);
+  }, []);
 
-  useEvent('keydown', e => {
-    if (haveInputFocused(e)) return
+  useEvent("keydown", (e) => {
+    if (haveInputFocused(e)) return;
 
-    if (!priorTool && e.code === 'Space') {
-      setPriorTool(tool)
-      setTool('hand')
+    if (!priorTool && e.code === "Space") {
+      setPriorTool(tool);
+      setTool("hand");
     }
-    if (e.code === 'Space') {
-      e.preventDefault()
-      e.stopPropagation()
+    if (e.code === "Space") {
+      e.preventDefault();
+      e.stopPropagation();
     }
-  }, [tool, priorTool])
+  }, [tool, priorTool]);
 
-  useEvent('keyup', e => {
-    if (haveInputFocused(e)) return
+  useEvent("keyup", (e) => {
+    if (haveInputFocused(e)) return;
 
-    if (priorTool && e.code === 'Space') {
-      setTool(priorTool)
-      setPriorTool(undefined)
+    if (priorTool && e.code === "Space") {
+      setTool(priorTool);
+      setPriorTool(undefined);
     }
-    if (e.code === 'Space') {
-      e.preventDefault()
-      e.stopPropagation()
+    if (e.code === "Space") {
+      e.preventDefault();
+      e.stopPropagation();
     }
-  }, [tool, priorTool])
+  }, [tool, priorTool]);
 
-  useEvent('svg:mousedown', e => {
+  useEvent("svg:mousedown", (e) => {
     if (!priorTool && e.detail.originalEvent.button === 1) {
-      setPriorTool(tool)
-      setTool('hand')
+      setPriorTool(tool);
+      setTool("hand");
     }
-  }, [tool, priorTool])
+  }, [tool, priorTool]);
 
-  useEvent('svg:mouseup', e => {
+  useEvent("svg:mouseup", (e) => {
     if (priorTool && e.detail.originalEvent.button === 1) {
-      setTool(priorTool)
-      setPriorTool(undefined)
+      setTool(priorTool);
+      setPriorTool(undefined);
     }
-  }, [tool, priorTool])
+  }, [tool, priorTool]);
 
   return (
     <>
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showModuleWindow && currentModule && <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
-      }
+        {showModuleWindow && currentModule && (
+          <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
+        )}
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
         </EditorContent>
-        {(projectType === 'PDA') &&
-          <PDAStackVisualiser panelWidth={panelWidth} />
-        }
-        <Sidepanel />
+        {projectType === "PDA" && <PDAStackVisualiser panelWidth={panelWidth} />}
+        <Sidepanel onToggle={handleSidepanelToggle} />
       </Content>
       <ShortcutGuide />
-
       <FinalStatePopup />
-
       <ExportImage />
       <ShareUrl />
       <ShareUrlModule />
@@ -160,16 +160,15 @@ const Editor = () => {
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
       />
-
-    <TourButton
-      icon={<HelpCircle />}
-      onClick={showTourHandler}>
-    </TourButton>
-
+      <TourButton
+        icon={<HelpCircle />}
+        onClick={showTourHandler}
+        style={{ position: "fixed", right: buttonRight, bottom: "20px" }} // Use calculated right position
+      />
       <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour}/>}
+      {showTour && <EditorPageTour onClose={closeTour} />}
     </>
-  )
-}
+  );
+};
 
-export default Editor
+export default Editor;
