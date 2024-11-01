@@ -118,6 +118,25 @@ const NewFile = () => {
     setKebabRefsProjects(Array.from({ length: projects.length }, () => createRef<HTMLAnchorElement>()))
   }, [projects])
 
+  useEffect(() => {
+    // Scroll to the element if the URL contains the hash
+    if (window.location.hash) {
+      const targetId = window.location.hash.substring(1) // Remove the '#' character
+      const targetElement = document.getElementById(targetId)
+      if (targetElement) {
+        // Set the offset value for how much higher you want to scroll
+        const offset = 70 // Adjust this value for the desired space
+        const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset
+        const offsetPosition = elementPosition - offset // Calculate the new scroll position
+
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: 'smooth' // Smooth scrolling effect
+        })
+      }
+    }
+  }, [])
+
   // For "Your modules Section"
   useEffect(() => {
     setKebabRefsLabs(Array.from({ length: modules.length }, () => createRef<HTMLAnchorElement>()))
@@ -287,6 +306,7 @@ const NewFile = () => {
     </CardList>
 
     <CardList // Using modal to create module
+      id="new-module-cardlist"
       title="New Module"
       button={<Button onClick={importModule}>Import...</Button>}
       innerRef={cardsRef}
