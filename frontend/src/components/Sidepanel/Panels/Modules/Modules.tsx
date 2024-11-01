@@ -1,5 +1,6 @@
 import { SectionLabel, Preference, Switch, Button, Input, Modal } from '/src/components'
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import { createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
@@ -158,7 +159,11 @@ const Modules = () => {
     <>
       <SectionLabel>Current Assessment</SectionLabel>
       {!currentModule && <>
-        <Wrapper>You're not working on a module right now</Wrapper>
+        <Wrapper>You're not working on a module right now
+        <Link to="/new#new-module-cardlist" style={{ color: '#007bff', textDecoration: 'underline' }}>
+          Click here to create a module
+        </Link>
+        </Wrapper>
       </>}
       {currentModule && <>
         <Wrapper>
