@@ -106,12 +106,12 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
       </Button>
     </ImportButtonWrapper>
     <hr />
-      From URL (raw/plaintext)
+      From URL (module/plaintext)
       <ImportButtonWrapper>
         <Input
           value={urlValue}
           onChange={e => setUrlValue(e.target.value)}
-          placeholder={'www.example.com/paste/raw/CoolFSA.json'}
+          placeholder={'www.example.com/paste/module/CoolFSA.aom'}
         />
         <Button
           disabled={loading}
@@ -138,7 +138,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
       </ImportButtonWrapper>
       {urlError ? <ErrorText>No URL specified!</ErrorText> : <></>}
       <hr />
-      From raw data (from the export or your json file)
+      From raw data (from the export or your module file)
       <ImportButtonWrapper>
         <Input
           value={rawValue}

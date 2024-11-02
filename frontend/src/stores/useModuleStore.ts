@@ -108,9 +108,15 @@ interface ModuleStore {
 
 const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>, get: GetState<ModuleStore>) => ({
   module: null as StoredModule,
+  showModuleWindow: false,
+  lastChangeDate: null,
+
   setModule: (module: StoredModule) => set({ module }),
+
   setProjects: (projects: ModuleProject[]) => set((state) => ({ module: { ...state.module, projects } })),
+
   clearProjects: () => set((state) => ({ module: { ...state.module, projects: [] } })),
+
   upsertProject: (project: ModuleProject) => set((state) => ({
     module: {
       ...state.module,
@@ -119,19 +125,26 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
         : [...state.module.projects, project]
     }
   })),
+
   deleteProject: (pid: string) => set((state) => ({
     module: { ...state.module, projects: state.module?.projects.filter(p => p._id !== pid) }
   })),
+
   getProject: (index: number) => get().module?.projects[index] || undefined,
+
   getProjectById: (id: string) => get().module?.projects.find(project => project._id === id) || undefined,
+
   setName: (name: string) => set((s: ModuleStore) => ({
     module: { ...s.module, meta: { ...s.module.meta, name } },
     lastChangeDate: new Date().getTime()
   })),
+
   setModuleDescription: (description: string) => set((state) => ({
     module: { ...state.module, description },
     lastChangeDate: new Date().getTime()
   })),
+
+  /* Set all project names in module */
   setAllProjectNames: (name: string) => set((state) => ({
     module: {
       ...state.module,
@@ -145,9 +158,11 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
     },
     lastChangeDate: new Date().getTime()
   })),
-  showModuleWindow: false,
-  lastChangeDate: null,
+
+  /* Set module window to open or close */
   setShowModuleWindow: (show: boolean) => set(() => ({ showModuleWindow: show })),
+
+  /* Insert or update question */
   upsertQuestion: (pid: string, question: string) => set((state) => ({
     module: {
       ...state.module,
@@ -158,6 +173,8 @@ const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>
       lastChangeDate: new Date().getTime()
     }
   })),
+
+  /* Delete question from module */
   deleteQuestion: (pid: string) => set((state) => ({
     module: {
       ...state.module,

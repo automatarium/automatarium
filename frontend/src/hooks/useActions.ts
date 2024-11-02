@@ -685,6 +685,7 @@ export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[]
   }
 }
 
+// Functions for importing and exporting modules
 export const useParseModuleFile = <T>(onData: (val: T) => void, errorMessage: string, input: File, onFinishLoading: () => void, onFailedLoading: () => void) => {
   // Read file data
   const reader = new FileReader()
