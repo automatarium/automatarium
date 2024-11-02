@@ -28,7 +28,7 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
   const currentQuestion = questions[currentProject._id]
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
 
-  const [panelWidth, setPanelWidth] = useState('250px')
+  const [panelWidth, setPanelWidth] = useState('300px')
   const panelRef = useRef<HTMLDivElement | null>(null)
 
   const [isEditing, setIsEditing] = useState(false)
@@ -41,7 +41,7 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
     const handleMouseMove = (moveEvent: MouseEvent) => {
       let newWidth = startWidth + (moveEvent.clientX - startX)
       if (newWidth > 650) newWidth = 650
-      if (newWidth < 200) newWidth = 200
+      if (newWidth < 300) newWidth = 300
       setPanelWidth(`${newWidth}px`)
       onPanelWidthChange(newWidth)
     }
