@@ -78,8 +78,6 @@ const Sidepanel = ({ onToggle }) => {
   const handleToggle = (panel: PanelItem) => {
     const isSamePanel = activePanel?.value === panel.value
 
-    
-
     // Cleanup the previous panel regardless of the state
     cleanupPanel()
 
@@ -87,12 +85,10 @@ const Sidepanel = ({ onToggle }) => {
       // If the same panel is clicked, close it
       setActivePanel(undefined)
       onToggle(false) // Close side panel
-      
     } else {
       // If a different panel is clicked, open it
       setActivePanel(panel)
       onToggle(true) // Open side panel
-      
     }
   }
 
