@@ -183,7 +183,7 @@ export const DescriptionText = styled('p')`
   line-height: 1.2rem; 
   max-height: calc(1.2rem * 12); /* Restrict to 12 lines */
   color: white;
-`;
+`
 
 // Export button styles (consistent with other buttons)
 export const ExportButton = styled('button')`
