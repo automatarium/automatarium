@@ -74,6 +74,7 @@ Improved user experience with guided tours, added manual stepping, early halting
 <details>
 <summary>Group 6 - 2024 Semester 2</summary>
 Added modules and support for sharing modules and improved the guided tours.
+  
 - [Aayushi Khatri](https://github.com/s3948240)
 - [Brian Tran](https://github.com/s3944192)
 - [Shourya Saini](https://github.com/shourya02)
