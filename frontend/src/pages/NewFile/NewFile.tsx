@@ -3,13 +3,13 @@ import { Settings, HelpCircle } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog, Modal } from '/src/components'
+import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog, Modal, Input, TextArea } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
 import { StoredModule, createNewModule, createNewModuleProject } from 'src/stores/useModuleStore'
-import { ModalForm, FormLabel, FormInput, FormSelect, FormTextarea, ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
+import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import TourButton from '/src/components/TourButton/TourButton'
 
 import { CardList, DeleteConfirmationDialog, NewProjectCard, ModuleCard } from './components'
@@ -331,33 +331,25 @@ const NewFile = () => {
         </>
       }
       >
-        <ModalForm>
-        <FormLabel>
           Select automata type for your first question:
-          <FormSelect value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
+          <Input type="select" value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
             <option value='FSA'>Finite State Automaton</option>
             <option value='PDA'>Push Down Automaton</option>
             <option value='TM'>Turing Machine</option>
-          </FormSelect>
-        </FormLabel>
-        <FormLabel>
+          </Input>
           Project Name:
-          <FormInput
+          <Input
             type='text'
             value={moduleName}
             onChange={(e) => setModuleName(e.target.value)}
             placeholder='Enter project name'
           />
-        </FormLabel>
-        <FormLabel>
           Description:
-          <FormTextarea
+          <TextArea
             value={moduleDescription}
             onChange={(e) => setModuleDescription(e.target.value)}
             placeholder='Enter project description'
           />
-        </FormLabel>
-      </ModalForm>
     </Modal>
 
     {currentModule && (

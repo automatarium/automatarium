@@ -42,7 +42,7 @@ const Editor = () => {
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
   const updateModule = useModulesStore(s => s.upsertModule)
 
-  const [panelWidth, setPanelWidth] = useState(250) // Default panel width
+  const [panelWidth, setPanelWidth] = useState(300) // Default panel width
 
   const handlePanelWidthChange = (newWidth) => {
     setPanelWidth(newWidth)
@@ -51,7 +51,7 @@ const Editor = () => {
   useEffect(() => {
     // Reset panel width when currentModule changes
     if (showModuleWindow) {
-      setPanelWidth(250) // Reset to default width
+      setPanelWidth(300) // Reset to default width
     }
   }, [showModuleWindow])
 
