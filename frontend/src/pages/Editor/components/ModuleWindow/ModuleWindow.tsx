@@ -36,7 +36,7 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startX = e.clientX
-    const startWidth = panelRef.current ? panelRef.current.offsetWidth : 250
+    const startWidth = panelRef.current ? panelRef.current.offsetWidth : 300
 
     const handleMouseMove = (moveEvent: MouseEvent) => {
       let newWidth = startWidth + (moveEvent.clientX - startX)
