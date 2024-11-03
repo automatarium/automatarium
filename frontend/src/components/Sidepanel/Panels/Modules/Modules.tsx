@@ -275,7 +275,7 @@ const Modules = () => {
         </>
         <SectionLabel>Export</SectionLabel>
         <Wrapper>
-          <Button onClick={handleExportModule}>Export as Automatrium module file</Button>
+          <Button onClick={handleExportModule}>Export as Automatariumm module file</Button>
           <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>Export as URL</Button>
         </Wrapper>
       </>
