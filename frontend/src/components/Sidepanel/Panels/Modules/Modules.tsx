@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import { createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
-import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper } from './modulesStyle'
+import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper, DescriptionText } from './modulesStyle'
 import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -176,6 +176,7 @@ const Modules = () => {
                   onChange={(e) => setTitleInput(e.target.value)}
                   rows={1}
                   placeholder="Module Title"
+                  maxLength={30} // character limit on input field
                 />
               </TitleSection>
               <TextArea
@@ -195,7 +196,7 @@ const Modules = () => {
               <TitleSection>
                 <h2>{currentModule?.meta.name || 'Module Title'}</h2> {/* Display current lab title */}
               </TitleSection>
-              <p>{currentModule?.description || 'Module Description'}</p> {/* Display current lab description */}
+              <DescriptionText>{currentModule?.description || 'Module Description'}</DescriptionText> {/* Display current lab description */}
               <Button onClick={handleEditClick}>Edit</Button> {/* Toggle edit mode */}
             </>
             )}
@@ -274,7 +275,7 @@ const Modules = () => {
         </>
         <SectionLabel>Export</SectionLabel>
         <Wrapper>
-          <Button onClick={handleExportModule}>Export as Automatrium module file</Button>
+          <Button onClick={handleExportModule}>Export as Automatariumm module file</Button>
           <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>Export as URL</Button>
         </Wrapper>
       </>

@@ -16,6 +16,9 @@ export const TitleSection = styled('div')`
     margin: 0; /* Remove margin from h2 */
     font-size: 1.5rem; 
     padding-bottom: 0.5rem;
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis for overflow text */
   }
 `
 
@@ -161,11 +164,25 @@ export const TextArea = styled('textarea')`
   background-color: var(--toolbar);
   color: white; 
   resize: none;
+  
 
   &:focus {
     outline: none;
     border-color: var(--primary); 
   }
+`
+
+// custom styling to decription area after saving, ensure that the text wraps to new line with limits.
+export const DescriptionText = styled('p')`
+  display: -webkit-box;
+  -webkit-line-clamp: 12; /* Limit to 8 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Add ellipsis after truncation */
+  white-space: pre-wrap; /* Allows text to wrap */
+  line-height: 1.2rem; 
+  max-height: calc(1.2rem * 12); /* Restrict to 12 lines */
+  color: white;
 `
 
 // Export button styles (consistent with other buttons)
