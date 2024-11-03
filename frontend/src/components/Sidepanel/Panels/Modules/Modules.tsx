@@ -1,12 +1,12 @@
 import { SectionLabel, Preference, Switch, Button, Input, Modal } from '/src/components'
 import { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import { createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
 import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper, DescriptionText } from './modulesStyle'
 import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
+import { Plus } from 'lucide-react'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
@@ -155,14 +155,16 @@ const Modules = () => {
     exportModuleFile()
   }
 
+  const handleCreateModule = () => {
+    dispatchCustomEvent('modal:createModule', { project: true })
+  }
+
   return (
     <>
       <SectionLabel>Current Assessment</SectionLabel>
       {!currentModule && <>
         <Wrapper>You're not working on a module right now
-        <Link to="/new#new-module-cardlist" style={{ color: '#007bff', textDecoration: 'underline' }}>
-          Click here to create a module
-        </Link>
+        <Button icon={<Plus/>} onClick={handleCreateModule}>Modularise this project</Button>
         </Wrapper>
       </>}
       {currentModule && <>
@@ -194,9 +196,9 @@ const Modules = () => {
           : (
             <>
               <TitleSection>
-                <h2>{currentModule?.meta.name || 'Module Title'}</h2> {/* Display current lab title */}
+                <h2>{currentModule?.meta.name || 'Untitled Module'}</h2> {/* Display current lab title */}
               </TitleSection>
-              <DescriptionText>{currentModule?.description || 'Module Description'}</DescriptionText> {/* Display current lab description */}
+              <DescriptionText>{currentModule?.description || ''}</DescriptionText> {/* Display current lab description */}
               <Button onClick={handleEditClick}>Edit</Button> {/* Toggle edit mode */}
             </>
             )}

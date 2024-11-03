@@ -3,12 +3,12 @@ import { Settings, HelpCircle } from 'lucide-react'
 import { RefObject, createRef, useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog, Modal, Input, TextArea } from '/src/components'
+import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog, CreateModule } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
 import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
-import { StoredModule, createNewModule, createNewModuleProject } from 'src/stores/useModuleStore'
+import { StoredModule } from 'src/stores/useModuleStore'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
 import TourButton from '/src/components/TourButton/TourButton'
 
@@ -77,18 +77,11 @@ const NewFile = () => {
   // Modules
   const modules = useModulesStore(s => s.modules)
   const setModule = useModuleStore(s => s.setModule)
-  const addModuleProject = useModuleStore(s => s.upsertProject)
   const getModuleProject = useModuleStore(s => s.getProject)
   const deleteModule = useModulesStore(s => s.deleteModule)
   const currentModule = useModuleStore(s => s.module)
-  const addQuestion = useModuleStore(s => s.upsertQuestion)
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
-  // const addModule = useModulesStore(s => s.upsertModule)
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [newModuleType, setModuleType] = useState<ProjectType>('FSA')
-  const [moduleName, setModuleName] = useState('')
-  const [moduleDescription, setModuleDescription] = useState('')
 
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
@@ -151,7 +144,8 @@ const NewFile = () => {
 
   // Function to open the module modal
   const handleNewModuleClick = () => {
-    setIsModalOpen(true)
+    // setIsModalOpen(true)
+    dispatchCustomEvent('modal:createModule', { project: false })
   }
 
   const handleNewFile = (type: ProjectType) => {
@@ -177,43 +171,6 @@ const NewFile = () => {
 
   const importModule = () => {
     dispatchCustomEvent('modal:importModule', null)
-  }
-
-  const handleNewModuleFile = () => {
-    // Create a new module and module project
-    const newModule = createNewModule()
-    const newModuleProject = createNewModuleProject(newModuleType, moduleName)
-
-    if (moduleName === '') {
-      newModule.meta.name = 'Untitled'
-      newModuleProject.meta.name = 'Untitled'
-    } else {
-      newModule.meta.name = moduleName
-      newModuleProject.meta.name = moduleName
-    }
-
-    newModule.description = moduleDescription
-
-    // Set the new module and module project
-    setModule(newModule)
-    addModuleProject(newModuleProject)
-
-    // Add question to module
-    addQuestion(newModuleProject._id, '')
-
-    // Store module to local storage under automatarium-modules
-    // addModule(newModule)
-
-    // Set module project for editor
-    setProject(getModuleProject(0))
-
-    // Show module window when navigating to editor
-    if (showModuleWindow === false) {
-      setShowModuleWindow(true)
-    }
-
-    // Go to the editor
-    navigate('/editor')
   }
 
   const handleLoadModule = (module: StoredModule) => {
@@ -320,7 +277,7 @@ const NewFile = () => {
       />
     </CardList>
 
-    <Modal
+    {/* <Modal
       title='Create New Module'
       isOpen={isModalOpen}
       onClose= {() => setIsModalOpen(false)}
@@ -350,7 +307,7 @@ const NewFile = () => {
             onChange={(e) => setModuleDescription(e.target.value)}
             placeholder='Enter project description'
           />
-    </Modal>
+    </Modal> */}
 
     {currentModule && (
     // conditional rendering for latest module.
@@ -441,6 +398,7 @@ const NewFile = () => {
     {showTour && <NewPageTour onClose={closeTour} Step={handleStep} />}
     <ImportDialog navigateFunction={navigate} />
     <ImportModuleDialog navigateFunction={navigate}/>
+    <CreateModule />
   </Main>
 }
 

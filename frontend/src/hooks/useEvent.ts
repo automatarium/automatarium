@@ -79,6 +79,7 @@ export interface CustomEvents {
   'modal:editorConfirmation': { title: string, description: string, tid: string },
   'modal:import': null,
   'modal:importModule': null,
+  'modal:createModule': { project: boolean},
   'showSharing': null,
   'showModuleSharing': null,
   'stackVisualiser:toggle': { state: boolean },
