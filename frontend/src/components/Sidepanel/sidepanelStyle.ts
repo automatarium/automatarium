@@ -4,13 +4,13 @@ export const Wrapper = styled('div')`
   display: flex;
   position: relative;
 `
-
+// removed z-index so context menu can be displayed in front
 export const Panel = styled('div')`
   width: 350px;
   height: 100%;
   background: var(--surface);
   position: relative;
-  z-index: 10;
+  z-index: 1
 
   & > div {
     position: absolute;
@@ -28,7 +28,7 @@ export const Heading = styled('h2')`
 export const CloseButton = styled('button')`
   position: absolute;
   top: .6em;
-  z-index: 15;
+  z-index: 1;
   left: -1em;
   height: 2em;
   width: 2em;
