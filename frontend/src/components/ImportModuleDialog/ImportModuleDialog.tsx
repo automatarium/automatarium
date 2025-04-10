@@ -136,7 +136,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
           }}
         >Import</Button>
       </ImportButtonWrapper>
-      {urlError ? <ErrorText>No URL specified!</ErrorText> : <></>}
+      {urlError && <ErrorText>No URL specified!</ErrorText>}
       <hr />
       From raw data (from the export or your module file)
       <ImportButtonWrapper>
