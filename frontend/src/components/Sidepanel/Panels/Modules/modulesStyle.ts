@@ -68,11 +68,6 @@ export const RemoveButton = styled('button')`
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
-
-  // &:hover {
-  //   background-color: var(--toolbar); 
-  //   border-color: var(--error); 
-  // }
 `
 
 // Styles for the Add Question button
