@@ -277,37 +277,6 @@ const NewFile = () => {
       />
     </CardList>
 
-    {/* <Modal
-      title='Create New Module'
-      isOpen={isModalOpen}
-      onClose= {() => setIsModalOpen(false)}
-      actions={
-        <>
-        <Button secondary onClick= {() => setIsModalOpen(false)}>Cancel</Button>
-        <Button onClick={handleNewModuleFile}> Create </Button>
-        </>
-      }
-      >
-          Select automata type for your first question:
-          <Input type="select" value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
-            <option value='FSA'>Finite State Automaton</option>
-            <option value='PDA'>Push Down Automaton</option>
-            <option value='TM'>Turing Machine</option>
-          </Input>
-          Project Name:
-          <Input
-            type='text'
-            value={moduleName}
-            onChange={(e) => setModuleName(e.target.value)}
-            placeholder='Enter project name'
-          />
-          Description:
-          <TextArea
-            value={moduleDescription}
-            onChange={(e) => setModuleDescription(e.target.value)}
-            placeholder='Enter project description'
-          />
-    </Modal> */}
 
     {currentModule && (
     // conditional rendering for latest module.
