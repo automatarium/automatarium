@@ -10,7 +10,6 @@ dayjs.extend(relativeTime)
 
 type moduleCardProps = {
     name: string
-    // type?: ProjectType | '???' // '???' is used has a default type
     image?: string
     isSelectedTemplate?: boolean,
     width: number,
