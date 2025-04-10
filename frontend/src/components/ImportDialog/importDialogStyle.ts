@@ -8,5 +8,5 @@ export const ImportButtonWrapper = styled('div')`
 `
 
 export const ErrorText = styled('span')`
-  color: red;
+  color: var(--error);
 `
