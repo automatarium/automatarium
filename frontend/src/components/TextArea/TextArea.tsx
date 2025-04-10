@@ -10,14 +10,10 @@ interface InputProps {
 
 const TextArea = forwardRef(({
   type,
-  color,
-  small = false,
   ...props
 }: InputProps & TextareaHTMLAttributes<HTMLTextAreaElement>, ref: ForwardedRef<HTMLTextAreaElement>) => (
   <StyledTextArea
     id={props.id ?? props.name}
-    $color={color}
-    $small={small}
     {...props}
     as={type === 'select' ? 'select' : 'textarea'}
     ref={ref}
