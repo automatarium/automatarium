@@ -54,38 +54,36 @@ const ShareUrlModule = () => {
 
   useEvent('showModuleSharing', () => setExportUrlOpen(true))
 
-  return <>
+  return (
     <Modal
-      title='Export Module as URL'
+      title="Export Module as URL"
       isOpen={exportUrlOpen}
       onClose={handleClose}
-      actions={<Button secondary onClick={handleClose}>Close</Button>}
+      actions={
+        <Button secondary onClick={handleClose}>
+          Close
+        </Button>
+      }
     >
       You can copy and paste as the raw data
       <CopyRowWrapper>
-        <Input
-          readOnly
-          value={base64Project}
-        />
+        <Input readOnly value={base64Project} />
         <Button onClick={handleCopyEncoding} style={{ height: '100%' }}>
-          <Copy size='18px' />
+          <Copy size="18px" />
         </Button>
       </CopyRowWrapper>
       {dataCopySuccess && <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv>}
       URL
       <CopyRowWrapper>
-        <Input
-          readOnly
-          value={shareRawLink}
-        />
+        <Input readOnly value={shareRawLink} />
         <Button onClick={handleCopyUrl} style={{ height: '100%' }}>
-          <Copy size='18px' />
+          <Copy size="18px" />
         </Button>
       </CopyRowWrapper>
       {copySuccess && <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv>}
       <hr />
     </Modal>
-  </>
+  )
 }
 
 export default ShareUrlModule

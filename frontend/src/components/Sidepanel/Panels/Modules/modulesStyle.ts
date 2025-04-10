@@ -144,8 +144,6 @@ export const Input = styled('input')`
     outline: none;
     border-color: var(--primary); 
   }
-
-}
 `
 
 export const TextArea = styled('textarea')`
