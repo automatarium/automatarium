@@ -71,7 +71,7 @@ const ShareUrlModule = () => {
           <Copy size='18px' />
         </Button>
       </CopyRowWrapper>
-      {dataCopySuccess ? <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv> : <></>}
+      {dataCopySuccess && <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv>}
       URL
       <CopyRowWrapper>
         <Input
