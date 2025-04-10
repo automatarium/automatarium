@@ -157,7 +157,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
           }
         }}>Load</Button>
       </ImportButtonWrapper>
-      {rawError ? <ErrorText>Can't load nothing!</ErrorText> : <></>}
+      {rawError && <ErrorText>Can't load nothing!</ErrorText>}
   </Modal>
 }
 
