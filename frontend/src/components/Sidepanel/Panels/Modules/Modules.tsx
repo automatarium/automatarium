@@ -247,7 +247,7 @@ const Modules = () => {
                 ))}
               </tbody>
             </Table>
-            <Button onClick={handleAddQuestionClick}>+ Add question</Button>
+            <Button icon={<Plus/>} onClick={handleAddQuestionClick}>Add question</Button>
           </Wrapper>
           <Modal
             title="Select Question Type"
