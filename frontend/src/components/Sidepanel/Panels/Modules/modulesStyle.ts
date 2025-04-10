@@ -13,12 +13,12 @@ export const TitleSection = styled('div')`
   padding-bottom: 0.3rem;
   border-bottom: 1px solid var(--toolbar); 
   h2 {
-    margin: 0; /* Remove margin from h2 */
-    font-size: 1.5rem; 
+    margin: 0;
+    font-size: 1.5rem;
     padding-bottom: 0.5rem;
-    white-space: nowrap; /* Prevent text from wrapping */
-    overflow: hidden; /* Hide overflow */
-    text-overflow: ellipsis; /* Add ellipsis for overflow text */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 `
 
