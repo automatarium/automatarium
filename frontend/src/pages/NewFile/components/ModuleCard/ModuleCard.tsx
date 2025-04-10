@@ -29,7 +29,6 @@ const ModuleCard = ({ name, image, isSelectedTemplate = false, ...props }: modul
   return <CardContainer {...rest}>
     <CardImage $image={!!image}>
       {image ? <img src={image} alt="" /> : <Logo />}
-      {/* {type && <TypeBadge>{type}</TypeBadge>} */}
       {/* Highlight a template if it is selected */}
       {isSelectedTemplate && <SelectedTemplateOverlay/>}
     </CardImage>
