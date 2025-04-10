@@ -81,7 +81,6 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const upsertModuleProject = useModuleStore(s => s.upsertProject)
   const upsertModule = useModulesStore(s => s.upsertModule)
   const currentModule = useModuleStore(s => s.module)
-  // const setLabLastSaveDate = useLabStore(s => s.setLastSaveDate)
 
   const handleEditProjectName = () => {
     setTitleValue(projectName ?? '')
