@@ -17,7 +17,6 @@ const CreateModule = () => {
   const showModuleWindow = useModuleStore(s => s.showModuleWindow)
   const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
   const currentProject = useProjectStore(s => s.project)
-  // const addModule = useModulesStore(s => s.upsertModule)
   const [isModalOpen, setModalOpen] = useState(false)
   const [newModuleType, setModuleType] = useState<ProjectType>('FSA')
   const [moduleName, setModuleName] = useState('')
