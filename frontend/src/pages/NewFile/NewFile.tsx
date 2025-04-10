@@ -277,7 +277,6 @@ const NewFile = () => {
       />
     </CardList>
 
-
     {currentModule && (
     // conditional rendering for latest module.
     // showing the latest module if more than one module is stored and nothing if no
