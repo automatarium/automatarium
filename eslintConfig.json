@@ -17,6 +17,7 @@
   ],
   "rules": {
     "import/no-absolute-path": "off",
+    "multiline-ternary": "off",
     "@typescript-eslint/no-unused-vars": "error"
   }
 }
