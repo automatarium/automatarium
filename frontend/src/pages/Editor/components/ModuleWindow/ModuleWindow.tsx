@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react'
+import ReactMarkdown from 'react-markdown'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import {
   ModuleWindowWrapper,
@@ -13,7 +14,7 @@ import {
   EditButton
 } from './moduleWindowStyling'
 import { X, ChevronRight, ChevronLeft } from 'lucide-react'
-import { MarkdownRender, Button } from '/src/components'
+import { Button } from '/src/components'
 
 const ModuleWindow = ({ onPanelWidthChange }) => {
   const currentModule = useModuleStore(s => s.module)
@@ -103,42 +104,40 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
     <ModuleWindowWrapper ref={panelRef} width={panelWidth}>
       <TitleWrapper>
         <Title>Question {currentQuestionIndex + 1}</Title>
-        {isEditing
-          ? (
+        {isEditing ? (
           <ButtonContainer>
             <Button onClick={handleCancelClick}>Cancel</Button>
             <Button onClick={handleEditClick}>Save</Button>
           </ButtonContainer>
-            )
-          : (
+        ) : (
           <EditButton>
             <Button onClick={handleEditClick}>Edit</Button>
           </EditButton>
-            )}
+        )}
       </TitleWrapper>
-      <CloseButton onClick={handleClose}><X /></CloseButton>
+      <CloseButton onClick={handleClose}>
+        <X />
+      </CloseButton>
 
       <div>
         <hr />
         <Content>
-          {isEditing
-            ? (
+          {isEditing ? (
             <TextArea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="Edit module instructions here"
               rows={39}
             />
-              )
-            : (
-            <MarkdownRender props={question} />
-              )}
+          ) : (
+            <ReactMarkdown>{question}</ReactMarkdown>
+          )}
         </Content>
       </div>
 
       <PaginationWrapper>
-        {currentQuestionIndex !== 0
-          ? (<Button
+        {currentQuestionIndex !== 0 ? (
+          <Button
             onClick={() => {
               if (currentQuestionIndex > 0) {
                 const newIndex = currentQuestionIndex - 1
@@ -147,61 +146,56 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
             }}
             disabled={currentQuestionIndex === 0}
             style={{
-              backgroundColor: currentQuestionIndex > 0 ? 'var(--primary)' : 'transparent',
-              margin: '0 2px',
-              flex: 0
+              backgroundColor: currentQuestionIndex > 0 ? "var(--primary)" : "transparent",
+              margin: "0 2px",
+              flex: 0,
             }}
           >
             <ChevronLeft />
           </Button>
-            )
-          : null}
+        ) : null}
 
-        {currentQuestionIndex > 0
-          ? (
+        {currentQuestionIndex > 0 ? (
           <Button
             onClick={() => handlePageChange(currentQuestionIndex - 1)}
             style={{
-              backgroundColor: 'var(--primary)',
-              margin: '0 2px',
-              flex: 0
+              backgroundColor: "var(--primary)",
+              margin: "0 2px",
+              flex: 0,
             }}
           >
             {currentQuestionIndex}
           </Button>
-            )
-          : (
+        ) : (
           <div style={{ flex: 0 }}></div> // Empty space when no previous question
-            )}
+        )}
 
         <Button
           style={{
-            backgroundColor: 'gray',
-            margin: '0 2px',
-            flex: 0
+            backgroundColor: "gray",
+            margin: "0 2px",
+            flex: 0,
           }}
         >
           {currentQuestionIndex + 1}
         </Button>
 
-        {currentQuestionIndex < totalQuestions - 1
-          ? (<Button
+        {currentQuestionIndex < totalQuestions - 1 ? (
+          <Button
             onClick={() => handlePageChange(currentQuestionIndex + 1)}
             style={{
-              backgroundColor: 'var(--primary)',
-              margin: '0 2px',
-              flex: 0
+              backgroundColor: "var(--primary)",
+              margin: "0 2px",
+              flex: 0,
             }}
           >
             {currentQuestionIndex + 2}
           </Button>
-            )
-          : (
+        ) : (
           <div style={{ flex: 0 }}></div> // Empty space when no next question
-            )}
+        )}
 
-        {currentQuestionIndex !== totalQuestions - 1
-          ? (
+        {currentQuestionIndex !== totalQuestions - 1 ? (
           <Button
             onClick={() => {
               if (currentQuestionIndex < totalQuestions - 1) {
@@ -210,15 +204,14 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
               }
             }}
             style={{
-              backgroundColor: currentQuestionIndex < totalQuestions - 1 ? 'var(--primary)' : 'transparent',
-              margin: '0 2px',
-              flex: 0
+              backgroundColor: currentQuestionIndex < totalQuestions - 1 ? "var(--primary)" : "transparent",
+              margin: "0 2px",
+              flex: 0,
             }}
           >
             <ChevronRight />
           </Button>
-            )
-          : null}
+        ) : null}
       </PaginationWrapper>
 
       <ResizeHandle onMouseDown={handleMouseDown} />

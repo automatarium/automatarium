@@ -34,7 +34,6 @@ export { default as Input } from './Input/Input'
 export { default as Switch } from './Switch/Switch'
 export { default as Footer } from './Footer/Footer'
 export { default as ProjectCard } from './ProjectCard/ProjectCard'
-export { default as MarkdownRender } from './MarkdownRender/MarkdownRender'
 export { default as TextArea } from './TextArea/TextArea'
 export { default as CreateModule } from './CreateModule/CreateModule'
 
