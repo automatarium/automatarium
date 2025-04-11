@@ -71,6 +71,7 @@ export const RemoveButton = styled('button')`
 
   &:disabled {
     background-color: var(--disabled-button);
+    cursor: default;
   }
 `
 
