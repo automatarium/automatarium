@@ -39,6 +39,10 @@ const Modules = () => {
 
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false) // Controls modal visibility
+  
+  // Delete confirmation modal state
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [projectToDelete, setProjectToDelete] = useState<ModuleProject | null>(null)
 
   // Load module values into local state when module changes
   useEffect(() => {
@@ -117,15 +121,31 @@ const Modules = () => {
     setProject(_project)
   }
 
+  // Show delete confirmation modal
   const handleDeleteQuestion = (_project: ModuleProject) => {
+    setProjectToDelete(_project)
+    setIsDeleteModalOpen(true)
+  }
+
+  // Perform actual deletion after confirmation
+  const confirmDeleteQuestion = () => {
+    if (!projectToDelete) return
+    
     // Delete project from current module
-    deleteProjectFromModule(_project._id)
+    deleteProjectFromModule(projectToDelete._id)
     // Delete question from current module
-    deleteQuestionFromModule(_project._id)
-    if (_project._id === currentProject._id) {
-      const remainingProjects = currentModule.projects.filter((proj) => proj._id !== _project._id)
+    deleteQuestionFromModule(projectToDelete._id)
+    
+    if (projectToDelete._id === currentProject._id && currentModule) {
+      const remainingProjects = currentModule.projects.filter((proj) => proj._id !== projectToDelete._id)
+  
       setProject(remainingProjects[0]) // Set the first remaining project as the current project
+      
     }
+    
+    // Close the modal and reset projectToDelete
+    setIsDeleteModalOpen(false)
+    setProjectToDelete(null)
   }
 
   // Drag and drop
@@ -236,12 +256,14 @@ const Modules = () => {
                     <td onClick={() => handleOpenQuestion(q)}>{`Question ${index + 1}`}</td>
                     <td>
                       <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
-                      <RemoveButton
+                      
+
+                      {currentModule.projects.length > 1 && <RemoveButton
                         onClick={() => handleDeleteQuestion(q)}
-                        disabled={currentModule.projects.length <= 1}
                       >
                         Remove
-                      </RemoveButton>
+                      </RemoveButton> }
+                      
                     </td>
                   </tr>
                 ))}
@@ -249,6 +271,8 @@ const Modules = () => {
             </Table>
             <Button icon={<Plus/>} onClick={handleAddQuestionClick}>Add question</Button>
           </Wrapper>
+          
+          {/* Question Type Modal */}
           <Modal
             title="Select Question Type"
             description="Choose the type of question that you would like to add."
@@ -274,6 +298,31 @@ const Modules = () => {
               </FieldWrapper>
             </form>
           </Modal>
+          
+          {/* Delete Confirmation Modal */}
+          <Modal
+            title="Delete Question"
+            description="Are you sure you want to delete this question? This action cannot be undone."
+            isOpen={isDeleteModalOpen}
+            onClose={() => {
+              setIsDeleteModalOpen(false)
+              setProjectToDelete(null)
+            }}
+            actions={
+              <>
+                <Button 
+                  secondary 
+                  onClick={() => {
+                    setIsDeleteModalOpen(false)
+                    setProjectToDelete(null)
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button onClick={confirmDeleteQuestion}>Delete</Button>
+              </>
+            }
+          />
         </>
         <SectionLabel>Export</SectionLabel>
         <Wrapper>
