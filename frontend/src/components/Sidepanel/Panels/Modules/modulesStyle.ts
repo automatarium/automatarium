@@ -68,6 +68,10 @@ export const RemoveButton = styled('button')`
   align-items: center;
   justify-content: center;
   transition: background-color 0.3s;
+
+  &:disabled {
+    background-color: var(--disabled-button);
+  }
 `
 
 // Table header styles
