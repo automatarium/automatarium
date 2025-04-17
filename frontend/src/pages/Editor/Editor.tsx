@@ -25,7 +25,6 @@ const Editor = () => {
   const setViewPositionAndScale = useViewStore((s) => s.setViewPositionAndScale)
   const project = useProjectStore((s) => s.project)
   const [showTour, setShowTour] = useState(false)
-  const [isSidepanelOpen, setIsSidepanelOpen] = useState(false)
 
   const closeTour = () => {
     setShowTour(false)
@@ -78,17 +77,6 @@ const Editor = () => {
   }, [currentModule, project, getProjectinModule])
 
   const projectType = project.config.type
-  const [buttonRight, setButtonRight] = useState('60px')
-
-  // Adjust button position when side panel is toggled
-  useEffect(() => {
-    setButtonRight(isSidepanelOpen ? '410px' : '60px')
-  }, [isSidepanelOpen])
-
-  // Toggle side panel and update button position
-  const handleSidepanelToggle = (isOpen) => {
-    setIsSidepanelOpen(isOpen)
-  }
 
   const isSaving = useAutosaveProject()
 
@@ -152,7 +140,7 @@ const Editor = () => {
           <BottomPanel />
         </EditorContent>
         {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
-        <Sidepanel onToggle={handleSidepanelToggle} />
+        <Sidepanel onToggle={setShowModuleWindow} />
       </Content>
       <ShortcutGuide />
       <FinalStatePopup />
@@ -165,11 +153,6 @@ const Editor = () => {
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
       />
-      {/* <TourButton
-        icon={<HelpCircle />}
-        onClick={showTourHandler}
-        style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
-      /> */}
       <ImportDialog navigateFunction={navigate} />
       {showTour && <EditorPageTour onClose={closeTour} />}
       <CreateModule />
