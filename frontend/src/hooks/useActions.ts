@@ -333,6 +333,10 @@ const useActions = (registerHotkeys = false) => {
         commit()
       }
     },
+    // start tour action - sets the start tour handler to true
+    START_TOUR: {
+      handler: () => dispatchCustomEvent('tour:start', null)
+    },
     OPEN_DOCS: {
       handler: () => window.open('https://github.com/automatarium/automatarium/wiki', '_blank')
     },
@@ -532,6 +536,7 @@ const useActions = (registerHotkeys = false) => {
     DELETE_PROJECT: {
       handler: () => dispatchCustomEvent('modal:deleteConfirm', null)
     }
+
   }
 
   // Register action hotkeys

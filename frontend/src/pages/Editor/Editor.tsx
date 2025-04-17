@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { HelpCircle } from 'lucide-react'
+// import { HelpCircle } from 'lucide-react'
 
 import { Content, EditorContent } from './editorStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule, CreateModule } from '/src/components'
@@ -14,7 +14,7 @@ import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
-import TourButton from '/src/components/TourButton/TourButton'
+// import TourButton from '/src/components/TourButton/TourButton'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -31,9 +31,14 @@ const Editor = () => {
     setShowTour(false)
   }
 
-  const showTourHandler = () => {
+  // const showTourHandler = () => {
+  //   setShowTour(true)
+  // }
+
+  // Listen to the custom event 'tour:start' to show the tour
+  useEvent('tour:start', () => {
     setShowTour(true)
-  }
+  })
 
   const currentModule = useModuleStore(s => s.module)
   const getProjectinModule = useModuleStore(s => s.getProjectById)
@@ -160,11 +165,11 @@ const Editor = () => {
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
       />
-      <TourButton
+      {/* <TourButton
         icon={<HelpCircle />}
         onClick={showTourHandler}
         style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
-      />
+      /> */}
       <ImportDialog navigateFunction={navigate} />
       {showTour && <EditorPageTour onClose={closeTour} />}
       <CreateModule />
