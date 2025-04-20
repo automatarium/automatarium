@@ -189,6 +189,12 @@ const NewFile = () => {
     }
   }
 
+  const handleNewExample = (type: ProjectType) => {
+    setShowModuleWindow(false)
+    setProject(createNewProject(type))
+    navigate('/example')
+  }
+
   return <Main wide>
     <HeaderRow>
       <Header linkTo="/" />
@@ -223,6 +229,19 @@ const NewFile = () => {
         onClick={() => handleNewFile('TM')}
         height={height}
         image={<TM {...stylingVals} />}
+      />
+    </CardList>
+
+    <CardList
+      title="Examples"
+      innerRef={cardsRef}
+    >
+      <NewProjectCard
+        title="Finite State Automaton"
+        description="Follow a in-tour tutorial on how to build a finite state automaton, accompanied with a video tutorial"
+        onClick={() => handleNewExample('FSA')}
+        height={height}
+        image={<FSA {...stylingVals} />}
       />
     </CardList>
 
