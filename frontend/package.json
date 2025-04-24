@@ -18,6 +18,7 @@
     "axios": "^0.26.1",
     "dayjs": "^1.11.2",
     "goober": "^2.1.8",
+    "i18next": "^25.0.1",
     "immer": "^9.0.12",
     "lodash.clonedeep": "^4.5.0",
     "lodash.groupby": "^4.6.0",
@@ -28,11 +29,12 @@
     "react-a11y-dialog": "^6.1.5",
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.28.1",
+    "react-i18next": "^15.5.1",
     "react-lottie-player": "1.5.4",
+    "react-markdown": "^8.0.0",
     "react-resizable": "^3.0.5",
     "react-router-dom": "^6.2.2",
-    "zustand": "^4.3.7",
-    "react-markdown": "^8.0.0"
+    "zustand": "^4.3.7"
   },
   "devDependencies": {
     "@parcel/transformer-inline-string": "^2.8.3",
