@@ -26,7 +26,6 @@ const Example = () => {
   const project = useProjectStore((s) => s.project)
   const [showTour, setShowTour] = useState(true)
   const [isSidepanelOpen, setIsSidepanelOpen] = useState(false)
-  const [exampleStep, setExampleStep] = useState<number>(0)
 
   const closeTour = () => {
     setShowTour(false)

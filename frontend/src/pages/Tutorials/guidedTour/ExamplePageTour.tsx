@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 
 import { styled } from 'goober'
-import { Animation } from '/src/components/Toolbar/toolbarStyle'
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
@@ -67,48 +66,47 @@ interface TourProps {
 }
 
 const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
-    const [step, setStep] = useState<number>(0)
-    // Define tour steps
-    const steps: Step[] = [
-        // target - css selector
-        // content - text to display in tour
-        {
-            target: '', 
-            content: 'Testing1' 
-        },
+  const [step, setStep] = useState<number>(0)
+  // Define tour steps
+  const steps: Step[] = [
+    // target - css selector
+    // content - text to display in tour
+    {
+      target: '',
+      content: 'Testing1'
+    },
 
-        {
-            target: '',
-            content: 'Testing2'
-        }
-    ]
-
-    // Next button
-    const handleNext = () => {
-        // Set step state, if all steps are not complete
-        if (step < steps.length - 1) {
-            setStep(step + 1)
-        }
-        // If all steps complete, close tour
-        else {
-            onClose()
-        }
+    {
+      target: '',
+      content: 'Testing2'
     }
+  ]
 
-    // Skip tour button
-    const handleSkip = () => {
-        onClose() // Close tour
+  // Next button
+  const handleNext = () => {
+    // Set step state, if all steps are not complete
+    if (step < steps.length - 1) {
+      setStep(step + 1)
+    // If all steps complete, close tour
+    } else {
+      onClose()
     }
+  }
 
-    // Previous button
-    const handlePrevious = () => {
-        // If previous step exists, set step state
-        if (step > 0) {
-            setStep(step - 1)
-        }
+  // Skip tour button
+  const handleSkip = () => {
+    onClose() // Close tour
+  }
+
+  // Previous button
+  const handlePrevious = () => {
+    // If previous step exists, set step state
+    if (step > 0) {
+      setStep(step - 1)
     }
-    
-    return (
+  }
+
+  return (
         <TourOverlay>
             <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>
                 <p>{steps[step].content}</p>
@@ -120,7 +118,7 @@ const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
 
             </TourContent>
         </TourOverlay>
-    )
+  )
 }
 
 export default ExamplePageTour
