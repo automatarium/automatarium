@@ -13,7 +13,7 @@ import ModuleWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
-import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
+import ExamplePageTour from '../Tutorials/guidedTour/ExamplePageTour'
 import TourButton from '/src/components/TourButton/TourButton'
 
 const Example = () => {
@@ -24,8 +24,9 @@ const Example = () => {
   const resetExportSettings = useExportStore((s) => s.reset)
   const setViewPositionAndScale = useViewStore((s) => s.setViewPositionAndScale)
   const project = useProjectStore((s) => s.project)
-  const [showTour, setShowTour] = useState(false)
+  const [showTour, setShowTour] = useState(true)
   const [isSidepanelOpen, setIsSidepanelOpen] = useState(false)
+  const [exampleStep, setExampleStep] = useState<number>(0)
 
   const closeTour = () => {
     setShowTour(false)
@@ -166,7 +167,7 @@ const Example = () => {
         style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
       />
       <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour} />}
+      {showTour && <ExamplePageTour onClose={closeTour}/>}
       <CreateModule />
     </>
   )
