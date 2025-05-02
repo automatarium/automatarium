@@ -1,13 +1,15 @@
 import { ContextItems } from './contextItem'
 
+import i18n from '/src/config/i18n'
+
 const commentContextItems: ContextItems = [
   {
-    label: 'Edit comment',
+    label: i18n.t('context_menu.edit_comment', {ns: 'common'}),
     action: 'EDIT_COMMENT'
   },
   'hr',
   {
-    label: 'Delete',
+    label: i18n.t('context_menu.delete', {ns: 'common'}),
     shortcut: '⌫',
     action: 'DELETE'
   }
