@@ -1,0 +1,32 @@
+{
+    "privacy_policy": "Поверителност",
+    "about": "За Автоматариум",
+    "source_code": "Сорс Код",
+    "licensed_mit": "Лицензиран под MIT лиценз",
+    "turing_machine_tape": "Лента на Машината",
+    "context_menu": {
+      "add_comment": "Добавете коментар",
+      "create_state": "Добавете състояние тук",
+      "select_all": "Изберете всичко",
+      "copy": "Копирайте",
+      "paste": "Поставете",
+      "set_initial": "Изберете за начално",
+      "toggle_final": "Превключете на крайно",
+      "delete": "Изтрийте",
+      "align_horizontally": "Подравнете хоризонтално",
+      "align_vertically": "Подравнете вертикално",
+      "set_label": "Добавете етикет",
+      "change_name": "Преименувайте",
+      "edit_transitions_group": "Редактирайте група преходи",
+      "flip_edge": "Обърнете реброто",
+      "edit_first_transition": "Редактирайте първи преход",
+      "delete_edge": "Изтрийте реброто",
+      "edit_transition": "Редактирайте преход",
+      "flip_selected_transitions": "Обърнете избраните преходи",
+      "edit_comment": "Редактирайте коментар"
+    },
+
+    "create_module": {
+        
+    }
+}
