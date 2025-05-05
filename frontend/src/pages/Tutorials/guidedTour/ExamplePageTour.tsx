@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-
 import { styled } from 'goober'
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
@@ -73,12 +72,42 @@ const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
     // content - text to display in tour
     {
       target: '',
-      content: 'Testing1'
+      content: 'Welcome to the Finite State Automaton Example. In this example, we will walk you through the steps of how to build a Finite State Automata for the set of all strings that start with A and end with B'
     },
 
     {
       target: '',
-      content: 'Testing2'
+      content: 'To begin, press on the state tool and click on the automatarium canvas to place your state.'
+    },
+
+    {
+      target: '',
+      content: 'Right clicking a state will open up a state menu. Set q0 as an initial state and q1 as a final state. Our states are now set up properly.'
+    },
+
+    {
+      target: '',
+      content: 'We can now create transitions for our automata. Click on the transition tool and select and drag from q0 to q1 to create a transition between the two.'
+    },
+
+    {
+      target: '',
+      content: 'When you have created a transition between q0 and q1, you will prompt a dialog box where the transition can be labeled. Press input a. As we are making an automata that takes the set of all strings must start with A.'
+    },
+
+    {
+      target: '',
+      content: 'Using the selection tool, please click on q1 to make a transition loop. We will then label our transition from the range [a-z], as we can accept all characters so long as the string ends with B. '
+    },
+
+    {
+      target: '',
+      content: 'Now create a transition between q1 and q2, labelling our transition b, to ensure that our automata accepts strings that end with B.'
+    },
+
+    {
+      target: '',
+      content: 'We have now successfully created our finite state automata. We can test the automata by clicking on the flask icon, inputting a string and using the directional buttons to see the output.'
     }
   ]
 
