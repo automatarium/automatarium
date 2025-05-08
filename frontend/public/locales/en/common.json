@@ -2,11 +2,11 @@
     "privacy_policy": "Privacy Policy",
     "about": "About",
     "source_code": "Source Code",
+    "language": "Language:",
     "licensed_mit": "Licensed under MIT",
     "turing_machine_tape": "Turing Machine Tape",
     "create": "Create",
     "cancel": "Cancel",
-
     "context_menu": {
       "add_comment": "Add comment",
       "create_state": "Create state here",

@@ -1,3 +1,5 @@
+import { TFunction } from 'i18next'
+
 /**
  * Represents a Context item. These are the things that are shown in popups around the U
  */
@@ -20,3 +22,4 @@ export interface ContextItem {
  * A list is made up of context items along with <hr> elements to break them up into sections
  */
 export type ContextItems = readonly (ContextItem | 'hr')[]
+export type TranslatableContextItems = (t: TFunction) => ContextItems

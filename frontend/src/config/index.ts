@@ -21,6 +21,5 @@ const config = {
 
 export * from './colors'
 export * from './projects'
-export * from './i18n'
 
 export default config[env]
