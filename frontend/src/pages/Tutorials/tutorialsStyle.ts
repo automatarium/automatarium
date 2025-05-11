@@ -10,3 +10,7 @@ export const TitleRow = styled('div')`
 export const Title = styled('h2')`
   margin-block: 0;
 `
+export const ExampleContainer = styled('div')`
+  display: flex;
+  justify-content: center;
+`

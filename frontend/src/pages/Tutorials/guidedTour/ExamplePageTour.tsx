@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { styled } from 'goober'
+import { ExampleContainer } from '../tutorialsStyle'
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
@@ -87,12 +88,7 @@ const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
 
     {
       target: '',
-      content: 'We can now create transitions for our automata. Click on the transition tool and select and drag from q0 to q1 to create a transition between the two.'
-    },
-
-    {
-      target: '',
-      content: 'When you have created a transition between q0 and q1, you will prompt a dialog box where the transition can be labeled. Press input a. As we are making an automata that takes the set of all strings must start with A.'
+      content: 'We can now create transitions for our automata. Click on the transition tool and select and drag from q0 to q1 to create a transition between the two. A prompt will appear to label your transition between q1 and q0. As our finite state automata accepts languages that start with A, input a.'
     },
 
     {
@@ -135,10 +131,25 @@ const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
     }
   }
 
+  const FSAgifs = ['https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExNnBqMHcybWt0b240eHgyeGoxNnVnN3ZkamJ4NGR1aGxoZ2FmOXhzeCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/CEhv9ob2WWq2aUHWcK/giphy.gif',
+    'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExamF0bWd6OW1mYXRhemF5am5pamE5cWx1cmRqZzkycnBybWM4azIxbCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/gz6AZuHqdW620z78Cf/giphy.gif',
+    'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmRlNDYzcmx0YjM0YW9hdGUzMnF4eWZ1dGI0d3RncWpscmU4Z2l5NiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/8gxgNz6BWWzNb7yMO9/giphy.gif',
+    'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExaXl2OTN6N2FobDZ6anYwYTMwZHNpdmQ3a2I0OHVkazdrem9vNzNpcyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/lqAP4be6RHzicbwP4b/giphy.gif',
+    'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXI2cDF0MWNjcGJnZ3pveWEwZnRmY3RuYXJvZzh5dWN4MGVzcDdxMCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/kNNU6jziwCCs7jRl4V/giphy.gif',
+    'https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExeGVhc3RqM2owZ2s3MHRqNnNncW11dTNiemVwY3hzYjJpdGdzN3NkZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/F71XE0yKbDGzp7uSQj/giphy.gif',
+    'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZDk1cTV4ZnBsa2Z0ZWs3cmc5bno5cGdna2RsZm9nYTk2ZTdndXF3MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/vK75iMbo4P3pewcg0j/giphy.gif'
+  ]
   return (
+
         <TourOverlay>
             <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>
                 <p>{steps[step].content}</p>
+
+                {/* Place GIF here  */}
+                <ExampleContainer>
+                    <img src={FSAgifs[step]}/>
+                </ExampleContainer>
+
                 <div className="tour-navigation">
                     <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
                     <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
