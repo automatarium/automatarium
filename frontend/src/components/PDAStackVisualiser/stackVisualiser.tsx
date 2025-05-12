@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { useProjectStore, usePDAVisualiserStore, useTMSimResultStore, useModuleStore } from '/src/stores'
 import { ContentContainer, StackContainer, StackItem, ToggleStackButton, Label } from './stackVisualiserStyle'
+import { useTranslation } from 'react-i18next'
 
 const PDAStackVisualiser = ({ panelWidth }) => {
   // Opens and closes the stack tab within the visualiser
@@ -15,6 +16,8 @@ const PDAStackVisualiser = ({ panelWidth }) => {
 
   // Module window
   const showModuleWindow = useModuleStore((s) => s.showModuleWindow)
+
+  const { t } = useTranslation('common')
 
   // Stack
   const stack: { element: string, key: number }[] = []
@@ -47,7 +50,7 @@ const PDAStackVisualiser = ({ panelWidth }) => {
   return (
     projectType === 'PDA' && showStackVisualiser && (
       <ContentContainer $panelWidth={panelWidth} $showLabWindow={showModuleWindow}>
-        <Label>Stack</Label>
+        <Label>{t('stack')}</Label>
         <ToggleStackButton onClick={() => setShowStackTab((e) => !e)}>
           {showStackTab ? '-' : '+'}
         </ToggleStackButton>

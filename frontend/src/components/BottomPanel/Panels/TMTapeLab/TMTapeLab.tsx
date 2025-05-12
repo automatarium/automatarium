@@ -2,16 +2,18 @@ import { SectionLabel } from '/src/components'
 import TMTraceStepWindow from '/src/components/TMTraceStepWindow/TMTraceStepWindow'
 import { useTMSimResultStore, useProjectStore } from '/src/stores'
 import { Wrapper } from './tmTapeLabStyle'
+import { useTranslation } from 'react-i18next'
 
 const TMTapeLab = () => {
   const traceIDx = useTMSimResultStore(s => s.traceIDx)
   const traceInput = useProjectStore((s) => s.project.tests.single)
+  const { t } = useTranslation('common')
 
   const simResults = useTMSimResultStore(s => s.simResults)
 
   return (
     <>
-    <SectionLabel>Turing Machine Tape</SectionLabel>
+    <SectionLabel>{t('turing_machine_tape')}</SectionLabel>
         {(simResults.length !== 0) && (
         <Wrapper >
             {simResults.map((result, index) => {
