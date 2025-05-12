@@ -18,7 +18,7 @@ const graphContextItems: TranslatableContextItems = (t: TFunction) => {
       action: 'SELECT_ALL'
     },
     {
-      label: t('context_menu.paste', { ns: 'common' }),
+      label: t('paste', { ns: 'common' }),
       action: 'PASTE'
     }
   ]

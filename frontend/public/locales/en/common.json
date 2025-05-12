@@ -2,20 +2,31 @@
     "privacy_policy": "Privacy Policy",
     "about": "About",
     "source_code": "Source Code",
-    "language": "Language:",
     "licensed_mit": "Licensed under MIT",
+    "language": "Language:",
+
     "turing_machine_tape": "Turing Machine Tape",
+    "stack": "Stack",
+
     "create": "Create",
     "cancel": "Cancel",
+    "export": "Export",
+    "import": "Import",
+    "close": "Close",
+    "copy": "Copy",
+    "paste": "Paste",
+    "delete": "Delete",
+    "load": "Load",
+    "done": "Done",
+    "rename": "Rename",
+    "share": "Share",
+
     "context_menu": {
       "add_comment": "Add comment",
       "create_state": "Create state here",
       "select_all": "Select all",
-      "copy": "Copy",
-      "paste": "Paste",
       "set_initial": "Set as initial",
       "toggle_final": "Toggle as final",
-      "delete": "Delete",
       "align_horizontally": "Align horizontally",
       "align_vertically": "Align vertically",
       "set_label": "Set label",
@@ -31,6 +42,138 @@
 
     "create_module": {
         "untitled": "Untitled Module",
-        "create_new": "Create New Module"
+        "create_new": "Create New Module",
+        "select_type": "Select automata type for your first question:",
+        "fsa": "Finite State Automaton",
+        "pda": "Push Down Automaton",
+        "tm": "Turing Machine",
+        "name": "Module Name:",
+        "name_placeholder": "Enter project name",
+        "description": "Description:",
+        "description_placeholder": "Enter project description"
+    },
+
+    "export_image": {
+        "title": "Export Image",
+        "description": "Download an image of your project",
+        "copy": "Copy to clipboard",
+        "file_name": "File name",
+        "file_type": "File type",
+        "svg_note": "Note: SVG exporting is still in beta and may not work as expected",
+        "margin": "Margin",
+        "accent_colour": "Accent colour",
+        "red": "Red",
+        "orange": "Orange",
+        "green": "Green",
+        "teal": "Teal",
+        "blue": "Blue",
+        "purple": "Purple",
+        "pink": "Pink",
+        "background": "Background",
+        "solid": "Solid",
+        "transparent": "Transparent",
+        "dark_mode": "Dark mode"
+    },
+
+    "final_state_popup": {
+        "title": "IMPORTANT",
+        "description": "Default Turing Machine behaviour is to halt upon reaching a final state. Modify below or in the preferences menu.",
+        "close_nosave": "Close without saving",
+        "close_save": "Save and don't show again"
+    },
+
+    "preferences": {
+        "behaviour": "Behaviour",
+        "tm_halt": "TM Halt on Final State",
+        "tm_halt_description": "Toggles halting for trace step for TM"
+    },
+
+    "import_project": {
+        "title": "Import Project",
+        "description": "Have an existing project?",
+        "from_computer": "From your computer",
+        "invalid_file": "The file format provided is not valid. Please only open Automatarium .json, Automatarium .ao or JFLAP .jff file formats.",
+        "browse": "Browse...",
+        "from_url": "From URL (raw/plaintext)",
+        "failed_url": "Automatarium failed to load a project from provided URL.",
+        "no_url": "No URL specified!",
+        "from_data": "From raw data (from the export or your project file)",
+        "enter_data": "Enter raw data here",
+        "cant_load": "Can't load nothing!"
+    },
+
+    "import_module": {
+        "title": "Import Module",
+        "description": "Have an existing module?",
+        "invalid_file": "The file format provided is not valid. Please only open Automatarium .aom",
+        "from_url": "From URL (module/plaintext)",
+        "failed_url": "Automatarium failed to load a module from provided URL.",
+        "from_data": "From raw data (from the export or your module file)"
+    },
+
+    "input_dialog": {
+        "push": "λ\t(push)",
+        "pop": "λ\t(pop)",
+        "read": "λ\t(read)",
+        "write": "λ\t(write)",
+        "comment_text": "Comment text...",
+        "state_label": "State label...",
+        "new_transition": "λ (New transition)",
+        "add_new_transition": "Add a new transition?",
+        "edge_editor": "Transition Edge Editor",
+        "editing_transition": "Editing transition from {{state1}} to {{state2}}."
+    },
+
+    "menubar": {
+        "not_saved": "Your project isn't saved yet, are you sure you want to leave?",
+        "edit_title": "Edit Title",
+        "untitled": "Untitled Project",
+        "saving": "Saving..."
+    },
+
+    "menus": {
+        "file": "File",
+        "file_new": "New...",
+        "import_automatarium": "Import Automatarium file",
+        "import_jflap": "Import JFLAP file",
+        "import_other": "Import other...",
+        "export_image": "Export image...",
+        "export_png": "Quick export as PNG",
+        "export_svg": "Quick export as SVG",
+        "export_clipboard": "Quick copy to clipboard",
+        "export_automatarium": "Export as an Automatarium file",
+        "export_jflap": "Export as a JFLAP file",
+        "export_url_data": "Export as URL/Raw data...",
+        "preferences": "Preferences",
+
+        "edit": "Edit",
+        "undo": "Undo",
+        "redo": "Redo",
+        "select_all": "Select All",
+        "clear_selection": "Clear Selection",
+
+        "view": "View",
+        "zoom_in": "Zoom in",
+        "zoom_out": "Zoom out",
+        "zoom_100": "Zoom to 100%",
+        "zoom_fit": "Zoom to fit",
+        "fullscreen": "Fullscreen",
+        "testing_lab": "Testing lab",
+        "file_info": "File info",
+        "file_options": "File options",
+        "templates": "Templates",
+        "modules": "Modules",
+
+        "tools": "Tools",
+        "convert_dfa": "Convert to DFA",
+        "auto_layout": "Auto layout",
+        "reorder_graph": "Reorder graph",
+
+        "help": "Help",
+        "view_documentation": "View documentation",
+        "tutorial_videos": "Tutorial videos",
+        "keyboard_shortcuts": "Keyboard shortcuts",
+        "about_automatarium": "About Automatarium",
+        "version": "Version {{version}}"
     }
-  }
+}

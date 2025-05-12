@@ -9,7 +9,7 @@ const commentContextItems: TranslatableContextItems = (t: TFunction) => {
     },
     'hr',
     {
-      label: t('context_menu.delete', { ns: 'common' }),
+      label: t('delete', { ns: 'common' }),
       shortcut: '⌫',
       action: 'DELETE'
     }
