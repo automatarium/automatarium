@@ -1,0 +1,59 @@
+{
+    "section1": {
+        "description": {
+            "paragraph1": "Automatarium is a student-built platform for automata and formal language theory.",
+            "paragraph2": "Work easily with a simple and intuitive design built for ease of use and accessibility.",
+            "paragraph3": "It's free to use, and when you're done, share your project with the world with a link.",
+            "paragraph4": "First time here? Check out our tutorials!"
+        },
+        "button": {
+            "start_building": "Start building!",
+            "tutorials": "Tutorials"
+        }
+    },
+    "banner1": {
+        "description": {
+            "heading": "Automatarium is open-source and free",
+            "paragraph1": "Licensed under MIT, and hosted by RMIT University for everyone to use"
+        },
+        "button": {
+            "visit_github": "Visit Github"
+        }
+    },
+    "section2": {
+        "description": {
+            "heading": "Fully-featured testing lab",
+            "paragraph1": "Automatarium provides a simple but powerful testing lab. Step through inputs and see a live trace of what is happening. Try changing the input in the example and see what happens.",
+            "paragraph2": "There is also a multi-run feature, run many tests at once and see which succeed and fail."
+        }
+    },
+    "section3": {
+        "description": {
+            "heading": "Explore your automata",
+            "paragraph1": "Automatarium provides tools to inspect your automaton and learn about how it reacts to different inputs."
+        }
+    },
+    "section4": {
+        "project_name": "My Project",
+        "description": {
+            "heading": "Share with colleagues",
+            "paragraph1": "Easily share your projects with your peers via a link that lets anyone make a copy of your project and continue working."
+        }
+    },
+    "banner2": {
+        "description": {
+            "heading": "What are you waiting for?",
+            "paragraph1": "Start building and testing your automata now!"
+        },
+        "button": {
+            "start_building": "Start building!"
+        }
+    },
+    "component": {
+        "testing_lab": {
+            "accepted": "ACCEPTED",
+            "rejected": "REJECTED",
+            "input_placeholder": "Enter a value to test"
+        }
+    }
+}

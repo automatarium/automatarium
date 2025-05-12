@@ -7,6 +7,7 @@ import { Input, Button, TracePreview } from '/src/components'
 import { Wrapper, StepButtons, TraceConsole } from './testingLabStyle'
 import { FSAExecutionResult } from '@automatarium/simulation/src/graph'
 import { FSAProjectGraph } from '/src/types/ProjectTypes'
+import { useTranslation } from 'react-i18next'
 
 // Example automaton graph
 const graph: FSAProjectGraph = {
@@ -24,6 +25,7 @@ const graph: FSAProjectGraph = {
 }
 
 const TestingLab = ({ Step }) => {
+  const { t } = useTranslation('landing')
   const [input, setInput] = useState('ab')
   const [idx, setIdx] = useState(0)
   const [result, setResult] = useState<FSAExecutionResult & {transitionCount: number}>()
@@ -49,7 +51,7 @@ const TestingLab = ({ Step }) => {
     const { trace, accepted, remaining, transitionCount } = result
 
     if (trace.length < 2) {
-      if (idx > 0) return accepted ? 'ACCEPTED' : 'REJECTED'
+      if (idx > 0) return accepted ? t('component.testing_lab.accepted') : t('component.testing_lab.rejected')
       return null
     }
 
@@ -66,7 +68,7 @@ const TestingLab = ({ Step }) => {
             : `\nq${trace[trace.length - 1].to} ->|`]
       : transitions
 
-    return `${transitionsWithRejected.join('\n')}${(idx === transitionCount) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
+    return `${transitionsWithRejected.join('\n')}${(idx === transitionCount) ? '\n\n' + (accepted ? t('component.testing_lab.accepted') : t('component.testing_lab.rejected')) : ''}`
   }, [input, result, idx])
 
   useEffect(() => {
@@ -83,7 +85,7 @@ const TestingLab = ({ Step }) => {
           setResult(undefined)
         }}
         value={input}
-        placeholder="Enter a value to test"
+        placeholder={t('component.testing_lab.input_placeholder')}
       />
 
       <StepButtons>
