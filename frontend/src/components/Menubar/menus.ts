@@ -1,5 +1,5 @@
 import { APP_VERSION } from '/src/config/projects'
-import { ContextItems, TranslatableContextItems } from '/src/components/ContextMenus/contextItem'
+import { TranslatableContextItems } from '/src/components/ContextMenus/contextItem'
 import { TFunction } from 'i18next'
 
 const menus: TranslatableContextItems = (t: TFunction) => [
@@ -131,7 +131,7 @@ const menus: TranslatableContextItems = (t: TFunction) => [
         action: 'ZOOM_100'
       },
       {
-        label:t('menus.zoom_fit', { ns: 'common' }),
+        label: t('menus.zoom_fit', { ns: 'common' }),
         action: 'ZOOM_FIT'
       },
       'hr',
@@ -213,7 +213,7 @@ const menus: TranslatableContextItems = (t: TFunction) => [
       },
       'hr',
       {
-        label: t('menus.version', { ns: 'common', version: APP_VERSION})
+        label: t('menus.version', { ns: 'common', version: APP_VERSION })
       }
     ]
   }

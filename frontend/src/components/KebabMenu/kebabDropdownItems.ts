@@ -1,7 +1,6 @@
 import { TFunction } from 'i18next'
 import { TranslatableContextItems } from '../ContextMenus/contextItem'
 
-
 const kebabContextItems: TranslatableContextItems = (t: TFunction) => [
   {
     label: t('rename', { ns: 'common' }),
