@@ -13,7 +13,9 @@ import ModuleWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
-import ExamplePageTour from '../Tutorials/guidedTour/ExamplePageTour'
+import FSAPageTour from '../Tutorials/guidedTour/FSAPageTour'
+import PDAPageTour from '../Tutorials/guidedTour/PDAPageTour'
+import TMPageTour from '../Tutorials/guidedTour/TMPageTour'
 import TourButton from '/src/components/TourButton/TourButton'
 
 const Example = () => {
@@ -134,6 +136,14 @@ const Example = () => {
     }
   }, [tool, priorTool])
 
+  // const renderGuidedTour = () => {
+  //   switch (projectType) {
+  //     case 'FSA':
+  //       return <FSAPageTour onClose={closeTour}/>
+  //     case 'PDA':
+  //       return <PDAPageTour onClose={closeTour}/>
+  //   }
+  // }
   return (
     <>
       <Menubar isSaving={isSaving} />
@@ -166,7 +176,7 @@ const Example = () => {
         style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
       />
       <ImportDialog navigateFunction={navigate} />
-      {showTour && <ExamplePageTour onClose={closeTour}/>}
+      {showTour && (projectType === 'FSA' ? (<FSAPageTour onClose={closeTour}/>) : projectType === 'PDA' ? (<PDAPageTour onClose={closeTour}/>) : (<TMPageTour onClose={closeTour}/>))}
       <CreateModule />
     </>
   )

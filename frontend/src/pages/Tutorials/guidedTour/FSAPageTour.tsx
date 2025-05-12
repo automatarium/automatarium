@@ -65,7 +65,7 @@ interface TourProps {
     onClose: () => void;
 }
 
-const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
+const FSAPageTour: React.FC<TourProps> = ({ onClose }) => {
   const [step, setStep] = useState<number>(0)
   // Define tour steps
   const steps: Step[] = [
@@ -161,4 +161,4 @@ const ExamplePageTour: React.FC<TourProps> = ({ onClose }) => {
   )
 }
 
-export default ExamplePageTour
+export default FSAPageTour

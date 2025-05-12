@@ -233,15 +233,31 @@ const NewFile = () => {
     </CardList>
 
     <CardList
-      title="Examples"
+      title="Automata Examples"
       innerRef={cardsRef}
     >
       <NewProjectCard
         title="Finite State Automaton"
-        description="Follow a in-tour tutorial on how to build a finite state automaton, accompanied with a video tutorial"
+        description="Follow a in-tour tutorial on how to build a finite state automaton."
         onClick={() => handleNewExample('FSA')}
         height={height}
         image={<FSA {...stylingVals} />}
+      />
+
+      <NewProjectCard
+        title="Push Down Automaton"
+        description="Follow a in-tour tutorial on how to build a push-down stack."
+        onClick={() => handleNewExample('PDA')}
+        height={height}
+        image={<PDA {...stylingVals} />}
+      />
+
+      <NewProjectCard
+        title="Turing Machine"
+        description="Follow a in-tour tutorial on how to build a turing machine."
+        onClick={() => handleNewExample('TM')}
+        height={height}
+        image={<TM {...stylingVals} />}
       />
     </CardList>
 
