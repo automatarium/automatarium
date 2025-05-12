@@ -25,6 +25,7 @@ import {
   ProjectComment, TMAutomataTransition,
   TMDirection
 } from '/src/types/ProjectTypes'
+import { useTranslation } from 'react-i18next'
 
 /**
  * All types that a dialog could be
@@ -78,6 +79,7 @@ const InputDialogs = () => {
   const inputRef = useRef<HTMLInputElement>()
   const inputPopRef = useRef()
   const inputPushRef = useRef()
+  const { t } = useTranslation('common')
 
   const [value, setValue] = useState('')
   const [valuePop, setValuePop] = useState('')
@@ -323,7 +325,7 @@ const InputDialogs = () => {
               value={value}
               onChange={e => setValue(e.target.value)}
               onKeyUp={handleSave}
-              placeholder={'λ\t(read)'}
+              placeholder={t('input_dialog.read')}
               style={TransitionInputStyle}
             />
           </InputWrapper>
@@ -333,7 +335,7 @@ const InputDialogs = () => {
               value={valuePop}
               onChange={e => setValuePop(e.target.value)}
               onKeyUp={handleSave}
-              placeholder={'λ\t(pop)'}
+              placeholder={t('input_dialog.pop')}
               style={TransitionInputStyle}
             />
           </InputWrapper>
@@ -343,7 +345,7 @@ const InputDialogs = () => {
               value={valuePush}
               onChange={e => setValuePush(e.target.value)}
               onKeyUp={handleSave}
-              placeholder={'λ\t(push)'}
+              placeholder={t('input_dialog.push')}
               style={TransitionInputStyle}
             />
             <SubmitButton onClick={save}>
@@ -361,7 +363,7 @@ const InputDialogs = () => {
               value={value}
               onChange={(e) => setValue(e.target.value)}
               onKeyUp={handleSave}
-              placeholder={'λ\t(read)'}
+              placeholder={t('input_dialog.read')}
               style={TMInputStyle}
             />
           </InputWrapper>
@@ -371,7 +373,7 @@ const InputDialogs = () => {
               value={write}
               onChange={handleWriteIn}
               onKeyUp={handleSave}
-              placeholder={'λ\t(write)'}
+              placeholder={t('input_dialog.write')}
               style={TMInputStyle}
             />
           </InputWrapper>
@@ -406,8 +408,8 @@ const InputDialogs = () => {
               onKeyUp={handleSave}
               placeholder={{
                 stateName: `${statePrefix ?? 'q'}${(dialog as StateDialog).selectedState?.id ?? '0'}`,
-                stateLabel: 'State label...',
-                comment: 'Comment text...'
+                stateLabel: t('input_dialog.state_label'),
+                comment: t('input_dialog.comment_text')
               }[dialog.type]}
               style={{
                 width: 'calc(20ch + 3.5em)',
