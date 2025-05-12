@@ -1,17 +1,19 @@
-import { ContextItems } from '../ContextMenus/contextItem'
+import { TFunction } from 'i18next'
+import { ContextItems, TranslatableContextItems } from '../ContextMenus/contextItem'
 
-const kebabContextItems: ContextItems = [
+
+const kebabContextItems: TranslatableContextItems = (t: TFunction) => [
   {
-    label: 'Rename',
+    label: t('rename', {ns: 'common'}),
     action: 'RENAME_PROJECT'
   },
   {
-    label: 'Copy',
+    label: t('copy', {ns: 'common'}),
     action: 'COPY_PROJECT'
   },
   'hr',
   {
-    label: 'Delete',
+    label: t('delete', {ns: 'common'}),
     action: 'DELETE_PROJECT'
   }
 ]

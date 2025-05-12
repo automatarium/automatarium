@@ -22,6 +22,7 @@ import {
 
 import menus from './menus'
 import { ContextItem } from '/src/components/ContextMenus/contextItem'
+import { useTranslation } from 'react-i18next'
 
 // Extend dayjs
 dayjs.extend(relativeTime)
@@ -76,6 +77,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const deleteProject = useProjectsStore(s => s.deleteProject)
+  const { t } = useTranslation('common')
 
   // Modules
   const upsertModuleProject = useModuleStore(s => s.upsertProject)
@@ -160,7 +162,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             </NameRow>
 
             <DropdownMenus>
-              {menus.map((item: ContextItem) => (
+              {menus(t).map((item: ContextItem) => (
                 <DropdownButton
                   key={item.label}
                   item={item}
