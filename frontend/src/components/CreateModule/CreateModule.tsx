@@ -24,7 +24,7 @@ const CreateModule = () => {
   const [moduleName, setModuleName] = useState('')
   const [moduleDescription, setModuleDescription] = useState('')
   const [project, setProjectforModule] = useState(false)
-  const { t } = useTranslation('common')  
+  const { t } = useTranslation('common')
 
   useEvent('modal:createModule', e => {
     setModalOpen(true)
@@ -45,8 +45,8 @@ const CreateModule = () => {
     newModuleProject.config.color = pink
 
     if (moduleName === '') {
-      newModule.meta.name = i18n.t('create_module.untitled', {ns: 'common'})
-      newModuleProject.meta.name = i18n.t('create_module.untitled', {ns: 'common'})
+      newModule.meta.name = i18n.t('create_module.untitled', { ns: 'common' })
+      newModuleProject.meta.name = i18n.t('create_module.untitled', { ns: 'common' })
     } else {
       newModule.meta.name = moduleName
       newModuleProject.meta.name = moduleName

@@ -621,7 +621,7 @@ const InputTransitionGroup = () => {
     <Modal
       title={t('input_dialog.edge_editor')}
       description={
-        t('input_dialog.editing_transition', {state1: fromName, state2: toName})
+        t('input_dialog.editing_transition', { state1: fromName, state2: toName })
       }
       isOpen={modalOpen}
       onClose={() => {
