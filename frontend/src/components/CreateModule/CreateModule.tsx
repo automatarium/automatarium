@@ -6,6 +6,8 @@ import { ProjectType } from '/src/types/ProjectTypes'
 import { createNewModule, createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
 import { useNavigate } from 'react-router-dom'
 import { ColourName } from '/src/config'
+import { useTranslation } from 'react-i18next'
+import i18n from '/src/config/i18n'
 
 const CreateModule = () => {
   const navigate = useNavigate()
@@ -22,6 +24,7 @@ const CreateModule = () => {
   const [moduleName, setModuleName] = useState('')
   const [moduleDescription, setModuleDescription] = useState('')
   const [project, setProjectforModule] = useState(false)
+  const { t } = useTranslation('common')  
 
   useEvent('modal:createModule', e => {
     setModalOpen(true)
@@ -42,8 +45,8 @@ const CreateModule = () => {
     newModuleProject.config.color = pink
 
     if (moduleName === '') {
-      newModule.meta.name = 'Untitled Module'
-      newModuleProject.meta.name = 'Untitled Module'
+      newModule.meta.name = i18n.t('create_module.untitled', {ns: 'common'})
+      newModuleProject.meta.name = i18n.t('create_module.untitled', {ns: 'common'})
     } else {
       newModule.meta.name = moduleName
       newModuleProject.meta.name = moduleName
@@ -72,12 +75,12 @@ const CreateModule = () => {
 
   return <>
   <Modal
-    title='Create New Module'
+    title={t('create_module.create_new')}
     isOpen={isModalOpen}
     onClose= {() => setModalOpen(false)}
     actions={
       <>
-      <Button secondary onClick= {() => setModalOpen(false)}>Cancel</Button>
+      <Button secondary onClick= {() => setModalOpen(false)}>{t('cancel')}</Button>
       <Button
             onClick={() => {
               if (!project) {
@@ -86,32 +89,32 @@ const CreateModule = () => {
                 handleNewModuleFile(currentProject)
               }
             }}
-          > Create </Button>
+          > {t('create')} </Button>
       </>
     }
     >
         {!project &&
         <>
-          Select automata type for your first question:
+          {t('create_module.select_type')}
           <Input type="select" value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
-            <option value='FSA'>Finite State Automaton</option>
-            <option value='PDA'>Push Down Automaton</option>
-            <option value='TM'>Turing Machine</option>
+            <option value='FSA'>{t('create_module.fsa')}</option>
+            <option value='PDA'>{t('create_module.pda')}</option>
+            <option value='TM'>{t('create_module.tm')}</option>
           </Input>
         </>
         }
-        Module Name:
+        {t('create_module.name')}
         <Input
           type='text'
           value={moduleName}
           onChange={(e) => setModuleName(e.target.value)}
-          placeholder='Enter project name'
+          placeholder={t('create_module.name_placeholder')}
         />
-        Description:
+        {t('create_module.description')}
         <TextArea
           value={moduleDescription}
           onChange={(e) => setModuleDescription(e.target.value)}
-          placeholder='Enter project description'
+          placeholder={t('create_module.description_placeholder')}
         />
   </Modal>
   </>
