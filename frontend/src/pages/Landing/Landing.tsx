@@ -10,8 +10,10 @@ import TestingLab from './components/TestingLab'
 
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import LandingPageTour from '../Tutorials/guidedTour/LandingPageTour'
+import { useTranslation } from 'react-i18next'
 
 const Landing = () => {
+  const { t } = useTranslation('landing')
   // creating booleans for tour
   const [showTour, setShowTour] = useState(false)
   const [Step, setStep] = useState(0)
@@ -61,42 +63,42 @@ const Landing = () => {
       <Section>
         <ExampleAutomaton />
         <div className="text">
-          <p>Automatarium is a student-built platform for automata and formal language theory.</p>
-          <p>Work easily with a simple and intuitive design built for ease of use and accessibility.</p>
-          <p>It's free to use, and when you're done, share your project with the world with a link.</p>
+          <p>{t('section1.description.paragraph1')}</p>
+          <p>{t('section1.description.paragraph2')}</p>
+          <p>{t('section1.description.paragraph3')}</p>
           <Button id="start-build" to="/new"
             style={{
               backgroundColor: (Step === 1) ? '#90EE90' : '',
               color: (Step === 1) ? 'green' : 'white'
             } }
-          >Start building!</Button>
-          <p>First time here? Check out our tutorials!</p>
+          >{t('section1.button.start_building')}</Button>
+          <p>{t('section1.description.paragraph4')}</p>
           <Button to='/tutorials'
           style={{
             backgroundColor: (Step === 2) ? '#90EE90' : '',
             color: (Step === 2) ? 'green' : 'white'
 
-          } }>Tutorials</Button>
+          } }>{t('section1.button.tutorials')}</Button>
         </div>
       </Section>
 
       <Banner>
-        <h3>Automatarium is open-source and free</h3>
-        <p>Licensed under MIT, and hosted by RMIT University for everyone to use</p>
+        <h3>{t('banner1.description.heading')}</h3>
+        <p>{t('banner1.description.paragraph1')}</p>
         <Button
           icon={<Github />}
           href="https://github.com/automatarium/automatarium"
           target="_blank"
           rel="nofollow noreferrer"
-        >Visit Github</Button>
+        >{t('banner1.button.visit_github')}</Button>
       </Banner>
 
       <Section $reverse>
         <TestingLab Step={Step} />
         <div className="text">
-          <h3>Fully-featured testing lab</h3>
-          <p>Automatarium provides a simple but powerful testing lab. Step through inputs and see a live trace of what is happening. Try changing the input in the example and see what happens.</p>
-          <p>There is also a multi-run feature, run many tests at once and see which succeed and fail.</p>
+          <h3>{t('section2.description.heading')}</h3>
+          <p>{t('section2.description.paragraph1')}</p>
+          <p>{t('section2.description.paragraph2')}</p>
         </div>
       </Section>
 
@@ -110,23 +112,23 @@ const Landing = () => {
           </tbody>
         </Table>
         <div className="text">
-          <h3>Explore your automata</h3>
-          <p>Automatarium provides tools to inspect your automaton and learn about how it reacts to different inputs.</p>
+          <h3>{t('section3.description.heading')}</h3>
+          <p>{t('section3.description.paragraph1')}</p>
         </div>
       </Section>
 
       <Section $reverse>
-        <ProjectCard name="My Project" type="FSA" date="2 days ago" disabled width={PROJECT_THUMBNAIL_WIDTH} $istemplate={false}/>
+        <ProjectCard name={t('section4.project_name')} type="FSA" date="2 days ago" disabled width={PROJECT_THUMBNAIL_WIDTH} $istemplate={false}/>
         <div className="text">
-          <h3>Share with colleagues</h3>
-          <p>Easily share your projects with your peers via a link that lets anyone make a copy of your project and continue working.</p>
+          <h3>{t('section4.description.heading')}</h3>
+          <p>{t('section4.description.paragraph1')}</p>
         </div>
       </Section>
 
     <Banner>
-          <h3>What are you waiting for?</h3>
-          <p>Start building and testing your automata now!</p>
-          <Button to="/new">Start building!</Button>
+          <h3>{t('banner2.description.heading')}</h3>
+          <p>{t('banner2.description.paragraph1')}</p>
+          <Button to="/new">{t('banner2.button.start_building')}</Button>
     </Banner>
     </Sections>
 
