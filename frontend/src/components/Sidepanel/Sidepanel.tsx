@@ -27,14 +27,7 @@ const panels: PanelItem[] = [
     icon: <FlaskConical />,
     element: <TestingLab />
   },
-  /*
-  {
-    label: 'Stepping Lab',
-    value: 'step',
-    icon: <Pause />,
-    element: <SteppingLab />
-  },
-  */
+
   {
     label: 'About Your Automaton',
     value: 'about',
