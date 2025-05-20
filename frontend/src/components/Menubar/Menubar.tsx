@@ -116,7 +116,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   useEvent('beforeunload', e => {
     if (lastSaveDate > lastChangeDate) return
     e.preventDefault()
-    return 'Your project isn\'t saved yet, are you sure you want to leave?'
+    return t('menubar.not_saved')
   }, [lastSaveDate, lastChangeDate], { options: { capture: true }, target: window })
 
   return (
@@ -156,9 +156,9 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
                 />
                   )
                 : (
-                <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
+                <Name onClick={handleEditProjectName} title={t('menubar.edit_title')}>{projectName ?? t('menubar.untitled')}</Name>
                   )}
-              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
+              <SaveStatus $show={isSaving}>{t('menubar.saving')}</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
@@ -177,7 +177,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
         </Menu>
 
         <Actions>
-          {<Button onClick={() => dispatchCustomEvent('showSharing', null)}>Share</Button>}
+          {<Button onClick={() => dispatchCustomEvent('showSharing', null)}>{t('share')}</Button>}
         </Actions>
       </Wrapper>
     </>
