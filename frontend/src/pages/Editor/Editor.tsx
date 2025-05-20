@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { HelpCircle } from 'lucide-react'
 
 import { Content, EditorContent } from './editorStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule, CreateModule } from '/src/components'
@@ -14,7 +13,6 @@ import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
-import TourButton from '/src/components/TourButton/TourButton'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -25,15 +23,15 @@ const Editor = () => {
   const setViewPositionAndScale = useViewStore((s) => s.setViewPositionAndScale)
   const project = useProjectStore((s) => s.project)
   const [showTour, setShowTour] = useState(false)
-  const [isSidepanelOpen, setIsSidepanelOpen] = useState(false)
 
   const closeTour = () => {
     setShowTour(false)
   }
 
-  const showTourHandler = () => {
+  // Listen to the custom event 'tour:start' to show the tour
+  useEvent('tour:start', () => {
     setShowTour(true)
-  }
+  })
 
   const currentModule = useModuleStore(s => s.module)
   const getProjectinModule = useModuleStore(s => s.getProjectById)
@@ -73,17 +71,6 @@ const Editor = () => {
   }, [currentModule, project, getProjectinModule])
 
   const projectType = project.config.type
-  const [buttonRight, setButtonRight] = useState('60px')
-
-  // Adjust button position when side panel is toggled
-  useEffect(() => {
-    setButtonRight(isSidepanelOpen ? '410px' : '60px')
-  }, [isSidepanelOpen])
-
-  // Toggle side panel and update button position
-  const handleSidepanelToggle = (isOpen) => {
-    setIsSidepanelOpen(isOpen)
-  }
 
   const isSaving = useAutosaveProject()
 
@@ -147,7 +134,7 @@ const Editor = () => {
           <BottomPanel />
         </EditorContent>
         {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
-        <Sidepanel onToggle={handleSidepanelToggle} />
+        <Sidepanel onToggle={setShowModuleWindow} />
       </Content>
       <ShortcutGuide />
       <FinalStatePopup />
@@ -159,11 +146,6 @@ const Editor = () => {
         isOpen={confirmDialogOpen}
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
-      />
-      <TourButton
-        icon={<HelpCircle />}
-        onClick={showTourHandler}
-        style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
       />
       <ImportDialog navigateFunction={navigate} />
       {showTour && <EditorPageTour onClose={closeTour} />}

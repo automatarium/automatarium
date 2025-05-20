@@ -190,6 +190,10 @@ const menus: ContextItems = [
     label: 'Help',
     items: [
       {
+        label: 'Start Tour',
+        action: 'START_TOUR'
+      },
+      {
         label: 'View documentation',
         action: 'OPEN_DOCS'
       },
@@ -210,6 +214,7 @@ const menus: ContextItems = [
         label: 'About Automatarium',
         action: 'OPEN_ABOUT'
       },
+
       'hr',
       {
         label: `Version ${APP_VERSION}`
