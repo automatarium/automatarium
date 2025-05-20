@@ -126,13 +126,13 @@ const ExportImage = () => {
           </Preference>
           <Preference label={t('export_image.accent_colour')} fullWidth>
             <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value as ColourName })}>
-              <option value="red">{t('export_image.red')}</option>
-              <option value="orange">{t('export_image.orange')}</option>
-              <option value="green">{t('export_image.green')}</option>
-              <option value="teal">{t('export_image.teal')}</option>
-              <option value="blue">{t('export_image.blue')}</option>
-              <option value="purple">{t('export_image.purple')}</option>
-              <option value="pink">{t('export_image.pink')}</option>
+              <option value="red">{t('colours.red')}</option>
+              <option value="orange">{t('colours.orange')}</option>
+              <option value="green">{t('colours.green')}</option>
+              <option value="teal">{t('colours.teal')}</option>
+              <option value="blue">{t('colours.blue')}</option>
+              <option value="purple">{t('colours.purple')}</option>
+              <option value="pink">{t('colours.pink')}</option>
             </Input>
           </Preference>
           <Preference label={t('export_image.background')} fullWidth>

@@ -21,6 +21,26 @@
     "rename": "Rename",
     "share": "Share",
 
+    "warning": "Warning",
+    "ok": "OK",
+
+    "fsa": "Finite State Automaton",
+    "fsa_short": "FSA",
+    "pda": "Push Down Automaton",
+    "pda_short": "PDA",
+    "tm": "Turing Machine",
+    "tm_short": "TM",
+
+    "colours": {
+        "red": "Red",
+        "orange": "Orange",
+        "green": "Green",
+        "teal": "Teal",
+        "blue": "Blue",
+        "purple": "Purple",
+        "pink": "Pink"
+    },
+
     "context_menu": {
       "add_comment": "Add comment",
       "create_state": "Create state here",
@@ -44,9 +64,6 @@
         "untitled": "Untitled Module",
         "create_new": "Create New Module",
         "select_type": "Select automata type for your first question:",
-        "fsa": "Finite State Automaton",
-        "pda": "Push Down Automaton",
-        "tm": "Turing Machine",
         "name": "Module Name:",
         "name_placeholder": "Enter project name",
         "description": "Description:",
@@ -62,13 +79,6 @@
         "svg_note": "Note: SVG exporting is still in beta and may not work as expected",
         "margin": "Margin",
         "accent_colour": "Accent colour",
-        "red": "Red",
-        "orange": "Orange",
-        "green": "Green",
-        "teal": "Teal",
-        "blue": "Blue",
-        "purple": "Purple",
-        "pink": "Pink",
         "background": "Background",
         "solid": "Solid",
         "transparent": "Transparent",

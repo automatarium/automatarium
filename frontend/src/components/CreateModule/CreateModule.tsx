@@ -97,9 +97,9 @@ const CreateModule = () => {
         <>
           {t('create_module.select_type')}
           <Input type="select" value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
-            <option value='FSA'>{t('create_module.fsa')}</option>
-            <option value='PDA'>{t('create_module.pda')}</option>
-            <option value='TM'>{t('create_module.tm')}</option>
+            <option value='FSA'>{t('fsa')}</option>
+            <option value='PDA'>{t('pda')}</option>
+            <option value='TM'>{t('tm')}</option>
           </Input>
         </>
         }
