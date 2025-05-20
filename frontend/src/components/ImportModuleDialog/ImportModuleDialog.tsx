@@ -92,8 +92,9 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
         onClick={() => {
           setLoading(true)
           promptLoadModuleFile(
+            t,
             onData,
-            'The file format provided is not valid. Please only open Automatarium .aom',
+            t('import_module.invalid_file'),
             '.aom',
             () => {
               resetModal()
@@ -123,6 +124,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
               setLoading(true)
               urlLoadModuleFile(
                 urlValue,
+                t,
                 onData,
                 t('import_module.failed_url'),
                 () => {

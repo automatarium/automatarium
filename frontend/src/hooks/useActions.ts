@@ -17,6 +17,8 @@ import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
 import useModuleStore, { createNewModule } from '../stores/useModuleStore'
+import { useTranslation } from 'react-i18next'
+import { TFunction } from 'i18next'
 
 /**
  * Combination of keys. Used to call an action
@@ -98,6 +100,7 @@ const useActions = (registerHotkeys = false) => {
   const template = useTemplateStore(s => s.template)
   const setTemplate = useTemplateStore(s => s.setTemplate)
   const deleteTemplate = useTemplatesStore(s => s.deleteTemplate)
+  const { t } = useTranslation('common')
 
   const navigate = useNavigate()
 
@@ -111,23 +114,23 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open automatarium project', '.json,.ao') }
+        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json,.ao') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
       hotkeys: [{ key: 'i', meta: true, shift: true }],
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { promptLoadFile(setProject, 'Failed to open JFLAP project', '.jff') }
+        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_jflap'), '.jff') }
       }
     },
     IMPORT_DIALOG: {
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { dispatchCustomEvent('modal:import', null) }
+        if (window.confirm(t('use_actions.import_warning'))) { dispatchCustomEvent('modal:import', null) }
       }
     },
     IMPORT_MODULE: {
       handler: async () => {
-        if (window.confirm('Importing will override your current project. Continue anyway?')) { dispatchCustomEvent('modal:importModule', null) }
+        if (window.confirm(t('use_actions.import_warning'))) { dispatchCustomEvent('modal:importModule', null) }
       }
     },
     SAVE_FILE: {
@@ -242,7 +245,7 @@ const useActions = (registerHotkeys = false) => {
       handler: () => {
         // If a template is selected and nothing else is, delete the template
         if (template !== null && nothingSelected) {
-          if (window.confirm(`Are you sure you want to delete your template '${template.name}'?`)) {
+          if (window.confirm(t('use_actions.delete_template_warning', { name: template.name }))) {
             deleteTemplate(template._id)
             stopTemplateInsert(setTemplate, setTool)
           }
@@ -633,7 +636,7 @@ export const useParseFile = <T>(onData: (val: T) => void, errorMessage: string, 
   reader.readAsText(input)
 }
 
-export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
+export const promptLoadFile = <T>(t: TFunction, onData: (val: T) => void, errorMessage = t('use_actions.failed_parse'), accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
@@ -642,7 +645,7 @@ export const promptLoadFile = <T>(onData: (val: T) => void, errorMessage = 'Fail
   input.click()
 }
 
-export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file.', onFinishLoading = () => null, onFailedLoading = () => null) => {
+export const urlLoadFile = <T>(url: string, t: TFunction, onData: (val: T) => void, errorMessage = t('use_actions.failed_parse'), onFinishLoading = () => null, onFailedLoading = () => null) => {
   // Check that the user didn't just pass in the URL that was given from Automatarium
   const urlTokens = url.split('/') ?? null
   if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'raw') {
@@ -660,7 +663,7 @@ export const urlLoadFile = <T>(url: string, onData: (val: T) => void, errorMessa
         useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
       })
       .catch((error) => {
-        showWarning(`Failed to retrieve the file from this URL.\n${error}`)
+        showWarning(t('use_actions.failed_url') + `\n${error}`)
         console.error(error)
         onFailedLoading()
       })
@@ -714,7 +717,7 @@ export const useParseModuleFile = <T>(onData: (val: T) => void, errorMessage: st
   reader.readAsText(input)
 }
 
-export const promptLoadModuleFile = <T>(onData: (val: T) => void, errorMessage = 'Failed to parse file', accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
+export const promptLoadModuleFile = <T>(t: TFunction, onData: (val: T) => void, errorMessage = t('use_actions.failed_parse'), accept: string, onFinishLoading = () => null, onFailedLoading = () => null) => {
   // Prompt user for file input
   const input = document.createElement('input')
   input.type = 'file'
@@ -736,7 +739,7 @@ export const exportModuleFile = () => {
   a.click()
 }
 
-export const urlLoadModuleFile = <T>(url: string, onData: (val: T) => void, errorMessage = 'Failed to parse file.', onFinishLoading = () => null, onFailedLoading = () => null) => {
+export const urlLoadModuleFile = <T>(url: string, t: TFunction, onData: (val: T) => void, errorMessage = t('use_actions.failed_parse'), onFinishLoading = () => null, onFailedLoading = () => null) => {
   // Check that the user didn't just pass in the URL that was given from Automatarium
   const urlTokens = url.split('/') ?? null
   if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'module') {
@@ -754,7 +757,7 @@ export const urlLoadModuleFile = <T>(url: string, onData: (val: T) => void, erro
         useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
       })
       .catch((error) => {
-        showWarning(`Failed to retrieve the file from this URL.\n${error}`)
+        showWarning(t('use_actions.failed_url') + `\n${error}`)
         console.error(error)
         onFailedLoading()
       })

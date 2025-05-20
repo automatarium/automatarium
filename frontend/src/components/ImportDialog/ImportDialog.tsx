@@ -80,6 +80,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
           onClick={() => {
             setLoading(true)
             promptLoadFile(
+              t,
               onData,
               t('import_project.invalid_file'),
               '.jff,.json,.ao',
@@ -111,6 +112,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
               setLoading(true)
               urlLoadFile(
                 urlValue,
+                t,
                 onData,
                 t('import_project.failed_url'),
                 () => {
