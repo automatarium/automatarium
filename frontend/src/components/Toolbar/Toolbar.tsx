@@ -15,6 +15,8 @@ import transitionAnimation from './animations/transition.json'
 import commentAnimation from './animations/comment.json'
 import { SidebarButton } from '../Sidebar/Sidebar'
 import { Tool } from '/src/stores/useToolStore'
+import { useTranslation } from 'react-i18next'
+import { TFunction } from 'i18next'
 
 interface ToolItem {
   label: string
@@ -25,43 +27,45 @@ interface ToolItem {
   animation: object
 }
 
-const tools: ToolItem[] = [
+type TranslatableToolItems = (t: TFunction) => ToolItem[]
+
+const tools: TranslatableToolItems = (t: TFunction) => [
   {
-    label: 'Cursor tool',
+    label: t('tools.cursor'),
     hotkey: 'V',
-    description: 'Select and move items',
+    description: t('tools.cursor_desc'),
     value: 'cursor',
     icon: <MousePointer2 />,
     animation: cursorAnimation
   },
   {
-    label: 'Hand tool',
+    label: t('tools.hand'),
     hotkey: 'H',
-    description: 'Drag to pan around your automaton',
+    description: t('tools.hand_desc'),
     value: 'hand',
     icon: <Hand />,
     animation: handAnimation
   },
   {
-    label: 'State tool',
+    label: t('tools.state'),
     hotkey: 'S',
-    description: 'Create states by clicking',
+    description: t('tools.state_desc'),
     value: 'state',
     icon: <Circle />,
     animation: stateAnimation
   },
   {
-    label: 'Transition tool',
+    label: t('tools.transition'),
     hotkey: 'T',
-    description: 'Drag between states to create transitions',
+    description: t('tools.transition_desc'),
     value: 'transition',
     icon: <ArrowUpRight />,
     animation: transitionAnimation
   },
   {
-    label: 'Comment tool',
+    label: t('tools.comment'),
     hotkey: 'C',
-    description: 'Add comments to your automaton',
+    description: t('tools.comment_desc'),
     value: 'comment',
     icon: <MessageSquare />,
     animation: commentAnimation
@@ -79,10 +83,11 @@ const Toolbar = () => {
   const viewScale = useViewStore(s => s.scale)
   const [toolPopup, setToolPopup] = useState<ToolPopupType>({} as ToolPopupType)
   const toolPopupHover = useRef<ToolHoverType>({} as ToolHoverType)
+  const { t } = useTranslation('common')
 
   return (
     <Sidebar $tools>
-      {tools.map(toolOption => (
+      {tools(t).map(toolOption => (
         <SidebarButton
           key={toolOption.label}
           onClick={() => {
@@ -95,7 +100,7 @@ const Toolbar = () => {
             window.setTimeout(() => {
               if (toolPopupHover.current.value !== toolOption.value) return
               const box = (e.target as HTMLElement).getBoundingClientRect()
-              setToolPopup({ visible: true, y: box.y, tool: tools.find(t => t.value === toolOption.value) })
+              setToolPopup({ visible: true, y: box.y, tool: tools(t).find(t => t.value === toolOption.value) })
             }, toolPopupHover.current.timeout || 1000)
           }}
           onMouseLeave={e => {
@@ -150,24 +155,24 @@ const Toolbar = () => {
         onClose={() => setZoomMenuOpen(false)}
         items={[
           {
-            label: 'Zoom in',
+            label: t('menus.zoom_in'),
             action: 'ZOOM_IN'
           },
           {
-            label: 'Zoom out',
+            label: t('menus.zoom_out'),
             action: 'ZOOM_OUT'
           },
           {
-            label: 'Zoom to 100%',
+            label: t('menus.zoom_100'),
             action: 'ZOOM_100'
           },
           {
-            label: 'Zoom to fit',
+            label: t('menus.zoom_fit'),
             action: 'ZOOM_FIT'
           },
           'hr',
           {
-            label: 'Fullscreen',
+            label: t('menus.fullscreen'),
             shortcut: 'F11',
             action: 'FULLSCREEN'
           }
