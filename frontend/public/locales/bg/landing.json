@@ -1,59 +1,59 @@
 {
     "section1": {
         "description": {
-            "paragraph1": "Automatarium is a student-built platform for automata and formal language theory.",
-            "paragraph2": "Work easily with a simple and intuitive design built for ease of use and accessibility.",
-            "paragraph3": "It's free to use, and when you're done, share your project with the world with a link.",
-            "paragraph4": "First time here? Check out our tutorials!"
+            "paragraph1": "Automatarium е платформа създадена от студенти за изучаване на автомати и езици.",
+            "paragraph2": "Работете ефикасно с интуитивен дизайн, създаден за лесна употреба и достъпност.",
+            "paragraph3": "Безплатен е за употреба. Когато свършите проекта си, може да го споделите с линк.",
+            "paragraph4": "Тук сте за първи път? Разгледайте нашите видео уроци!"
         },
         "button": {
-            "start_building": "Start building!",
-            "tutorials": "Tutorials"
+            "start_building": "Започнете тук!",
+            "tutorials": "Видео уроци"
         }
     },
     "banner1": {
         "description": {
-            "heading": "Automatarium is open-source and free",
-            "paragraph1": "Licensed under MIT, and hosted by RMIT University for everyone to use"
+            "heading": "Automatarium е безплатен и с отворен код.",
+            "paragraph1": "Под MIT лиценз и е поддържан от RMIT University за всички."
         },
         "button": {
-            "visit_github": "Visit Github"
+            "visit_github": "Посетете Github"
         }
     },
     "section2": {
         "description": {
-            "heading": "Fully-featured testing lab",
-            "paragraph1": "Automatarium provides a simple but powerful testing lab. Step through inputs and see a live trace of what is happening. Try changing the input in the example and see what happens.",
-            "paragraph2": "There is also a multi-run feature, run many tests at once and see which succeed and fail."
+            "heading": "Напълно оборудвана лаборатория",
+            "paragraph1": "Automatarium предоставя лесна, но мощна лаборатория за тестване. Въведете дума и вижте стъпка по стъпка какво се случва. Променете какво се въвежда в примера и вижте резултата.",
+            "paragraph2": "Също има мулти-проба, където може да тествате няколко думи едновременно."
         }
     },
     "section3": {
         "description": {
-            "heading": "Explore your automata",
-            "paragraph1": "Automatarium provides tools to inspect your automaton and learn about how it reacts to different inputs."
+            "heading": "Разгледайте автомата си",
+            "paragraph1": "Automatarium предоставя инструменти с които да разгледате автомата си и да научите как реагира на различни думи."
         }
     },
     "section4": {
-        "project_name": "My Project",
+        "project_name": "Моят проект",
         "description": {
-            "heading": "Share with colleagues",
-            "paragraph1": "Easily share your projects with your peers via a link that lets anyone make a copy of your project and continue working."
+            "heading": "Споделете с колеги",
+            "paragraph1": "Лесно споделяйте проектите си с вашите връстници чрез линк, със който могат да направят копие на вашия проект и да работят над него."
         }
     },
     "banner2": {
         "description": {
-            "heading": "What are you waiting for?",
-            "paragraph1": "Start building and testing your automata now!"
+            "heading": "Какво чакате?",
+            "paragraph1": "Започнете да строите и тествате автоматите си сега!"
         },
         "button": {
-            "start_building": "Start building!"
+            "start_building": "Започнете тук!"
         }
     },
     "component": {
         "testing_lab": {
-            "accepted": "ACCEPTED",
-            "rejected": "REJECTED",
-            "input_placeholder": "Enter a value to test"
+            "accepted": "ПРИЕТА",
+            "rejected": "ОТХВЪРЛЕНА",
+            "input_placeholder": "Въведете дума за проба"
         }
     }
 }
