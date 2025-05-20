@@ -3,19 +3,21 @@ import { SectionLabel, Preference, Input } from '/src/components'
 
 import { Wrapper } from './optionsStyle'
 import { ColourName } from '/src/config'
+import { useTranslation } from 'react-i18next'
 
 const Options = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
   const orOperator = useProjectStore(s => s.project?.config?.orOperator)
   const projectColor = useProjectStore(s => s.project?.config?.color)
   const updateConfig = useProjectStore(s => s.updateConfig)
+  const { t } = useTranslation('common')
 
   return <>
-    <SectionLabel>States</SectionLabel>
+    <SectionLabel>{t('options.states')}</SectionLabel>
     <Wrapper>
       <Preference
-        label="State identifier"
-        description="Used to denote a state"
+        label={t('options.identifier')}
+        description={t('options.identifier_desc')}
       >
         <Input
           small
@@ -26,11 +28,11 @@ const Options = () => {
       </Preference>
     </Wrapper>
 
-    <SectionLabel>Operators</SectionLabel>
+    <SectionLabel>{t('options.operators')}</SectionLabel>
     <Wrapper>
       <Preference
-        label="OR operator"
-        description="Used to separate input characters"
+        label={t('options.or_operator')}
+        description={t('options.or_desc')}
       >
         <Input
           type="select"
@@ -42,17 +44,17 @@ const Options = () => {
           <option value="∥">∥</option>
           <option value="＋">＋</option>
           <option value="∨">v</option>
-          <option value="OR">OR</option>
-          <option value=" ">None</option>
+          <option value="OR">{t('OR')}</option>
+          <option value=" ">{t('options.none')}</option>
         </Input>
       </Preference>
     </Wrapper>
 
-    <SectionLabel>Theme</SectionLabel>
+    <SectionLabel>{t('options.theme')}</SectionLabel>
     <Wrapper>
       <Preference
-        label="Project colour"
-        description="Set the theme for this automaton"
+        label={t('options.colour')}
+        description={t('options.colour_desc')}
       >
         <Input
           type="select"
@@ -60,13 +62,13 @@ const Options = () => {
           value={(projectColor === '' || !projectColor) ? 'orange' : projectColor}
           onChange={e => updateConfig({ color: e.target.value as ColourName })}
         >
-          <option value="red">Red</option>
-          <option value="orange">Orange</option>
-          <option value="green">Green</option>
-          <option value="teal">Teal</option>
-          <option value="blue">Blue</option>
-          <option value="purple">Purple</option>
-          <option value="pink">Pink</option>
+          <option value="red">{t('colours.red')}</option>
+          <option value="orange">{t('colours.orange')}</option>
+          <option value="green">{t('colours.green')}</option>
+          <option value="teal">{t('colours.teal')}</option>
+          <option value="blue">{t('colours.blue')}</option>
+          <option value="purple">{t('colours.purple')}</option>
+          <option value="pink">{t('colours.pink')}</option>
         </Input>
       </Preference>
     </Wrapper>

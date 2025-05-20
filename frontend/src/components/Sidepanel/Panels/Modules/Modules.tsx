@@ -7,6 +7,7 @@ import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, Butto
 import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
@@ -24,6 +25,7 @@ const Modules = () => {
   const currentProject = useProjectStore(s => s.project)
   const setAllProjectNames = useModuleStore(s => s.setAllProjectNames)
   const setProjectName = useProjectStore(s => s.setName)
+  const { t } = useTranslation('common')
 
   // Current assessment description and title
   const [isTitleEditing, setTitleIsEditing] = useState(false)
@@ -161,10 +163,10 @@ const Modules = () => {
 
   return (
     <>
-      <SectionLabel>Current Assessment</SectionLabel>
+      <SectionLabel>{t('module_panel.current')}</SectionLabel>
       {!currentModule && <>
-        <Wrapper>You're not working on a module right now
-        <Button icon={<Plus/>} onClick={handleCreateModule}>Modularise this project</Button>
+        <Wrapper>{t('module_panel.not_working')}
+        <Button icon={<Plus/>} onClick={handleCreateModule}>{t('module_panel.modularise')}</Button>
         </Wrapper>
       </>}
       {currentModule && <>
@@ -177,7 +179,7 @@ const Modules = () => {
                   value={titleInput}
                   onChange={(e) => setTitleInput(e.target.value)}
                   rows={1}
-                  placeholder="Module Title"
+                  placeholder={t('module_panel.placeholder_title')}
                   maxLength={30} // character limit on input field
                 />
               </TitleSection>
@@ -185,40 +187,40 @@ const Modules = () => {
                 value={titleDescription}
                 onChange={(e) => setTitleDescription(e.target.value)}
                 rows={4}
-                placeholder="Description"
+                placeholder={t('module_panel.placeholder_desc')}
               />
               <ButtonContainer>
-                <Button onClick={handleCancelClick}>Cancel</Button>
-                <Button onClick={handleEditSaveClick}>Save</Button>
+                <Button onClick={handleCancelClick}>{t('cancel')}</Button>
+                <Button onClick={handleEditSaveClick}>{t('save')}</Button>
               </ButtonContainer>
             </>
             )
           : (
             <>
               <TitleSection>
-                <h2>{currentModule?.meta.name || 'Untitled Module'}</h2> {/* Display current lab title */}
+                <h2>{currentModule?.meta.name || t('create_module.untitled')}</h2> {/* Display current lab title */}
               </TitleSection>
               <DescriptionText>{currentModule?.description || ''}</DescriptionText> {/* Display current lab description */}
-              <Button onClick={handleEditClick}>Edit</Button> {/* Toggle edit mode */}
+              <Button onClick={handleEditClick}>{t('menus.edit')}</Button> {/* Toggle edit mode */}
             </>
             )}
 
         </Wrapper>
 
-        <SectionLabel>Module Settings</SectionLabel>
+        <SectionLabel>{t('module_panel.settings')}</SectionLabel>
         <Wrapper>
-          <Preference label="Open questions to the left">
+          <Preference label={t('module_panel.open_questions')}>
             <Switch type="checkbox" checked={showModuleWindow} onChange={() => setShowModuleWindow(!showModuleWindow)} />
           </Preference>
         </Wrapper>
         <>
-          <SectionLabel>Questions</SectionLabel>
+          <SectionLabel>{t('module_panel.questions')}</SectionLabel>
           <Wrapper>
             <Table>
               <thead>
                 <tr>
-                  <th>Question</th>
-                  <th>Actions</th>
+                  <th>{t('module_panel.question')}</th>
+                  <th>{t('module_panel.actions')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -233,52 +235,52 @@ const Modules = () => {
                     onDrop={() => handleDrop(index)}
                     onDragOver={handleDragOver}
                   >
-                    <td onClick={() => handleOpenQuestion(q)}>{`Question ${index + 1}`}</td>
+                    <td onClick={() => handleOpenQuestion(q)}>{t('module_panel.question_id', { id: index + 1 })}</td>
                     <td>
-                      <EditButton onClick={() => handleEditQuestion(q)}>Edit</EditButton>
+                      <EditButton onClick={() => handleEditQuestion(q)}>{t('menus.edit')}</EditButton>
                       <RemoveButton
                         onClick={() => handleDeleteQuestion(q)}
                         disabled={currentModule.projects.length <= 1}
                       >
-                        Remove
+                        {t('module_panel.remove')}
                       </RemoveButton>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </Table>
-            <Button icon={<Plus/>} onClick={handleAddQuestionClick}>Add question</Button>
+            <Button icon={<Plus/>} onClick={handleAddQuestionClick}>{t('module_panel.add_question')}</Button>
           </Wrapper>
           <Modal
-            title="Select Question Type"
-            description="Choose the type of question that you would like to add."
+            title={t('module_panel.add_question_title')}
+            description={t('module_panel.add_question_desc')}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             actions={
               <>
-                <Button secondary onClick={() => setIsModalOpen(false)}>Cancel</Button>
-                <Button type="submit" form="question_type_form">Save</Button>
+                <Button secondary onClick={() => setIsModalOpen(false)}>{t('cancel')}</Button>
+                <Button type="submit" form="question_type_form">{t('save')}</Button>
               </>
             }
             style={{ paddingInline: 0 }}
           >
             <form id="question_type_form" onSubmit={handleSubmit(handleAddQuestion)}>
-              <SectionLabel>Question Type</SectionLabel>
+              <SectionLabel>{t('module_panel.question_type')}</SectionLabel>
               <FieldWrapper>
-                <span>Select Type</span>
+                <span>{t('module_panel.select_type')}</span>
                 <Input type="select" small {...register('questionType')}>
-                  <option value="FSA">FSA</option>
-                  <option value="PDA">PDA</option>
-                  <option value="TM">TM</option>
+                  <option value="FSA">{t('fsa_short')}</option>
+                  <option value="PDA">{t('pda_short')}</option>
+                  <option value="TM">{t('tm_short')}</option>
                 </Input>
               </FieldWrapper>
             </form>
           </Modal>
         </>
-        <SectionLabel>Export</SectionLabel>
+        <SectionLabel>{t('export')}</SectionLabel>
         <Wrapper>
-          <Button onClick={handleExportModule}>Export as Automatarium module file</Button>
-          <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>Export as URL</Button>
+          <Button onClick={handleExportModule}>{t('module_panel.export_automatarium')}</Button>
+          <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>{t('module_panel.export_url')}</Button>
         </Wrapper>
       </>
       }

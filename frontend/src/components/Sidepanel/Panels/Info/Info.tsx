@@ -7,6 +7,7 @@ import { Table, SectionLabel } from '/src/components'
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
 import { TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
+import { useTranslation } from 'react-i18next'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
@@ -14,6 +15,7 @@ const Info = () => {
   const transitions = useProjectStore(s => s.project?.transitions)
   const graph = useProjectStore(s => s.getGraph())
   const projectType = useProjectStore(s => s.project.config.type)
+  const { t } = useTranslation('common')
 
   // Function to get name of state from an id
   const getStateName = useCallback((id: number) =>
@@ -75,7 +77,7 @@ const Info = () => {
   }, [states, alphabet, graph])
 
   return <>
-    <SectionLabel>Alphabet</SectionLabel>
+    <SectionLabel>{t('info.alphabet')}</SectionLabel>
     <Wrapper>
       <SymbolList>
         {alphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
@@ -84,7 +86,7 @@ const Info = () => {
 
    {projectType === 'PDA' && (
       <>
-        <SectionLabel>Stack Alphabet</SectionLabel>
+        <SectionLabel>{t('info.stack_alphabet')}</SectionLabel>
         <Wrapper>
           <SymbolList>
             {stackAlphabet.map(symbol => <Symbol key={symbol}>{symbol}</Symbol>)}
@@ -93,7 +95,7 @@ const Info = () => {
       </>
    )}
 
-    <SectionLabel>State Transition Table</SectionLabel>
+    <SectionLabel>{t('info.state_transition_table')}</SectionLabel>
     <Wrapper>
       <Table>
         <tbody>
@@ -113,7 +115,7 @@ const Info = () => {
       </Table>
     </Wrapper>
 
-    <SectionLabel>Transition Function</SectionLabel>
+    <SectionLabel>{t('info.transition_function')}</SectionLabel>
     <Wrapper>
       <Table>
         <tbody>
