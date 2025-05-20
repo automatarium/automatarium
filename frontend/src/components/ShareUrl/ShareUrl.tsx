@@ -8,6 +8,7 @@ import { Button, Input, Modal } from '/src/components'
 
 import { CopyRowWrapper, CopySuccessDiv } from './shareUrlStyle'
 import { encodeData } from '/src/util/encoding'
+import { useTranslation } from 'react-i18next'
 
 const ShareUrl = () => {
   const project = useProjectStore(s => s.project)
@@ -19,6 +20,8 @@ const ShareUrl = () => {
   const [exportUrlOpen, setExportUrlOpen] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
   const [dataCopySuccess, setDataCopySuccess] = useState(false)
+
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if (exportUrlOpen) {
@@ -56,12 +59,12 @@ const ShareUrl = () => {
 
   return <>
     <Modal
-      title='Export Machine as URL'
+      title={t('share_url.title')}
       isOpen={exportUrlOpen}
       onClose={handleClose}
-      actions={<Button secondary onClick={handleClose}>Close</Button>}
+      actions={<Button secondary onClick={handleClose}>{t('close')}</Button>}
     >
-      You can copy and paste as the raw data
+      {t('share_url.copy_data')}
       <CopyRowWrapper>
         <Input
           readOnly
@@ -71,7 +74,7 @@ const ShareUrl = () => {
           <Copy size='18px' />
         </Button>
       </CopyRowWrapper>
-      {dataCopySuccess ? <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv> : <></>}
+      {dataCopySuccess ? <CopySuccessDiv>{t('share_url.copied')}</CopySuccessDiv> : <></>}
       URL
       <CopyRowWrapper>
         <Input
@@ -82,7 +85,7 @@ const ShareUrl = () => {
           <Copy size='18px' />
         </Button>
       </CopyRowWrapper>
-      {copySuccess ? <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv> : <></>}
+      {copySuccess ? <CopySuccessDiv>{t('share_url.copied')}</CopySuccessDiv> : <></>}
       <hr />
     </Modal>
   </>

@@ -185,5 +185,135 @@
         "keyboard_shortcuts": "Keyboard shortcuts",
         "about_automatarium": "About Automatarium",
         "version": "Version {{version}}"
+    },
+
+    "share_url": {
+        "title": "Export Machine as URL",
+        "copy_data": "You can copy and paste as the raw data",
+        "copied": "Copied to clipboard!",
+        "module_title": "Export Module as URL"
+    },
+
+    "tools": {
+        "cursor": "Cursor tool",
+        "cursor_desc": "Select and move items",
+        "hand": "Hand tool",
+        "hand_desc": "Drag to pan around your automaton",
+        "state": "State tool",
+        "state_desc": "Create states by clicking",
+        "transition": "Transition tool",
+        "transition_desc": "Drag between states to create transitions",
+        "comment": "Comment tool",
+        "comment_desc": "Add comments to your automaton"
+    },
+
+    "shortcuts": {
+        "title": "Keyboard Shortcuts",
+        "description": "Become an Automatarium master",
+
+        "application": "Application",
+
+        "import_automatarium": "Import Automatarium project",
+        "import_jflap": "Import JFLAP project",
+        "save_file": "Save file",
+        "export_automatarium": "Export as Automatarium project",
+        "export_image": "Export image",
+        "select_multiple": "Select multiple",
+
+        "move_view": "Move view",
+        "no_snapping": "Drag without snapping",
+
+        "move_cells": "Move between multi-run cells",
+        "create_cell": "Create multi-run cell",
+        "delete_cell": "Delete multi-run cell",
+        "execute_multirun": "Execute multi-run"
+    },
+
+    "testing_lab": {
+        "warnings": "Warnings",
+        "no_initial": "There is no initial state",
+        "no_final": "There are no final states",
+        "no_path": "There is no path to final state",
+        "accepted": "ACCEPTED",
+        "rejected": "REJECTED",
+        "trace": "Trace",
+        "trace_buddy": "Trace buddy",
+        "trace_tape": "Trace tape",
+        "manual": "Manual stepping",
+        "transitions": "Transitions",
+        "multirun": "Multi-run",
+        "run": "Run"
+    },
+    
+    "panels": {
+        "testing_lab": "Testing Lab",
+        "about": "About your Automaton",
+        "options": "File Options"
+    },
+
+    "info": {
+        "alphabet": "Alphabet",
+        "stack_alphabet": "Stack Alphabet",
+        "state_transition_table": "State Transition Table",
+        "transition_function": "Transition Function"
+    },
+
+    "module_panel": {
+        "current": "Current Assessment",
+        "not_working": "You're not working on a module right now.",
+        "settings": "Module settings",
+        "modularise": "Modularise this project",
+        "placeholder_title": "Module Title",
+        "placeholder_desc": "Description",
+        "open_questions": "Open questions to the left",
+        "questions": "Questions",
+        "question": "Question",
+        "actions": "Actions",
+        "remove": "Remove",
+        "add_question": "Add question",
+        "add_question_title": "Select Question Type",
+        "add_question_desc": "Choose the type of question that you would like to add.",
+        "question_type": "Question Type",
+        "select_type": "Select Type",
+        "export_automatarium": "Export as Automatarium module file",
+        "export_url": "Export as URL",
+        "question_id": "Question {{id}}"
+    },
+
+    "options": {
+        "states": "States",
+        "identifier": "State identifier",
+        "identifier_desc": "Used to denote a state",
+        "operators": "Operators",
+        "or_operator": "OR Operator",
+        "or_desc": "Used to separate input characters",
+        "none": "None",
+        "theme": "Theme",
+        "colour": "Project colour",
+        "colour_desc": "Set the theme for this automaton"
+    },
+    "OR": "OR",
+
+    "templates": {
+        "create": "Create a Template",
+        "name": "Name your template",
+        "add": "Add",
+        "description": "Template is created from selected states and transitions",
+        "insert": "Insert Templates",
+        "delete": "Delete Template?",
+        "delete_desc": "This will permanently remove {{name}} from your computer.",
+        "error_no_state": "Please select at least one state before clicking \"Add\".",
+        "error_transition": "Transitions must include its connected states.",
+        "error_no_name": "Template name cannot be empty.",
+        "error_dupe_name": "A template named {{name}} already exists. Please choose another name."
+    },
+
+    "use_actions": {
+        "import_warning": "Importing will override your current project. Continue anyway?",
+        "failed_automatarium": "Failed to open Automatarium project.",
+        "failed_jflap": "Failed to open JFLAP project.",
+        "delete_template_warning": "Are you sure you want to delete your template {{name}}?",
+        "failed_parse": "Failed to parse file",
+        "failed_url": "Failed to retrieve the file from this URL."
     }
 }

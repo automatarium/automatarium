@@ -8,6 +8,7 @@ import { Button, Input, Modal } from '/src/components'
 
 import { CopyRowWrapper, CopySuccessDiv } from './shareUrlModuleStyle'
 import { encodeModule } from '/src/util/encoding'
+import { useTranslation } from 'react-i18next'
 
 const ShareUrlModule = () => {
   const module = useModuleStore(s => s.module)
@@ -19,6 +20,8 @@ const ShareUrlModule = () => {
   const [exportUrlOpen, setExportUrlOpen] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
   const [dataCopySuccess, setDataCopySuccess] = useState(false)
+
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if (exportUrlOpen) {
@@ -56,23 +59,23 @@ const ShareUrlModule = () => {
 
   return (
     <Modal
-      title="Export Module as URL"
+      title={t('share_url.module_title')}
       isOpen={exportUrlOpen}
       onClose={handleClose}
       actions={
         <Button secondary onClick={handleClose}>
-          Close
+          {t('close')}
         </Button>
       }
     >
-      You can copy and paste as the raw data
+      {t('share_url.copy_data')}
       <CopyRowWrapper>
         <Input readOnly value={base64Project} />
         <Button onClick={handleCopyEncoding} style={{ height: '100%' }}>
           <Copy size="18px" />
         </Button>
       </CopyRowWrapper>
-      {dataCopySuccess && <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv>}
+      {dataCopySuccess && <CopySuccessDiv>{t('share_url.copied')}</CopySuccessDiv>}
       URL
       <CopyRowWrapper>
         <Input readOnly value={shareRawLink} />
@@ -80,7 +83,7 @@ const ShareUrlModule = () => {
           <Copy size="18px" />
         </Button>
       </CopyRowWrapper>
-      {copySuccess && <CopySuccessDiv>Copied to clipboard!</CopySuccessDiv>}
+      {copySuccess && <CopySuccessDiv>{t('share_url.copied')}</CopySuccessDiv>}
       <hr />
     </Modal>
   )
