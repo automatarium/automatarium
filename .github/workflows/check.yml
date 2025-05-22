@@ -23,7 +23,7 @@ jobs:
         run: yarn set version latest
 
       - name: Clean cache from previous installs
-        run: yarn cache clean -all
+        run: yarn cache clean --all
 
       - name: Install Yarn Dependencies
         run: yarn
