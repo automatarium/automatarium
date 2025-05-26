@@ -1,0 +1,6 @@
+{
+	"heading": "About",
+	"paragraph1": "Automatarium is a student-led project to provide a modern, intuitive interface for creating and testing automata.",
+	"paragraph2": "Inspired by <linkjflap>JFLAP</linkjflap>, Automatarium allows you to draw a graph, define transitions, and use the Testing Lab to test inputs. It facilitates the creation of Finite State Automata, Pushdown Automata, and Turing Machines.",
+	"paragraph3": "Automatarium is open-source, licensed under MIT, and <linksource>hosted on Github</linksource>. If you spot any bugs or have a feature request, you are welcome to <createissue>create an issue</createissue>."
+}

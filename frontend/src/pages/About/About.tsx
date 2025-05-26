@@ -1,14 +1,33 @@
+import { Trans, useTranslation } from 'react-i18next'
 import { Main, Header } from '/src/components'
 
-const About = () => (
-  <Main>
-    <Header center linkTo="/" />
-    <h2>About</h2>
+const About = () => {
+  const { t } = useTranslation('about')
+  return (
+    <Main>
+      <Header center linkTo="/" />
+      <h2>{t('heading')}</h2>
 
-    <p>Automatarium is a student-led project to provide a modern, intuitive interface for creating and testing automata.</p>
-    <p>Inspired by <a href="https://www.jflap.org/" target="_blank" rel="nofollow noreferrer">JFLAP</a>, Automatarium allows you to draw a graph, define transitions, and use the Testing Lab to test inputs. It facilitates the creation of Finite State Automata, Pushdown Automata, and Turing Machines.</p>
-    <p>Automatarium is open-source, licensed under MIT, and <a href="https://github.com/automatarium/automatarium" target="_blank" rel="nofollow noreferrer">hosted on Github</a>. If you spot any bugs or have a feature request, you are welcome to <a href="https://github.com/automatarium/automatarium/issues/new/choose" target="_blank" rel="nofollow noreferrer">create an issue</a>.</p>
-  </Main>
-)
+      <p>{t('paragraph1')}</p>
+      <p>
+        <Trans
+          ns="about"
+          i18nKey="paragraph2"
+          components={{ linkjflap: <a href="https://www.jflap.org/" target="_blank" rel="nofollow noreferrer" /> }}
+        />
+      </p>
+      <p>
+        <Trans
+          ns="about"
+          i18nKey="paragraph3"
+          components={{
+            linksource: <a href="https://github.com/automatarium/automatarium" target="_blank" rel="nofollow noreferrer" />,
+            createissue: <a href="https://github.com/automatarium/automatarium/issues/new/choose" target="_blank" rel="nofollow noreferrer" />
+          }}
+        />
+      </p>
+    </Main>
+  )
+}
 
 export default About
