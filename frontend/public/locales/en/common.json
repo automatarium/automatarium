@@ -10,6 +10,7 @@
 
     "create": "Create",
     "cancel": "Cancel",
+    "confirm": "Confirm",
     "export": "Export",
     "import": "Import",
     "close": "Close",
