@@ -1,0 +1,45 @@
+{
+    "title": "Preferences",
+    "description": "Your Automatarium preferences are saved to your browser",
+    "button": {
+        "without_save": "Close without saving",
+        "save": "Save changes"
+    },
+    "appearance": {
+        "label": "Appearance",
+        "theme": {
+            "label": "Theme",
+            "description": "Up late? Switch to dark mode",
+            "system": "Match system",
+            "light": "Light",
+            "dark": "Dark"
+        },
+        "colour_accent": {
+            "label": "Colour accent",
+            "description": "Roses are red, Automatarium is blue",
+            "match": "Match file theme",
+            "red": "Red",
+            "orange": "Orange",
+            "green": "Green",
+            "teal": "Teal",
+            "blue": "Blue",
+            "purple": "Purple",
+            "pink": "Pink"
+        }
+    },
+    "behaviour": {
+        "label": "Behaviour",
+        "enable_grid": {
+            "label": "Enable grid",
+            "description": "This also enables snapping"
+        },
+        "zoom_control": {
+            "label": "Zoom with the control key",
+            "description": "Allows panning using a trackpad"
+        },
+        "tm_halt": {
+            "label": "TM Halt on Final State",
+            "description": "Toggles halting for trace step for TM"
+        }
+    }
+}

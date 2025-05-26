@@ -7,6 +7,7 @@ import { useEvent } from '/src/hooks'
 
 import { Section } from './preferencesStyle'
 import { Preferences } from '/src/stores/usePreferencesStore'
+import { useTranslation } from 'react-i18next'
 
 const defaultValues = {
   theme: 'system',
@@ -17,6 +18,7 @@ const defaultValues = {
 }
 
 const Preferences = () => {
+  const { t } = useTranslation('preferences')
   const [isOpen, setIsOpen] = useState(false)
 
   const preferences = usePreferencesStore(state => state.preferences)
@@ -38,67 +40,67 @@ const Preferences = () => {
 
   return (
     <Modal
-      title="Preferences"
-      description="Your Automatarium preferences are saved to your browser"
+      title={t('title')}
+      description={t('description')}
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       role="alertdialog" // Prevents closing by clicking away
       actions={<>
-        <Button secondary onClick={() => setIsOpen(false)}>Close without saving</Button>
-        <Button type="submit" form="preferences_form">Save changes</Button>
+        <Button secondary onClick={() => setIsOpen(false)}>{t('button.without_save')}</Button>
+        <Button type="submit" form="preferences_form">{t('button.save')}</Button>
       </>}
       style={{ paddingInline: 0 }}
     >
       <form id="preferences_form" onSubmit={handleSubmit(onSubmit)}>
-        <SectionLabel>Appearance</SectionLabel>
+        <SectionLabel>{t('appearance.label')}</SectionLabel>
         <Section>
           <Preference
-            label="Theme"
-            description="Up late? Switch to dark mode"
+            label={t('appearance.theme.label')}
+            description={t('appearance.theme.description')}
           >
             <Input type="select" small {...register('theme')}>
-              <option value="system">Match system</option>
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
+              <option value="system">{t('appearance.theme.system')}</option>
+              <option value="light">{t('appearance.theme.light')}</option>
+              <option value="dark">{t('appearance.theme.dark')}</option>
             </Input>
           </Preference>
 
           <Preference
-            label="Colour accent"
-            description="Roses are red, Automatarium is blue"
+            label={t('appearance.colour_accent.label')}
+            description={t('appearance.colour_accent.description')}
           >
             <Input type="select" small {...register('color')}>
-              <option value="match">Match file theme</option>
-              <option value="red">Red</option>
-              <option value="orange">Orange</option>
-              <option value="green">Green</option>
-              <option value="teal">Teal</option>
-              <option value="blue">Blue</option>
-              <option value="purple">Purple</option>
-              <option value="pink">Pink</option>
+              <option value="match">{t('appearance.colour_accent.match')}</option>
+              <option value="red">{t('appearance.colour_accent.red')}</option>
+              <option value="orange">{t('appearance.colour_accent.orange')}</option>
+              <option value="green">{t('appearance.colour_accent.green')}</option>
+              <option value="teal">{t('appearance.colour_accent.teal')}</option>
+              <option value="blue">{t('appearance.colour_accent.blue')}</option>
+              <option value="purple">{t('appearance.colour_accent.purple')}</option>
+              <option value="pink">{t('appearance.colour_accent.pink')}</option>
             </Input>
           </Preference>
         </Section>
 
-        <SectionLabel>Behaviour</SectionLabel>
+        <SectionLabel>{t('behaviour.label')}</SectionLabel>
         <Section>
           <Preference
-            label="Enable grid"
-            description="This also enables snapping"
+            label={t('behaviour.enable_grid.label')}
+            description={t('behaviour.enable_grid.description')}
           >
             <Switch type="checkbox" {...register('showGrid')} />
           </Preference>
 
           <Preference
-            label="Zoom with the control key"
-            description="Allows panning using a trackpad"
+            label={t('behaviour.zoom_control.label')}
+            description={t('behaviour.zoom_control.description')}
           >
             <Switch type="checkbox" {...register('ctrlZoom')} />
           </Preference>
 
           <Preference
-            label="TM Halt on Final State"
-            description="Toggles halting for trace step for TM"
+            label={t('behaviour.tm_halt.label')}
+            description={t('behaviour.tm_halt.description')}
           >
             <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>
