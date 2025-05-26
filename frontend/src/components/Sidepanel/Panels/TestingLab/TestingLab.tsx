@@ -293,7 +293,7 @@ const TestingLab = () => {
     const { trace, accepted } = simulationResult
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
-      if (traceIdx > 0) { return accepted ? t('testing_lab.acceped') : 'REJECTED' }
+      if (traceIdx > 0) { return accepted ? t('testing_lab.acceped') : t('testing_lab.rejected') }
       return null
     }
 
@@ -398,7 +398,7 @@ const TestingLab = () => {
   }, [graph])
   // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
   if (noInitialState) { warnings.push(t('testing_lab.no_initial')) }
-  if (noFinalState) { warnings.push(t('testing_lab.no_initial')) } else if (!pathToFinal) { warnings.push(t('testing_lab.no_path')) }
+  if (noFinalState) { warnings.push(t('testing_lab.no_final')) } else if (!pathToFinal) { warnings.push(t('testing_lab.no_path')) }
 
   // :^)
   const dibEgg = useDibEgg()
