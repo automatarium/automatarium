@@ -1,0 +1,43 @@
+{
+    "header": {
+        "button": {
+            "title": "Preferences"
+        }
+    },
+    "new_project": {
+        "title": "New Project",
+        "button": {
+            "import": "Import..."
+        },
+        "fsa_desc": "Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars.",
+        "pda_desc": "Create an automaton with a push-down stack capable of representing context-free grammars.",
+        "tm_desc": "Create a turing machine capable of representing recursively enumerable grammars."
+    },
+    "projects": {
+        "title": "Your Projects",
+        "nothing": "No projects yet"
+    },
+    "new_module": {
+        "title": "New Module",
+        "button": {
+            "import": "Import..."
+        },
+        "create": {
+            "title": "Create New Module",
+            "description": "Modules are interactive questions that will help assess your understanding of automata."
+        }
+    },
+    "latest_module": {
+        "title": "Ongoing Module"
+    },
+    "modules": {
+        "title": "Your Modules",
+        "nothing": "No modules yet"
+    },
+    "component": {
+        "delete_dialog": {
+            "title": "Delete Project?",
+            "description": "This will permanently remove your project {{projectName}} from your computer."
+        }
+    }
+}
