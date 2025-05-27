@@ -55,7 +55,7 @@ export const SaveStatus = styled('span')<{$show?: boolean}>`
   ${p => p.$show && `
     opacity: .75;
   `}
-  
+
   &::before {
     content: '';
     position: absolute;
@@ -69,7 +69,7 @@ export const SaveStatus = styled('span')<{$show?: boolean}>`
     border-block-end: 2px solid transparent;
     animation: spin 1s linear infinite;
   }
-  
+
   @keyframes spin { to { transform: rotate(360deg); } }
 `
 

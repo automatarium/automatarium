@@ -167,7 +167,7 @@ const Toolbar = () => {
           },
           'hr',
           {
-            label: 'Fullscreen',
+            label: 'Toggle Fullscreen',
             shortcut: 'F11',
             action: 'FULLSCREEN'
           }

@@ -27,14 +27,7 @@ const panels: PanelItem[] = [
     icon: <FlaskConical />,
     element: <TestingLab />
   },
-  /*
-  {
-    label: 'Stepping Lab',
-    value: 'step',
-    icon: <Pause />,
-    element: <SteppingLab />
-  },
-  */
+
   {
     label: 'About Your Automaton',
     value: 'about',
@@ -61,7 +54,11 @@ const panels: PanelItem[] = [
   }
 ]
 
-const Sidepanel = ({ onToggle }) => {
+type SidePanelProps = {
+  onToggle: (isOpen: boolean) => void
+}
+
+const Sidepanel = ({ onToggle }: SidePanelProps) => {
   const [activePanel, setActivePanel] = useState<PanelItem | undefined>()
   const setTemplate = useTemplateStore((s) => s.setTemplate)
   const setTool = useToolStore((s) => s.setTool)
@@ -84,11 +81,11 @@ const Sidepanel = ({ onToggle }) => {
     if (isSamePanel) {
       // If the same panel is clicked, close it
       setActivePanel(undefined)
-      onToggle(false) // Close side panel
+      onToggle?.(false) // Close side panel
     } else {
       // If a different panel is clicked, open it
       setActivePanel(panel)
-      onToggle(true) // Open side panel
+      onToggle?.(true) // Open side panel
     }
   }
 
@@ -108,7 +105,8 @@ const Sidepanel = ({ onToggle }) => {
   const handleClose = () => {
     cleanupPanel()
     setActivePanel(undefined)
-    onToggle() // Ensure this is correctly toggling the state
+    onToggle?.(false)
+    onToggle?.(true)
   }
 
   useEffect(() => {
