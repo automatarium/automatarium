@@ -86,6 +86,7 @@ export interface CustomEvents {
   'createTemplateThumbnail': string,
   'storeTemplateThumbnail': string,
   'selectionGraph:hide': null,
+  'tour:start': null,
 }
 
 /**
