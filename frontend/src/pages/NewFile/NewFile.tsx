@@ -181,6 +181,12 @@ const NewFile = () => {
     }
   }
 
+  const handleNewExample = (type: ProjectType) => {
+    setShowModuleWindow(false)
+    setProject(createNewProject(type))
+    navigate('/example')
+  }
+
   return <Main wide>
     <HeaderRow>
       <Header linkTo="/" />
@@ -213,6 +219,35 @@ const NewFile = () => {
         title="Turing Machine"
         description="Create a turing machine capable of representing recursively enumerable grammars."
         onClick={() => handleNewFile('TM')}
+        height={height}
+        image={<TM {...stylingVals} />}
+      />
+    </CardList>
+
+    <CardList
+      title="Automata Examples"
+      innerRef={cardsRef}
+    >
+      <NewProjectCard
+        title="Finite State Automaton"
+        description="Follow a in-tour tutorial on how to build a finite state automaton."
+        onClick={() => handleNewExample('FSA')}
+        height={height}
+        image={<FSA {...stylingVals} />}
+      />
+
+      <NewProjectCard
+        title="Push Down Automaton"
+        description="Follow a in-tour tutorial on how to build a push-down stack."
+        onClick={() => handleNewExample('PDA')}
+        height={height}
+        image={<PDA {...stylingVals} />}
+      />
+
+      <NewProjectCard
+        title="Turing Machine"
+        description="Follow a in-tour tutorial on how to build a turing machine."
+        onClick={() => handleNewExample('TM')}
         height={height}
         image={<TM {...stylingVals} />}
       />
