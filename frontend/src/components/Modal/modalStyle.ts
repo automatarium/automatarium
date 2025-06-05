@@ -63,6 +63,7 @@ export const Description = styled('span')`
   display: block;
   padding-inline: 1rem;
   opacity: .5;
+  margin-top: 0.5rem;
 `
 
 export const Buttons = styled('div')`

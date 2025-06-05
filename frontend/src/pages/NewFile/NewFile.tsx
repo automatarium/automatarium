@@ -45,7 +45,6 @@ const NewFile = () => {
   const [coordinates, setCoordinates] = useState<Coordinate>({ x: 0, y: 0 })
   const [kebabRefsProjects, setKebabRefsProjects] = useState<Array<RefObject<HTMLAnchorElement>>>([])
   const [kebabRefsLabs, setKebabRefsLabs] = useState<Array<RefObject<HTMLAnchorElement>>>([])
-  const [kebabRefsLatestLab, setKebabRefsLatestLab] = useState<RefObject<HTMLAnchorElement> | null>(null)
 
   /// Tour stuff
   const [showTour, setShowTour] = useState(false)
@@ -137,13 +136,6 @@ const NewFile = () => {
     setKebabRefsLabs(Array.from({ length: modules.length }, () => createRef<HTMLAnchorElement>()))
   }, [modules])
 
-  // For "Your Latest module Section"
-  useEffect(() => {
-    if (currentModule) {
-      setKebabRefsLatestLab(createRef<HTMLAnchorElement>())
-    }
-  }, [currentModule])
-
   // Function to open the module modal
   const handleNewModuleClick = () => {
     // setIsModalOpen(true)
@@ -191,6 +183,12 @@ const NewFile = () => {
     }
   }
 
+  const handleNewExample = (type: ProjectType) => {
+    setShowModuleWindow(false)
+    setProject(createNewProject(type))
+    navigate('/example')
+  }
+
   return <Main wide>
     <HeaderRow>
       <Header linkTo="/" />
@@ -223,6 +221,35 @@ const NewFile = () => {
         title={t('tm', { ns: 'common' })}
         description={t('new_project.tm_desc', { ns: 'newfile' })}
         onClick={() => handleNewFile('TM')}
+        height={height}
+        image={<TM {...stylingVals} />}
+      />
+    </CardList>
+
+    <CardList
+      title="Automata Examples"
+      innerRef={cardsRef}
+    >
+      <NewProjectCard
+        title="Finite State Automaton"
+        description="Follow a in-tour tutorial on how to build a finite state automaton."
+        onClick={() => handleNewExample('FSA')}
+        height={height}
+        image={<FSA {...stylingVals} />}
+      />
+
+      <NewProjectCard
+        title="Push Down Automaton"
+        description="Follow a in-tour tutorial on how to build a push-down stack."
+        onClick={() => handleNewExample('PDA')}
+        height={height}
+        image={<PDA {...stylingVals} />}
+      />
+
+      <NewProjectCard
+        title="Turing Machine"
+        description="Follow a in-tour tutorial on how to build a turing machine."
+        onClick={() => handleNewExample('TM')}
         height={height}
         image={<TM {...stylingVals} />}
       />
@@ -278,35 +305,6 @@ const NewFile = () => {
         image={<FSA {...stylingVals} />}
       />
     </CardList>
-
-    {currentModule && (
-    // conditional rendering for latest module.
-    // showing the latest module if more than one module is stored and nothing if no
-    // modules exist
-        <CardList title={t('latest_module.title', { ns: 'newfile' })} style={{ gap: '1.5em .4em' }}>
-          <ModuleCard
-            key={currentModule._id}
-            name={currentModule?.meta?.name ?? '<Untitled>'}
-            image={thumbnails[getThumbTheme(currentModule._id)]}
-            width={PROJECT_THUMBNAIL_WIDTH}
-            onClick={() => handleLoadModule(currentModule)}
-            $kebabClick={(event) => {
-              event.stopPropagation()
-              setKebabOpen(true)
-              const thisRef = kebabRefsLatestLab?.current || { offsetLeft: 0, offsetTop: 0, offsetHeight: 0 }
-              const coords = {
-                x: thisRef.offsetLeft,
-                y: thisRef.offsetTop + thisRef.offsetHeight
-              } as Coordinate
-              setCoordinates(coords)
-              setSelectedProjectId(currentModule._id)
-              setSelectedProjectName(currentModule.meta.name)
-            }}
-            $kebabRef={kebabRefsLatestLab}
-            $istemplate={false}
-          />
-        </CardList>
-    )}
 
     <CardList
       title={t('modules.title', { ns: 'newfile' })}

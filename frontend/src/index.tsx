@@ -75,6 +75,7 @@ const App = () => {
       <Route path="/new" element={<Pages.NewFile />} />
       <Route path="/share/:type/:data" element={<Pages.Share />} />
       <Route path="/tutorials" element={<Pages.TutorialsPage />} />
+      <Route path="/example" element={<Pages.Example/>} />
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
     {!hideFooter && <Footer />}

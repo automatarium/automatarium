@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { HelpCircle } from 'lucide-react'
 
-import { Content, EditorContent } from './editorStyle'
+import { Content, EditorContent } from './exampleStyle'
 import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule, CreateModule } from '/src/components'
 import { useActions, useEvent } from '/src/hooks'
 import { useExportStore, useModulesStore, useModuleStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
@@ -12,9 +13,12 @@ import ModuleWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
-import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
+import FSAPageTour from '../Tutorials/guidedTour/FSAPageTour'
+import PDAPageTour from '../Tutorials/guidedTour/PDAPageTour'
+import TMPageTour from '../Tutorials/guidedTour/TMPageTour'
+import TourButton from '/src/components/TourButton/TourButton'
 
-const Editor = () => {
+const Example = () => {
   const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState<Tool>()
@@ -22,16 +26,16 @@ const Editor = () => {
   const resetExportSettings = useExportStore((s) => s.reset)
   const setViewPositionAndScale = useViewStore((s) => s.setViewPositionAndScale)
   const project = useProjectStore((s) => s.project)
-  const [showTour, setShowTour] = useState(false)
+  const [showTour, setShowTour] = useState(true)
+  const [isSidepanelOpen, setIsSidepanelOpen] = useState(false)
 
   const closeTour = () => {
     setShowTour(false)
   }
 
-  // Listen to the custom event 'tour:start' to show the tour
-  useEvent('tour:start', () => {
+  const showTourHandler = () => {
     setShowTour(true)
-  })
+  }
 
   const currentModule = useModuleStore(s => s.module)
   const getProjectinModule = useModuleStore(s => s.getProjectById)
@@ -71,6 +75,17 @@ const Editor = () => {
   }, [currentModule, project, getProjectinModule])
 
   const projectType = project.config.type
+  const [buttonRight, setButtonRight] = useState('60px')
+
+  // Adjust button position when side panel is toggled
+  useEffect(() => {
+    setButtonRight(isSidepanelOpen ? '410px' : '60px')
+  }, [isSidepanelOpen])
+
+  // Toggle side panel and update button position
+  const handleSidepanelToggle = (isOpen) => {
+    setIsSidepanelOpen(isOpen)
+  }
 
   const isSaving = useAutosaveProject()
 
@@ -121,6 +136,14 @@ const Editor = () => {
     }
   }, [tool, priorTool])
 
+  // const renderGuidedTour = () => {
+  //   switch (projectType) {
+  //     case 'FSA':
+  //       return <FSAPageTour onClose={closeTour}/>
+  //     case 'PDA':
+  //       return <PDAPageTour onClose={closeTour}/>
+  //   }
+  // }
   return (
     <>
       <Menubar isSaving={isSaving} />
@@ -134,7 +157,7 @@ const Editor = () => {
           <BottomPanel />
         </EditorContent>
         {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
-        <Sidepanel onToggle={setShowModuleWindow} />
+        <Sidepanel onToggle={handleSidepanelToggle} />
       </Content>
       <ShortcutGuide />
       <FinalStatePopup />
@@ -147,11 +170,16 @@ const Editor = () => {
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
       />
+      <TourButton
+        icon={<HelpCircle />}
+        onClick={showTourHandler}
+        style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
+      />
       <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour} />}
+      {showTour && (projectType === 'FSA' ? (<FSAPageTour onClose={closeTour}/>) : projectType === 'PDA' ? (<PDAPageTour onClose={closeTour}/>) : (<TMPageTour onClose={closeTour}/>))}
       <CreateModule />
     </>
   )
 }
 
-export default Editor
+export default Example

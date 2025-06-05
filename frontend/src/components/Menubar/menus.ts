@@ -191,6 +191,10 @@ const menus: TranslatableContextItems = (t: TFunction) => [
     label: t('menus.help', { ns: 'common' }),
     items: [
       {
+        label: 'Start Tour',
+        action: 'START_TOUR'
+      },
+      {
         label: t('menus.view_documentation', { ns: 'common' }),
         action: 'OPEN_DOCS'
       },
@@ -211,6 +215,7 @@ const menus: TranslatableContextItems = (t: TFunction) => [
         label: t('menus.about_automatarium', { ns: 'common' }),
         action: 'OPEN_ABOUT'
       },
+
       'hr',
       {
         label: t('menus.version', { ns: 'common', version: APP_VERSION })
