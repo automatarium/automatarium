@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { styled } from 'goober'
 import { ExampleContainer } from '../tutorialsStyle'
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next'
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
