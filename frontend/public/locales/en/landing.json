@@ -35,6 +35,7 @@
     },
     "section4": {
         "project_name": "My Project",
+        "date": "2 days ago",
         "description": {
             "heading": "Share with colleagues",
             "paragraph1": "Easily share your projects with your peers via a link that lets anyone make a copy of your project and continue working."

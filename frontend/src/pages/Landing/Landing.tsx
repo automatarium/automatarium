@@ -118,7 +118,7 @@ const Landing = () => {
       </Section>
 
       <Section $reverse>
-        <ProjectCard name={t('section4.project_name')} type="FSA" date="2 days ago" disabled width={PROJECT_THUMBNAIL_WIDTH} $istemplate={false}/>
+        <ProjectCard name={t('section4.project_name')} type="FSA" date={t('section4.date')} disabled width={PROJECT_THUMBNAIL_WIDTH} $istemplate={false}/>
         <div className="text">
           <h3>{t('section4.description.heading')}</h3>
           <p>{t('section4.description.paragraph1')}</p>
