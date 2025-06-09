@@ -181,6 +181,7 @@
         "reorder_graph": "Reorder graph",
 
         "help": "Help",
+        "start_tour": "Start Tour",
         "view_documentation": "View documentation",
         "tutorial_videos": "Tutorial videos",
         "keyboard_shortcuts": "Keyboard shortcuts",
@@ -276,6 +277,8 @@
         "add_question_desc": "Choose the type of question that you would like to add.",
         "question_type": "Question Type",
         "select_type": "Select Type",
+        "delete_question_title": "Delete Question",
+        "delete_question_desc": "Are you sure you want to delete this question? This action cannot be undone.",
         "export_automatarium": "Export as Automatarium module file",
         "export_url": "Export as URL",
         "question_id": "Question {{id}}"
@@ -316,5 +319,12 @@
         "delete_template_warning": "Are you sure you want to delete your template {{name}}?",
         "failed_parse": "Failed to parse file",
         "failed_url": "Failed to retrieve the file from this URL."
+    },
+
+    "tour": {
+        "previous": "Previous",
+        "finish": "Finish",
+        "next": "Next",
+        "skip": "Skip Tour"
     }
 }

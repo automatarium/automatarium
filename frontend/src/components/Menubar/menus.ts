@@ -191,7 +191,7 @@ const menus: TranslatableContextItems = (t: TFunction) => [
     label: t('menus.help', { ns: 'common' }),
     items: [
       {
-        label: 'Start Tour',
+        label: t('menus.start_tour', { ns: 'common' }),
         action: 'START_TOUR'
       },
       {

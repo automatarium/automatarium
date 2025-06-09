@@ -301,8 +301,8 @@ const Modules = () => {
 
           {/* Delete Confirmation Modal */}
           <Modal
-            title="Delete Question"
-            description="Are you sure you want to delete this question? This action cannot be undone."
+            title={t('module_panel.delete_question_title')}
+            description={t('module_panel.delete_question_desc')}
             isOpen={isDeleteModalOpen}
             onClose={() => {
               setIsDeleteModalOpen(false)
@@ -317,9 +317,9 @@ const Modules = () => {
                     setProjectToDelete(null)
                   }}
                 >
-                  Cancel
+                  {t('cancel')}
                 </Button>
-                <Button onClick={confirmDeleteQuestion}>Delete</Button>
+                <Button onClick={confirmDeleteQuestion}>{t('delete')}</Button>
               </>
             }
           />

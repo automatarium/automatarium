@@ -181,6 +181,7 @@
         "reorder_graph": "Поправете реда на графа",
 
         "help": "Помощ",
+        "start_tour": "Start Tour",
         "view_documentation": "Разгледайте документация (на английски)",
         "tutorial_videos": "Видео уроци (на английски)",
         "keyboard_shortcuts": "Клавишни комбинации",
@@ -276,6 +277,8 @@
         "add_question_desc": "Изберете какъв вид автомат ще е новата задача.",
         "question_type": "Вид автомат",
         "select_type": "Изберете вид",
+        "delete_question_title": "Delete Question",
+        "delete_question_desc": "Are you sure you want to delete this question? This action cannot be undone.",
         "export_automatarium": "Експортирайте като Automatarium модул",
         "export_url": "Експортирайте като URL",
         "question_id": "Задача {{id}}"
@@ -316,5 +319,12 @@
         "delete_template_warning": "Сигурни ли сте, че искате да изтриете шаблона {{name}}?",
         "failed_parse": "Неуспешно прочитане на файл.",
         "failed_url": "Неуспешно отваряне на файл от този URL."
+    },
+
+    "tour": {
+        "previous": "Previous",
+        "finish": "Finish",
+        "next": "Next",
+        "skip": "Skip Tour"
     }
 }
