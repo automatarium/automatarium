@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { styled } from 'goober'
 import { ExampleContainer } from '../tutorialsStyle'
+import { useTranslation } from 'react-i18next';
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
@@ -66,6 +67,7 @@ interface TourProps {
 }
 
 const FSAPageTour: React.FC<TourProps> = ({ onClose }) => {
+  const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
   const steps: Step[] = [
@@ -73,37 +75,37 @@ const FSAPageTour: React.FC<TourProps> = ({ onClose }) => {
     // content - text to display in tour
     {
       target: '',
-      content: 'Welcome to the Finite State Automaton Example. In this example, we will walk you through the steps of how to build a Finite State Automata for the set of all strings that start with A and end with B'
+      content: t('fsa_tour.step1', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'To begin, press on the state tool and click on the automatarium canvas to place your state.'
+      content: t('fsa_tour.step2', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Right clicking a state will open up a state menu. Set q0 as an initial state and q1 as a final state. Our states are now set up properly.'
+      content: t('fsa_tour.step3', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We can now create transitions for our automata. Click on the transition tool and select and drag from q0 to q1 to create a transition between the two. A prompt will appear to label your transition between q1 and q0. As our finite state automata accepts languages that start with A, input a.'
+      content: t('fsa_tour.step4', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Using the selection tool, please click on q1 to make a transition loop. We will then label our transition from the range [a-z], as we can accept all characters so long as the string ends with B. '
+      content: t('fsa_tour.step5', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Now create a transition between q1 and q2, labelling our transition b, to ensure that our automata accepts strings that end with B.'
+      content: t('fsa_tour.step6', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We have now successfully created our finite state automata. We can test the automata by clicking on the flask icon, inputting a string and using the directional buttons to see the output.'
+      content: t('fsa_tour.step7', { ns: 'tutorials' })
     }
   ]
 
@@ -151,9 +153,9 @@ const FSAPageTour: React.FC<TourProps> = ({ onClose }) => {
                 </ExampleContainer>
 
                 <div className="tour-navigation">
-                    <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
-                    <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
-                    <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+                    <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
+                    <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
+                    <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
                 </div>
 
             </TourContent>

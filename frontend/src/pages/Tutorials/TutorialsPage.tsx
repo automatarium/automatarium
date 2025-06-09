@@ -9,6 +9,7 @@ import { Title, TitleRow } from './tutorialsStyle'
 
 import { Banner } from '../Landing/landingStyle'
 import manifest from '/src/config/tutorials-manifest.json'
+import { useTranslation } from 'react-i18next'
 
 export interface TutorialLeaf {
   id: string
@@ -34,6 +35,7 @@ type ManifestItem = TutorialLeaf | TutorialSection
 type PageInfo = ManifestItem | 'not found'
 
 const TutorialsPage = () => {
+  const { t } = useTranslation('tutorials')
   const [searchParams, setSearchParams] = useSearchParams()
   const [pageInfo, setPageInfo] = useState<PageInfo>()
   const [pagePath, setPagePath] = useState<string[]>()
@@ -72,8 +74,8 @@ const TutorialsPage = () => {
         <TitleRow>
           <Title>{pageInfo.title}</Title>
           {pagePath.length > 0
-            ? <Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>Go back</Button>
-            : <Button onClick={() => navigate('/')}>Return home</Button>}
+            ? <Button onClick={() => setSearchParams(pagePath.slice(0, -1).join('&'))}>{t('header.button.back')}</Button>
+            : <Button onClick={() => navigate('/')}>{t('header.button.home')}</Button>}
         </TitleRow>
 
         {/* Section description goes above (unknown number of cards) */}
@@ -87,8 +89,8 @@ const TutorialsPage = () => {
         {pageInfo.type === 'item' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
       </ Main>
       <Banner>
-        <p>Ready to start building?</p>
-        <Button to='/new'>Let's start</Button>
+        <p>{t('banner.paragraph')}</p>
+        <Button to='/new'>{t('banner.button')}</Button>
       </Banner>
     </>
   }

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { styled } from 'goober'
 import { ExampleContainer } from '../tutorialsStyle'
+import { useTranslation } from 'react-i18next';
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
@@ -66,6 +67,7 @@ interface TourProps {
 }
 
 const PDAPageTour: React.FC<TourProps> = ({ onClose }) => {
+  const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
   const steps: Step[] = [
@@ -73,32 +75,32 @@ const PDAPageTour: React.FC<TourProps> = ({ onClose }) => {
     // content - text to display in tour
     {
       target: '',
-      content: 'In this guided tutorial, we will walk you through the steps of how to build a push-down automata which are machines capable of representing context-free grammars. For this tour, we will walk you through building a PDA that recognises palidromes containing the alphabet {a, b, c}'
+      content: t('pda_tour.step1', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'To begin, press on the state tool and click on the automatarium canvas to place two states. Right click on both states to initialise one of each as an initial and final state.'
+      content: t('pda_tour.step2', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We will now create three self-loop transitions at q0 for our palindrome language {a, b, c}. Click on your state, using the transition tool. We will now define our transition loop. You will see the transition dialog box appear. "λ (read)" is for the input taken, "λ (pop)" is to pop the stack and "λ (push)" is to push the stack. For our palindrome language {a, b, c} define these as our input and push them to the stack as shown below.'
+      content: t('pda_tour.step3', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Using the transition tool, create 4 transitions between q0 and q1. 3 transitions for popping each letter of the palidrome and an empty transition to indicate the midpoint of the palidrome.'
+      content: t('pda_tour.step4', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We will now create three self-loop transitions at q1 for our palinrome language {a, b, c}. Click on the state, using the transition tool. In the transition dialog box, for each string in the palindrome language {a, b, c}, define a pop for their uppercase versions {A, B, C}.'
+      content: t('pda_tour.step5', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We can now test our push-down automata. Press on the testing flask and input a palindrome that uses the language {a, b, c}. For example, take the string "abcba" and you should see that our push down automata accepts this as a palidrome, as we press the directional keys. We can also visualise our stack in the bottom right of the screen.'
+      content: t('pda_tour.step6', { ns: 'tutorials' })
     }
   ]
 
@@ -146,9 +148,9 @@ const PDAPageTour: React.FC<TourProps> = ({ onClose }) => {
                 </ExampleContainer>
 
                 <div className="tour-navigation">
-                    <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
-                    <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
-                    <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+                    <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
+                    <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
+                    <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
                 </div>
 
             </TourContent>
