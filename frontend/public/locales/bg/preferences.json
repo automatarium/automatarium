@@ -41,5 +41,12 @@
             "label": "TM Halt on Final State",
             "description": "Toggles halting for trace step for TM"
         }
+    },
+    "language": {
+        "label": "Language",
+        "language": {
+            "label": "Current Language",
+            "description": "Changes the language"
+        }
     }
 }

@@ -14,6 +14,7 @@ const localeNamespaces = [
 ]
 
 i18n.use(Backend).use(initReactI18next).init({
+  lng: JSON.parse(localStorage.getItem('automatarium-preferences'))?.state.preferences.language,
   fallbackLng: 'en',
   supportedLngs: Object.keys(locales),
   defaultNS: localeNamespaces.at(0),

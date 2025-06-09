@@ -8,17 +8,19 @@ import { useEvent } from '/src/hooks'
 import { Section } from './preferencesStyle'
 import { Preferences } from '/src/stores/usePreferencesStore'
 import { useTranslation } from 'react-i18next'
+import { locales } from '/src/config/i18n'
 
 const defaultValues = {
   theme: 'system',
   color: 'match',
   showGrid: true,
   ctrlZoom: true,
-  pauseTM: true
+  pauseTM: true,
+  language: 'en'
 }
 
 const Preferences = () => {
-  const { t } = useTranslation('preferences')
+  const { t, i18n } = useTranslation('preferences')
   const [isOpen, setIsOpen] = useState(false)
 
   const preferences = usePreferencesStore(state => state.preferences)
@@ -29,6 +31,7 @@ const Preferences = () => {
   const onSubmit = (values: Preferences) => {
     setPreferences(values)
     setIsOpen(false)
+    i18n.changeLanguage(values.language)
     window.location.reload()
   }
 
@@ -103,6 +106,20 @@ const Preferences = () => {
             description={t('behaviour.tm_halt.description')}
           >
             <Switch type="checkbox" {...register('pauseTM')} />
+          </Preference>
+        </Section>
+
+        <SectionLabel>{t('language.label')}</SectionLabel>
+        <Section>
+          <Preference
+            label={t('language.language.label')}
+            description={t('language.language.description')}
+          >
+            <Input type="select" small {...register('language')}>
+              {Object.entries(locales).map(([localeCode, localeName]) => (
+                <option key={localeCode} value={localeCode} style={{ zIndex: 1 }}>{localeName}</option>
+              ))}
+            </Input>
           </Preference>
         </Section>
       </form>

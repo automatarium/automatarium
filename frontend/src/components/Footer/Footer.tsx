@@ -4,8 +4,20 @@ import { Container, FooterItem } from './footerStyle'
 import { locales } from '/src/config/i18n'
 import { useTranslation } from 'react-i18next'
 
+import { usePreferencesStore } from '/src/stores'
+import { ChangeEvent } from 'react'
+
 const Footer = () => {
   const { t, i18n } = useTranslation('common')
+
+  const preferences = usePreferencesStore(state => state.preferences)
+  const setPreferences = usePreferencesStore(state => state.setPreferences)
+
+  const handleChange = (event: ChangeEvent<HTMLSelectElement>) => {
+    i18n.changeLanguage(event.target.value)
+    preferences.language = event.target.value
+    setPreferences(preferences)
+  }
 
   return (
     <Container>
@@ -20,7 +32,7 @@ const Footer = () => {
         <select
           id="languageSelector"
           value={i18n.resolvedLanguage}
-          onChange={(event) => i18n.changeLanguage(event.target.value)}
+          onChange={handleChange}
           style={{ borderRadius: 6, padding: 2 }}
         >
           {Object.entries(locales).map(([localeCode, localeName]) => (
