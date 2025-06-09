@@ -227,28 +227,28 @@ const NewFile = () => {
     </CardList>
 
     <CardList
-      title="Automata Examples"
+      title={t('examples.title', { ns: 'newfile' })}
       innerRef={cardsRef}
     >
       <NewProjectCard
-        title="Finite State Automaton"
-        description="Follow a in-tour tutorial on how to build a finite state automaton."
+        title={t('fsa', { ns: 'common' })}
+        description={t('examples.fsa_desc', { ns: 'newfile' })}
         onClick={() => handleNewExample('FSA')}
         height={height}
         image={<FSA {...stylingVals} />}
       />
 
       <NewProjectCard
-        title="Push Down Automaton"
-        description="Follow a in-tour tutorial on how to build a push-down stack."
+        title={t('pda', { ns: 'common' })}
+        description={t('examples.pda_desc', { ns: 'newfile' })}
         onClick={() => handleNewExample('PDA')}
         height={height}
         image={<PDA {...stylingVals} />}
       />
 
       <NewProjectCard
-        title="Turing Machine"
-        description="Follow a in-tour tutorial on how to build a turing machine."
+        title={t('tm', { ns: 'common' })}
+        description={t('examples.tm_desc', { ns: 'newfile' })}
         onClick={() => handleNewExample('TM')}
         height={height}
         image={<TM {...stylingVals} />}
