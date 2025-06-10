@@ -70,3 +70,11 @@ Make sure the title and body of the PR is descriptive
 
 1. Ensure dependencies are installed by running `yarn`
 2. Run `yarn build` to build the packages, backend and frontend
+
+## Add New Language
+
+1. Copy the `.json` files under `public/locales/en` to use as a template into your new locale folder named based on the locale code of the new language (en, bg, etc.)
+2. Now replace the english translation values in the newly copied template `.json` files with the values of the language of your choice
+3. Now navigate to the `frontend/src/config/i18n.ts` file and append your locale code and locale name under `locales`
+
+Note: To load the locale files locally, please run `yarn workspace frontend copy:locales` after any locale changes before running `yarn dev`. You can then change the language by using the language dropdown in Preferences or the Footer
