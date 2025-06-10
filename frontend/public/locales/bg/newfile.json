@@ -1,49 +1,49 @@
 {
     "header": {
         "button": {
-            "title": "Preferences"
+            "title": "Настройки"
         }
     },
     "new_project": {
-        "title": "New Project",
+        "title": "Нов проект",
         "button": {
-            "import": "Import..."
+            "import": "Импортирайте..."
         },
-        "fsa_desc": "Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars.",
-        "pda_desc": "Create an automaton with a push-down stack capable of representing context-free grammars.",
-        "tm_desc": "Create a turing machine capable of representing recursively enumerable grammars."
-    },
-    "examples": {
-        "title": "Automata Examples",
-        "fsa_desc": "Follow an in-tour tutorial on how to build a finite state automaton.",
-        "pda_desc": "Follow an in-tour tutorial on how to build a push-down stack.",
-        "tm_desc": "Follow an in-tour tutorial on how to build a turing machine."
+        "fsa_desc": "Създайте детерминиран или недетерминиран автомат с краен брой състояния. Способен на представяне на регулярни граматики.",
+        "pda_desc": "Създайте автомат със стек, с който може да представяте безконтекстни граматики.",
+        "tm_desc": "Създайте машина на Тюринг, способна да представя рекурсивно изброими граматики."
     },
     "projects": {
-        "title": "Your Projects",
-        "nothing": "No projects yet"
+        "title": "Вашите проекти",
+        "nothing": "Няма създадени проекти"
+    },
+    "examples": {
+        "title": "Примерни автомати",
+        "fsa_desc": "Следвайте подробен пример и упътване за построяване на Краен Автомат.",
+        "pda_desc": "Следвайте подробен пример и упътване за построяване на Стеков Автомат.",
+        "tm_desc": "Следвайте подробен пример и упътване за построяване на Машина на Тюринг."
     },
     "new_module": {
-        "title": "New Module",
+        "title": "Нов модул",
         "button": {
-            "import": "Import..."
+            "import": "Импортирайте..."
         },
         "create": {
-            "title": "Create New Module",
-            "description": "Modules are interactive questions that will help assess your understanding of automata."
+            "title": "Създайте нов модул",
+            "description": "Модулите са интерактивни въпроси чрез които може да проверите вашето разбиране на автомати."
         }
     },
     "latest_module": {
-        "title": "Ongoing Module"
+        "title": "Активен модул"
     },
     "modules": {
-        "title": "Your Modules",
-        "nothing": "No modules yet"
+        "title": "Вашите модули",
+        "nothing": "Няма създадени модули"
     },
     "component": {
         "delete_dialog": {
-            "title": "Delete Project?",
-            "description": "This will permanently remove your project {{projectName}} from your computer."
+            "title": "Изтрийте този проект?",
+            "description": "Това завинаги изтрива {{projectName}} от Вашия компютър."
         }
     }
 }
