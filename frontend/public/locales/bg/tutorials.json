@@ -1,71 +1,71 @@
 {
     "header": {
         "button": {
-            "back": "Go back",
-            "home": "Return home"
+            "back": "Назад",
+            "home": "Към началото"
         }
     },
     "banner": {
-        "paragraph": "Ready to start building?",
-        "button": "Let's start"
+        "paragraph": "Готови ли сте да строите автомати?",
+        "button": "Нека започнем!"
     },
     "components": {
-        "tutorial_video": "Tutorial Video"
+        "tutorial_video": "Видео урок"
     },
     "editor_tour": {
-        "step1": "This is the editor Page. You will get to build your Automatons here, here is a quick guide to the tools you will use.",
-        "step2": "The Cursor tool allows you to select single or multiple states at once and move them around where you please.",
-        "step3": "The Hand tool allows you to move around the screen.",
-        "step4": "The State Tool will allow you to create states, which can be done any number of times.",
-        "step5": "The Transition Tool will allow you to create transition between states. ",
-        "step6": "You can also add your personal comments with the Comment Tool.",
-        "step7": "The testing lab will alow you to test your automaton with different inputs.",
-        "step8": "The \"About Your Automaton Feature will showcase detailed information about your automaton. ",
-        "step9": "The File options will allow you to change any preferences to State Identifiers, Operators and Project themes.",
-        "step10": "The Template option will allow you to save a template of states for future use. Here you can also access your saved templates.",
-        "step11": "The Create Module option allows you to create a new module, add custom questions and view the completed module."
+        "step1": "Това е страницата за редакция. Тук ще строите автомати. Нека разгледаме инструментите, които ще ползвате.",
+        "step2": "С мишката можете да изберете едно или повече състояния и да ги местите където искате.",
+        "step3": "С ръката можете да местите екрана.",
+        "step4": "С инструмента за състояния можете да създавате състояния.",
+        "step5": "С инструмента за преходи можете да създавате преходи между състоянията.",
+        "step6": "С инструмента за коментари можете да добавяте лични коментари",
+        "step7": "В лабораторията за тестване можете да въведете и изпробвате всякакви думи във Вашият автомат.",
+        "step8": "\"За Вашият Автомат\" показва подробна информация за Вашия автомат.",
+        "step9": "От опциите на файла можете да промените обозначителите на състоянията, знаците и темата на проекта.",
+        "step10": "От шаблоните можете да създадете шаблон от състояния за в бъдеще. Там също имате достъп към запазените Ви шаблони.",
+        "step11": "От модулите можете да създадете и отворите нов модул или да разгледате и променяте отворен модул."
     },
     "fsa_tour": {
-        "step1": "Welcome to the Finite State Automaton Example. In this example, we will walk you through the steps of how to build a Finite State Automata for the set of all strings that start with A and end with B",
-        "step2": "To begin, press on the state tool and click on the automatarium canvas to place your state.",
-        "step3": "Right clicking a state will open up a state menu. Set q0 as an initial state and q1 as a final state. Our states are now set up properly.",
-        "step4": "We can now create transitions for our automata. Click on the transition tool and select and drag from q0 to q1 to create a transition between the two. A prompt will appear to label your transition between q1 and q0. As our finite state automata accepts languages that start with A, input a.",
-        "step5": "Using the selection tool, please click on q1 to make a transition loop. We will then label our transition from the range [a-z], as we can accept all characters so long as the string ends with B. ",
-        "step6": "Now create a transition between q1 and q2, labelling our transition b, to ensure that our automata accepts strings that end with B.",
-        "step7": "We have now successfully created our finite state automata. We can test the automata by clicking on the flask icon, inputting a string and using the directional buttons to see the output."
+        "step1": "Добре дошли в примера за Краен Автомат. В този пример, ще Ви покажем как да създадете Краен Автомат, който приема всички думи които започват с буква a, завършват с буква b и са написани на латиница.",
+        "step2": "За да започнем, изберете инструмента за състояния и кликнете върху екрана за да създадете 3 състояния.",
+        "step3": "Когато кликнете върху състояние с дясното копче, отваряте меню. От там, можете да изберете кое състояние е начално, и кои състояния са крайни. Нека направим q0 началното състояние и превключим q2 като крайно.",
+        "step4": "Сега трябва да създадем преходи между нашите състояния. Изберете инструмента за преходи, натиснете върху q0 и влачете до q1 за да създадете преход между състоянията. Automatarium ще Ви пита какви букви се приемат за прехода. Понеже изкаме да приемаме само стринговете които започват с a, въведете a (на латиница).",
+        "step5": "След това, натиснете върху q1 за да създадете преход от q1 в себе си. Този преход ще приема всички латински букви от [a-z], защото искаме да приемем всички думи които завършват с a и завършват с b, без значение какво се намира между тях.",
+        "step6": "Последно, създадете преход между q1 и q2 който приема буква b, за да потвърдим че приемаме само думи, които завършват с b.",
+        "step7": "Успешно създадохме Крайният Автомат. Сега може да отидем в лабораторията, да въведем разни думи и да видим резултата."
     },
     "landing_tour": {
-        "step1": "Welcome to the Landing Page!",
-        "step2": "Automatarium is a tool that allows you to visualize concepts of Formal languages and Automata Theory. To get started you can select the start building button. ",
-        "step3": "If you want more in-depth tool guides you can go to the tutorial page using the tutorial button.",
-        "step4": "Here we have a testing table",
-        "step5": "You can see a glimpse of how some of the tools of Automatarium work. Try the STEP buttons, it will reveal how the dfa shown above will run given it's input.",
-        "step6": "You can always press the skip button to see the end result  ",
-        "step7": "You can access your recent projects here, when you have started building your own automatons"
+        "step1": "Добре дошли в Automatarium!",
+        "step2": "Automatarium е сайт който помага за изучаване на изучаване на езици и автомати. Когато сте готови, натиснете тук.",
+        "step3": "За да научите повече за сайта, разгледайте нашите видео уроци.",
+        "step4": "Тук е демонстрация на лабораторията.",
+        "step5": "Натиснете стрелките, за да видите как машината горе реагира на въведената дума.",
+        "step6": "Също така, можете да натиснете дясното копче за да отидете директно до края на пробата.",
+        "step7": "Когато започнете да създавате автомати, ще изглеждат по този начин в сайта."
     },
     "new_tour": {
-        "step1": "Here you get to choose what type of projects you want to create.",
-        "step2": "You can choose from three types of automatons: Finite State Automaton, Push Down Automaton or a Turing Machine.",
-        "step3": "Here you can select your previous saved projects.",
-        "step4": "You can also import a project from your local drive, via Url or simply through raw data from a Json file (note a file to be imported can be created from the export section when creating your automaton)."
+        "step1": "Тук може да изберете какъв вид проект да създадете.",
+        "step2": "Можете да създадете 3 различни вида автомат: Краен Автомат, Стеков Автомат или Машина на Тюринг.",
+        "step3": "Тук можете да отворите и да разгледате предишни проекти.",
+        "step4": "Също можете да импортирате автомати от Вашият компютър, от URL или от текст (файлове и текст може да създадете когато експортирате вашият автомат)"
     },
     "pda_tour": {
-        "step1": "In this guided tutorial, we will walk you through the steps of how to build a push-down automata which are machines capable of representing context-free grammars. For this tour, we will walk you through building a PDA that recognises palidromes containing the alphabet {a, b, c}",
-        "step2": "To begin, press on the state tool and click on the automatarium canvas to place two states. Right click on both states to initialise one of each as an initial and final state.",
-        "step3": "We will now create three self-loop transitions at q0 for our palindrome language {a, b, c}. Click on your state, using the transition tool. We will now define our transition loop. You will see the transition dialog box appear. \"λ (read)\" is for the input taken, \"λ (pop)\" is to pop the stack and \"λ (push)\" is to push the stack. For our palindrome language {a, b, c} define these as our input and push them to the stack as shown below.",
-        "step4": "Using the transition tool, create 4 transitions between q0 and q1. 3 transitions for popping each letter of the palidrome and an empty transition to indicate the midpoint of the palidrome.",
-        "step5": "We will now create three self-loop transitions at q1 for our palinrome language {a, b, c}. Click on the state, using the transition tool. In the transition dialog box, for each string in the palindrome language {a, b, c}, define a pop for their uppercase versions {A, B, C}.",
-        "step6": "We can now test our push-down automata. Press on the testing flask and input a palindrome that uses the language {a, b, c}. For example, take the string \"abcba\" and you should see that our push down automata accepts this as a palidrome, as we press the directional keys. We can also visualise our stack in the bottom right of the screen."
+        "step1": "Добре дошли в примера за Стеков Автомат. В този пример, ще Ви покажем как да създадете Стеков Автомат който приема палиндроми, създадени от буквите {a, b, c}.",
+        "step2": "За да започнем, изберете инструмента за състояния и кликнете върху екрана за да създадете 2 състояния. Натиснете с дясно копче върху q0 и го направете началното състояние, и след това върху q1 за да го превключите на крайно състояние.",
+        "step3": "Сега ще създадем 3 прехода от q0 към себе си. Изберете инструмента за преходи и кликнете върху q0. Automatarium ще Ви пита да определите прехода. \"λ (чете)\" е за буквата, която автомата приема, \"λ (вади)\" е за буквата, която трябва да се извади от стека, и \"λ (добавя)\" е за буквата, която ще се добави върху стека след прехода. За нашият палиндромен автомат, всеки преход ще чете малка буква и ще добавя голяма буква към стека (чете a, добавя A; чете b, добавя B; чете c, добавя C). Тези преходи също за показани долу.",
+        "step4": "След това, ще създадем 4 прехода между q0 и q1. 3 от тях ще вадят буква от прехода, а 4-ият преход оставяме празен. Чрез тези преходи, отбелязваме средата на палиндрома.",
+        "step5": "Последно, ще създадем 3 прехода от q1 към себе си. Тези преходи ще четат всяка малка буква от {a, b, c} и ще вадят съответстващата голяма буква {a, b, c}. Тези преходи също са показани долу.",
+        "step6": "Автоматът е готов, време е да го изпробваме! Отворете лаборатотията и въведете палиндром от буквите {a, b, c}. Например, ако изпробвате думата \"abcba\", ще видите, че автоматът я приема като палиндром. Също така, когато натиснете , може да видите как стека се променя между всеки преход."
     },
     "tm_tour": {
-        "step1": "In this guided tutorial, we will walk you through the steps of how to build a turing machine which are capable of representing recursively enumerable languages. In this example, we will create a turing machine that increments a given binary number.",
-        "step2": "To begin, press on the state tool and click on the automatarium canvas to place three states. Right click q0 and q2 to designate them as the initial and final state.",
-        "step3": "We will now create two self-loops using the transition tool. You will notice a dialog box appear. There are 3 values the transition tool can take. \"λ read\" which reads the head of the tape, \"λ write\" which is the character we can replace the tape with\" and \"R, L, S\" which dictates the moving the head either one direction to the right or left. Otherwise s for stationary.",
-        "step4": "As we are creating a turing machine that increments a given binary number, using the transition tool click on q0 to create two self-loops. We want to continue looping until the input is completed. As such, we will read 0, write 0 and move the tape right (R). We will also read 1, write 1 and move the tape right (R).",
-        "step5": "When we reach the end of our input, we want to stop moving to the right. Using the transition tool, create a transition from q0 to q1. We will leave our read and write as λ which represents an empty string in Automatarium. We will put left (L) as our direction to move.",
-        "step6": "We now want to replace all trailing 1s with 0s. To do this, remember that we are currently positioned at the end of our tape. So using the transition tool, click on q1 to create a self-loop to read 1, write 0 and move left.",
-        "step7": "Once all the trailing 1s are replaced with 0, we need to replace the next 0 or blank we encounter with 1. To do so, use the transition tool to add two transitions between q1 and q2. The first transition should read blank, write 1 and move right (R), the second should read 0, write 1 and move right (R).",
-        "step8": "Our turing machine to increment a binary number is done. We can click on the testing flask and enter our binary number into trace to increment it by 1. Click on the directional keys to progress through each step. You will see the turing machine at the bottom of your screen. The example provided below is using 101 in the trace, which increments to 110.",
-        "step9": "Automatarium also provides a feature that allows you to inspect an overview of your turing machine. This allows you to inspect your alphabet, state transition table and transition function. You can view this by pressing the informatory button icon on the right below the flask button. "
+        "step1": "Добре дошли в примера за Машина на Тюринг. В този пример, ще Ви покажем как да създадете Машина на Тюринг, която увеличава двоични числа.",
+        "step2": "За да започнем, изберете инструмента за състояния и кликнете върху екрана за да създадете 3 състояния. Натиснете с дясно копче върху q0 и го направете началното състояние, и след това върху q2 за да го превключите на крайно състояние.",
+        "step3": "Сега трябва да определим преходи. Изберете инструмента за преходи и кликнете върху q0. Automatarium ще Ви пита да определите прехода. Има 3 стойности за въвеждане. \"λ (чете)\" е за буквата която машината трябва да прочете на главата на лентата, \"λ (пише)\" е за буквата която ще замени сегашната глава на лентата, и \"R, L, S\" което определя къде ще се премести главата на лентата. L за вляво, R за вдясно и S за да остане на място.",
+        "step4": "Понеже създаваме машина която увеличава двоично число, трябва да създадем преходи които да прочитат двоищно число. Кликнете върху q0 за да създадете 2 прехода от q0 към себе си. С тези преходи искаме да стигнем края на числото, така че единият преход ще чете 0, пише 0 и мести лентата вдясно(R), а другият ще чете 1, пише 1 и също ще мести лентата вдясно(R). Тези преходи също са показани долу.",
+        "step5": "Когато стигнем края на числото, ще спрем да местим лентата вдясно. Създайте преход от q0 към q1 и оставете да чете и прочита λ, което представя празен символ в Automatarium. Ще изберем ляво(L) като посока на движение.",
+        "step6": "Сега трябва да заменим всяко 1 от с 0 от края на числото докато стигнем 0 или началото. Спомнете си, че главата на лентата е на крайната цифра на числото. С инструмента за преходи, кликнете върху q1 за да създадете преход от q1 към себе си, който чете 1, пише 0 и мести лентата вляво.",
+        "step7": "След като сме заменили всяко 1 което трябва с 0, трябва да заменим следващата 0 или празно пространство(ако сме отишли до началото) с 1. За тази цел, създайте два прехода между q1 и q2. Първият преход ще чете празен символ(λ), пише 1 и мести вдясно. Вторият преход ще чете 0, пише 1 и мести вдясно. Тези преходи също са показани долу.",
+        "step8": "Машината на Тюринг която увеличава двоични числа е готова. За да я изпробвате, отворете лабораторията и въведете двоично число. Натиснете стрелките за да видите как лентата се променя след всяка стъпка. В даденият пример въвеждаме двоичното число 101, което се увеличава на 110.",
+        "step9": "Automatarium също Ви предоставя с информация за Вашата машина. Можете да видите азбуката, таблицата за преходи и функцията на преходите. За да разгледате тази информация, натиснете информационният бутон, който се намира под бутона който отваря лабораторията."
     }
 }
