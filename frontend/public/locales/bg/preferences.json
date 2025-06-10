@@ -1,52 +1,52 @@
 {
-    "title": "Preferences",
-    "description": "Your Automatarium preferences are saved to your browser",
+"title": "Настройки",
+    "description": "Настройките за Automatarium се запазват във Вашия браузър.",
     "button": {
-        "without_save": "Close without saving",
-        "save": "Save changes"
+        "without_save": "Затворете без запазване",
+        "save": "Запазете промени"
     },
     "appearance": {
-        "label": "Appearance",
+        "label": "Облик",
         "theme": {
-            "label": "Theme",
-            "description": "Up late? Switch to dark mode",
-            "system": "Match system",
-            "light": "Light",
-            "dark": "Dark"
+            "label": "Тема",
+            "description": "Работите до късно? Сменете на тъмна тема.",
+            "system": "Като системата",
+            "light": "Светла",
+            "dark": "Тъмна"
         },
         "colour_accent": {
-            "label": "Colour accent",
-            "description": "Roses are red, Automatarium is blue",
-            "match": "Match file theme",
-            "red": "Red",
-            "orange": "Orange",
-            "green": "Green",
-            "teal": "Teal",
-            "blue": "Blue",
-            "purple": "Purple",
-            "pink": "Pink"
+            "label": "Цветна тема",
+            "description": "Оранжево небето, оранжев Automatarium",
+            "match": "Като файла",
+            "red": "Червен",
+            "orange": "Оранжев",
+            "green": "Зелен",
+            "teal": "Синьо-зелен",
+            "blue": "Син",
+            "purple": "Лилав",
+            "pink": "Розов"
         }
     },
     "behaviour": {
-        "label": "Behaviour",
+        "label": "Действие",
         "enable_grid": {
-            "label": "Enable grid",
-            "description": "This also enables snapping"
+            "label": "Покажете решетка",
+            "description": "Състоянията се прилепват към нея"
         },
         "zoom_control": {
-            "label": "Zoom with the control key",
-            "description": "Allows panning using a trackpad"
+            "label": "Мащабиране с Ctrl",
+            "description": "Позволява местене на екрана с тъчпад"
         },
         "tm_halt": {
-            "label": "TM Halt on Final State",
-            "description": "Toggles halting for trace step for TM"
+            "label": "МТ спира на финално състояние",
+            "description": "Превключва спирането при проследването на стъпки за МТ"
         }
     },
     "language": {
-        "label": "Language",
+        "label": "Език",
         "language": {
-            "label": "Current Language",
-            "description": "Changes the language"
+            "label": "Сегашен език",
+            "description": "Сменете езика"
         }
     }
 }
