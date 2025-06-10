@@ -1,13 +1,13 @@
 {
     "component": {
         "module": {
-            "title": "Question {{qNumber}}",
-            "loading": "Loading module instructions...",
+            "title": "Задача {{qNumber}}",
+            "loading": "Заданието се зарежда...",
             "button": {
-                "save": "Save",
-                "edit": "Edit"
+                "save": "Запазване",
+                "edit": "Редкатиране"
             },
-            "edit_placeholder": "Edit module instructions here"
+            "edit_placeholder": "Въведете заданието за модула тук"
         }
     }
 }

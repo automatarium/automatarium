@@ -27,7 +27,7 @@
     },
     "fsa_tour": {
         "step1": "Welcome to the Finite State Automaton Example. In this example, we will walk you through the steps of how to build a Finite State Automata for the set of all strings that start with A and end with B",
-        "step2": "To begin, press on the state tool and click on the automatarium canvas to place your state.",
+        "step2": "To begin, press on the state tool and click on the automatarium canvas to place 3 states.",
         "step3": "Right clicking a state will open up a state menu. Set q0 as an initial state and q1 as a final state. Our states are now set up properly.",
         "step4": "We can now create transitions for our automata. Click on the transition tool and select and drag from q0 to q1 to create a transition between the two. A prompt will appear to label your transition between q1 and q0. As our finite state automata accepts languages that start with A, input a.",
         "step5": "Using the selection tool, please click on q1 to make a transition loop. We will then label our transition from the range [a-z], as we can accept all characters so long as the string ends with B. ",

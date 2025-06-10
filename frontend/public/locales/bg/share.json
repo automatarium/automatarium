@@ -1,4 +1,4 @@
 {
-    "load_fail": "Failed to load file.",
-    "unknown_type": "Unknown share type"
+    "load_fail": "Неуспешно зареждане на файл.",
+    "unknown_type": "Непознат тип споделяне"
 }
