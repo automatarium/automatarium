@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { styled } from 'goober'
+import { useTranslation } from 'react-i18next'
 
 interface TourContentProps {
     isBannerStep: boolean;
@@ -105,27 +106,28 @@ interface TourProps {
 }
 
 const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
+  const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
   const steps: Step[] = [
     {
       target: '', // CSS selector for the element to highlight
-      content: 'Here you get to choose what type of projects you want to create.'
+      content: t('new_tour.step1', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'You can choose from three types of automatons: Finite State Automaton, Push Down Automaton or a Turing Machine.'
+      content: t('new_tour.step2', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'Here you can select your previous saved projects.'
+      content: t('new_tour.step3', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'You can also import a project from your local drive, via Url or simply through raw data from a Json file (note a file to be imported can be created from the export section when creating your automaton).'
+      content: t('new_tour.step4', { ns: 'tutorials' })
 
     }
 
@@ -160,9 +162,9 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
         <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>
           <p>{steps[step].content}</p>
           <div className="tour-navigation">
-              <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
-              <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
-              <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+              <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
+              <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
+              <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
           </div>
 
         </TourContent>

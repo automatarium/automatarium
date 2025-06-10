@@ -1,12 +1,13 @@
 import { APP_VERSION } from '/src/config/projects'
-import { ContextItems } from '/src/components/ContextMenus/contextItem'
+import { TranslatableContextItems } from '/src/components/ContextMenus/contextItem'
+import { TFunction } from 'i18next'
 
-const menus: ContextItems = [
+const menus: TranslatableContextItems = (t: TFunction) => [
   {
-    label: 'File',
+    label: t('menus.file', { ns: 'common' }),
     items: [
       {
-        label: 'New...',
+        label: t('menus.file_new', { ns: 'common' }),
         action: 'NEW_FILE'
       },
       // TODO: Support dynamic menu items to show recent files
@@ -21,127 +22,127 @@ const menus: ContextItems = [
       // },
       'hr',
       {
-        label: 'Import',
+        label: t('import', { ns: 'common' }),
         items: [
           {
-            label: 'Import Automatarium file',
+            label: t('menus.import_automatarium', { ns: 'common' }),
             action: 'IMPORT_AUTOMATARIUM_PROJECT'
           },
           {
-            label: 'Import JFLAP file',
+            label: t('menus.import_jflap', { ns: 'common' }),
             action: 'IMPORT_JFLAP_PROJECT'
           },
           {
-            label: 'Import other...',
+            label: t('menus.import_other', { ns: 'common' }),
             action: 'IMPORT_DIALOG'
           }
         ]
       },
       {
-        label: 'Export',
+        label: t('export', { ns: 'common' }),
         items: [
           {
-            label: 'Export image...',
+            label: t('menus.export_image', { ns: 'common' }),
             action: 'EXPORT'
           },
           {
-            label: 'Quick export as PNG',
+            label: t('menus.export_png', { ns: 'common' }),
             action: 'EXPORT_AS_PNG'
           },
           {
-            label: 'Quick export as SVG',
+            label: t('menus.export_svg', { ns: 'common' }),
             action: 'EXPORT_AS_SVG'
           },
           {
-            label: 'Quick copy to clipboard',
+            label: t('menus.export_clipboard', { ns: 'common' }),
             action: 'EXPORT_TO_CLIPBOARD'
           },
           'hr',
           {
-            label: 'Export as an Automatarium file',
+            label: t('menus.export_automatarium', { ns: 'common' }),
             action: 'SAVE_FILE_AS'
           },
           {
-            label: 'Export as a JFLAP file',
+            label: t('menus.export_jflap', { ns: 'common' }),
             action: 'EXPORT_AS_JFLAP'
           },
           {
-            label: 'Export as URL/Raw data...',
+            label: t('menus.export_url_data', { ns: 'common' }),
             action: 'ENCODE_FILE'
           }
         ]
       },
       'hr',
       {
-        label: 'Preferences',
+        label: t('menus.preferences', { ns: 'common' }),
         action: 'OPEN_PREFERENCES'
       }
     ]
   },
   {
-    label: 'Edit',
+    label: t('menus.edit', { ns: 'common' }),
     items: [
       {
-        label: 'Undo',
+        label: t('menus.undo', { ns: 'common' }),
         action: 'UNDO'
       },
       {
-        label: 'Redo',
+        label: t('menus.redo', { ns: 'common' }),
         action: 'REDO'
       },
       'hr',
       {
-        label: 'Copy',
+        label: t('copy', { ns: 'common' }),
         action: 'COPY'
       },
       {
-        label: 'Paste',
+        label: t('paste', { ns: 'common' }),
         action: 'PASTE'
       },
       {
-        label: 'Select All',
+        label: t('menus.select_all', { ns: 'common' }),
         action: 'SELECT_ALL'
       },
       {
-        label: 'Clear Selection',
+        label: t('menus.clear_selection', { ns: 'common' }),
         action: 'SELECT_NONE'
       },
       'hr',
       {
-        label: 'Delete',
+        label: t('delete', { ns: 'common' }),
         shortcut: '⌫',
         action: 'DELETE'
       }
     ]
   },
   {
-    label: 'View',
+    label: t('menus.view', { ns: 'common' }),
     items: [
       {
-        label: 'Zoom in',
+        label: t('menus.zoom_in', { ns: 'common' }),
         action: 'ZOOM_IN'
       },
       {
-        label: 'Zoom out',
+        label: t('menus.zoom_out', { ns: 'common' }),
         action: 'ZOOM_OUT'
       },
       {
-        label: 'Zoom to 100%',
+        label: t('menus.zoom_100', { ns: 'common' }),
         action: 'ZOOM_100'
       },
       {
-        label: 'Zoom to fit',
+        label: t('menus.zoom_fit', { ns: 'common' }),
         action: 'ZOOM_FIT'
       },
       'hr',
       {
-        label: 'Fullscreen',
+        label: t('menus.fullscreen', { ns: 'common' }),
         shortcut: 'F11',
         action: 'FULLSCREEN'
       },
       'hr',
       {
-        label: 'Testing lab',
+        label: t('menus.testing_lab', { ns: 'common' }),
         action: 'TESTING_LAB'
       },
       /*
@@ -151,73 +152,73 @@ const menus: ContextItems = [
       },
       */
       {
-        label: 'File info',
+        label: t('menus.file_info', { ns: 'common' }),
         action: 'FILE_INFO'
       },
       {
-        label: 'File options',
+        label: t('menus.file_options', { ns: 'common' }),
         action: 'FILE_OPTIONS'
       },
       {
-        label: 'Templates',
+        label: t('menus.templates', { ns: 'common' }),
         action: 'TEMPLATES'
       },
       {
-        label: 'Modules',
+        label: t('menus.modules', { ns: 'common' }),
         action: 'MODULES'
       }
     ]
   },
   {
-    label: 'Tools',
+    label: t('menus.tools', { ns: 'common' }),
     items: [
       {
-        label: 'Convert to DFA',
+        label: t('menus.convert_dfa', { ns: 'common' }),
         action: 'CONVERT_TO_DFA'
       },
       'hr',
       {
-        label: 'Auto layout',
+        label: t('menus.auto_layout', { ns: 'common' }),
         action: 'AUTO_LAYOUT'
       },
       {
-        label: 'Reorder graph',
+        label: t('menus.reorder_graph', { ns: 'common' }),
         action: 'REORDER_GRAPH'
       }
     ]
   },
   {
-    label: 'Help',
+    label: t('menus.help', { ns: 'common' }),
     items: [
       {
-        label: 'Start Tour',
+        label: t('menus.start_tour', { ns: 'common' }),
         action: 'START_TOUR'
       },
       {
-        label: 'View documentation',
+        label: t('menus.view_documentation', { ns: 'common' }),
         action: 'OPEN_DOCS'
       },
       {
-        label: 'Tutorial videos',
+        label: t('menus.tutorial_videos', { ns: 'common' }),
         action: 'TUTORIAL_VIDEOS'
       },
       {
-        label: 'Keyboard shortcuts',
+        label: t('menus.keyboard_shortcuts', { ns: 'common' }),
         action: 'KEYBOARD_SHORTCUTS'
       },
       'hr',
       {
-        label: 'Privacy policy',
+        label: t('privacy_policy', { ns: 'common' }),
         action: 'PRIVACY_POLICY'
       },
       {
-        label: 'About Automatarium',
+        label: t('menus.about_automatarium', { ns: 'common' }),
         action: 'OPEN_ABOUT'
       },
 
       'hr',
       {
-        label: `Version ${APP_VERSION}`
+        label: t('menus.version', { ns: 'common', version: APP_VERSION })
       }
     ]
   }

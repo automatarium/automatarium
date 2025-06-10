@@ -38,6 +38,7 @@ import { buildProblem } from '@automatarium/simulation/src/utils'
 import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
+import { useTranslation } from 'react-i18next'
 
 type SimulationResult = ExecutionResult & {transitionCount: number}
 type StepType = 'Forward' | 'Backward' | 'Reset'
@@ -54,6 +55,7 @@ const TestingLab = () => {
   const [currentManualNode, setCurrentManualNode] = useState<Node<State> | undefined>()
   const [currentManualSuccessors, setCurrentManualSuccessors] = useState<Node<State>[]>([])
   // const [manualExecutionTrace, setManualExecutionTrace] = useState([])
+  const { t } = useTranslation('common')
 
   // Graph state
   const graph = useProjectStore(s => s.getGraph())
@@ -291,7 +293,7 @@ const TestingLab = () => {
     const { trace, accepted } = simulationResult
     // Return null if not enough states in trace to render transitions
     if (trace.length < 2) {
-      if (traceIdx > 0) { return accepted ? 'ACCEPTED' : 'REJECTED' }
+      if (traceIdx > 0) { return accepted ? t('testing_lab.acceped') : t('testing_lab.rejected') }
       return null
     }
 
@@ -313,7 +315,7 @@ const TestingLab = () => {
     }
 
     // Add 'REJECTED'/'ACCEPTED' label
-    return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx || (enableManualStepping && currentManualSuccessors.length === 0)) ? '\n\n' + (accepted ? 'ACCEPTED' : 'REJECTED') : ''}`
+    return `${transitionsWithRejected.join('\n')}${(traceIdx === lastTraceIdx || (enableManualStepping && currentManualSuccessors.length === 0)) ? '\n\n' + (accepted ? t('testing_lab.accepted') : t('testing_lab.rejected')) : ''}`
   }, [traceInput, simulationResult, statePrefix, traceIdx, getStateName, enableManualStepping])
 
   // Creates problem and sets it, should run every time trace/graph changes while enableManualStepping is enabled
@@ -395,8 +397,8 @@ const TestingLab = () => {
     return Array.from(closure).concat({ state: graph.initialState, transitions: [] }).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
   }, [graph])
   // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
-  if (noInitialState) { warnings.push('There is no initial state') }
-  if (noFinalState) { warnings.push('There are no final states') } else if (!pathToFinal) { warnings.push('There is no path to final state') }
+  if (noInitialState) { warnings.push(t('testing_lab.no_initial')) }
+  if (noFinalState) { warnings.push(t('testing_lab.no_final')) } else if (!pathToFinal) { warnings.push(t('testing_lab.no_path')) }
 
   // :^)
   const dibEgg = useDibEgg()
@@ -423,13 +425,13 @@ const TestingLab = () => {
         <TraceStepBubble input={traceInput} index={inputIdx} stateID={currentStateID} />
       }
       {warnings.length > 0 && <>
-        <SectionLabel>Warnings</SectionLabel>
+        <SectionLabel>{t('testing_lab.warnings')}</SectionLabel>
         {warnings.map(warning => <WarningLabel key={warning}>
           <AlertTriangle />
           {warning}
         </WarningLabel>)}
       </>}
-      <SectionLabel>Trace</SectionLabel>
+      <SectionLabel>{t('testing_lab.trace')}</SectionLabel>
       <Wrapper>
         <Input
           onChange={e => {
@@ -493,7 +495,7 @@ const TestingLab = () => {
         </div>}
         {projectType !== 'TM' && (
         <Preference
-          label={useMemo(() => Math.random() < 0.001 ? 'Trace buddy' : 'Trace tape', [])}
+          label={useMemo(() => Math.random() < 0.001 ? t('testing_lab.trace_buddy') : t('testing_lab.trace_tape'), [])}
           style={{ marginBlock: 0 }}
         >
           <Switch
@@ -506,7 +508,7 @@ const TestingLab = () => {
         )}
         {(
         <Preference
-          label={'Manual stepping'}
+          label={t('testing_lab.manual')}
           style={{ marginBlock: 0 }}
         >
           <Switch
@@ -520,14 +522,14 @@ const TestingLab = () => {
       </Wrapper>
 
           {enableManualStepping && (currentManualSuccessors.length !== 0) && <>
-              <SectionLabel>Transitions</SectionLabel>
+              <SectionLabel>{t('testing_lab.transitions')}</SectionLabel>
               <Wrapper>
               {(buttonsArray)}
                         </Wrapper>
       </>}
 
       {!enableManualStepping && <>
-        <SectionLabel>Multi-run</SectionLabel>
+        <SectionLabel>{t('testing_lab.multirun')}</SectionLabel>
           <Wrapper>
             {multiTraceInput.map((value, index) => (
               <MultiTraceRow key={index}>
@@ -607,7 +609,7 @@ const TestingLab = () => {
             />
             <Button onClick={() => {
               rerunMultiTraceInput()
-            }}>Run</Button>
+            }}>{t('testing_lab.run')}</Button>
         </Wrapper>
         </>}
     </>

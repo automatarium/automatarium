@@ -10,6 +10,7 @@ import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { StoredModule } from '/src/stores/useModuleStore'
 import { encodeModule } from '/src/util/encoding'
+import { useTranslation } from 'react-i18next'
 
 type ImportDialogProps = {
     // This needs to be passed in from the main page
@@ -33,6 +34,8 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
 
   const [rawError, setRawError] = useState(false)
   const [urlError, setUrlError] = useState(false)
+
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     const timeout = setTimeout(() => setRawError(false), 3000)
@@ -76,21 +79,22 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
   return loading
     ? <Container><Spinner /></Container>
     : <Modal
-      title='Import Module'
-      description='Have an existing module?'
+      title={t('import_module.title')}
+      description={t('import_module.description')}
       isOpen={modalOpen}
       onClose={resetModal}
-      actions={<Button secondary onClick={resetModal}>Close</Button>}
+      actions={<Button secondary onClick={resetModal}>{t('close')}</Button>}
   >
     <ImportButtonWrapper>
-      From your computer
+      {t('import_project.from_computer')}
       <Button
         disabled={loading}
         onClick={() => {
           setLoading(true)
           promptLoadModuleFile(
+            t,
             onData,
-            'The file format provided is not valid. Please only open Automatarium .aom',
+            t('import_module.invalid_file'),
             '.aom',
             () => {
               resetModal()
@@ -102,11 +106,11 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
           )
         }}
       >
-        Browse...
+        {t('import_project.browse')}
       </Button>
     </ImportButtonWrapper>
     <hr />
-      From URL (module/plaintext)
+      {t('import_module.from_url')}
       <ImportButtonWrapper>
         <Input
           value={urlValue}
@@ -120,8 +124,9 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
               setLoading(true)
               urlLoadModuleFile(
                 urlValue,
+                t,
                 onData,
-                'Automatarium failed to load a module from provided URL.',
+                t('import_module.failed_url'),
                 () => {
                   resetModal()
                   navigate('/editor')
@@ -134,16 +139,16 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
               setUrlError(true)
             }
           }}
-        >Import</Button>
+        >{t('import')}</Button>
       </ImportButtonWrapper>
-      {urlError && <ErrorText>No URL specified!</ErrorText>}
+      {urlError && <ErrorText>{t('import_project.no_url')}</ErrorText>}
       <hr />
-      From raw data (from the export or your module file)
+      {t('import_module.from_data')}
       <ImportButtonWrapper>
         <Input
           value={rawValue}
           onChange={e => setRawValue(e.target.value)}
-          placeholder={'Enter raw data here'}
+          placeholder={t('import_project.enter_data')}
         />
         <Button disabled={loading} onClick={() => {
           if (rawValue.length > 0) {
@@ -155,9 +160,9 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
           } else {
             setRawError(true)
           }
-        }}>Load</Button>
+        }}>{t('load')}</Button>
       </ImportButtonWrapper>
-      {rawError && <ErrorText>Can't load nothing!</ErrorText>}
+      {rawError && <ErrorText>{t('import_project.cant_load')}</ErrorText>}
   </Modal>
 }
 

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 
 import { styled } from 'goober'
+import { useTranslation } from 'react-i18next'
 
 interface TourContentProps {
     isBannerStep: boolean;
@@ -102,43 +103,44 @@ interface TourProps {
 }
 
 const LandingPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
+  const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
   const steps: Step[] = [
     {
       target: '.text', // CSS selector for the element to highlight
-      content: 'Welcome to the Landing Page!'
+      content: t('landing_tour.step1', { ns: 'tutorials' })
     },
 
     {
       target: '.banner',
-      content: 'Automatarium is a tool that allows you to visualize concepts of Formal languages and Automata Theory. To get started you can select the start building button. '
+      content: t('landing_tour.step2', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'If you want more in-depth tool guides you can go to the tutorial page using the tutorial button.'
+      content: t('landing_tour.step3', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'Here we have a testing table'
+      content: t('landing_tour.step4', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'You can see a glimpse of how some of the tools of Automatarium work. Try the STEP buttons, it will reveal how the dfa shown above will run given it\'s input.'
+      content: t('landing_tour.step5', { ns: 'tutorials' })
 
     },
 
     {
       target: '',
-      content: 'You can always press the skip button to see the end result  '
+      content: t('landing_tour.step6', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'You can access your recent projects here, when you have started building your own automatons'
+      content: t('landing_tour.step7', { ns: 'tutorials' })
 
     }
 
@@ -173,9 +175,9 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
         <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>
           <p>{steps[step].content}</p>
           <div className="tour-navigation">
-            <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
-            <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
-            <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+            <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
+            <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
+            <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
           </div>
 
         </TourContent>

@@ -5,6 +5,8 @@ import { useActions, useEvent } from '/src/hooks'
 import { formatHotkey, HotKey } from '/src/hooks/useActions'
 
 import { Section, Shortcut } from './shortcutGuideStyle'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 interface ActionShortcut {
   label: string
@@ -21,144 +23,146 @@ interface Category {
   items: (ActionShortcut | HotkeyShortcut)[]
 }
 
-const shortcuts: Category[] = [
+type TranslatableCategories = (t: TFunction) => Category[]
+
+const shortcuts: TranslatableCategories = (t: TFunction) => [
   {
-    title: 'Application',
+    title: t('shortcuts.application'),
     items: [
       {
-        label: 'Preferences',
+        label: t('menus.preferences'),
         action: 'OPEN_PREFERENCES'
       },
       {
-        label: 'Keyboard shortcuts',
+        label: t('menus.keyboard_shortcuts'),
         action: 'KEYBOARD_SHORTCUTS'
       }
     ]
   },
   {
-    title: 'Tools',
+    title: t('menus.tools'),
     items: [
       {
-        label: 'Cursor tool',
+        label: t('tools.cursor'),
         action: 'TOOL_CURSOR'
       },
       {
-        label: 'Hand tool',
+        label: t('tools.hand'),
         action: 'TOOL_HAND'
       },
       {
-        label: 'State tool',
+        label: t('tools.state'),
         action: 'TOOL_STATE'
       },
       {
-        label: 'Transition tool',
+        label: t('tools.transition'),
         action: 'TOOL_TRANSITION'
       },
       {
-        label: 'Comment tool',
+        label: t('tools.comment'),
         action: 'TOOL_COMMENT'
       }
     ]
   },
   {
-    title: 'File',
+    title: t('menus.file'),
     items: [
       {
-        label: 'Import Automatarium project',
+        label: t('shortcuts.import_automatarium'),
         action: 'IMPORT_AUTOMATARIUM_PROJECT'
       },
       {
-        label: 'Import JFLAP project',
+        label: t('shortcuts.import_jflap'),
         action: 'IMPORT_JFLAP_PROJECT'
       },
       {
-        label: 'Save file',
+        label: t('shortcuts.save_file'),
         action: 'SAVE_FILE'
       },
       {
-        label: 'Export as Automatarium project',
+        label: t('shortcuts.export_automatarium'),
         action: 'SAVE_FILE_AS'
       },
       {
-        label: 'Export image',
+        label: t('shortcuts.export_image'),
         action: 'EXPORT'
       },
       {
-        label: 'Quick export as PNG',
+        label: t('menus.export_png'),
         action: 'EXPORT_AS_PNG'
       },
       {
-        label: 'Quick export as SVG',
+        label: t('menus.export_svg'),
         action: 'EXPORT_AS_SVG'
       },
       {
-        label: 'Quick copy to clipboard',
+        label: t('menus.export_clipboard'),
         action: 'EXPORT_TO_CLIPBOARD'
       }
     ]
   },
   {
-    title: 'Edit',
+    title: t('menus.edit'),
     items: [
       {
-        label: 'Undo',
+        label: t('menus.undo'),
         action: 'UNDO'
       },
       {
-        label: 'Redo',
+        label: t('menus.redo'),
         action: 'REDO'
       },
       {
-        label: 'Copy',
+        label: t('copy'),
         action: 'COPY'
       },
       {
-        label: 'Paste',
+        label: t('paste'),
         action: 'PASTE'
       },
       {
-        label: 'Select all',
+        label: t('menus.select_all'),
         action: 'SELECT_ALL'
       },
       {
-        label: 'Clear selection',
+        label: t('menus.clear_selection'),
         action: 'SELECT_NONE'
       },
       {
-        label: 'Select multiple',
+        label: t('shortcuts.select_multiple'),
         hotkeys: [{ shift: true, key: '' }]
       },
       {
-        label: 'Delete',
+        label: t('delete'),
         hotkeys: [{ key: '⌫' }]
       }
     ]
   },
   {
-    title: 'View',
+    title: t('menus.view'),
     items: [
       {
-        label: 'Zoom in',
+        label: t('menus.zoom_in'),
         action: 'ZOOM_IN'
       },
       {
-        label: 'Zoom out',
+        label: t('menus.zoom_out'),
         action: 'ZOOM_OUT'
       },
       {
-        label: 'Zoom to 100%',
+        label: t('menus.zoom_100'),
         action: 'ZOOM_100'
       },
       {
-        label: 'Zoom to fit',
+        label: t('menus.zoom_fit'),
         action: 'ZOOM_FIT'
       },
       {
-        label: 'Fullscreen',
+        label: t('menus.fullscreen'),
         hotkeys: [{ key: 'F11' }]
       },
       {
-        label: 'Testing lab',
+        label: t('menus.testing_lab'),
         action: 'TESTING_LAB'
       },
       /*
@@ -168,48 +172,48 @@ const shortcuts: Category[] = [
       },
       */
       {
-        label: 'File info',
+        label: t('menus.file_info'),
         action: 'FILE_INFO'
       },
       {
-        label: 'File options',
+        label: t('menus.file_options'),
         action: 'FILE_OPTIONS'
       },
       {
-        label: 'Templates',
+        label: t('menus.templates'),
         action: 'TEMPLATES'
       },
       {
-        label: 'Modules',
+        label: t('menus.modules'),
         action: 'MODULES'
       },
       {
-        label: 'Move view',
+        label: t('shortcuts.move_view'),
         hotkeys: [{ key: '←' }, { key: '↑' }, { key: '→' }, { key: '↓' }]
       },
       {
-        label: 'Drag without snapping',
+        label: t('shortcuts.no_snapping'),
         hotkeys: [{ alt: true, key: '' }]
       }
     ]
   },
   {
-    title: 'Testing lab',
+    title: t('menus.testing_lab'),
     items: [
       {
-        label: 'Move between multi-run cells',
+        label: t('shortcuts.move_cells'),
         hotkeys: [{ key: '↑' }, { key: '↓' }]
       },
       {
-        label: 'Create multi-run cell',
+        label: t('shortcuts.create_cell'),
         hotkeys: [{ key: 'Enter' }]
       },
       {
-        label: 'Delete multi-run cell',
+        label: t('shortcuts.delete_cell'),
         hotkeys: [{ key: '⌫' }]
       },
       {
-        label: 'Execute multi-run',
+        label: t('shortcuts.execute_multirun'),
         hotkeys: [{ meta: true, key: 'Enter' }]
       }
     ]
@@ -219,18 +223,19 @@ const shortcuts: Category[] = [
 const ShortcutGuide = () => {
   const [isOpen, setIsOpen] = useState(false)
   useEvent('modal:shortcuts', () => setIsOpen(true), [])
+  const { t } = useTranslation('common')
 
   const actions = useActions()
 
   return (
     <Modal
-      title="Keyboard Shortcuts"
-      description="Become an Automatarium master"
+      title={t('shortcuts.title')}
+      description={t('shortcuts.description')}
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       style={{ paddingInline: 0 }}
     >
-      {useMemo(() => shortcuts.map(category => <Fragment key={category.title}>
+      {useMemo(() => shortcuts(t).map(category => <Fragment key={category.title}>
         {category.title && <SectionLabel>{category.title}</SectionLabel>}
         <Section>{category.items.map(item => (
           <Shortcut key={item.label}>

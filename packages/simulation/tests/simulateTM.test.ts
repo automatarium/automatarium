@@ -19,7 +19,8 @@ const defaultValues = {
   color,
   showGrid: true,
   ctrlZoom: true,
-  pauseTM: true
+  pauseTM: true,
+  language: 'en'
 }
 
 function simulate (graph, input: string): TMExecutionResult {

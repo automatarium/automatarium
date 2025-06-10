@@ -10,6 +10,7 @@ import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { encodeData } from '/src/util/encoding'
 import { StoredProject } from '/src/stores/useProjectStore'
+import { useTranslation } from 'react-i18next'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -29,6 +30,8 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
 
   const [rawError, setRawError] = useState(false)
   const [urlError, setUrlError] = useState(false)
+
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     const timeout = setTimeout(() => setRawError(false), 3000)
@@ -64,21 +67,22 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
   return loading
     ? <Container><Spinner /></Container>
     : <Modal
-      title='Import Project'
-      description='Have an existing project?'
+      title={t('import_project.title')}
+      description={t('import_project.description')}
       isOpen={modalOpen}
       onClose={resetModal}
-      actions={<Button secondary onClick={resetModal}>Close</Button>}
+      actions={<Button secondary onClick={resetModal}>{t('close')}</Button>}
     >
       <ImportButtonWrapper>
-        From your computer
+        {t('import_project.from_computer')}
         <Button
           disabled={loading}
           onClick={() => {
             setLoading(true)
             promptLoadFile(
+              t,
               onData,
-              'The file format provided is not valid. Please only open Automatarium .json, Automatarium .ao or JFLAP .jff file formats.',
+              t('import_project.invalid_file'),
               '.jff,.json,.ao',
               () => {
                 resetModal()
@@ -90,11 +94,11 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
             )
           }}
         >
-          Browse...
+          {t('import_project.browse')}
         </Button>
       </ImportButtonWrapper>
       <hr />
-      From URL (raw/plaintext)
+      {t('import_project.from_url')}
       <ImportButtonWrapper>
         <Input
           value={urlValue}
@@ -108,8 +112,9 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
               setLoading(true)
               urlLoadFile(
                 urlValue,
+                t,
                 onData,
-                'Automatarium failed to load a project from provided URL.',
+                t('import_project.failed_url'),
                 () => {
                   resetModal()
                   navigate('/editor')
@@ -122,16 +127,16 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
               setUrlError(true)
             }
           }}
-        >Import</Button>
+        >{t('import')}</Button>
       </ImportButtonWrapper>
-      {urlError ? <ErrorText>No URL specified!</ErrorText> : <></>}
+      {urlError ? <ErrorText>{t('import_project.no_url')}</ErrorText> : <></>}
       <hr />
-      From raw data (from the export or your project file)
+      {t('import_project.from_data')}
       <ImportButtonWrapper>
         <Input
           value={rawValue}
           onChange={e => setRawValue(e.target.value)}
-          placeholder={'Enter raw data here'}
+          placeholder={t('import_project.enter_data')}
         />
         <Button disabled={loading} onClick={() => {
           if (rawValue.length > 0) {
@@ -143,9 +148,9 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
           } else {
             setRawError(true)
           }
-        }}>Load</Button>
+        }}>{t('load')}</Button>
       </ImportButtonWrapper>
-      {rawError ? <ErrorText>Can't load nothing!</ErrorText> : <></>}
+      {rawError ? <ErrorText>{t('import_file.cant_load')}</ErrorText> : <></>}
     </Modal >
 }
 

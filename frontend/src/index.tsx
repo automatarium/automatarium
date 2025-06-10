@@ -1,4 +1,4 @@
-import { StrictMode, createElement, useEffect } from 'react'
+import { StrictMode, Suspense, createElement, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
 import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
@@ -10,6 +10,8 @@ import { usePreferencesStore, useProjectStore } from '/src/stores'
 import COLORS from '/src/config/colors'
 import { Footer } from '/src/components'
 import { Warning } from '/src/components/Warning/Warning'
+
+import '/src/config/i18n'
 
 import favicon from 'bundle-text:/public/logo.svg'
 
@@ -85,9 +87,11 @@ const App = () => {
 // Render the app
 ReactDOM.render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <Suspense fallback={<div>Loading</div>}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </Suspense>
   </StrictMode>,
   document.getElementById('app')
 )

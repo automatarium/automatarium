@@ -5,6 +5,7 @@ import { useA11yDialog } from 'react-a11y-dialog'
 import { Button } from '/src/components'
 
 import { Buttons, Children, Container, Content, Description, Heading, Overlay } from './modalStyle'
+import { useTranslation } from 'react-i18next'
 
 export interface ModalProps extends HTMLAttributes<HTMLDivElement> {
   description?: string
@@ -34,6 +35,8 @@ const Modal = ({
   ...props
 }: ModalProps) => {
   const [instance, attr] = useA11yDialog({ id, role, title })
+
+  const { t } = useTranslation('common')
 
   useEffect(() => {
     if (isOpen) {
@@ -66,7 +69,7 @@ const Modal = ({
         </Children>
 
         <Buttons>
-          {actions ?? <Button {...attr.closeButton} secondary>Close</Button>}
+          {actions ?? <Button {...attr.closeButton} secondary>{t('close')}</Button>}
         </Buttons>
       </Content>
     </Container>,

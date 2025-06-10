@@ -1,16 +1,19 @@
-import { ContextItems } from './contextItem'
+import { TFunction } from 'i18next'
+import { TranslatableContextItems } from './contextItem'
 
-const commentContextItems: ContextItems = [
-  {
-    label: 'Edit comment',
-    action: 'EDIT_COMMENT'
-  },
-  'hr',
-  {
-    label: 'Delete',
-    shortcut: '⌫',
-    action: 'DELETE'
-  }
-]
+const commentContextItems: TranslatableContextItems = (t: TFunction) => {
+  return [
+    {
+      label: t('context_menu.edit_comment', { ns: 'common' }),
+      action: 'EDIT_COMMENT'
+    },
+    'hr',
+    {
+      label: t('delete', { ns: 'common' }),
+      shortcut: '⌫',
+      action: 'DELETE'
+    }
+  ]
+}
 
 export default commentContextItems

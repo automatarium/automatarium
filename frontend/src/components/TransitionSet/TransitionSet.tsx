@@ -10,6 +10,7 @@ import { lerpPoints, movePointTowards, size } from '/src/util/points'
 import { PositionedTransition } from '/src/util/states'
 import { assertType, Coordinate, PDAAutomataTransition, ProjectType, TMAutomataTransition } from '/src/types/ProjectTypes'
 import { formatOutput } from '/src/util/stringManipulations'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Creates the transition text depending on the project type. Uses the following notation
@@ -144,6 +145,7 @@ const Transition = ({
   const selectedTransitions = useSelectionStore(s => s.selectedTransitions)
   const setSelected = transitions.some(t => selectedTransitions.includes(t.id))
   const orOperator = useProjectStore(s => s.project?.config?.orOperator) ?? '|'
+  const { t } = useTranslation('common')
 
   // We want transitions going from left to right to be bending like a hill and in the other direction bending like
   // a valley
@@ -208,7 +210,7 @@ const Transition = ({
     parts.forEach((part, index) => {
       elements.push(<tspan key={`part-${index}`}>{part}</tspan>)
       if (index !== parts.length - 1) {
-        elements.push(<tspan key={`operator-${index}`} fill="#999">{orOperator}</tspan>)
+        elements.push(<tspan key={`operator-${index}`} fill="#999">{t(orOperator)}</tspan>)
       }
     })
     return elements

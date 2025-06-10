@@ -19,8 +19,10 @@ import TM from './images/TM'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
 import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
+import { useTranslation } from 'react-i18next'
 
 const NewFile = () => {
+  const { t } = useTranslation(['common', 'newfile'])
   const navigate = useNavigate()
   const projects = useProjectsStore(s => s.projects)
   const setProject = useProjectStore(s => s.set)
@@ -192,32 +194,32 @@ const NewFile = () => {
       <Header linkTo="/" />
       <div style={{ flex: 1 }} />
       <ButtonGroup>
-        <PreferencesButton title="Preferences" type="button" onClick={() => dispatchCustomEvent('modal:preferences', null)}><Settings /></PreferencesButton>
+        <PreferencesButton title={t('header.button.title', { ns: 'newfile' })} type="button" onClick={() => dispatchCustomEvent('modal:preferences', null)}><Settings /></PreferencesButton>
       </ButtonGroup>
     </HeaderRow>
 
     <CardList
-      title="New Project"
-      button={<Button onClick={importProject}>Import...</Button>}
+      title={t('new_project.title', { ns: 'newfile' })}
+      button={<Button onClick={importProject}>{t('new_project.button.import', { ns: 'newfile' })}</Button>}
       innerRef={cardsRef}
     >
       <NewProjectCard
-        title="Finite State Automaton"
-        description="Create a deterministic or non-deterministic automaton with finite states. Capable of representing regular grammars."
+        title={t('fsa', { ns: 'common' })}
+        description={t('new_project.fsa_desc', { ns: 'newfile' })}
         onClick={() => handleNewFile('FSA')}
         height={height}
         image={<FSA {...stylingVals} />}
       />
       <NewProjectCard
-        title="Push Down Automaton"
-        description="Create an automaton with a push-down stack capable of representing context-free grammars."
+        title={t('pda', { ns: 'common' })}
+        description={t('new_project.pda_desc', { ns: 'newfile' })}
         onClick={() => handleNewFile('PDA')}
         height={height}
         image={<PDA {...stylingVals} />}
       />
       <NewProjectCard
-        title="Turing Machine"
-        description="Create a turing machine capable of representing recursively enumerable grammars."
+        title={t('tm', { ns: 'common' })}
+        description={t('new_project.tm_desc', { ns: 'newfile' })}
         onClick={() => handleNewFile('TM')}
         height={height}
         image={<TM {...stylingVals} />}
@@ -225,28 +227,28 @@ const NewFile = () => {
     </CardList>
 
     <CardList
-      title="Automata Examples"
+      title={t('examples.title', { ns: 'newfile' })}
       innerRef={cardsRef}
     >
       <NewProjectCard
-        title="Finite State Automaton"
-        description="Follow a in-tour tutorial on how to build a finite state automaton."
+        title={t('fsa', { ns: 'common' })}
+        description={t('examples.fsa_desc', { ns: 'newfile' })}
         onClick={() => handleNewExample('FSA')}
         height={height}
         image={<FSA {...stylingVals} />}
       />
 
       <NewProjectCard
-        title="Push Down Automaton"
-        description="Follow a in-tour tutorial on how to build a push-down stack."
+        title={t('pda', { ns: 'common' })}
+        description={t('examples.pda_desc', { ns: 'newfile' })}
         onClick={() => handleNewExample('PDA')}
         height={height}
         image={<PDA {...stylingVals} />}
       />
 
       <NewProjectCard
-        title="Turing Machine"
-        description="Follow a in-tour tutorial on how to build a turing machine."
+        title={t('tm', { ns: 'common' })}
+        description={t('examples.tm_desc', { ns: 'newfile' })}
         onClick={() => handleNewExample('TM')}
         height={height}
         image={<TM {...stylingVals} />}
@@ -254,7 +256,7 @@ const NewFile = () => {
     </CardList>
 
     <CardList
-      title="Your Projects"
+      title={t('projects.title', { ns: 'newfile' })}
       style={{ gap: '1.5em .4em' }}
     >
       {projects.sort((a, b) => b.meta.dateEdited - a.meta.dateEdited).map((p, i) =>
@@ -286,18 +288,18 @@ const NewFile = () => {
           $istemplate={false}
         />
       )}
-      {projects.length === 0 && <NoResultSpan>No projects yet</NoResultSpan>}
+      {projects.length === 0 && <NoResultSpan>{t('projects.nothing', { ns: 'newfile' })}</NoResultSpan>}
     </CardList>
 
     <CardList // Using modal to create module
       id="new-module-cardlist"
-      title="New Module"
-      button={<Button onClick={importModule}>Import...</Button>}
+      title={t('new_module.title', { ns: 'newfile' })}
+      button={<Button onClick={importModule}>{t('new_module.button.import', { ns: 'newfile' })}</Button>}
       innerRef={cardsRef}
     >
       <NewProjectCard
-        title="Create New Module"
-        description="Modules are interactive questions that will help assess your understanding of automata."
+        title={t('new_module.create.title', { ns: 'newfile' })}
+        description={t('new_module.create.description', { ns: 'newfile' })}
         onClick={handleNewModuleClick}
         height={height}
         image={<FSA {...stylingVals} />}
@@ -305,7 +307,7 @@ const NewFile = () => {
     </CardList>
 
     <CardList
-      title='Your Modules'
+      title={t('modules.title', { ns: 'newfile' })}
       style={{ gap: '1.5em .4em' }}
     >
       {
@@ -334,7 +336,7 @@ const NewFile = () => {
         />
         )
       })}
-    {modules.length === 0 && <NoResultSpan>No modules yet</NoResultSpan>}
+    {modules.length === 0 && <NoResultSpan>{t('modules.nothing', { ns: 'newfile' })}</NoResultSpan>}
   </CardList>
 
     <KebabMenu

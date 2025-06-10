@@ -1,7 +1,9 @@
 import { useLayoutEffect, useState } from 'react'
 import { isYoutube } from '../utils'
+import { useTranslation } from 'react-i18next'
 
 const EmbeddedVideo = ({ link }) => {
+  const { t } = useTranslation('tutorials')
   const [aspectRatios, setAspectRatio] = useState([560, 315])
 
   const updateRatios = () => {
@@ -30,7 +32,7 @@ const EmbeddedVideo = ({ link }) => {
         src={`https://www.youtube.com/embed/${vidId}`}
         allow="accelerometer; clipboard-write; encrypted-media"
         allowFullScreen
-        title="Tutorial Video"
+        title={t('components.tutorial_video')}
       />
     </>
 }

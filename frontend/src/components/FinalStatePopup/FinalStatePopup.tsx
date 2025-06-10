@@ -6,6 +6,7 @@ import { useEvent } from '/src/hooks'
 import { usePopupsStore, usePreferencesStore } from '/src/stores'
 
 import { Section } from './finalStatePopupStyle'
+import { useTranslation } from 'react-i18next'
 
 const defaultValues = {
   pauseTM: true
@@ -24,6 +25,8 @@ const FinalStatePopup = () => {
 
   const { register, handleSubmit, reset } = useForm({ defaultValues })
 
+  const { t } = useTranslation('common')
+
   const onSubmit = (values: PauseOption) => {
     // Get current preferences and modify only pauseTM
     const newPreferences = { ...preferences, pauseTM: values.pauseTM }
@@ -41,23 +44,23 @@ const FinalStatePopup = () => {
 
   return (
     <Modal
-      title="IMPORTANT"
-      description="Default Turing Machine behaviour is to halt upon reaching a final state. Modify below or in the preferences menu."
+      title={t('final_state_popup.title')}
+      description={t('final_state_popup.description')}
       isOpen={isOpen}
       onClose={() => setIsOpen(false)}
       role="alertdialog" // Prevents closing by clicking away
       actions={<>
-        <Button secondary onClick={() => setIsOpen(false)}>Close without saving</Button>
-        <Button type="submit" form="popups_form">Save and don't show again</Button>
+        <Button secondary onClick={() => setIsOpen(false)}>{t('final_state_popup.close_nosave')}</Button>
+        <Button type="submit" form="popups_form">{t('final_state_popup.close_save')}</Button>
       </>}
       style={{ paddingInline: 0 }}
     >
       <form id="popups_form" onSubmit={handleSubmit(onSubmit)}>
-        <SectionLabel>Behaviour</SectionLabel>
+        <SectionLabel>{t('preferences.behaviour')}</SectionLabel>
         <Section>
           <Preference
-            label="TM Halt on Final State"
-            description="Toggles halting for trace step for TM"
+            label={t('preferences.tm_halt')}
+            description={t('preferences.tm_halt_description')}
           >
             <Switch type="checkbox" {...register('pauseTM')} />
           </Preference>

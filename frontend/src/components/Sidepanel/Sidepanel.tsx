@@ -12,6 +12,8 @@ import { stopTemplateInsert } from './Panels/Templates/Templates'
 import { useTemplateStore, useToolStore, useSteppingStore, useProjectStore } from '/src/stores'
 
 import { dispatchCustomEvent } from '/src/util/events'
+import { TFunction } from 'i18next'
+import { useTranslation } from 'react-i18next'
 
 type PanelItem = {
   label: string
@@ -20,34 +22,36 @@ type PanelItem = {
   element: ReactNode
 }
 
-const panels: PanelItem[] = [
+type TranslatablePanelItems = (t: TFunction) => PanelItem[]
+
+const panels: TranslatablePanelItems = (t: TFunction) => [
   {
-    label: 'Testing Lab',
+    label: t('panels.testing_lab'),
     value: 'test',
     icon: <FlaskConical />,
     element: <TestingLab />
   },
 
   {
-    label: 'About Your Automaton',
+    label: t('panels.about'),
     value: 'about',
     icon: <InfoIcon />,
     element: <Info />
   },
   {
-    label: 'File Options',
+    label: t('panels.options'),
     value: 'options',
     icon: <Settings2 />,
     element: <Options />
   },
   {
-    label: 'Templates',
+    label: t('menus.templates'),
     value: 'templates',
     icon: <Star />,
     element: <Templates />
   },
   {
-    label: 'Modules',
+    label: t('menus.modules'),
     value: 'modules',
     icon: <GraduationCap/>,
     element: <Modules />
@@ -64,6 +68,7 @@ const Sidepanel = ({ onToggle }: SidePanelProps) => {
   const setTool = useToolStore((s) => s.setTool)
   const setSteppedStates = useSteppingStore((s) => s.setSteppedStates)
   const projectType = useProjectStore((s) => s.project.config.type)
+  const { t } = useTranslation('common')
 
   const cleanupPanel = () => {
     stopTemplateInsert(setTemplate, setTool)
@@ -90,7 +95,7 @@ const Sidepanel = ({ onToggle }: SidePanelProps) => {
   }
 
   useEvent('sidepanel:open', (e) => {
-    const panel = panels.find((p) => p.value === e.detail.panel)
+    const panel = panels(t).find((p) => p.value === e.detail.panel)
     handleToggle(panel)
   }, [activePanel])
 
@@ -134,7 +139,7 @@ const Sidepanel = ({ onToggle }: SidePanelProps) => {
       )}
 
       <Sidebar>
-        {panels.map((panel) => (
+        {panels(t).map((panel) => (
           <SidebarButton
             key={panel.value}
             onClick={() => handleToggle(panel)}

@@ -35,6 +35,7 @@ import {
   assertType
 } from '/src/types/ProjectTypes'
 import { formatOutput, formatInput } from '/src/util/stringManipulations'
+import { useTranslation } from 'react-i18next'
 
 const InputTransitionGroup = () => {
   const inputRef = useRef<HTMLInputElement>()
@@ -74,6 +75,8 @@ const InputTransitionGroup = () => {
   const createTransition = useProjectStore((s) => s.createTransition)
   const removeTransitions = useProjectStore((s) => s.removeTransitions)
   const commit = useProjectStore((s) => s.commit)
+
+  const { t } = useTranslation('common')
 
   // Get data from event dispatch
   useEvent(
@@ -228,7 +231,7 @@ const InputTransitionGroup = () => {
           e.target.select()
           setSelectedIndex(-1)
         }}
-        placeholder={'λ (New transition)'}
+        placeholder={t('input_dialog.new_transition')}
       />
       <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
         <CornerDownLeft size="18px" />
@@ -293,7 +296,7 @@ const InputTransitionGroup = () => {
             e.target.select()
             setSelectedIndex(-1)
           }}
-          placeholder={'λ\t(read)'}
+          placeholder={t('input_dialog.read')}
         />
       </InputSpacingWrapper>
       <InputSeparator>,</InputSeparator>
@@ -307,7 +310,7 @@ const InputTransitionGroup = () => {
             e.target.select()
             setSelectedIndex(-1)
           }}
-          placeholder={'λ\t(pop)'}
+          placeholder={t('input_dialog.pop')}
         />
       </InputSpacingWrapper>
       <InputSeparator>;</InputSeparator>
@@ -321,7 +324,7 @@ const InputTransitionGroup = () => {
             e.target.select()
             setSelectedIndex(-1)
           }}
-          placeholder={'λ\t(push)'}
+          placeholder={t('input_dialog.push')}
         />
       </InputSpacingWrapper>
       <SubmitButton onClick={saveNewTransition} tabIndex={-1}>
@@ -449,7 +452,7 @@ const InputTransitionGroup = () => {
             e.target.select()
             setSelectedIndex(-1)
           }}
-          placeholder={'λ\t(read)'}
+          placeholder={t('input_dialog.read')}
         />
       </InputSpacingWrapper>
       <InputSeparator>,</InputSeparator>
@@ -466,7 +469,7 @@ const InputTransitionGroup = () => {
             e.target.select()
             setSelectedIndex(-1)
           }}
-          placeholder={'λ\t(write)'}
+          placeholder={t('input_dialog.write')}
         />
       </InputSpacingWrapper>
       <InputSeparator>;</InputSeparator>
@@ -587,7 +590,7 @@ const InputTransitionGroup = () => {
           <>
             {transitionsList.map((t, i) => fsaInputField(t, i)).reverse()}
             <hr />
-            Add a new transition?
+            {t('input_dialog.add_new_transition')}
             {blankFSAInput()}
           </>
         )
@@ -597,7 +600,7 @@ const InputTransitionGroup = () => {
           <>
             {transitionsList.map((t, i) => pdaInputFields(t, i)).reverse()}
             <hr />
-            <Heading>Add a new transition?</Heading>
+            <Heading>{t('input_dialog.add_new_transition')}n?</Heading>
             {blankPDAInput()}
           </>
         )
@@ -607,7 +610,7 @@ const InputTransitionGroup = () => {
           <>
             {transitionsList.map((t, i) => tmInputFields(t, i)).reverse()}
             <hr />
-            <Heading>Add a new transition?</Heading>
+            <Heading>{t('input_dialog.add_new_transition')}</Heading>
             {blankTMInput()}
           </>
         )
@@ -616,9 +619,9 @@ const InputTransitionGroup = () => {
 
   return (
     <Modal
-      title="Transition Edge Editor"
+      title={t('input_dialog.edge_editor')}
       description={
-        'Editing transition from ' + fromName + ' to ' + toName + '.'
+        t('input_dialog.editing_transition', { state1: fromName, state2: toName })
       }
       isOpen={modalOpen}
       onClose={() => {
@@ -634,7 +637,7 @@ const InputTransitionGroup = () => {
             resetInputFields()
           }}
         >
-          Done
+          {t('done')}
         </Button>
       }
     >

@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { styled } from 'goober'
 import { ExampleContainer } from '../tutorialsStyle'
+import { useTranslation } from 'react-i18next'
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
@@ -66,6 +67,7 @@ interface TourProps {
 }
 
 const TMPageTour: React.FC<TourProps> = ({ onClose }) => {
+  const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
   const steps: Step[] = [
@@ -73,47 +75,47 @@ const TMPageTour: React.FC<TourProps> = ({ onClose }) => {
     // content - text to display in tour
     {
       target: '',
-      content: 'In this guided tutorial, we will walk you through the steps of how to build a turing machine which are capable of representing recursively enumerable languages. In this example, we will create a turing machine that increments a given binary number.'
+      content: t('tm_tour.step1', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'To begin, press on the state tool and click on the automatarium canvas to place three states. Right click q0 and q2 to designate them as the initial and final state.'
+      content: t('tm_tour.step2', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We will now create two self-loops using the transition tool. You will notice a dialog box appear. There are 3 values the transition tool can take. "λ read" which reads the head of the tape, "λ write" which is the character we can replace the tape with" and "R, L, S" which dictates the moving the head either one direction to the right or left. Otherwise s for stationary.'
+      content: t('tm_tour.step3', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'As we are creating a turing machine that increments a given binary number, using the transition tool click on q0 to create two self-loops. We want to continue looping until the input is completed. As such, we will read 0, write 0 and move the tape right (R). We will also read 1, write 1 and move the tape right (R).'
+      content: t('tm_tour.step4', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'When we reach the end of our input, we want to stop moving to the right. Using the transition tool, create a transition from q0 to q1. We will leave our read and write as λ which represents an empty string in Automatarium. We will put left (L) as our direction to move.'
+      content: t('tm_tour.step5', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'We now want to replace all trailing 1s with 0s. To do this, remember that we are currently positioned at the end of our tape. So using the transition tool, click on q1 to create a self-loop to read 1, write 0 and move left.'
+      content: t('tm_tour.step6', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Once all the trailing 1s are replaced with 0, we need to replace the next 0 or blank we encounter with 1. To do so, use the transition tool to add two transitions between q1 and q2. The first transition should read blank, write 1 and move right (R), the second should read 0, write 1 and move right (R).'
+      content: t('tm_tour.step7', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Our turing machine to increment a binary number is done. We can click on the testing flask and enter our binary number into trace to increment it by 1. Click on the directional keys to progress through each step. You will see the turing machine at the bottom of your screen. The example provided below is using 101 in the trace, which increments to 110.'
+      content: t('tm_tour.step8', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'Automatarium also provides a feature that allows you to inspect an overview of your turing machine. This allows you to inspect your alphabet, state transition table and transition function. You can view this by pressing the informatory button icon on the right below the flask button. '
+      content: t('tm_tour.step9', { ns: 'tutorials' })
     }
   ]
 
@@ -163,9 +165,9 @@ const TMPageTour: React.FC<TourProps> = ({ onClose }) => {
                 </ExampleContainer>
 
                 <div className="tour-navigation">
-                    <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
-                    <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
-                    <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+                    <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
+                    <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
+                    <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
                 </div>
 
             </TourContent>

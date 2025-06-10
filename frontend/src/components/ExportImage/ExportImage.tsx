@@ -8,6 +8,7 @@ import { Wrapper, Image } from './exportImageStyle'
 import { Size } from '/src/types/ProjectTypes'
 import { ColourName } from '/src/config'
 import { Background } from '/src/stores/useExportStore'
+import { useTranslation } from 'react-i18next'
 
 const ExportImage = () => {
   const { exportVisible, setExportVisible, options, setOptions } = useExportStore()
@@ -18,6 +19,7 @@ const ExportImage = () => {
   const [size, setSize] = useState<Size>({} as Size)
   const [preview, setPreview] = useState('#')
   const [prevBG, setPrevBG] = useState<'solid' | 'none'>()
+  const { t } = useTranslation('common')
 
   // Set project settings if they change
   useEffect(() => {
@@ -87,29 +89,29 @@ const ExportImage = () => {
 
   return (
     <Modal
-      title="Export Image"
-      description="Download an image of your project"
+      title={t('export_image.title')}
+      description={t('export_image.description')}
       isOpen={exportVisible}
       onClose={() => setExportVisible(false)}
       actions={<>
-        <Button secondary onClick={() => setExportVisible(false)}>Cancel</Button>
+        <Button secondary onClick={() => setExportVisible(false)}>{t('cancel')}</Button>
         <div style={{ flex: 1 }}/>
         {/*
             Currently jpg is not supported for the ClipboardItem API.
             See https://stackoverflow.com/a/69536762
          */}
-        <Button disabled={type === 'jpg'} secondary onClick={copyToClipboard}>Copy to clipboard</Button>
-        <Button onClick={doExport}>Export</Button>
+        <Button disabled={type === 'jpg'} secondary onClick={copyToClipboard}>{t('export_image.copy')}</Button>
+        <Button onClick={doExport}>{t('export')}</Button>
       </>}
       width="800px"
     >
       <Wrapper>
         <Image src={preview} alt=""/>
         <div>
-          <Preference label="File name" fullWidth>
+          <Preference label={t('export_image.file_name')} fullWidth>
             <Input small value={filename} onChange={e => setOptions({ filename: e.target.value })}/>
           </Preference>
-          <Preference label="File type" fullWidth>
+          <Preference label={t('export_image.file_type')} fullWidth>
             <Input type="select" small value={type} onChange={e => setOptions({ type: e.target.value })}>
               <option value="png">PNG</option>
               <option value="jpg">JPG</option>
@@ -117,30 +119,30 @@ const ExportImage = () => {
             </Input>
           </Preference>
           {type === 'svg' &&
-              <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>Note: SVG exporting is still in beta and may not work as expected</span>}
-          <Preference label="Margin" fullWidth>
+              <span style={{ fontSize: '.7em', display: 'block', maxWidth: 'fit-content', color: 'var(--error)' }}>{t('export_image.svg_note')}</span>}
+          <Preference label={t('export_image.margin')} fullWidth>
             <Input type="number" min="0" max="500" small value={margin}
                    onChange={e => setOptions({ margin: e.target.value === '' ? 0 : Math.min(Math.max(Number(e.target.value), 0), 500) })}/>
           </Preference>
-          <Preference label="Accent colour" fullWidth>
+          <Preference label={t('export_image.accent_colour')} fullWidth>
             <Input type="select" small value={color} onChange={e => setOptions({ color: e.target.value as ColourName })}>
-              <option value="red">Red</option>
-              <option value="orange">Orange</option>
-              <option value="green">Green</option>
-              <option value="teal">Teal</option>
-              <option value="blue">Blue</option>
-              <option value="purple">Purple</option>
-              <option value="pink">Pink</option>
+              <option value="red">{t('colours.red')}</option>
+              <option value="orange">{t('colours.orange')}</option>
+              <option value="green">{t('colours.green')}</option>
+              <option value="teal">{t('colours.teal')}</option>
+              <option value="blue">{t('colours.blue')}</option>
+              <option value="purple">{t('colours.purple')}</option>
+              <option value="pink">{t('colours.pink')}</option>
             </Input>
           </Preference>
-          <Preference label="Background" fullWidth>
+          <Preference label={t('export_image.background')} fullWidth>
             <Input type="select" small value={background} onChange={e => setOptions({ background: e.target.value as Background })}>
-              <option value="solid">Solid</option>
-              <option value="none" disabled={type === 'jpg'}>Transparent</option>
+              <option value="solid">{t('export_image.solid')}</option>
+              <option value="none" disabled={type === 'jpg'}>{t('export_image.transparent')}</option>
               {/* <option value="grid">Dot grid</option> */}
             </Input>
           </Preference>
-          <Preference label="Dark mode">
+          <Preference label={t('export_image.dark_mode')}>
             <Switch checked={darkMode} onChange={e => setOptions({ darkMode: e.target.checked })}/>
           </Preference>
         </div>

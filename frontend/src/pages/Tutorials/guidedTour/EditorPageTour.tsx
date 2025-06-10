@@ -13,6 +13,7 @@ import commentAnimation from '../../../components/Toolbar/animations/comment.jso
 import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, FlaskConical, Info as InfoIcon, Settings2, Star, GraduationCap } from 'lucide-react'
 
 import { Info } from '/src/components/Sidepanel/Panels'
+import { useTranslation } from 'react-i18next'
 
 interface TourContentProps {
     isBannerStep: boolean;
@@ -76,63 +77,64 @@ interface TourProps {
 }
 
 const EditorPageTour: React.FC<TourProps> = ({ onClose }) => {
+  const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
 
   // Define tour steps
   const steps: Step[] = [
     {
       target: '', // CSS selector for the element to highlight
-      content: 'This is the editor Page. You will get to build your Automatons here, here is a quick guide to the tools you will use.'
+      content: t('editor_tour.step1', { ns: 'tutorials' })
     },
 
     {
       target: '',
-      content: 'The Cursor tool allows you to select single or multiple states at once and move them around where you please.'
+      content: t('editor_tour.step2', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The Hand tool allows you to move around the screen.'
+      content: t('editor_tour.step3', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The State Tool will allow you to create states, which can be done any number of times.'
+      content: t('editor_tour.step4', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The Transition Tool will allow you to create transition between states. '
+      content: t('editor_tour.step5', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'You can also add your personal comments with the Comment Tool.'
+      content: t('editor_tour.step6', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The testing lab will alow you to test your automaton with different inputs.'
+      content: t('editor_tour.step7', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The "About Your Automaton Feature will showcase detailed information about your automaton. '
+      content: t('editor_tour.step8', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The File options will allow you to change any preferences to State Identifiers, Operators and Project themes.'
+      content: t('editor_tour.step9', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The Template option will allow you to save a template of states for future use. Here you can also access your saved templates.'
+      content: t('editor_tour.step10', { ns: 'tutorials' })
 
     },
     {
       target: '',
-      content: 'The Create Module option allows you to create a new module, add custom questions and view the completed module.'
+      content: t('editor_tour.step11', { ns: 'tutorials' })
     }
     // Add more steps as needed
   ]
@@ -193,9 +195,9 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose }) => {
       )}
 
       <div className="tour-navigation">
-        <TourButton onClick={handlePrevious} disabled={step === 0}>Previous</TourButton>
-        <TourButton onClick={handleNext}>{step === steps.length - 1 ? 'Finish' : 'Next'}</TourButton>
-        <TourButton onClick={handleSkip}>Skip Tour</TourButton>
+        <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
+        <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
+        <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
       </div>
         </TourContent>
      </TourOverlay>

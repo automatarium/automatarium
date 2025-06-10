@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button, Modal } from '/src/components'
 import { useEvent } from '/src/hooks'
 import { useTemplatesStore, useThumbnailStore } from '/src/stores'
+import { useTranslation } from 'react-i18next'
 
 type EditorConfirmationProps = {
   isOpen: boolean
@@ -10,6 +11,7 @@ type EditorConfirmationProps = {
 }
 
 const TemplateDelConfDialog = ({ isOpen, setOpen, setClose }: EditorConfirmationProps) => {
+  const { t } = useTranslation('common')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [tid, setTid] = useState<string>()
@@ -31,13 +33,13 @@ const TemplateDelConfDialog = ({ isOpen, setOpen, setClose }: EditorConfirmation
         onClose={setClose}
         role='alertdialog'
         actions={<>
-          <Button secondary onClick={setClose}>Cancel</Button>
+          <Button secondary onClick={setClose}>{t('cancel')}</Button>
           <Button onClick={() => {
             deleteTemplate(tid)
             removeThumbnail(`tmp${tid}-light`)
             removeThumbnail(`tmp${tid}-dark`)
             setClose()
-          }}>Confirm</Button>
+          }}>{t('confirm')}</Button>
         </>}
     />
   )

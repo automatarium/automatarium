@@ -22,6 +22,7 @@ import {
 
 import menus from './menus'
 import { ContextItem } from '/src/components/ContextMenus/contextItem'
+import { useTranslation } from 'react-i18next'
 
 // Extend dayjs
 dayjs.extend(relativeTime)
@@ -76,6 +77,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const setLastSaveDate = useProjectStore(s => s.setLastSaveDate)
   const upsertProject = useProjectsStore(s => s.upsertProject)
   const deleteProject = useProjectsStore(s => s.deleteProject)
+  const { t } = useTranslation('common')
 
   // Modules
   const upsertModuleProject = useModuleStore(s => s.upsertProject)
@@ -114,7 +116,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   useEvent('beforeunload', e => {
     if (lastSaveDate > lastChangeDate) return
     e.preventDefault()
-    return 'Your project isn\'t saved yet, are you sure you want to leave?'
+    return t('menubar.not_saved')
   }, [lastSaveDate, lastChangeDate], { options: { capture: true }, target: window })
 
   return (
@@ -154,13 +156,13 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
                 />
                   )
                 : (
-                <Name onClick={handleEditProjectName} title="Edit title">{projectName ?? 'Untitled Project'}</Name>
+                <Name onClick={handleEditProjectName} title={t('menubar.edit_title')}>{projectName ?? t('menubar.untitled')}</Name>
                   )}
-              <SaveStatus $show={isSaving}>Saving...</SaveStatus>
+              <SaveStatus $show={isSaving}>{t('menubar.saving')}</SaveStatus>
             </NameRow>
 
             <DropdownMenus>
-              {menus.map((item: ContextItem) => (
+              {menus(t).map((item: ContextItem) => (
                 <DropdownButton
                   key={item.label}
                   item={item}
@@ -175,7 +177,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
         </Menu>
 
         <Actions>
-          {<Button onClick={() => dispatchCustomEvent('showSharing', null)}>Share</Button>}
+          {<Button onClick={() => dispatchCustomEvent('showSharing', null)}>{t('share')}</Button>}
         </Actions>
       </Wrapper>
     </>

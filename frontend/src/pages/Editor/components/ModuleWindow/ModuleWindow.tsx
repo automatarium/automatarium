@@ -15,8 +15,10 @@ import {
 } from './moduleWindowStyling'
 import { X, ChevronRight, ChevronLeft } from 'lucide-react'
 import { Button } from '/src/components'
+import { useTranslation } from 'react-i18next'
 
 const ModuleWindow = ({ onPanelWidthChange }) => {
+  const { t } = useTranslation(['common', 'editor'])
   const currentModule = useModuleStore(s => s.module)
   const updateQuestion = useModuleStore(s => s.upsertQuestion)
   const updateProject = useModuleStore(s => s.upsertProject)
@@ -89,7 +91,7 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
 
   // If there are no questions or module data yet, show a loading or fallback message
   if (!questions || totalQuestions === 0 || !currentModule) {
-    return <ModuleWindowWrapper width={panelWidth}>Loading module instructions...</ModuleWindowWrapper>
+    return <ModuleWindowWrapper width={panelWidth}>{t('component.module.loading', { ns: 'editor' })}</ModuleWindowWrapper>
   }
 
   // Cancel editing and reset the input fields to the stored values
@@ -103,17 +105,17 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
   return (
     <ModuleWindowWrapper ref={panelRef} width={panelWidth}>
       <TitleWrapper>
-        <Title>Question {currentQuestionIndex + 1}</Title>
+        <Title>{t('component.module.title', { ns: 'editor', qNumber: currentQuestionIndex + 1 })}</Title>
         {isEditing
           ? (
           <ButtonContainer>
-            <Button onClick={handleCancelClick}>Cancel</Button>
-            <Button onClick={handleEditClick}>Save</Button>
+            <Button onClick={handleCancelClick}>{t('cancel', { ns: 'common' })}</Button>
+            <Button onClick={handleEditClick}>{t('component.module.button.save', { ns: 'editor' })}</Button>
           </ButtonContainer>
             )
           : (
           <EditButton>
-            <Button onClick={handleEditClick}>Edit</Button>
+            <Button onClick={handleEditClick}>{t('component.module.button.edit', { ns: 'editor' })}</Button>
           </EditButton>
             )}
       </TitleWrapper>
@@ -129,7 +131,7 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
             <TextArea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Edit module instructions here"
+              placeholder={t('component.module.edit_placeholder', { ns: 'editor' })}
               rows={39}
             />
               )

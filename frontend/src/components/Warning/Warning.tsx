@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { useEvent } from '/src/hooks'
 import { Modal, Button } from '/src/components'
 import { dispatchCustomEvent } from '/src/util/events'
+import { useTranslation } from 'react-i18next'
 
 // This is the warning modal that will use the prebuilt modal defined in 'Modal' to display
 // a warning under certain circumstances (such as incorrect input, or anything else that could be
@@ -9,20 +10,21 @@ import { dispatchCustomEvent } from '/src/util/events'
 export const Warning = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [message, setMessage] = useState('')
+  const { t } = useTranslation('common')
   useEvent('showWarning', e => {
     setMessage(e.detail)
     setIsOpen(true)
   })
   return (
     <Modal
-      title="Warning"
+      title={t('warning')}
       isOpen={isOpen}
       onClose={() => {
         setIsOpen(false)
       }}
       role="alertdialog" // Prevents closing by clicking away
       actions={
-        <Button onClick={() => setIsOpen(false)}>OK</Button>
+        <Button onClick={() => setIsOpen(false)}>{t('ok')}</Button>
       }
       description={message}
     >
