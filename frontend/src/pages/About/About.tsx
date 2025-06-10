@@ -26,6 +26,7 @@ const About = () => {
           }}
         />
       </p>
+      <p>{t('note')}</p>
     </Main>
   )
 }
