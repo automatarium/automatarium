@@ -24,9 +24,9 @@
     "build:packages": "yarn build:simulation && yarn build:jflap-translator",
     "dev:frontend": "concurrently \"yarn watch:packages\" \"yarn workspace frontend start\"",
     "build:frontend": "yarn workspace frontend build",
-    "lint": "yarn workspaces run lint",
-    "lint:fix": "yarn workspaces run lint:fix",
-    "check:types": "yarn workspaces run check:types",
+    "lint": "yarn workspaces foreach -A run lint",
+    "lint:fix": "yarn workspaces foreach -A run lint:fix",
+    "check:types": "yarn workspaces foreach -A run check:types",
     "test": "yarn workspace @automatarium/simulation test && yarn workspace @automatarium/jflap-translator test",
     "dev": "yarn dev:frontend",
     "build": "yarn build:packages && yarn build:frontend"
