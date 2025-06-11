@@ -39,6 +39,9 @@
   },
   "packageManager": "yarn@4.9.2",
   "dependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
+    "eslint": "^8",
     "typescript": "^5.8.3"
   }
 }

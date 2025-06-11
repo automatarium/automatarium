@@ -48,8 +48,8 @@ const Modal = ({
 
   useEffect(() => {
     if (!instance) return
-    onClose && instance.on('hide', onClose)
-    focusRef?.current && instance.on('show', () => setTimeout(() => focusRef.current?.focus(), 100))
+    if (onClose) instance.on('hide', onClose)
+    if (focusRef?.current) instance.on('show', () => setTimeout(() => focusRef.current?.focus(), 100))
   }, [instance, onClose, focusRef?.current])
 
   return createPortal(

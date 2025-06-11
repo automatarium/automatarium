@@ -31,7 +31,7 @@ const TourButton = ({
   ...props
 }: ButtonProps) => {
   // Select which element to use.
-  let Element: any
+  let Element
   if ('href' in props) {
     Element = 'a'
   } else if ('to' in props) {
