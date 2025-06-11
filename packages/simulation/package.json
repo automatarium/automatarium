@@ -16,15 +16,16 @@
     "check:types": "tsc --noemit"
   },
   "dependencies": {
+    "eslint": "^8.57.0",
+    "eslint-plugin-react": "^7.37.5",
     "frontend": "1.0.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
     "@types/node": "^18.15.10",
-    "@typescript-eslint/eslint-plugin": "^5.54.1",
-    "@typescript-eslint/parser": "^5.54.1",
-    "eslint": "^8.0.1",
-    "eslint-config-standard": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.34.0",
+    "@typescript-eslint/parser": "^8.34.0",
+    "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.25.2",
     "eslint-plugin-n": "^15.0.0",
     "eslint-plugin-promise": "^6.0.0",

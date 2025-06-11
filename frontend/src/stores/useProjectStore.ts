@@ -2,7 +2,7 @@ import { create, SetState, GetState } from 'zustand'
 import { persist } from 'zustand/middleware'
 import produce, { current } from 'immer'
 import clone from 'lodash.clonedeep'
-import isEqual from 'lodash.isequal'
+require('node:util').isDeepStrictEqual
 
 import { randomProjectName } from '../util/projectName'
 
@@ -30,6 +30,7 @@ import {
 import { expandTransitions } from '@automatarium/simulation/src/utils'
 
 import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
+import { isDeepStrictEqual } from 'util'
 
 /**
  * Normal project, except it has extra information to identify it
@@ -165,7 +166,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   /* Add current project state to stored history of project states */
   commit: () => set(produce((state: ProjectStore) => {
     // Check whether anything changed before committing
-    const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
+    const didChange = !isDeepStrictEqual(current(state.history[state.historyPointer]), current(state.project))
     if (!didChange) { return }
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)
