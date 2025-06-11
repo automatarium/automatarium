@@ -524,8 +524,8 @@ const TestingLab = () => {
           {enableManualStepping && (currentManualSuccessors.length !== 0) && <>
               <SectionLabel>{t('testing_lab.transitions')}</SectionLabel>
               <Wrapper>
-              {(buttonsArray)}
-                        </Wrapper>
+                {(buttonsArray)}
+              </Wrapper>
       </>}
 
       {!enableManualStepping && <>

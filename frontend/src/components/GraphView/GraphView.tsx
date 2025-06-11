@@ -79,39 +79,43 @@ const GraphView = ({ children, $selectedOnly: $isTemplate = false, ...props }: G
   }, [])
 
   // Keep track of resizes
-  !$isTemplate && useEffect(() => {
-    if (svgRef.current) {
+  if (!$isTemplate) {
+    useEffect(() => {
+      if (svgRef.current) {
       // Update reference
-      setSvgElement(svgRef.current)
+        setSvgElement(svgRef.current)
 
-      // Manage resizing of view
-      onContainerResize()
-      window.addEventListener('resize', onContainerResize)
+        // Manage resizing of view
+        onContainerResize()
+        window.addEventListener('resize', onContainerResize)
 
-      // Setup handlers
-      svgRef.current.addEventListener('mousedown', onContainerMouseDown)
-      svgRef.current.addEventListener('mouseup', onContainerMouseUp)
-      svgRef.current.addEventListener('mousemove', onContainerMouseMove)
+        // Setup handlers
+        svgRef.current.addEventListener('mousedown', onContainerMouseDown)
+        svgRef.current.addEventListener('mouseup', onContainerMouseUp)
+        svgRef.current.addEventListener('mousemove', onContainerMouseMove)
 
-      // Unset handlers
-      return () => {
-        window.removeEventListener('resize', onContainerResize)
-        svgRef.current?.removeEventListener('mousedown', onContainerMouseDown)
-        svgRef.current?.removeEventListener('mouseup', onContainerMouseUp)
-        svgRef.current?.removeEventListener('mousedown', onContainerMouseMove)
+        // Unset handlers
+        return () => {
+          window.removeEventListener('resize', onContainerResize)
+          svgRef.current?.removeEventListener('mousedown', onContainerMouseDown)
+          svgRef.current?.removeEventListener('mouseup', onContainerMouseUp)
+          svgRef.current?.removeEventListener('mousedown', onContainerMouseMove)
+        }
       }
-    }
-  }, [svgRef.current])
+    }, [svgRef.current])
+  }
 
   // Add a resize observer to the wrapper div
-  !$isTemplate && useEffect(() => {
-    if (wrapperRef.current) {
-      const resizeObserver = new ResizeObserver(onContainerResize)
-      resizeObserver.observe(wrapperRef.current)
+  if (!$isTemplate) {
+    useEffect(() => {
+      if (wrapperRef.current) {
+        const resizeObserver = new ResizeObserver(onContainerResize)
+        resizeObserver.observe(wrapperRef.current)
 
-      return () => resizeObserver.disconnect()
-    }
-  }, [wrapperRef.current])
+        return () => resizeObserver.disconnect()
+      }
+    }, [wrapperRef.current])
+  }
 
   // Set color theme
   useEffect(() => {

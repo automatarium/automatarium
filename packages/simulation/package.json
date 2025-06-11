@@ -16,9 +16,12 @@
     "check:types": "tsc --noemit"
   },
   "dependencies": {
-    "eslint": "^8.57.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
+    "eslint": "^8",
     "eslint-plugin-react": "^7.37.5",
-    "frontend": "1.0.0"
+    "frontend": "1.0.0",
+    "globals": "^16.2.0"
   },
   "devDependencies": {
     "@types/jest": "^29.5.0",
