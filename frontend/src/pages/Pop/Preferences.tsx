@@ -15,7 +15,7 @@ const defaultValues = {
   ctrlZoom: true
 }
 
-const Preferences = () => {
+const PreferencesMenu = () => {
   const [isOpen, setIsOpen] = useState(false)
 
   const preferences = usePreferencesStore(state => state.preferences)
@@ -99,4 +99,4 @@ const Preferences = () => {
   )
 }
 
-export default Preferences
+export default PreferencesMenu
