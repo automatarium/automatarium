@@ -19,7 +19,7 @@ const defaultValues = {
   language: 'en'
 }
 
-const Preferences = () => {
+const PreferencesMenu = () => {
   const { t, i18n } = useTranslation('preferences')
   const [isOpen, setIsOpen] = useState(false)
 
@@ -127,4 +127,4 @@ const Preferences = () => {
   )
 }
 
-export default Preferences
+export default PreferencesMenu

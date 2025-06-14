@@ -413,7 +413,7 @@ const TestingLab = () => {
   const buttonsArray:JSX.Element[] = []
   currentManualSuccessors.forEach(t => {
     // Add transition to the form of <Button>{'a,X;R: q0 -> q1'}</Button>
-    buttonsArray.push(<Button onClick={() => {
+    buttonsArray.push(<Button key={nodeTransitionString(t)} onClick={() => {
       setCurrentManualNode(t)
       setTraceIdx(traceIdx + 1)
     }}>{nodeTransitionString(t)}</Button>)
@@ -473,7 +473,7 @@ const TestingLab = () => {
             }} />
 
           <Button icon={<SkipForward size={20} />}
-            // eslint-disable-next-line no-mixed-operators
+             
             disabled={
                 traceIdx >= lastTraceIdx || automataIsInvalid || enableManualStepping
             }
@@ -524,8 +524,8 @@ const TestingLab = () => {
           {enableManualStepping && (currentManualSuccessors.length !== 0) && <>
               <SectionLabel>{t('testing_lab.transitions')}</SectionLabel>
               <Wrapper>
-              {(buttonsArray)}
-                        </Wrapper>
+                {(buttonsArray)}
+              </Wrapper>
       </>}
 
       {!enableManualStepping && <>

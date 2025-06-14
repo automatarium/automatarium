@@ -25,4 +25,6 @@ const Input = forwardRef(({
   />
 ))
 
+Input.displayName = "inputComponent";
+
 export default Input

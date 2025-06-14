@@ -1,4 +1,4 @@
-/* eslint-disable react/no-unknown-property */
+ 
 
 import { Link, LinkProps, To } from 'react-router-dom'
 

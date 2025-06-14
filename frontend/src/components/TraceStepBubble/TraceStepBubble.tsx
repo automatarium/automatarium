@@ -43,9 +43,9 @@ const TraceStepBubble = ({ stateID, input, index }: TraceStepBubbleProps) => {
       <Container style={{ left: position[0], top: position[1] }} className={transitionsEnabled ? 'animate' : ''}>
         <div>
           <Pointer />
-          <TickerTape $index={index}>
+          <TickerTape $index={index + 2}>
             <SerratedEdge />
-            {input?.split('').map((symbol, i) => <TickerTapeCell key={i} $consumed={i < index - 1 }>
+            {input?.split('').map((symbol, i) => <TickerTapeCell key={i} $consumed={i < index}>
               {symbol}
             </TickerTapeCell>)}
             <SerratedEdge flipped />

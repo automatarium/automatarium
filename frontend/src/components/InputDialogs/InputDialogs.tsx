@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, ChangeEvent, KeyboardEvent } from 'react'
+import { useState, useRef, useCallback, ChangeEvent, KeyboardEvent } from 'react'
 import { CornerDownLeft, MessageSquare } from 'lucide-react'
 
 import { Dropdown, Input } from '/src/components'

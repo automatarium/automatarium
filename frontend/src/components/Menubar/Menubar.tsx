@@ -38,7 +38,7 @@ const DropdownButton = ({ item, dropdown, setDropdown, ...props }: DropdownButto
   const [rect, setRect] = useState<DOMRect>()
 
   useEffect(() => {
-    buttonRef.current && setRect(buttonRef.current.getBoundingClientRect())
+    if (buttonRef.current) setRect(buttonRef.current.getBoundingClientRect())
   }, [buttonRef.current])
   return (
     <>

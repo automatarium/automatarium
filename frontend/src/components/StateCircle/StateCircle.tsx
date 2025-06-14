@@ -75,6 +75,6 @@ const StateCircle = ({ id, name, label, isFinal, cx, cy, selected, stepped, ...p
 }
 
 StateCircle.Ghost = ({ cx, cy }: {cx: number, cy: number}) =>
-  <circle cx={cx} cy={cy} r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, opacity: 0.3, pointerEvents: 'none' }} />
+  <circle cx={cx} cy={cy} r={STATE_CIRCLE_RADIUS} style={{ ...circleStyles, opacity: 0.3, pointerEvents: 'none' }}/>
 
 export default StateCircle

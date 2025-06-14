@@ -5,3 +5,5 @@ dist
 **/yarn-error.log
 .eslintcache
 .eslintcache'
+.vscode
+.yarn/install-state.gz

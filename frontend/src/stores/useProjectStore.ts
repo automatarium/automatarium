@@ -2,7 +2,6 @@ import { create, SetState, GetState } from 'zustand'
 import { persist } from 'zustand/middleware'
 import produce, { current } from 'immer'
 import clone from 'lodash.clonedeep'
-import isEqual from 'lodash.isequal'
 
 import { randomProjectName } from '../util/projectName'
 
@@ -165,7 +164,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   /* Add current project state to stored history of project states */
   commit: () => set(produce((state: ProjectStore) => {
     // Check whether anything changed before committing
-    const didChange = !isEqual(current(state.history[state.historyPointer]), current(state.project))
+    const didChange = !(current(state.history[state.historyPointer]) === current(state.project))
     if (!didChange) { return }
     // Delete the future
     state.history = state.history.slice(0, state.historyPointer + 1)

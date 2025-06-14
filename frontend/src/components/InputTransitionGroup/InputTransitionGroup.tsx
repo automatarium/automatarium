@@ -167,8 +167,8 @@ const InputTransitionGroup = () => {
 
   const handleIndexUp = () => {
     if (selectedIndex < transitionListRef?.length - 1) {
-      const prevIndex = selectedIndex === transitionListRef?.length - 1 ?? 0
-        ? transitionListRef?.length - 1 ?? 0
+      const prevIndex = selectedIndex === transitionListRef?.length - 1
+        ? transitionListRef?.length - 1
         : selectedIndex + 1
       const prevInputRef = transitionListRef[prevIndex]
       const ro = prevInputRef as RefObject<HTMLInputElement>
