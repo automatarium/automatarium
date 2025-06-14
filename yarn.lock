@@ -395,14 +395,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.21.0":
-  version: 7.27.1
-  resolution: "@babel/runtime@npm:7.27.1"
-  checksum: 10c0/530a7332f86ac5a7442250456823a930906911d895c0b743bf1852efc88a20a016ed4cd26d442d0ca40ae6d5448111e02a08dd638a4f1064b47d080e2875dc05
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9":
+"@babel/runtime@npm:^7.21.0, @babel/runtime@npm:^7.23.2, @babel/runtime@npm:^7.23.9":
   version: 7.27.6
   resolution: "@babel/runtime@npm:7.27.6"
   checksum: 10c0/89726be83f356f511dcdb74d3ea4d873a5f0cf0017d4530cb53aa27380c01ca102d573eff8b8b77815e624b1f8c24e7f0311834ad4fb632c90a770fda00bd4c8
@@ -535,7 +528,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.29.0, @eslint/js@npm:^9.29.0":
+"@eslint/js@npm:9.29.0, @eslint/js@npm:^9.28.0, @eslint/js@npm:^9.29.0":
   version: 9.29.0
   resolution: "@eslint/js@npm:9.29.0"
   checksum: 10c0/d0ccf37063fa27a3fae9347cb044f84ca10b5a2fa19ffb2b3fedf3b96843ac1ff359ea9f0ab0e80f2f16fda4cb0dc61ea0fed0375090f050fe0a029e7d6de3a3
@@ -2429,12 +2422,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
-  version: 24.0.0
-  resolution: "@types/node@npm:24.0.0"
+"@types/node@npm:*, @types/node@npm:^24.0.1":
+  version: 24.0.1
+  resolution: "@types/node@npm:24.0.1"
   dependencies:
     undici-types: "npm:~7.8.0"
-  checksum: 10c0/075f3129aa88932a0b4c3c9c28486f93a8d295151138b1fdd590cbbb59ec92d59b66201f99a0f061a7c8955a09d06ecc3fa070ed3c438a521a9890d1a3460958
+  checksum: 10c0/91cd50d1ac32a2172cbc67b65c78391fbd469b24743e3665427aa60bebaf4620cb9ac2e91c09a8081a78d08855c00faca659c287c1725ce8ca5e80ece3a20520
   languageName: node
   linkType: hard
 
@@ -2444,15 +2437,6 @@ __metadata:
   dependencies:
     undici-types: "npm:~6.21.0"
   checksum: 10c0/11979f5c4c626555351352fe1b30846700ca018747272a7ff425f883f102805b7f07737d5b7fa3c6deb0ddaeb94e367bb9a633a3d1e1d5c517de9a6283c6f21c
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:^24.0.1":
-  version: 24.0.1
-  resolution: "@types/node@npm:24.0.1"
-  dependencies:
-    undici-types: "npm:~7.8.0"
-  checksum: 10c0/91cd50d1ac32a2172cbc67b65c78391fbd469b24743e3665427aa60bebaf4620cb9ac2e91c09a8081a78d08855c00faca659c287c1725ce8ca5e80ece3a20520
   languageName: node
   linkType: hard
 
@@ -4319,6 +4303,8 @@ __metadata:
   dependencies:
     "@automatarium/jflap-translator": "npm:1.0.0"
     "@automatarium/simulation": "npm:2.0.0"
+    "@eslint/eslintrc": "npm:^3.3.1"
+    "@eslint/js": "npm:^9.28.0"
     "@msgpack/msgpack": "npm:^2.8.0"
     "@parcel/transformer-inline-string": "npm:^2.15.2"
     "@parcel/transformer-typescript-types": "npm:^2.15.2"
@@ -4998,7 +4984,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"is-generator-function@npm:^1.0.10":
+"is-generator-function@npm:^1.0.10, is-generator-function@npm:^1.0.7":
   version: 1.1.0
   resolution: "is-generator-function@npm:1.1.0"
   dependencies:
@@ -5007,15 +4993,6 @@ __metadata:
     has-tostringtag: "npm:^1.0.2"
     safe-regex-test: "npm:^1.1.0"
   checksum: 10c0/fdfa96c8087bf36fc4cd514b474ba2ff404219a4dd4cfa6cf5426404a1eed259bdcdb98f082a71029a48d01f27733e3436ecc6690129a7ec09cb0434bee03a2a
-  languageName: node
-  linkType: hard
-
-"is-generator-function@npm:^1.0.7":
-  version: 1.0.10
-  resolution: "is-generator-function@npm:1.0.10"
-  dependencies:
-    has-tostringtag: "npm:^1.0.0"
-  checksum: 10c0/df03514df01a6098945b5a0cfa1abff715807c8e72f57c49a0686ad54b3b74d394e2d8714e6f709a71eb00c9630d48e73ca1796c1ccc84ac95092c1fecc0d98b
   languageName: node
   linkType: hard
 
