@@ -5,7 +5,7 @@ const Privacy = () => (
     <Header center linkTo="/" />
     <h2>Privacy</h2>
 
-    <p>Automatarium (hereafter referred to as "Automatarium" or "we" or "our") understands your privacy is important, and has developed this privacy policy that describes how we collect and use your personal information when you are using the Automatarium website, platform, applications and related web technologies hereafter referred as the "Service" and the steps we take to protect your data.</p>
+    <p>Automatarium (hereafter referred to as &quot;Automatarium&quot; or &quot;we&quot; or &quot;our&quot;) understands your privacy is important, and has developed this privacy policy that describes how we collect and use your personal information when you are using the Automatarium website, platform, applications and related web technologies hereafter referred as the &quot;Service&quot; and the steps we take to protect your data.</p>
     <p>This page is used to inform visitors regarding the policies of the collection, use, and disclosure of Personal Information if using the Service.</p>
     <p>If you choose to use the Service, then you agree to the collection and use of information in relation to this policy. Your information will not be used or shared with anyone except as described in this Privacy Policy.</p>
 
@@ -28,14 +28,14 @@ const Privacy = () => (
     <p>We take security seriously and use industry standard practices to protect personal information from loss or theft, as well as unauthorized access, disclosure, copying, use or modification. We regularly review our information collection, storage and processing practices.</p>
 
     <h3>Cookies</h3>
-    <p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device's internal memory.</p>
+    <p>Cookies are files with a small amount of data that are commonly used as anonymous unique identifiers. These are sent to your browser from the websites that you visit and are stored on your device&apos;s internal memory.</p>
     <p>We currently do not use cookies in Automatarium.</p>
 
     <h3>Links to Other Sites</h3>
     <p>The Service may contain links to other sites. If you click on a third-party link, you will be directed to that site. Note that these external sites are not operated by the Service. Therefore, you are advised to review the Privacy Policy of these websites.</p>
     <p>Our tutorial videos use the YouTube service. Please review the <a href="https://policies.google.com/privacy">YouTube Privacy Policy</a> if you are unsure.</p>
 
-    <h3>Children's Privacy</h3>
+    <h3>Children&apos;s Privacy</h3>
     <p>Our services are for users over the age of 13. We do not knowingly collect or store personal information from children (visitors under the age of 13). If you are under the age of 13, you are ineligible to use the Service. If you believe your child has provided us with personal information, we encourage you to contact us immediately, and we will promptly remove such information from our Service.</p>
 
     <h3>Changes to our Privacy Policy</h3>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { Github, HelpCircle } from 'lucide-react'
 
 import { Sections, Section, Banner } from './landingStyle'
