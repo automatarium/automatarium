@@ -82,6 +82,16 @@ Added modules and support for sharing modules and improved the guided tours.
 - [Zicheng Hong](https://github.com/s3882476)
 </details>
 
+<details>
+<summary>Group 7 - 2025 Semester 1</summary>
+Added language localisation and infrastructure, guided examples, revamped tutorial videos, bug fixes and dependency clean up.
+  
+- [Tommy Nguyen](https://github.com/t0mmyngyn)
+- [Yoan-Mario Hristov](https://github.com/YoanMario)
+- [Jason Tran](https://github.com/s3840285)
+- [Joseph Packham](https://github.com/packofgum601)
+- [James Lee](https://github.com/JamesLeeRMIT)
+</details>
 
 For a full list of contributors see: https://github.com/automatarium/automatarium/graphs/contributors
 
