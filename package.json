@@ -24,13 +24,19 @@
     "build:packages": "yarn build:simulation && yarn build:jflap-translator",
     "dev:frontend": "concurrently \"yarn watch:packages\" \"yarn workspace frontend start\"",
     "build:frontend": "yarn workspace frontend build",
+<<<<<<< HEAD
     "lint": "eslint --fix",
+=======
+    "lint": "yarn workspaces foreach -A run lint",
+    "lint:fix": "yarn workspaces foreach -A run lint:fix",
+>>>>>>> a6c87f08208df72c62a770656b646a60cc9b7ed7
     "check:types": "yarn workspaces foreach -A run check:types",
     "test": "yarn workspace @automatarium/simulation test && yarn workspace @automatarium/jflap-translator test",
     "dev": "yarn dev:frontend",
     "build": "yarn build:packages && yarn build:frontend"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@eslint/js": "^9.29.0",
     "@parcel/packager-ts": "^2.15.2",
     "@parcel/transformer-typescript-types": "^2.15.2",
@@ -43,6 +49,18 @@
   },
   "packageManager": "yarn@4.9.2",
   "dependencies": {
+=======
+    "@parcel/packager-ts": "^2.15.2",
+    "@parcel/transformer-typescript-types": "^2.15.2",
+    "concurrently": "^7.1.0",
+    "parcel": "^2.0.0"
+  },
+  "packageManager": "yarn@4.9.2",
+  "dependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
+    "eslint": "^8",
+>>>>>>> a6c87f08208df72c62a770656b646a60cc9b7ed7
     "typescript": "^5.8.3"
   }
 }

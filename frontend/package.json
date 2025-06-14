@@ -8,28 +8,48 @@
     "copy:locales": "cp -r public/locales dist",
     "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales",
     "build": "yarn prebuild && parcel build public/index.html",
+<<<<<<< HEAD
+=======
+    "lint": "eslint . --ext .js,.ts,.tsx --cache --cache-location '../.eslintcache'",
+    "lint:fix": "yarn lint --fix",
+>>>>>>> a6c87f08208df72c62a770656b646a60cc9b7ed7
     "check:types": "tsc --noemit"
   },
   "dependencies": {
     "@automatarium/jflap-translator": "1.0.0",
     "@automatarium/simulation": "2.0.0",
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.28.0",
     "@msgpack/msgpack": "^2.8.0",
     "@parcel/transformer-typescript-types": "^2.15.2",
     "axios": "^0.30.0",
     "csstype": "^3.1.3",
+<<<<<<< HEAD
     "dayjs": "^1.11.13",
     "globals": "^16.2.0",
     "goober": "^2.1.16",
     "i18next": "^23.16.8",
+=======
+    "dayjs": "^1.11.2",
+    "eslint": "^8",
+    "globals": "^16.2.0",
+    "goober": "^2.1.16",
+    "i18next": "^23.2.3",
+>>>>>>> a6c87f08208df72c62a770656b646a60cc9b7ed7
     "i18next-http-backend": "^3.0.2",
     "immer": "^9.0.21",
     "lodash.clonedeep": "^4.5.0",
     "lodash.groupby": "^4.6.0",
+<<<<<<< HEAD
     "lucide-react": "^0.515.0",
+=======
+    "lucide-react": "^0.17.9",
+>>>>>>> a6c87f08208df72c62a770656b646a60cc9b7ed7
     "prop-types": "^15.8.1",
     "react": "^17.0.2",
     "react-a11y-dialog": "^6.2.0",
     "react-dom": "^17.0.2",
+<<<<<<< HEAD
     "react-hook-form": "^7.57.0",
     "react-i18next": "^14.1.3",
     "react-lottie-player": "^2.1.0",
@@ -47,6 +67,26 @@
     "assert": "^2.1.0",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
+=======
+    "react-hook-form": "^7.28.1",
+    "react-i18next": "^14",
+    "react-lottie-player": "1.5.4",
+    "react-markdown": "^8.0.0",
+    "react-resizable": "^3.0.5",
+    "react-router-dom": "^6.2.2",
+    "typescript": "^4",
+    "zustand": "^4.3.7"
+  },
+  "devDependencies": {
+    "@parcel/transformer-inline-string": "^2.15.2",
+    "@types/lodash.groupby": "^4.6.7",
+    "@types/node": "^20.2.5",
+    "@types/react": "^18.0.33",
+    "assert": "^2.0.0",
+    "browserify-zlib": "^0.2.0",
+    "buffer": "^5.5.0||^6.0.0",
+    "eslint-plugin-react": "^7.37.5",
+>>>>>>> a6c87f08208df72c62a770656b646a60cc9b7ed7
     "events": "^3.3.0",
     "parcel": "^2.15.2",
     "process": "^0.11.10",
