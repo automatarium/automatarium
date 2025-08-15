@@ -6,8 +6,9 @@
   "scripts": {
     "start": "yarn prebuild && parcel public/index.html --no-cache",
     "copy:locales": "cp -r public/locales dist",
-    "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales",
-    "build": "yarn prebuild && parcel build public/index.html",
+    "prebuild": "rm -rf dist && mkdir dist && cp -r public/* dist/",
+    "build": "yarn prebuild && parcel build public/index.html && yarn workbox generateSW workbox-config.js",
+    "serve": "serve dist -l 3000",
     "check:types": "tsc --noemit"
   },
   "dependencies": {
@@ -42,7 +43,9 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
+    "@parcel/packager-raw-url": "2.15.2",
     "@parcel/transformer-inline-string": "^2.15.2",
+    "@parcel/transformer-webmanifest": "2.15.2",
     "@types/lodash.groupby": "^4.6.9",
     "@types/node": "^20.19.0",
     "@types/react": "^18.3.23",
@@ -52,7 +55,10 @@
     "events": "^3.3.0",
     "parcel": "^2.15.2",
     "process": "^0.11.10",
+    "serve": "^14.2.4",
     "stream-browserify": "^3.0.0",
-    "util": "^0.12.5"
+    "util": "^0.12.5",
+    "workbox-build": "^7.3.0",
+    "workbox-cli": "^7.3.0"
   }
 }

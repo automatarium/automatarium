@@ -84,6 +84,21 @@ const App = () => {
   </>
 }
 
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    const swUrl = new URL("./sw.js", import.meta.url);
+
+    navigator.serviceWorker
+      .register(swUrl, { type: "module" })
+      .then((reg: ServiceWorkerRegistration) => {
+        console.log("SW registered:", reg);
+      })
+      .catch((err: any) => {
+        console.error("SW registration failed:", err);
+      });
+  });
+}
+
 // Render the app
 ReactDOM.render(
   <StrictMode>
