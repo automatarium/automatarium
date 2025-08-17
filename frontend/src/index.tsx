@@ -89,7 +89,7 @@ if ("serviceWorker" in navigator) {
     const swUrl = new URL("./sw.js", import.meta.url);
 
     navigator.serviceWorker
-      .register(swUrl, { type: "module" })
+      .register(swUrl)
       .then((reg: ServiceWorkerRegistration) => {
         console.log("SW registered:", reg);
       })

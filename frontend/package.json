@@ -8,6 +8,7 @@
     "copy:locales": "cp -r public/locales dist",
     "prebuild": "rm -rf dist && mkdir dist && cp -r public/* dist/",
     "build": "yarn prebuild && parcel build public/index.html && yarn workbox generateSW workbox-config.js",
+    "postbuild": "workbox injectManifest --config workbox-config.js",
     "serve": "serve dist -l 3000",
     "check:types": "tsc --noemit"
   },
