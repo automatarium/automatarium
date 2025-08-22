@@ -9,6 +9,7 @@
     "jsx": "react-jsx",
     "sourceMap": true,
     "target": "ES2021",
+    "module": "esnext",
     "paths": {
       "/src/*": ["./src/*"]
     },

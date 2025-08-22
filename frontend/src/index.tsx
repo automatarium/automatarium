@@ -93,7 +93,7 @@ if ("serviceWorker" in navigator) {
       .then((reg: ServiceWorkerRegistration) => {
         console.log("SW registered:", reg);
       })
-      .catch((err: any) => {
+      .catch((err: Error) => {
         console.error("SW registration failed:", err);
       });
   });

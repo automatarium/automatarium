@@ -1,9 +1,6 @@
-// build-sw.js
-const { injectManifest } = require('workbox-build');
-const glob = require('glob');
-const path = require('path');
+import { injectManifest } from 'workbox-build';
+import { glob } from 'glob';
 
-// Find service worker source dynamically
 const distFiles = glob.sync('dist/service-worker*.js');
 if (distFiles.length === 0) {
   throw new Error('No service worker file found in dist/');
