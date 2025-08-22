@@ -6,10 +6,10 @@
   "scripts": {
     "start": "yarn prebuild && parcel public/index.html --no-cache",
     "copy:locales": "cp -r public/locales dist",
-    "prebuild": "rm -rf dist && mkdir dist && cp -r public/* dist/",
-    "build": "yarn prebuild && parcel build public/index.html && yarn workbox generateSW workbox-config.js",
-    "postbuild": "workbox injectManifest --config workbox-config.js",
-    "serve": "serve dist -l 3000",
+    "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales",
+    "build": "yarn prebuild && parcel build public/index.html && yarn postbuild",
+    "postbuild": "node build-sw.js",
+    "serve": "serve -s dist -l 3000",
     "check:types": "tsc --noemit"
   },
   "dependencies": {
@@ -54,6 +54,7 @@
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
     "events": "^3.3.0",
+    "glob": "^11.0.3",
     "parcel": "^2.15.2",
     "process": "^0.11.10",
     "serve": "^14.2.4",

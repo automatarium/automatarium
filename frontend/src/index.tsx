@@ -86,7 +86,7 @@ const App = () => {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    const swUrl = new URL("./sw.js", import.meta.url);
+    const swUrl = new URL("./service-worker.js", import.meta.url);
 
     navigator.serviceWorker
       .register(swUrl)
