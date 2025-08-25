@@ -7,7 +7,7 @@ import { Copy } from 'lucide-react'
 import { Button, Input, Modal } from '/src/components'
 
 import { CopyRowWrapper, CopySuccessDiv } from './shareUrlModuleStyle'
-import { encodeModule } from '/src/util/encoding'
+import { encodeData } from '/src/util/encoding'
 import { useTranslation } from 'react-i18next'
 
 const ShareUrlModule = () => {
@@ -25,7 +25,7 @@ const ShareUrlModule = () => {
 
   useEffect(() => {
     if (exportUrlOpen) {
-      encodeModule(module).then(setBase64Project)
+      encodeData(module).then(setBase64Project)
     }
   }, [exportUrlOpen])
 
