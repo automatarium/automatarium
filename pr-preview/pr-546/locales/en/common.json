@@ -1,0 +1,330 @@
+{
+    "privacy_policy": "Privacy Policy",
+    "about": "About",
+    "source_code": "Source Code",
+    "licensed_mit": "Licensed under MIT",
+    "language": "Language:",
+
+    "turing_machine_tape": "Turing Machine Tape",
+    "stack": "Stack",
+
+    "create": "Create",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "export": "Export",
+    "import": "Import",
+    "close": "Close",
+    "copy": "Copy",
+    "paste": "Paste",
+    "delete": "Delete",
+    "load": "Load",
+    "done": "Done",
+    "rename": "Rename",
+    "share": "Share",
+
+    "warning": "Warning",
+    "ok": "OK",
+
+    "fsa": "Finite State Automaton",
+    "fsa_short": "FSA",
+    "pda": "Push Down Automaton",
+    "pda_short": "PDA",
+    "tm": "Turing Machine",
+    "tm_short": "TM",
+
+    "colours": {
+        "red": "Red",
+        "orange": "Orange",
+        "green": "Green",
+        "teal": "Teal",
+        "blue": "Blue",
+        "purple": "Purple",
+        "pink": "Pink"
+    },
+
+    "context_menu": {
+      "add_comment": "Add comment",
+      "create_state": "Create state here",
+      "select_all": "Select all",
+      "set_initial": "Set as initial",
+      "toggle_final": "Toggle as final",
+      "align_horizontally": "Align horizontally",
+      "align_vertically": "Align vertically",
+      "set_label": "Set label",
+      "change_name": "Change name",
+      "edit_transitions_group": "Edit transitions group",
+      "flip_edge": "Flip edge",
+      "edit_first_transition": "Edit first transition",
+      "delete_edge": "Delete edge",
+      "edit_transition": "Edit transition",
+      "flip_selected_transitions": "Flip selected transitions",
+      "edit_comment": "Edit comment"
+    },
+
+    "create_module": {
+        "untitled": "Untitled Module",
+        "create_new": "Create New Module",
+        "select_type": "Select automata type for your first question:",
+        "name": "Module Name:",
+        "name_placeholder": "Enter project name",
+        "description": "Description:",
+        "description_placeholder": "Enter project description"
+    },
+
+    "export_image": {
+        "title": "Export Image",
+        "description": "Download an image of your project",
+        "copy": "Copy to clipboard",
+        "file_name": "File name",
+        "file_type": "File type",
+        "svg_note": "Note: SVG exporting is still in beta and may not work as expected",
+        "margin": "Margin",
+        "accent_colour": "Accent colour",
+        "background": "Background",
+        "solid": "Solid",
+        "transparent": "Transparent",
+        "dark_mode": "Dark mode"
+    },
+
+    "final_state_popup": {
+        "title": "IMPORTANT",
+        "description": "Default Turing Machine behaviour is to halt upon reaching a final state. Modify below or in the preferences menu.",
+        "close_nosave": "Close without saving",
+        "close_save": "Save and don't show again"
+    },
+
+    "preferences": {
+        "behaviour": "Behaviour",
+        "tm_halt": "TM Halt on Final State",
+        "tm_halt_description": "Toggles halting for trace step for TM"
+    },
+
+    "import_project": {
+        "title": "Import Project",
+        "description": "Have an existing project?",
+        "from_computer": "From your computer",
+        "invalid_file": "The file format provided is not valid. Please only open Automatarium .json, Automatarium .ao or JFLAP .jff file formats.",
+        "browse": "Browse...",
+        "from_url": "From URL (raw/plaintext)",
+        "failed_url": "Automatarium failed to load a project from provided URL.",
+        "no_url": "No URL specified!",
+        "from_data": "From raw data (from the export or your project file)",
+        "enter_data": "Enter raw data here",
+        "cant_load": "Can't load nothing!"
+    },
+
+    "import_module": {
+        "title": "Import Module",
+        "description": "Have an existing module?",
+        "invalid_file": "The file format provided is not valid. Please only open Automatarium .aom",
+        "from_url": "From URL (module/plaintext)",
+        "failed_url": "Automatarium failed to load a module from provided URL.",
+        "from_data": "From raw data (from the export or your module file)"
+    },
+
+    "input_dialog": {
+        "push": "λ\t(push)",
+        "pop": "λ\t(pop)",
+        "read": "λ\t(read)",
+        "write": "λ\t(write)",
+        "comment_text": "Comment text...",
+        "state_label": "State label...",
+        "new_transition": "λ (New transition)",
+        "add_new_transition": "Add a new transition?",
+        "edge_editor": "Transition Edge Editor",
+        "editing_transition": "Editing transition from {{state1}} to {{state2}}."
+    },
+
+    "menubar": {
+        "not_saved": "Your project isn't saved yet, are you sure you want to leave?",
+        "edit_title": "Edit Title",
+        "untitled": "Untitled Project",
+        "saving": "Saving..."
+    },
+
+    "menus": {
+        "file": "File",
+        "file_new": "New...",
+        "import_automatarium": "Import Automatarium file",
+        "import_jflap": "Import JFLAP file",
+        "import_other": "Import other...",
+        "export_image": "Export image...",
+        "export_png": "Quick export as PNG",
+        "export_svg": "Quick export as SVG",
+        "export_clipboard": "Quick copy to clipboard",
+        "export_automatarium": "Export as an Automatarium file",
+        "export_jflap": "Export as a JFLAP file",
+        "export_url_data": "Export as URL/Raw data...",
+        "preferences": "Preferences",
+
+        "edit": "Edit",
+        "undo": "Undo",
+        "redo": "Redo",
+        "select_all": "Select All",
+        "clear_selection": "Clear Selection",
+
+        "view": "View",
+        "zoom_in": "Zoom in",
+        "zoom_out": "Zoom out",
+        "zoom_100": "Zoom to 100%",
+        "zoom_fit": "Zoom to fit",
+        "fullscreen": "Fullscreen",
+        "testing_lab": "Testing lab",
+        "file_info": "File info",
+        "file_options": "File options",
+        "templates": "Templates",
+        "modules": "Modules",
+
+        "tools": "Tools",
+        "convert_dfa": "Convert to DFA",
+        "auto_layout": "Auto layout",
+        "reorder_graph": "Reorder graph",
+
+        "help": "Help",
+        "start_tour": "Start Tour",
+        "view_documentation": "View documentation",
+        "tutorial_videos": "Tutorial videos",
+        "keyboard_shortcuts": "Keyboard shortcuts",
+        "about_automatarium": "About Automatarium",
+        "version": "Version {{version}}"
+    },
+
+    "share_url": {
+        "title": "Export Machine as URL",
+        "copy_data": "You can copy and paste as the raw data",
+        "copied": "Copied to clipboard!",
+        "module_title": "Export Module as URL"
+    },
+
+    "tools": {
+        "cursor": "Cursor tool",
+        "cursor_desc": "Select and move items",
+        "hand": "Hand tool",
+        "hand_desc": "Drag to pan around your automaton",
+        "state": "State tool",
+        "state_desc": "Create states by clicking",
+        "transition": "Transition tool",
+        "transition_desc": "Drag between states to create transitions",
+        "comment": "Comment tool",
+        "comment_desc": "Add comments to your automaton"
+    },
+
+    "shortcuts": {
+        "title": "Keyboard Shortcuts",
+        "description": "Become an Automatarium master",
+
+        "application": "Application",
+
+        "import_automatarium": "Import Automatarium project",
+        "import_jflap": "Import JFLAP project",
+        "save_file": "Save file",
+        "export_automatarium": "Export as Automatarium project",
+        "export_image": "Export image",
+        "select_multiple": "Select multiple",
+
+        "move_view": "Move view",
+        "no_snapping": "Drag without snapping",
+
+        "move_cells": "Move between multi-run cells",
+        "create_cell": "Create multi-run cell",
+        "delete_cell": "Delete multi-run cell",
+        "execute_multirun": "Execute multi-run"
+    },
+
+    "testing_lab": {
+        "warnings": "Warnings",
+        "no_initial": "There is no initial state",
+        "no_final": "There are no final states",
+        "no_path": "There is no path to final state",
+        "accepted": "ACCEPTED",
+        "rejected": "REJECTED",
+        "trace": "Trace",
+        "trace_buddy": "Trace buddy",
+        "trace_tape": "Trace tape",
+        "manual": "Manual stepping",
+        "transitions": "Transitions",
+        "multirun": "Multi-run",
+        "run": "Run"
+    },
+    
+    "panels": {
+        "testing_lab": "Testing Lab",
+        "about": "About your Automaton",
+        "options": "File Options"
+    },
+
+    "info": {
+        "alphabet": "Alphabet",
+        "stack_alphabet": "Stack Alphabet",
+        "state_transition_table": "State Transition Table",
+        "transition_function": "Transition Function"
+    },
+
+    "module_panel": {
+        "current": "Current Assessment",
+        "not_working": "You're not working on a module right now.",
+        "settings": "Module settings",
+        "modularise": "Modularise this project",
+        "placeholder_title": "Module Title",
+        "placeholder_desc": "Description",
+        "open_questions": "Open questions to the left",
+        "questions": "Questions",
+        "question": "Question",
+        "actions": "Actions",
+        "remove": "Remove",
+        "add_question": "Add question",
+        "add_question_title": "Select Question Type",
+        "add_question_desc": "Choose the type of question that you would like to add.",
+        "question_type": "Question Type",
+        "select_type": "Select Type",
+        "delete_question_title": "Delete Question",
+        "delete_question_desc": "Are you sure you want to delete this question? This action cannot be undone.",
+        "export_automatarium": "Export as Automatarium module file",
+        "export_url": "Export as URL",
+        "question_id": "Question {{id}}"
+    },
+
+    "options": {
+        "states": "States",
+        "identifier": "State identifier",
+        "identifier_desc": "Used to denote a state",
+        "operators": "Operators",
+        "or_operator": "OR Operator",
+        "or_desc": "Used to separate input characters",
+        "none": "None",
+        "theme": "Theme",
+        "colour": "Project colour",
+        "colour_desc": "Set the theme for this automaton"
+    },
+    "OR": "OR",
+
+    "templates": {
+        "create": "Create a Template",
+        "name": "Name your template",
+        "add": "Add",
+        "description": "Template is created from selected states and transitions",
+        "insert": "Insert Templates",
+        "delete": "Delete Template?",
+        "delete_desc": "This will permanently remove {{name}} from your computer.",
+        "error_no_state": "Please select at least one state before clicking \"Add\".",
+        "error_transition": "Transitions must include its connected states.",
+        "error_no_name": "Template name cannot be empty.",
+        "error_dupe_name": "A template named {{name}} already exists. Please choose another name."
+    },
+
+    "use_actions": {
+        "import_warning": "Importing will override your current project. Continue anyway?",
+        "failed_automatarium": "Failed to open Automatarium project.",
+        "failed_jflap": "Failed to open JFLAP project.",
+        "delete_template_warning": "Are you sure you want to delete your template {{name}}?",
+        "failed_parse": "Failed to parse file",
+        "failed_url": "Failed to retrieve the file from this URL."
+    },
+
+    "tour": {
+        "previous": "Previous",
+        "finish": "Finish",
+        "next": "Next",
+        "skip": "Skip Tour"
+    }
+}
