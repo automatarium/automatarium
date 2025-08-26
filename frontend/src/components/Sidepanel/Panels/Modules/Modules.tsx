@@ -8,6 +8,8 @@ import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+// Import enum from ProjectTypes
+import { ProjectType } from '../types/ProjectTypes'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
@@ -32,12 +34,9 @@ const Modules = () => {
   const [titleInput, setTitleInput] = useState('')
   const [titleDescription, setTitleDescription] = useState('')
 
-  // enum for Project Types
-  enum ProjectType {
-    FSA = 'FSA',
-    PDA = 'PDA',
-    TM = 'TM',
-  }
+  const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({
+  defaultValues: { questionType: 'FSA' },
+})
 
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false) // Controls modal visibility
