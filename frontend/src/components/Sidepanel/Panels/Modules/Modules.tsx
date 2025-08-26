@@ -90,8 +90,9 @@ const Modules = () => {
   }
 
   // Form handling using react-hook-form
-  const { register, handleSubmit } = useForm({ defaultValues: { questionType: 'FSA' } })
-
+  const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({ 
+      defaultValues: { questionType: 'FSA' } 
+  })
   const handleAddQuestion = (data) => {
     const newModuleProject = createNewModuleProject(data.questionType, currentModule.meta.name)
     updateProjectToModule(newModuleProject) // Save new project with selected type
