@@ -35,7 +35,7 @@ const Modules = () => {
   const [titleDescription, setTitleDescription] = useState('')
 
   const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({
-  defaultValues: { questionType: 'FSA' },
+  defaultValues: { questionType: ProjectType.FSA },
 })
 
   // Modal-related state management
