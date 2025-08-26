@@ -9,7 +9,7 @@ import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 // Import enum from ProjectTypes
-import { ProjectType } from '../types/ProjectTypes'
+import { ProjectType } from '../../../../types/ProjectTypes'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
