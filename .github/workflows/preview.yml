@@ -38,4 +38,4 @@ jobs:
       - name: Deploy preview
         uses: rossjrw/pr-preview-action@v1.6.2
         with:
-          source-dir: ./dist/
+          source-dir: ./frontend/dist/
