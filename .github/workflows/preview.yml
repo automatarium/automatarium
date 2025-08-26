@@ -1,0 +1,41 @@
+# .github/workflows/preview.yml
+name: Deploy PR previews
+
+on:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+      - closed
+
+concurrency: preview-${{ github.ref }}
+
+jobs:
+  deploy-preview:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js Latest LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Enabling Corepack
+        run: corepack enable
+
+      - name: Installing Latest Yarn
+        run: yarn set version stable && yarn install
+
+      - name: Install Yarn Dependencies and build project
+        if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
+        run: |
+          yarn
+          yarn build
+
+      - name: Deploy preview
+        uses: rossjrw/pr-preview-action@v1.6.2
+        with:
+          source-dir: ./frontend/dist/
