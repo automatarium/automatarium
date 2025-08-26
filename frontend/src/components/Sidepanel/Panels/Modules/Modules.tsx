@@ -34,10 +34,6 @@ const Modules = () => {
   const [titleInput, setTitleInput] = useState('')
   const [titleDescription, setTitleDescription] = useState('')
 
-  const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({
-  defaultValues: { questionType: ProjectType.FSA },
-})
-
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false) // Controls modal visibility
 
@@ -94,7 +90,7 @@ const Modules = () => {
   }
 
   // Form handling using react-hook-form
-  const { register, handleSubmit } = useForm({ defaultValues: { questionType: ProjectType.FSA } })
+  const { register, handleSubmit } = useForm({ defaultValues: { questionType: 'FSA' } })
 
   const handleAddQuestion = (data) => {
     const newModuleProject = createNewModuleProject(data.questionType, currentModule.meta.name)
