@@ -18,7 +18,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install and Build
+      - name: Set up Node.js Latest LTS
+        uses: actions/setup-node@v3
+        with:
+          node-version: 'lts/*'
+
+      - name: Enabling Corepack
+        run: corepack enable
+
+      - name: Installing Latest Yarn
+        run: yarn set version stable && yarn install
+
+      - name: Install Yarn Dependencies and build project
         if: github.event.action != 'closed' # You might want to skip the build if the PR has been closed
         run: |
           yarn
