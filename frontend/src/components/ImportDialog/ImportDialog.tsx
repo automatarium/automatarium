@@ -83,7 +83,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
               t,
               onData,
               t('import_project.invalid_file'),
-              '.jff,.json,.ao',
+              '.jff,.json',
               () => {
                 resetModal()
                 navigate('/editor')
@@ -103,7 +103,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
         <Input
           value={urlValue}
           onChange={e => setUrlValue(e.target.value)}
-          placeholder={'www.example.com/paste/raw/CoolFSA.ao'}
+          placeholder={'www.example.com/paste/raw/CoolFSA.json'}
         />
         <Button
           disabled={loading}

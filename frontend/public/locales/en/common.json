@@ -103,7 +103,7 @@
         "title": "Import Project",
         "description": "Have an existing project?",
         "from_computer": "From your computer",
-        "invalid_file": "The file format provided is not valid. Please only open Automatarium .json, Automatarium .ao or JFLAP .jff file formats.",
+        "invalid_file": "The file format provided is not valid. Please only open Automatarium .json, Automatarium .json or JFLAP .jff file formats.",
         "browse": "Browse...",
         "from_url": "From URL (raw/plaintext)",
         "failed_url": "Automatarium failed to load a project from provided URL.",
@@ -116,7 +116,7 @@
     "import_module": {
         "title": "Import Module",
         "description": "Have an existing module?",
-        "invalid_file": "The file format provided is not valid. Please only open Automatarium .aom",
+        "invalid_file": "The file format provided is not valid. Please only open Automatarium .json",
         "from_url": "From URL (module/plaintext)",
         "failed_url": "Automatarium failed to load a module from provided URL.",
         "from_data": "From raw data (from the export or your module file)"
