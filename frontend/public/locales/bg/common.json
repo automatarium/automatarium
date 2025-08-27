@@ -103,7 +103,7 @@
         "title": "Импортиране на проект",
         "description": "Отворете съществуващ проект!",
         "from_computer": "От Вашият компютър",
-        "invalid_file": "Файлът е в неправилен формат. Приемат се само Automatarium .json, Automatarium .ao или JFLAP .jff файлове.",
+        "invalid_file": "Файлът е в неправилен формат. Приемат се само Automatarium .json, Automatarium .json или JFLAP .jff файлове.",
         "browse": "Търсете...",
         "from_url": "От URL",
         "failed_url": "Automatarium не успя да зареди проект от въведения URL.",
@@ -116,7 +116,7 @@
     "import_module": {
         "title": "Импортиране на модул",
         "description": "Отворете съществуващ модул!",
-        "invalid_file": "Файлът е в неправилен формат. Приемат се само Automatarium .aom файлове.",
+        "invalid_file": "Файлът е в неправилен формат. Приемат се само Automatarium .json файлове.",
         "from_url": "От URL",
         "failed_url": "Automatarium не успя да зареди модул от въведения URL.",
         "from_data": "От текст (от експортиране на Вашият модул)"
