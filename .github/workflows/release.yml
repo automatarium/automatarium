@@ -30,6 +30,5 @@ jobs:
       - name: Upload dist folder
         uses: actions/upload-artifact@v4
         with:
-          name: 'dist'
+          name: 'automatarium_dist'
           path: ./frontend/dist/
-          overwrite: 'true'
