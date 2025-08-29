@@ -1,4 +1,4 @@
-name: setup.yml
+name: Setup dependencies
 
 runs:
   using: "composite"
