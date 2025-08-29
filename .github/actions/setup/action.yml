@@ -1,0 +1,22 @@
+name: "Setup environment"
+description: "Setup node"
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v5
+    - name: Set up Node.js Latest LTS
+      uses: actions/setup-node@v4
+      with:
+        node-version: 'lts/*'
+
+    - name: Enabling Corepack
+      shell: bash
+      run: corepack enable
+
+    - name: Installing Latest Yarn
+      shell: bash
+      run: yarn set version stable
+
+    - name: Install Yarn Dependencies
+      shell: bash
+      run: yarn
