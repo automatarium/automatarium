@@ -8,6 +8,8 @@ import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+// Import enum from ProjectTypes
+import type { ProjectType } from '../../../../types/ProjectTypes'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
@@ -31,13 +33,6 @@ const Modules = () => {
   const [isTitleEditing, setTitleIsEditing] = useState(false)
   const [titleInput, setTitleInput] = useState('')
   const [titleDescription, setTitleDescription] = useState('')
-
-  // enum for Project Types
-  enum ProjectType {
-    FSA = 'FSA',
-    PDA = 'PDA',
-    TM = 'TM',
-  }
 
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false) // Controls modal visibility
@@ -95,8 +90,9 @@ const Modules = () => {
   }
 
   // Form handling using react-hook-form
-  const { register, handleSubmit } = useForm({ defaultValues: { questionType: ProjectType.FSA } })
-
+  const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({ 
+      defaultValues: { questionType: 'FSA' } 
+  })
   const handleAddQuestion = (data) => {
     const newModuleProject = createNewModuleProject(data.questionType, currentModule.meta.name)
     updateProjectToModule(newModuleProject) // Save new project with selected type
