@@ -13,6 +13,7 @@ import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
+import GrammarEditor from '../../components/Grammar/GrammarEditor'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -130,8 +131,8 @@ const Editor = () => {
           <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
         )}
         <EditorContent>
-          <EditorPanel />
-          <BottomPanel />
+        <EditorPanel />
+        <BottomPanel />
         </EditorContent>
         {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
         <Sidepanel onToggle={setShowModuleWindow} />

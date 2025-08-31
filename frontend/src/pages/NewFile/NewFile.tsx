@@ -224,6 +224,13 @@ const NewFile = () => {
         height={height}
         image={<TM {...stylingVals} />}
       />
+      <NewProjectCard
+        title="Grammar"
+        description="Define context-free grammars and test strings"
+        onClick={() => handleNewFile('GRAMMAR')}
+        height={height}
+        image={<span style={{ fontSize: "3rem" }}>📖</span>}
+      />
     </CardList>
 
     <CardList
@@ -252,6 +259,13 @@ const NewFile = () => {
         onClick={() => handleNewExample('TM')}
         height={height}
         image={<TM {...stylingVals} />}
+      />
+      <NewProjectCard
+        title="Grammar"
+        description="Example grammars you can test"
+        onClick={() => handleNewExample('GRAMMAR')}
+        height={height}
+        image={<span style={{ fontSize: "3rem" }}>📖</span>}
       />
     </CardList>
 
