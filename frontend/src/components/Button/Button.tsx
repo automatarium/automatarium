@@ -32,8 +32,7 @@ const Button = ({
   surface,
   ...props
 }: ButtonProps) => {
-  // Select which element to use.
-  // This is done because the `as` prop didn't work well with goober
+
   let Element
   if ('href' in props) {
     Element = 'a'
@@ -42,6 +41,7 @@ const Button = ({
   } else {
     Element = 'button'
   }
+
   return <Element
     className={ButtonStyleClass({
       $icon: icon && !children,
