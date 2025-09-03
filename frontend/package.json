@@ -7,7 +7,7 @@
     "start": "yarn prebuild && parcel public/index.html --no-cache",
     "copy:locales": "cp -r public/locales dist",
     "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales",
-    "build": "yarn prebuild && parcel build index.html --public-url ./",
+    "build": "yarn prebuild && parcel build public/index.html --public-url ./",
     "check:types": "tsc --noemit"
   },
   "dependencies": {
