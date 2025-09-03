@@ -267,21 +267,22 @@
         "modularise": "Modularise this project",
         "placeholder_title": "Module Title",
         "placeholder_desc": "Description",
-        "open_questions": "Open questions to the left",
-        "questions": "Questions",
-        "question": "Question",
+        "open_questions": "Open sections to the left",
+        "questions": "Sections",
+        "question": "Section",
         "actions": "Actions",
         "remove": "Remove",
-        "add_question": "Add question",
-        "add_question_title": "Select Question Type",
-        "add_question_desc": "Choose the type of question that you would like to add.",
-        "question_type": "Question Type",
-        "select_type": "Select Type",
-        "delete_question_title": "Delete Question",
-        "delete_question_desc": "Are you sure you want to delete this question? This action cannot be undone.",
+        "add_question": "Add section",
+        "add_question_title": "Select Section Type",
+        "add_question_desc": "Choose the type of section that you would like to add.",
+
+        "question_type": "Section Type",
+        "select_type": "Section Type",
+        "delete_question_title": "Delete Section",
+        "delete_question_desc": "Are you sure you want to delete this section? This action cannot be undone.",
         "export_automatarium": "Export as Automatarium module file",
         "export_url": "Export as URL",
-        "question_id": "Question {{id}}"
+        "question_id": "Section {{id}}"
     },
 
     "options": {

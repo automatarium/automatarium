@@ -1,7 +1,7 @@
 {
     "component": {
         "module": {
-            "title": "Question {{qNumber}}",
+            "title": "Section {{qNumber}}",
             "loading": "Loading module instructions...",
             "button": {
                 "save": "Save",
