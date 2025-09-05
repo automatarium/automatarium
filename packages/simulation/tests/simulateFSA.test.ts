@@ -12,6 +12,7 @@ import dib from './graphs/dib.json'
 import lambdaOnly from './graphs/lambda-only.json'
 import dibEndLambda from './graphs/dib-end-lambda.json'
 import exclusionTransitions from './graphs/exclusionTransitions.json'
+import keyCollision from './graphs/fsaKeyCollision.json'
 import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
 
 // Accepts dib or dip with even number of ps
@@ -340,5 +341,10 @@ describe('Exclusion automata', () => {
     expect(accepted).toBeTrue()
     expect(to).toStrictEqual([0, 1, 2, 3])
     expect(read).toStrictEqual([null, '1', '0', '1'])
+  })
+
+  test("id and remaining don't create key collisions", () => {
+    const { accepted } = simulateFSA(keyCollision as FSAProjectGraph, '000')
+    expect(accepted).toBeTrue()
   })
 })
