@@ -13,7 +13,7 @@ export class FSAState extends State {
   }
 
   key () {
-    return [this.id, this.remaining].join("\x00")
+    return [this.id, this.remaining].join("_")
   }
 
   toTransitionString () {

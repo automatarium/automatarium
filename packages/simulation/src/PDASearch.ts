@@ -17,7 +17,7 @@ export class PDAState extends State {
   }
 
   key () {
-    return [this.remaining, this.id, this.stack.join('')].join("\x00")
+    return [this.remaining, this.id, this.stack.join('')].join("_")
   }
 
   toTransitionString () {

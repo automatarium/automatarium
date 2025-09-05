@@ -17,7 +17,7 @@ export class TMState extends State {
 
   key () {
     const traceAdd = this.tape.trace.toString() ?? ''
-    return [this.id, this.tape.pointer, traceAdd].join("\x00")
+    return [this.id, this.tape.pointer, traceAdd].join("_")
   }
 
   toTransitionString () {
