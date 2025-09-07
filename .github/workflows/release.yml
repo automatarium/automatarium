@@ -1,0 +1,21 @@
+name: Upload dist folder
+on:
+  release:
+    types:
+      - published
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: ./.github/actions/setup
+
+      - name: Build project
+        run: yarn build
+
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: 'automatarium_dist'
+          path: ./frontend/dist/
