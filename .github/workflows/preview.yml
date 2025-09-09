@@ -16,7 +16,8 @@ jobs:
       - uses: actions/checkout@v5
 
       - name: Set PR preview env variable
-      - run: echo 'PR_PREVIEW=pr-preview/pr-${{ github.ref }}' >> .env
+        shell: bash
+        run: echo 'PR_PREVIEW=pr-preview/pr-${{ github.ref }}' >> .env
 
       - uses: ./.github/actions/setup
 
