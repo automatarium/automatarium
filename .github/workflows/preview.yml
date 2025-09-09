@@ -17,7 +17,7 @@ jobs:
 
       - name: Set PR preview env variable
         shell: bash
-        run: echo 'PR_PREVIEW=pr-preview/pr-${{ github.event.number }}' >> .env
+        run: echo 'PR_PREVIEW=/automatarium/pr-preview/pr-${{ github.event.number }}' >> .env
 
       - uses: ./.github/actions/setup
 
