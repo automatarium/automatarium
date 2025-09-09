@@ -7,6 +7,9 @@ on:
       - synchronize
       - closed
 
+env:
+  PREVIEW-PR: pr-preview/pr-${{ github.ref }}
+
 concurrency: preview-${{ github.ref }}
 
 jobs:

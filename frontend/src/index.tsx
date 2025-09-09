@@ -84,11 +84,13 @@ const App = () => {
   </>
 }
 
+const basename: string | undefined = process.env.PREVIEW_PR ? `/${process.env.PREVIEW_PR}` : undefined
+
 // Render the app
 ReactDOM.render(
   <StrictMode>
     <Suspense fallback={<div>Loading</div>}>
-      <BrowserRouter>
+      <BrowserRouter {...(basename ? { basename } : {})}>
         <App />
       </BrowserRouter>
     </Suspense>
