@@ -7,9 +7,6 @@ on:
       - synchronize
       - closed
 
-env:
-  PREVIEW-PR: pr-preview/pr-${{ github.ref }}
-
 concurrency: preview-${{ github.ref }}
 
 jobs:
@@ -17,6 +14,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+
+      - name: Set PR preview env variable
+      - run: echo 'PR_PREVIEW=pr-preview/pr-${{ github.ref }}' >> .env
+
       - uses: ./.github/actions/setup
 
       - name: Install Yarn Dependencies and build project

@@ -84,7 +84,7 @@ const App = () => {
   </>
 }
 
-const basename: string | undefined = process.env.PREVIEW_PR ? `/${process.env.PREVIEW_PR}` : undefined
+const basename: string | undefined = process.env.PR_PREVIEW ? `/${process.env.PR_PREVIEW}` : undefined
 
 // Render the app
 ReactDOM.render(
