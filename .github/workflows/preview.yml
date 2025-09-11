@@ -21,7 +21,7 @@ jobs:
 
       - uses: ./.github/actions/setup
 
-      - name: Install Yarn Dependencies and build project
+      - name: Build project
         if: github.event.action != 'closed'
         run: yarn build
 
