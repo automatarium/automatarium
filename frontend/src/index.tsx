@@ -84,7 +84,8 @@ const App = () => {
   </>
 }
 
-const basename: string | undefined = process.env.PR_PREVIEW ? `/${process.env.PR_PREVIEW}` : undefined
+// Should have a leading `/`
+const basename = process.env.SUB_PATH ?? "/"
 
 // Render the app
 ReactDOM.render(

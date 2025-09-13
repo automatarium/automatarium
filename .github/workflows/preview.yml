@@ -15,9 +15,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
 
-      - name: Set PR preview env variable
+      - name: Set PR preview sub path env variable
         shell: bash
-        run: echo 'PR_PREVIEW=/automatarium/pr-preview/pr-${{ github.event.number }}' >> frontend/.env
+        run: echo 'SUB_PATH=/automatarium/pr-preview/pr-${{ github.event.number }}' >> frontend/.env
 
       - uses: ./.github/actions/setup
 
