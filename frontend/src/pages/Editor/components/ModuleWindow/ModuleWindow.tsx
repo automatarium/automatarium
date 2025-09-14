@@ -15,7 +15,7 @@ import {
   ButtonContainer,
   EditButton
 } from './moduleWindowStyling'
-import { X, ChevronRight, ChevronLeft } from 'lucide-react'
+import { X,} from 'lucide-react'
 import { Button } from '/src/components'
 import { useTranslation } from 'react-i18next'
 
