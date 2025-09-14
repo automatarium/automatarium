@@ -1,14 +1,14 @@
 import { precacheAndRoute, createHandlerBoundToURL  } from "workbox-precaching"
 import { registerRoute } from 'workbox-routing';
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   console.log("[SW] Install event");
   // Activate this worker immediately, skipping waiting
   self.skipWaiting();
 });
 
 // Listen for activate event
-self.addEventListener("activate", (event) => {
+self.addEventListener("activate", () => {
   console.log("[SW] Activate event");
   // Take control of all clients (pages) immediately
   clients.claim();
