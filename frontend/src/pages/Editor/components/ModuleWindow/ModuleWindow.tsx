@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react'
 import ReactMarkdown from 'react-markdown'
+import QuestionPager from '../../../../components/QuestionPager'
+
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import {
   ModuleWindowWrapper,
@@ -142,86 +144,11 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
       </div>
 
       <PaginationWrapper>
-        {currentQuestionIndex !== 0
-          ? (
-          <Button
-            onClick={() => {
-              if (currentQuestionIndex > 0) {
-                const newIndex = currentQuestionIndex - 1
-                handlePageChange(newIndex)
-              }
-            }}
-            disabled={currentQuestionIndex === 0}
-            style={{
-              backgroundColor: currentQuestionIndex > 0 ? 'var(--primary)' : 'transparent',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
-            <ChevronLeft />
-          </Button>
-            )
-          : null}
-
-        {currentQuestionIndex > 0
-          ? (<Button
-            onClick={() => handlePageChange(currentQuestionIndex - 1)}
-            style={{
-              backgroundColor: 'var(--primary)',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
-            {currentQuestionIndex}
-          </Button>
-            ) : (
-          <div style={{ flex: 0 }}></div> // Empty space when no previous question
-            )}
-
-        <Button
-          style={{
-            backgroundColor: 'gray',
-            margin: '0 2px',
-            flex: 0
-          }}
-        >
-          {currentQuestionIndex + 1}
-        </Button>
-
-        {currentQuestionIndex < totalQuestions - 1 ? (
-          <Button
-            onClick={() => handlePageChange(currentQuestionIndex + 1)}
-            style={{
-              backgroundColor: 'var(--primary)',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
-            {currentQuestionIndex + 2}
-          </Button>
-        ) : (
-          <div style={{ flex: 0 }}></div> // Empty space when no next question
-        )}
-
-        {currentQuestionIndex !== totalQuestions - 1
-          ? (
-          <Button
-            onClick={() => {
-              if (currentQuestionIndex < totalQuestions - 1) {
-                const newIndex = currentQuestionIndex + 1
-                handlePageChange(newIndex)
-              }
-            }}
-            style={{
-              backgroundColor: currentQuestionIndex < totalQuestions - 1 ? 'var(--primary)' : 'transparent',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
-            <ChevronRight />
-          </Button>
-            )
-          : null}
+        <QuestionPager
+    value={currentQuestionIndex + 1}     // 1-based
+    total={totalQuestions}
+    onChange={(next) => handlePageChange(next - 1)}
+  />
       </PaginationWrapper>
 
       <ResizeHandle onMouseDown={handleMouseDown} />

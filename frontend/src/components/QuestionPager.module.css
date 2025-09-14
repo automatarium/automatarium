@@ -1,0 +1,67 @@
+.qpager {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.qpager__btn {
+  width: 32px;
+  height: 32px;
+  border: none;                
+  border-radius: 6px;
+  background: #444;             
+  color: #fff;                 
+  font-size: 16px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.qpager__btn:hover:not(:disabled) {
+  background: #555;            
+}
+
+.qpager__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #444;
+  color: #888;                 
+}
+
+
+
+.qpager__center {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.qpager__input {
+  width: 35px;
+  height: 32px;
+  border-radius: 6px;
+  border: 2px solid var(--toolbar, #3a3a3a);
+  background: #fff;
+  color: #111;
+  text-align: right;
+
+  font-size: 16px;
+  line-height: 32px;   
+  padding: 0;          
+  box-sizing: border-box;
+
+  outline: none;
+}
+
+
+.qpager__input:disabled {
+  background: #e8e8e8;
+}
+
+.qpager__of {
+  color: var(--text-muted, #cfcfcf);
+  font-size: 18px;
+}
