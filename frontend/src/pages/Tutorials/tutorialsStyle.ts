@@ -14,3 +14,18 @@ export const ExampleContainer = styled('div')`
   display: flex;
   justify-content: center;
 `
+
+export const OfflineWarning = styled('div')`
+  max-width: 100%;
+  padding: 14px 20px;
+  background-color: #ff4d4d;
+  color: #fff;
+  text-align: center;
+  margin: 20px 0;
+  border-radius: 6px;
+  font-family: system-ui, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  line-height: 1.4;
+`
