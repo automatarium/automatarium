@@ -5,7 +5,7 @@ import { Button, Header, Main } from '/src/components'
 import { NotFound } from '/src/pages'
 
 import { TutorialsSection, EmbeddedVideo } from './components'
-import { Title, TitleRow } from './tutorialsStyle'
+import { OfflineWarning, Title, TitleRow } from './tutorialsStyle'
 
 import { Banner } from '../Landing/landingStyle'
 import manifest from '/src/config/tutorials-manifest.json'
@@ -65,6 +65,22 @@ const TutorialsPage = () => {
     setPageInfo(traceTree(searchParams.keys(), manifest as ManifestItem))
   }, [searchParams])
 
+  // detect offline status
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
+
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => setIsOnline(false);
+
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, []);
+
   if (pageInfo === undefined || pageInfo === 'not found') {
     return <NotFound />
   } else {
@@ -78,6 +94,12 @@ const TutorialsPage = () => {
             : <Button onClick={() => navigate('/')}>{t('header.button.home')}</Button>}
         </TitleRow>
 
+{!isOnline ? (
+        <OfflineWarning>
+          You are currently offline. Please connect to the internet to access tutorials.
+        </OfflineWarning>
+      ): (
+        <>
         {/* Section description goes above (unknown number of cards) */}
         {pageInfo.type === 'section' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
 
@@ -87,6 +109,9 @@ const TutorialsPage = () => {
 
         {/* Video description goes below */}
         {pageInfo.type === 'item' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
+        </>
+      )}
+      
       </ Main>
       <Banner>
         <p>{t('banner.paragraph')}</p>
