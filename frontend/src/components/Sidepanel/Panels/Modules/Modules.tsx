@@ -2,7 +2,7 @@ import { SectionLabel, Button, Input, Modal } from '/src/components'
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
-import { createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
+import { createNewModuleProject } from 'src/stores/useModuleStore'
 import { Wrapper, ButtonContainer, FieldWrapper, DescriptionText } from './modulesStyle'
 import { QuestionBlock, QuestionHeader, TextArea } from './moduleWindowStyling'
 import { exportModuleFile } from '/src/hooks/useActions'
@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next'
 import type { ProjectType } from '../../../../types/ProjectTypes'
 
 const Modules = () => {
-  const setModuleProjects = useModuleStore(s => s.setProjects)
   const setModuleDescription = useModuleStore(s => s.setModuleDescription)
   const setModuleName = useModuleStore(s => s.setName)
   const deleteQuestionFromModule = useModuleStore(s => s.deleteQuestion)
@@ -148,7 +147,7 @@ const Modules = () => {
                 <ButtonContainer>
                   <Button secondary onClick={handleCancelClick}>{t('cancel')}</Button>
                   <Button onClick={handleEditSaveClick}>{t('save')}</Button>
-                </ButtonContainer>                                                                              x
+                </ButtonContainer>
               </>
             ) : (
               <>
@@ -168,13 +167,9 @@ const Modules = () => {
                   <div className="actions" style={{ display: 'flex', gap: '0.5rem' }}>
                     {editingId === id ? (
                       <>
-                       <Button
-  onClick={() => handleCancelQuestion(id)}
-  style={{ backgroundColor: 'gray', color: 'white' }}
->
-  {t('cancel')}
-</Button>
-
+                        <Button secondary onClick={() => handleCancelQuestion(id)}>
+                          {t('cancel')}
+                        </Button>
                         <Button onClick={() => handleSaveQuestion(id)}>
                           <Save size={16} />
                         </Button>
@@ -193,24 +188,26 @@ const Modules = () => {
                 </QuestionHeader>
 
                 {editingId === id ? (
-  <TextArea
-    value={drafts[id]}
-    autoFocus
-    onChange={(e) =>
-      setDrafts({ ...drafts, [id]: e.target.value })
-    }
-    placeholder="Edit module instructions here"
-    rows={4}
-  />
-) : (
-  <p
-    style={{ color: currentModule.questions[id] ? 'inherit' : 'gray', cursor: 'text' }}
-    onClick={() => setEditingId(id)}
-  >
-    {currentModule.questions[id] || "Edit module instructions here"}
-  </p>
-)}
-
+                  <TextArea
+                    value={drafts[id]}
+                    onChange={(e) =>
+                      setDrafts({ ...drafts, [id]: e.target.value })
+                    }
+                    placeholder="Edit module instructions here"
+                    autoFocus
+                    rows={4}
+                  />
+                ) : (
+                  <p
+                    style={{
+                      color: currentModule.questions[id] ? 'inherit' : 'gray',
+                      cursor: 'text'
+                    }}
+                    onClick={() => setEditingId(id)}
+                  >
+                    {currentModule.questions[id] || "Edit module instructions here"}
+                  </p>
+                )}
               </QuestionBlock>
             ))}
             <Button icon={<Plus />} onClick={handleAddQuestionClick}>

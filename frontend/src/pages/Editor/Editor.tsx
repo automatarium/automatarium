@@ -125,10 +125,8 @@ const Editor = () => {
     <>
       <Menubar isSaving={isSaving} />
       <Content>
-        <Toolbar />
-        {false && showModuleWindow && currentModule && (
-          <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
-        )}
+        <Toolbar /> 
+         
         <EditorContent>
           <EditorPanel />
           <BottomPanel />

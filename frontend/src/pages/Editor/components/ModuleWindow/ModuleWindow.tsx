@@ -50,9 +50,8 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
   const handleClose = () => setShowModuleWindow(false)
 
   const handlePageChange = (index: number) => {
-    const project = useProjectStore.getState().project
     updateModule(currentModule)
-    setProject(currentModule.projects[index])
+setProject(currentModule.projects[index])
   }
 
   if (!currentModule || !currentProject) {
