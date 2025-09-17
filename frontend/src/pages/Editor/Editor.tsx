@@ -8,7 +8,6 @@ import { useExportStore, useModulesStore, useModuleStore, useProjectStore, useTo
 import { haveInputFocused } from '/src/util/actions'
 
 import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
-import ModuleWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
@@ -42,9 +41,6 @@ const Editor = () => {
 
   const [panelWidth, setPanelWidth] = useState(300) // Default panel width
 
-  const handlePanelWidthChange = (newWidth) => {
-    setPanelWidth(newWidth)
-  }
 
   useEffect(() => {
     // Reset panel width when currentModule changes
