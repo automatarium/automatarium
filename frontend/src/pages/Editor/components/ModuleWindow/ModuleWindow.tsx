@@ -1,17 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react'
-import ReactMarkdown from 'react-markdown'
+import React, { useState, useRef } from 'react'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
 import {
   ModuleWindowWrapper,
-  TextArea,
   PaginationWrapper,
   ResizeHandle,
   CloseButton,
   TitleWrapper,
-  Title,
-  Content,
-  ButtonContainer,
-  EditButton
+  Title
 } from './moduleWindowStyling'
 import { X, ChevronRight, ChevronLeft } from 'lucide-react'
 import { Button } from '/src/components'
@@ -19,23 +14,17 @@ import { useTranslation } from 'react-i18next'
 
 const ModuleWindow = ({ onPanelWidthChange }) => {
   const { t } = useTranslation(['common', 'editor'])
-  const currentModule = useModuleStore(s => s.module)
-  const updateQuestion = useModuleStore(s => s.upsertQuestion)
-  const updateProject = useModuleStore(s => s.upsertProject)
-  const questions = currentModule.questions
-  const totalQuestions = Object.keys(questions).length
-  const currentProject = useProjectStore(s => s.project)
-  const currentQuestionIndex = currentModule.projects.findIndex(project => project._id === currentProject._id)
-  const updateModule = useModulesStore(s => s.upsertModule)
-  const setProject = useProjectStore(s => s.set)
-  const currentQuestion = questions[currentProject._id]
-  const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
+  const currentModule = useModuleStore((s) => s.module)
+  const currentProject = useProjectStore((s) => s.project)
+  const currentQuestionIndex = currentModule.projects.findIndex(
+    (project) => project._id === currentProject._id
+  )
+  const updateModule = useModulesStore((s) => s.upsertModule)
+  const setProject = useProjectStore((s) => s.set)
+  const setShowModuleWindow = useModuleStore((s) => s.setShowModuleWindow)
 
   const [panelWidth, setPanelWidth] = useState('300px')
   const panelRef = useRef<HTMLDivElement | null>(null)
-
-  const [isEditing, setIsEditing] = useState(false)
-  const [question, setQuestion] = useState(currentQuestion || '')
 
   const handleMouseDown = (e: React.MouseEvent) => {
     const startX = e.clientX
@@ -58,170 +47,56 @@ const ModuleWindow = ({ onPanelWidthChange }) => {
     document.addEventListener('mouseup', handleMouseUp)
   }
 
-  const handleClose = () => {
-    setShowModuleWindow(false) // Close the module panel
-  }
-
-  useEffect(() => {
-    // Ensure that the question is updated when the current question or module changes
-    if (currentModule && currentProject._id) {
-      setQuestion(questions[currentProject._id] || '')
-    }
-  }, [currentModule, currentProject._id])
-
-  const saveModule = () => {
-    const project = useProjectStore.getState().project
-    updateProject({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
-    updateModule(currentModule)
-  }
-
-  const handleEditClick = () => {
-    if (isEditing) {
-      const currentQuestionId = Object.keys(questions)[currentQuestionIndex]
-      updateQuestion(currentQuestionId, question)
-      updateModule(currentModule)
-    }
-    setIsEditing(!isEditing)
-  }
+  const handleClose = () => setShowModuleWindow(false)
 
   const handlePageChange = (index: number) => {
-    saveModule()
+    const project = useProjectStore.getState().project
+    updateModule(currentModule)
     setProject(currentModule.projects[index])
   }
 
-  // If there are no questions or module data yet, show a loading or fallback message
-  if (!questions || totalQuestions === 0 || !currentModule) {
-    return <ModuleWindowWrapper width={panelWidth}>{t('component.module.loading', { ns: 'editor' })}</ModuleWindowWrapper>
-  }
-
-  // Cancel editing and reset the input fields to the stored values
-  const handleCancelClick = () => {
-    if (currentModule) {
-      setQuestion(currentQuestion || '') // Reset description input
-    }
-    setIsEditing(false) // Exit edit mode without saving
+  if (!currentModule || !currentProject) {
+    return (
+      <ModuleWindowWrapper width={panelWidth}>
+        {t('component.module.loading', { ns: 'editor' })}
+      </ModuleWindowWrapper>
+    )
   }
 
   return (
     <ModuleWindowWrapper ref={panelRef} width={panelWidth}>
       <TitleWrapper>
-        <Title>{t('component.module.title', { ns: 'editor', qNumber: currentQuestionIndex + 1 })}</Title>
-        {isEditing
-          ? (
-          <ButtonContainer>
-            <Button onClick={handleCancelClick}>{t('cancel', { ns: 'common' })}</Button>
-            <Button onClick={handleEditClick}>{t('component.module.button.save', { ns: 'editor' })}</Button>
-          </ButtonContainer>
-            )
-          : (
-          <EditButton>
-            <Button onClick={handleEditClick}>{t('component.module.button.edit', { ns: 'editor' })}</Button>
-          </EditButton>
-            )}
+        <Title>
+          {t('component.module.title', {
+            ns: 'editor',
+            qNumber: currentQuestionIndex + 1
+          })}
+        </Title>
       </TitleWrapper>
+
       <CloseButton onClick={handleClose}>
         <X />
       </CloseButton>
 
-      <div>
-        <hr />
-        <Content>
-          {isEditing
-            ? (
-            <TextArea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder={t('component.module.edit_placeholder', { ns: 'editor' })}
-              rows={39}
-            />
-              )
-            : (
-            <ReactMarkdown>{question}</ReactMarkdown>
-              )}
-        </Content>
-      </div>
-
       <PaginationWrapper>
-        {currentQuestionIndex !== 0
-          ? (
+        {currentQuestionIndex !== 0 && (
           <Button
-            onClick={() => {
-              if (currentQuestionIndex > 0) {
-                const newIndex = currentQuestionIndex - 1
-                handlePageChange(newIndex)
-              }
-            }}
+            onClick={() => handlePageChange(currentQuestionIndex - 1)}
             disabled={currentQuestionIndex === 0}
-            style={{
-              backgroundColor: currentQuestionIndex > 0 ? 'var(--primary)' : 'transparent',
-              margin: '0 2px',
-              flex: 0
-            }}
           >
             <ChevronLeft />
           </Button>
-            )
-          : null}
+        )}
 
-        {currentQuestionIndex > 0
-          ? (<Button
-            onClick={() => handlePageChange(currentQuestionIndex - 1)}
-            style={{
-              backgroundColor: 'var(--primary)',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
-            {currentQuestionIndex}
-          </Button>
-            ) : (
-          <div style={{ flex: 0 }}></div> // Empty space when no previous question
-            )}
-
-        <Button
-          style={{
-            backgroundColor: 'gray',
-            margin: '0 2px',
-            flex: 0
-          }}
-        >
+        <Button style={{ backgroundColor: 'gray' }}>
           {currentQuestionIndex + 1}
         </Button>
 
-        {currentQuestionIndex < totalQuestions - 1 ? (
-          <Button
-            onClick={() => handlePageChange(currentQuestionIndex + 1)}
-            style={{
-              backgroundColor: 'var(--primary)',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
-            {currentQuestionIndex + 2}
-          </Button>
-        ) : (
-          <div style={{ flex: 0 }}></div> // Empty space when no next question
-        )}
-
-        {currentQuestionIndex !== totalQuestions - 1
-          ? (
-          <Button
-            onClick={() => {
-              if (currentQuestionIndex < totalQuestions - 1) {
-                const newIndex = currentQuestionIndex + 1
-                handlePageChange(newIndex)
-              }
-            }}
-            style={{
-              backgroundColor: currentQuestionIndex < totalQuestions - 1 ? 'var(--primary)' : 'transparent',
-              margin: '0 2px',
-              flex: 0
-            }}
-          >
+        {currentQuestionIndex < currentModule.projects.length - 1 && (
+          <Button onClick={() => handlePageChange(currentQuestionIndex + 1)}>
             <ChevronRight />
           </Button>
-            )
-          : null}
+        )}
       </PaginationWrapper>
 
       <ResizeHandle onMouseDown={handleMouseDown} />
