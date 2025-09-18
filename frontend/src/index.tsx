@@ -99,11 +99,14 @@ if ("serviceWorker" in navigator) {
   });
 }
 
+// Should have a leading `/`
+const basename = process.env.SUB_PATH ?? "/"
+
 // Render the app
 ReactDOM.render(
   <StrictMode>
     <Suspense fallback={<div>Loading</div>}>
-      <BrowserRouter>
+      <BrowserRouter {...(basename ? { basename } : {})}>
         <App />
       </BrowserRouter>
     </Suspense>
