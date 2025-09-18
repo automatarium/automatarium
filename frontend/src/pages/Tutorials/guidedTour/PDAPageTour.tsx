@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { styled } from 'goober'
 import { ExampleContainer } from '../tutorialsStyle'
 import { useTranslation } from 'react-i18next'
+import { PDAgifs } from '../../../config/tour-gifs-manifest.json'
 
 // Make interface for tourStep - current step and isBannerStep - boolean prop for styling/behavior
 interface TourContentProps {
@@ -128,14 +129,6 @@ const PDAPageTour: React.FC<TourProps> = ({ onClose }) => {
     }
   }
 
-  const PDAgifs = ['https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExYndtZGVwdzJubnFuejNxeG9ybG4zYm9leGZleThrMDJveTA5eDc2MCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/uD4qr1AGOaKaJQrFXG/giphy.gif',
-    'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExenBzYjJ1a3VyYml5bHViMXdtenh1bXVuMHRicHB5cjYxaWhscWd0ZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/NMgNDytfx6PQDc3EmP/giphy.gif',
-    'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExczNmbTllbjhpcmpqbTJ4Z2FkcTdod3p0MWs3cW9nMGxnNmRscWJ6ZiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/whdDzqi05KxOYIf5wu/giphy.gif',
-    'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExcXNoOGswc2k3NTYxeWw2ODBkZHR0dXNocDVtejZybWFmbzFqNmVqNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/5LzPcMx9Tfk1lTC6TN/giphy.gif',
-    'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExY3AydjU0Z2s1cTJhMmNsZ25jMzgyMHdrZzBrZDU0M3k4OWVyZjVzdSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/IH0xajIIS5dZ9J68WW/giphy.gif',
-    'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExM2l5MXNxcWZxMjYyNTdmNmtzMDJieHhnbXFpcDR1ODkyNnJqN2RobSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/FDc1LxcmwaNpalpgKH/giphy.gif'
-
-  ]
   return (
 
         <TourOverlay>
