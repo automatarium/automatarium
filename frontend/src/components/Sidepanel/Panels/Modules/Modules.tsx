@@ -205,8 +205,8 @@ const Modules = () => {
                     }}
                     onClick={() => setEditingId(id)}
                   >
-                    {currentModule.questions[id] || "Edit module instructions here"}
-                  </p>
+{currentModule.questions[id] || t('module_panel.edit_instructions_placeholder')}
+                                                                                                                                                                  </p>
                 )}
               </QuestionBlock>
             ))}

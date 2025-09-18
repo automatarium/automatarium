@@ -267,6 +267,7 @@
         "modularise": "Modularise this project",
         "placeholder_title": "Module Title",
         "placeholder_desc": "Description",
+        "edit_instructions_placeholder": "Edit module instructions here",
         "open_questions": "Open questions to the left",
         "questions": "Questions",
         "question": "Question",

@@ -41,6 +41,8 @@ export const createNewModuleProject = (
     orOperator: DEFAULT_OR_OPERATOR,
     acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
     color: 'pink'
+        // All lab projects are set to pink to distinguish the difference between a lab and a normal project
+
   }
 })
 
