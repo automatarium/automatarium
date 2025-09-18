@@ -135,6 +135,11 @@ const Editor = () => {
         <BottomPanel />
         </EditorContent>
         {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
+        {projectType === 'GRAMMAR' && <GrammarEditor project={{
+          projectType: 'GRAMMAR',
+          startSymbol: '',
+          productions: []
+        }} />}
         <Sidepanel onToggle={setShowModuleWindow} />
       </Content>
       <ShortcutGuide />
