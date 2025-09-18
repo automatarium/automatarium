@@ -9,7 +9,7 @@ import { ErrorText, ImportButtonWrapper } from './importModuleDialogStyle'
 import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { StoredModule } from '/src/stores/useModuleStore'
-import { encodeModule } from '/src/util/encoding'
+import { encodeData } from '/src/util/encoding'
 import { useTranslation } from 'react-i18next'
 
 type ImportDialogProps = {
@@ -154,7 +154,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
           if (rawValue.length > 0) {
             const data = rawValue[0] === '{'
               // This is a json file. It might not fit on the URL
-              ? encodeModule(JSON.parse(rawValue))
+              ? encodeData(JSON.parse(rawValue))
               : rawValue
             navigate(`/share/module/${data}`)
           } else {
