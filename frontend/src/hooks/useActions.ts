@@ -114,7 +114,7 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json,.ao') }
+        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
@@ -153,7 +153,7 @@ const useActions = (registerHotkeys = false) => {
         const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
         // File extension explicitly added to allow for file names with dots
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.ao'
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
         a.click()
       }
     },
@@ -740,7 +740,7 @@ export const exportModuleFile = () => {
   const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
   a.href = URL.createObjectURL(file)
   // File extension explicitly added to allow for file names with dots
-  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.aom'
+  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
   a.click()
 }
 

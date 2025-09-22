@@ -95,7 +95,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
             t,
             onData,
             t('import_module.invalid_file'),
-            '.aom',
+            '.json',
             () => {
               resetModal()
               loadModule()
@@ -115,7 +115,7 @@ const ImportModuleDialog = ({ navigateFunction }: ImportDialogProps) => {
         <Input
           value={urlValue}
           onChange={e => setUrlValue(e.target.value)}
-          placeholder={'www.example.com/paste/module/CoolFSA.aom'}
+          placeholder={'www.example.com/paste/module/CoolFSA.json'}
         />
         <Button
           disabled={loading}
