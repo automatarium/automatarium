@@ -5,7 +5,7 @@ import { convertJFLAPXML, convertAutomatariumToJFLAP } from '@automatarium/jflap
 import autoLayout from '@automatarium/simulation/src/autoLayout'
 import { convertNFAtoDFA } from '@automatarium/simulation/src/convert'
 import { reorderStates } from '@automatarium/simulation/src/reorder'
-import { decodeData, decodeModule } from '../util/encoding'
+import { decodeData } from '../util/encoding'
 import useEdgeContext from './useEdgeContext'
 import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/Templates'
 import { showWarning } from '/src/components/Warning/Warning'
@@ -114,7 +114,7 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json,.ao') }
+        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
@@ -153,7 +153,7 @@ const useActions = (registerHotkeys = false) => {
         const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
         // File extension explicitly added to allow for file names with dots
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.ao'
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
         a.click()
       }
     },
@@ -740,7 +740,7 @@ export const exportModuleFile = () => {
   const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
   a.href = URL.createObjectURL(file)
   // File extension explicitly added to allow for file names with dots
-  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.aom'
+  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
   a.click()
 }
 
@@ -748,7 +748,7 @@ export const urlLoadModuleFile = <T>(url: string, t: TFunction, onData: (val: T)
   // Check that the user didn't just pass in the URL that was given from Automatarium
   const urlTokens = url.split('/') ?? null
   if (urlTokens[urlTokens.length - 3] === 'share' && urlTokens[urlTokens.length - 2] === 'module') {
-    decodeModule(urlTokens[urlTokens.length - 1]).then((data) => {
+    decodeData(urlTokens[urlTokens.length - 1]).then((data) => {
       const asFile = new File([JSON.stringify(data)], 'Shared Project')
       useParseFile(onData, errorMessage, asFile, onFinishLoading, onFailedLoading)
     })

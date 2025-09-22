@@ -8,7 +8,6 @@ import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-// Import enum from ProjectTypes
 import type { ProjectType } from '../../../../types/ProjectTypes'
 
 const Modules = () => {
