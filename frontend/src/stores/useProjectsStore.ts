@@ -1,6 +1,6 @@
 import { create, SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { Project } from '../types/ProjectTypes'
+import { Project } from '/src/types/ProjectTypes'
 
 interface ProjectsStore {
   projects: Project[],
