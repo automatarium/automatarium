@@ -2,10 +2,20 @@ import { precacheAndRoute, createHandlerBoundToURL  } from "workbox-precaching"
 import { registerRoute } from 'workbox-routing';
 import { PDAgifs, FSAgifs, TMgifs } from './config/tour-gifs-manifest.json'
 
-self.addEventListener("install", () => {
+self.addEventListener("install", (event) => {
   console.log("[SW] Install event");
   // Activate this worker immediately, skipping waiting
   self.skipWaiting();
+
+  event.waitUntil(
+    (async () => {
+      // Once install completes, tell clients that offline is ready
+      const clientsList = await self.clients.matchAll({ includeUncontrolled: true });
+      for (const client of clientsList) {
+        client.postMessage({ type: "OFFLINE_READY" });
+      }
+    })()
+  );
 });
 
 // Listen for activate event

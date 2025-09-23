@@ -84,6 +84,39 @@ const App = () => {
   </>
 }
 
+function showToast(message) {
+  const toast = document.createElement("div");
+  toast.innerText = message;
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--toolbar);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-family: sans-serif;
+    font-size: 14px;
+    opacity: 0;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    z-index: 9999;
+  `;
+  document.body.appendChild(toast);
+
+  // Trigger fade-in
+  requestAnimationFrame(() => {
+    toast.style.opacity = "1";
+    toast.style.transform = "translateX(-50%) translateY(0)";
+  });
+
+  // Hide after 3s
+  setTimeout(() => {
+    toast.style.opacity = "0";
+    setTimeout(() => toast.remove(), 400);
+  }, 3000);
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
     const swUrl = new URL("./service-worker.js", import.meta.url);
@@ -96,6 +129,19 @@ if ("serviceWorker" in navigator) {
       .catch((err: Error) => {
         console.error("SW registration failed:", err);
       });
+
+    navigator.serviceWorker.addEventListener("message", (event) => {
+      if (event.data?.type === "OFFLINE_READY") {
+        showToast("✅ App is ready to use offline");
+      }
+    });
+
+    navigator.serviceWorker.ready.then((registration) => {
+      // If there's an active controller, the app is already cached
+      if (navigator.serviceWorker.controller) {
+        showToast("✅ App is ready to use offline");
+      }
+    });
   });
 }
 
