@@ -30,11 +30,6 @@ import { expandTransitions } from '@automatarium/simulation/src/utils'
 
 import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
 
-/**
- * Normal project, except it has extra information to identify it
- */
-export type StoredProject = Project & {_id: string, userid?: string}
-
 export enum InsertGroupResponseType {
   FAIL = 1,
   SUCCESS
