@@ -57,6 +57,7 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
   initialState: null,
   meta: {
     name: randomProjectName(),
+    description: '',
     dateCreated: new Date().getTime(),
     dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,

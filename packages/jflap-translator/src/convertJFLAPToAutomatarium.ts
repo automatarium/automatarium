@@ -101,6 +101,7 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Module => {
     },
     meta: {
       name: '', // Name will be changed to filename by frontend
+      description: '',
       dateCreated: new Date().getTime(),
       dateEdited: new Date().getTime(),
       version: SCHEMA_VERSION,

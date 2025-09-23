@@ -35,6 +35,7 @@ export const createNewModuleProject = (projectType: ProjectType = DEFAULT_PROJEC
   initialState: null,
   meta: {
     name: projectName,
+    description: '',
     dateCreated: new Date().getTime(),
     dateEdited: new Date().getTime(),
     version: SCHEMA_VERSION,

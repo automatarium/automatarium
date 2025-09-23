@@ -32,11 +32,12 @@ export interface ProjectConfig {
     type: ProjectType
 }
 
-export interface ProjectMetaData {
+interface Metadata {
     automatariumVersion: string,
     dateCreated: number,
     dateEdited: number,
     name: string,
+    description: string,
     version: string
 }
 
@@ -143,7 +144,7 @@ export type Module = ModuleData & {
     _id: string,
     comments: ProjectComment[],
     config: ProjectConfig,
-    meta: ProjectMetaData,
+    meta: Metadata,
     projectType: string,
     simResult: string[],
     tests: AutomataTests,
