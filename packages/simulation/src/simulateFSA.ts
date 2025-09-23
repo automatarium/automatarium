@@ -2,7 +2,7 @@ import { FSAState } from './FSASearch'
 import { FSAExecutionResult, FSAExecutionTrace } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
-import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { FSAModuleGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
 export const generateTrace = (node: Node<FSAState>): FSAExecutionTrace[] => {
@@ -22,7 +22,7 @@ export const generateTrace = (node: Node<FSAState>): FSAExecutionTrace[] => {
 }
 
 export const simulateFSA = (
-  graph: FSAProjectGraph,
+  graph: FSAModuleGraph,
   input: string
 ): FSAExecutionResult => {
   const problem = buildProblem(graph, input)

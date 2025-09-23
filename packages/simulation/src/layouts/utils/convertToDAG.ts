@@ -1,4 +1,4 @@
-import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { BaseAutomataTransition, ModuleGraph } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Edge needs to be a string as a tuple `[f, t]` is passed by reference.
@@ -30,7 +30,7 @@ type DetectCyclesProblem = {
  * @param graph In progress graph to get the read and id values from
  * @param adjacencyList Weighted adjacency list @see AdjacencyList
  */
-export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: AdjacencyList) => {
+export const adjacencyListToTransitions = (graph: ModuleGraph, adjacencyList: AdjacencyList) => {
   const transitions = <BaseAutomataTransition[]>[]
   adjacencyList.forEach((adjList, k) => {
     adjList.forEach(adj => {
@@ -42,12 +42,12 @@ export const adjacencyListToTransitions = (graph: ProjectGraph, adjacencyList: A
 }
 
 // Make graph acyclic
-export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList] => {
+export const convertToDAG = (graph: ModuleGraph) : [ModuleGraph, AdjacencyList] => {
   /**
    * Priority:
    *  initialState -> finalStates (random) -> random state
    */
-  const getInitialState = (graph: ProjectGraph): number => {
+  const getInitialState = (graph: ModuleGraph): number => {
     // Choose source node
     if (graph.initialState || graph.initialState === 0) {
       return graph.initialState
@@ -113,7 +113,7 @@ export const convertToDAG = (graph: ProjectGraph) : [ProjectGraph, AdjacencyList
   }
 
   /** Reverse all transitions in the directed edge then updates the adjacency list. */
-  const reverseEdge = (graph: ProjectGraph, edges: AdjacencyList, edgeKey: Edge) => {
+  const reverseEdge = (graph: ModuleGraph, edges: AdjacencyList, edgeKey: Edge) => {
     const [from, to] = edgeKey.split(',').map(v => parseInt(v))
     const transitionsToReverse = graph.transitions.filter(t => t.to === to && t.from === from)
     const transitionsNotToReverse = graph.transitions.filter(t => t.to !== to || t.from !== from)

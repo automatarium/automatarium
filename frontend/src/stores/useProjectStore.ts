@@ -14,7 +14,7 @@ import {
   Template,
   CopyData,
   ProjectType,
-  ProjectGraph
+  ModuleGraph
 } from '../types/ProjectTypes'
 
 import {
@@ -126,11 +126,11 @@ interface ProjectStore {
    * Returns just a copy of the project graph.
    * This expands transitions if needed
    */
-  getGraph: () => ProjectGraph,
+  getGraph: () => ModuleGraph,
   /**
    * Updates the current project graph with the graph passed
    */
-  updateGraph: (graph: ProjectGraph) => void,
+  updateGraph: (graph: ModuleGraph) => void,
   reset: () => void
 }
 
@@ -435,7 +435,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
       projectType: project.projectType,
       states: project.states,
       transitions: expandTransitions(project.transitions)
-    } as ProjectGraph
+    } as ModuleGraph
   },
 
   updateGraph: graph => set(produce(({ project }: { project: Project}) => {

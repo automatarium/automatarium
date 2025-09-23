@@ -7,10 +7,10 @@ import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import abba from './graphs/abba.json'
 import disconnected from './graphs/disconnected.json'
 import { expandGraph } from '../src/utils'
-import type { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import type { FSAModuleGraph } from 'frontend/src/types/ProjectTypes'
 
 describe('Automata dib', () => {
-  const graph = expandGraph(dib as FSAProjectGraph)
+  const graph = expandGraph(dib as FSAModuleGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -39,7 +39,7 @@ describe('Automata dib', () => {
 })
 
 describe('Automata dib-multipath', () => {
-  const graph = expandGraph(dibMultipart as FSAProjectGraph)
+  const graph = expandGraph(dibMultipart as FSAModuleGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -70,7 +70,7 @@ describe('Automata dib-multipath', () => {
 })
 
 describe('Automata dib_dip-lambdaloop', () => {
-  const graph = expandGraph(dibDipLambdaloop as FSAProjectGraph)
+  const graph = expandGraph(dibDipLambdaloop as FSAModuleGraph)
 
   test('Include all transitions', () => {
     const startID = 0
@@ -82,14 +82,14 @@ describe('Automata dib_dip-lambdaloop', () => {
 
 describe('Reachability', () => {
   test('Unreachable final states', () => {
-    const graph = expandGraph(disconnected as FSAProjectGraph)
+    const graph = expandGraph(disconnected as FSAModuleGraph)
     const closure = closureWithPredicate(graph, 0, () => true)
     const states = Array.from(closure).map(({ state }) => graph.states.find(s => s.id === state))
     expect(states.some(s => s.isFinal)).toBeFalse()
   })
 
   test('Unreachable final states due to predicate', () => {
-    const graph = expandGraph(abba as FSAProjectGraph)
+    const graph = expandGraph(abba as FSAModuleGraph)
     const closure = closureWithPredicate(graph, 0, transition => !transition.read.includes('b'))
     const states = Array.from(closure).map(({ state }) => graph.states.find(s => s.id === state))
     expect(states.some(s => s.isFinal)).toBeFalse()

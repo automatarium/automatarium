@@ -1,11 +1,11 @@
-import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { ModuleGraph } from 'frontend/src/types/ProjectTypes'
 import GemLayoutAlgorithm from './layouts/GemLayoutAlgorithm'
 import GraphvizLayoutAlgorithm from './layouts/GraphvizLayoutAlgorithm'
 
 type LayoutName = 'gem' | 'tree'
-type LayoutAlgorithm = (graph: ProjectGraph) => ProjectGraph
+type LayoutAlgorithm = (graph: ModuleGraph) => ModuleGraph
 
-const autoLayout = (graph: ProjectGraph, algorithm: LayoutName = 'gem') => {
+const autoLayout = (graph: ModuleGraph, algorithm: LayoutName = 'gem') => {
   const algorithms = new Map<string, LayoutAlgorithm>([
     ['gem', GemLayoutAlgorithm],
     ['tree', GraphvizLayoutAlgorithm]

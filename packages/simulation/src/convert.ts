@@ -1,4 +1,4 @@
-import { FSAAutomataTransition, FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { FSAAutomataTransition, FSAModuleGraph } from 'frontend/src/types/ProjectTypes'
 import { expandReadSymbols } from './parseGraph'
 
 /**
@@ -28,7 +28,7 @@ const readSymbols = (t: FSAAutomataTransition): string[] => {
  *  6. add those sets to the frontier
  *  7. Add the transitions in using the new states
  */
-export const convertNFAtoDFA = (nfa: FSAProjectGraph): FSAProjectGraph => {
+export const convertNFAtoDFA = (nfa: FSAModuleGraph): FSAModuleGraph => {
   // Just in case
   if (nfa.initialState === null) return nfa
   // Build an adjacency list for the NFA to make operations easier.

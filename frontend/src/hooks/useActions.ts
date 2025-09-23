@@ -12,7 +12,7 @@ import { showWarning } from '/src/components/Warning/Warning'
 import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
 import { useContextStore, usePopupsStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
 import { InsertGroupResponseType, createNewProject } from '/src/stores/useProjectStore'
-import { CopyData, FSAProjectGraph, Project } from '/src/types/ProjectTypes'
+import { CopyData, FSAModuleGraph, Project } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -324,7 +324,7 @@ const useActions = (registerHotkeys = false) => {
     CONVERT_TO_DFA: {
       disabled: () => projectType !== 'FSA' || project.initialState === null,
       handler: () => {
-        const dfa = convertNFAtoDFA(project as FSAProjectGraph)
+        const dfa = convertNFAtoDFA(project as FSAModuleGraph)
         updateGraph(autoLayout(dfa))
         commit()
       }

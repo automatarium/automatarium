@@ -2,7 +2,7 @@ import { PDAState } from './PDASearch'
 import { PDAExecutionResult, PDAExecutionTrace, Stack } from './graph'
 import { Node } from './interfaces/graph'
 import { breadthFirstSearch } from './search'
-import { PDAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { PDAModuleGraph } from 'frontend/src/types/ProjectTypes'
 import { buildProblem } from './utils'
 
 export const generateTrace = (node: Node<PDAState>): PDAExecutionTrace[] => {
@@ -63,7 +63,7 @@ export const generateStack = (trace: PDAExecutionTrace[]) => {
 }
 
 export const simulatePDA = (
-  graph: PDAProjectGraph,
+  graph: PDAModuleGraph,
   input: string
 ): PDAExecutionResult => {
   const problem = buildProblem(graph, input)

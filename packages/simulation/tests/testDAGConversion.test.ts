@@ -1,4 +1,4 @@
-import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { ModuleGraph } from 'frontend/src/types/ProjectTypes'
 import { convertToDAG } from '../src/layouts/utils/convertToDAG'
 
 import ignoreReflex from './graphs/convertToDAGIgnoreReflex.json'
@@ -15,14 +15,14 @@ import triangleSolution from './graphs/convertToDAGTriangleSolution.json'
 import simpleFutureSolution from './graphs/convertToDAGFutureCycleSolution.json'
 
 /** Same reason as NFA to DFA tests */
-type Graph = Omit<ProjectGraph, 'projectType'> & {projectType: string}
-const convert = (g: Graph) => convertToDAG(g as ProjectGraph)[0]
+type Graph = Omit<ModuleGraph, 'projectType'> & {projectType: string}
+const convert = (g: Graph) => convertToDAG(g as ModuleGraph)[0]
 
 /** I suspect some nodes may become unreachable but this doesn't check for that.
  *  It will cost a lot to check for cycles within enclaves etc.
  */
-const hasCycles = (graph: ProjectGraph) : boolean => {
-  const getInitial = (graph: ProjectGraph) : number => {
+const hasCycles = (graph: ModuleGraph) : boolean => {
+  const getInitial = (graph: ModuleGraph) : number => {
     if (graph.initialState) return graph.initialState
     // let's start from zero!
     let sStartFromZero = 0
@@ -32,7 +32,7 @@ const hasCycles = (graph: ProjectGraph) : boolean => {
     return sStartFromZero
   }
 
-  const buildAdjacencyList = (graph: ProjectGraph) : Map<number, number[]> => {
+  const buildAdjacencyList = (graph: ModuleGraph) : Map<number, number[]> => {
     const adjList = new Map<number, number[]>()
     graph.transitions.forEach(t => {
       if (adjList.has(t.from)) {

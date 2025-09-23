@@ -6,7 +6,7 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
-import { TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
+import { TMAutomataTransition, PDAModuleGraph } from '/src/types/ProjectTypes'
 import { useTranslation } from 'react-i18next'
 
 const Info = () => {
@@ -43,7 +43,7 @@ const Info = () => {
   const stackAlphabet = useMemo(() => {
     if (projectType !== 'PDA') return []
 
-    const pdaGraph = graph as PDAProjectGraph
+    const pdaGraph = graph as PDAModuleGraph
     const stackAlphabetSet = new Set<string>()
 
     pdaGraph.transitions.forEach((transition) => {

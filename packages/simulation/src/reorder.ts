@@ -1,5 +1,5 @@
 import { Queue } from './collection'
-import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { ModuleGraph } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Reorders the states in the graph so they follow the flow i.e. we perform a basic topological sort.
@@ -12,7 +12,7 @@ import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
  * i.e. This is a fancy floodfill
  * @param graph Graph to reorder
  */
-export const reorderStates = <T extends ProjectGraph>(graph: T): T => {
+export const reorderStates = <T extends ModuleGraph>(graph: T): T => {
   if (graph.initialState === null) return graph
   // Convert the graph into an adjacency list of transitions
   const graphList = new Map<number, number[]>()

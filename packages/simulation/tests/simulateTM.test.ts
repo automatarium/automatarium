@@ -4,7 +4,7 @@ import bepsi from './graphs/bepsi.json'
 import { simulateTM } from '../src/simulateTM'
 import { TMExecutionResult } from '../src/graph'
 import { describe } from 'node:test'
-import { TMProjectGraph, AutomatariumTheme } from 'frontend/src/types/ProjectTypes'
+import { TMModuleGraph, AutomatariumTheme } from 'frontend/src/types/ProjectTypes'
 import { ColourName } from 'frontend/src/config'
 
 // Shim to allow for structuredClone alternative (See https://github.com/jsdom/jsdom/issues/3363)
@@ -24,7 +24,7 @@ const defaultValues = {
 }
 
 function simulate (graph, input: string): TMExecutionResult {
-  return simulateTM(graph as TMProjectGraph, input, defaultValues)
+  return simulateTM(graph as TMModuleGraph, input, defaultValues)
 }
 
 describe('Machine that moves left', () => {

@@ -2,7 +2,7 @@ import { describe } from 'node:test'
 import { reorderStates } from '../src/reorder'
 import dibDipLambdaLoop from './graphs/dib_dip-lambdaloop.json'
 import spiggy from './graphs/spiggy.json'
-import { FSAProjectGraph, TMProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { FSAModuleGraph, TMModuleGraph } from 'frontend/src/types/ProjectTypes'
 import highSort from './graphs/highSort.json'
 
 describe('Reordering graph', () => {
@@ -36,7 +36,7 @@ describe('Reordering graph', () => {
         }
       ],
       initialState: 1
-    } as TMProjectGraph)
+    } as TMModuleGraph)
 
     expect(graph.initialState).toBe(0)
 
@@ -80,16 +80,16 @@ describe('Reordering graph', () => {
         }
       ],
       initialState: null
-    } as FSAProjectGraph
+    } as FSAModuleGraph
     expect(reorderStates(graph)).toEqual(graph)
   })
 
   test('Cycles are handled', () => {
-    expect(reorderStates(structuredClone(dibDipLambdaLoop) as FSAProjectGraph)).toMatchObject(dibDipLambdaLoop)
+    expect(reorderStates(structuredClone(dibDipLambdaLoop) as FSAModuleGraph)).toMatchObject(dibDipLambdaLoop)
   })
 
   test('Lower ID path is taken first', () => {
-    let testVer = structuredClone(dibDipLambdaLoop) as FSAProjectGraph
+    let testVer = structuredClone(dibDipLambdaLoop) as FSAModuleGraph
     // We have to update both states and transitions. We will apply this mapping
     const mapping = {
       0: 2,
@@ -143,20 +143,20 @@ describe('Reordering graph', () => {
       ],
       transitions: [],
       initialState: 1
-    } as FSAProjectGraph)
+    } as FSAModuleGraph)
 
     expect(graph.states[0].id).toBe(1)
     expect(graph.states[1].id).toBe(0)
   })
 
   test("Mildly complex graph doesn't lose states", () => {
-    const graph = reorderStates(spiggy as FSAProjectGraph)
+    const graph = reorderStates(spiggy as FSAModuleGraph)
     // Check that the state numbers are continuous
     expect(graph.states.map(it => it.id).sort()).toEqual([0, 1, 2, 3, 4, 5, 6, 7, 8])
   })
 
   test('IDs are sorted correctly', () => {
-    const graph = reorderStates(highSort as FSAProjectGraph)
+    const graph = reorderStates(highSort as FSAModuleGraph)
     // q10 should be mapped to q2 since it was previously the highest
     const highest = graph.transitions.find(t => t.to === 2)
     // Transition from q0 to q10 reads B

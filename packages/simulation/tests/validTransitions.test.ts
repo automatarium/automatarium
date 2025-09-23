@@ -3,7 +3,7 @@ import { FSAGraph, FSAState } from '../src/FSASearch'
 
 import dibDipLambdaloop from './graphs/dib_dip-lambdaloop.json'
 import { StateID } from '../src/graph'
-import { AutomataTransition, FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { AutomataTransition, FSAModuleGraph } from 'frontend/src/types/ProjectTypes'
 import { expandGraph } from '../src/utils'
 
 /**
@@ -123,7 +123,7 @@ describe('Lambda transitions', () => {
 
 describe('Automata dib_dip-lambdaloop', () => {
   test('Valid states from q4', () => {
-    const fullGraph = expandGraph(dibDipLambdaloop as FSAProjectGraph)
+    const fullGraph = expandGraph(dibDipLambdaloop as FSAModuleGraph)
     const graph = new FSAGraph(
       new Node<FSAState>(new FSAState(fullGraph.initialState, false)),
       fullGraph.states.map(it => new FSAState(it.id, it.isFinal)),

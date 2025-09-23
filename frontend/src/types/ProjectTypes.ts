@@ -115,31 +115,31 @@ type BaseProjectGraph<PT extends ProjectType, T extends BaseAutomataTransition> 
 }
 
 /**
- * Graph for FSA project. There isn't any different in types but this is just for completion’s sake
+ * Graph for FSA module. There isn't any different in types but this is just for completion’s sake
  */
-export type FSAProjectGraph = BaseProjectGraph<'FSA', FSAAutomataTransition>
+export type FSAModuleGraph = BaseProjectGraph<'FSA', FSAAutomataTransition>
 
 /**
- * Graph for PDA project. The transitions need push/pop properties
+ * Graph for PDA module. The transitions need push/pop properties
  */
-export type PDAProjectGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
+export type PDAModuleGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
 
 /**
- * Graph for TM project. The transitions need read/write properties
+ * Graph for TM module. The transitions need read/write properties
  */
-export type TMProjectGraph = BaseProjectGraph<'TM', TMAutomataTransition>
+export type TMModuleGraph = BaseProjectGraph<'TM', TMAutomataTransition>
 
 /**
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
+export type ModuleGraph = FSAModuleGraph | PDAModuleGraph | TMModuleGraph
 
 /**
  * What a project for the frontend looks like.
  * This contains everything that is needed to display a graph
  */
-export type Project = ProjectGraph & {
+export type Project = ModuleGraph & {
     _id: string,
     comments: ProjectComment[],
     config: ProjectConfig,

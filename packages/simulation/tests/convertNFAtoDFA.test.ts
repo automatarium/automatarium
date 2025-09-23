@@ -15,14 +15,14 @@ import nfaWithORSymbolsExpected from './graphs/nfaWithORSymbolsExpected.json'
 import nfaWithORSymbolsInput from './graphs/nfaWithORSymbolsInput.json'
 import nfaWithRangeInput from './graphs/nfaWithRangeInput.json'
 import nfaWithRangeExpected from './graphs/nfaWithRangeExpected.json'
-import { FSAProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { FSAModuleGraph } from 'frontend/src/types/ProjectTypes'
 
 // Required because we can't do `as const` to the imported JSON.
 // Means we don't need `as FSAProjectGraph` everywhere
-type LooseFSA = Omit<FSAProjectGraph, 'projectType'> & {projectType: string}
+type LooseFSA = Omit<FSAModuleGraph, 'projectType'> & {projectType: string}
 
-const convertToDFA = (project: LooseFSA): FSAProjectGraph => {
-  return convertNFAtoDFA(project as FSAProjectGraph)
+const convertToDFA = (project: LooseFSA): FSAModuleGraph => {
+  return convertNFAtoDFA(project as FSAModuleGraph)
 }
 
 describe('Check to ensure DFA graph is displayed as expected', () => {

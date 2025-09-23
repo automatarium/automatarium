@@ -6,11 +6,11 @@ import { Input, Button, TracePreview } from '/src/components'
 
 import { Wrapper, StepButtons, TraceConsole } from './testingLabStyle'
 import { FSAExecutionResult } from '@automatarium/simulation/src/graph'
-import { FSAProjectGraph } from '/src/types/ProjectTypes'
+import { FSAModuleGraph } from '/src/types/ProjectTypes'
 import { useTranslation } from 'react-i18next'
 
 // Example automaton graph
-const graph: FSAProjectGraph = {
+const graph: FSAModuleGraph = {
   projectType: 'FSA',
   states: [
     { id: 0, isFinal: false, x: 0, y: 0 },

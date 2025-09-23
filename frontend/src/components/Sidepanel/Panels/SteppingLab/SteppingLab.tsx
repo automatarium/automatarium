@@ -11,7 +11,7 @@ import {
 
 import { graphStepper } from '@automatarium/simulation'
 import { useMemo, useEffect } from 'react'
-import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph } from '/src/types/ProjectTypes'
+import { FSAModuleGraph, PDAModuleGraph, TMModuleGraph } from '/src/types/ProjectTypes'
 
 type StepType = 'Forward' | 'Backward' | 'Reset'
 
@@ -29,7 +29,7 @@ const SteppingLab = () => {
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
-    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
+    return graphStepper(graph as FSAModuleGraph | PDAModuleGraph | TMModuleGraph, traceInput)
   }, [graph, traceInput])
 
   const handleStep = (stepType: StepType) => {

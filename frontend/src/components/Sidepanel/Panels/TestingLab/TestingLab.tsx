@@ -35,7 +35,7 @@ import { PDAState } from '@automatarium/simulation/src/PDASearch'
 import { TMState } from '@automatarium/simulation/src/TMSearch'
 import { buildProblem } from '@automatarium/simulation/src/utils'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
-import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
+import { FSAModuleGraph, PDAModuleGraph, TMModuleGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
 import { useTranslation } from 'react-i18next'
@@ -126,7 +126,7 @@ const TestingLab = () => {
   const stepper = useMemo(() => {
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
-    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
+    return graphStepper(graph as FSAModuleGraph | PDAModuleGraph | TMModuleGraph, traceInput)
   }, [graph, traceInput])
   const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
 
