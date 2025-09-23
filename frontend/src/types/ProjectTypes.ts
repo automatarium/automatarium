@@ -150,6 +150,12 @@ export type Module = ModuleData & {
     tests: AutomataTests,
 }
 
+export interface Project {
+    _id: string
+    meta: Metadata
+    modules: Module[]
+}
+
 // This is for copy/paste function which isn't TS converted yet
 // Leaving it here so its ready for when its converted, so as not to clutter useActions
 export type CopyData = {
