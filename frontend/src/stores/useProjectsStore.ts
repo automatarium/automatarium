@@ -1,18 +1,18 @@
 import { create, SetState } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { StoredProject } from './useProjectStore'
+import { Project } from '../types/ProjectTypes'
 
 interface ProjectsStore {
-  projects: StoredProject[],
-  setProjects: (projects: StoredProject[]) => void,
+  projects: Project[],
+  setProjects: (projects: Project[]) => void,
   clearProjects: () => void,
-  upsertProject: (project: StoredProject) => void,
+  upsertProject: (project: Project) => void,
   deleteProject: (pid: string) => void,
 }
 
 const useProjectsStore = create<ProjectsStore>()(persist((set: SetState<ProjectsStore>) => ({
-  projects: [] as StoredProject[],
-  setProjects: (projects: StoredProject[]) => set({ projects }),
+  projects: [] as Project[],
+  setProjects: (projects: Project[]) => set({ projects }),
   clearProjects: () => set({ projects: [] }),
   upsertProject: project => set(s => ({
     projects: s.projects.find(p => p._id === project._id)

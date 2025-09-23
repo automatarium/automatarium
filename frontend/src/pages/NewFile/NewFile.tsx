@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import { Button, Header, Main, ProjectCard, ImportDialog, ImportModuleDialog, CreateModule } from '/src/components'
 import { PROJECT_THUMBNAIL_WIDTH } from '/src/config/rendering'
 import { usePreferencesStore, useProjectStore, useProjectsStore, useThumbnailStore, useModuleStore, useModulesStore } from '/src/stores'
-import { StoredProject, createNewProject } from '/src/stores/useProjectStore' // #HACK
+import { createNewProject } from '/src/stores/useProjectStore' // #HACK
 import { dispatchCustomEvent } from '/src/util/events'
 import { StoredModule } from 'src/stores/useModuleStore'
 import { ButtonGroup, HeaderRow, NoResultSpan, PreferencesButton } from './newFileStyle'
@@ -17,7 +17,7 @@ import FSA from './images/FSA'
 import PDA from './images/PDA'
 import TM from './images/TM'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { Coordinate, ProjectType } from '/src/types/ProjectTypes'
+import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 import { useTranslation } from 'react-i18next'
 
@@ -148,7 +148,7 @@ const NewFile = () => {
     navigate('/editor')
   }
 
-  const handleLoadProject = (project: StoredProject) => {
+  const handleLoadProject = (project: Project) => {
     setShowModuleWindow(false)
     setProject(project)
     navigate('/editor')
