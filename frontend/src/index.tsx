@@ -136,7 +136,7 @@ if ("serviceWorker" in navigator) {
       }
     });
 
-    navigator.serviceWorker.ready.then((registration) => {
+    navigator.serviceWorker.ready.then(() => {
       // If there's an active controller, the app is already cached
       if (navigator.serviceWorker.controller) {
         showToast("✅ App is ready to use offline");
