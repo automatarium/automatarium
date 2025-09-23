@@ -10,6 +10,7 @@ import { OfflineWarning, Title, TitleRow } from './tutorialsStyle'
 import { Banner } from '../Landing/landingStyle'
 import manifest from '/src/config/tutorials-manifest.json'
 import { useTranslation } from 'react-i18next'
+import { useRealOnlineStatus } from '/src/hooks/useOnlineStatus'
 
 export interface TutorialLeaf {
   id: string
@@ -39,6 +40,7 @@ const TutorialsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [pageInfo, setPageInfo] = useState<PageInfo>()
   const [pagePath, setPagePath] = useState<string[]>()
+  const isOnline = useRealOnlineStatus();
 
   const navigate = useNavigate()
 
@@ -64,22 +66,6 @@ const TutorialsPage = () => {
   useEffect(() => {
     setPageInfo(traceTree(searchParams.keys(), manifest as ManifestItem))
   }, [searchParams])
-
-  // detect offline status
-  const [isOnline, setIsOnline] = useState(navigator.onLine);
-
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => setIsOnline(false);
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
 
   if (pageInfo === undefined || pageInfo === 'not found') {
     return <NotFound />
