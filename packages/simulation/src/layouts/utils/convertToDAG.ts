@@ -1,4 +1,4 @@
-import { BaseAutomataTransition, ModuleGraph } from 'frontend/src/types/ProjectTypes'
+import { BaseAutomataTransition, ModuleData } from 'frontend/src/types/ProjectTypes'
 
 /**
  * Edge needs to be a string as a tuple `[f, t]` is passed by reference.
@@ -30,7 +30,7 @@ type DetectCyclesProblem = {
  * @param graph In progress graph to get the read and id values from
  * @param adjacencyList Weighted adjacency list @see AdjacencyList
  */
-export const adjacencyListToTransitions = (graph: ModuleGraph, adjacencyList: AdjacencyList) => {
+export const adjacencyListToTransitions = (graph: ModuleData, adjacencyList: AdjacencyList) => {
   const transitions = <BaseAutomataTransition[]>[]
   adjacencyList.forEach((adjList, k) => {
     adjList.forEach(adj => {
@@ -42,12 +42,12 @@ export const adjacencyListToTransitions = (graph: ModuleGraph, adjacencyList: Ad
 }
 
 // Make graph acyclic
-export const convertToDAG = (graph: ModuleGraph) : [ModuleGraph, AdjacencyList] => {
+export const convertToDAG = (graph: ModuleData) : [ModuleData, AdjacencyList] => {
   /**
    * Priority:
    *  initialState -> finalStates (random) -> random state
    */
-  const getInitialState = (graph: ModuleGraph): number => {
+  const getInitialState = (graph: ModuleData): number => {
     // Choose source node
     if (graph.initialState || graph.initialState === 0) {
       return graph.initialState
@@ -113,7 +113,7 @@ export const convertToDAG = (graph: ModuleGraph) : [ModuleGraph, AdjacencyList] 
   }
 
   /** Reverse all transitions in the directed edge then updates the adjacency list. */
-  const reverseEdge = (graph: ModuleGraph, edges: AdjacencyList, edgeKey: Edge) => {
+  const reverseEdge = (graph: ModuleData, edges: AdjacencyList, edgeKey: Edge) => {
     const [from, to] = edgeKey.split(',').map(v => parseInt(v))
     const transitionsToReverse = graph.transitions.filter(t => t.to === to && t.from === from)
     const transitionsNotToReverse = graph.transitions.filter(t => t.to !== to || t.from !== from)

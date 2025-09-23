@@ -17,7 +17,7 @@ import FSA from './images/FSA'
 import PDA from './images/PDA'
 import TM from './images/TM'
 import KebabMenu from '/src/components/KebabMenu/KebabMenu'
-import { Coordinate, Project, ProjectType } from '/src/types/ProjectTypes'
+import { Coordinate, Module, ProjectType } from '/src/types/ProjectTypes'
 import NewPageTour from '../Tutorials/guidedTour/NewPageTour'
 import { useTranslation } from 'react-i18next'
 
@@ -148,7 +148,7 @@ const NewFile = () => {
     navigate('/editor')
   }
 
-  const handleLoadProject = (project: Project) => {
+  const handleLoadProject = (project: Module) => {
     setShowModuleWindow(false)
     setProject(project)
     navigate('/editor')

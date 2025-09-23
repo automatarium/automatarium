@@ -4,7 +4,7 @@
  */
 import { Record, Records } from './types'
 import { STATE_CIRCLE_RADIUS } from 'frontend/src/config/rendering'
-import { ModuleGraph } from 'frontend/src/types/ProjectTypes'
+import { ModuleData } from 'frontend/src/types/ProjectTypes'
 import { AdjacencyList, convertToDAG } from './utils/convertToDAG'
 
 type Node = {
@@ -24,7 +24,7 @@ type Level = {
   max: number
 }
 
-const GraphvizLayoutAlgorithm = (graph: ModuleGraph) => {
+const GraphvizLayoutAlgorithm = (graph: ModuleData) => {
   const [dag, edges] = convertToDAG(graph)
   const graphClone = structuredClone(graph)
   const cloneStates = graphClone.states
@@ -60,7 +60,7 @@ const GraphvizLayoutAlgorithm = (graph: ModuleGraph) => {
 
   // rank
   // TODO: Currently just creates a tree from the graph. Needs to be ranked properly wrt. to importance etc.
-  const hierarchy = (graph: ModuleGraph, edges: AdjacencyList) : Level => {
+  const hierarchy = (graph: ModuleData, edges: AdjacencyList) : Level => {
     const { states } = graph
 
     const getSuccessors = (parent: Node, edges: AdjacencyList) : Node[] => {

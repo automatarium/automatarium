@@ -1,7 +1,7 @@
 import {
   AutomataState,
   BaseAutomataTransition, FSAAutomataTransition, FSAModuleGraph, PDAAutomataTransition, PDAModuleGraph,
-  ModuleGraph, TMAutomataTransition, TMModuleGraph
+  ModuleData, TMAutomataTransition, TMModuleGraph
 } from 'frontend/src/types/ProjectTypes'
 import { expandReadSymbols } from './parseGraph'
 import { Node } from './interfaces/graph'
@@ -18,7 +18,7 @@ import { GraphStepper } from './Step'
  * e.g. buildProblem({} as TMProjectGraph, '') would be TMGraph | PDAGraph | FSAGraph instead of TMGraph.
  * Hopefully this problem is fixed in future typescript versions
  */
-type GraphMapper<P extends ModuleGraph, TM, PDA, FSA> =
+type GraphMapper<P extends ModuleData, TM, PDA, FSA> =
   P extends TMModuleGraph ? TM :
     P extends PDAModuleGraph ? PDA :
       FSA
@@ -26,15 +26,15 @@ type GraphMapper<P extends ModuleGraph, TM, PDA, FSA> =
 /**
  * Mapping of frontend graph -> simulator graph
  */
-export type GraphMapping<P extends ModuleGraph> = GraphMapper<P, TMGraph, PDAGraph, FSAGraph>
+export type GraphMapping<P extends ModuleData> = GraphMapper<P, TMGraph, PDAGraph, FSAGraph>
 /**
  * Mapping of frontend graph -> simulator state
  */
-export type StateMapping<P extends ModuleGraph> = GraphMapper<P, TMState, PDAState, FSAState>
+export type StateMapping<P extends ModuleData> = GraphMapper<P, TMState, PDAState, FSAState>
 /**
  * Mapping of frontend graph -> its transition type.
  */
-export type TransitionMapping<P extends ModuleGraph> =
+export type TransitionMapping<P extends ModuleData> =
   GraphMapper<P, TMAutomataTransition, PDAAutomataTransition, FSAAutomataTransition>
 
 /**
@@ -55,14 +55,14 @@ export const expandTransitions = <T extends BaseAutomataTransition>(transitions:
 /**
  * Performs any expansions needed for a graph
  */
-export const expandGraph = <T extends ModuleGraph>(graph: T): T => {
+export const expandGraph = <T extends ModuleData>(graph: T): T => {
   return { ...graph, transitions: expandTransitions(graph.transitions) }
 }
 
 /**
  * Returns the initial state object from the graph. Returns undefined if not found
  */
-export const findInitialState = (graph: ModuleGraph): AutomataState | undefined => {
+export const findInitialState = (graph: ModuleData): AutomataState | undefined => {
   return graph.states.find((state) => state.id === graph.initialState)
 }
 
@@ -74,7 +74,7 @@ export const newTape = (input: string): Tape => ({ pointer: 0, trace: input ? in
 /**
  * Builds the graph into a problem graph so that it can be simulated
  */
-export function buildProblem <M extends ModuleGraph> (graph: M, input: string): GraphMapping<M> | null {
+export function buildProblem <M extends ModuleData> (graph: M, input: string): GraphMapping<M> | null {
   // Make some type aliases
   type S = StateMapping<M>
   type T = TransitionMapping<M>

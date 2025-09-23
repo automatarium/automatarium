@@ -10,7 +10,7 @@ import { showWarning } from '/src/components/Warning/Warning'
 import { decodeData } from '/src/util/encoding'
 import { StoredModule } from '/src/stores/useModuleStore'
 import { useTranslation } from 'react-i18next'
-import { Project } from '/src/types/ProjectTypes'
+import { Module } from '/src/types/ProjectTypes'
 
 const Share = () => {
   const { t } = useTranslation('share')
@@ -49,7 +49,7 @@ const Share = () => {
     }
   }, [data])
 
-  const onData = (project: Project) => {
+  const onData = (project: Module) => {
     setProject(project)
     addProject(project)
   }

@@ -1,8 +1,8 @@
 import { convertJFLAPXML } from '../src'
 import { readFileSync } from 'fs'
-import { Project } from 'frontend/src/types/ProjectTypes'
+import { Module } from 'frontend/src/types/ProjectTypes'
 
-const readProject = (name: string): Project => {
+const readProject = (name: string): Module => {
   return convertJFLAPXML(readFileSync('tests/sample-jflap-data/' + name + '.jff').toString())
 }
 

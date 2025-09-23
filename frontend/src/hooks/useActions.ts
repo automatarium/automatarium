@@ -12,7 +12,7 @@ import { showWarning } from '/src/components/Warning/Warning'
 import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
 import { useContextStore, usePopupsStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
 import { InsertGroupResponseType, createNewProject } from '/src/stores/useProjectStore'
-import { CopyData, FSAModuleGraph, Project } from '/src/types/ProjectTypes'
+import { CopyData, FSAModuleGraph, Module } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -678,7 +678,7 @@ export const urlLoadFile = <T>(url: string, t: TFunction, onData: (val: T) => vo
 // Takes in the IDs of states, comments, and transitions
 // Parameters also include  the current project and whether a template is being created
 // Outputs a CopyData to be copied or Template object to be created into a template
-export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project: Project): CopyData => {
+export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project: Module): CopyData => {
   const selectedStates = project.states.filter(state => stateIds.includes(state.id))
   const selectedComments = project.comments.filter(comment => commentIds.includes(comment.id))
   const selectedTransitions = project.transitions.filter(transition => transitionIds.includes(transition.id))

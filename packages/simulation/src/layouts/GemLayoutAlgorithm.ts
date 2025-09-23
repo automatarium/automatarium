@@ -7,9 +7,9 @@
  */
 
 import { Point, Record, Records } from './types'
-import { ModuleGraph } from 'frontend/src/types/ProjectTypes'
+import { ModuleData } from 'frontend/src/types/ProjectTypes'
 
-const GemLayoutAlgorithm = (graph: ModuleGraph) => {
+const GemLayoutAlgorithm = (graph: ModuleData) => {
   const graphClone = structuredClone(graph)
   const cloneStates = graphClone.states
   // Remove the initial state from the vertices to move so we build around it

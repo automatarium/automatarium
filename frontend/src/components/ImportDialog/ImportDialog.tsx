@@ -10,7 +10,7 @@ import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { encodeData } from '/src/util/encoding'
 import { useTranslation } from 'react-i18next'
-import { Project } from '/src/types/ProjectTypes'
+import { Module } from '/src/types/ProjectTypes'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -59,7 +59,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
     setUrlError(false)
   }
 
-  const onData = (project: Project) => {
+  const onData = (project: Module) => {
     setProject(project)
     upsertProject(project)
   }

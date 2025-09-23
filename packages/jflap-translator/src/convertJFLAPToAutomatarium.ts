@@ -3,7 +3,7 @@ import { ElementCompact, xml2js } from 'xml-js'
 import { DEFAULT_PROJECT_COLOR, DEFAULT_STATE_PREFIX, DEFAULT_OR_OPERATOR, DEFAULT_ACCEPTANCE_CRITERIA, SCHEMA_VERSION, APP_VERSION } from 'frontend/src/config'
 import {
   ProjectType,
-  Project,
+  Module,
   assertType,
   PDAAutomataTransition, TMAutomataTransition
 } from 'frontend/src/types/ProjectTypes'
@@ -15,13 +15,13 @@ const PROJECT_TYPE_MAP: Record<string, ProjectType> = {
 }
 
 // Convert JFLAP XML to Automatarium format
-export const convertJFLAPXML = (xml: string): Project => {
+export const convertJFLAPXML = (xml: string): Module => {
   const jflapProject = xml2js(xml, { compact: true, ignoreComment: true, ignoreDeclaration: true })
   return convertJFLAPProject(jflapProject)
 }
 
 // Convert JFLAP JSON to Automatarium format
-export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
+export const convertJFLAPProject = (jflapProject: ElementCompact): Module => {
   // Pull out necessary values from jflap project
   let {
     structure: {

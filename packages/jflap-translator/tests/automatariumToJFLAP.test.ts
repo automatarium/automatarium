@@ -1,11 +1,11 @@
 import { convertAutomatariumToJFLAP } from '../src'
 import { readFileSync } from 'fs'
-import { Project } from 'frontend/src/types/ProjectTypes'
+import { Module } from 'frontend/src/types/ProjectTypes'
 import { ElementCompact, xml2js } from 'xml-js'
 
 const readProject = (name: string): ElementCompact => {
   const jsonData = readFileSync('tests/sample-automatarium-data/' + name + '.json').toString()
-  const project = JSON.parse(jsonData) as Project
+  const project = JSON.parse(jsonData) as Module
   return xml2js(convertAutomatariumToJFLAP(project), { compact: true })
 }
 

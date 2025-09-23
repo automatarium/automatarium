@@ -10,7 +10,7 @@ import {
 } from './types/JFLAPTypes'
 import {
   ProjectType,
-  Project,
+  Module,
   PDAAutomataTransition, TMAutomataTransition,
   AutomataState,
   AutomataTransition,
@@ -103,7 +103,7 @@ const mapComments = (comments: ProjectComment[]): JFLAPComment[] => comments.map
 }))
 
 // Convert JFLAP JSON to Automatarium format
-export const convertAutomatariumToJFLAP = (automatariumProject: Project): string => {
+export const convertAutomatariumToJFLAP = (automatariumProject: Module): string => {
   const jsonToXml = {
     _declaration: {
       _attributes: { version: '1.0', encoding: 'UTF-8', standalone: 'no' }

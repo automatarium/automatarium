@@ -133,13 +133,13 @@ export type TMModuleGraph = BaseProjectGraph<'TM', TMAutomataTransition>
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-export type ModuleGraph = FSAModuleGraph | PDAModuleGraph | TMModuleGraph
+export type ModuleData = FSAModuleGraph | PDAModuleGraph | TMModuleGraph
 
 /**
- * What a project for the frontend looks like.
+ * What a module for the frontend looks like.
  * This contains everything that is needed to display a graph
  */
-export type Project = ModuleGraph & {
+export type Module = ModuleData & {
     _id: string,
     comments: ProjectComment[],
     config: ProjectConfig,
