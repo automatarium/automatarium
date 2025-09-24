@@ -9,8 +9,8 @@ import { ErrorText, ImportButtonWrapper } from './importDialogStyle'
 import { Button, Input, Modal, Spinner } from '/src/components'
 import { Container } from '/src/pages/Share/shareStyle'
 import { encodeData } from '/src/util/encoding'
-import { StoredProject } from '/src/stores/useProjectStore'
 import { useTranslation } from 'react-i18next'
+import { Project } from '/src/types/ProjectTypes'
 
 type ImportDialogProps = {
   // This needs to be passed in from the main page
@@ -59,7 +59,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
     setUrlError(false)
   }
 
-  const onData = (project: StoredProject) => {
+  const onData = (project: Project) => {
     setProject(project)
     upsertProject(project)
   }
@@ -83,7 +83,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
               t,
               onData,
               t('import_project.invalid_file'),
-              '.jff,.json,.ao',
+              '.jff,.json',
               () => {
                 resetModal()
                 navigate('/editor')
@@ -103,7 +103,7 @@ const ImportDialog = ({ navigateFunction }: ImportDialogProps) => {
         <Input
           value={urlValue}
           onChange={e => setUrlValue(e.target.value)}
-          placeholder={'www.example.com/paste/raw/CoolFSA.ao'}
+          placeholder={'www.example.com/paste/raw/CoolFSA.json'}
         />
         <Button
           disabled={loading}

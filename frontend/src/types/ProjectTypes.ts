@@ -158,6 +158,7 @@ export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph | 
  * This contains everything that is needed to display a graph
  */
 export type Project = ProjectGraph & {
+    _id: string,
     comments: ProjectComment[],
     config: ProjectConfig,
     meta: ProjectMetaData,

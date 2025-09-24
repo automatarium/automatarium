@@ -91,6 +91,7 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
   }))
 
   return {
+    _id: crypto.randomUUID(),
     config: {
       type: projectType,
       statePrefix: DEFAULT_STATE_PREFIX,
