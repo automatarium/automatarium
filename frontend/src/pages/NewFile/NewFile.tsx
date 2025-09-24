@@ -29,6 +29,8 @@ const NewFile = () => {
   const thumbnails = useThumbnailStore(s => s.thumbnails)
   const removeThumbnail = useThumbnailStore(s => s.removeThumbnail)
   const preferences = usePreferencesStore(state => state.preferences)
+  const theme = usePreferencesStore(state => state.getTheme())
+
   // We find the tallest card using method shown here
   // https://legacy.reactjs.org/docs/hooks-faq.html#how-can-i-measure-a-dom-node
   const [height, setHeight] = useState(0)
@@ -87,16 +89,14 @@ const NewFile = () => {
   // Dynamic styling values for new project thumbnails
   // Will likely be extended to 'Your Projects' list
   // If matching system theme, don't append a theme to css vars
-  const theme = preferences.theme === 'system' ? '' : `-${preferences.theme}`
+  const cssTheme = preferences.theme === 'system' ? '' : `-${preferences.theme}`
   const getThumbTheme = useCallback((id: string) => {
-    const thumbTheme = preferences.theme === 'system'
-      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? '-dark' : ''
-      : preferences.theme === 'dark' ? '-dark' : ''
+    const thumbTheme = theme === 'dark' ? '-dark' : ''
     return `${id}${thumbTheme}`
-  }, [preferences.theme])
+  }, [theme])
   const stylingVals = {
-    stateFill: `var(--state-bg${theme})`,
-    strokeColor: `var(--stroke${theme})`
+    stateFill: `var(--state-bg${cssTheme})`,
+    strokeColor: `var(--stroke${cssTheme})`
   }
 
   // Remove old thumbnails
