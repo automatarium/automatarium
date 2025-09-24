@@ -35,7 +35,7 @@ const Templates = () => {
   const thumbs = useThumbnailStore(s => s.thumbnails)
 
   const theme = usePreferencesStore(state => state.getTheme())
-    const getThumbTheme = useCallback((id: string) => {
+  const getThumbTheme = useCallback((id: string) => {
       const thumbTheme = theme === 'dark' ? '-dark' : ''
       return `tmp${id}${thumbTheme}`
   }, [theme])
