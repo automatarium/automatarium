@@ -19,7 +19,7 @@
   --error-h: 0;
   --error-s: 97%;
   --error-l: 66%;
-  --error: #FC5353;
+  --error: hsl(var(--error-h), var(--error-s), var(--error-l));
 
   --surface: #2C2C2C;
   --toolbar: #424242;
