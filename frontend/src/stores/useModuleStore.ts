@@ -19,7 +19,7 @@ import {
 /**
  * A new project type for modules based on the pre-existing project type
  */
-export type ModuleProject = Module & {_id: string}
+export type ModuleProject = Module
 
 export const createNewModuleProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): ModuleProject => ({
   projectType,
