@@ -1,4 +1,7 @@
-export const makeTmTourSteps = (t: (k: string, o?: any) => string): Step[] => [
+import { TFunction } from "i18next";
+import { Step } from "../ProjectTour";
+
+export const makeTmTourSteps = (t: TFunction): Step[] => [
   {
     target: "",
     content: t("tm_tour.step1", { ns: "tutorials" }),

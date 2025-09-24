@@ -1,4 +1,5 @@
 import { styled } from 'goober'
+import { TourContentProps } from './ProjectTour'
 
 export const ButtonContainer = styled('div')`
   display: flex;

@@ -1,4 +1,7 @@
-export const makePdaTourSteps = (t: (k: string, o?: any) => string): Step[] => [
+import { TFunction } from "i18next";
+import { Step } from "../ProjectTour";
+
+export const makePdaTourSteps = (t: TFunction): Step[] => [
   {
     target: "",
     content: t("pda_tour.step1", { ns: "tutorials" }),

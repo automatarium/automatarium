@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { styled } from 'goober'
 import { ExampleContainer } from '../tutorialsStyle'
 import { useTranslation } from 'react-i18next'
 import { Button } from '/src/components';
@@ -8,6 +7,17 @@ import { ButtonContainer, TourContent, TourOverlay } from './tourStyles';
 interface TourProps {
     onClose: () => void;
     steps: Step[]
+}
+
+export interface TourContentProps {
+  isBannerStep: boolean
+  tourStep: number
+}
+
+export interface Step {
+  target: string
+  content: string
+  gifUrl: string | null
 }
 
 const ProjectTour: React.FC<TourProps> = ({ steps, onClose }) => {

@@ -16,6 +16,7 @@ import { Info } from '/src/components/Sidepanel/Panels'
 import { useTranslation } from 'react-i18next'
 import { ButtonContainer, TourOverlay } from './tourStyles'
 import { Button } from '/src/components'
+import { Step, TourContentProps } from './ProjectTour'
 
 const TourContent = styled('div')<TourContentProps>`
     background-color: #fff;
@@ -25,7 +26,6 @@ const TourContent = styled('div')<TourContentProps>`
     max-height: 80%;
     overflow: auto;
     background-color: rgba(0, 0, 0, 1);
-
 `
 
 interface TourProps {

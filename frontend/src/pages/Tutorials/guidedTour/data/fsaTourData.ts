@@ -1,4 +1,7 @@
-export const makeFsaTourSteps = (t: (k: string, o?: any) => string): Step[] => [
+import { Step } from "../ProjectTour";
+import type { TFunction } from "i18next";
+
+export const makeFsaTourSteps = (t: TFunction): Step[] => [
   {
     target: "",
     content: t("fsa_tour.step1", { ns: "tutorials" }),

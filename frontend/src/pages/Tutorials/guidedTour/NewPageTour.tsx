@@ -4,27 +4,7 @@ import { styled } from 'goober'
 import { useTranslation } from 'react-i18next'
 import { ButtonContainer, TourOverlay } from './tourStyles';
 import { Button } from '/src/components';
-
-const TourButton = styled('button')`
-
-  padding: 10px 20px;
-  background-color: #cbccc6;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin: 5px; 
-
-  &:hover {
-    background-color: #fbfcfa; /* Darker blue color on hover */
-  }
-
-  &:disabled {
-    background-color: #26261f; 
-    color: white;
-    cursor: not-allowed;
-  }
-`
+import { Step, TourContentProps } from './ProjectTour';
 
 const TourContent = styled('div')<TourContentProps>`
     pointer-events: auto;
@@ -78,10 +58,10 @@ const TourContent = styled('div')<TourContentProps>`
 
 interface TourProps {
   onClose: () => void;
-  Step: (step: number) => void;
+  stepCallback: (step: number) => void;
 }
 
-const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
+const NewPageTour: React.FC<TourProps> = ({ onClose, stepCallback }) => {
   const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
@@ -111,8 +91,8 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
     // Add more steps as needed
   ]
   useEffect(() => {
-    Step(step)
-  }, [step, Step])
+    stepCallback(step)
+  }, [step, stepCallback])
 
   const handleNext = () => {
     if (step < steps.length - 1) {

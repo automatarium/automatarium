@@ -4,6 +4,7 @@ import { styled } from 'goober'
 import { useTranslation } from 'react-i18next'
 import { ButtonContainer, TourOverlay } from './tourStyles'
 import { Button } from '/src/components'
+import { Step, TourContentProps } from './ProjectTour'
 
 const TourContent = styled('div')<TourContentProps>`
     pointer-events: auto;
@@ -55,10 +56,10 @@ const TourContent = styled('div')<TourContentProps>`
 
 interface TourProps {
   onClose: () => void;
-  Step: (step: number) => void;
+  stepCallback: (step: number) => void;
 }
 
-const LandingPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
+const LandingPageTour: React.FC<TourProps> = ({ onClose, stepCallback }) => {
   const { t } = useTranslation(['common', 'tutorials'])
   const [step, setStep] = useState<number>(0)
   // Define tour steps
@@ -102,8 +103,8 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
     // Add more steps as needed
   ]
   useEffect(() => {
-    Step(step)
-  }, [step, Step])
+    stepCallback(step)
+  }, [step, stepCallback])
 
   const handleNext = () => {
     if (step < steps.length - 1) {
