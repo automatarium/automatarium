@@ -2,26 +2,8 @@ import React, { useState, useEffect } from 'react'
 
 import { styled } from 'goober'
 import { useTranslation } from 'react-i18next'
-
-interface TourContentProps {
-    isBannerStep: boolean;
-    tourStep: number;
-  }
-
-// Define styled components
-const TourOverlay = styled('div')`
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0);
-    z-index: 9999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    pointer-events: none;
-`
+import { ButtonContainer, TourOverlay } from './tourStyles';
+import { Button } from '/src/components';
 
 const TourButton = styled('button')`
 
@@ -94,11 +76,6 @@ const TourContent = styled('div')<TourContentProps>`
     `}
 `
 
-interface Step {
-  target: string;
-  content: string;
-}
-
 interface TourProps {
   onClose: () => void;
   Step: (step: number) => void;
@@ -111,23 +88,24 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
   const steps: Step[] = [
     {
       target: '', // CSS selector for the element to highlight
-      content: t('new_tour.step1', { ns: 'tutorials' })
+      content: t('new_tour.step1', { ns: 'tutorials' }),
+      gifUrl: null,
     },
 
     {
       target: '',
-      content: t('new_tour.step2', { ns: 'tutorials' })
-
+      content: t('new_tour.step2', { ns: 'tutorials' }),
+      gifUrl: null,
     },
     {
       target: '',
-      content: t('new_tour.step3', { ns: 'tutorials' })
-
+      content: t('new_tour.step3', { ns: 'tutorials' }),
+      gifUrl: null,
     },
     {
       target: '',
-      content: t('new_tour.step4', { ns: 'tutorials' })
-
+      content: t('new_tour.step4', { ns: 'tutorials' }),
+      gifUrl: null,
     }
 
     // Add more steps as needed
@@ -157,15 +135,13 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, Step }) => {
 
   return (
     <TourOverlay>
-
         <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>
           <p>{steps[step].content}</p>
-          <div className="tour-navigation">
-              <TourButton onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</TourButton>
-              <TourButton onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</TourButton>
-              <TourButton onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</TourButton>
-          </div>
-
+          <ButtonContainer>
+              <Button onClick={handlePrevious} disabled={step === 0}>{t('tour.previous', { ns: 'common' })}</Button>
+              <Button onClick={handleNext}>{step === steps.length - 1 ? t('tour.finish', { ns: 'common' }) : t('tour.next', { ns: 'common' })}</Button>
+              <Button secondary onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</Button>
+          </ButtonContainer>
         </TourContent>
      </TourOverlay>
 
