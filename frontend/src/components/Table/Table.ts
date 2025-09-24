@@ -46,7 +46,7 @@ const Table = styled('table')`
    }
 
    td {
-    font-family: monospace;
+    font-family: var(--font-mono);
     text-align: center;
    }
 `
