@@ -167,7 +167,7 @@ const useImageExport = () => {
 
   // Generate project thumbnail
   useEffect(() => {
-    window.setTimeout(() => {
+    const id = window.setTimeout(() => {
       const { svg: svgLight } = getSvgString({ darkMode: false })
       const { svg: svgDark } = getSvgString({ darkMode: true })
       if (svgLight !== null) {
@@ -177,10 +177,11 @@ const useImageExport = () => {
         setThumbnail(`${project._id}-dark`, 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent('<?xml version="1.0" standalone="no"?>\r\n' + svgDark))
       }
     }, 200)
+    return () => window.clearTimeout(id)
   }, [project])
 
   useEvent('storeTemplateThumbnail', e => {
-    window.setTimeout(() => {
+    const id = window.setTimeout(() => {
       const { svg: svgLight } = getSvgString({ svgElementTag: 'selected-graph', darkMode: false })
       const { svg: svgDark } = getSvgString({ svgElementTag: 'selected-graph', darkMode: true })
       if (svgLight !== null) {
@@ -191,6 +192,7 @@ const useImageExport = () => {
       }
       dispatchCustomEvent('selectionGraph:hide', null)
     }, 200)
+    return () => window.clearTimeout(id)
   })
 }
 
