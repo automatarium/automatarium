@@ -15,6 +15,10 @@ export interface Preferences {
 interface PreferencesStore {
   preferences: Preferences
   setPreferences: (preferences: Preferences) => void
+  /**
+  * Gets the current selected theme. Resolves system theme if the user has "system" selected
+  */
+  getTheme: () => 'light' | 'dark'
 }
 
 const defaultPreferences: Preferences = {
@@ -26,9 +30,15 @@ const defaultPreferences: Preferences = {
   language: 'en'
 }
 
-const usePreferencesStore = create<PreferencesStore>()(persist((set: SetState<PreferencesStore>) => ({
+const usePreferencesStore = create<PreferencesStore>()(persist((set: SetState<PreferencesStore>, get) => ({
   preferences: { ...defaultPreferences },
-  setPreferences: (preferences: Preferences) => set({ preferences })
+  setPreferences: (preferences: Preferences) => set({ preferences }),
+  getTheme: () => {
+    const theme = get().preferences.theme
+    return theme === 'system'
+          ? window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+          : theme
+  }
 }), {
   name: 'automatarium-preferences'
 }))
