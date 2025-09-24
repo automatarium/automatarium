@@ -38,8 +38,7 @@ const Templates = () => {
     const getThumbTheme = useCallback((id: string) => {
       const thumbTheme = theme === 'dark' ? '-dark' : ''
       return `tmp${id}${thumbTheme}`
-    }, [theme])
-
+  }, [theme])
 
   const [templateNameInput, setTemplateNameInput] = useState('')
   const [error, setError] = useState('')
