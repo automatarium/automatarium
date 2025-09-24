@@ -27,7 +27,6 @@ const TourButton = styled('button')`
 
   padding: 10px 20px;
   background-color: #cbccc6;
-  color: #black; 
   border: none;
   border-radius: 5px;
   cursor: pointer;
