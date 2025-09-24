@@ -123,41 +123,48 @@ const Editor = () => {
   }, [tool, priorTool])
 
   return (
-    <>
-      <Menubar isSaving={isSaving} />
-      <Content>
-        <Toolbar />
-        {showModuleWindow && currentModule && (
-          <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
-        )}
-        <EditorContent>
-        <EditorPanel />
-        <BottomPanel />
-        </EditorContent>
-        {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
-        {projectType === 'GRAMMAR' && <GrammarEditor project={{
-          projectType: 'GRAMMAR',
-          startSymbol: '',
-          productions: []
-        }} />}
-        <Sidepanel onToggle={setShowModuleWindow} />
-      </Content>
-      <ShortcutGuide />
-      <FinalStatePopup />
-      <ExportImage />
-      <ShareUrl />
-      <ShareUrlModule />
-
-      <TemplateDelConfDialog
-        isOpen={confirmDialogOpen}
-        setOpen={() => setConfirmDialogOpen(true)}
-        setClose={() => setConfirmDialogOpen(false)}
+  <>
+    {projectType === "GRAMMAR" ? (
+      // Only render Grammar editor
+      <GrammarEditor
+        project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
       />
-      <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour} />}
-      <CreateModule />
-    </>
-  )
+    ) : (
+      // Render everything else
+      <>
+        <Menubar isSaving={isSaving} />
+        <Content>
+          <Toolbar />
+          {showModuleWindow && currentModule && (
+            <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
+          )}
+          <EditorContent>
+            <EditorPanel />
+            <BottomPanel />
+          </EditorContent>
+          {projectType === "PDA" && (
+            <PDAStackVisualiser panelWidth={panelWidth} />
+          )}
+          <Sidepanel onToggle={setShowModuleWindow} />
+        </Content>
+        <ShortcutGuide />
+        <FinalStatePopup />
+        <ExportImage />
+        <ShareUrl />
+        <ShareUrlModule />
+
+        <TemplateDelConfDialog
+          isOpen={confirmDialogOpen}
+          setOpen={() => setConfirmDialogOpen(true)}
+          setClose={() => setConfirmDialogOpen(false)}
+        />
+        <ImportDialog navigateFunction={navigate} />
+        {showTour && <EditorPageTour onClose={closeTour} />}
+        <CreateModule />
+      </>
+    )}
+  </>
+)
 }
 
 export default Editor
