@@ -119,16 +119,6 @@ function showToast(message) {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    const swUrl = new URL("./service-worker.js", import.meta.url);
-
-    navigator.serviceWorker
-      .register(swUrl)
-      .then((reg: ServiceWorkerRegistration) => {
-        console.log("SW registered:", reg);
-      })
-      .catch((err: Error) => {
-        console.error("SW registration failed:", err);
-      });
 
     navigator.serviceWorker.addEventListener("message", (event) => {
       if (event.data?.type === "OFFLINE_READY") {

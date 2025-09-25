@@ -1,6 +1,6 @@
 import { precacheAndRoute, createHandlerBoundToURL  } from "workbox-precaching"
 import { registerRoute } from 'workbox-routing';
-import { PDAgifs, FSAgifs, TMgifs } from './config/tour-gifs-manifest.json'
+import { PDAgifs, FSAgifs, TMgifs } from '../src/config/tour-gifs-manifest.json'
 
 self.addEventListener("install", (event) => {
   console.log("[SW] Install event");
@@ -19,11 +19,22 @@ self.addEventListener("install", (event) => {
 });
 
 // Listen for activate event
-self.addEventListener("activate", () => {
+self.addEventListener("activate", (event) => {
   console.log("[SW] Activate event");
   // Take control of all clients (pages) immediately
-  clients.claim();
-});
+  //
+  event.waitUntil(
+      (async () => {
+        await self.clients.claim();
+        const windowClients = await self.clients.matchAll({ type: "window" });
+        if (self.registration.active) {
+        for (const client of windowClients) {
+          client.postMessage({ type: "NEW_VERSION" });
+        }
+      }
+      })()
+    );
+  });
 
 const manifest = self.__WB_MANIFEST || [];
 
