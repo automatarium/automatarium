@@ -11,5 +11,6 @@ export const DEFAULT_ACCEPTANCE_CRITERIA = 'both'
 export const DEFAULT_PROJECT_COLOR: Record<ProjectType, ColourName> = {
   FSA: 'orange',
   PDA: 'red',
-  TM: 'purple'
+  TM: 'purple',
+  GRAMMAR: 'green'
 }
