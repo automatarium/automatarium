@@ -124,29 +124,46 @@ const Editor = () => {
 
   return (
   <>
+    
+    <Menubar isSaving={isSaving} />
+
     {projectType === "GRAMMAR" ? (
-      // Only render Grammar editor
-      <GrammarEditor
-        project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
-      />
-    ) : (
-      // Render everything else
-      <>
-        <Menubar isSaving={isSaving} />
-        <Content>
-          <Toolbar />
-          {showModuleWindow && currentModule && (
-            <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
-          )}
-          <EditorContent>
-            <EditorPanel />
-            <BottomPanel />
-          </EditorContent>
-          {projectType === "PDA" && (
-            <PDAStackVisualiser panelWidth={panelWidth} />
-          )}
-          <Sidepanel onToggle={setShowModuleWindow} />
-        </Content>
+      // Only use top menu bar for grammar projects
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+        <div
+          style={{
+            maxWidth: "1200px", 
+            width: "100%",
+            padding: "1rem",
+            fontSize: "1.5rem", 
+            lineHeight: "1.6",
+          }}
+        >
+          <GrammarEditor
+            project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
+          />
+        </div>
+      </div>
+
+        ) : (
+          // Automata / PDA / TM layout
+          <Content>
+            <Toolbar />
+            {showModuleWindow && currentModule && (
+              <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
+            )}
+            <EditorContent>
+              <EditorPanel />
+              <BottomPanel />
+            </EditorContent>
+            {projectType === "PDA" && (
+              <PDAStackVisualiser panelWidth={panelWidth} />
+            )}
+            <Sidepanel onToggle={setShowModuleWindow} />
+          </Content>
+        )}
+
+        {/* Shared UI */}
         <ShortcutGuide />
         <FinalStatePopup />
         <ExportImage />
@@ -162,9 +179,7 @@ const Editor = () => {
         {showTour && <EditorPageTour onClose={closeTour} />}
         <CreateModule />
       </>
-    )}
-  </>
-)
+  )
 }
 
 export default Editor

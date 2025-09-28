@@ -48,71 +48,93 @@ export default function GrammarEditor({ project }: Props) {
   }
 
   return (
-    <div className="p-4">
-      <h2 className="text-xl mb-2">Grammar Editor</h2>
+    <div className="h-full w-full flex bg-gray-800 text-gray-100">
+      {/* Left Toolbar (reuse existing) */}
+      <div className="w-14 bg-gray-900 border-r border-gray-700">
+        {/* toolbar buttons can go here */}
+      </div>
 
-      {/* Grammar input panel */}
-      <div className="mb-4">
-        <label className="block font-semibold">Start Symbol:</label>
-        <input
-          className="border p-1 w-32"
-          type="text"
-          value={startSymbol}
-          onChange={e => setStartSymbol(e.target.value)}
-        />
+      {/* Main Content */}
+      <div className="flex-1 p-6 grid grid-cols-2 gap-6">
+        
+        {/* Grammar Rules Panel */}
+        <div className="bg-gray-900 rounded-lg p-4 shadow">
+          <h2 className="text-xl font-bold mb-4">Grammar</h2>
+          
+          <label className="block font-semibold mb-2">Start Symbol</label>
+          <input
+            className="border border-gray-700 rounded px-2 py-1 bg-gray-800 w-32"
+            type="text"
+            value={startSymbol}
+            onChange={e => setStartSymbol(e.target.value)}
+          />
 
-        <h3 className="mt-2 font-semibold">Productions:</h3>
-        {productions.map((p, i) => (
-          <div key={i} className="flex items-center gap-2 mb-1">
+          <h3 className="mt-4 mb-2 font-semibold">Productions</h3>
+          <div className="space-y-2">
+            {productions.map((p, i) => (
+              <div key={i} className="flex items-center gap-2">
+                <input
+                  className="border border-gray-700 rounded px-2 py-1 w-16 bg-gray-800"
+                  type="text"
+                  value={p.left}
+                  onChange={e => updateLeft(i, e.target.value)}
+                  placeholder="LHS"
+                />
+                →
+                <input
+                  className="border border-gray-700 rounded px-2 py-1 flex-1 bg-gray-800"
+                  type="text"
+                  value={p.right.join(" | ")}
+                  onChange={e => updateRight(i, e.target.value)}
+                  placeholder="rhs1 | rhs2"
+                />
+                <button
+                  className="text-red-400 hover:text-red-600"
+                  onClick={() => deleteProduction(i)}
+                >
+                  ✖
+                </button>
+              </div>
+            ))}
+          </div>
+          
+          <button
+            className="mt-3 px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-white"
+            onClick={addProduction}
+          >
+            + Add Production
+          </button>
+        </div>
+
+        {/* String Tester Panel */}
+        <div className="bg-gray-900 rounded-lg p-4 shadow">
+          <h2 className="text-xl font-bold mb-4">Test String</h2>
+          <div className="flex items-center">
             <input
-              className="border p-1 w-16"
+              className="border border-gray-700 rounded px-2 py-1 flex-1 bg-gray-800"
               type="text"
-              value={p.left}
-              onChange={e => updateLeft(i, e.target.value)}
-              placeholder="LHS"
-            />
-            →
-            <input
-              className="border p-1 flex-1"
-              type="text"
-              value={p.right.join(" | ")}
-              onChange={e => updateRight(i, e.target.value)}
-              placeholder="rhs1 | rhs2 | ..."
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="Enter string"
             />
             <button
-              className="text-red-500 ml-2"
-              onClick={() => deleteProduction(i)}
+              className="ml-2 px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white"
+              onClick={handleTest}
             >
-              ✖
+              Test
             </button>
           </div>
-        ))}
-        <button
-          className="mt-2 px-3 py-1 border rounded"
-          onClick={addProduction}
-        >
-          + Add Production
-        </button>
+          {result && (
+            <div
+              className={`mt-4 px-3 py-2 rounded font-semibold ${
+                result.includes("Accepted") ? "bg-green-700" : "bg-red-700"
+              }`}
+            >
+              {result}
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* String tester */}
-      <div className="mt-4">
-        <input
-          className="border p-1"
-          type="text"
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          placeholder="Enter string to test"
-        />
-        <button
-          className="ml-2 px-3 py-1 border rounded"
-          onClick={handleTest}
-        >
-          Test
-        </button>
-      </div>
-
-      {result && <div className="mt-2">{result}</div>}
     </div>
   )
 }
