@@ -26,3 +26,50 @@ function derives(grammar: GrammarProjectGraph, current: string, input: string): 
 export function testString(grammar: GrammarProjectGraph, str: string): boolean { //starter for the recursive function
     return derives(grammar, grammar.startSymbol, str)
 }
+
+export function detectType(grammar: GrammarProjectGraph): "regular" | "context-free" | "context-sensitive" | "unrestricted" {
+    //assume the grammar is valid for all types until proven otherwise
+    let isRegular = true
+    let isContextFree = true
+    let isContextSensitive = true
+
+    for (const prod of grammar.productions) { //iterate through each production rule
+        const left = prod.left
+        for (const rule of prod.right) {
+
+            //regular grammar check (only one non-terminal on LHS, and RHS is either a single terminal or a terminal + non-terminal)
+            if (!(left.length === 1 && left >= "A" && left <= "Z")) {
+              isRegular = false
+            } else {
+              if (
+                rule !== "" &&
+                !(
+                  //check for single terminal
+                  (rule.length === 1 && rule[0] >= "a" && rule[0] <= "z") ||
+                  //check for terminal + non-terminal (right-linear)
+                  (rule.length === 2 && rule[0] >= "a" && rule[0] <= "z" && rule[1] >= "A" && rule[1] <= "Z") ||
+                  //check for non-terminal + terminal (left-linear)
+                  (rule.length === 2 && rule[0] >= "A" && rule[0] <= "Z" && rule[1] >= "a" && rule[1] <= "z")
+                )
+              ) {
+                isRegular = false
+              }
+            }
+
+            //context-free grammar check (only one non-terminal on LHS)
+            if (!(left.length === 1 && left >= "A" && left <= "Z")) { 
+              isContextFree = false
+            }
+
+            //context-sensitive grammar check (length of RHS must be >= length of LHS, except for the case of start symbol producing empty string)
+            if (rule.length < left.length && !(left === grammar.startSymbol && rule === "")) {
+              isContextSensitive = false
+            }
+    }
+  }
+
+  if (isRegular) return "regular"
+  if (isContextFree) return "context-free"
+  if (isContextSensitive) return "context-sensitive"
+  return "unrestricted"
+}
