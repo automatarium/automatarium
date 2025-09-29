@@ -57,14 +57,14 @@ const ProjectTour: React.FC<TourProps> = ({ steps, onClose }) => {
           <img src={steps[step].gifUrl} />
         </ExampleContainer>
         <ButtonContainer>
+          <Button secondary onClick={handleSkip}>
+            {t("tour.skip", { ns: "common" })}
+          </Button>
           <Button onClick={handlePrevious} disabled={step === 0}>
             {t("tour.previous", { ns: "common" })}
           </Button>
           <Button onClick={handleNext}>
             {step === steps.length - 1 ? t("tour.finish", { ns: "common" }) : t("tour.next", { ns: "common" })}
-          </Button>
-          <Button secondary onClick={handleSkip}>
-            {t("tour.skip", { ns: "common" })}
           </Button>
         </ButtonContainer>
       </TourContent>

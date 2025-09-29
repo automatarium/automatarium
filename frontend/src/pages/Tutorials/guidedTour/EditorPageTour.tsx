@@ -25,7 +25,9 @@ const TourContent = styled('div')<TourContentProps>`
     max-width: 50%;
     max-height: 80%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 1);
+    background-color: var(--surface);
+    outline: 1px solid var(--input-border);
+    box-shadow: 0 2px 5px rgba(0 0 0 / .5);
 `
 
 interface TourProps {
@@ -138,13 +140,13 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose }) => {
         )}
 
         <ButtonContainer>
+          <Button secondary onClick={handleSkip}>{t("tour.skip", { ns: "common" })}</Button>
           <Button onClick={handlePrevious} disabled={step === 0}>
             {t("tour.previous", { ns: "common" })}
           </Button>
           <Button onClick={handleNext}>
             {step === steps.length - 1 ? t("tour.finish", { ns: "common" }) : t("tour.next", { ns: "common" })}
           </Button>
-          <Button onClick={handleSkip}>{t("tour.skip", { ns: "common" })}</Button>
         </ButtonContainer>
       </TourContent>
     </TourOverlay>

@@ -14,12 +14,10 @@ export const TourOverlay = styled('div')`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0);
     z-index: 9999;
     display: flex;
     justify-content: center;
     align-items: center;
-    pointer-events: none;
 `
 
 export const TourContent = styled('div')<TourContentProps>`
@@ -30,5 +28,7 @@ export const TourContent = styled('div')<TourContentProps>`
     max-width: 50%;
     max-height: 80%;
     overflow: auto;
-    background-color: rgba(0, 0, 0, 1);
+    background-color: var(--surface);
+    outline: 1px solid var(--input-border);
+    box-shadow: 0 2px 5px rgba(0 0 0 / .5);
 `
