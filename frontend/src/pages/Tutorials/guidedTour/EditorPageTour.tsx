@@ -41,58 +41,46 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose }) => {
     {
       target: '', // CSS selector for the element to highlight
       content: t('editor_tour.step1', { ns: 'tutorials' }),
-      gifUrl: null,
     },
-
     {
       target: '',
       content: t('editor_tour.step2', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step3', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step4', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step5', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step6', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step7', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step8', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step9', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step10', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('editor_tour.step11', { ns: 'tutorials' }),
-      gifUrl: null,
     }
     // Add more steps as needed
   ]

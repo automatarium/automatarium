@@ -17,7 +17,7 @@ export interface TourContentProps {
 export interface Step {
   target: string
   content: string
-  gifUrl: string | null
+  gifUrl?: string
 }
 
 const ProjectTour: React.FC<TourProps> = ({ steps, onClose }) => {

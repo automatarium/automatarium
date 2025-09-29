@@ -67,37 +67,30 @@ const LandingPageTour: React.FC<TourProps> = ({ onClose, stepCallback }) => {
     {
       target: '.text', // CSS selector for the element to highlight
       content: t('landing_tour.step1', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '.banner',
       content: t('landing_tour.step2', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('landing_tour.step3', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('landing_tour.step4', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('landing_tour.step5', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('landing_tour.step6', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('landing_tour.step7', { ns: 'tutorials' }),
-      gifUrl: null,
     }
 
     // Add more steps as needed

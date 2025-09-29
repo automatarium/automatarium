@@ -69,23 +69,18 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, stepCallback }) => {
     {
       target: '', // CSS selector for the element to highlight
       content: t('new_tour.step1', { ns: 'tutorials' }),
-      gifUrl: null,
     },
-
     {
       target: '',
       content: t('new_tour.step2', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('new_tour.step3', { ns: 'tutorials' }),
-      gifUrl: null,
     },
     {
       target: '',
       content: t('new_tour.step4', { ns: 'tutorials' }),
-      gifUrl: null,
     }
 
     // Add more steps as needed
