@@ -91,7 +91,7 @@ const basename = process.env.SUB_PATH ?? "/"
 ReactDOM.render(
   <StrictMode>
     <Suspense fallback={<div>Loading</div>}>
-      <HashRouter {...(basename ? { basename } : {})} hashType="noslash">
+      <HashRouter {...(basename ? { basename } : {})}>
         <App />
       </HashRouter>
     </Suspense>
