@@ -118,6 +118,25 @@ function showToast(message) {
   }, 3000);
 }
 
+function showUpdateToast(message, onClick) {
+  const toast = document.createElement("div");
+  toast.innerText = message + " – click to refresh";
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    background: var(--toolbar);
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    zIndex: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  `;
+  toast.addEventListener("click", onClick);
+  document.body.appendChild(toast);
+}
+
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
 
@@ -125,7 +144,15 @@ if ("serviceWorker" in navigator) {
       if (event.data?.type === "OFFLINE_READY") {
         showToast("✅ App is ready to use offline");
       }
+      if (event.data?.type === 'NEW_VERSION') {
+      showUpdateToast("A new version is available", () => {
+        // user clicked update -> reload with new SW
+        window.location.reload();
+      });
+    }
     });
+
+    const hasController = !!navigator.serviceWorker.controller;
 
     navigator.serviceWorker.ready.then(() => {
       // If there's an active controller, the app is already cached
