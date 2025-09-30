@@ -101,6 +101,7 @@ function showToast(message) {
     opacity: 0;
     transition: opacity 0.4s ease, transform 0.4s ease;
     z-index: 9999;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
   `;
   document.body.appendChild(toast);
 
