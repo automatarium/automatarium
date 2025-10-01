@@ -16,25 +16,8 @@ jobs:
     - name: Build project
       run: yarn build
 
-    - name: Upload static files as artifact
-      id: deployment
-      uses: actions/upload-pages-artifact@v4
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        path: ./frontend/dist/
-
-  deploy:
-    needs: build
-
-    permissions:
-      pages: write
-      id-token: write
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    runs-on: ubuntu-latest
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
+        folder: ./frontend/dist/
+        clean-exclude: pr-preview/
