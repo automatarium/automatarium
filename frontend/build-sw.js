@@ -8,7 +8,7 @@ injectManifest({
   maximumFileSizeToCacheInBytes: 10 * 1024 * 1024, 
 }).then(({ count, size, warnings }) => {
   warnings.forEach(console.warn);
-  console.log(`Injected ${count} files, totaling ${size} bytes. (Not counting external files))`);
+  console.log(`Injected ${count} files, totaling ${size} bytes. (Not counting external files)`);
 }).catch(err => {
   console.error('Error generating service worker:', err);
 });
