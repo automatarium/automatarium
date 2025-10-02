@@ -1,16 +1,7 @@
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching"
 import { registerRoute } from 'workbox-routing';
-import { PDAgifs, FSAgifs, TMgifs } from '../src/config/tour-gifs-manifest.json'
 
-const manifest = self.__WB_MANIFEST || [];
-
-const formatCacheEntries = (links) => {
-  return links.map(url => ({url, revision: null}));
-}
-
-const extraCacheEntries = formatCacheEntries([...FSAgifs, ...PDAgifs, ...TMgifs]);
-
-precacheAndRoute([...manifest, ...extraCacheEntries]);
+precacheAndRoute(self.__WB_MANIFEST || []);
 
 self.addEventListener("install", () => {
   // Activate this worker immediately
