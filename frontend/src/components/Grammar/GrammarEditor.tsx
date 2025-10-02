@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { GrammarProjectGraph } from '../../types/ProjectTypes'
-import { testString } from '../../util/grammar'
+import { testString, detectType } from '../../util/grammar'
+
 
 type Props = {
   project: GrammarProjectGraph
@@ -12,6 +13,8 @@ export default function GrammarEditor({ project }: Props) {
   const [productions, setProductions] = useState(project.productions || [])
   const [input, setInput] = useState("")
   const [result, setResult] = useState<string | null>(null)
+  const [grammarType, setGrammarType] = useState<string | null>(null)
+
 
   // add a new production rule
   const addProduction = () => {
@@ -45,6 +48,15 @@ export default function GrammarEditor({ project }: Props) {
     }
     const ok = testString(currentGrammar, input)
     setResult(ok ? "✅ Accepted" : "❌ Rejected")
+  }
+
+  const handleDetectType = () => {
+    const currentGrammar: GrammarProjectGraph = {
+      projectType: 'GRAMMAR',
+      startSymbol,
+      productions
+    }
+    setGrammarType(detectType(currentGrammar))
   }
 
   return (
@@ -104,6 +116,19 @@ export default function GrammarEditor({ project }: Props) {
           >
             + Add Production
           </button>
+          <button
+              className="mt-3 ml-2 px-3 py-1 bg-purple-600 hover:bg-purple-500 rounded text-white"
+              onClick={handleDetectType}
+            >
+              Detect Grammar Type
+            </button>
+                      
+            {grammarType && (
+              <div className="mt-3 px-3 py-2 rounded bg-gray-700 font-semibold">
+                Type: {grammarType}
+              </div>
+            )}
+
         </div>
 
         {/* String Tester Panel */}
