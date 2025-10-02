@@ -8,7 +8,7 @@
     "start": "yarn prebuild && parcel public/index.html --no-cache",
     "copy:locales": "cp -r public/locales dist",
     "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales",
-    "build": "yarn prebuild && parcel build public/index.html --public-url ./ && yarn postbuild",
+    "build": "yarn prebuild && parcel build public/index.html && yarn postbuild",
     "postbuild": "node build-sw.js",
     "serve": "serve -s dist -l 3000",
     "check:types": "tsc --noemit"
@@ -45,9 +45,9 @@
     "zustand": "^4.5.7"
   },
   "devDependencies": {
-    "@parcel/packager-raw-url": "2.16.0",
+    "@parcel/packager-raw-url": "2.15.2",
     "@parcel/transformer-inline-string": "^2.15.2",
-    "@parcel/transformer-webmanifest": "2.16.0",
+    "@parcel/transformer-webmanifest": "2.15.2",
     "@types/lodash.groupby": "^4.6.9",
     "@types/node": "^20.19.0",
     "@types/react": "^18.3.23",
