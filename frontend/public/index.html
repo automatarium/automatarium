@@ -17,11 +17,6 @@
   <body>
     <div id="app"></div>
     <script type="module" src="/src/index.tsx"></script>
-    <script type="module">
-      if (process.env.NODE_ENV !== 'development') {
-        navigator.serviceWorker.register(new URL('service-worker.js', import.meta.url), { type: 'module' })
-      }
-    </script>
 
     <noscript>Automatarium requires JavaScript, you may need to update your browser.</noscript>
   </body>

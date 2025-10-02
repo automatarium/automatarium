@@ -139,6 +139,9 @@ function showUpdateToast(message, onClick) {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
+    if (process.env.NODE_ENV !== 'development') {
+      navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url), { type: 'module' })
+    }
 
     navigator.serviceWorker.addEventListener("message", (event) => {
       if (event.data?.type === "OFFLINE_READY") {
