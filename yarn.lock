@@ -4088,8 +4088,6 @@ __metadata:
     parcel: "npm:^2.15.2"
     typescript: "npm:^5.8.3"
     typescript-eslint: "npm:^8.34.0"
-    workbox-build: "npm:^7.3.0"
-    workbox-cli: "npm:^7.3.0"
   languageName: unknown
   linkType: soft
 
