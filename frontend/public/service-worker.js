@@ -19,21 +19,18 @@ self.addEventListener("install", (event) => {
 
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-      (async () => {
-        // Take control of all clients (pages) immediately
-        await self.clients.claim();
+    (async () => {
+
+      const clientsList = await self.clients.matchAll({type: "window", includeUncontrolled: true });
+
+      // Take control of all clients (pages) immediately
+      await self.clients.claim();
 
       // Once install completes, tell clients that offline is ready
-      const clientsList = await self.clients.matchAll({type: "window", includeUncontrolled: true });
       for (const client of clientsList) {
         client.postMessage({ type: "OFFLINE_READY" });
       }
 
-      if (self.registration.active) {
-        for (const client of clientsList) {
-          client.postMessage({ type: "NEW_VERSION" });
-        }
-      }
       })()
     );
   });

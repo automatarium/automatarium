@@ -138,31 +138,41 @@ function showUpdateToast(message, onClick) {
 }
 
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
+  window.addEventListener("load", async () => {
     if (process.env.NODE_ENV !== 'development') {
-      navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url), { type: 'module' })
-    }
+      const hasController = !!navigator.serviceWorker.controller; // <- track if SW already existed
 
-    navigator.serviceWorker.addEventListener("message", (event) => {
-      if (event.data?.type === "OFFLINE_READY") {
-        showToast("✅ App is ready to use offline");
-      }
-      if (event.data?.type === 'NEW_VERSION') {
-      showUpdateToast("A new version is available", () => {
-        // user clicked update -> reload with new SW
-        window.location.reload();
+      const registration = await navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url), { type: 'module' })
+
+      navigator.serviceWorker.addEventListener("message", (event) => {
+        if (event.data?.type === "OFFLINE_READY") {
+          showToast("✅ App is ready to use offline");
+        }
       });
-    }
-    });
 
-    const hasController = !!navigator.serviceWorker.controller;
+      navigator.serviceWorker.ready.then(() => {
+        // If there's an active controller, the app is already cached
+        if (navigator.serviceWorker.controller) {
+          showToast("✅ App is ready to use offline");
+        }
+      });
+      
+      if (hasController) {
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (!newWorker) return;
 
-    navigator.serviceWorker.ready.then(() => {
-      // If there's an active controller, the app is already cached
-      if (navigator.serviceWorker.controller) {
-        showToast("✅ App is ready to use offline");
+          newWorker.addEventListener("statechange", () => {
+            if (newWorker.state === "activated") {
+              showUpdateToast("A new version is available", () => {
+                // user clicked update -> reload with new SW
+                window.location.reload();
+              })
+            }
+          });
+        });
       }
-    });
+    }
   });
 }
 
