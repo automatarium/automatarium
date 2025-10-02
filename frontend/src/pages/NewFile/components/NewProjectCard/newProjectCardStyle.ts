@@ -61,7 +61,6 @@ export const CardImage = styled('div')<{theme: string, $disabled?: boolean}>`
       opacity: .4;
       position: absolute;
       inset: 0;
-      font-family: var(--font-feature);
     }
   `}
 

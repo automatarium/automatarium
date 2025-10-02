@@ -363,7 +363,7 @@ const NewFile = () => {
       onClick={showTourHandler}>
     </TourButton>
 
-    {showTour && <NewPageTour onClose={closeTour} Step={handleStep} />}
+    {showTour && <NewPageTour onClose={closeTour} stepCallback={handleStep} />}
     <ImportDialog navigateFunction={navigate} />
     <ImportModuleDialog navigateFunction={navigate}/>
     <CreateModule />

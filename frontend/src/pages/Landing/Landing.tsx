@@ -138,7 +138,7 @@ const Landing = () => {
     </TourButton>
 
     {/* Render the tour if showTour is true */}
-    {showTour && <LandingPageTour onClose={closeTour} Step={handleBannerStep} />}
+    {showTour && <LandingPageTour onClose={closeTour} stepCallback={handleBannerStep} />}
     </Main>
   )
 }

@@ -49,7 +49,7 @@ export const TickerTapeCell = styled('span')<{$consumed?: boolean}>`
   justify-content: center;
   aspect-ratio: 1;
   min-width: var(--cell-width);
-  font-family: monospace;
+  font-family: var(--font-mono);
   font-size: 1.2rem;
   box-sizing: border-box;
   background: var(--white);

@@ -4,7 +4,7 @@ export const HeaderContainer = styled('header')<{$center?: boolean}>`
   display: flex;
   align-items: center;
   margin-bottom: 1em;
-  font-family: var(--font-feature);
+  font-family: var(--font-header);
   gap: 1em;
   user-select: none;
 
