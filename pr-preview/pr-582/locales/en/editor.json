@@ -1,0 +1,13 @@
+{
+    "component": {
+        "module": {
+            "title": "Question {{qNumber}}",
+            "loading": "Loading module instructions...",
+            "button": {
+                "save": "Save",
+                "edit": "Edit"
+            },
+            "edit_placeholder": "Edit module instructions here"
+        }
+    }
+}
