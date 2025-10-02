@@ -11,8 +11,8 @@ import { stopTemplateInsert } from '/src/components/Sidepanel/Panels/Templates/T
 import { showWarning } from '/src/components/Warning/Warning'
 import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
 import { useContextStore, usePopupsStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
-import { InsertGroupResponseType, StoredProject, createNewProject } from '/src/stores/useProjectStore'
-import { CopyData, FSAProjectGraph } from '/src/types/ProjectTypes'
+import { InsertGroupResponseType, createNewProject } from '/src/stores/useProjectStore'
+import { CopyData, FSAProjectGraph, Project } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -114,7 +114,7 @@ const useActions = (registerHotkeys = false) => {
     IMPORT_AUTOMATARIUM_PROJECT: {
       hotkeys: [{ key: 'i', meta: true }],
       handler: async () => {
-        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json,.ao') }
+        if (window.confirm(t('use_actions.import_warning'))) { promptLoadFile(t, setProject, t('use_actions.failed_automatarium'), '.json') }
       }
     },
     IMPORT_JFLAP_PROJECT: {
@@ -153,7 +153,7 @@ const useActions = (registerHotkeys = false) => {
         const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
         a.href = URL.createObjectURL(file)
         // File extension explicitly added to allow for file names with dots
-        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.ao'
+        a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
         a.click()
       }
     },
@@ -678,7 +678,7 @@ export const urlLoadFile = <T>(url: string, t: TFunction, onData: (val: T) => vo
 // Takes in the IDs of states, comments, and transitions
 // Parameters also include  the current project and whether a template is being created
 // Outputs a CopyData to be copied or Template object to be created into a template
-export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project: StoredProject): CopyData => {
+export const selectionToCopyTemplate = (stateIds: number[], commentIds: number[], transitionIds: number[], project: Project): CopyData => {
   const selectedStates = project.states.filter(state => stateIds.includes(state.id))
   const selectedComments = project.comments.filter(comment => commentIds.includes(comment.id))
   const selectedTransitions = project.transitions.filter(transition => transitionIds.includes(transition.id))
@@ -740,7 +740,7 @@ export const exportModuleFile = () => {
   const file = new Blob([JSON.stringify(project, null, 2)], { type: 'application/json' })
   a.href = URL.createObjectURL(file)
   // File extension explicitly added to allow for file names with dots
-  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.aom'
+  a.download = project.meta.name.replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '') + '.json'
   a.click()
 }
 

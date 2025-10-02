@@ -30,11 +30,6 @@ import { expandTransitions } from '@automatarium/simulation/src/utils'
 
 import { PASTE_POSITION_OFFSET } from 'frontend/src/config/rendering'
 
-/**
- * Normal project, except it has extra information to identify it
- */
-export type StoredProject = Project & {_id: string, userid?: string}
-
 export enum InsertGroupResponseType {
   FAIL = 1,
   SUCCESS
@@ -48,7 +43,7 @@ type InsertGroupResponse = {
   body: Template | CopyData
 }
 
-export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): StoredProject => ({
+export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): Project => ({
   projectType,
   _id: crypto.randomUUID(),
   states: [],
@@ -88,18 +83,18 @@ const nextIDFor = (elementArr: {id: number}[]): number => {
 }
 
 interface ProjectStore {
-  project: StoredProject,
+  project: Project,
   // Can't work this one out
-  history: StoredProject[],
+  history: Project[],
   historyPointer: number,
   lastChangeDate: number,
   lastSaveDate: number,
-  set: (project: StoredProject) => void,
+  set: (project: Project) => void,
   /**
    * Updates the current project. This doesn't reset the history like `set`
    * @param project
    */
-  update: (project: StoredProject) => void,
+  update: (project: Project) => void,
   commit: () => void,
   undo: () => void,
   redo: () => void,
@@ -149,15 +144,15 @@ const updateById = <T extends {id: number}>(items: T[], item: Partial<T>) => {
 }
 
 const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectStore>, get: GetState<ProjectStore>) => ({
-  project: null as StoredProject,
+  project: null as Project,
   history: [],
   historyPointer: null,
   lastChangeDate: null,
   lastSaveDate: null,
 
-  set: (project: StoredProject) => { set({ project, history: [clone(project)], historyPointer: 0 }) },
+  set: (project: Project) => { set({ project, history: [clone(project)], historyPointer: 0 }) },
 
-  update: (project: StoredProject) => set(produce((state: ProjectStore) => {
+  update: (project: Project) => set(produce((state: ProjectStore) => {
     state.project = project
   })),
 
@@ -224,7 +219,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     return id
   },
 
-  editTransition: newTransition => set(produce(({ project }: { project: StoredProject }) => {
+  editTransition: newTransition => set(produce(({ project }: { project: Project }) => {
     // Refactor types to enums later
     const ti = project.transitions.findIndex(t => t.id === newTransition.id)
     // Merge the new transition info with existing transition info
@@ -232,7 +227,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   // Same as edit but restricted to from/to edits. Should they be the same function?
-  moveTransition: newTransition => set(produce(({ project }: { project: StoredProject }) => {
+  moveTransition: newTransition => set(produce(({ project }: { project: Project }) => {
     // Refactor types to enums later
     const ti = project.transitions.findIndex(t => t.id === newTransition.id)
     // Merge the new transition info with existing transition info
@@ -242,32 +237,32 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   /* Create a new comment */
   createComment: comment => {
     const id = nextIDFor(get().project.comments)
-    set(produce(({ project }: { project: StoredProject }) => {
+    set(produce(({ project }: { project: Project }) => {
       project.comments.push({ ...comment, id })
     }))
     return id
   },
 
   /* Update a comment by id */
-  updateComment: comment => set(produce(({ project }: { project: StoredProject }) => {
+  updateComment: comment => set(produce(({ project }: { project: Project }) => {
     updateById(project.comments, comment)
   })),
 
-  updateComments: comments => set(produce(({ project }: { project: StoredProject }) => {
+  updateComments: comments => set(produce(({ project }: { project: Project }) => {
     for (const comment of comments) {
       updateById(project.comments, comment)
     }
   })),
 
   /* Remove a comment by id */
-  removeComment: (comment: ProjectComment) => set(produce(({ project }: { project: StoredProject }) => {
+  removeComment: (comment: ProjectComment) => set(produce(({ project }: { project: Project }) => {
     project.comments = project.comments.filter((cm: ProjectComment) => cm.id !== comment.id)
   })),
 
   /* Create a new state */
   createState: state => {
     const id = nextIDFor(get().project.states)
-    set(produce(({ project }: { project: StoredProject }) => {
+    set(produce(({ project }: { project: Project }) => {
       project.states.push({ ...state, id, isFinal: state.isFinal ?? false })
       if (project.states.length === 1) {
         project.initialState = id
@@ -277,18 +272,18 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   /* Update a state by id */
-  updateState: state => set(produce(({ project }: { project: StoredProject }) => {
+  updateState: state => set(produce(({ project }: { project: Project }) => {
     updateById(project.states, state)
   })),
 
-  updateStates: states => set(produce(({ project }: { project: StoredProject }) => {
+  updateStates: states => set(produce(({ project }: { project: Project }) => {
     for (const state of states) {
       updateById(project.states, state)
     }
   })),
 
   /* Remove a state by id */
-  removeState: (state: AutomataState) => set(produce(({ project }: { project: StoredProject }) => {
+  removeState: (state: AutomataState) => set(produce(({ project }: { project: Project }) => {
     project.states = project.states.filter((st: AutomataState) => st.id !== state.id)
   })),
 
@@ -388,12 +383,12 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   setStateInitial: (stateID: number) => set((s: ProjectStore) => ({ project: { ...s.project, initialState: stateID } })),
 
   /* Set all provided states as final */
-  toggleStatesFinal: (stateIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
+  toggleStatesFinal: (stateIDs: number[]) => set(produce(({ project }: {project: Project}) => {
     project.states = project.states.map(state => ({ ...state, isFinal: stateIDs.includes(state.id) ? !state.isFinal : state.isFinal }))
   })),
 
   /* Toggle direction of transitions */
-  flipTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
+  flipTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: Project}) => {
     project.transitions = project.transitions.map(t => transitionIDs.includes(t.id)
       ? ({
           ...t,
@@ -404,7 +399,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Remove states by id */
-  removeStates: (stateIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
+  removeStates: (stateIDs: number[]) => set(produce(({ project }: {project: Project}) => {
     // Remove states
     project.states = project.states.filter((st: AutomataState) => !stateIDs.includes(st.id))
 
@@ -418,12 +413,12 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Remove transitions by id */
-  removeTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
+  removeTransitions: (transitionIDs: number[]) => set(produce(({ project }: {project: Project}) => {
     project.transitions = project.transitions.filter((t: BaseAutomataTransition) => !transitionIDs.includes(t.id))
   })),
 
   /* Remove comments by id */
-  removeComments: (commentIDs: number[]) => set(produce(({ project }: {project: StoredProject}) => {
+  removeComments: (commentIDs: number[]) => set(produce(({ project }: {project: Project}) => {
     project.comments = project.comments.filter(c => !commentIDs.includes(c.id))
   })),
 
@@ -443,7 +438,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     } as ProjectGraph
   },
 
-  updateGraph: graph => set(produce(({ project }: { project: StoredProject}) => {
+  updateGraph: graph => set(produce(({ project }: { project: Project}) => {
     project.transitions = graph.transitions
     project.states = graph.states
     project.initialState = graph.initialState
