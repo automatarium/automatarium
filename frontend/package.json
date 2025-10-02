@@ -8,7 +8,7 @@
     "start": "yarn prebuild && parcel public/index.html --no-cache",
     "copy:locales": "cp -r public/locales dist",
     "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales",
-    "build": "yarn prebuild && parcel build public/index.html && yarn postbuild",
+    "build": "yarn prebuild && parcel build public/index.html --public-url ./ && yarn postbuild",
     "postbuild": "node build-sw.js",
     "serve": "serve -s dist -l 3000",
     "check:types": "tsc --noemit"
