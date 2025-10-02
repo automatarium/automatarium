@@ -12,7 +12,7 @@ const extraCacheEntries = formatCacheEntries([...FSAgifs, ...PDAgifs, ...TMgifs]
 
 precacheAndRoute([...manifest, ...extraCacheEntries]);
 
-self.addEventListener("install", (event) => {
+self.addEventListener("install", () => {
   // Activate this worker immediately
   self.skipWaiting();
 });
