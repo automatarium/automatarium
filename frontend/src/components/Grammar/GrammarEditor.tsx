@@ -67,34 +67,34 @@ export default function GrammarEditor({ project }: Props) {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-6 grid grid-cols-2 gap-6">
+      <div className="flex-1 pt-1 px-6 pb-6 grid grid-cols-2 gap-6">
         
         {/* Grammar Rules Panel */}
-        <div className="bg-gray-900 rounded-lg p-4 shadow">
-          <h2 className="text-xl font-bold mb-4">Grammar</h2>
+        <div className="bg-gray-900 rounded-lg p-2 shadow">
+          <h2 className="grammar-header">Grammar Editor</h2>
           
-          <label className="block font-semibold mb-2">Start Symbol</label>
-          <input
-            className="border border-gray-700 rounded px-2 py-1 bg-gray-800 w-32"
-            type="text"
-            value={startSymbol}
-            onChange={e => setStartSymbol(e.target.value)}
-          />
+          <label className="font-semibold">Start Symbol</label>
+            <input
+              className="input-box"
+              type="text"
+              value={startSymbol}
+              onChange={e => setStartSymbol(e.target.value)}
+            />
 
           <h3 className="mt-4 mb-2 font-semibold">Productions</h3>
           <div className="space-y-2">
             {productions.map((p, i) => (
               <div key={i} className="flex items-center gap-2">
                 <input
-                  className="border border-gray-700 rounded px-2 py-1 w-16 bg-gray-800"
+                  className="input-box"
                   type="text"
                   value={p.left}
                   onChange={e => updateLeft(i, e.target.value)}
                   placeholder="LHS"
                 />
-                →
+                →  
                 <input
-                  className="border border-gray-700 rounded px-2 py-1 flex-1 bg-gray-800"
+                  className="input-box-right"
                   type="text"
                   value={p.right.join(" | ")}
                   onChange={e => updateRight(i, e.target.value)}
@@ -111,20 +111,20 @@ export default function GrammarEditor({ project }: Props) {
           </div>
           
           <button
-            className="mt-3 px-3 py-1 bg-green-600 hover:bg-green-500 rounded text-white"
+            className="grammar-button"
             onClick={addProduction}
           >
             + Add Production
           </button>
           <button
-              className="mt-3 ml-2 px-3 py-1 bg-purple-600 hover:bg-purple-500 rounded text-white"
+              className="grammar-button"
               onClick={handleDetectType}
             >
               Detect Grammar Type
             </button>
                       
             {grammarType && (
-              <div className="mt-3 px-3 py-2 rounded bg-gray-700 font-semibold">
+              <div className="grammar-type">
                 Type: {grammarType}
               </div>
             )}
@@ -136,14 +136,14 @@ export default function GrammarEditor({ project }: Props) {
           <h2 className="text-xl font-bold mb-4">Test String</h2>
           <div className="flex items-center">
             <input
-              className="border border-gray-700 rounded px-2 py-1 flex-1 bg-gray-800"
+              className="input-box"
               type="text"
               value={input}
               onChange={e => setInput(e.target.value)}
               placeholder="Enter string"
             />
             <button
-              className="ml-2 px-3 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white"
+              className="grammar-button"
               onClick={handleTest}
             >
               Test
