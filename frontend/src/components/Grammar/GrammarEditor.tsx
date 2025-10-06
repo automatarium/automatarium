@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { GrammarProjectGraph } from '../../types/ProjectTypes'
-import { testString, detectType } from '../../util/grammar'
+import { testString, detectType, convertToAutomata } from '../../util/grammar'
+import { useNavigate } from 'react-router-dom'
 
 
 type Props = {
@@ -14,6 +15,10 @@ export default function GrammarEditor({ project }: Props) {
   const [input, setInput] = useState("")
   const [result, setResult] = useState<string | null>(null)
   const [grammarType, setGrammarType] = useState<string | null>(null)
+  const [fsaRedirect, setFsaRedirect] = useState(false)
+  const navigate = useNavigate()
+
+
 
 
   // add a new production rule
@@ -58,6 +63,54 @@ export default function GrammarEditor({ project }: Props) {
     }
     setGrammarType(detectType(currentGrammar))
   }
+
+
+  const handleExportToFSA = () => {
+  const currentGrammar: GrammarProjectGraph = {
+    projectType: 'GRAMMAR',
+    startSymbol,
+    productions
+  }
+
+  // 🔹 Use your existing converter
+  const fsaGraph = convertToAutomata(currentGrammar, 'FSA')
+
+  // 🔹 Build the exported Automaton project JSON
+  const fsaData = {
+    ...fsaGraph,
+    _id: crypto.randomUUID(),
+    comments: [],
+    simResult: [],
+    tests: { single: "", batch: [""] },
+    meta: {
+      name: "Converted Grammar",
+      dateCreated: Date.now(),
+      dateEdited: Date.now(),
+      version: "1.0.0",
+      automatariumVersion: "1.0.0"
+    },
+    config: {
+      type: "FSA",
+      statePrefix: "q",
+      orOperator: "|",
+      acceptanceCriteria: "both",
+      color: "orange"
+    }
+  }
+
+  // 🔹 Trigger JSON download
+  const blob = new Blob([JSON.stringify(fsaData, null, 2)], {
+    type: "application/json"
+  })
+  const link = document.createElement("a")
+  link.href = URL.createObjectURL(blob)
+  link.download = "converted_fsa.json"
+  link.click()
+  URL.revokeObjectURL(link.href)
+}
+
+
+
 
   return (
     <div className="h-full w-full flex bg-gray-800 text-gray-100">
@@ -122,12 +175,22 @@ export default function GrammarEditor({ project }: Props) {
             >
               Detect Grammar Type
             </button>
-                      
+              
             {grammarType && (
               <div className="grammar-type">
                 Type: {grammarType}
+                {grammarType == "regular" && (
+                <button
+                  className="convert-button"
+                  onClick={handleExportToFSA}
+                >
+                  Export as FSA
+                </button>
+                )}
               </div>
             )}
+        
+
 
         </div>
 

@@ -1,4 +1,4 @@
-import { GrammarProjectGraph } from '../types/ProjectTypes'
+import { GrammarProjectGraph, FSAProjectGraph, AutomataState, FSAAutomataTransition } from '../types/ProjectTypes'
 
 function derives(grammar: GrammarProjectGraph, current: string, input: string): boolean { //recursive function to check if rules can derive the input string from the current string
     if (current === "" && input === "") return true //base case for if both strings are empty
@@ -27,7 +27,10 @@ export function testString(grammar: GrammarProjectGraph, str: string): boolean {
     return derives(grammar, grammar.startSymbol, str)
 }
 
-export function detectType(grammar: GrammarProjectGraph): "regular" | "context-free" | "context-sensitive" | "unrestricted" {
+export function detectType(grammar: GrammarProjectGraph): "regular" | "context-free" | "context-sensitive" | "unrestricted" | "none" {
+  if (grammar.productions.length == 0) {
+    return "none"
+  }
     //assume the grammar is valid for all types until proven otherwise
     let isRegular = true
     let isContextFree = true
@@ -72,4 +75,100 @@ export function detectType(grammar: GrammarProjectGraph): "regular" | "context-f
   if (isContextFree) return "context-free"
   if (isContextSensitive) return "context-sensitive"
   return "unrestricted"
+}
+
+
+
+let stateCounter = 0
+const genId = () => stateCounter++
+
+export function convertToAutomata(grammar: GrammarProjectGraph, type: string) {
+  if (type !== "regular") {
+      console.warn("Only regular grammars can be converted so far.")
+      return null
+  }
+  stateCounter = 0
+  const stateMap = new Map<string, number>()
+  const states: AutomataState[] = []
+  const transitions: FSAAutomataTransition[] = []
+  for (const prod of grammar.productions) {
+    if (!stateMap.has(prod.left)) {
+      const id = genId()
+      stateMap.set(prod.left, id)
+      states.push({
+        id,
+        x: Math.random() * 400 + 100,
+        y: Math.random() * 300 + 100,
+        isFinal: false,
+        name: prod.left
+      })
+    }
+  }
+
+  const finalStateId = genId()
+  states.push({
+    id: finalStateId,
+    x: 500,
+    y: 250,
+    isFinal: true,
+    name: 'F'
+  })
+
+  for (const prod of grammar.productions) {
+    const fromId = stateMap.get(prod.left)!
+    for (const rule of prod.right) {
+      if (rule === "") {
+        // epsilon → mark as final
+        const state = states.find(s => s.id === fromId)
+        if (state) state.isFinal = true
+      } 
+      else if (rule.length === 1 && rule >= "a" && rule <= "z") {
+        // A → a
+        transitions.push({
+          id: genId(),
+          from: fromId,
+          read: rule,
+          to: finalStateId
+        })
+      } 
+      else if (rule.length === 2) {
+        const [a, B] = rule
+        if (a >= "a" && a <= "z" && B >= "A" && B <= "Z") {
+          // A → aB (right-linear)
+          const toId = stateMap.get(B)
+          if (toId !== undefined) {
+            transitions.push({
+              id: genId(),
+              from: fromId,
+              read: a,
+              to: toId
+            })
+          }
+        } else if (a >= "A" && a <= "Z" && B >= "a" && B <= "z") {
+          // A → Bb (left-linear)
+          const toId = stateMap.get(a)
+          if (toId !== undefined) {
+            transitions.push({
+              id: genId(),
+              from: toId,
+              read: B,
+              to: fromId
+            })
+          }
+        }
+      }
+    }
+  }
+
+
+  const automaton: FSAProjectGraph = {
+    projectType: 'FSA',
+    states,
+    transitions,
+    initialState: stateMap.get(grammar.startSymbol) ?? null
+  }
+
+  return automaton
+
+
 }
