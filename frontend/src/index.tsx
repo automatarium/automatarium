@@ -43,8 +43,8 @@ const App = () => {
       'href',
       'data:image/svg+xml,' +
       encodeURIComponent(favicon
-        .replace(/var\(--primary,\s*.*?\)/, `hsl(${color.h} ${color.s}% ${color.l}%)`)
-        .replace(/var\(--state-bg,\s*.*?\)/, `hsl(${color.h} ${color.s}% 75%)`)
+        .replace(/var\(--primary,.*?\)/, `hsl(${color.h} ${color.s}% ${color.l}%)`)
+        .replace(/var\(--state-bg,.*?\)/, `hsl(${color.h} ${color.s}% 75%)`)
       )
     )
   }, [colorPref, projectColor])
