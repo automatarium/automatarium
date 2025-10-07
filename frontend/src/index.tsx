@@ -84,9 +84,6 @@ const App = () => {
   </>
 }
 
-// Should have a leading `/`
-const basename = process.env.SUB_PATH ?? "/"
-
 // Render the app
 ReactDOM.render(
   <StrictMode>
