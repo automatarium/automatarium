@@ -10,7 +10,7 @@ import { OfflineWarning, Title, TitleRow } from './tutorialsStyle'
 import { Banner } from '../Landing/landingStyle'
 import manifest from '/src/config/tutorials-manifest.json'
 import { useTranslation } from 'react-i18next'
-import { useRealOnlineStatus } from '/src/hooks/useOnlineStatus'
+import { useOnlineStatus } from '/src/hooks/useOnlineStatus'
 
 export interface TutorialLeaf {
   id: string
@@ -40,7 +40,7 @@ const TutorialsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [pageInfo, setPageInfo] = useState<PageInfo>()
   const [pagePath, setPagePath] = useState<string[]>()
-  const isOnline = useRealOnlineStatus();
+  const isOnline = useOnlineStatus();
 
   const navigate = useNavigate()
 
