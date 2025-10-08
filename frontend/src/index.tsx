@@ -139,24 +139,30 @@ function showUpdateToast(message, onClick) {
 
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
+    // Don't register if dev server
     if (process.env.NODE_ENV !== 'development') {
-      const hasController = !!navigator.serviceWorker.controller; // <- track if SW already existed
+
+      // Check if SW exists
+      const hasController = !!navigator.serviceWorker.controller;
 
       const registration = await navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url), { type: 'module' })
 
+      // Display offline ready when SW completes installation
       navigator.serviceWorker.addEventListener("message", (event) => {
         if (event.data?.type === "OFFLINE_READY") {
-          showToast("✅ App is ready to use offline");
+          showToast("✅ Ready to use offline");
         }
       });
 
+      // Display offline ready if SW already exists. 
       navigator.serviceWorker.ready.then(() => {
         // If there's an active controller, the app is already cached
         if (navigator.serviceWorker.controller) {
-          showToast("✅ App is ready to use offline");
+          showToast("✅ Ready to use offline");
         }
       });
       
+      // Display update toast if previous controller exists and is updated.
       if (hasController) {
         registration.addEventListener("updatefound", () => {
           const newWorker = registration.installing;
@@ -165,7 +171,6 @@ if ("serviceWorker" in navigator) {
           newWorker.addEventListener("statechange", () => {
             if (newWorker.state === "activated") {
               showUpdateToast("A new version is available", () => {
-                // user clicked update -> reload with new SW
                 window.location.reload();
               })
             }
