@@ -1,7 +1,10 @@
 import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching"
 import { registerRoute } from 'workbox-routing';
+import { googleFontsCache } from 'workbox-recipes';
 
 precacheAndRoute(self.__WB_MANIFEST || []);
+
+googleFontsCache();
 
 self.addEventListener("install", () => {
   // Activate this worker immediately
