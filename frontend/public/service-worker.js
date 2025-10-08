@@ -2,8 +2,12 @@ import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching"
 import { registerRoute } from 'workbox-routing';
 import { googleFontsCache } from 'workbox-recipes';
 
+// precache and route manifest urls during install phase.
+// self.__WB_MANIFEST is populated by injectManifest in build-sw.js
 precacheAndRoute(self.__WB_MANIFEST || []);
 
+// Workbox provided recipe for caching google fonts
+// https://developer.chrome.com/docs/workbox/modules/workbox-recipes#google_fonts_cache
 googleFontsCache();
 
 self.addEventListener("install", () => {
@@ -30,7 +34,7 @@ self.addEventListener("activate", (event) => {
   });
 
 // Route navigations to index.html because SPA
-const handler = createHandlerBoundToURL('/index.html');
+const handler = createHandlerBoundToURL('./index.html');
 registerRoute(
   ({ request }) => request.mode === 'navigate',
   handler
