@@ -13,12 +13,15 @@ import ModuleWindow from './components/ModuleWindow/ModuleWindow'
 import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
-import FSAPageTour from '../Tutorials/guidedTour/FSAPageTour'
-import PDAPageTour from '../Tutorials/guidedTour/PDAPageTour'
-import TMPageTour from '../Tutorials/guidedTour/TMPageTour'
 import TourButton from '/src/components/TourButton/TourButton'
+import ProjectTour from '../Tutorials/guidedTour/ProjectTour'
+import { useTranslation } from 'react-i18next'
+import { makeFsaTourSteps } from '/src/pages/Tutorials/guidedTour/data/fsaTourData'
+import { makePdaTourSteps } from '/src/pages/Tutorials/guidedTour/data/pdaTourData'
+import { makeTmTourSteps } from '/src/pages/Tutorials/guidedTour/data/tmTourData'
 
 const Example = () => {
+  const { t } = useTranslation(["common", "tutorials"])
   const navigate = useNavigate()
   const { tool, setTool } = useToolStore()
   const [priorTool, setPriorTool] = useState<Tool>()
@@ -136,14 +139,6 @@ const Example = () => {
     }
   }, [tool, priorTool])
 
-  // const renderGuidedTour = () => {
-  //   switch (projectType) {
-  //     case 'FSA':
-  //       return <FSAPageTour onClose={closeTour}/>
-  //     case 'PDA':
-  //       return <PDAPageTour onClose={closeTour}/>
-  //   }
-  // }
   return (
     <>
       <Menubar isSaving={isSaving} />
@@ -176,7 +171,10 @@ const Example = () => {
         style={{ position: 'fixed', right: buttonRight, bottom: '20px' }} // Use calculated right position
       />
       <ImportDialog navigateFunction={navigate} />
-      {showTour && (projectType === 'FSA' ? (<FSAPageTour onClose={closeTour}/>) : projectType === 'PDA' ? (<PDAPageTour onClose={closeTour}/>) : (<TMPageTour onClose={closeTour}/>))}
+      {showTour && (
+        projectType === 'FSA' ? (<ProjectTour steps={makeFsaTourSteps(t)} onClose={closeTour}/>) :
+        projectType === 'PDA' ? (<ProjectTour steps={makePdaTourSteps(t)} onClose={closeTour}/>) :
+        (<ProjectTour steps={makeTmTourSteps(t)} onClose={closeTour}/>))}
       <CreateModule />
     </>
   )
