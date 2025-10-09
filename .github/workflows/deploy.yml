@@ -24,5 +24,7 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@v4
       with:
         folder: frontend/dist/
-        clean-exclude: pr-preview/
         target-folder: ${{ github.ref_name }}
+        clean-exclude: |
+          pr-preview/
+          ${{ github.ref_name == 'main' && 'dev/' || 'main/' }}
