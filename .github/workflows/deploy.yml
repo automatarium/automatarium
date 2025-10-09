@@ -28,3 +28,4 @@ jobs:
         clean-exclude: |
           pr-preview/
           ${{ github.ref_name == 'main' && 'dev/' || 'main/' }}
+        force: false
