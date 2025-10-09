@@ -29,3 +29,4 @@ jobs:
           pr-preview/
           ${{ github.ref_name == 'main' && 'dev/' || 'main/' }}
         force: false
+        commit-message: Deploy to GitHub Pages from ${{ github.ref_name }} branch
