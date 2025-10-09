@@ -3,9 +3,10 @@ on:
   push:
     branches:
       - main
+      - dev
 
 concurrency:
-  group: pages-${{ github.ref }}
+  group: pages-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
@@ -24,3 +25,4 @@ jobs:
       with:
         folder: ./frontend/dist/
         clean-exclude: pr-preview/
+        target-folder: ${{ github.ref_name }}
