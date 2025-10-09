@@ -1,7 +1,7 @@
 import { StrictMode, Suspense, createElement, useEffect } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 import * as Pages from './pages'
 
@@ -84,16 +84,13 @@ const App = () => {
   </>
 }
 
-// Should have a leading `/`
-const basename = process.env.SUB_PATH ?? "/"
-
 // Render the app
 ReactDOM.render(
   <StrictMode>
     <Suspense fallback={<div>Loading</div>}>
-      <BrowserRouter {...(basename ? { basename } : {})}>
+      <HashRouter>
         <App />
-      </BrowserRouter>
+      </HashRouter>
     </Suspense>
   </StrictMode>,
   document.getElementById('app')
