@@ -27,7 +27,7 @@ export function testString(grammar: GrammarProjectGraph, str: string): boolean {
     return derives(grammar, grammar.startSymbol, str)
 }
 
-export function detectType(grammar: GrammarProjectGraph): "regular" | "context-free" | "context-sensitive" | "unrestricted" | "none" {
+export function detectType(grammar: GrammarProjectGraph): "regular (right-linear)" | "regular (left-linear)" | "context-free" | "context-sensitive" | "unrestricted" | "none" {
   if (grammar.productions.length == 0) {
     return "none"
   }
@@ -35,43 +35,53 @@ export function detectType(grammar: GrammarProjectGraph): "regular" | "context-f
     let isRegular = true
     let isContextFree = true
     let isContextSensitive = true
+    let rightLinear = null
 
     for (const prod of grammar.productions) { //iterate through each production rule
-        const left = prod.left
-        for (const rule of prod.right) {
-
-            //regular grammar check (only one non-terminal on LHS, and RHS is either a single terminal or a terminal + non-terminal)
-            if (!(left.length === 1 && left >= "A" && left <= "Z")) {
-              isRegular = false
+      const left = prod.left
+      for (const rule of prod.right) {
+        //regular grammar check (only one non-terminal on LHS, and RHS is either a single terminal or a terminal + non-terminal)
+        if (!(left.length === 1 && left >= "A" && left <= "Z")) {
+          isRegular = false
+        } else {
+          if (rule !== "") {
+            const isSingleTerminal = rule.length === 1 && rule[0] >= "a" && rule[0] <= "z";
+            const isRightLinearForm = rule.length === 2 && rule[0] >= "a" && rule[0] <= "z" && rule[1] >= "A" && rule[1] <= "Z";
+            const isLeftLinearForm = rule.length === 2 && rule[0] >= "A" && rule[0] <= "Z" && rule[1] >= "a" && rule[1] <= "z";
+            if (!(isSingleTerminal || isRightLinearForm || isLeftLinearForm)) {
+              isRegular = false;
             } else {
-              if (
-                rule !== "" &&
-                !(
-                  //check for single terminal
-                  (rule.length === 1 && rule[0] >= "a" && rule[0] <= "z") ||
-                  //check for terminal + non-terminal (right-linear)
-                  (rule.length === 2 && rule[0] >= "a" && rule[0] <= "z" && rule[1] >= "A" && rule[1] <= "Z") ||
-                  //check for non-terminal + terminal (left-linear)
-                  (rule.length === 2 && rule[0] >= "A" && rule[0] <= "Z" && rule[1] >= "a" && rule[1] <= "z")
-                )
-              ) {
-                isRegular = false
+              //determin left or right linear format
+              if (isRightLinearForm) {
+                if (rightLinear === false) {
+                  isRegular = false; //mixed linearity can't be regular
+                } else {
+                  rightLinear = true;
+                }
+              } else if (isLeftLinearForm) {
+                if (rightLinear === true) {
+                  isRegular = false; //mixed linearity can't be regular
+                } else {
+                  rightLinear = false;
+                }
               }
             }
+          }
+        }
 
-            //context-free grammar check (only one non-terminal on LHS)
-            if (!(left.length === 1 && left >= "A" && left <= "Z")) { 
-              isContextFree = false
-            }
-
-            //context-sensitive grammar check (length of RHS must be >= length of LHS, except for the case of start symbol producing empty string)
-            if (rule.length < left.length && !(left === grammar.startSymbol && rule === "")) {
-              isContextSensitive = false
-            }
+      //context-free grammar check (only one non-terminal on LHS)
+      if (!(left.length === 1 && left >= "A" && left <= "Z")) { 
+        isContextFree = false
+      }
+    
+      //context-sensitive grammar check (length of RHS must be >= length of LHS, except for the case of start symbol producing empty string)
+      if (rule.length < left.length && !(left === grammar.startSymbol && rule === "")) {
+        isContextSensitive = false
+      }
     }
   }
 
-  if (isRegular) return "regular"
+  if (isRegular) return `regular (${rightLinear ? "right-linear" : "left-linear"})`;
   if (isContextFree) return "context-free"
   if (isContextSensitive) return "context-sensitive"
   return "unrestricted"
@@ -118,12 +128,10 @@ export function convertToAutomata(grammar: GrammarProjectGraph, type: string) {
     const fromId = stateMap.get(prod.left)!
     for (const rule of prod.right) {
       if (rule === "") {
-        // epsilon → mark as final
         const state = states.find(s => s.id === fromId)
         if (state) state.isFinal = true
       } 
       else if (rule.length === 1 && rule >= "a" && rule <= "z") {
-        // A → a
         transitions.push({
           id: genId(),
           from: fromId,
@@ -134,7 +142,6 @@ export function convertToAutomata(grammar: GrammarProjectGraph, type: string) {
       else if (rule.length === 2) {
         const [a, B] = rule
         if (a >= "a" && a <= "z" && B >= "A" && B <= "Z") {
-          // A → aB (right-linear)
           const toId = stateMap.get(B)
           if (toId !== undefined) {
             transitions.push({
@@ -145,7 +152,6 @@ export function convertToAutomata(grammar: GrammarProjectGraph, type: string) {
             })
           }
         } else if (a >= "A" && a <= "Z" && B >= "a" && B <= "z") {
-          // A → Bb (left-linear)
           const toId = stateMap.get(a)
           if (toId !== undefined) {
             transitions.push({

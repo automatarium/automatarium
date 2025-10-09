@@ -85,10 +85,10 @@ export default function GrammarEditor({ project }: Props) {
       productions
     }
 
-    // 🔹 Use your existing converter
-    const fsaGraph = convertToAutomata(currentGrammar, 'FSA')
+    
+    const fsaGraph = convertToAutomata(currentGrammar, 'regular')
 
-    // 🔹 Build the exported Automaton project JSON
+    
     const fsaData = {
       ...fsaGraph,
       _id: crypto.randomUUID(),
@@ -111,7 +111,7 @@ export default function GrammarEditor({ project }: Props) {
       }
     }
 
-    // 🔹 Trigger JSON download
+    
     const blob = new Blob([JSON.stringify(fsaData, null, 2)], {
       type: "application/json"
     })
@@ -184,7 +184,7 @@ export default function GrammarEditor({ project }: Props) {
             {grammarType && (
               <div className="grammar-type">
                 Type: {grammarType}
-                {grammarType === "regular" && (
+                {grammarType === "regular (left-linear)" || grammarType === "regular (right-linear)" && (
                   <button className="convert-button" onClick={handleExportToFSA}>
                     Export as FSA
                   </button>
