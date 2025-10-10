@@ -32,10 +32,3 @@ self.addEventListener("activate", (event) => {
       })()
     );
   });
-
-// Route navigations to index.html because SPA
-const handler = createHandlerBoundToURL('./index.html');
-registerRoute(
-  ({ request }) => request.mode === 'navigate',
-  handler
-);

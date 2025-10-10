@@ -10,7 +10,7 @@
     "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales && cp public/ping.txt dist/",
     "build": "yarn prebuild && parcel build public/index.html --public-url ./ && yarn postbuild",
     "postbuild": "node build-sw.js",
-    "serve": "serve -s dist -l 3000",
+    "serve": "serve dist -l 3000",
     "check:types": "tsc --noemit"
   },
   "dependencies": {
