@@ -18,6 +18,8 @@ export default function GrammarEditor({ project }: Props) {
   const [fsaRedirect, setFsaRedirect] = useState(false)
   const navigate = useNavigate()
 
+
+  // TODO: Remove this when grammar menu is implemented
   useEffect(() => {
     // Hide File, Edit, View, Tools, Help buttons
     const menuButtons = document.querySelectorAll('.go4171875633 button');
