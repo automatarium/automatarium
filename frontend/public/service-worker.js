@@ -1,5 +1,4 @@
-import { precacheAndRoute, createHandlerBoundToURL } from "workbox-precaching"
-import { registerRoute } from 'workbox-routing';
+import { precacheAndRoute } from "workbox-precaching"
 import { googleFontsCache } from 'workbox-recipes';
 
 // precache and route manifest urls during install phase.
