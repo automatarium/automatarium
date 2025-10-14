@@ -15,6 +15,7 @@ import '/src/config/i18n'
 
 import favicon from 'bundle-text:/public/logo.svg'
 import { UpdateToast } from './components/Toast/UpdateToast/UpdateToast'
+import { OfflineReadyToast } from './components/Toast/OfflineReadyToast/OfflineReadyToast'
 
 // Set up goober to use React
 setup(
@@ -76,6 +77,17 @@ const App = () => {
     return () => window.removeEventListener("sw-update-available", handleSWUpdate);
   }, []);
 
+  // Check for offline ready toast event
+  const [showOfflineReadyToast, setShowOfflineReadyToast] = useState(false);
+  useEffect(() => {
+    const handleOfflineReady = () => {
+      setShowOfflineReadyToast(true);
+    };
+
+    window.addEventListener("sw-offline-ready", handleOfflineReady);
+    return () => window.removeEventListener("sw-offline-ready", handleOfflineReady);
+  }, []);
+
   useEgg()
 
   return <>
@@ -92,43 +104,10 @@ const App = () => {
     </Routes>
     {!hideFooter && <Footer />}
     {showUpdateToast && <UpdateToast />}
+    {showOfflineReadyToast && <OfflineReadyToast />}
     <Warning />
     <Pages.Preferences />
   </>
-}
-
-function showToast(message) {
-  const toast = document.createElement("div");
-  toast.innerText = message;
-  toast.style.cssText = `
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--toolbar);
-    color: var(--white);
-    padding: 12px 20px;
-    border-radius: 8px;
-    font-family: sans-serif;
-    font-size: 14px;
-    opacity: 0;
-    transition: opacity 0.4s ease, transform 0.4s ease;
-    z-index: 9999;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  `;
-  document.body.appendChild(toast);
-
-  // Trigger fade-in
-  requestAnimationFrame(() => {
-    toast.style.opacity = "1";
-    toast.style.transform = "translateX(-50%) translateY(0)";
-  });
-
-  // Hide after 3s
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    setTimeout(() => toast.remove(), 400);
-  }, 3000);
 }
 
 if ("serviceWorker" in navigator) {
@@ -144,7 +123,7 @@ if ("serviceWorker" in navigator) {
       // Display offline ready when SW completes installation
       navigator.serviceWorker.addEventListener("message", (event) => {
         if (event.data?.type === "OFFLINE_READY") {
-          showToast("✅ Ready to use offline");
+          window.dispatchEvent(new Event('sw-offline-ready'));
         }
       });
 
@@ -152,7 +131,7 @@ if ("serviceWorker" in navigator) {
       navigator.serviceWorker.ready.then(() => {
         // If there's an active controller, the app is already cached
         if (navigator.serviceWorker.controller) {
-          showToast("✅ Ready to use offline");
+          window.dispatchEvent(new Event('sw-offline-ready'));
         }
       });
       
