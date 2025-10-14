@@ -14,7 +14,7 @@ import { Warning } from '/src/components/Warning/Warning'
 import '/src/config/i18n'
 
 import favicon from 'bundle-text:/public/logo.svg'
-import { UpdateToast } from './components/Toast/UpdateToast'
+import { UpdateToast } from './components/Toast/UpdateToast/UpdateToast'
 
 // Set up goober to use React
 setup(
