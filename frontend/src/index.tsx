@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, createElement, useEffect } from 'react'
+import { StrictMode, Suspense, createElement, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
 import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
@@ -14,6 +14,7 @@ import { Warning } from '/src/components/Warning/Warning'
 import '/src/config/i18n'
 
 import favicon from 'bundle-text:/public/logo.svg'
+import { UpdateToast } from './components/Toast/UpdateToast'
 
 // Set up goober to use React
 setup(
@@ -64,6 +65,17 @@ const App = () => {
     setPreferences({ ...preferences, pauseTM: true })
   }
 
+  // Check for update toast event
+  const [showUpdateToast, setShowUpdateToast] = useState(false);
+  useEffect(() => {
+    const handleSWUpdate = () => {
+      setShowUpdateToast(true);
+    };
+
+    window.addEventListener("sw-update-available", handleSWUpdate);
+    return () => window.removeEventListener("sw-update-available", handleSWUpdate);
+  }, []);
+
   useEgg()
 
   return <>
@@ -79,6 +91,7 @@ const App = () => {
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
     {!hideFooter && <Footer />}
+    {showUpdateToast && <UpdateToast />}
     <Warning />
     <Pages.Preferences />
   </>
@@ -118,25 +131,6 @@ function showToast(message) {
   }, 3000);
 }
 
-function showUpdateToast(message, onClick) {
-  const toast = document.createElement("div");
-  toast.innerText = message + " – click to refresh";
-  toast.style.cssText = `
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    background: var(--toolbar);
-    color: #fff;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    cursor: pointer;
-    zIndex: 9999;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  `;
-  toast.addEventListener("click", onClick);
-  document.body.appendChild(toast);
-}
-
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", async () => {
     // Don't register if dev server
@@ -170,9 +164,7 @@ if ("serviceWorker" in navigator) {
 
           newWorker.addEventListener("statechange", () => {
             if (newWorker.state === "activated") {
-              showUpdateToast("A new version is available", () => {
-                window.location.reload();
-              })
+              window.dispatchEvent(new Event('sw-update-available'));
             }
           });
         });
