@@ -5656,6 +5656,7 @@ __metadata:
     react-router-dom: "npm:^6.30.1"
     serve: "npm:^14.2.4"
     stream-browserify: "npm:^3.0.0"
+    ts-node: "npm:^10.9.2"
     typescript: "npm:^4.9.5"
     util: "npm:^0.12.5"
     workbox-build: "npm:^7.3.0"

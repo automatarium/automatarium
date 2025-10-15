@@ -9,7 +9,7 @@
     "copy:locales": "cp -r public/locales dist",
     "prebuild": "rm -rf dist && mkdir dist && yarn copy:locales && cp public/ping.txt dist/",
     "build": "yarn prebuild && parcel build public/index.html --public-url ./ && yarn postbuild",
-    "postbuild": "node build-sw.js",
+    "postbuild": "yarn ts-node build-sw.ts",
     "serve": "serve dist -l 3000",
     "check:types": "tsc --noemit"
   },
@@ -41,6 +41,7 @@
     "react-markdown": "^8.0.7",
     "react-resizable": "^3.0.5",
     "react-router-dom": "^6.30.1",
+    "ts-node": "^10.9.2",
     "typescript": "^4.9.5",
     "workbox-precaching": "^7.3.0",
     "zustand": "^4.5.7"

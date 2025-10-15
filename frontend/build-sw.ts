@@ -1,12 +1,24 @@
 import { injectManifest } from 'workbox-build';
 import tourGifs from './src/pages/Tutorials/guidedTour/data/tour-gifs.json' with { type: 'json' };
-const { fsaTourGifs, pdaTourGifs, tmTourGifs } = tourGifs;
 
-const formatManifestEntries = (links) => {
+interface TourGifs {
+  fsaTourGifs: string[];
+  pdaTourGifs: string[];
+  tmTourGifs: string[];
+}
+
+interface ManifestEntry {
+  url: string;
+  revision: string | null;
+}
+
+const { fsaTourGifs, pdaTourGifs, tmTourGifs } = tourGifs as TourGifs;
+
+const formatManifestEntries = (links: string[]): ManifestEntry[] => {
   return links.map(url => ({url, revision: null}));
 }
 
-const additionalManifestEntries = formatManifestEntries([
+const additionalManifestEntries: ManifestEntry[] = formatManifestEntries([
   ...fsaTourGifs,
   ...pdaTourGifs,
   ...tmTourGifs
@@ -24,7 +36,7 @@ injectManifest({
   maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB 
 }).then(({ count, warnings }) => {
   warnings.forEach(console.warn);
-  console.log(`build-sw.js: Injected ${count} files into ${swFile} precache manifest.`);
-}).catch(err => {
+  console.log(`build-sw.ts: Injected ${count} files into ${swFile} precache manifest.`);
+}).catch((err: unknown) => {
   console.error('Error generating service worker:', err);
 });
