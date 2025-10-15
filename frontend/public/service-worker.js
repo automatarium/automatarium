@@ -5,10 +5,6 @@ import { googleFontsCache } from 'workbox-recipes';
 // self.__WB_MANIFEST is populated by injectManifest in build-sw.js
 precacheAndRoute(self.__WB_MANIFEST || []);
 
-// Workbox provided recipe for caching google fonts
-// https://developer.chrome.com/docs/workbox/modules/workbox-recipes#google_fonts_cache
-googleFontsCache();
-
 self.addEventListener("install", () => {
   // Activate this worker immediately
   self.skipWaiting();
