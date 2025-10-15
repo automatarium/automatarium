@@ -1,7 +1,7 @@
 import { precacheAndRoute } from "workbox-precaching"
 
 // precache and route manifest urls during install phase.
-// self.__WB_MANIFEST is populated by injectManifest in build-sw.js
+// self.__WB_MANIFEST is populated by injectManifest in build-sw.ts
 precacheAndRoute(self.__WB_MANIFEST || []);
 
 self.addEventListener("install", () => {
