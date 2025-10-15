@@ -9,20 +9,22 @@ const formatManifestEntries = (links) => {
 const additionalManifestEntries = formatManifestEntries([
   ...fsaTourGifs,
   ...pdaTourGifs,
-   ...tmTourGifs
+  ...tmTourGifs
 ]);
+
+const swFile = 'dist/service-worker.js';
 
 // replaces self.__WB_MANIFEST placeholder with populated manifest
 injectManifest({
-  swSrc: 'dist/service-worker.js',
-  swDest: 'dist/service-worker.js',
+  swSrc: swFile,
+  swDest: swFile,
   globDirectory: 'dist',
   globPatterns: ["**/*.{js,css,html,svg,png,json,ttf,webmanifest}"],
   additionalManifestEntries,
   maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5 MiB 
 }).then(({ count, warnings }) => {
   warnings.forEach(console.warn);
-  console.log(`Injected ${count} files.`);
+  console.log(`build-sw.js: Injected ${count} files into ${swFile} precache manifest.`);
 }).catch(err => {
   console.error('Error generating service worker:', err);
 });
