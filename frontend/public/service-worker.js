@@ -1,5 +1,4 @@
 import { precacheAndRoute } from "workbox-precaching"
-import { googleFontsCache } from 'workbox-recipes';
 
 // precache and route manifest urls during install phase.
 // self.__WB_MANIFEST is populated by injectManifest in build-sw.js
