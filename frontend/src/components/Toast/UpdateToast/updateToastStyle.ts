@@ -10,6 +10,5 @@ export const StyledUpdateToast = styled("div")`
   cursor: pointer;
   z-index: 9999;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  font-family: system-ui, sans-serif;
   transition: opacity 0.3s ease;
 `;
