@@ -4,7 +4,7 @@ import { Logo } from '/src/components'
 
 import { HeaderContainer } from './headerStyle'
 
-const content = <><Logo /><h1>test</h1></>
+const content = <><Logo /><h1>Automatarium</h1></>
 
 const Header = ({ center, linkTo }: {center?: boolean, linkTo?: To}) => linkTo
   ? (
