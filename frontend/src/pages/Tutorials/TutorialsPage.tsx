@@ -5,11 +5,12 @@ import { Button, Header, Main } from '/src/components'
 import { NotFound } from '/src/pages'
 
 import { TutorialsSection, EmbeddedVideo } from './components'
-import { Title, TitleRow } from './tutorialsStyle'
+import { OfflineWarning, Title, TitleRow } from './tutorialsStyle'
 
 import { Banner } from '../Landing/landingStyle'
 import manifest from '/src/config/tutorials-manifest.json'
 import { useTranslation } from 'react-i18next'
+import { useOnlineStatus } from '/src/hooks/useOnlineStatus'
 
 export interface TutorialLeaf {
   id: string
@@ -39,6 +40,7 @@ const TutorialsPage = () => {
   const [searchParams, setSearchParams] = useSearchParams()
   const [pageInfo, setPageInfo] = useState<PageInfo>()
   const [pagePath, setPagePath] = useState<string[]>()
+  const isOnline = useOnlineStatus();
 
   const navigate = useNavigate()
 
@@ -78,15 +80,26 @@ const TutorialsPage = () => {
             : <Button onClick={() => navigate('/')}>{t('header.button.home')}</Button>}
         </TitleRow>
 
-        {/* Section description goes above (unknown number of cards) */}
-        {pageInfo.type === 'section' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
+        {isOnline === null ? <></> : (
+          !isOnline ? (
+            <OfflineWarning>
+              You are currently offline. Please connect to the internet to access tutorials.
+            </OfflineWarning>
+          ): (
+            <>
+            {/* Section description goes above (unknown number of cards) */}
+            {pageInfo.type === 'section' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
 
-        {pageInfo.type === 'section'
-          ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
-          : <EmbeddedVideo link={pageInfo.link} />}
+            {pageInfo.type === 'section'
+              ? <TutorialsSection pageInfo={pageInfo} pagePath={pagePath} />
+              : <EmbeddedVideo link={pageInfo.link} />}
 
-        {/* Video description goes below */}
-        {pageInfo.type === 'item' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
+            {/* Video description goes below */}
+            {pageInfo.type === 'item' && <p dangerouslySetInnerHTML={{ __html: pageInfo.description }}></p>}
+            </>
+          )
+        )}
+      
       </ Main>
       <Banner>
         <p>{t('banner.paragraph')}</p>
