@@ -164,6 +164,135 @@ pre {
   font-family: var(--font-mono);
 }
 
+label {
+  padding-right: 10px;
+}
+
+.input-box {
+  background: var(--surface);
+  border: 1px solid var(--input-border);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: var(--white);
+  font-family: monospace, sans-serif;
+  margin-bottom: 10px;
+  margin-right: 5px;
+}
+
+.input-box:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+.input-box-right {
+  background: var(--surface);
+  border: 1px solid var(--input-border);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.5rem;
+  color: var(--white);
+  font-family: monospace, sans-serif;
+  margin-bottom: 10px;
+  margin-right: 5px;
+  margin-left: 5px;
+
+}
+
+.input-box-right:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px var(--primary);
+}
+
+button.grammar-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--surface); 
+  color: white;
+  font-family: var(--font-feature);
+  font-weight: 600;
+  border: 1px solid var(--input-border);
+  cursor: pointer;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.7),
+    0 2px 2px rgba(0, 0, 0, 0.5);
+    
+  margin-right: 10px;
+}
+
+button.grammar-button:hover {
+  background-color: #16A34A; /* green-500 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  border: none;
+}
+
+button.grammar-button:focus {
+  outline: none;
+}
+
+
+button.convert-button {
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  background: var(--surface); 
+  color: white;
+  font-family: var(--font-feature);
+  font-weight: 600;
+  border: 1px solid var(--input-border);
+  cursor: pointer;
+
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease-in-out;
+  text-shadow:
+    0 0 1px rgba(0, 0, 0, 0.7),
+    0 2px 2px rgba(0, 0, 0, 0.5);
+    
+  margin-right: 10px;
+  margin-left: 15px;
+}
+
+button.convert-button:hover {
+  background-color: #16A34A; /* green-500 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  transform: translateY(-2px);
+  border: none;
+}
+
+button.convert-button:focus {
+  outline: none;
+}
+
+
+.grammar-type{
+  margin-top: 12px;      
+  padding-top: 5px;
+  font-weight: 600;        
+  color: white;
+}
+
+.grammar-header {
+  margin-top: -5px;
+  margin-bottom: 2px;
+}
+h2 {
+  margin-top: 5px;
+  margin-bottom: -2px;
+}
+flex-1 h2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.flex-1 h3 {
+  margin-top: 0.75rem;
+  margin-bottom: 4px;  
+}
+
+
 #app {
   display: flex;
   flex-direction: column;

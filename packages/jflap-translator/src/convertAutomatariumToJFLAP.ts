@@ -20,7 +20,8 @@ import {
 const PROJECT_TYPE_MAP: Record<ProjectType, string> = {
   FSA: 'fa',
   PDA: 'pda',
-  TM: 'turing'
+  TM: 'turing',
+  GRAMMAR: 'grammar'
 }
 
 const mapStates = (states: AutomataState[], initialStateId: number, statePrefix: string): JFLAPState[] => states.map((state) => ({

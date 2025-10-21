@@ -13,6 +13,7 @@ import { useAutosaveProject } from '../../hooks'
 import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
 import { Tool } from '/src/stores/useToolStore'
 import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
+import GrammarEditor from '../../components/Grammar/GrammarEditor'
 
 const Editor = () => {
   const navigate = useNavigate()
@@ -122,35 +123,62 @@ const Editor = () => {
   }, [tool, priorTool])
 
   return (
-    <>
-      <Menubar isSaving={isSaving} />
-      <Content>
-        <Toolbar />
-        {showModuleWindow && currentModule && (
-          <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
-        )}
-        <EditorContent>
-          <EditorPanel />
-          <BottomPanel />
-        </EditorContent>
-        {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
-        <Sidepanel onToggle={setShowModuleWindow} />
-      </Content>
-      <ShortcutGuide />
-      <FinalStatePopup />
-      <ExportImage />
-      <ShareUrl />
-      <ShareUrlModule />
+  <>
+    
+    <Menubar isSaving={isSaving} />
 
-      <TemplateDelConfDialog
-        isOpen={confirmDialogOpen}
-        setOpen={() => setConfirmDialogOpen(true)}
-        setClose={() => setConfirmDialogOpen(false)}
-      />
-      <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour} />}
-      <CreateModule />
-    </>
+    {projectType === "GRAMMAR" ? (
+      // Only use top menu bar for grammar projects
+      <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
+        <div
+          style={{
+            maxWidth: "1200px", 
+            width: "100%",
+            padding: "1rem",
+            fontSize: "1.5rem", 
+            lineHeight: "1.6",
+          }}
+        >
+          <GrammarEditor
+            project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
+          />
+        </div>
+      </div>
+
+        ) : (
+          // Automata / PDA / TM layout
+          <Content>
+            <Toolbar />
+            {showModuleWindow && currentModule && (
+              <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
+            )}
+            <EditorContent>
+              <EditorPanel />
+              <BottomPanel />
+            </EditorContent>
+            {projectType === "PDA" && (
+              <PDAStackVisualiser panelWidth={panelWidth} />
+            )}
+            <Sidepanel onToggle={setShowModuleWindow} />
+          </Content>
+        )}
+
+        {/* Shared UI */}
+        <ShortcutGuide />
+        <FinalStatePopup />
+        <ExportImage />
+        <ShareUrl />
+        <ShareUrlModule />
+
+        <TemplateDelConfDialog
+          isOpen={confirmDialogOpen}
+          setOpen={() => setConfirmDialogOpen(true)}
+          setClose={() => setConfirmDialogOpen(false)}
+        />
+        <ImportDialog navigateFunction={navigate} />
+        {showTour && <EditorPageTour onClose={closeTour} />}
+        <CreateModule />
+      </>
   )
 }
 
