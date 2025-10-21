@@ -186,7 +186,7 @@ export default function GrammarEditor({ project }: Props) {
             {grammarType && (
               <div className="grammar-type">
                 Type: {grammarType}
-                {grammarType === "regular (left-linear)" || grammarType === "regular (right-linear)" && (
+                {(grammarType === "regular (left-linear)" || grammarType === "regular (right-linear)") && (
                   <button className="convert-button" onClick={handleExportToFSA}>
                     Export as FSA
                   </button>
