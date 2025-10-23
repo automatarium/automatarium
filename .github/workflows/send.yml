@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - dev
+      - dev # change to main
 
 jobs:
   send:
@@ -25,9 +25,16 @@ jobs:
         with:
           name: 'automatarium_dist'
 
+      - name: Run Get Email Action
+        id: get_email
+        uses: ryohidaka/action-get-email@v0.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.actor }}
+
       - uses: cinotify/github-action@main
         with:
-          to: 's3946986@student.rmit.edu.au'
+          to: ${{ steps.get_email.outputs.email }}
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> Best Regards, <br> Automatarium CI System'
           type: 'text/html'
