@@ -31,4 +31,4 @@ jobs:
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> Best Regards, <br> Automatarium CI System'
           type: 'text/html'
-          attachment: 'automatarium_dist.zip'
+          attachment: 'automatarium_dist'
