@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - dev # change to main
+      - fix/send-email # for testing, will change to main
 
 jobs:
   send:
@@ -14,16 +14,16 @@ jobs:
       - name: Build project
         run: yarn build
 
-      - name: Zip dist folder
-        uses: actions/upload-artifact@v4
-        with:
-          name: 'automatarium_dist'
-          path: ./frontend/dist/
-
-      - name: Download zip
-        uses: actions/download-artifact@v5
-        with:
-          name: 'automatarium_dist'
+#      - name: Zip dist folder
+#        uses: actions/upload-artifact@v4
+#        with:
+#          name: 'automatarium_dist'
+#          path: ./frontend/dist/
+#
+#      - name: Download zip
+#        uses: actions/download-artifact@v5
+#        with:
+#          name: 'automatarium_dist'
 
       - uses: cinotify/github-action@main
         with:
@@ -31,4 +31,4 @@ jobs:
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> Best Regards, <br> Automatarium CI System'
           type: 'text/html'
-          attachment: 'automatarium_dist'
+          attachment: 'frontend/dist'
