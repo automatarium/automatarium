@@ -14,21 +14,21 @@ jobs:
       - name: Build project
         run: yarn build
 
-#      - name: Zip dist folder
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: 'automatarium_dist'
-#          path: ./frontend/dist/
-#
-#      - name: Download zip
-#        uses: actions/download-artifact@v5
-#        with:
-#          name: 'automatarium_dist'
+      - name: Zip dist folder to send
+        run: zip -r automatarium_frontend_dist.zip ./frontend/dist/
 
-      - uses: cinotify/github-action@main
+      - name: Upload dist zip to GH Actions Artifacts
+        uses: actions/upload-artifact@v4
         with:
-          to: s3946986@student.rmit.edu.au # temp email for testing
+          name: 'automatarium_frontend_dist'
+          path: automatarium_frontend_dist.zip
+
+      - name: Send email with latest build
+        uses: cinotify/github-action@main
+        with:
+          to: 's3946986@student.rmit.edu.au' # temp email for testing
           subject: 'Automatarium Latest Build'
-          body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> Best Regards, <br> Automatarium CI System'
+          body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> 
+                Best Regards, <br> Automatarium CI System'
           type: 'text/html'
-          attachment: 'frontend/dist'
+          attachment: 'automatarium_frontend_dist.zip'
