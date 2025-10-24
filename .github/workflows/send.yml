@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - fix/send-email # for testing, will change to main
+      - main
 
 jobs:
   send:
