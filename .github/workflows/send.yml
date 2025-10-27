@@ -33,7 +33,7 @@ jobs:
       - name: Send email with latest build
         uses: cinotify/github-action@main
         with:
-          to: '${{ steps.get_email.outputs.email }},s3946986@student.rmit.edu.au'
+          to: ${{ steps.get_email.outputs.email }}
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> A recent push has been made to the main branch.
                 Please find the latest build of Automatarium attached. <br><br> 
