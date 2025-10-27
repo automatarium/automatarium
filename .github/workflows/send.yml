@@ -15,7 +15,7 @@ jobs:
         run: yarn build
 
       - name: Zip dist folder to send
-        run: cd frontend && zip -r automatarium_dist.zip ./dist/
+        run: cd frontend && zip -r ../automatarium_dist.zip ./dist/
 
       - name: Upload dist zip to GH Actions Artifacts
         uses: actions/upload-artifact@v4
