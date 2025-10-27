@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - fix/send-email
+      - main
 
 jobs:
   send:
@@ -26,7 +26,7 @@ jobs:
       - name: Send email with latest build
         uses: cinotify/github-action@main
         with:
-          to: 's3946986@student.rmit.edu.au'
+          to: ${{ secrets.RMIT_LIB_EMAIL }}
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> A recent push has been made to the main branch.
                 Please find the latest build of Automatarium attached. <br><br> 
