@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - fix/send-email
+      - main
 
 jobs:
   send:
@@ -27,7 +27,7 @@ jobs:
         uses: cinotify/github-action@main
         with:
           to: ${{ secrets.RMIT_LIB_EMAIL }}
-          subject: 'TEST PLEASE DISREGARD - Automatarium Latest Build'
+          subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> A recent push has been made to the main branch.
                 Please find the latest build of Automatarium attached. <br><br> 
                 To view more about the changes, please see the commit details at
