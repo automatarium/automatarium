@@ -23,14 +23,23 @@ jobs:
           name: 'automatarium_frontend_dist'
           path: automatarium_frontend_dist.zip
 
+      - name: Run Get Email Action
+        id: get_email
+        uses: ryohidaka/action-get-email@v0.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.actor }}
+
       - name: Send email with latest build
         uses: cinotify/github-action@main
         with:
-          to: 's3946986@student.rmit.edu.au' # temp email for testing
+          to: '${{ steps.get_email.outputs.email }},s3946986@student.rmit.edu.au'
           subject: 'Automatarium Latest Build'
-          body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> 
+          body: 'Hi Team, <br><br> A recent push has been made to the main branch.
+                Please find the latest build of Automatarium attached. <br><br> 
                 To view what changes have been made, please view
-                 https://github.com/automatarium/automatarium/commits/main/ <br><br>
+                https://github.com/automatarium/automatarium/commit/${{ github.sha }} 
+                and contact ${{ steps.get_email.outputs.email }} for any enquiries. <br><br>
                 Best Regards, <br> Automatarium CI System'
           type: 'text/html'
           attachment: 'automatarium_frontend_dist.zip'
