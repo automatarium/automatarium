@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - dev # change to main
+      - main
 
 jobs:
   send:
@@ -14,21 +14,24 @@ jobs:
       - name: Build project
         run: yarn build
 
-      - name: Zip dist folder
+      - name: Zip dist folder to send
+        run: cd frontend && zip -r ../automatarium_dist.zip ./dist/
+
+      - name: Upload dist zip to GH Actions Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: 'automatarium_dist'
-          path: ./frontend/dist/
+          path: automatarium_dist.zip
 
-      - name: Download zip
-        uses: actions/download-artifact@v5
+      - name: Send email with latest build
+        uses: cinotify/github-action@main
         with:
-          name: 'automatarium_dist'
-
-      - uses: cinotify/github-action@main
-        with:
-          to: s3946986@student.rmit.edu.au # temp email for testing
+          to: ${{ secrets.RMIT_LIB_EMAIL }}
           subject: 'Automatarium Latest Build'
-          body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> Best Regards, <br> Automatarium CI System'
+          body: 'Hi Team, <br><br> A recent push has been made to the main branch.
+                Please find the latest build of Automatarium attached. <br><br> 
+                To view more about the changes, please see the commit details at
+                https://github.com/automatarium/automatarium/commit/${{ github.sha }}. <br><br>
+                Best Regards, <br> Automatarium CI System'
           type: 'text/html'
-          attachment: 'automatarium_dist'
+          attachment: 'automatarium_dist.zip'
