@@ -8,6 +8,13 @@ jobs:
   send:
     runs-on: ubuntu-latest
     steps:
+      - name: Run Get Email Action
+        id: get_email
+        uses: ryohidaka/action-get-email@v0.1.0
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          username: ${{ github.actor }}
+
       - uses: actions/checkout@v5
       - uses: ./.github/actions/setup
 
@@ -23,17 +30,10 @@ jobs:
           name: 'automatarium_frontend_dist'
           path: automatarium_frontend_dist.zip
 
-#      - name: Run Get Email Action
-#        id: get_email
-#        uses: ryohidaka/action-get-email@v0.1.0
-#        with:
-#          token: ${{ secrets.GITHUB_TOKEN }}
-#          username: ${{ github.actor }}
-
       - name: Send email with latest build
         uses: cinotify/github-action@main
         with:
-          to: 's3946986@student.rmit.edu.au'
+          to: ${{ steps.get_email.outputs.email }}
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> A recent push has been made to the main branch.
                 Please find the latest build of Automatarium attached. <br><br> 
