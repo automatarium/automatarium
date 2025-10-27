@@ -2,7 +2,7 @@ name: Send Latest Build
 on:
   push:
     branches:
-      - main
+      - fix/send-email
 
 jobs:
   send:
@@ -29,6 +29,8 @@ jobs:
           to: 's3946986@student.rmit.edu.au' # temp email for testing
           subject: 'Automatarium Latest Build'
           body: 'Hi Team, <br><br> Please find the latest build of Automatarium attached. <br><br> 
+                To view what changes have been made, please view
+                 https://github.com/automatarium/automatarium/commits/main/ <br><br>
                 Best Regards, <br> Automatarium CI System'
           type: 'text/html'
           attachment: 'automatarium_frontend_dist.zip'
