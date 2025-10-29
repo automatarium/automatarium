@@ -1,0 +1,1689 @@
+[33ma5fd047d[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfinal-refactor[m[33m)[m Refactor: split Editor logic into modular hooks and context
+[33m878332a3[m Refactored Editor: separated state logic and added useEditorControls hook
+[33m11c3f8d2[m[33m ([m[1;31morigin/dev[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mdev[m[33m)[m Fix/send email (#590)
+[33m5e222787[m Remove .zip (#589)
+[33m0126ee39[m Automatically email builds (#588)
+[33mdf4c36f8[m Offline Support via PWA (#582)
+[33m90c506d4[m Deploy main and dev to github pages (#581)
+[33m74ffeab1[m Change to HashRouter for RMIT library (#579)
+[33m2f72800b[m Fix favicon theming (#583)
+[33m9b26d7c4[m Visual Overhaul (#576)
+[33m51d80014[m Only run on push to mainline branches (#580)
+[33ma26f222a[m Fix thumbnails using wrong theme with `system` theme (#575)
+[33m31b6b212[m Simplify project types (#571)
+[33m3aa02c26[m Refactor/replace aom with json (#551)
+[33m46a91610[m[33m ([m[1;31morigin/feat/editor-context-refactor[m[33m)[m remove install-state.gz (#568)
+[33mfa46839d[m Removed duplicated functions (#545)
+[33m660e3af6[m[33m ([m[1;33mtag: [m[1;33mv1.0.1[m[33m)[m Set up github pages for pr preview (#546)
+[33m64833931[m[33m ([m[1;31morigin/522-pagination-double-up-behaviour[m[33m)[m Fix the key generated for FSA node not being unique (#561)
+[33m75ada59a[m Update tutorials manifest with new tutorials (#554)
+[33mf53e934b[m Action to upload dist on release (#553)
+[33mbff9f3a6[m Refactor: remove duplicate enum from Modules.tsx and import from ProjectTypes (#550)
+[33m7a452c3a[m[33m ([m[1;33mtag: [m[1;33mv1.0.0[m[33m, [m[1;31morigin/main[m[33m)[m Updated yarn, dependencies, and removed package-lock (#538)
+[33md8d3469c[m Ensured lockfile was up to date
+[33m1fffdc79[m Changes to be committed: 	modified:   frontend/package.json 	modified:   packages/jflap-translator/package.json 	modified:   packages/simulation/package.json 	modified:   yarn.lock
+[33m09b29344[m 	modified:   .yarnrc.yml
+[33m2f25f7bf[m modified:   package.json
+[33m947738df[m Further cleaned dependencies, and upgraded ESLint to v9
+[33m90caca19[m Further cleaned dependencies, and upgraded ESLint to v9
+[33m4a6b00c2[m Fixed trace tape arrow not lining up
+[33m8ed616bb[m Wrangled TS, react-i18next, and goober to all work together. TS going above v14 breaks type checking goober
+[33mc4a43fa0[m Updated testing workflow to match current yarn version
+[33m76ff5f3f[m Updated yarn, dependencies, and removed package-lock
+[33ma6c87f08[m Merge branch 'dev' into DependencyCleanup
+[33mef3b02b4[m Update README.md
+[33mf4f5e686[m Update README.md
+[33mc29bc8bf[m Fixed trace tape arrow not lining up
+[33ma1cef882[m Wrangled TS, react-i18next, and goober to all work together. TS going above v14 breaks type checking goober
+[33mc71e5777[m Updated testing workflow to match current yarn version
+[33m85274b2e[m Updated yarn, dependencies, and removed package-lock
+[33mcaf4dd24[m Feature/language localisation (#537)
+[33mbbfddc36[m Merge branch 'feature/language-localisation' of https://github.com/automatarium/automatarium into feature/language-localisation
+[33m78c2dc62[m Added how to add a new language
+[33m0b643b59[m Implemented translation of updated files
+[33m6a3cf9af[m Implemented translation of about page
+[33mb4c00dce[m Implemented translations of newfile and share
+[33m6ff5b536[m Implemented translation of tutorials
+[33m7fafb2d1[m Implemented translation of editor and example
+[33mb797e880[m Implemented translation of preferences
+[33m42fe7683[m Added language preferences and Fixed language not persisting on refresh issue
+[33mcbefc5d7[m Fixed Eslint for CI Test
+[33m34cb1d06[m Example page translation keys implementation
+[33m35c211bd[m More NewFile page translation keys implementation
+[33mc2e52960[m More Landing page translation keys implementation
+[33m7ace20a4[m Tutorials translation key implementation
+[33m0123d1e4[m MenuBar and SidePanel component translation key implementation
+[33m0eb0eef7[m Resolved Dependencies
+[33mbe70e5ec[m Merge branch 'dev' into feature/language-localisation
+[33m3f32eccf[m Merged Example/Guided Tour Feature
+[33mf27c55d4[m Merge branch 'dev' into feature/example
+[33m42e2f71b[m Merges Bug fixes branch with dev branch
+[33m83bd305f[m Preferences translation key implementation
+[33m681c5ceb[m Share page translation key implementation
+[33mbf30e4cf[m NewFile page and component translation key implementation
+[33mc49de39b[m About page translation keys implementation
+[33m1a41d91c[m Editor page and component translation keys implementation
+[33meb898547[m Fixed missing translation and wrong translation key
+[33m919549c0[m Implemented translation of landing page
+[33md1e6e956[m Implemented translation of useActions hook and updated associated components
+[33m1a0e4073[m Implemented translations of smaller components (TransitionSet and Warning)
+[33m93c09189[m Implemented translation of Toolbar component
+[33mdaf1c5fd[m Implemented translation of Sidepanel and all panel components
+[33me6520b61[m Implemented translation of ShortcuitGuide component
+[33mdaa7103b[m Implemented translation of Menubar component
+[33mee8b720b[m Implemented translation of ShareUrl components
+[33m0861952e[m Tightened up translation file organisation and actual translation
+[33mc1b2add6[m removed ongoing module section
+[33mc3a5aa7a[m removed commented out code
+[33m8ad858ce[m Merge branch 'dev' into features/bigfixes
+[33md031d6d5[m Update yarn.lock
+[33mb9eb6c02[m Linter fixes again
+[33m44533d4c[m added TM Example Tour
+[33m8db61f60[m added PDA Example Tour
+[33md577c87d[m curly braces
+[33m0a7a12ca[m Merge branch 'feature/language-localisation' of https://github.com/automatarium/automatarium into feature/language-localisation
+[33m5dbd0466[m Implemented translation of create module, export image and modal component
+[33m77804803[m Implemented translation of kebab menu and editor menubar
+[33m89b9bf38[m Implemented translation of input dialogue placeholders
+[33m5727ddf2[m Implemented translation of machine-specific components
+[33m75f999ba[m Implemented translation of import dialogues
+[33m87252406[m Translation files for all components up to shareURL
+[33m6c67ec1b[m Landing page and component translation keys implementation
+[33m3f49eca6[m Finished FSA Example Feature
+[33m7733ad85[m Dynamic loading of translation files, fix for Github CI tests and language dropdown in Footer
+[33mcb826d00[m Updated FSA ExampleTour Steps
+[33m85c38497[m Translation of context menus done
+[33m5d8120ad[m Translation of footer component
+[33m53b6cfc5[m Found correct versions of i18next for CI tests
+[33me03929d3[m Fixing CI Tests
+[33meb8f2a37[m Added Tour Functionality - Example Feature
+[33m4fa4fdf5[m Initial i18next config file
+[33m7ce24e6b[m Added language localisation dependencies
+[33m7d2b80cc[m Added Example Page
+[33m7d56b5c0[m feat: add confirmation dialog when deleting module questions (#521) (#532)
+[33m1937ea28[m fixed errors with values not being read that were used for the tour button
+[33m6fe23dfa[m removed the start tour button from the editor page and instead added it to the help dropdown menu. ALso changed the fullscreen option to toggle fullscreen on the toolbar menu
+[33mea6b135d[m Merge branch 'dev' into features/bigfixes
+[33m66b76cba[m Update disabled button styling for module remove button (#531)
+[33m2b747838[m feat: add Lucide icon to 'Add Question' button in modules (#526) (#530)
+[33mc2e6cdb6[m Deployment of Group 6's Work – "Modules" Feature (#508)
+[33m01a61b29[m fixes bug where context menu was displayed behind sidepanel
+[33m12fba24d[m Expand read symbols for DFA conversion  (#501)
+[33m6854be9f[m Fix autosave status timing (#493)
+[33m322d3e8c[m Automatarium to JFLAP conversion (#499)
+[33m3d3ea4be[m Properly use name from imported jff projects (#505)
+[33m15703c11[m Fix project action colours (#491)
+[33mfa13e2af[m Update share URL when opening export modal (#490)
+[33mbb87b400[m Remove the m (#488)
+[33m58942bad[m Adding Group 5 to contributions (#485)
+[33m22b82491[m Adding Group 5 to contributions
+[33m832269e5[m Removed test code from TMPause. (#484)
+[33mcb6b74f3[m Removed test code from TMPause.
+[33m4cba5cb3[m TMpause implementation (#479)
+[33m7117e405[m Fixed manual stepping not respecting tm pausing preference
+[33mfade4e56[m Merged updated dev into tmpause, maunual stepping doesn't work with tm pause option
+[33m34e03cd9[m Merged dev into tmpause
+[33m476202d5[m Applied fixes from linter
+[33mc693a020[m Guided tours (#482)
+[33m2bc28a4d[m First intial state (#483)
+[33m5c22f913[m Feat/475 add manual stepping option for turing machines in testing lab (#481)
+[33m69ebe058[m Fixed linting errors
+[33m292612e6[m Update frontend/src/components/Sidepanel/Panels/TestingLab/TestingLab.tsx
+[33m8167b75d[m Update frontend/src/components/Sidepanel/Panels/TestingLab/TestingLab.tsx
+[33m4c4aa735[m Update frontend/src/components/Sidepanel/Panels/TestingLab/TestingLab.tsx
+[33mbe8d1a8f[m Update frontend/src/components/Sidepanel/Panels/TestingLab/TestingLab.tsx
+[33mfe6783a9[m fixed import error, disabled stepping lab when in manual stepping mode
+[33m3a200e95[m Merge branch 'dev' into feat/475-add-manual-stepping-option-for-turing-machines-in-testing-lab
+[33m27dc6641[m Added header for transition button array (only appears when there are transitions)
+[33m44e761fe[m Merge branch 'TMpause' of https://github.com/automatarium/automatarium into TMpause
+[33mf8d35870[m reload page when save changes for preferences
+[33m7fb00d20[m Moved all useEffects to one place, moved internal function to memo outside to make code cleaner
+[33m8e28723c[m Fixed issue where trace idx is not reset when manual stepping is turned off
+[33m36a186c7[m Removed multi-run section when manual stepping is enabled
+[33m13649708[m Only show tours once, using info from local storage
+[33me8af7ee4[m fixing linting issues for now  >: )
+[33m1e5e6125[m automatic yarn lint fixes
+[33m31f3b720[m fixed linting issues
+[33mf3f6bdfe[m Implemented Enhancement of first state as initial
+[33mfe8eb936[m Fixed machines not being shown as REJECTED in trace in manual stepping mode
+[33md79edc96[m Fixed manual transitions list not being updated when graph is updated
+[33m1c6e90a8[m Fixed up code to please the linter & type checker
+[33m72145a57[m Part 2
+[33m3d0cee9b[m Yarn lint fix and changed wording for clarity
+[33m70b96c05[m Yarn lint change
+[33m3b22d8b1[m Added testing for pauseTM change
+[33md6b75733[m Fixed issues by building trace for first successor of current node
+[33m93ee7f1a[m Added preference to final state popup
+[33m09467137[m Got very messy solution for presenting information on screen
+[33me56a7c96[m Added trace output for manual mode
+[33md86d1071[m Feat/468 add popups when first using certain tools (#480)
+[33md1905281[m removed duplicate import and unused variables
+[33m0f67ac2a[m Merge branch 'TMpause' of https://github.com/automatarium/automatarium into TMpause
+[33m75dd78cc[m Fix test for simulateTM by adding default preferance values
+[33m5183c9c4[m slight correction on grammar
+[33mbdf5e4a3[m Fixed PDA buttons
+[33m7de112d4[m Actually fixed yarn lint errors frfr
+[33m32c3d6fb[m Fixed lint errors
+[33m8ed10dcb[m Changed imports to relative to resolve ts error
+[33m181cf68d[m Updated test with new parameters for simulateTM
+[33m20a70529[m Added symbol formatting for manual lambda transitions, fixed issues with linter and type checker
+[33m7423e0b4[m Added ability to go backwards while manual stepping
+[33mdf158314[m Updated buttons array to be filled in by successors
+[33m4f84cf67[m Added methods to states to output transition info, added function to testinglab to create string from node
+[33m3e4858e4[m Merged into button generation commit
+[33mb0dd9a87[m Got problem & successor generation working & basic console prints for when final state has been reached
+[33md780e8bf[m Buttons now fill automatically
+[33m878b50f2[m Quick fix of the const typings?
+[33m90497e21[m fixing spelling mistakes
+[33m8c3cf7e9[m fixed some grammar mistakes
+[33m62387458[m fixed errors mentioned from feedback
+[33m430badf2[m Worked on getting manual simulation working, having issues with recursively calling code to build problem on graph change (graph is 'modified' in buildProblem, causing recursive code)
+[33md8da6e62[m add execution trace for turing machines (#474)
+[33m7412988d[m Completion of issue #359 (#477)
+[33m1ee4cfbb[m Solving #359 for good
+[33m09e724f6[m Fixing warnings
+[33mc0d7882e[m Removed temp code that was causing crashes when changing input in manual stepping mode
+[33m12cef7ec[m Completion of task 6 (#469)
+[33m25e3f849[m Split simulate/trace functions to allow for different logic when manual stepping is enabled
+[33m404f6438[m Fixed button not displaying correctly after trying to fix linting issue
+[33m9e990580[m Added temp button with placeholder text when manual stepping is enabled
+[33m11979ea0[m TMpause implementation
+[33mdf42a467[m finished the basic implementation of tour
+[33m7bdedcd2[m Added checkbox for enabling manual stepping
+[33m61807500[m auto-linted adjustments to files, removed accidental tabs
+[33m2606ef9b[m Fixed typing issues in a couple of functions (caused issues with yarn check:types)
+[33mc269b39b[m Fixed minor issues that github checks didn't like
+[33m610574bf[m added editor tourpage with old animation
+[33m0c48fe84[m finished landing tour and new page tour
+[33mb9a25381[m The fix for 359
+[33mbda97e5b[m Removed commented out code, used yarn lint --fix
+[33md546ddaa[m Added write & direction info for TM execution trace
+[33mcb39a61e[m Got turing machines execution trace working successfully
+[33mf6f5ed25[m Added visualisation of execution trace for TMs, however last symbol comes up as 'null'
+[33m0fcff88d[m Added read symbol for TMState
+[33m54292932[m Created scroll affects on seconds step of tour
+[33m62cc1d5e[m Created a template for landing page tour
+[33m37ca191b[m Revert "Created page for Landing Tour"
+[33m89b792a6[m Created page for Landing Tour
+[33mcfb7958d[m Remove redundant `noStepper` variable
+[33mc757d2a8[m Apparently there's an auto linter. Whoops.
+[33me296abbf[m Fixing keybinds
+[33m41b9fd1d[m Adhere to linting
+[33m890c10c9[m Merge complete
+[33mbc74f14b[m First attempt at merging, partial merge complete
+[33mdff81dae[m Fixed typo in CONTRIBUTING.md (#466)
+[33mb510825c[m Minor refactoring and documentation changes (#463)
+[33m194e3b13[m Projects are in local store not cookies
+[33m58fcb708[m Add backlink to main page in 404
+[33ma1c316cc[m Update privacy policy
+[33m567780f5[m Fix spelling mistake
+[33md21bf53d[m Lint fix
+[33m6231ebd4[m Add padding to separate export fields
+[33mc1f4d34d[m Remove outdated share modal
+[33m09393d5d[m Enable share button to display export as URL modal
+[33ma75b0fbb[m Refactor string manipulations to enhance readability
+[33m10a62cc4[m Add short description of group 4's contribution
+[33m0b6586c9[m Move modals in pages to components
+[33me2077b39[m NFA -> DFA Basic Layouting (#462)
+[33mb041bc30[m Stop transition editing deleting transition on cancel (#459)
+[33m0b327a63[m Add new tutorial videos to tutorial page (#460)
+[33m6c2f81af[m Ensure links with queries don't break thumbnails
+[33m38987829[m Add new videos to tutorial page
+[33ma7557133[m Merge dev into feat/tutorial-pages
+[33m44103745[m Improve transition edge UX (#458)
+[33m59c1a0b6[m Update documentation (#457)
+[33m0c3da72b[m Update About page
+[33m6022a9c8[m Delete redundant documentation
+[33m8dbb1436[m Transition group editor fixes (#456)
+[33mb5c832e0[m Delete empty files
+[33mb91e0201[m Update keyboard shortcuts (#455)
+[33m7a97c668[m Change deselect all shortcut to esc
+[33m45ea2111[m Add shortcut for clearing selection
+[33me2eff185[m Add tutorial video menu option
+[33m055be95a[m Add template keyboard shortcut
+[33mce25caa5[m Exclusion inputs in transitions (#454)
+[33m72c19796[m Lint fix
+[33m60cc5003[m Merge branch 'dev' of github.com:automatarium/automatarium into feat/exclusion-inputs
+[33m496b2a58[m Stack alphabet for PDA projects (#446)
+[33ma1c841be[m Format spaces for exclusion inputs with parentheses
+[33m0c7819ca[m Remove stray console.log
+[33m33a5e1f2[m Fix typescript unknown type error
+[33m7e506efb[m Revert erroneous changes to valid transitions
+[33m872f8281[m Update alphabet symbol styling
+[33m1e27046f[m Update alphabet extraction in info tab
+[33m7227dbc4[m Fix incorrect OR operator join bug
+[33m50dcaeeb[m Fix range extraction bug
+[33m764893f8[m Format lambda for consistency
+[33mbb53bc87[m Conditionally render stack alphabet section for PDAs
+[33me7522066[m Enable computation of stack alphabet for PDAs
+[33m2a805817[m Lint fix
+[33mc0c4e4b9[m Add tests for exclusion transitions
+[33m383d9bca[m Merge branch 'dev' of github.com:automatarium/automatarium into feat/exclusion_inputs
+[33m3e968e0f[m Thumbnails conform with app theme (#444)
+[33m17825710[m Test exclusion extraction and formatting
+[33mba55e9f0[m Fix lambda transitions not being recognised
+[33mfc4463d3[m Merge dev
+[33mbd662512[m Template thumbnails (#442)
+[33m10c55329[m Fix TM Tape Stretching Components (#441)
+[33m55b149bd[m Implement exclusion inputs for all machine types
+[33m32e8258e[m Rework so only a single excl expression is allowed
+[33m03cab823[m Fix ordering of string manipulation issue
+[33m28c6c543[m Refactor format util file
+[33m048f2614[m Consider exclusions when formatting input
+[33m76b6eb81[m Tutorial pages (#437)
+[33m57533c94[m Merge branch 'feat/tutorial-pages' of github.com:automatarium/automatarium into feat/tutorial-pages
+[33mabc15611[m Merge branch 'dev' into feat/tutorial-pages
+[33maa4b3045[m Clarify advanced features
+[33m4472f54a[m Grab thumbnails from youtube if not specified
+[33m68ae5232[m Add a default image if empty
+[33m1c38025b[m Disable dangerously set inner on cards
+[33m1475016d[m Adds description info from video (minus website, you're on it)
+[33mc37890d1[m Differentiate description on card and desc in page
+[33m70a93263[m Adds video links to manifest
+[33m7d7531a4[m Improve transition UX for PDAs and TMs (#436)
+[33me0a61766[m Add video descriptions below
+[33mbc61ea44[m Allow html elements in description
+[33m6c2c7243[m Fix TM bug where blank always matched read value
+[33m738ac498[m Enable radio button selection with RLS keys
+[33mcc094d37[m Adjust padding
+[33m57669764[m Merge branch 'dev' of github.com:automatarium/automatarium into feat/improve-transition-UI
+[33m3e941c7e[m Add radio buttons to inputTransitionsGroup
+[33mf211b9c3[m Set default direction and enable tabbing
+[33m6790211c[m Refactor input styling
+[33m411ab618[m Add clickable labels to radio buttons
+[33m9771c2b7[m Transition dragging (#435)
+[33m31a9bd46[m Create direction radio buttons
+[33m136b1b05[m Add margins to PDA and TM input fields
+[33m80e52233[m Enhance multiple inputs per transition (#434)
+[33m15774efa[m Changes to orOperator instantly update in dialogs
+[33m5195bb80[m Apply OR operator formatting to edit input dialogs
+[33m6d8285f5[m Resolve key prop warning
+[33mca347204[m Enable multiple read values for TMs and PDAs
+[33ma024f389[m Update simulation tests
+[33m6b9556aa[m Merge branch 'dev' of github.com:automatarium/automatarium into feat/multi-transitions
+[33m409ea2d2[m Consider minor operator variations as equivalent
+[33m6f060448[m Don't insert OR for PDAs and TMs (yet)
+[33m786a2259[m Make customise or operator a dropdown
+[33m21b02bba[m Remove any OR operators in given read value
+[33m836aed0d[m Apply lint fixes
+[33m6140c954[m Ignore ranges when adding OR operator
+[33mec380f8c[m Enable OR operator customisation
+[33m123d2309[m Insert OR operators between FSA read characters
+[33m1566df39[m Fixes left bounded TM tape (#433)
+[33mac58528f[m Creates lambda to start of tape when tape pointer reaches < 0
+[33md9d1106c[m Quick trace tape fix by moving increasing index
+[33ma3df5296[m Cards can be in 4 states
+[33m29e476ef[m Allow image to span its box, any overflow is hidden
+[33m010a4e00[m Add check for unfound key
+[33m4d0c191f[m Move tutorials section to components
+[33m0b18100d[m Merge branch 'dev' of github.com:automatarium/automatarium into feat/tutorial-pages
+[33m98489c8d[m Add route to new file from tutorials
+[33m3053eea2[m There is no syncing acorss devices anymore
+[33m0bd69a9a[m Add a button on the front page to go to tutorials
+[33me059929a[m Allow adding a thumbnail to cards
+[33m4e47935c[m Video is resized on load
+[33m3bdafc04[m Cards now wrap to window size
+[33m403a4006[m Adds basic card for tutorial options
+[33m302bf9f8[m Fixes video iframe size
+[33m4f9fcd33[m Remove tutorial section from pages index
+[33m60775b88[m Move video embed to subcomponent
+[33m67d5d8ec[m Move description to the main page file
+[33m82a3ff3f[m Simplify by removing video page and just embedding the video
+[33mb8676e4c[m Remove redundancy by unifying style
+[33m88a7f9da[m Adds embedded youtube video
+[33m163d9728[m Adds descriptions and slight clean up
+[33m8297d1e7[m Tutorials have a navigation system
+[33mf333543d[m Add path trace of tutorial pages
+[33m89aa8375[m Add functionality to get information from manifest from url query
+[33mfc0b9b88[m Improve stack visualiser aesthetics (#432)
+[33m0ad72e1b[m Add stub pages for tutorials
+[33m8757df34[m Use project colours for stack items and background
+[33m88a7897c[m Format toggle stack button
+[33md3f60c7f[m Add styling to stack items and label
+[33m42c867df[m Enable stack visualiser and stack tab view toggle
+[33m1c9f85da[m Change stack styling from .css to .ts
+[33ma6212c08[m Unnest list, add type and id instead
+[33mb81b488b[m Allows some way to specify pages and links to be generated
+[33m51c52c93[m Add enhancements/fixes to Stepping Lab (#429)
+[33m04db71c7[m Finalise pre-merge Stepping Lab adjustments
+[33m44207629[m Disable buttons when movement not possible (buggy)
+[33mdff1a471[m Apply lint fixes
+[33m374a5744[m Hide stack visualiser when Testing Lab not in use
+[33me8293f93[m Add Stepping Lab support for TMs
+[33m9fec75c1[m Refactor handleStep to switch over StepType
+[33m0fe9d153[m Highlight initial state when opening Stepping Lab
+[33mf52d6e97[m Add Stepping Lab keyboard shortcut
+[33m50338482[m Delete backend from codebase (#428)
+[33mc5d7ed73[m Clean up typos and weird naming in code (#427)
+[33mc994c597[m Import machines from json and base64 encoded formats (#424)
+[33m2a553387[m Fix stepping lab functionality issues and appearance (#422)
+[33m10f713c3[m Check for non-empty frontier before invoking handleStep
+[33m0a80d00c[m Increase intensity and radius of stepped state glow circle
+[33m840a414b[m Apply lint fix
+[33m571655d9[m Reset stepped states when stepping lab panel not in use
+[33mb3fdb32a[m Remove frontier assignment
+[33m03651a0c[m Using comment tool on non canvas objects (#421)
+[33m2ac0b027[m Delete projects from local store (#417)
+[33m0f3c34f7[m Kebab button (#419)
+[33mf19f22c9[m Transition edge context menu (#418)
+[33m36823f94[m Reverse focus movement to reflect reversed mapped list
+[33m3f54624c[m Makes transitions in description reflect their names instead of just ids
+[33m24b62e06[m Run cleanup actions on modal close
+[33m19b17f38[m Reverses transition list to reflect the graph ordering
+[33m1eb6b9fe[m Focus to first input after saving new transition
+[33mfa8dc0ea[m Add delete context action for edges
+[33m34eb33a1[m Add the separator between input fields
+[33m457024da[m Add generic save function to switch save styles
+[33mc7149f96[m Add arrow key movement of input fields
+[33m43e77e94[m Add delete transition functionality
+[33m7a935fb6[m Fix incorrect TM direction causing error loops
+[33m34120c41[m Add functionality of enter key for all machines
+[33mff081624[m Add functionality for enter key for FSAs
+[33ma343e476[m Disables context button if nothing is selected
+[33m8ac6311d[m Adds TM input spacing. Fixes a bug causing crash
+[33m26943e75[m Adds validation to TM inputs
+[33mded5333e[m Changes  to only be used on done for batched undo
+[33mc3f86ac3[m Add routine to update dialog to display all transitions on edge
+[33mae6ac432[m Add some spacing styling to inputs so they look a bit nicer
+[33m4b6b3755[m Add input fields for PDA and TMs
+[33mf23be89f[m Add new input field for FSAs
+[33m3a4fea23[m Use object to satisfy linter
+[33m844b22f6[m Attach saving to editor window
+[33m221ec522[m Add saving functions for dialog
+[33m09933cff[m Add transition edge group editor prototype
+[33m3da08e13[m Add context menu for right click on edge
+[33m5eac10c9[m Add editing first transition on edge double-click
+[33m98ff6af7[m Add type check to useEvent
+[33m1005a17a[m Fix items being dragged even if they are not selected (#402)
+[33ma65640f0[m Only accept `.jff` files when importing JFLAP and `.json` when importing automatarium (#401)
+[33m197f27e5[m Batch updates during dragging for increased performance (#400)
+[33me5f24c4e[m Refactor NFA -> DFA conversion (#399)
+[33mb5604900[m Add some more comments
+[33mc789cfaf[m Update tests to latest format (i.e. include the labels)
+[33m55f3bd52[m Add trap state into conversion
+[33m1a8592de[m Remove unneeded test files. Add test for file that was causing infinite loop
+[33m0f144c8a[m Refactor the DFA conversion algorithm. This is an inital version and will clean it up once I get tests passing again. This works in more cases though and is simplier to understand than the older algorithm
+[33ma6276422[m Centre graph when loading project (#335)
+[33md0224906[m Move graph reorderingfrom right-click menu into the Tools dropdown. (#394)
+[33m36113144[m Add short sentence about what we did (#395)
+[33m4d248b3c[m Add better typing (#391)
+[33ma6320f54[m Fix reordering sort (#393)
+[33m22b100e2[m Extend from `HTMLButtonElement` instead of creating a union of types
+[33mf1c6c633[m Final small touchups Nothing major, just restricting project types and adding in lodash types
+[33mb8fe3be0[m Clean up some more types, espically around the use of `ColourName` and `Background`
+[33mb8ef63a7[m Add lodash types
+[33mf5d737e3[m Fix issue where transition function wasn't properly loading.
+[33m24fc599f[m fix the any issues in TestingLab.tsx
+[33mc095d701[m Remove some implicit `any` variables that were found via the `noImplicitAny` TS option.
+[33mfb1f59c6[m Use `nextIDFor` in places that need a new ID (#392)
+[33m2a96b4c6[m Update `createState` so that `isFinal` is optional. This is default assigned in `createState` so it doesn't matter if it is missing
+[33me7387c10[m `createTransition` now allows for an incomplete transition type
+[33mcc1799bb[m Update `ProjectComment` and `createComment` to better reflect what the type is like at runtime. The ID now isn't optional since the comment is given one when it is created, so it definitely always has one. `createComment` is updated though to reflect that the comment passed doesn't need an ID since it is given one.
+[33ma60a8455[m Use `nextIDFor` function for getting the next ID instead of reimplementing in multiple locations. Also add some comments for stuff that might confuse people
+[33mf86ac0bf[m Templates Part 1 - 'backend' functionality (#348)
+[33mb2a8ae77[m Merge branch 'feat/templates-backend' of https://github.com/automatarium/automatarium into feat/templates-backend
+[33m31e14b34[m Create nothingSelected var
+[33md6819318[m Update frontend/src/stores/useTemplateStore.ts
+[33mfae83673[m Update frontend/src/stores/useTemplateStore.ts
+[33m807d7cfa[m Lint
+[33m276ff8c3[m Implement review feedback
+[33m328f3bcb[m Get rid of magic numbers
+[33m668b7010[m Update frontend/src/hooks/useActions.ts
+[33m780d07b9[m Fix type errors
+[33m96e305b0[m Delete old hook
+[33mf2b1aa95[m Lint
+[33mcdf98c3e[m Resolve conflicts:
+[33md29c0a9d[m Templates Part 2 - UI (#381)
+[33m51d10d70[m Put stopTemplateInsert into its own function used across project
+[33m554efee3[m Beta label and put resetting template into function
+[33m9ba989e0[m Linting
+[33ma593378a[m Update goober prop name
+[33mc43cefee[m Add else if to if statement
+[33m0472e26c[m Put bend value calculation into separate function
+[33m670a42f8[m Update transition properties
+[33mf7aefe5b[m Get rid of unnecessary if statement
+[33m1eef40be[m Remove old comment
+[33mcc2cb622[m Disable copying JPEG images (#390)
+[33m0c951238[m Pass innerRef directly to remove react error (#389)
+[33md3c553fd[m Tracing Tape Inconsistencies + Bugs Fixed (#388)
+[33mdb657625[m Check projectType and activePanel in one statement
+[33m544d622c[m Remove unused Heading and CloseButton
+[33m3775c61f[m Make the bottom panel be responsive. This is done by removing the absolute positioning so that the height can be automatically determined
+[33mda49c046[m Removed restriction in Editor.tsx
+[33m7353386c[m PR suggestions added
+[33meebcd1f4[m TM tracing tape now opens and close with sidepanel
+[33m56449d08[m Move the bottom panel behavior to sidepanel file
+[33mb31a20f4[m Trace tape always open for TM when in lab
+[33m43d699d9[m Tracing tape button doesnt show for TM (no need)
+[33m7a8711f7[m Fixed pathToFinal 'error'
+[33me7ecdd52[m Tracing tape bug fixes
+[33m8c8f3a74[m Remove useless minimize button in tools (#386)
+[33mf826c157[m Remove useless minimize button in tools
+[33mf5740b46[m Convert last files to typescript (#384)
+[33m6be65f9e[m Fix height differences in new project cards (#344)
+[33m78fe2355[m Merge changes in ProjectCard
+[33ma891c1cf[m Add `dom.iterable` lib so TS understands that I can spread a collection
+[33meb82dc20[m Add comment saying why I have teh 100% default
+[33m717e465e[m Calculate the height of the tallest card and use that for the rest of the cards
+[33m588e4ca3[m Fix improper use of attributes which was causing parsing errors (#385)
+[33m38939e49[m Set tool to cursor when deleting template
+[33m03a2b234[m Code clean up
+[33m218a2c82[m Resolve conflicts
+[33ma0f68c69[m Resolve conflicts
+[33m29ec127b[m Lint
+[33m3105861e[m Remove jsconfig.json which isn't needed anymore since we have switched fully to typescript
+[33mf4cf4aeb[m Still use the `projectId` prop so React doesn't complain. This will be fixed in a later PR
+[33m8d5d7ecf[m Converted last of the pages to typescript.
+[33m80d17c82[m Convert last of components to typescript
+[33mcae1487f[m Convert last of hooks to typescript
+[33m0ad45907[m Convert services to typescript
+[33m365a6469[m Convert ProjectCard to typescript.
+[33m2436e058[m Add ghost mode
+[33m5fe9b35e[m Fix borders
+[33m485e2536[m No tool selected when inserting template
+[33m0c0929c4[m Don't save blank projects (#333)
+[33m5356c4b9[m Fix the shortcuts page (#372)
+[33m1864a660[m Add delete, fix borders, update errors
+[33m5884d574[m Prevent same name of templates and update to use new warning modal
+[33mb8a321e3[m Resolve conflicts
+[33m7ec3cdcd[m finesse templates list 8)
+[33m99a6df83[m Implement UI for selecting and deselecting template to insert
+[33md7a222e1[m Fix regression for right clicking a state (#376)
+[33m9a7519fc[m Add a warning modal as a standard for alerts (#373)
+[33med326fa4[m Linting
+[33m11b59433[m Import showWarning from main warning file
+[33m211fd5e5[m Merge branch 'feat/warning-modal' of https://github.com/automatarium/automatarium into feat/warning-modal
+[33m64b7c877[m Make the message a description in modal
+[33m4ebab1bb[m Merge branch 'dev' into feat/warning-modal
+[33mf537ea0e[m Add showWarning as a custom event
+[33m853e1235[m Linting
+[33m4a6be678[m Rendering of the warning modal
+[33mb35a37b5[m Warning modal fixed to use the proper modal
+[33m1ae6371e[m Only accept `.jff` and `.json` files in importer (#374)
+[33m2311e799[m Change warning modal to use react instead
+[33mc888bcec[m Add an orange border to the modal
+[33m9595a202[m Linting
+[33me9e5dfd9[m Warning Modal styling changed
+[33m4537a089[m Warning modal created and alerts updated
+[33md98ff9af[m Make the hook calls always happen
+[33m3350095a[m Convert the `hotkey` property to be `hotkeys` so we only need to deal with arrays
+[33mc181cdff[m Implement UI for creating a template
+[33m2b2842e7[m Get rid of unnecessary lint ignore
+[33m787a0d5b[m Lint:
+[33m500bb245[m Fix import
+[33me1ce1274[m Resolve conflicts :((
+[33m9fbdd192[m Linting
+[33m18b9c4cc[m Move snapPosition into points.js
+[33m51012ab5[m Create function for calculating new element ids
+[33m21358a2e[m Fix not being able to drag items (#371)
+[33md346ddbd[m Move selecting a single item from a group to be a double tap
+[33m11e09907[m Convert `StateCircle` to typescript and support for double clicking
+[33mc695eb0b[m Update how selected element ids are converted to objects
+[33m19c14568[m Convert templates sidepanel to TS
+[33m2f21489e[m Fix bug in shortening coordinate changes
+[33m8418faa3[m Shorten coordinate changes for states and comments
+[33m7b789537[m Better multiselecting/unselecting (#370)
+[33m0b44728f[m Remove initial state properly when it is deleted (#369)
+[33ma1093da7[m If not holding shift when selecting a single item, make sure to unselect everything else
+[33m981987c5[m Merge in the changes relating to how moving is done
+[33m26bb21f5[m Fix not being able to move both states and comments (#366)
+[33m93969189[m Update removeStates method in useProjectStore
+[33mf425bd44[m Check saving even if the user isn't logged in (#368)
+[33ma2c33e90[m If holding shift and selecting another group if items, properly append it to the current selection
+[33m69b99d21[m Fix not being able to unselect a single item from group selection with shift
+[33mb4e190b7[m Convert SelectionBox to typescript
+[33m5109640e[m Handle dragging for all resources in the same block
+[33m5c2ab89d[m Convert relevant files to typescript
+[33md01af718[m Refactor more to typescript (#357)
+[33m2a8d257a[m Merge latest changes from dev that include different TS typing
+[33m932e771b[m Get the project value instead of the actual store (#365)
+[33m5533ab68[m Fix transitions not being formatted properly (#364)
+[33mbf7abec0[m Make transition labels stack on top of each other (#342)
+[33m557fa2a6[m Merge dev to fix non existant property issue
+[33m3d03d10b[m Fix bug in TracePreview displaying wrong ending transition
+[33m3a17496e[m Fix issue with parcel
+[33me308b893[m Remove eslint disabling comments that aren't required anymore
+[33meb20755a[m Readd the tracestep bubble since it does sorta have a use with FSA/PDA.
+[33mb899ecb8[m Fix regressions that happened to the testing lab
+[33m47013dd9[m Remove old comments that are not relevant anymore
+[33m4ecc283b[m Merge in latest simulation and linting changes
+[33m859e4954[m `SidebarButton` is now a separate component instead of being attached to `Sidebar`
+[33m30aae011[m Switched buttons to typescript.
+[33m87604034[m Convert some pages to typescript
+[33m681b1c06[m Convert some more components that required simple translations
+[33me87872c6[m Convert large number of components to typescript
+[33m227b5942[m Fix typescript linting (#354)
+[33m1d37e193[m Remove TraceStepBubble since it is unneeded
+[33m1e49989e[m Clean up presentation of convert tests (#355)
+[33ma8856f8c[m Fix convertInitialNotAtStart test
+[33me3960466[m Change tests to directly compare JSONs
+[33m1025481d[m Clean up presentation of convert tests
+[33m1e92b3c6[m Bandaid solution for JFLAP translator not being able to import frontend
+[33me3fbba70[m Convert TestingLab to typescript.
+[33m9fdb1ab7[m Start working on components
+[33m86c31649[m More work on converting the hooks which required upping the ECMA version to 2021 This was already required before so no browser support is lost
+[33me0194977[m Merge in latest dev changes
+[33mf9648337[m linting
+[33m2f8e7f9b[m Fix handling of errors for insertGroup in project store
+[33m37510db6[m Cleaning up files
+[33m64f5d834[m Refactor template addition to use store method and abstract creating data for copy and template creation
+[33mddf69192[m Move inserting group of elements to project store
+[33ma95b4dc9[m Minimise number of trap states in DFA (#352)
+[33m463409ca[m Resolve merge conflicts with dev
+[33m858f3d0d[m Merge branch 'dev' into fix/trap-state-merge
+[33mce9bc33d[m Refactor graph types (#351)
+[33m83f9fd3e[m Refactor out `graphStepper` into generic function since PDA/FSA implementation is the same
+[33m8e916430[m Remove leftover logging statement
+[33mae7e2854[m Trap state test changes added
+[33m5476a042[m Branch not in final now goes to same trap state
+[33m83113a43[m Minimise number of trap states in DFA
+[33m3067b3a9[m Move frontend over to using new graph functions for store
+[33m8459be54[m Start cleaning up frontend to handle the changes in the simulation.
+[33m58f8a01a[m Clean up `closureWithPredicate` so that the typing makes more sense.
+[33mb98bdcfa[m Update with latest changes from `dev`
+[33md6594f47[m Fix up how the problem is built so that the tests are passing again
+[33m6e157e7c[m Add abstracting for building a `problem` (Simulations term for a graph) from a generic project
+[33m0e8c74c9[m Clean up the types used in the tests and don't use `unknown` anymore
+[33mf7a07406[m Add in the `projectType` key which is missing in the old graphs
+[33m1de78f87[m Simplified the transitions for FSA/PDA so the symbols are stored has a single string.
+[33m5823c468[m Move the simulation functions over to using the types defined in the frontend
+[33m8df657f2[m Clean up how the types are used in the frontend to handle the changes
+[33m330a629b[m Switch the transition types into a variant to better handle the different possible types.
+[33m38a528f8[m L I N T
+[33m55900e0f[m A few cleanups
+[33mfd4b25e9[m Fix problem where text wasn't getting rotated around midpoint Was a matter of using midpoint instead of control
+[33md7215871[m Calculate the midpoint of the curve and place the text on that. This makes the offset calculation less hacky and a lot easier to reason with
+[33m0e418742[m NFA to DFA converter (#347)
+[33m783b9f9a[m Tests changed to be "throw" instead of "fail"
+[33m773945c9[m Remove force fail test from convert tests
+[33mc15675e8[m Merge branch 'dev' into feat/nfa-to-dfa
+[33m26006b89[m Tests changed to reflect error messages
+[33m0813fbc8[m Merge branch 'dev' into feat/nfa-to-dfa
+[33m7d589ae9[m Throw error messages as an exception
+[33mfae68dc4[m Don't reorder when no initial state (#349)
+[33mefa3e0af[m Add error messages for incompatible graphs
+[33m2c064385[m Linting
+[33mf252ead2[m More complex tests added
+[33m1cdc309b[m Linting
+[33md6cc3aca[m Final refinements
+[33m1e5e67f8[m Fix bug when adding template in blank file
+[33m8f7d10c7[m Cleaning and commenting of convert.ts
+[33ma3158c1e[m Change the flow of adding templates
+[33m1d24a5a3[m Linting
+[33mab0910d5[m Clean up convert code and tests
+[33mcad260aa[m Convert useActions section to support TS
+[33me3807149[m Linting on tests
+[33ma538437b[m Add error checking tests for conversion
+[33m2384fccf[m Get inserting and creating templates working with template tool
+[33mbec294df[m Add saving of new templates from selection
+[33m2857a7a5[m Conversion algorithm finished
+[33mf3eebf1e[m Main logic and display complete for convert
+[33m6291b3c9[m Moving some things around, get useTemplateInsert hook set up
+[33m2aef1016[m Linting
+[33mdd313501[m Step 3 complete and conversion finished
+[33mef2b58e6[m changes
+[33m821a4346[m Make branch be up-to-date with dev
+[33m63e58df1[m Make the gap smaller
+[33ma0119423[m Fix eslintcache issue
+[33mf8906138[m Rough version of template stores
+[33md1016560[m Fix loading no project and convert `Editor` to typescript (#343)
+[33md4e6356d[m Move more hooks to typescript.
+[33ma95fe653[m Convert index files to typescript
+[33mfd5fcd82[m Convert the easter eggs
+[33m248c4c55[m Convert a few files to test types. Biggest one is `useActions` which is now converted to typescript
+[33mde8df6f6[m Fix merge conflicts with `dev`
+[33m5bd687ec[m Implement copy/paste feature (#338)
+[33me50c5b38[m Update to localStorage instead of sessionStorage
+[33medf32025[m Linting
+[33m22b1d15f[m Add graph traversal that removes unreached states
+[33m695ef902[m Lint fix for build succeed
+[33mee6862d9[m Cleaner ordering + multiple final states
+[33m1bb83064[m Fix documentation
+[33mafabf77c[m Clean up event typing to be less convoluted
+[33mdd5457df[m Convert Editor to use typescript
+[33md944c0f5[m Move check that the project exists to be before we try and access values from the project
+[33m4285eb82[m Convert the last of the stores into typescript
+[33mf158fcbc[m Steps 1, 1.5, and 2 finished
+[33m3e201bda[m Merging fixed so now its top down
+[33m348df0e2[m Step 2 finished for conversion
+[33m555c143c[m Update `zustand` (#341)
+[33m9b35e849[m Support clicking an edge to select all the transitions
+[33m675ee127[m Text is rotated like JFLAP so that it always sticks out along the normal of the transition
+[33m1e895748[m Merge `dev` in to get the event system typing
+[33m0bea5ec8[m Step 1.5 fixed
+[33m938e6588[m Step 1 and 1.5 complete for conversion
+[33m5670ed0e[m Remove the delete tool (#339)
+[33m94ffc36c[m Refactor to use sessionStorage
+[33m94f1a620[m Created step to remove lambdas
+[33m3b19c97e[m Remove deselect all tools keybind
+[33m2ed19684[m Remove unused animation
+[33m5a329b88[m Remove the stinky delete tool
+[33m5d8fc24c[m Make final states copy + add error for partial transition copy
+[33m96dde426[m Fix linting errors
+[33m7f0c02db[m First version of copy paste, not perfect
+[33m423b7766[m Prevent lambda symbols from adding to new states
+[33m5bc81612[m DFA trap state compatability added
+[33m3300d2c5[m Create a mapping for common symbol-to states
+[33mbc34a183[m createTransitionTable functionality added
+[33m7aee1663[m Basic functionality checks added to convert.ts
+[33m012551a7[m Fixes image exporting in Firefox (#334)
+[33m9664a9f4[m Start typing the event handling system (#336)
+[33m8e55d4c4[m Implement copy
+[33meb9dc9ed[m Start work on making only a single transition be generated
+[33mee2653d2[m Can correctly render over/under transitions but self transitions are a bit broken at the moment
+[33mc7bfcb56[m Fixed transitions disappearing when x coordinates are equal
+[33m8845d92f[m Convert more files to typescript to find some type errors
+[33m8a420588[m Refactor out the branches for making the transition labels
+[33m900cc7a1[m Setup convertNFAtoDFA in actions and simulation
+[33mfe536ee3[m Support reordering graph states (#332)
+[33mc8f27e5b[m Fix states getting lost
+[33maae9f6dc[m Reorder action now properly integrates with history
+[33mf771ae1c[m 1 morbillion increase in performance
+[33mb42ca56d[m Create copy of graph instead of performing operation in place. This makes it work in the frontend, still have performance problems though
+[33maf2fbac2[m Add action to context menu for reordering graph
+[33mcdc20773[m Finish implementing the reordering
+[33m545f534f[m Add tests for cycle and that sorting is done
+[33m641b89cb[m Basic reordering working
+[33m7748edf8[m Add test case for basic reordering
+[33m0d451494[m Fix default transition value in TM (#331)
+[33mee0cab91[m Check types in CI (#330)
+[33m7b34dfe4[m Update comment to make more sense
+[33m2989b059[m Allow user to backspace TM direction
+[33ma4b74cd0[m Fix default transition value in TM
+[33m703cf04c[m States now have properties be readonly instead of private.
+[33m79541248[m Fix simulator types
+[33mad83fb74[m Fix backend types
+[33mdf81cdc5[m Refactor useSelectionStore to ts (#328)
+[33m0ae90da7[m Implement PR feedback
+[33mcaacaac4[m Fix frontend types
+[33mfcc66ca6[m Check typescript types in the CI
+[33m79d5480b[m Add caching to linting tasks (#325)
+[33m999f2e74[m Merge branch 'dev' into refactor/jstots-selectionStore
+[33m7e94dfd2[m initialise project store values as null (#327)
+[33m8f0e7773[m Linting fix
+[33m942e8e0c[m Merge branch 'dev' into refactor/jstots-selectionStore
+[33m795d207d[m Refactor useSelectionStore to ts
+[33m877a59c7[m Refactor dialogs to typescript (#324)
+[33m161630a2[m Update lock file
+[33me5bd3fbd[m Sort out more TypeScript/TSX IDE errors
+[33m2b6bb9d9[m `AutomataState` is inferred
+[33m50c53a5f[m Fix imports to find any last type bugs
+[33m1707632a[m Fix event types
+[33m8b322aef[m Use more explicit types for event handlers
+[33ma7727a67[m Make the save handler be the same for all inputs
+[33mbce6ec4d[m Remove unused `previousX` fields
+[33maee4c4d3[m Move common properties into separate variables
+[33m24698ae6[m Added more comments, starting to understand it more Always remove transition when closing, can't find a case where that isn't intended
+[33mcfa7d6fb[m Refactor `InputDialogs` to use typescript
+[33m8f84b642[m Support importing PDAs and TMs from JFLAP (#316)
+[33m0ba9f378[m Use types used by frontend
+[33mbbd7d5be[m Use colours has defined in `frontend` when importing JFLAP files
+[33m7b7330bb[m Add frontend to translator dependencies
+[33m866a770c[m Fix `source` not pointing to the new main file
+[33m0d9a92d9[m Error when importing multi-character PDA
+[33m50d49f7c[m Support TMs
+[33m538c95ad[m Support PDAs
+[33m5974912f[m Add PDA related test
+[33m4f96af69[m Add test cases when importing FSA
+[33m50fafbc7[m Convert the translator to typescript. The types I've used basically only correspond to what I see here and should be updated once the frontend has a proper type
+[33m7ca374f8[m Add linter to `jflap-translator` package (#315)
+[33m76189750[m Add configs for JS and TS that should fix imports not getting resolved correctly (#326)
+[33m4d2fd022[m Remove lockfiles from workspaces (#322)
+[33m904095a0[m Refactor `eslint` to use a shared config (#321)
+[33m1d094ca1[m Display Stack fix (#320)
+[33mad143dd9[m Migrate some of the stores to typescript (#323)
+[33ma52eb7bd[m Remove old enum
+[33mdfdea0bf[m Remove console.log
+[33m58af8bf9[m Add types in the setters
+[33m883935c3[m Delete old comments
+[33m03617d76[m Fix error with import
+[33m74fadf5c[m Fix linting errors
+[33m440570f4[m Convert useProjectStore to TypeScript
+[33m7e69d266[m Make linter support the new TS files
+[33m528243d2[m First go of converting useProjectsStore to TS
+[33m40465191[m Refactor top 4 /stores files to TS
+[33m04f4ccbc[m Lint the backend using the shared config
+[33m12ed7c13[m Create shared config and use it in the workspaces
+[33m6ec499cc[m Display Stack fix
+[33m13849292[m PDA and TM show correct modal for comments (#313)
+[33m2f0baebd[m Linting
+[33md0a336de[m Refactor PDA and FSA
+[33m7d2313ff[m Refactored TM
+[33mee048132[m Final linting fixes (comment was preventing fix)
+[33m5c7d0cb1[m Linting
+[33m904b72e7[m Slight refactoring + added comments
+[33md2c4cefe[m Fix tracing tape for TMs (#314)
+[33mc34f9ec9[m Linting
+[33mbd530b9c[m TM comment modals fixed
+[33mbabd2ace[m PDA comment modals fixed
+[33m9a94b48a[m Add tests for `simulation` package (#308)
+[33m99faad22[m Disables running multitrace automatically when user loads a project (#306)
+[33m5734e08b[m Block yarn-error.log from being added to git (#307)
+[33mceedd0a8[m Update Info.js (#304)
+[33m0463068a[m Update Info.js
+[33m117a6a85[m Simpler logic for reading lambda cell
+[33m6f11abeb[m Test the full tracing
+[33mb6bc710b[m Add another test case. This machine shouldn't crash the program
+[33ma10b9606[m Add test case for a Turing machine staying in the same state
+[33m6159bac4[m Made the key have the pointer so different positions on the same tape are considered different.
+[33meecad58d[m Finished first Turing machine test Yes I could've made the Turing machine simplier by having a sential character at the start, but this least gives it a bigger test.
+[33md7300a9e[m Seperate stack and remaining by the ID to reduce collisions
+[33ma1c2b019[m Make the TMStateIn type better reflect what comes in
+[33m947e2e16[m Bump nodejs to version 18
+[33m8d691423[m Add git conventions into contribution guide (#305)
+[33m2f87de64[m Refactor `simulation` and `simulation-v2` into one package
+[33mf0fa761f[m Add git conventions
+[33m94123ffb[m Update Info.js
+[33m19ca9ffc[m Separate contributing guide and issue templates (#303)
+[33mcaf96de5[m Add bug and feature issue templates
+[33mc9d3ba8f[m Update README and add CONTRIBUTING guide
+[33m96e58a15[m Start on turing machine tests
+[33m7652f531[m Fix bug that was found
+[33mf633ec55[m Add some tests for PDA
+[33mc56c1bb2[m Corrected behaviour in tests. `simulation-v2` doesn't skip past lambdas like old version
+[33m9b77cfea[m Move to using `resolveGraph` instead of other versions
+[33mc0ab4efc[m Fix test not passing due to requireing order
+[33m29bd0b27[m Test character expansion
+[33m3c92c7c2[m Bump parcel dependencies
+[33m9e1955e3[m Deleted old `simulation` and made `simulation-v2` become `simulation`
+[33m362c34f1[m Move some tests across
+[33mc63c33ae[m Move simulation files across
+[33me38e28c4[m Remove old simulation package
+[33m210225d3[m Update configs to account for new files
+[33m1290f3e1[m Merge pull request #300 from automatarium/fix/export-with-dot
+[33mb55a5cf4[m Fix small bug where the wrong variable is used (#293)
+[33me3c020a5[m Remove console.log statements
+[33m954bb302[m Fix exporting projects with dot in the name
+[33mbec01c67[m Speed up CI by caching yarn dependencies
+[33mc50888a8[m Merge pull request #297 from automatarium/fix/project-thumbnails-broken
+[33md7675f35[m Make thumbnails work with match system theme
+[33md79aff43[m Fix enter key not saving TM transition
+[33mbb43db8c[m Use null coalescing again since it caused problems in some cases without
+[33me1dddaff[m Merge pull request #295 from automatarium/chore/add-people-readme
+[33m251ac013[m Update README.md
+[33m611769c9[m Update frontend/src/components/InputDialogs/InputDialogs.js
+[33m0f303aea[m should be final linting fixes
+[33m63139c1d[m fix linting
+[33mee672aa0[m fix linting
+[33mb122a497[m Select the right simulation function when running multi trace
+[33m6cdac387[m Fix project name not getting saved quickly
+[33mfed45b39[m FOUND THE DEFAULT KEY
+[33m05a0791a[m Try and fix markdown formatting
+[33md826c47f[m Add the other people
+[33m0d700640[m consistent dropdown between PDA and TM
+[33m4ac03144[m should update for default if no input is made
+[33mae9e9587[m make placeholders better
+[33mdea82fd4[m remove readRef
+[33m9687cb41[m fixed naming of ref's
+[33m96869914[m remove autofocus
+[33mc6bce1ac[m Make the reference for the input be the read field
+[33m4b8ce939[m remove unneeded code
+[33m12e9a98b[m autofocus not working
+[33mee3840e7[m fix TM formatting so consistent with PDA
+[33m67741dd6[m Adds running tests to the CI
+[33m8fcf2fbd[m add default save
+[33m7bc40c4c[m change save to be save function instead
+[33m6d3d12d7[m Linting
+[33m0ae4f314[m Refactor dynamic styling to use props
+[33m06a4d525[m Refine styling of dark mode thumbnail
+[33m8042e40c[m Make new proj thumbnails change background with theme
+[33m494d024b[m Make state colours match theme in thumbnails
+[33m725de5c2[m Delete commented out old SVG
+[33m22ef67c0[m Change PDA and TM thumbnail SVGs to match FSA
+[33m591e4a83[m Remove node.js v12 warning
+[33m3adb1a9f[m Use actions/setup-node to cache yarn dependencies
+[33m335b1e45[m Remove the null coalescing since the LHS can never be null
+[33m396bcd31[m Run tests in the CI
+[33mc9f351a0[m Add task for running all tests
+[33mcf5a8f06[m Clean up another location that was simulating with FSA instead of the current project
+[33m0cefcda9[m Make the initial runner also use runSimulation
+[33me3ef632c[m Make a runSimulation function that handles running a simulation for the current project type
+[33m311933c5[m Save the project to the store when renamed
+[33m56feb729[m Merge pull request #279 from automatarium/feat/ci
+[33me868cc0e[m tidy up CI + activate on all branches
+[33mc3cf0ecd[m Merge pull request #275 from automatarium/feat/linting-ci
+[33m9e349a31[m Add section in readme
+[33m46f2e69e[m Add eslint config files for simulation-v2
+[33mef808074[m Fix the final linting issues
+[33m6b0d449e[m Update workflow name
+[33m41115f4c[m Fix spelling errors in package.json for the lint tasks
+[33m3b61fc45[m Fix up the linting changes that were made
+[33m05678e7b[m Turn off importing rules, it seems to cause a lot of problems
+[33m60c1527d[m Make linting on frontend more strict
+[33mdbbaffd4[m Add linting to simulator-v2
+[33m52d1b359[m Switch from .js eslint file to .json eslint file
+[33mff1eef4a[m Get code working with linter
+[33m1809ccd5[m Fix up the package.json calling wrong workspace for linting
+[33m7ef1bddd[m Make the rules be in line with the project
+[33m6176bbc9[m Fix yml syntax
+[33m283d8a32[m Don't run by default in src folder
+[33mc388781d[m Add github action
+[33m3da31242[m Ignore the dist folder
+[33m2c9bd91c[m Add linting tasks
+[33m0fb60d64[m Merge pull request #265 from ire4ever1190/automatarium-v2
+[33mdf1d95a7[m Remove the middle alignment
+[33m8fdae3a5[m Merge branch 'feat/documentation' into main
+[33ma9d8da23[m Merge branch 'feat/documentation' of https://github.com/JamesHarland/Automatarium-development- into feat/documentation
+[33mec5da7f4[m Made some finalising changes
+[33mb79855a6[m Merge branch 'feat/documentation' of https://github.com/JamesHarland/Automatarium-development- into feat/documentation
+[33m454a14aa[m add all documentation changes to stores and components
+[33mb8f8e444[m Update Hooks.md
+[33m3d7eec8e[m Removed console log.
+[33macf400fb[m Added double-click to edit feature.
+[33mb1d565b7[m Fix dangling ampersand
+[33mea410cb9[m Fix PDA search key, isFinal, added copy
+[33m59e703b2[m Fixed no unique key prop for stack visualiser
+[33mc88ad11a[m Fix bug not allowing multiple transitions
+[33m74e33624[m Put a example for resource selection
+[33mf80545e9[m This hook is confusing. Wrote a bit of explanation for the resource selection
+[33mcfcc63a5[m Removed unnecessary code. Renamed Step.ts. PDA stepping lab works for multiple branches.
+[33m3c1dcc29[m Added more examples
+[33m9efec3ca[m Included overview description
+[33ma40096e0[m Added an explanation for useActions
+[33m2c56ebaa[m Edited explanations for other custom hooks and added new explanations
+[33m2d06bdde[m Added explanations for the sync custom hooks
+[33mdf2e63bd[m Merge remote-tracking branch 'origin/feat/TuringMachine' into feat/PDA
+[33mf2a94d1f[m Merge remote-tracking branch 'origin/feat/documentation' into feat/PDA
+[33m3d6aa38e[m Removed initial TM/PDA work from simulation v1. Implemented initial PDA graph stepper functionality.
+[33mffed5c53[m Fixed bug in PDA stack logic and moved it to use BFS so trace rejects correctly.
+[33mde11878b[m Small bug fix: Correctly displaying stepping arrows.
+[33m093b27b4[m Debug: Make PDA and TM backgrounds white.
+[33m2fbe93bd[m Debug list: Tape colours now working. Tape pointer now in correct spot. Stepping buttons disabling correctly. Multi-trace now working.
+[33mfe393c36[m Removed unnecessary code in relation to PDA stack visualiser
+[33m9097b3d8[m Stop stack from appearing in non-PDA projects
+[33m903340a4[m Documentation progress on hooks
+[33me9e6c898[m Debugged FSA and PDA errors including rendering the bottom panel outside of a TM
+[33m5bc0da46[m Debugged PDA Stack Visualiser error preventing editor operation.
+[33mdd6b5bba[m Started explaining useContextMenus
+[33m6f4fd316[m Written documentation for creating a state and comment and made other edits elsewhere
+[33m8ebd1680[m Explained custom hooks about dragging for states and comments
+[33m660d9501[m Provided documentation of custom hooks relating to selection
+[33mbe23c7ad[m Written documentation for delete tool and some for useEvent
+[33m1ef2ca0e[m Merge branch 'feat/delete-tool' into feat/documentation
+[33m38331f2d[m Stack display now single colour and only shows on PDA projects.
+[33m18cc86da[m Visual stack updates with testing lab trace.
+[33mc0a61ada[m Merged with PDA feature. Debugged with regards to merge bugs.
+[33m20ac6bfa[m Merge branch 'feat/PDA' into feat/TuringMachine
+[33mabf64370[m Updated the simulation for TM to accommodate the changes made to the BFS code by Tom.
+[33m28c090e3[m Removed unnecessary code
+[33m1f737291[m Merge branch 'feat/ndfa-support' into feat/TuringMachine
+[33m01eaafaa[m Removed Console Logs from previous commit.
+[33m03ad00e9[m Feature: Implemented colour changing turing machine tape in TMTapeLab that represents a tape halting, in progress, or rejecting.
+[33mc552057f[m Bug Fix: Was Receiving Error and unexpected behaviour in InputDialogs component. Simple fix, set the initial state to a string value such that the Input component has a controlled value from conception onward.
+[33m4e5de047[m Forgot to add a comment
+[33m53e8e591[m Removed unnecessary code and added comments to organise code
+[33m20dca5fa[m Preparing places to save pop and push values to use in logic
+[33m6764ff15[m Attempt to use useContext to save data
+[33m42baa01c[m Bug Fix: The TM input wouldn't represent 'Stay' direction
+[33m46d9b73e[m Managed to retrieve the stack values
+[33m6a357156[m add first store documentation
+[33m815851cf[m add hooks headings/subheadings
+[33md5bd8d42[m change of file structure and add first component documentation
+[33m2c936d83[m Attempted to access stack using zustand
+[33mc123aeaa[m add files for documentation
+[33m0f959ba2[m Attempt to retrieve a value from a function inside a component in order to use in another file
+[33m610e52aa[m Merge branch 'feat/PDA' into feat/pda-stack-visualiser
+[33me4f04ae1[m Updated trace stack naming and changed from structuredClone to JSON parse.
+[33m8dc22493[m Added the current stack for each step in the trace (Testing Lab).
+[33mab0f426b[m Improved css and implemented a close button for stack
+[33mac2b1538[m Updated display and positioning of the stack so it looks nicer
+[33md644762a[m More attempts on trying to add feature on side bar. And changed css for stack
+[33m1f3566d6[m The stack shows but might need to find a better place to display it
+[33mc78b51f3[m Attempting to add another option to display the stack on side bar but its not working
+[33mee2d0bc3[m DM Tape working. Just need to adjust colour for accepted tape.
+[33m92fe6a54[m DTM Tape panel working. (MVP)
+[33m954a0322[m Added Key Prop to TMTapeLab
+[33m89838b7a[m Working through Panel Bug. Pushing for sharing amongst team
+[33mff96e2ab[m Bug Fix: Bottom Panel appearing... But not as desired.
+[33mc80ad5f6[m Simplified classes. Nearly have bottom panel showing.
+[33m03d36c9b[m Prepared Infrastructure for bottom panel to view TM Tapes
+[33me5aaabae[m Reject attempts to pop empty stack - bandaid fix for now.
+[33mb4230fdb[m Reject attempts to pop empty stack - bandaid fix for now.
+[33mb4017fde[m Logo for TM
+[33m211c3188[m PDA stack operations now working. Need to test.
+[33me123dcc0[m Merged graph traversal changes into PDA branch.
+[33m8caa533e[m Implement generic stepper, change State to class
+[33m24012156[m Working TM Algorithm. Needs to create structured copy of execution trace
+[33md8bd708a[m Get rid of input string in graph constructor
+[33m35e9683a[m TM Simulation code implemented (After losing many hours of work due to a merge mistake).
+[33m21a92773[m Merged with new BFS. UI Looking complete for state and transitions.
+[33m8ac2f208[m Merge remote-tracking branch 'origin/feat/TuringMachine' into feat/TuringMachine
+[33md6c956c6[m Merged with new BFS. UI Looking complete for state and transitions.
+[33me13708d8[m Resolve errors from merge for PDA as per FSA as a starting point.
+[33m5cdcf74a[m Merging graph traversal changes into PDA.
+[33m5f73955e[m Initial work on PDA simulation.
+[33mb7b35a8c[m Remove unused member and function
+[33m8ca3aa1b[m Rework simulation algorithm to be even more generic
+[33macf9d049[m Pop up for visually showing PDA stack
+[33m1e151a45[m updated description
+[33m65784311[m Fix import and recover accidentally deleted code
+[33m9e68bf64[m Merge remote-tracking branch 'origin/feat/ndfa-support' into feat/PDA
+[33m0d1d61eb[m add comment deletion
+[33m58dcf4c6[m add transition deletion
+[33m00a6398d[m Added SVG image for PDA.
+[33m7c820f37[m add functionality to delete states
+[33mcc55659d[m Reorganisation of simulation v2 files
+[33m51e44830[m Make the graph search algorithm generic
+[33mf34b44b8[m Add UI feedback in stepping tool
+[33m68c5dd10[m Fixed PDA transition display for cases where some but not all inputs were blank.
+[33m8c1c46ab[m Memoise the graph and stepper
+[33m5b92a276[m Basic step through functionality linked with UI
+[33m2cf2f7b3[m Create new side panel for stepping through graphs
+[33m7427f612[m Fix bug when opening testing lab with no graph
+[33m39a74de2[m Implement basic functions of graph stepper
+[33m46354f01[m Begin writing stepwise BFS (?)
+[33mcb5feaff[m Fix typo.
+[33mbdc79895[m PDA transition create and edit now displaying correctly.
+[33m03c2f07e[m Added input dialogs for PDA pop and push operations. Non-functional atm
+[33md8ca9dbd[m PDA frontend WIP.
+[33maaf792b2[m Deprecating this branch after Tomas' simulation improvements. Easier to branch from his and manually transfer progress.
+[33m390bee8f[m Create trace for FSA return and fix bugs (usable!)
+[33mb31d378e[m Add prettier config and format all files
+[33m18d889b9[m Turn graph node into class and update dependents
+[33mf04d09f5[m Add Ewan's parser and change typing to accomodate
+[33mbedd95d8[m Create tsconfig and fix collections due to strict
+[33m77902fd3[m Current state WIP.
+[33me30a89f9[m Create preliminary graph search and problem files
+[33ma6bfe959[m Delete old queue file
+[33m04464324[m Create generic collection classes for BFS and DFS
+[33m6a57c38c[m Create basic queue class for BFS
+[33m0ab2917a[m Create new package for graph simulation algorithm
+[33m01ba18e7[m Start PDA implementation. Similar to Conor with TM, but for PDA. Stack to be implemented.
+[33m739d4e59[m Update Toolbar.js
+[33m10952104[m Added animation for delete tool
+[33m93f73acd[m add delete changes for Jessani to pull
+[33mfb528782[m add icon on toolbar for delete
+[33m682b99f2[m Unlocked TM editor from home page. Beginning to build TM functionality.
+[33m9eda5d11[m Merge pull request #4 from JamesHarland/dev
+[33m7c00347f[m Merge pull request #2 from JamesHarland/feat/project-deletion
+[33mbdd69c63[m Merge pull request #1 from JamesHarland/chore/deployment
+[33m0c2b14d4[m Merge pull request #257 from automatarium/fix/hsl-commas
+[33m2f8dca08[m Add commas in hsl css to prevent black export bug
+[33m2dbb5434[m Adjust config for deployment
+[33m2b9173dd[m Merge pull request #256 from automatarium/fix/right-click-menu
+[33mb0bdeeff[m Override right click default behaviour
+[33m9eeebc30[m Merge pull request #251 from automatarium/fix/ghost-on-right-mouse
+[33m808e3353[m Merge pull request #250 from automatarium/fix/dialog-positioning
+[33ma298e98f[m Merge pull request #252 from automatarium/fix/export-project-name
+[33ma4aa6f14[m Remove console.log
+[33m1a0fdf50[m Merge pull request #253 from automatarium/fix/id-in-export-json
+[33mae493605[m Extract _id and userid from exported JSON
+[33m7c793ae3[m Update project name and colour in export dialog if updated
+[33m37098f29[m Check if left click is pressed to show ghost state
+[33md150ee82[m Use screenToViewSpace and viewToScreenSpace when showing dialogs
+[33m0ca21bd7[m Merge pull request #247 from automatarium/fix/scroll-zoom-in
+[33m080486ad[m Cap scroll deltaY when zooming
+[33m26d0b3c1[m Fix zoom bug (single scroll takes user to 500%)
+[33m9eeb2d99[m Merge pull request #244 from automatarium/feat/info-state-name
+[33mdabb2fd3[m Nothing 0.0
+[33m037debe5[m Update transition table and function to use state names rather than ids
+[33me091f1c1[m Reorder info panel
+[33m89da7b81[m work on project deletion (wip - the sync hook is messing some stuff up)
+[33m3bad9b11[m Merge remote-tracking branch 'origin/dev' into feat/project-deletion
+[33mf6c082b5[m Merge pull request #207 from automatarium/feat/tool-animations
+[33m8355b355[m Increase animation max width to 225px
+[33me113f316[m Add comment animation
+[33m418f2545[m Merge pull request #233 from automatarium/feat/reachability
+[33m6ab8e67a[m Merge pull request #236 from automatarium/refactor/padding-to-margin
+[33m9ebd68eb[m Merge pull request #235 from automatarium/feat/lambda-placeholder
+[33m95d82d13[m Show warning for unreachable final states
+[33m01119d05[m Use new simulation package methods for Info pane
+[33mdec8f482[m Clamp margin between 0 and 500
+[33m757921b3[m Remove unused import
+[33m3b691f7b[m Refactor padding to margin
+[33m0bccd62c[m Prevent removing all multi-run inputs
+[33m591020d1[m Use lambda for multi-run text input placeholder
+[33maf00c0a5[m Merge pull request #222 from automatarium/fix/use-dev-firebase
+[33m90748ff9[m Merge pull request #227 from automatarium/fix/export-selected-arrowheads
+[33m1358841f[m Merge pull request #232 from automatarium/docs/licence
+[33m21b3ed28[m Update docs
+[33m97f66f0e[m Update lock
+[33m1f602c2c[m Extract closure logic, document and add tests to simulation
+[33m119be063[m Add a license file
+[33m54cff9d2[m Fix possible undefined typescript errors
+[33m9e083eab[m Fixed arrowheads being black when exporting an image in dark mode
+[33mc38ee835[m Merge pull request #225 from automatarium/fix/light-grid-pattern
+[33mf2f5e11a[m Merge pull request #224 from automatarium/fix/remove-uuid-package
+[33mbea88f68[m Merge pull request #223 from automatarium/fix/login-error-message
+[33mde530b2f[m Be more polite with warning user
+[33m5f7bafc1[m Fixed dark grid incorrectly used on project cards
+[33m620ea3f9[m Removed unneeded UUID package
+[33m3c96c763[m Show more accurate error message on login dialog
+[33mfa2c3e89[m Use the dev firebase in prod
+[33m970f6266[m Merge pull request #215 from automatarium/fix/saving-issues
+[33m81b1cbab[m Merge pull request #216 from automatarium/feat/ctrl-zoom-preference
+[33m025f13fb[m Comment code
+[33m79a39f37[m Merge pull request #217 from automatarium/feat/move-preferences
+[33mb7639a89[m Merge remote-tracking branch 'origin/dev' into feat/move-preferences
+[33m7824ef1a[m Merge pull request #218 from automatarium/feat/beforeunload
+[33m9cbc5893[m Merge pull request #219 from automatarium/refactor/remove-plurals
+[33m1f3eda53[m Merge pull request #220 from automatarium/feat/comment-input
+[33mcbcdc785[m Merge pull request #221 from automatarium/feat/fsa-image
+[33m1509b52a[m Add new file image for FSA
+[33m783c7b6f[m Use input dialogs for state names and labels
+[33m58700fc8[m Add comment icon to dialog
+[33mc2ea303f[m Use input dialog for comment creation and editing
+[33m691f82ac[m Remove plurals from new project names
+[33m9675cb93[m Prevent closing tab or navigating away if project unsaved
+[33m52707a33[m Save project if unsaved when clicking the logo
+[33m01e2377c[m Unused import
+[33me84c6e2a[m Add preferences button to new file page
+[33m973a5062[m Move state to shortcut guide modal component
+[33mcb8a55d8[m Move preferences panel to entire site
+[33m1d4fe689[m Add preference for zooming with ctrl key
+[33m24bcd356[m Update last saved date
+[33mcc1f8467[m Remove unused parameters
+[33m159e02bd[m Backend: store dates as numbers
+[33md40acce4[m Fix comment zoom clipping
+[33mc81dc6df[m Prevent className from being `false`
+[33mdffe5667[m Prevent overscroll
+[33md1aad924[m Add state tool animation
+[33m3dbfb5de[m Merge pull request #208 from automatarium/fix/touch-bar-pan
+[33m9551d486[m Merge pull request #209 from automatarium/feat/file-thumbnails
+[33m8578fd57[m Merge pull request #210 from automatarium/refactor/new-file-namegen
+[33maf40c12f[m Alter spirit animals
+[33m51b72a7d[m Change project name nouns to garden related
+[33ma32047ba[m Align cards top
+[33m86fee8cf[m Add hand and transition tool animations
+[33m013dd7a7[m Use SWF adjectives and planets/moons for nouns
+[33mbb8bce0d[m Fix dates not using milliseconds
+[33m3826fd23[m Use css classes for selected svg styles
+[33m569b7002[m Remove unused thumbnails
+[33mbb96a2d1[m Use project thumbnail on projectcard
+[33m37239b59[m Save thumbnail when changing project
+[33m23011c2a[m Update project card to be a html button
+[33m8995218a[m Reset view position when opening file
+[33me8313c52[m Allow panning view with touchpad
+[33mb5780d28[m Add cursor animation
+[33m841e273d[m Merge pull request #202 from automatarium/feat/export-to-clipboard
+[33ma72ec3d5[m Svg export warning
+[33m4a414976[m Merge pull request #200 from automatarium/fix/fit-to-zoom
+[33ma2ee88b6[m Update shortcut guide
+[33mbd7a9110[m Change name of menu item to "quick copy to clipboard"
+[33m3f0bc4a6[m Merge pull request #204 from automatarium/feat/homepage-spruce
+[33m91bee78e[m Change fit to view padding to 40px
+[33m01f2a64f[m Merge pull request #203 from automatarium/feat/about-and-privacy
+[33m92628d7a[m Merge pull request #201 from automatarium/fix/comment-text
+[33m6bd7c179[m Actual live working trace on the homepage
+[33m69b27447[m Add basic privacy policy
+[33ma113d758[m Move title font into project
+[33m6fe425ac[m Add simple about page
+[33md8ec2de7[m Make header link back to homepage
+[33m66f62c2d[m Fix preferences fullWidth
+[33m2fd15a48[m Reset export options when opening a new file
+[33m8e291cf8[m Fix SVG copy
+[33m77742f3f[m Copy image to clipboard from export dialog
+[33mf189c55f[m Image export dialog
+[33mf9e971f3[m Use proper variables
+[33m30ebd321[m Export with transparent initial state arrow
+[33m25d93726[m Use white for comment text in dark mode
+[33mdbc02592[m Fix comment scaling
+[33md5ee3d0a[m Fix fit to zoom equation
+[33mb1bb3f1a[m Merge pull request #199 from automatarium/doc/readme-screenshot
+[33mc8cf8ea3[m Add screenshot to readme
+[33m52df9032[m Merge pull request #198 from automatarium/doc/update-readme
+[33mc864e4c6[m Planet
+[33md8029c1f[m Update readme
+[33mde228c84[m Merge pull request #196 from automatarium/feat/read-tokenising
+[33m2c1ade11[m Merge pull request #197 from automatarium/feat/toggle-switch
+[33m20d57276[m Use switch component
+[33m51719f74[m Implement parsing and syntax checking of read values
+[33m2b3b6d81[m Toggle switch component
+[33m61b18ed1[m Merge pull request #194 from automatarium/fix/view-dragging
+[33mab86179a[m Merge pull request #195 from automatarium/fix/tool-popups
+[33mc48c34fc[m Set tool tooltips to position fixed
+[33m20a7207b[m Rename parseRead -> expandReadSymbols
+[33me3f3f6e1[m Fix view dragging requiring bg drag
+[33m8666c573[m Merge pull request #193 from automatarium/feat/spooky-states
+[33m345bfbd3[m Remove trailing console log statements
+[33m602b9749[m Add "Select Multiple" hotkey help item
+[33ma7fd4d69[m Spooky action at a distance
+[33m320d969c[m Merge pull request #188 from automatarium/feat/trace-bubble
+[33m699bcee2[m Merge remote-tracking branch 'origin/dev' into feat/trace-bubble
+[33mfd644f0f[m Update ticker
+[33mcc01cff9[m Merge pull request #187 from automatarium/feat/state-labels
+[33mba1e5b3c[m Switch to svg for trace preview and resize label
+[33m78cf83d8[m Merge pull request #191 from automatarium/fix/reflexive-tangent-labels
+[33mdb587c79[m Don't use textpath for reflexive transitions
+[33m8da43689[m Implement trace tape functionality
+[33md3d59e1d[m Change name and label
+[33m88ef7600[m Fix label styles
+[33me3a5f94a[m Merge branch 'dev' into feat/state-labels
+[33mb499d780[m Merge pull request #186 from automatarium/fix/file-theme
+[33mcb9c0a57[m Set root styles on the svg
+[33m81e46209[m Merge pull request #182 from automatarium/feat/file-options
+[33m6eae6914[m Merge pull request #185 from automatarium/fix/multi-run-paste-newline
+[33mf0bb406c[m Merge pull request #184 from automatarium/feat/colour-favicon
+[33m5aa19c42[m Remove empty newlines from paste
+[33m88a842b7[m Graph theme update with ui colour pref
+[33ma2259fe2[m Merge pull request #180 from automatarium/fix/null-comment
+[33m07d78493[m Merge pull request #181 from automatarium/feat/remove-transition-duplicates
+[33mfebc64a1[m Theme responsive favicon
+[33m0499ec32[m Merge pull request #177 from automatarium/feat/auto-name-export
+[33m46f0b7eb[m Merge pull request #176 from automatarium/feat/fit-to-zoom-binding
+[33m6d8fd515[m Use file theme
+[33m90fb86c2[m Use state prefix
+[33m0b20a1c5[m Add options panel
+[33m73c58dde[m Consolidate input field
+[33mfdf8866e[m Remove duplicates from transition reads
+[33m3acd7c8b[m Prevent cancel from nulling comment value
+[33me8bb062c[m Remove hotkeys file
+[33m7c8b97a3[m Merge pull request #162 from automatarium/feat/delete-projects-be
+[33m6aa985d4[m Change auto image naming conventions
+[33mcf23e05c[m Use project name as downloaded file name
+[33m424bf6fa[m Update hotkeys menu
+[33mee3b3d8e[m Change fit to zoom binding
+[33me27d6f64[m Merge pull request #173 from automatarium/fix/new-file-import
+[33mbcd16af0[m Merge pull request #175 from automatarium/feat/tool-tooltips
+[33m64ba632b[m Merge remote-tracking branch 'origin/dev' into feat/tool-tooltips
+[33mfaa6385a[m Tool popup
+[33m72894473[m Merge pull request #172 from automatarium/feat/new-page-modals
+[33m42368479[m Merge pull request #163 from automatarium/fix/jflap-import
+[33m95c5f728[m Use string interpolation for alert box
+[33mf00e08db[m Change import to absolute import
+[33m2e370e77[m Add rudimentary label rendering
+[33m3ddf4c3c[m Fix imports from new file page to name the file correctly
+[33m8d7d5bb2[m Merge remote-tracking branch 'origin/dev' into feat/state-labels
+[33mfe52d9d4[m Merge pull request #169 from automatarium/feat/export-image
+[33m70b03002[m Merge pull request #171 from automatarium/feat/snap-actions
+[33m080e84e6[m Add auth modals to new file page
+[33m26e0607c[m Add alignment context items
+[33mafe6405d[m Merge pull request #168 from automatarium/refactor/button-colours
+[33maa4bcc6f[m Merge pull request #167 from automatarium/refactor/preferences-subheading
+[33mb627002a[m Fix error message on import error
+[33m9370fc66[m Add tool shortcuts
+[33m24992ca1[m Export as SVG and JPG
+[33m0a52f924[m Implement imported file names
+[33mdd1fe409[m Actually fix jflap importing
+[33m281c0017[m Download PNG
+[33m85412ac4[m Change button active styling to prevent obnoxious orange on grey buttons
+[33mef71c8d7[m Change preferences subheading (big commit)
+[33ma7f80f82[m Fix zoom to fit
+[33md862b420[m Move SVG styles to inline styles
+[33md95a86fb[m Merge pull request #166 from automatarium/feat/transition-dialog
+[33m780a51bd[m Check that comment input isn't empty
+[33m4673fe86[m Add submit button to transition input
+[33m31c678e7[m Merge pull request #160 from automatarium/feat/keyboard-shortcut-guide
+[33m4431c810[m Incorrect arrows
+[33m15cb8f7f[m Remove unnecessary comment
+[33ma3549653[m Fix broken testing lab after jflap import
+[33m9f664211[m Fix jflap importing when there are no comments, states, or transitions
+[33m46549464[m Merge pull request #161 from automatarium/fix/delta-stt
+[33mc6f4dbe2[m Update 403 error message
+[33ma775642d[m Add project delete method and route
+[33m5ac76a62[m Add delta into state transition table to reflect course materials
+[33m4bb26600[m Keyboard shortcut guide
+[33mce4bd6df[m Merge pull request #159 from automatarium/feat/dib-egg
+[33m80c28732[m Merge pull request #158 from automatarium/fix/share-button-reflow
+[33m642a8a60[m Commit directly to dev branch (fix share button appearing abruptly)
+[33m81eea1d8[m Implement dib egg (yay)
+[33m8fff041a[m Merge pull request #157 from automatarium/feat/background-context-items
+[33md737ff2b[m Implement easter egg :^)
+[33m029184e0[m State creation
+[33m45bb72c4[m Comment creation
+[33m775194d4[m Merge pull request #156 from automatarium/feat/middle-click-drag
+[33m39efe595[m Implement middle click panning
+[33m155bbd73[m Merge pull request #154 from automatarium/feat/colour-themes
+[33m50717f83[m Merge pull request #155 from automatarium/feat/testing-lab-qol
+[33mff30f3c6[m Arrow key control and spam prevention
+[33mac432799[m Merge pull request #153 from automatarium/fix/performance
+[33m579acd1c[m Fix broken import
+[33mc7cde2bb[m Disable buttons if there's no initial state
+[33mac53cc0c[m Slightly refactor theming system, alter some colours
+[33mccf9cbdd[m Keyboard shortcuts and multiline paste support for multi-run
+[33m6bc4e027[m Remove render indicators
+[33mb7f55c67[m Reduce re-render count
+[33m39859cd9[m Allow tables to scroll horizontally
+[33mf4f49e82[m Merge pull request #151 from automatarium/feat/preferences
+[33m0adf0a21[m Fix cards in dark mode
+[33m91fd0460[m Merge pull request #150 from automatarium/fix/initial-state-type
+[33m6e8e3e37[m Merge pull request #149 from automatarium/feat/info-pane
+[33m13f17d3f[m Extract info table into seperate component
+[33mbd258641[m Remove indigo
+[33mf049666c[m Update table colour variables
+[33m83a480a5[m Add dependencies to useMemo
+[33m36f3c2d3[m Adjust dark grid background
+[33m2ee93e2c[m Accessible footer link hover
+[33m9b2dd0c2[m Exit fullscreen
+[33m9bbbdb91[m More robust text path calculation
+[33m282e3a36[m Auto resize comment bounding box
+[33m1f04bdea[m Dropdown-esque share modal
+[33m73877682[m Use project version
+[33m6ebef7dd[m Change default colour name causing issues
+[33m3bc16176[m Show/hide grid
+[33m464599f6[m Dark/light mode
+[33m1fa944bc[m Color theme
+[33m104e944a[m 'Implement' project deletion (very WIP)
+[33m41b76854[m Update project model to store IDs as number
+[33mebe96617[m Implement project info panel
+[33mc58d8b1a[m Merge remote-tracking branch 'origin/dev' into feat/preferences
+[33m8e9dd8fb[m Merge pull request #147 from automatarium/feat/home-page-import
+[33m0ebca572[m Merge pull request #146 from automatarium/feat/comments
+[33m9949d516[m Remove sample comment and update context item
+[33m84e13496[m Add padding to calculated SVG comment height
+[33m08284d68[m Merge remote-tracking branch 'origin/dev' into feat/comments
+[33m0d32ac80[m Implement .json and .jff file importing
+[33mf71d2f3e[m Setup generic resource interactivity hooks
+[33me14c72c4[m Disable unused menu items
+[33mc5de9b5c[m Small tweaks to new project page
+[33ma2750629[m Merge pull request #145 from automatarium/feat/edit-project-name
+[33mb19ba156[m Merge remote-tracking branch 'origin/dev' into feat/edit-project-name
+[33m3bb0c579[m Nicer title edit input
+[33m5814d297[m Setup comment mouse events
+[33m564a3bc6[m Implement rendering comments
+[33m887e2b26[m Merge pull request #141 from automatarium/feat/share-automaton
+[33m4afe1037[m Merge pull request #144 from automatarium/feat/view-controls
+[33m768bff51[m Power up save indicator
+[33m8ee44f18[m Fix repeated zooms to 100%
+[33m6f121ed2[m Implement zoom to fit
+[33m36e0316e[m Merge pull request #143 from automatarium/fix/safari-layout
+[33ma1aa1fba[m Safari doesn't support user-select
+[33m4dc936e8[m Merge remote-tracking branch 'origin/dev' into feat/view-controls
+[33m96867184[m Merge pull request #142 from automatarium/feat/svg-resize-observer
+[33m31c81369[m Prevent dragging from outside svg
+[33mbbba689e[m Setup view actions
+[33m7f9b4161[m Use hand cursor for panning
+[33m97c6ee92[m Use resize observer for svg wrapper
+[33mb7866a3b[m Fix view toolbar menu
+[33mca035f97[m Disable share button while saving
+[33m377a4da7[m Fix sharing functionality
+[33mc4630a7e[m Merge branch 'dev' into feat/share-automaton
+[33m19cc7587[m Add reset projects after logout
+[33mc4474d89[m Merge pull request #140 from automatarium/feat/clean-new-file-page
+[33m98424f8e[m Merge pull request #139 from automatarium/feat/testing-lab-finesse
+[33m30c0fcf3[m Fix visualisation of short traces in testing lab
+[33m23a09318[m Add share functionality for projects
+[33md528482d[m Make new project buttons real buttons and clean css
+[33m7a06fcf5[m Correctly show short traces
+[33m870448ce[m Remove trailing console logs
+[33m4a0c6ac9[m Show warnings and fix output for small traces
+[33mc2db804f[m Fix type errors and account for missing initial state
+[33ma07cee1f[m Merge pull request #135 from automatarium/feat/transition-seperation
+[33m9e8f7fe7[m Fix transitions rendering in reverse direction
+[33m472a7c1b[m Fix reflexive transitions overlapping labels
+[33m50d2bc4c[m Group transitions by directions before rendering
+[33m6b7aa316[m Fix overlapping transitions
+[33m67980668[m Merge pull request #132 from automatarium/fix/testing-lab-issues
+[33m9c5c261c[m Merge pull request #131 from automatarium/feat/modal-improvements
+[33mf7919375[m Removed redundant useEffect
+[33m3a345ba8[m Fix issue 129
+[33mdd6ed448[m Fix issues 73 and 108
+[33m9dd5eb17[m Remove leftover console logging
+[33mce5a3fdf[m Fix auth state not updating after signup
+[33m66c9cfd4[m Add html form validation for password length
+[33m8344fe49[m Split signup into two words on Signup page
+[33mecdc5135[m Merge pull request #124 from automatarium/feat/simulation-ranges
+[33mfd77665b[m Merge pull request #123 from automatarium/feat/project-saving
+[33m8e060e3d[m Fix cases with final lambda transitions
+[33mb759bfef[m Add lambda transition test graphs
+[33m47f54551[m Revert "Fix multi-run remaining characters bug"
+[33m2d43c3ba[m Fix multi-run remaining characters bug
+[33m7fba0760[m Implement automatarium logo redirect to new page
+[33m8b89019a[m Remove unnecessary scroll bar from new file page
+[33m0fbee250[m Use lambda closure to optimise simulation
+[33md47f2dc9[m Slightly improve code formatting
+[33md9912ae8[m Fix handling of lambdas
+[33md89b84ba[m Refactor simulation to use typescript and add parse read functionality
+[33ma11300f8[m Use save and change dates for autosaving
+[33m95d2612b[m Add saving indicator
+[33m8722412a[m Add temporary system to change project name
+[33m1aefcf1b[m Sort recent projects by edited date
+[33mebe4a229[m Improve layout of Editor hooks
+[33m8084c0ec[m Move syncing logic out of Editor into hook
+[33m0794c490[m Fix syncing logic incorrectly getting dates
+[33m83186436[m Revert backend address to localhost
+[33m645494a8[m Fix root yarn lock hash
+[33m11c4ca5b[m Fix syncing/saving logic and Implement random project names
+[33m9b263b3a[m Add project config key to BE
+[33m257af1c6[m Use dark background when loading editor @Benpai
+[33mf11834e2[m Persist and load projects into localStorage
+[33mb64c826e[m Fix transition editing and menubar items
+[33mf80dec8a[m Ensure newly created projects are empty
+[33m61dca3a4[m Merge pull request #121 from automatarium/feat/auth-modals
+[33m89f8379b[m Merge pull request #120 from automatarium/feat/transition-reversing
+[33m94c99a91[m Merge branch 'dev' into feat/auth-modals
+[33m8efbea18[m Merge branch 'dev' into feat/transition-reversing
+[33m126baa88[m Merge pull request #119 from automatarium/refactor/fe-structure
+[33mcc8a44d5[m Rename dispatchEvent utility to dispatchCustomEvent
+[33m8db3b4b0[m Use useEvent hook in SelectionBox
+[33m4af7662d[m Remove leftover debugging
+[33m07935329[m Adjust comments in StateCircle for clarity
+[33maf370cfb[m Remove leftover internal documentation
+[33m85f3cb7d[m Use modals for signup/login actions
+[33m340e5186[m Add generic modal component
+[33m16344b25[m Merge branch 'refactor/fe-structure' into feat/transition-reversing
+[33m915bf07d[m Fix multi-transition selection
+[33mb4a88dbf[m Implement transition flipping
+[33mbee9c0d2[m Fix svg expanding off page
+[33ma0ca7266[m Fix spacebar scrolling
+[33m2c691966[m Remove large comment block from GraphContent
+[33mac16b6ad[m Set key on trace preview items
+[33m22888201[m Move editor components and hooks into global directory
+[33mb9b0b595[m Setup context interactivity
+[33m27d4c3b0[m Restructure interactivity
+[33mb3220d4c[m Merge pull request #116 from automatarium/feat/fe-be-integration
+[33m77cf651e[m Alow new file card list to scroll
+[33mc5738a3a[m Replace border button style with surface
+[33m51f970cb[m Fix logout page
+[33m50d4e1f6[m Move Header into seperate component
+[33m05b552b2[m Hide share menu button when not logged in
+[33m8ab8c3b9[m Fix CardList import
+[33m10e4a08f[m Update footer positioning and links
+[33m090214e7[m Split up styles into seperate files
+[33mf98fbd0f[m Add important feature
+[33m321f1899[m Remove demo svg page
+[33m3b2cf030[m Merge branch 'feat/fe-be-integration' of https://github.com/GRA0007/automatarium into feat/fe-be-integration
+[33mfecb4650[m Remove unused css
+[33m7356f8eb[m Fix typo
+[33mcb4d4359[m Add no result text to recent projects
+[33m1c8f201c[m Remove leftover debugging
+[33mab804ddb[m Integrate backend and frontend
+[33m18b69bc3[m Merge remote-tracking branch 'origin/dev' into feat/fe-be-integration
+[33mf741d7de[m Merge pull request #115 from automatarium/fix/be-config-error
+[33m488a61b0[m Improve error and logging readability
+[33m8946ef4c[m Rename types to pascal case
+[33mef103083[m Merge pull request #106 from automatarium/feat/backend-user-projects
+[33me4308edd[m Remove console log from signup frontend
+[33mf8b6b8df[m Merge pull request #114 from automatarium/feat/default-project
+[33mcd22b609[m Simplify default project
+[33me73b00bf[m Merge pull request #113 from automatarium/feat/testing-lab-ticker
+[33m63c9eac4[m Allow scroll
+[33m0b138dd7[m Show trace preview in trace step
+[33m0e13eaa5[m Add status icons to multi-run
+[33m0e2994c0[m Merge pull request #112 from automatarium/fix/dep-fixes
+[33m1a105ca2[m Fix deployment issues
+[33m23def83b[m Merge pull request #110 from GRA0007/fix/fsa-bugs
+[33m426e9a7c[m Fix lambda as last transition bug
+[33m210b8e9a[m Fix undefined output prints & skip to end button
+[33m731dca33[m Fix undefined issue when running out of input characters
+[33mf58c020d[m Add missing import
+[33m58ed2d89[m Merge pull request #105 from GRA0007/feat/transition-modal
+[33mf4d170e1[m Merge pull request #103 from GRA0007/feat/file-context-menu
+[33m5443ef26[m Merge branch 'dev' into feat/file-context-menu
+[33md98a26ce[m Merge pull request #102 from GRA0007/refactor/fsa-execution
+[33mf2e23c4b[m ->|
+[33mce5986f9[m Use view state to transform modal position
+[33mcc004e6c[m Remove console logs and refactor routes
+[33m50e8b417[m Edit transitions
+[33m3ffed196[m Move dialog to midpoint
+[33m134f53a1[m Improve performance and flow of import action
+[33m18ec6a83[m Merge remote-tracking branch 'origin/dev' into feat/transition-modal
+[33m24064811[m Allow transition edit
+[33m74ed177a[m Add update project route and authentication middleware
+[33m3787de49[m Allow creating transitions
+[33me9691f06[m Update lock
+[33ma5be2ffd[m Fix testing lab output
+[33m3fbac005[m Merge remote-tracking branch 'origin/dev' into refactor/fsa-execution
+[33m6374a9c2[m Merge pull request #88 from GRA0007/feat/selection-effect
+[33m47d607fd[m Merge branch 'dev' into feat/selection-effect
+[33m9f013af3[m Update selection style
+[33mf94a263a[m Update open file code
+[33mb71edeb8[m Update JFLAP conversion to include id in transitions
+[33m90e00b78[m Allow .jff files to be opened
+[33m2fa45b17[m Implement downloading project files (save as)
+[33m9258457e[m Implement new file and open file
+[33m5868288b[m Remove console log
+[33mfb72867c[m Create tests for all graphs
+[33m1ca2b828[m Update testing lab to adhere to new FSA execution format
+[33mf3b24196[m Update FSA simluation to return objects
+[33m55cedafd[m Add babel config for es6 syntax in tests
+[33m42e5451e[m Refactor all test graphs
+[33m7bc9774c[m Merge pull request #101 from GRA0007/fix/creating-history
+[33md4a2feff[m Update selection style
+[33me1bbda09[m Commit state and transition creating to history
+[33m0dd3fb24[m Show dialog when creating transition
+[33m1bb68af8[m Merge pull request #100 from GRA0007/feat/reflexive-transitions
+[33m31956548[m Merge pull request #99 from GRA0007/feat/state-actions
+[33m7da6940a[m Implement reflexive transition paths
+[33md6fc993d[m Update default project graph
+[33m13138785[m Implement set initial and toggle final actions
+[33mc84853fa[m Merge pull request #98 from GRA0007/feat/action-scoping
+[33m81580650[m Disable tool swap actions when an input is focused
+[33md419e442[m Fix view zooming prevent all scrolling
+[33m4005a45f[m Move arrow key view movements to actions
+[33m09de71b2[m Disable hotkeys when an input is focused
+[33m8fccbaa3[m Merge pull request #96 from GRA0007/feat/context-menus
+[33m9ce7291e[m Use single dropdown for all context menus
+[33m8a0c0d35[m Add graph context menu
+[33m5c3df958[m Add transition context menu
+[33mb8204914[m Moved context menus to a separate component
+[33m9e7209d9[m State right click menu
+[33m283e3603[m Merge branch 'dev' into feat/selection-effect
+[33m0b906fbb[m Merge branch 'dev' into feat/user-database
+[33m9879faa2[m Merge pull request #92 from GRA0007/feat/transition-label
+[33m2ad56985[m Merge pull request #91 from GRA0007/feat/transition-selection
+[33mfbf25530[m Merge pull request #90 from GRA0007/fix/group-snapping
+[33m4b0dc057[m Allow transition read label to be specified
+[33m7f9329f2[m Fix mouse position not reseting after creating transition
+[33m79b105c0[m Fix transition creation arrow not receiving mouse up event
+[33m148c2cbb[m Implement transition deletion
+[33m28f3d4bc[m Implement transition selection with selection box
+[33m40f9cd0f[m Implement direct transition selecting
+[33ma11fe3d5[m Setup mouse events for transitions
+[33m41507f95[m Merge remote-tracking branch 'origin/dev' into fix/group-snapping
+[33m27459d63[m Merge pull request #87 from GRA0007/fix/duplicate-states
+[33m66dcf287[m Adjust grid snapping for groups of states
+[33mb563c829[m Merge pull request #89 from GRA0007/feat/yarn-workspaces
+[33mc5aa6cc5[m Update frontend package.json to live reload packages
+[33m3e0b591e[m Add yarn workspace package.json and scripts
+[33m88fdbae3[m Add variable for selection fill
+[33m0cb17cc2[m Update selected state colours
+[33m1a7c7185[m Fix states being created with infinite IDs
+[33m4260c2cb[m Fix #86
+[33m6deead54[m Merge pull request #78 from GRA0007/feat/testing-lab
+[33m357d5cd2[m Merge pull request #85 from GRA0007/feat/jest-testing
+[33m5744a06c[m Add sidebar close button
+[33mc9e69f57[m Fix imports and refactor quotes
+[33m3e9d444c[m Use project store for inputs
+[33m973b910b[m Use common components
+[33md1e9fb9b[m Add initial jest tests from existing automaton
+[33m611dd4c1[m Fix testing lab output
+[33mb890559a[m Work on step through (WIP)
+[33m4e7d9322[m Begin step through implementation
+[33md2580345[m Work on styles
+[33m605a3022[m Implement live multirun
+[33m5c603ae4[m Implement input trace
+[33mdaffc861[m Begin testing lab integration
+[33mebf011f9[m Improve styling of testing lab
+[33m481d62bb[m Reduce height of testing lab buttons, resize icons
+[33m24ec1849[m Use components for trace section
+[33m08995deb[m Merge pull request #71 from GRA0007/feat/transition-creation
+[33mb05d3632[m Merge pull request #70 from GRA0007/feat/state-deletion
+[33m0919507b[m Update GraphContent.js
+[33m44b543b1[m Correctly group transitions in opposite directions
+[33mb4eed253[m Implement transition creation
+[33m71a37071[m Fix no-op delete action being added to history
+[33md0eaeb2a[m Fix delete label
+[33m4cfffae3[m Implement state deletion
+[33ma073a5fb[m Merge branch 'dev' into feat/testing-lab
+[33m82cf3291[m Merge pull request #69 from GRA0007/fix/package-json
+[33m998d1061[m Fix package json
+[33mf0edf537[m Merge pull request #65 from GRA0007/feat/execute-fsa
+[33m89ef5576[m Merge pull request #64 from GRA0007/feat/jflap-to-automatarium
+[33m747ccb15[m Merge remote-tracking branch 'origin/dev' into feat/jflap-to-automatarium
+[33md0a614ed[m Remove simulation code from this branch
+[33m9f4395bb[m Move soure into src and Setup jest
+[33m8f2c6f4a[m Merge branch 'dev' into feat/execute-fsa
+[33m3b541e0b[m Add jest testing boilerplate
+[33m86e32a31[m Add simulation package to frontend
+[33m26cb6d64[m Move simulation code to seperate package
+[33mdd51e6a2[m Remove testing and export FSA simulation method
+[33m5977185f[m Merge pull request #67 from GRA0007/fix/drag-history
+[33mbc2031a5[m Merge pull request #68 from GRA0007/feat/state-creation
+[33m6a077a89[m Merge pull request #66 from GRA0007/feat/global-hotkeys
+[33m2718082f[m Refactor letter to key
+[33m90c5804d[m Add support for windows shortcuts
+[33m8e14f290[m Implement state default names from id
+[33m72ee6170[m Implement state creation with state tool
+[33m9a974b51[m Add seperate state and transition tools
+[33m8015d565[m Extract view transform functions from selection box component
+[33m0e90c230[m Ensure no-op actions are ommited from undo history
+[33m68ec3de2[m Use centralised actions for dropdown menus
+[33m2a1f438b[m Update dib.xml
+[33m69ca0051[m Update yarn.lock
+[33m34807c52[m Extract util directory to package
+[33mea344e24[m Add JFLAP sample data
+[33m6f121e83[m Add JFLAP translator package
+[33m544518f2[m Remove unnecessary comment
+[33me13712cf[m Implement lambda transition handling
+[33me6f33d0d[m Setup actions in centralised hook
+[33m2f5b3923[m Merge pull request #62 from GRA0007/feat/state-selecting
+[33mc69c52f8[m Remove left over debug logging
+[33md07b5124[m Fix leaked API key Take 2
+[33mf0033e86[m Update example env file
+[33m9727cc21[m Fix leaked API key
+[33m6be77068[m Add userStore to frontend
+[33mdd9e1a4e[m Add firebase and axios API to frontend
+[33mdf2170ac[m Add firebase intergration to backend
+[33m7ceef3d4[m Fix return type of createProject
+[33m52d7fd9e[m Fix broken menubar
+[33me5dac4bb[m Remove improperly implemented select all hotkey action
+[33m1a8a0916[m Create select all and deselect all hotkeys
+[33m08fee9cd[m Implement multi state dragging
+[33m6c296e41[m Add basic user routes
+[33m90cf4c54[m Fixed async await layout for project routes
+[33m87fbe1dc[m Use selection colours from figma
+[33m7ce5b536[m Implement box selecting
+[33m7f57432f[m Merge pull request #61 from GRA0007/feat/database-refactor
+[33m2990349a[m Remove fsa model and replace with project
+[33mdb0b1128[m Implement simple state selecting
+[33m0ef75106[m Merge pull request #59 from GRA0007/feat/recorded-history
+[33m6d1bed5b[m Remove unused immer import
+[33m711002b5[m Fix test lab import
+[33me388a1e4[m Add testing lab basic layout
+[33m44714016[m Implement action history
+[33m0427eb3c[m Merge pull request #52 from GRA0007/fix/remove-logging
+[33m6ec635c8[m Merge pull request #50 from GRA0007/feat/tool-store
+[33mf842247a[m Remove unnecessary logging from GraphView
+[33m13595007[m Merge branch 'dev' into feat/tool-store
+[33m4d2abfb6[m Merge pull request #48 from GRA0007/feat/sidepanel-framework
+[33mb942c2e8[m Implement state drag cancelling on tool change
+[33m59101a00[m Implement cursor tool requirement for dragging states
+[33ma4cd03c6[m Implement holding space to use hand tool
+[33m86861be4[m Use hand tool for view dragging
+[33m370adf14[m Setup tool store and use it in the Toolbar
+[33m12714946[m Make sidepanel show over the grid
+[33mf30731ed[m Merge remote-tracking branch 'origin/dev' into feat/tool-store
+[33m161e11a1[m Merge pull request #49 from GRA0007/feat/css-dot-grid
+[33md63427ff[m Add a single space between two css blocks
+[33m63e8c06b[m Move view dragging config to config
+[33ma50cc3de[m Set initial state arrow to white
+[33m537ca3f3[m Convert DotGrid component to css styling
+[33m35122b75[m Add sidepanel framework
+[33mc6fef3d2[m Merge pull request #47 from GRA0007/fix/merge-conflicts
+[33mc4dbf5a8[m Merge branch 'dev' into fix/merge-conflicts
+[33m761dfaff[m Remove dot grid dynamic resizing temporarily
+[33mb6f44403[m Fix merge conflict resolution error excluding view hook
+[33m5eaa9fb0[m Merge pull request #45 from GRA0007/feat/view-dragging
+[33m0cb7e6fe[m Merge pull request #44 from GRA0007/chore/remove-yarn-dep
+[33m4e921a18[m Merge pull request #46 from GRA0007/chore/package-contributors
+[33m73d4fe3c[m Merge pull request #37 from GRA0007/feat/db-route-configuration
+[33m67f87c2e[m Add portfolio URLs, expand Tim's name
+[33me47deabf[m Merge branch 'dev' into feat/view-dragging
+[33m2ef88b32[m Move view at relative speed when panning
+[33mbd32dcec[m Remove redundant yarn dependency
+[33mdc4f46e1[m Merge pull request #43 from GRA0007/feat/axis-snap-drag
+[33ma35ebde0[m Unset dragCenter on mouse up
+[33m7b481851[m Add axis aligned dragging deadzone
+[33mdd994f97[m Fix type in internal documentation
+[33m3f7b3ebc[m Snap to original state position when axis aligned dragging
+[33mec536b73[m Implement axis locked dragging
+[33m7052201d[m Implement view zooming
+[33m8a905a64[m Improve efficiency of dot grid component
+[33mfc35817b[m Implement view dragging as a hook
+[33mb3841c01[m Setup local hooks directories
+[33mf95f40ce[m Merge pull request #41 from GRA0007/feat/svg-view
+[33m737625e7[m Fix dot grid for moving view
+[33m7bf36951[m Implement arrow key events to move the view
+[33m40017456[m Add view state to store and use when dragging
+[33m527b58c8[m Merge pull request #40 from GRA0007/feat/global-project-state
+[33m99ed66c9[m Use project store
+[33mc88813f9[m Merge branch 'dev' into feat/global-project-state
+[33m96fd5941[m Create project store
+[33m5016bbe2[m Merge pull request #38 from GRA0007/chore/fe-eslint
+[33m62c9e276[m Setup eslint for frontend and fix existing problems
+[33m54ac8b30[m Merge pull request #34 from GRA0007/feat/hot-keys
+[33m2ad2e6b8[m Merge branch 'dev' into feat/hot-keys
+[33ma729856e[m Merge pull request #36 from GRA0007/feat/dragging
+[33m8b1b2bab[m Return string from HotKey directly
+[33m2b554225[m Use props argument in StateCircle component
+[33m85df6dbf[m Use css vars for dot grid colour
+[33mdb2895c3[m Increase speed of dot grid fade transition
+[33m065710a2[m Remove build script and Fix start script
+[33m0a456f68[m Update schema to include meta
+[33m3d0f7040[m Add comments and update readme
+[33mff42e09a[m Update FA to FSA in all methods
+[33mb1600a1e[m Add finite state automaton save and get routes
+[33m5b7bd8d0[m Implement grid fading when snapping disabled
+[33m12234735[m Implement dot grid to show grid snapping
+[33maa18e7fa[m Fix interactions configuration
+[33m406ad788[m Implement grid snapping on drag
+[33m6e477f1c[m Implement relative dragging
+[33mfebfb1d9[m Add DB configuration for development database and sample .env
+[33m445b6caa[m Add DB configuration for development database and sample .env
+[33m55acff5c[m Reformat useHotkeyAction hook
+[33m501d3903[m Add menu hotkey support
+[33mfbb82bec[m Create useHotkeyAction hook
+[33m5efc1c9f[m added labels to states/ and notes
+[33mbf7b7726[m Implement conversion from JFLAP XML to Automatarium JSON
+[33m340b92b5[m Merge branch 'feat/execute-fsa' of github.com:GRA0007/automatarium into feat/execute-fsa
+[33m97720ee5[m Finalise refactor of FSA
+[33m55cf0d2e[m visual graphing of test NFAs
+[33m2402e79f[m Merge pull request #29 from GRA0007/feat/svg-ui-integration
+[33m02e08076[m Merge pull request #30 from GRA0007/feat/dropdown-menus
+[33m6dfa9241[m Refactor FSA implementation
+[33me9129a64[m Add zoom dropdown
+[33m677e717c[m Update colours and arrow head length
+[33m907acfa7[m Accessibility: keyboard navigation
+[33mafb540aa[m Add dropdowns and activate from the menubar
+[33mf1e160ff[m Add support for transient props
+[33me7fe8651[m Use CSS styles for SVG rendering
+[33m48f69754[m Fix formatting and keys on transitions
+[33mbbedb670[m Fix state prop keys
+[33m1bf15385[m Fix dragging offset
+[33maa8134d0[m Merge pull request #28 from GRA0007/feat/initial-state-indicator
+[33mcf0ec2ce[m Merge branch 'dev' into feat/initial-state-indicator
+[33m88280d00[m Merge pull request #27 from GRA0007/feat/tool-sidebar
+[33m90c82d98[m Oops
+[33m1213bdb0[m Implement initial state indicator
+[33m5a06e579[m Add cool favicon
+[33m3951645c[m Show GraphView in editor page
+[33mbe923af2[m Setup tools in sidebar
+[33m1cb163f4[m Swap graph state IDs from String to Number
+[33mac46a51e[m Merge pull request #20 from GRA0007/feat/svg-rendering
+[33mb91a44d3[m Merge branch 'dev' into feat/svg-rendering
+[33mb4176982[m Merge pull request #24 from GRA0007/fix/dib-url
+[33mb23f977b[m Merge pull request #23 from GRA0007/feat/toolbar
+[33m8866adc0[m Fix Dib's linked profile URL in README
+[33mbc2a9838[m Refactor structure and code
+[33m48971059[m More flexible dropdown buttons
+[33m19b811ec[m Fix spacing and add buttons
+[33mbdbff7f3[m Add basic toolbar component
+[33m92f99de1[m Add "line" arrow head style
+[33ma356ec7c[m Adjust edge connection points
+[33m597e9500[m Implement parametric arrow heads
+[33m2aa3f8a1[m Implement edge seperation
+[33m76172c7a[m Tidy svg rendering logic into hooks and utilities
+[33m3e3dc0aa[m Implement state dragging
+[33md72899dc[m Implement rendering svg from json
+[33md615d643[m Add DB connection config and method
+[33m108ec61b[m Implement simple state and transition rendering
+[33m8205fd1f[m Merge pull request #19 from GRA0007/feat/backend-basic-setup
+[33m8735fe5b[m Implement printing for NFA execution
+[33mb711daf2[m Work on NFA implementation
+[33m53250632[m Fix stevent glitch
+[33me48225b5[m Fix all fixable ESlint problems on project
+[33m98594341[m Add Babel config
+[33mcc43ac64[m Add ESLint config
+[33mcda67ed5[m Add TypeScript specific config
+[33m8c3d4734[m Add Typescript and ts-node-dev config
+[33m5723a3de[m Add backend basic packages and git ignore
+[33m7bbd4060[m Implement DFA execution
+[33m26bb72a5[m Merge pull request #18 from GRA0007/refactor/move-frontend
+[33mf5c03722[m Move the frontend to it's own folder
+[33m8368fd9e[m Add route structure
+[33mf99f0e08[m Add goober for styling and react-router
+[33md40ef87e[m Setup build scripts
+[33mfb61867a[m Reorder names
+[33m4255bee2[m every time
+[33m353a4d8a[m Add readme
