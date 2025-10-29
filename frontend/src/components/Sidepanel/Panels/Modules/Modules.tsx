@@ -105,9 +105,9 @@ const Modules = () => {
   });
 
   const handleAddQuestion = (data: { questionType: string }) => {
-    const newRawProject = createNewModuleProject(data.questionType as any, currentModule.meta.name);
+const newModuleProject = createNewModuleProject(data.questionType as any);
 
-    const newModuleProject = newRawProject;
+
 
 
     updateProjectToModule(newModuleProject);

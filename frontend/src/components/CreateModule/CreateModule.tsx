@@ -42,10 +42,10 @@ const CreateModule = () => {
     const newModule = createNewModule()
 
     // Clone or create a new one
-    const rawProject =
-      project !== null
-        ? JSON.parse(JSON.stringify(project))
-        : createNewModuleProject(newModuleType, moduleName)
+   const rawProject =
+  project !== null
+    ? JSON.parse(JSON.stringify(project))
+    : createNewModuleProject(newModuleType);
 
     // 🩹 Normalize to match the new ModuleProject type
     const newModuleProject = normalizeModule(rawProject)
