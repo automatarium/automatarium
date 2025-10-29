@@ -8,7 +8,87 @@ import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import type { ProjectType } from '../../../../types/ProjectTypes'
+// modules-normaliser.ts
+// modules-normaliser.ts
+import {
+  ProjectType,
+  ProjectConfig,
+  ProjectComment,
+  ProjectMetaData,
+  AutomataTests,
+} from "@/types/ProjectTypes";
+import {
+  DEFAULT_PROJECT_TYPE,
+  DEFAULT_ACCEPTANCE_CRITERIA,
+  DEFAULT_OR_OPERATOR,
+  DEFAULT_STATE_PREFIX,
+  APP_VERSION,
+  SCHEMA_VERSION,
+} from "@/config";
+
+// Build a valid default config for a given project type
+const makeDefaultConfig = (type: ProjectType): ProjectConfig => ({
+  acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
+  color: "",
+  orOperator: DEFAULT_OR_OPERATOR,
+  statePrefix: DEFAULT_STATE_PREFIX,
+  type,
+});
+
+type LegacyModule = {
+  _id: string;                 // may be a template-literal type from your API
+  name: string;
+  type: ProjectType | string;  // legacy
+  states: any[];
+  transitions: any[];
+  alphabet: any[];
+  stackAlphabet: any[];
+  startState: string;
+  acceptStates: any[];
+  meta?: {
+    name?: string;
+    dateCreated?: number;
+    dateEdited?: number;
+  };
+};
+
+
+export function toModuleProject(m: LegacyModule): ModuleProject {
+  // ensure _id is a plain string, not a template-literal type
+  const id: string = String(m._id);
+
+
+  const project: ModuleProject = {
+    _id: id,
+    // store expects `projectType` (string), not `type`
+   projectType: m.type as "FSA" | "PDA" | "TM",
+
+
+    // TMProjectGraph bits
+    states: m.states ?? [],
+    transitions: m.transitions ?? [],
+    initialState: m.startState ? Number(m.startState) : null,
+
+    // required extras
+    comments: [] as ProjectComment[],
+    config: makeDefaultConfig((m.type as ProjectType) ?? DEFAULT_PROJECT_TYPE as ProjectType),
+    meta: {
+      name: m.meta?.name ?? m.name ?? "Untitled",
+      dateCreated: m.meta?.dateCreated ?? Date.now(),
+      dateEdited: m.meta?.dateEdited ?? Date.now(),
+      version: SCHEMA_VERSION,
+      automatariumVersion: APP_VERSION,
+    } as ProjectMetaData,
+    simResult: [],
+    tests: {
+      batch: [],
+      single: "",
+    } as AutomataTests,
+  };
+
+  return project;
+}
+
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)

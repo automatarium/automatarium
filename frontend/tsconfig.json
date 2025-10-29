@@ -11,7 +11,9 @@
     "target": "ES2021",
     "module": "esnext",
     "paths": {
+      "@/*": ["src/*"],
       "/src/*": ["./src/*"]
+      
     },
     "types": ["@types/lodash"],
     "lib": ["DOM", "ES2021", "dom.iterable"],

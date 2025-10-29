@@ -14,23 +14,34 @@ import {
   DEFAULT_ACCEPTANCE_CRITERIA,
 } from "/src/config";
 
-export function createNewModuleProject(type: ProjectType) {
+export function createNewModuleProject(type: ProjectType, name?: string) {
   return {
     _id: crypto.randomUUID(),
-    name: "New Project",
-    type,
+    projectType: type,
     states: [],
     transitions: [],
-    alphabet: [],
-    stackAlphabet: [],
-    startState: "",
-    acceptStates: [],
+    initialState: null,
+    comments: [],
+    config: {
+      acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
+      color: "",
+      orOperator: DEFAULT_OR_OPERATOR,
+      statePrefix: DEFAULT_STATE_PREFIX,
+      type,
+    },
     meta: {
-      name: "New Project",
+      name: name ?? "New Project",
       dateCreated: Date.now(),
       dateEdited: Date.now(),
+      version: SCHEMA_VERSION,
+      automatariumVersion: APP_VERSION,
     },
-  };
+    simResult: [],
+    tests: {
+      batch: [],
+      single: "",
+    },
+  } as ModuleProject;
 }
 
 
