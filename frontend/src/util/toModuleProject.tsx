@@ -1,12 +1,12 @@
-import {
+import type {
   ProjectType,
   ProjectConfig,
   ProjectComment,
   ProjectMetaData,
   AutomataTests,
   ModuleProject,
-  AutomataState,            
-  BaseAutomataTransition, 
+  AutomataState,
+  BaseAutomataTransition,
 } from '@/types/ProjectTypes';
 import {
   DEFAULT_PROJECT_TYPE,

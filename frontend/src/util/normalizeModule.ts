@@ -5,40 +5,56 @@ import type {
   ProjectComment,
   ProjectMetaData,
   AutomataTests,
-} from "@/types/ProjectTypes"
+  AutomataState,
+  BaseAutomataTransition,
+} from "@/types/ProjectTypes";
+import {
+  DEFAULT_ACCEPTANCE_CRITERIA,
+  DEFAULT_OR_OPERATOR,
+  DEFAULT_STATE_PREFIX,
+  DEFAULT_PROJECT_TYPE,
+  APP_VERSION,
+  SCHEMA_VERSION,
+} from "@/config";
 
-export function normalizeModule(m: any): ModuleProject {
-  return {
+type LegacyModule = {
+  _id: string;
+  name?: string;
+  type?: ProjectType | string;
+  states?: unknown[];
+  transitions?: unknown[];
+  startState?: string | null;
+  meta?: Partial<ProjectMetaData>;
+};
+
+export function normalizeModule(m: LegacyModule): ModuleProject {
+  const project = {
     _id: String(m._id),
-
-    // must be one of 'FSA' | 'PDA' | 'TM'
-    projectType: (m.type as ProjectType) ?? "FSA",
-
-    // graph fields
-    states: m.states ?? [],
-    transitions: m.transitions ?? [],
+    projectType: (m.type as ProjectType) ?? DEFAULT_PROJECT_TYPE,
+    states: (m.states ?? []) as AutomataState[],
+    transitions: (m.transitions ?? []) as BaseAutomataTransition[],
     initialState: m.startState ? Number(m.startState) : null,
-
-    // required extras
     comments: [] as ProjectComment[],
     config: {
-      acceptanceCriteria: "",
+      acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
       color: "",
-      orOperator: "|",
-      statePrefix: "q",
-      type: (m.type as ProjectType) ?? "FSA",
+      orOperator: DEFAULT_OR_OPERATOR,
+      statePrefix: DEFAULT_STATE_PREFIX,
+      type: (m.type as ProjectType) ?? DEFAULT_PROJECT_TYPE,
     } as ProjectConfig,
     meta: {
-      automatariumVersion: "1.0.0",
+      automatariumVersion: APP_VERSION,
       dateCreated: m.meta?.dateCreated ?? Date.now(),
       dateEdited: m.meta?.dateEdited ?? Date.now(),
       name: m.meta?.name ?? m.name ?? "Untitled",
-      version: "1.0.0",
+      version: SCHEMA_VERSION,
     } as ProjectMetaData,
-    simResult: [],
+    simResult: [] as string[],
     tests: {
       batch: [],
       single: "",
     } as AutomataTests,
-  }
+  };
+
+  return project as ModuleProject;
 }
