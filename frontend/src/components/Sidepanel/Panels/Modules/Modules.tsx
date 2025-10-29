@@ -2,7 +2,7 @@ import { SectionLabel, Preference, Switch, Button, Input, Modal } from '/src/com
 import { useState, useEffect } from 'react'
 import { useForm } from 'react-hook-form'
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores'
-import { createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
+import { createNewModuleProject, ModuleProject } from '@/stores/useModuleStore'
 import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper, DescriptionText } from './modulesStyle'
 import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
