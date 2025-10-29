@@ -10,11 +10,24 @@ import TemplateDelConfDialog from "./components/TemplateDelConfDialog/TemplateDe
 import EditorPageTour from "../Tutorials/guidedTour/EditorPageTour";
 import { useEditorInit } from "../../hooks/useEditorInit";
 import { useEditorControls } from "../../hooks/useEditorControls";
+import { useModuleValidation } from "../../hooks/useModuleValidation";
+import { EditorUIProvider, useEditorUI } from "../../providers/EditorUIProvider";
 
-export default function Editor() {
+
+
+
+export default function EditorWrapper() {
+  return (
+    <EditorUIProvider>
+      <Editor />
+    </EditorUIProvider>
+  );
+}
+
+function Editor() {
+  
   const [panelWidth, setPanelWidth] = useState(300);
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
-  const [showTour, setShowTour] = useState(false);
+const { confirmDialogOpen, setConfirmDialogOpen, showTour, setShowTour } = useEditorUI();
   const project = useProjectStore((s) => s.project);
   const projectType = project?.config.type;
   const isSaving = useAutosaveProject();
@@ -24,6 +37,8 @@ export default function Editor() {
 
   useEditorInit();
   useEditorControls();
+  useModuleValidation();
+
 
   const handlePanelWidthChange = (newWidth: number) => setPanelWidth(newWidth);
 
