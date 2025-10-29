@@ -173,3 +173,7 @@ export type Template = CopyData & {
 export function assertType<T> (value: unknown): asserts value is T {
 
 }
+
+// For backwards compatibility with module features
+export type ModuleProject = Project;
+
