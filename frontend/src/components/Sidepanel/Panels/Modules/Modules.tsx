@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useModuleStore, useModulesStore, useProjectStore } from '/src/stores';
 import { createNewModuleProject, ModuleProject } from '@/stores/useModuleStore';
 import { Wrapper, RemoveButton, EditButton, TextArea, Table, TitleSection, ButtonContainer, FieldWrapper, DescriptionText } from './modulesStyle';
+import { ProjectType } from '/src/types/ProjectTypes';
 import { exportModuleFile } from '/src/hooks/useActions';
 import { dispatchCustomEvent } from '/src/util/events';
 import { Plus } from 'lucide-react';
@@ -76,9 +77,9 @@ const Modules = () => {
 
   const handleAddQuestionClick = () => setIsModalOpen(true);
 
-  const { register, handleSubmit } = useForm<{ questionType: string }>({ defaultValues: { questionType: 'FSA' } });
-  const handleAddQuestion = (data: { questionType: string }) => {
-    const newModuleProject = createNewModuleProject(data.questionType as any);
+  const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({ defaultValues: { questionType: 'FSA' } });
+  const handleAddQuestion = (data: { questionType: ProjectType }) => {
+    const newModuleProject = createNewModuleProject(data.questionType);
     updateProjectToModule(newModuleProject);
     addQuestionToModule(newModuleProject._id, '');
     setProject(newModuleProject);
@@ -107,9 +108,9 @@ const Modules = () => {
     deleteProjectFromModule(projectToDelete._id);
     deleteQuestionFromModule(projectToDelete._id);
 
-    if (projectToDelete._id === currentProject._id && currentModule) {
+    if (projectToDelete._id === (currentProject?._id) && currentModule) {
       const remainingProjects = currentModule.projects.filter((proj) => proj._id !== projectToDelete._id);
-      setProject(remainingProjects[0]);
+      if (remainingProjects.length > 0) setProject(remainingProjects[0]);
     }
 
     setIsDeleteModalOpen(false);
@@ -121,6 +122,7 @@ const Modules = () => {
   const handleDragStart = (index: number) => setDraggedIndex(index);
 
   const handleDrop = (dropIndex: number) => {
+    if (!currentModule) return;
     if (draggedIndex === null || draggedIndex === dropIndex) return;
     const updatedProjects = [...currentModule.projects];
     const [movedProject] = updatedProjects.splice(draggedIndex, 1);

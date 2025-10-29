@@ -1,10 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { randomProjectName } from "../util/projectName";
-import {
-  Project,
-  ProjectType,
-} from "../types/ProjectTypes";
+import { Project, ProjectType } from "../types/ProjectTypes";
 import {
   APP_VERSION,
   SCHEMA_VERSION,
@@ -43,7 +40,6 @@ export function createNewModuleProject(type: ProjectType, name?: string) {
     },
   } as ModuleProject;
 }
-
 
 /** Types */
 export type ModuleProject = Project & { _id: string };
@@ -103,7 +99,7 @@ interface ModuleStore {
   setAllProjectNames: (name: string) => void;
 }
 
-export const useModuleStore = create<ModuleStore>()(
+const useModuleStore = create<ModuleStore>()(
   persist(
     (set, get) => ({
       module: null,
@@ -240,4 +236,3 @@ export const useModuleStore = create<ModuleStore>()(
 );
 
 export default useModuleStore;
-
