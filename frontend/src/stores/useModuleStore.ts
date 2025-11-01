@@ -20,7 +20,8 @@ export function createNewModuleProject(type: ProjectType, name?: string) {
     comments: [],
     config: {
       acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-      color: "",
+      // All lab projects are set to pink to distinguish the difference between a lab and a normal project
+      color: 'pink',
       orOperator: DEFAULT_OR_OPERATOR,
       statePrefix: DEFAULT_STATE_PREFIX,
       type,
