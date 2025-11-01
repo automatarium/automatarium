@@ -7,7 +7,7 @@ import { defineConfig, globalIgnores } from "eslint/config";
 export default defineConfig([
   globalIgnores(["**/node_modules/", "**/dist/", "**/src/hooks/useEgg.ts"]),
   { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], plugins: { js }, extends: ["js/recommended"] },
-  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: {...globals.browser, ...globals.node} } },
+  { files: ["**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}"], languageOptions: { globals: {...globals.browser, ...globals.node, ...globals.serviceworker} } },
   { settings: { react: { version: "detect", defaultVersion: ""} } }, 
   tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,

@@ -3,7 +3,7 @@ import { styled } from 'goober'
 export const Code = styled('div')`
   padding: 1em;
   background: var(--toolbar);
-  font-family: monospace;
+  font-family: var(--font-mono);
   border-radius: .5rem;
 `
 

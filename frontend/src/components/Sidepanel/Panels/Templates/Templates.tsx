@@ -33,13 +33,11 @@ const Templates = () => {
   const { t } = useTranslation('common')
 
   const thumbs = useThumbnailStore(s => s.thumbnails)
-  const theme = usePreferencesStore(s => s.preferences).theme
 
+  const theme = usePreferencesStore(state => state.getTheme())
   const getThumbTheme = useCallback((id: string) => {
-    const thumbTheme = theme === 'system'
-      ? window.matchMedia && window.matchMedia('prefer-color-scheme: dark').matches ? '-dark' : ''
-      : theme === 'dark' ? '-dark' : ''
-    return `tmp${id}${thumbTheme}`
+      const thumbTheme = theme === 'dark' ? '-dark' : ''
+      return `tmp${id}${thumbTheme}`
   }, [theme])
 
   const [templateNameInput, setTemplateNameInput] = useState('')

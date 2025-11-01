@@ -1,7 +1,7 @@
-import { StrictMode, Suspense, createElement, useEffect } from 'react'
+import { StrictMode, Suspense, createElement, useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
 import { setup } from 'goober'
-import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom'
+import { HashRouter, Route, Routes, useLocation } from 'react-router-dom'
 
 import * as Pages from './pages'
 
@@ -14,6 +14,8 @@ import { Warning } from '/src/components/Warning/Warning'
 import '/src/config/i18n'
 
 import favicon from 'bundle-text:/public/logo.svg'
+import { UpdateToast } from './components/Toast/UpdateToast/UpdateToast'
+import { OfflineReadyToast } from './components/Toast/OfflineReadyToast/OfflineReadyToast'
 
 // Set up goober to use React
 setup(
@@ -43,8 +45,8 @@ const App = () => {
       'href',
       'data:image/svg+xml,' +
       encodeURIComponent(favicon
-        .replace(/var\(--primary, (.*?)\)/, `hsl(${color.h} ${color.s}% ${color.l}%)`)
-        .replace(/var\(--state-bg, (.*?)\)/, `hsl(${color.h} ${color.s}% 75%)`)
+        .replace(/var\(--primary,.*?\)/, `hsl(${color.h} ${color.s}% ${color.l}%)`)
+        .replace(/var\(--state-bg,.*?\)/, `hsl(${color.h} ${color.s}% 75%)`)
       )
     )
   }, [colorPref, projectColor])
@@ -64,6 +66,28 @@ const App = () => {
     setPreferences({ ...preferences, pauseTM: true })
   }
 
+  // Check for update toast event
+  const [showUpdateToast, setShowUpdateToast] = useState(false);
+  useEffect(() => {
+    const handleSWUpdate = () => {
+      setShowUpdateToast(true);
+    };
+
+    window.addEventListener("sw-update-available", handleSWUpdate);
+    return () => window.removeEventListener("sw-update-available", handleSWUpdate);
+  }, []);
+
+  // Check for offline ready toast event
+  const [showOfflineReadyToast, setShowOfflineReadyToast] = useState(false);
+  useEffect(() => {
+    const handleOfflineReady = () => {
+      setShowOfflineReadyToast(true);
+    };
+
+    window.addEventListener("sw-offline-ready", handleOfflineReady);
+    return () => window.removeEventListener("sw-offline-ready", handleOfflineReady);
+  }, []);
+
   useEgg()
 
   return <>
@@ -79,18 +103,62 @@ const App = () => {
       <Route path="*" element={<Pages.NotFound />} />
     </Routes>
     {!hideFooter && <Footer />}
+    {showUpdateToast && <UpdateToast />}
+    {showOfflineReadyToast && <OfflineReadyToast />}
     <Warning />
     <Pages.Preferences />
   </>
+}
+
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", async () => {
+    // Don't register if dev server
+    if (process.env.NODE_ENV !== 'development') {
+
+      // Check if SW exists
+      const hasController = !!navigator.serviceWorker.controller;
+
+      const registration = await navigator.serviceWorker.register(new URL('../public/service-worker.js', import.meta.url), { type: 'module' })
+
+      // Display offline ready when SW completes installation
+      navigator.serviceWorker.addEventListener("message", (event) => {
+        if (event.data?.type === "OFFLINE_READY") {
+          window.dispatchEvent(new Event('sw-offline-ready'));
+        }
+      });
+
+      // Display offline ready if SW already exists. 
+      navigator.serviceWorker.ready.then(() => {
+        // If there's an active controller, the app is already cached
+        if (navigator.serviceWorker.controller) {
+          window.dispatchEvent(new Event('sw-offline-ready'));
+        }
+      });
+      
+      // Display update toast if previous controller exists and is updated.
+      if (hasController) {
+        registration.addEventListener("updatefound", () => {
+          const newWorker = registration.installing;
+          if (!newWorker) return;
+
+          newWorker.addEventListener("statechange", () => {
+            if (newWorker.state === "activated") {
+              window.dispatchEvent(new Event('sw-update-available'));
+            }
+          });
+        });
+      }
+    }
+  });
 }
 
 // Render the app
 ReactDOM.render(
   <StrictMode>
     <Suspense fallback={<div>Loading</div>}>
-      <BrowserRouter>
+      <HashRouter>
         <App />
-      </BrowserRouter>
+      </HashRouter>
     </Suspense>
   </StrictMode>,
   document.getElementById('app')

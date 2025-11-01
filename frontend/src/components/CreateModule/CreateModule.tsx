@@ -3,7 +3,7 @@ import { useEvent } from '/src/hooks'
 import { Button, Modal, Input, TextArea } from '/src/components'
 import { useProjectStore, useModuleStore } from '/src/stores'
 import { ProjectType } from '/src/types/ProjectTypes'
-import { createNewModule, createNewModuleProject, ModuleProject } from 'src/stores/useModuleStore'
+import { createNewModule, createNewModuleProject, ModuleProject } from '@/stores/useModuleStore'
 import { useNavigate } from 'react-router-dom'
 import { ColourName } from '/src/config'
 import { useTranslation } from 'react-i18next'
@@ -34,7 +34,7 @@ const CreateModule = () => {
     setProjectforModule(e.detail.project)
   })
 
-  const handleNewModuleFile = (project: ModuleProject) => {
+ const handleNewModuleFile = (project: ModuleProject) => {
     // Create a new module and module project
     const newModule = createNewModule()
     const newModuleProject = project ? JSON.parse(JSON.stringify(project)) : createNewModuleProject(newModuleType, moduleName)
@@ -73,36 +73,41 @@ const CreateModule = () => {
     navigate('/editor')
   }
 
-  return <>
-  <Modal
-    title={t('create_module.create_new')}
-    isOpen={isModalOpen}
-    onClose= {() => setModalOpen(false)}
-    actions={
-      <>
-      <Button secondary onClick= {() => setModalOpen(false)}>{t('cancel')}</Button>
-      <Button
-            onClick={() => {
-              if (!project) {
-                handleNewModuleFile(null)
-              } else {
-                handleNewModuleFile(currentProject)
-              }
-            }}
-          > {t('create')} </Button>
-      </>
-    }
-    >
-        {!project &&
-        <>
-          {t('create_module.select_type')}
-          <Input type="select" value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
-            <option value='FSA'>{t('fsa')}</option>
-            <option value='PDA'>{t('pda')}</option>
-            <option value='TM'>{t('tm')}</option>
-          </Input>
-        </>
+  return (
+    <>
+      <Modal
+        title={t('create_module.create_new')}
+        isOpen={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        actions={
+          <>
+            <Button secondary onClick={() => setModalOpen(false)}>
+              {t('cancel')}
+            </Button>
+            <Button
+              onClick={() => {
+                if (!project) {
+                  handleNewModuleFile(null);
+                } else {
+                  handleNewModuleFile(currentProject);
+                }
+              }}
+            >
+              {t('create')}
+            </Button>
+          </>
         }
+      >
+        {!project && (
+          <>
+            {t('create_module.select_type')}
+            <Input type="select" value={newModuleType} onChange={(e) => setModuleType(e.target.value as ProjectType)}>
+              <option value="FSA">{t('fsa')}</option>
+              <option value="PDA">{t('pda')}</option>
+              <option value="TM">{t('tm')}</option>
+            </Input>
+          </>
+        )}
         {t('create_module.name')}
         <Input
           type='text'
@@ -116,8 +121,9 @@ const CreateModule = () => {
           onChange={(e) => setModuleDescription(e.target.value)}
           placeholder={t('create_module.description_placeholder')}
         />
-  </Modal>
-  </>
-}
+      </Modal>
+    </>
+  );
+};
 
 export default CreateModule

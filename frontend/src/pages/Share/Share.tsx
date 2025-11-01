@@ -7,10 +7,10 @@ import { Container } from './shareStyle'
 
 import { useParseFile, useParseModuleFile } from '/src/hooks/useActions'
 import { showWarning } from '/src/components/Warning/Warning'
-import { decodeData, decodeModule } from '/src/util/encoding'
-import { StoredProject } from '/src/stores/useProjectStore'
+import { decodeData } from '/src/util/encoding'
 import { StoredModule } from '/src/stores/useModuleStore'
 import { useTranslation } from 'react-i18next'
+import { Project } from '/src/types/ProjectTypes'
 
 const Share = () => {
   const { t } = useTranslation('share')
@@ -35,7 +35,7 @@ const Share = () => {
         break
       }
       case 'module': {
-        decodeModule(data).then((decodedJson) => {
+        decodeData(data).then((decodedJson) => {
           const dataJson = new File([JSON.stringify(decodedJson)], 'Shared Project')
           useParseModuleFile(onModule, t('load_fail'), dataJson, handleLoadSuccess, handleLoadFail)
         })
@@ -49,7 +49,7 @@ const Share = () => {
     }
   }, [data])
 
-  const onData = (project: StoredProject) => {
+  const onData = (project: Project) => {
     setProject(project)
     addProject(project)
   }

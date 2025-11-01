@@ -1,0 +1,31 @@
+name: Deploy dev/main
+on:
+  push:
+    branches:
+      - dev
+      - main
+
+concurrency:
+  group: pages-${{ github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-dev-main:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v5
+    - uses: ./.github/actions/setup
+
+    - name: Build project
+      run: yarn build
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: frontend/dist/
+        target-folder: ${{ github.ref_name }}
+        clean-exclude: |
+          pr-preview/
+          ${{ github.ref_name == 'main' && 'dev/' || 'main/' }}
+        force: false
+        commit-message: Deploy to GitHub Pages from ${{ github.ref_name }} branch

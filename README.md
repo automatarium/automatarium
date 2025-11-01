@@ -93,6 +93,17 @@ Added language localisation and infrastructure, guided examples, revamped tutori
 - [James Lee](https://github.com/JamesLeeRMIT)
 </details>
 
+<details>
+<summary>Group 8 - 2025 Semester 2</summary>
+Added Progressive Web App functionality, updated tutorial videos, changed deployments to Github Pages (main/dev/PR previews), partnership with RMIT Library Learning Objects, basic Grammar feature, bug fixes, refactoring.
+  
+- [Daniel Wang](https://github.com/cloudyapple4)
+- [Jerome Khoury](https://github.com/s4004264)
+- [Owen Atkinson](https://github.com/s4013303)
+- [Aliyah Santiano](https://github.com/alyuhhh)
+- [Joseph Nemhara](https://github.com/Jnemhara)
+</details>
+
 For a full list of contributors see: https://github.com/automatarium/automatarium/graphs/contributors
 
 ## License

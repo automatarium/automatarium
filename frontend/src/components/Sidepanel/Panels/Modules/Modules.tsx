@@ -8,6 +8,7 @@ import { exportModuleFile } from '/src/hooks/useActions'
 import { dispatchCustomEvent } from '/src/util/events'
 import { Plus } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
+import type { ProjectType } from '/src/types/ProjectTypes'
 
 const Modules = () => {
   const setModuleProjects = useModuleStore(s => s.setProjects)
@@ -31,13 +32,6 @@ const Modules = () => {
   const [isTitleEditing, setTitleIsEditing] = useState(false)
   const [titleInput, setTitleInput] = useState('')
   const [titleDescription, setTitleDescription] = useState('')
-
-  // enum for Project Types
-  enum ProjectType {
-    FSA = 'FSA',
-    PDA = 'PDA',
-    TM = 'TM',
-  }
 
   // Modal-related state management
   const [isModalOpen, setIsModalOpen] = useState(false) // Controls modal visibility
@@ -84,20 +78,21 @@ const Modules = () => {
 
   // Save changes to module
   const saveModule = () => {
-    const project = useProjectStore.getState().project
-    updateProjectToModule({ ...project, meta: { ...project.meta, dateEdited: new Date().getTime() } })
-    updateModule(currentModule)
-  }
+    const project = useProjectStore.getState().project;
+    if (!project) return;
+
+    updateProjectToModule({ ...project, meta: { ...project.meta, dateEdited: Date.now() } });
+    if (currentModule) updateModule(currentModule);
+  };
 
   // Function to open the modal
-  const handleAddQuestionClick = () => {
-    setIsModalOpen(true)
-  }
+  const handleAddQuestionClick = () => setIsModalOpen(true);
 
   // Form handling using react-hook-form
-  const { register, handleSubmit } = useForm({ defaultValues: { questionType: ProjectType.FSA } })
-
-  const handleAddQuestion = (data) => {
+  const { register, handleSubmit } = useForm<{ questionType: ProjectType }>({ 
+      defaultValues: { questionType: 'FSA' } 
+  })
+  const handleAddQuestion = (data: { questionType: ProjectType }) => {
     const newModuleProject = createNewModuleProject(data.questionType, currentModule.meta.name)
     updateProjectToModule(newModuleProject) // Save new project with selected type
     addQuestionToModule(newModuleProject._id, '') // Add new question
@@ -131,17 +126,14 @@ const Modules = () => {
 
   // Perform actual deletion after confirmation
   const confirmDeleteQuestion = () => {
-    if (!projectToDelete) return
+    if (!projectToDelete) return;
 
-    // Delete project from current module
-    deleteProjectFromModule(projectToDelete._id)
-    // Delete question from current module
-    deleteQuestionFromModule(projectToDelete._id)
+    deleteProjectFromModule(projectToDelete._id);
+    deleteQuestionFromModule(projectToDelete._id);
 
-    if (projectToDelete._id === currentProject._id && currentModule) {
-      const remainingProjects = currentModule.projects.filter((proj) => proj._id !== projectToDelete._id)
-
-      setProject(remainingProjects[0]) // Set the first remaining project as the current project
+    if (projectToDelete._id === (currentProject?._id) && currentModule) {
+      const remainingProjects = currentModule.projects.filter((proj) => proj._id !== projectToDelete._id);
+      if (remainingProjects.length > 0) setProject(remainingProjects[0]);  // Set the first remaining project as the current project
     }
 
     // Close the modal and reset projectToDelete
@@ -157,6 +149,7 @@ const Modules = () => {
   }
 
   const handleDrop = (dropIndex: number) => {
+    if (!currentModule) return;
     if (draggedIndex === null || draggedIndex === dropIndex) return // Avoid rearranging if the index hasn't changed
 
     const updatedProjects = [...currentModule.projects] // Clone projects array
@@ -171,68 +164,62 @@ const Modules = () => {
     e.preventDefault() // Allow drop by preventing the default behavior
   }
 
-  // Export
-  const handleExportModule = () => {
-    exportModuleFile()
-  }
-
-  const handleCreateModule = () => {
-    dispatchCustomEvent('modal:createModule', { project: true })
-  }
+  const handleExportModule = () => exportModuleFile();
+  const handleCreateModule = () => dispatchCustomEvent('modal:createModule', { project: true });
 
   return (
     <>
       <SectionLabel>{t('module_panel.current')}</SectionLabel>
-      {!currentModule && <>
-        <Wrapper>{t('module_panel.not_working')}
-        <Button icon={<Plus/>} onClick={handleCreateModule}>{t('module_panel.modularise')}</Button>
-        </Wrapper>
-      </>}
-      {currentModule && <>
+      {!currentModule ? (
         <Wrapper>
-        {isTitleEditing
-          ? (
-            <>
-              <TitleSection>
-                <TextArea
-                  value={titleInput}
-                  onChange={(e) => setTitleInput(e.target.value)}
-                  rows={1}
-                  placeholder={t('module_panel.placeholder_title')}
-                  maxLength={30} // character limit on input field
-                />
-              </TitleSection>
-              <TextArea
-                value={titleDescription}
-                onChange={(e) => setTitleDescription(e.target.value)}
-                rows={4}
-                placeholder={t('module_panel.placeholder_desc')}
-              />
-              <ButtonContainer>
-                <Button onClick={handleCancelClick}>{t('cancel')}</Button>
-                <Button onClick={handleEditSaveClick}>{t('save')}</Button>
-              </ButtonContainer>
-            </>
-            )
-          : (
-            <>
-              <TitleSection>
-                <h2>{currentModule?.meta.name || t('create_module.untitled')}</h2> {/* Display current lab title */}
-              </TitleSection>
-              <DescriptionText>{currentModule?.description || ''}</DescriptionText> {/* Display current lab description */}
-              <Button onClick={handleEditClick}>{t('menus.edit')}</Button> {/* Toggle edit mode */}
-            </>
-            )}
-
+          {t('module_panel.not_working')}
+          <Button icon={<Plus />} onClick={handleCreateModule}>
+            {t('module_panel.modularise')}
+          </Button>
         </Wrapper>
-
-        <SectionLabel>{t('module_panel.settings')}</SectionLabel>
-        <Wrapper>
-          <Preference label={t('module_panel.open_questions')}>
-            <Switch type="checkbox" checked={showModuleWindow} onChange={() => setShowModuleWindow(!showModuleWindow)} />
-          </Preference>
-        </Wrapper>
+      ) : (
         <>
+          <Wrapper>
+            {isTitleEditing ? (
+              <>
+                <TitleSection>
+                  <TextArea
+                    value={titleInput}
+                    onChange={(e) => setTitleInput(e.target.value)}
+                    rows={1}
+                    placeholder={t('module_panel.placeholder_title')}
+                    maxLength={30}
+                  />
+                </TitleSection>
+                <TextArea
+                  value={titleDescription}
+                  onChange={(e) => setTitleDescription(e.target.value)}
+                  rows={4}
+                  placeholder={t('module_panel.placeholder_desc')}
+                />
+                <ButtonContainer>
+                  <Button onClick={handleCancelClick}>{t('cancel')}</Button>
+                  <Button onClick={handleEditSaveClick}>{t('save')}</Button>
+                </ButtonContainer>
+              </>
+            ) : (
+              <>
+                <TitleSection>
+                  <h2>{currentModule?.meta.name || t('create_module.untitled')}</h2>
+                </TitleSection>
+                <DescriptionText>{currentModule?.description || ''}</DescriptionText>
+                <Button onClick={handleEditClick}>{t('menus.edit')}</Button> {/* Toggle edit mode */}
+              </>
+            )}
+          </Wrapper>
+
+          <SectionLabel>{t('module_panel.settings')}</SectionLabel>
+          <Wrapper>
+            <Preference label={t('module_panel.open_questions')}>
+              <Switch type="checkbox" checked={showModuleWindow} onChange={() => setShowModuleWindow(!showModuleWindow)} />
+            </Preference>
+          </Wrapper>
+
           <SectionLabel>{t('module_panel.questions')}</SectionLabel>
           <Wrapper>
             <Table>
@@ -257,11 +244,7 @@ const Modules = () => {
                     <td onClick={() => handleOpenQuestion(q)}>{t('module_panel.question_id', { id: index + 1 })}</td>
                     <td>
                       <EditButton onClick={() => handleEditQuestion(q)}>{t('menus.edit')}</EditButton>
-
-                      <RemoveButton
-                        onClick={() => handleDeleteQuestion(q)}
-                        disabled={currentModule.projects.length <= 1}
-                      >
+                      <RemoveButton onClick={() => handleDeleteQuestion(q)} disabled={currentModule.projects.length <= 1}>
                         {t('module_panel.remove')}
                       </RemoveButton>
                     </td>
@@ -269,7 +252,9 @@ const Modules = () => {
                 ))}
               </tbody>
             </Table>
-            <Button icon={<Plus/>} onClick={handleAddQuestionClick}>{t('module_panel.add_question')}</Button>
+            <Button icon={<Plus />} onClick={handleAddQuestionClick}>
+              {t('module_panel.add_question')}
+            </Button>
           </Wrapper>
 
           {/* Question Type Modal */}
@@ -280,8 +265,12 @@ const Modules = () => {
             onClose={() => setIsModalOpen(false)}
             actions={
               <>
-                <Button secondary onClick={() => setIsModalOpen(false)}>{t('cancel')}</Button>
-                <Button type="submit" form="question_type_form">{t('save')}</Button>
+                <Button secondary onClick={() => setIsModalOpen(false)}>
+                  {t('cancel')}
+                </Button>
+                <Button type="submit" form="question_type_form">
+                  {t('save')}
+                </Button>
               </>
             }
             style={{ paddingInline: 0 }}
@@ -323,14 +312,14 @@ const Modules = () => {
               </>
             }
           />
+
+          <SectionLabel>{t('export')}</SectionLabel>
+          <Wrapper>
+            <Button onClick={handleExportModule}>{t('module_panel.export_automatarium')}</Button>
+            <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>{t('module_panel.export_url')}</Button>
+          </Wrapper>
         </>
-        <SectionLabel>{t('export')}</SectionLabel>
-        <Wrapper>
-          <Button onClick={handleExportModule}>{t('module_panel.export_automatarium')}</Button>
-          <Button onClick={() => dispatchCustomEvent('showModuleSharing', null)}>{t('module_panel.export_url')}</Button>
-        </Wrapper>
-      </>
-      }
+      )}
     </>
   )
 }
