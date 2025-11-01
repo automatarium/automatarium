@@ -12,7 +12,7 @@ import { useEditorControls } from "../../hooks/useEditorControls";
 import { useModuleValidation } from "../../hooks/useModuleValidation";
 import { EditorUIProvider, useEditorUI } from "../../providers/EditorUIProvider";
 import { usePanelWidth } from "@/hooks/usePanelWidth";
-
+import { useEvent } from "/src/hooks"
 
 
 
@@ -39,6 +39,10 @@ function Editor() {
   useEditorControls();
   useModuleValidation();
 
+  // Listen to the custom event 'tour:start' to show the tour
+  useEvent('tour:start', () => {
+    setShowTour(true)
+  })
 
   const handlePanelWidthChange = (newWidth: number) => setPanelWidth(newWidth);
 
