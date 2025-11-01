@@ -1,157 +1,80 @@
-import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
+import { Content, EditorContent } from "./editorStyle";
+import { Menubar, Toolbar, EditorPanel, BottomPanel, Sidepanel, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule, CreateModule } from "/src/components";
+import { useAutosaveProject } from "../../hooks";
+import { useModuleStore, useProjectStore } from "/src/stores";
+import ModuleWindow from "./components/ModuleWindow/ModuleWindow";
+import PDAStackVisualiser from "../../components/PDAStackVisualiser/stackVisualiser";
+import TemplateDelConfDialog from "./components/TemplateDelConfDialog/TemplateDelConfDialog";
+import EditorPageTour from "../Tutorials/guidedTour/EditorPageTour";
+import { useEditorInit } from "../../hooks/useEditorInit";
+import { useEditorControls } from "../../hooks/useEditorControls";
+import { useModuleValidation } from "../../hooks/useModuleValidation";
+import { EditorUIProvider, useEditorUI } from "../../providers/EditorUIProvider";
+import { usePanelWidth } from "@/hooks/usePanelWidth";
+import { useEvent } from "/src/hooks"
 
-import { Content, EditorContent } from './editorStyle'
-import { BottomPanel, EditorPanel, Menubar, Sidepanel, Toolbar, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule, CreateModule } from '/src/components'
-import { useActions, useEvent } from '/src/hooks'
-import { useExportStore, useModulesStore, useModuleStore, useProjectStore, useToolStore, useViewStore } from '/src/stores'
-import { haveInputFocused } from '/src/util/actions'
 
-import PDAStackVisualiser from '../../components/PDAStackVisualiser/stackVisualiser'
-import ModuleWindow from './components/ModuleWindow/ModuleWindow'
-import { useAutosaveProject } from '../../hooks'
-import TemplateDelConfDialog from './components/TemplateDelConfDialog/TemplateDelConfDialog'
-import { Tool } from '/src/stores/useToolStore'
-import EditorPageTour from '../Tutorials/guidedTour/EditorPageTour'
 
-const Editor = () => {
-  const navigate = useNavigate()
-  const { tool, setTool } = useToolStore()
-  const [priorTool, setPriorTool] = useState<Tool>()
-  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false)
-  const resetExportSettings = useExportStore((s) => s.reset)
-  const setViewPositionAndScale = useViewStore((s) => s.setViewPositionAndScale)
-  const project = useProjectStore((s) => s.project)
-  const [showTour, setShowTour] = useState(false)
+export default function EditorWrapper() {
+  return (
+    <EditorUIProvider>
+      <Editor />
+    </EditorUIProvider>
+  );
+}
 
-  const closeTour = () => {
-    setShowTour(false)
-  }
+function Editor() {
+  
+  const [panelWidth, setPanelWidth] = usePanelWidth();
+  const { confirmDialogOpen, setConfirmDialogOpen, showTour, setShowTour } = useEditorUI();
+  const project = useProjectStore((s) => s.project);
+  const projectType = project?.config.type;
+  const isSaving = useAutosaveProject();
+  const { showModuleWindow, module } = useModuleStore();
+  const setShowModuleWindow = useModuleStore((s) => s.setShowModuleWindow);
+
+
+  useEditorInit();
+  useEditorControls();
+  useModuleValidation();
 
   // Listen to the custom event 'tour:start' to show the tour
   useEvent('tour:start', () => {
     setShowTour(true)
   })
 
-  const currentModule = useModuleStore(s => s.module)
-  const getProjectinModule = useModuleStore(s => s.getProjectById)
-  const setModule = useModuleStore(s => s.setModule)
-  const showModuleWindow = useModuleStore(s => s.showModuleWindow)
-  const setShowModuleWindow = useModuleStore(s => s.setShowModuleWindow)
-  const updateModule = useModulesStore(s => s.upsertModule)
-
-  const [panelWidth, setPanelWidth] = useState(300) // Default panel width
-
-  const handlePanelWidthChange = (newWidth) => {
-    setPanelWidth(newWidth)
-  }
-
-  useEffect(() => {
-    // Reset panel width when currentModule changes
-    if (showModuleWindow) {
-      setPanelWidth(300) // Reset to default width
-    }
-  }, [showModuleWindow])
-
-  if (!project) {
-    navigate('/new')
-    return null
-  }
-
-  useEffect(() => {
-    if (currentModule == null) {
-      setShowModuleWindow(false)
-    }
-    if (currentModule && getProjectinModule(project._id) === undefined) {
-      setModule(null)
-      setShowModuleWindow(false)
-    } else if (currentModule) {
-      updateModule(currentModule)
-    }
-  }, [currentModule, project, getProjectinModule])
-
-  const projectType = project.config.type
-
-  const isSaving = useAutosaveProject()
-
-  useActions(true)
-
-  useEffect(() => {
-    resetExportSettings()
-    setViewPositionAndScale({ x: 0, y: 0 }, 1)
-  }, [])
-
-  useEvent('keydown', (e) => {
-    if (haveInputFocused(e)) return
-
-    if (!priorTool && e.code === 'Space') {
-      setPriorTool(tool)
-      setTool('hand')
-    }
-    if (e.code === 'Space') {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-  }, [tool, priorTool])
-
-  useEvent('keyup', (e) => {
-    if (haveInputFocused(e)) return
-
-    if (priorTool && e.code === 'Space') {
-      setTool(priorTool)
-      setPriorTool(undefined)
-    }
-    if (e.code === 'Space') {
-      e.preventDefault()
-      e.stopPropagation()
-    }
-  }, [tool, priorTool])
-
-  useEvent('svg:mousedown', (e) => {
-    if (!priorTool && e.detail.originalEvent.button === 1) {
-      setPriorTool(tool)
-      setTool('hand')
-    }
-  }, [tool, priorTool])
-
-  useEvent('svg:mouseup', (e) => {
-    if (priorTool && e.detail.originalEvent.button === 1) {
-      setTool(priorTool)
-      setPriorTool(undefined)
-    }
-  }, [tool, priorTool])
+  const handlePanelWidthChange = (newWidth: number) => setPanelWidth(newWidth);
 
   return (
     <>
       <Menubar isSaving={isSaving} />
       <Content>
         <Toolbar />
-        {showModuleWindow && currentModule && (
+        {showModuleWindow && module && (
           <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
         )}
         <EditorContent>
           <EditorPanel />
           <BottomPanel />
         </EditorContent>
-        {projectType === 'PDA' && <PDAStackVisualiser panelWidth={panelWidth} />}
+        {projectType === "PDA" && <PDAStackVisualiser panelWidth={panelWidth} />}
         <Sidepanel onToggle={setShowModuleWindow} />
+
       </Content>
       <ShortcutGuide />
       <FinalStatePopup />
       <ExportImage />
       <ShareUrl />
       <ShareUrlModule />
-
       <TemplateDelConfDialog
         isOpen={confirmDialogOpen}
         setOpen={() => setConfirmDialogOpen(true)}
         setClose={() => setConfirmDialogOpen(false)}
       />
-      <ImportDialog navigateFunction={navigate} />
-      {showTour && <EditorPageTour onClose={closeTour} />}
+      <ImportDialog navigateFunction={useNavigate()} />
+      {showTour && <EditorPageTour onClose={() => setShowTour(false)} />}
       <CreateModule />
     </>
-  )
+  );
 }
-
-export default Editor
