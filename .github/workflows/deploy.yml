@@ -1,9 +1,9 @@
-name: Deploy main/dev
+name: Deploy dev/main
 on:
   push:
     branches:
-      - main
       - dev
+      - main
 
 concurrency:
   group: pages-${{ github.ref_name }}
