@@ -95,7 +95,7 @@ Added language localisation and infrastructure, guided examples, revamped tutori
 
 <details>
 <summary>Group 8 - 2025 Semester 2</summary>
-Added Progressive Web App functionality, updated tutorial videos, changed deployments to Github Pages (main/dev/PR previews), basic Grammar feature, bug fixes, refactoring.
+Added Progressive Web App functionality, updated tutorial videos, changed deployments to Github Pages (main/dev/PR previews), partnership with RMIT Library Learning Objects, basic Grammar feature, bug fixes, refactoring.
   
 - [Daniel Wang](https://github.com/cloudyapple4)
 - [Jerome Khoury](https://github.com/s4004264)
