@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy-main-dev:
+  deploy-dev-main:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
