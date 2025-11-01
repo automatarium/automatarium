@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@automatarium/simulation": "2.0.0",
-    "@types/node": "^24.0.1",
+    "@types/node": "^20.19.0",
     "frontend": "1.0.0",
     "globals": "^16.2.0",
     "typescript": "^5.8.3",

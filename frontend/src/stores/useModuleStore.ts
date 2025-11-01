@@ -1,101 +1,93 @@
-import { create, SetState, GetState } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { randomProjectName } from '../util/projectName'
-
-import {
-  Project,
-  ProjectType
-} from '../types/ProjectTypes'
-
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { randomProjectName } from "../util/projectName";
+import { Project, ProjectType } from "../types/ProjectTypes";
 import {
   APP_VERSION,
   SCHEMA_VERSION,
   DEFAULT_STATE_PREFIX,
   DEFAULT_OR_OPERATOR,
-  DEFAULT_PROJECT_TYPE,
-  DEFAULT_ACCEPTANCE_CRITERIA
-} from '/src/config'
+  DEFAULT_ACCEPTANCE_CRITERIA,
+} from "/src/config";
 
-/**
- * A new project type for modules based on the pre-existing project type
- */
-export type ModuleProject = Project & {_id: string}
+export function createNewModuleProject(type: ProjectType, name?: string) {
+  return {
+    _id: crypto.randomUUID(),
+    projectType: type,
+    states: [],
+    transitions: [],
+    initialState: null,
+    comments: [],
+    config: {
+      acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
+      color: "",
+      orOperator: DEFAULT_OR_OPERATOR,
+      statePrefix: DEFAULT_STATE_PREFIX,
+      type,
+    },
+    meta: {
+      name: name ?? "New Project",
+      dateCreated: Date.now(),
+      dateEdited: Date.now(),
+      version: SCHEMA_VERSION,
+      automatariumVersion: APP_VERSION,
+    },
+    simResult: [],
+    tests: {
+      batch: [],
+      single: "",
+    },
+  } as ModuleProject;
+}
 
-export const createNewModuleProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE, projectName: string = randomProjectName()): ModuleProject => ({
-  projectType,
-  _id: crypto.randomUUID(),
-  states: [],
-  transitions: [],
-  comments: [],
-  simResult: [],
-  tests: {
-    single: '',
-    batch: ['']
-  },
-  initialState: null,
-  meta: {
-    name: projectName,
-    dateCreated: new Date().getTime(),
-    dateEdited: new Date().getTime(),
-    version: SCHEMA_VERSION,
-    automatariumVersion: APP_VERSION
-  },
-  config: {
-    type: projectType,
-    statePrefix: DEFAULT_STATE_PREFIX,
-    orOperator: DEFAULT_OR_OPERATOR,
-    acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    // All lab projects are set to pink to distinguish the difference between a lab and a normal project
-    color: 'pink'
-  }
-})
+/** Types */
+export type ModuleProject = Project & { _id: string };
 
 export interface ModuleMetaData {
-  automatariumVersion: string,
-  dateCreated: number,
-  dateEdited: number,
-  name: string,
-  version: string
+  automatariumVersion: string;
+  dateCreated: number;
+  dateEdited: number;
+  name: string;
+  version: string;
 }
 
-type ModuleQuestionsDict = Record<string, string>;
+export type ModuleQuestionsDict = Record<string, string>;
 
-/**
- * Lab type for storing projects and questions. Projects are stored in an array
- * and questions are stored as a dictionary where the key is the project ID and
- * the value is the question itself which is stored as a string type.
- */
 export type StoredModule = {
-  _id: string,
-  description: string,
-  projects: ModuleProject[],
-  questions: ModuleQuestionsDict,
-  meta: ModuleMetaData,
-}
+  _id: string;
+  description: string;
+  projects: ModuleProject[];
+  questions: ModuleQuestionsDict;
+  meta: ModuleMetaData;
+};
 
-export const createNewModule = (description = 'Write a description here'): StoredModule => ({
+export const createNewModule = (
+  description = "Write a description here"
+): StoredModule => ({
   _id: crypto.randomUUID(),
   description,
-  projects: [] as ModuleProject[],
-  questions: {} as ModuleQuestionsDict,
+  projects: [],
+  questions: {},
   meta: {
     name: randomProjectName(),
-    dateCreated: new Date().getTime(),
-    dateEdited: new Date().getTime(),
+    dateCreated: Date.now(),
+    dateEdited: Date.now(),
     version: SCHEMA_VERSION,
-    automatariumVersion: APP_VERSION
-  }
-})
+    automatariumVersion: APP_VERSION,
+  },
+});
 
+/** Zustand store */
 interface ModuleStore {
   module: StoredModule | null;
-  lastChangeDate: number;
   showModuleWindow: boolean;
-  setModule: (module: StoredModule) => void;
+  lastChangeDate: number | null;
+  // Actions
+  setModule: (module: StoredModule | null) => void;
   setProjects: (projects: ModuleProject[]) => void;
   clearProjects: () => void;
   upsertProject: (project: ModuleProject) => void;
-  deleteProject: (pid: string) => void;
+  deleteProject: (id: string) => void;
   getProject: (index: number) => ModuleProject | undefined;
   getProjectById: (id: string) => ModuleProject | undefined;
   setName: (name: string) => void;
@@ -106,86 +98,140 @@ interface ModuleStore {
   setAllProjectNames: (name: string) => void;
 }
 
-const useModuleStore = create<ModuleStore>()(persist((set: SetState<ModuleStore>, get: GetState<ModuleStore>) => ({
-  module: null as StoredModule,
-  showModuleWindow: false,
-  lastChangeDate: null,
+const useModuleStore = create<ModuleStore>()(
+  persist(
+    (set, get) => ({
+      module: null,
+      showModuleWindow: false,
+      lastChangeDate: null,
 
-  setModule: (module: StoredModule) => set({ module }),
+      setModule: (module) => set({ module }),
 
-  setProjects: (projects: ModuleProject[]) => set((state) => ({ module: { ...state.module, projects } })),
+      setProjects: (projects) =>
+        set((state) =>
+          state.module
+            ? { module: { ...state.module, projects } }
+            : state
+        ),
 
-  clearProjects: () => set((state) => ({ module: { ...state.module, projects: [] } })),
+      clearProjects: () =>
+        set((state) =>
+          state.module
+            ? { module: { ...state.module, projects: [] } }
+            : state
+        ),
 
-  upsertProject: (project: ModuleProject) => set((state) => ({
-    module: {
-      ...state.module,
-      projects: state.module?.projects.find(p => p._id === project._id)
-        ? state.module.projects.map(p => p._id === project._id ? project : p)
-        : [...state.module.projects, project]
+      upsertProject: (project) =>
+        set((state) => {
+          if (!state.module) return state;
+          const exists = state.module.projects.some((p) => p._id === project._id);
+          const updated = exists
+            ? state.module.projects.map((p) =>
+                p._id === project._id ? project : p
+              )
+            : [...state.module.projects, project];
+          return {
+            module: { ...state.module, projects: updated },
+            lastChangeDate: Date.now(),
+          };
+        }),
+
+      deleteProject: (id) =>
+        set((state) =>
+          state.module
+            ? {
+                module: {
+                  ...state.module,
+                  projects: state.module.projects.filter(
+                    (p) => p._id !== id
+                  ),
+                },
+                lastChangeDate: Date.now(),
+              }
+            : state
+        ),
+
+      getProject: (index) => get().module?.projects[index],
+
+      getProjectById: (id) =>
+        get().module?.projects.find((p) => p._id === id),
+
+      setName: (name) =>
+        set((state) =>
+          state.module
+            ? {
+                module: {
+                  ...state.module,
+                  meta: { ...state.module.meta, name },
+                },
+                lastChangeDate: Date.now(),
+              }
+            : state
+        ),
+
+      setModuleDescription: (description) =>
+        set((state) =>
+          state.module
+            ? {
+                module: { ...state.module, description },
+                lastChangeDate: Date.now(),
+              }
+            : state
+        ),
+
+      setAllProjectNames: (name) =>
+        set((state) =>
+          state.module
+            ? {
+                module: {
+                  ...state.module,
+                  projects: state.module.projects.map((p) => ({
+                    ...p,
+                    meta: { ...p.meta, name },
+                  })),
+                },
+                lastChangeDate: Date.now(),
+              }
+            : state
+        ),
+
+      setShowModuleWindow: (show) => set({ showModuleWindow: show }),
+
+      upsertQuestion: (pid, question) =>
+        set((state) =>
+          state.module
+            ? {
+                module: {
+                  ...state.module,
+                  questions: { ...state.module.questions, [pid]: question },
+                },
+                lastChangeDate: Date.now(),
+              }
+            : state
+        ),
+
+      deleteQuestion: (pid) =>
+        set((state) =>
+          state.module
+            ? {
+                module: {
+                  ...state.module,
+                  questions: Object.fromEntries(
+                    Object.entries(state.module.questions).filter(
+                      ([key]) => key !== pid
+                    )
+                  ),
+                },
+                lastChangeDate: Date.now(),
+              }
+            : state
+        ),
+    }),
+    {
+      name: "automatarium-module",
+      version: 1,
     }
-  })),
+  )
+);
 
-  deleteProject: (pid: string) => set((state) => ({
-    module: { ...state.module, projects: state.module?.projects.filter(p => p._id !== pid) }
-  })),
-
-  getProject: (index: number) => get().module?.projects[index] || undefined,
-
-  getProjectById: (id: string) => get().module?.projects.find(project => project._id === id) || undefined,
-
-  setName: (name: string) => set((s: ModuleStore) => ({
-    module: { ...s.module, meta: { ...s.module.meta, name } },
-    lastChangeDate: new Date().getTime()
-  })),
-
-  setModuleDescription: (description: string) => set((state) => ({
-    module: { ...state.module, description },
-    lastChangeDate: new Date().getTime()
-  })),
-
-  /* Set all project names in module */
-  setAllProjectNames: (name: string) => set((state) => ({
-    module: {
-      ...state.module,
-      projects: state.module?.projects.map(project => ({
-        ...project,
-        meta: {
-          ...project.meta,
-          name
-        }
-      }))
-    },
-    lastChangeDate: new Date().getTime()
-  })),
-
-  /* Set module window to open or close */
-  setShowModuleWindow: (show: boolean) => set(() => ({ showModuleWindow: show })),
-
-  /* Insert or update question */
-  upsertQuestion: (pid: string, question: string) => set((state) => ({
-    module: {
-      ...state.module,
-      questions: {
-        ...state.module.questions,
-        [pid]: question
-      },
-      lastChangeDate: new Date().getTime()
-    }
-  })),
-
-  /* Delete question from module */
-  deleteQuestion: (pid: string) => set((state) => ({
-    module: {
-      ...state.module,
-      questions: Object.fromEntries(
-        Object.entries(state.module?.questions || {}).filter(([key]) => key !== pid)
-      )
-    },
-    lastChangeDate: new Date().getTime()
-  }))
-}), {
-  name: 'automatarium-module'
-}))
-
-export default useModuleStore
+export default useModuleStore;

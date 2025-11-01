@@ -1,27 +1,46 @@
-import { create, SetState } from 'zustand'
-import { persist } from 'zustand/middleware'
-import { StoredModule } from './useModuleStore'
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
+import { StoredModule } from "./useModuleStore";
 
 interface ModulesStore {
-    modules: StoredModule[],
-    setModules: (modules: StoredModule[]) => void,
-    clearModules: () => void,
-    upsertModule: (module: StoredModule) => void,
-    deleteModule: (pid: string) => void,
-  }
+  modules: StoredModule[];
+  setModules: (modules: StoredModule[]) => void;
+  clearModules: () => void;
+  upsertModule: (module: StoredModule) => void;
+  deleteModule: (id: string) => void;
+  getModuleById: (id: string) => StoredModule | undefined;
+}
 
-const useModulesStore = create<ModulesStore>()(persist((set: SetState<ModulesStore>) => ({
-  modules: [] as StoredModule[],
-  setModules: (modules: StoredModule[]) => set({ modules }),
-  clearModules: () => set({ modules: [] }),
-  upsertModule: (module: StoredModule) => set((state) => ({
-    modules: state.modules.find(l => l._id === module._id)
-      ? state.modules.map(l => l._id === module._id ? module : l)
-      : [...state.modules, module]
-  })),
-  deleteModule: (id: string) => set((state) => ({ modules: state.modules.filter(l => l._id !== id) }))
-}), {
-  name: 'automatarium-modules'
-}))
+export const useModulesStore = create<ModulesStore>()(
+  persist(
+    (set, get) => ({
+      modules: [],
 
-export default useModulesStore
+      setModules: (modules) => set({ modules }),
+
+      clearModules: () => set({ modules: [] }),
+
+      upsertModule: (module) =>
+        set((state) => {
+          const exists = state.modules.some((m) => m._id === module._id);
+          const updated = exists
+            ? state.modules.map((m) => (m._id === module._id ? module : m))
+            : [...state.modules, module];
+          return { modules: updated };
+        }),
+
+      deleteModule: (id) =>
+        set((state) => ({
+          modules: state.modules.filter((m) => m._id !== id),
+        })),
+
+      getModuleById: (id) => get().modules.find((m) => m._id === id),
+    }),
+    {
+      name: "automatarium-modules",
+      version: 1,
+    }
+  )
+);
+
+export default useModulesStore;
