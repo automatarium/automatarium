@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Content, EditorContent } from "./editorStyle";
 import { Menubar, Toolbar, EditorPanel, BottomPanel, Sidepanel, ExportImage, ImportDialog, ShareUrl, ShortcutGuide, FinalStatePopup, ShareUrlModule, CreateModule } from "/src/components";
@@ -12,6 +11,7 @@ import { useEditorInit } from "../../hooks/useEditorInit";
 import { useEditorControls } from "../../hooks/useEditorControls";
 import { useModuleValidation } from "../../hooks/useModuleValidation";
 import { EditorUIProvider, useEditorUI } from "../../providers/EditorUIProvider";
+import { usePanelWidth } from "@/hooks/usePanelWidth";
 
 
 
@@ -26,8 +26,8 @@ export default function EditorWrapper() {
 
 function Editor() {
   
-  const [panelWidth, setPanelWidth] = useState(300);
-const { confirmDialogOpen, setConfirmDialogOpen, showTour, setShowTour } = useEditorUI();
+  const [panelWidth, setPanelWidth] = usePanelWidth();
+  const { confirmDialogOpen, setConfirmDialogOpen, showTour, setShowTour } = useEditorUI();
   const project = useProjectStore((s) => s.project);
   const projectType = project?.config.type;
   const isSaving = useAutosaveProject();
