@@ -1,20 +1,19 @@
-name: Deploy to GitHub Pages
+name: Deploy dev/main
 on:
   push:
     branches:
-      - main
       - dev
+      - main
 
 concurrency:
   group: pages-${{ github.ref_name }}
   cancel-in-progress: true
 
 jobs:
-  build-and-deploy:
+  deploy-dev-main:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v5
-
     - uses: ./.github/actions/setup
 
     - name: Build project
