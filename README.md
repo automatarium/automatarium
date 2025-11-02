@@ -102,7 +102,7 @@ Added Progressive Web App functionality, updated tutorial videos, changed deploy
 - [Owen Atkinson](https://github.com/s4013303)
 - [Aliyah Santiano](https://github.com/alyuhhh)
 - [Joseph Nemhara](https://github.com/Jnemhara)
-</details>
+
 
 For a full list of contributors see: https://github.com/automatarium/automatarium/graphs/contributors
 
