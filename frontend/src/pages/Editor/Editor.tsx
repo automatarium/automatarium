@@ -12,7 +12,7 @@ import { useEditorControls } from "../../hooks/useEditorControls";
 import { useModuleValidation } from "../../hooks/useModuleValidation";
 import { EditorUIProvider, useEditorUI } from "../../providers/EditorUIProvider";
 import { usePanelWidth } from "@/hooks/usePanelWidth";
-import { useEvent } from "/src/hooks"
+import { useActions, useEvent } from "/src/hooks"
 
 
 
@@ -38,6 +38,7 @@ function Editor() {
   useEditorInit();
   useEditorControls();
   useModuleValidation();
+  useActions(true);
 
   // Listen to the custom event 'tour:start' to show the tour
   useEvent('tour:start', () => {
