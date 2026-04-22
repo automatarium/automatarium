@@ -5,9 +5,8 @@ import { ColourName } from '../config'
  * - FSA: Finite state automata
  * - PDA: Push down automata
  * - TM: Turing machine
- * - GRAMMAR: Grammar
  */
-export type ProjectType = 'FSA' | 'PDA' | 'TM' | 'GRAMMAR'
+export type ProjectType = 'FSA' | 'PDA' | 'TM'
 
 /**
  * 2D x, y coordinate pair
@@ -102,14 +101,6 @@ export interface TMAutomataTransition extends BaseAutomataTransition {
     direction: TMDirection
 }
 
-/** 
- * A production rule for a grammar
- */
-export interface GrammarProduction {
-    left: string      // Non-terminal (e.g. "S")
-    right: string[]   // Possible expansions (e.g. ["aA", "b"])
-}
-
 export type AutomataTransition = BaseAutomataTransition | PDAAutomataTransition | TMAutomataTransition
 
 /**
@@ -139,19 +130,10 @@ export type PDAProjectGraph = BaseProjectGraph<'PDA', PDAAutomataTransition>
 export type TMProjectGraph = BaseProjectGraph<'TM', TMAutomataTransition>
 
 /**
- * Graph for Grammar project. This is completely different to the other project types
- */
-export type GrammarProjectGraph = {
-    projectType: 'GRAMMAR'
-    startSymbol: string
-    productions: GrammarProduction[]
-}
-
-/**
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph | GrammarProjectGraph
+export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
 
 /**
  * What a project for the frontend looks like.
