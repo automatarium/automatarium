@@ -15,7 +15,7 @@ const ShareUrlModule = () => {
 
   const [base64Project, setBase64Project] = useState('')
 
-  const shareRawLink = `${window.location.origin}/share/module/${base64Project}`
+  const shareRawLink = `${window.location.href.split('#')[0]}#/share/module/${base64Project}`
 
   const [exportUrlOpen, setExportUrlOpen] = useState(false)
   const [copySuccess, setCopySuccess] = useState(false)
