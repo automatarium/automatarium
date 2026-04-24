@@ -90,31 +90,83 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
     y: Number(note.y._text)
   }))
 
-  return {
-    _id: crypto.randomUUID(),
-    config: {
-      type: projectType,
-      statePrefix: DEFAULT_STATE_PREFIX,
-      color: DEFAULT_PROJECT_COLOR[projectType],
-      orOperator: DEFAULT_OR_OPERATOR,
-      acceptanceCriteria: projectType === 'PDA' ? DEFAULT_ACCEPTANCE_CRITERIA : undefined
-    },
-    meta: {
-      name: '', // Name will be changed to filename by frontend
-      dateCreated: new Date().getTime(),
-      dateEdited: new Date().getTime(),
-      version: SCHEMA_VERSION,
-      automatariumVersion: APP_VERSION
-    },
-    projectType,
-    simResult: [],
-    tests: {
-      batch: [''],
-      single: ''
-    },
-    initialState: initialStateID,
-    states: automatariumStates,
-    transitions: automatariumTransitions,
-    comments: automatariumComments
+  switch (projectType) {
+    case 'FSA':
+      return {
+        _id: crypto.randomUUID(),
+        config: {
+          type: projectType,
+          statePrefix: DEFAULT_STATE_PREFIX,
+          color: DEFAULT_PROJECT_COLOR[projectType],
+          orOperator: DEFAULT_OR_OPERATOR,
+          acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+        },
+        meta: {
+          name: '',
+          dateCreated: Date.now(),
+          dateEdited: Date.now(),
+          version: SCHEMA_VERSION,
+          automatariumVersion: APP_VERSION
+        },
+        projectType: 'FSA', // ✅ literal, not generic
+        simResult: [],
+        tests: { batch: [''], single: '' },
+        initialState: initialStateID,
+        states: automatariumStates,
+        transitions: automatariumTransitions,
+        comments: automatariumComments
+      }
+
+    case 'PDA':
+      return {
+        _id: crypto.randomUUID(),
+        config: {
+          type: projectType,
+          statePrefix: DEFAULT_STATE_PREFIX,
+          color: DEFAULT_PROJECT_COLOR[projectType],
+          orOperator: DEFAULT_OR_OPERATOR,
+          acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+        },
+        meta: {
+          name: '',
+          dateCreated: Date.now(),
+          dateEdited: Date.now(),
+          version: SCHEMA_VERSION,
+          automatariumVersion: APP_VERSION
+        },
+        projectType: 'PDA',
+        simResult: [],
+        tests: { batch: [''], single: '' },
+        initialState: initialStateID,
+        states: automatariumStates,
+        transitions: automatariumTransitions,
+        comments: automatariumComments
+      }
+
+    case 'TM':
+      return {
+        _id: crypto.randomUUID(),
+        config: {
+          type: projectType,
+          statePrefix: DEFAULT_STATE_PREFIX,
+          color: DEFAULT_PROJECT_COLOR[projectType],
+          orOperator: DEFAULT_OR_OPERATOR,
+          acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+        },
+        meta: {
+          name: '',
+          dateCreated: Date.now(),
+          dateEdited: Date.now(),
+          version: SCHEMA_VERSION,
+          automatariumVersion: APP_VERSION
+        },
+        projectType: 'TM',
+        simResult: [],
+        tests: { batch: [''], single: '' },
+        initialState: initialStateID,
+        states: automatariumStates,
+        transitions: automatariumTransitions,
+        comments: automatariumComments
+      }
   }
 }

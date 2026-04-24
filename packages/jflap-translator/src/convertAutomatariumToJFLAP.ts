@@ -105,6 +105,9 @@ const mapComments = (comments: ProjectComment[]): JFLAPComment[] => comments.map
 
 // Convert JFLAP JSON to Automatarium format
 export const convertAutomatariumToJFLAP = (automatariumProject: Project): string => {
+  if (automatariumProject.projectType === 'GRAMMAR') {
+    throw new Error('Grammar projects convert to FSA (Automatarium Files Only)')
+  }
   const jsonToXml = {
     _declaration: {
       _attributes: { version: '1.0', encoding: 'UTF-8', standalone: 'no' }
