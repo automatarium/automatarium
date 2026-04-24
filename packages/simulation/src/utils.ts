@@ -1,7 +1,7 @@
 import {
   AutomataState,
   BaseAutomataTransition, FSAAutomataTransition, FSAProjectGraph, PDAAutomataTransition, PDAProjectGraph,
-  ProjectGraph, TMAutomataTransition, TMProjectGraph
+  ProjectGraph, AutomataProjectGraph, TMAutomataTransition, TMProjectGraph
 } from 'frontend/src/types/ProjectTypes'
 import { expandReadSymbols } from './parseGraph'
 import { Node } from './interfaces/graph'
@@ -55,14 +55,14 @@ export const expandTransitions = <T extends BaseAutomataTransition>(transitions:
 /**
  * Performs any expansions needed for a graph
  */
-export const expandGraph = <T extends ProjectGraph>(graph: T): T => {
+export const expandGraph = <T extends AutomataProjectGraph>(graph: T): T => {
   return { ...graph, transitions: expandTransitions(graph.transitions) }
 }
 
 /**
  * Returns the initial state object from the graph. Returns undefined if not found
  */
-export const findInitialState = (graph: ProjectGraph): AutomataState | undefined => {
+export const findInitialState = (graph: AutomataProjectGraph): AutomataState | undefined => {
   return graph.states.find((state) => state.id === graph.initialState)
 }
 
@@ -74,7 +74,7 @@ export const newTape = (input: string): Tape => ({ pointer: 0, trace: input ? in
 /**
  * Builds the graph into a problem graph so that it can be simulated
  */
-export function buildProblem <M extends ProjectGraph> (graph: M, input: string): GraphMapping<M> | null {
+export function buildProblem <M extends AutomataProjectGraph> (graph: M, input: string): GraphMapping<M> | null {
   // Make some type aliases
   type S = StateMapping<M>
   type T = TransitionMapping<M>
