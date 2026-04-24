@@ -12,12 +12,12 @@ export type ProjectType = 'FSA' | 'PDA' | 'TM' | 'GRAMMAR'
 /**
  * 2D x, y coordinate pair
  */
-export type Coordinate = {x: number, y: number}
+export type Coordinate = { x: number, y: number }
 
 /**
  * Stores width/height of a 2D object
  */
-export type Size = {width: number, height: number}
+export type Size = { width: number, height: number }
 
 /**
  * Different UI themes available. System just matches the users light/dark mode
@@ -89,7 +89,7 @@ export type FSAAutomataTransition = BaseAutomataTransition
 /**
  * Transition used by PDA projects
  */
-export interface PDAAutomataTransition extends BaseAutomataTransition{
+export interface PDAAutomataTransition extends BaseAutomataTransition {
     push: string
     pop: string
 }
@@ -148,10 +148,16 @@ export type GrammarProjectGraph = {
 }
 
 /**
+ * Union of automata-based project graphs (those with states, transitions, and initialState).
+ * Use this when you need access to automata-specific properties.
+ */
+export type AutomataProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
+
+/**
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph | GrammarProjectGraph
+export type ProjectGraph = AutomataProjectGraph | GrammarProjectGraph
 
 /**
  * What a project for the frontend looks like.
@@ -187,7 +193,7 @@ export type Template = CopyData & {
  * Small helper function to change the value of a type at block level.
  * Use this with care since it does override the type system.
  */
- 
-export function assertType<T> (value: unknown): asserts value is T {
+
+export function assertType<T>(value: unknown): asserts value is T {
 
 }

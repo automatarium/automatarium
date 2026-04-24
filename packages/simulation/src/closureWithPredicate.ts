@@ -1,5 +1,5 @@
 import { StateID } from './graph'
-import { BaseAutomataTransition, ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { AutomataProjectGraph, BaseAutomataTransition } from 'frontend/src/types/ProjectTypes'
 import { TransitionMapping } from './utils'
 
 export type ClosureNode<T extends BaseAutomataTransition> = { transition: T, parents: T[] }
@@ -31,7 +31,7 @@ type GraphClosure<T> = Set<{state: StateID, transitions: T[]}>
  * closureWithPredicate(graph, 0, transition => transition.read.length === 0)
  * ```
  */
-export const closureWithPredicate = <P extends ProjectGraph, T extends TransitionMapping<P>>(graph: P, currentStateID: StateID, predicate: ClosureWithPredicateFn<T>): GraphClosure<T> => {
+export const closureWithPredicate = <P extends AutomataProjectGraph, T extends TransitionMapping<P>>(graph: P, currentStateID: StateID, predicate: ClosureWithPredicateFn<T>): GraphClosure<T> => {
   // Setup flood fill sets
   type CNode = ClosureNode<T>
   const closed: CNode[] = []
