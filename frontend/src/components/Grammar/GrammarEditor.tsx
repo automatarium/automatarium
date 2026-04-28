@@ -206,10 +206,6 @@ const handleExportFSAJFLAP = () => {
   URL.revokeObjectURL(link.href)
 }
 
-  useEvent('exportGrammarJson', () => handleExportGrammar(), [startSymbol, productions])
-  useEvent('exportGrammarJFLAP', () => handleExportGrammarJFLAP(), [startSymbol, productions])
-  useEvent('exportFSAJFLAP', () => handleExportFSAJFLAP(), [startSymbol, productions])
-
   return (
     <div className="grammar-editor-page h-full w-full flex bg-gray-800 text-gray-100">
       <div className="h-full w-full flex bg-gray-800 text-gray-100">
