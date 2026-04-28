@@ -157,7 +157,7 @@ export type AutomataProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProject
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-export type ProjectGraph = AutomataProjectGraph //| GrammarProjectGraph
+export type ProjectGraph = AutomataProjectGraph | GrammarProjectGraph
 
 /**
  * What a project for the frontend looks like.

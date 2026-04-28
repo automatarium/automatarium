@@ -14,8 +14,10 @@ import {
   PDAAutomataTransition, TMAutomataTransition,
   AutomataState,
   AutomataTransition,
-  ProjectComment
+  ProjectComment,
+  GrammarProjectGraph
 } from 'frontend/src/types/ProjectTypes'
+
 
 const PROJECT_TYPE_MAP: Record<ProjectType, string> = {
   FSA: 'fa',
@@ -103,24 +105,49 @@ const mapComments = (comments: ProjectComment[]): JFLAPComment[] => comments.map
   y: { _text: comment.y }
 }))
 
-// Convert JFLAP JSON to Automatarium format
-export const convertAutomatariumToJFLAP = (automatariumProject: Project): string => {
-  /*if (automatariumProject.projectType === 'GRAMMAR') {
-    throw new Error('Grammar projects convert to FSA (Automatarium Files Only)')
-  }*/
-  const jsonToXml = {
-    _declaration: {
-      _attributes: { version: '1.0', encoding: 'UTF-8', standalone: 'no' }
-    },
-    _comment: 'Created with love from Automatarium for JFLAP',
-    structure: {
-      type: PROJECT_TYPE_MAP[automatariumProject.projectType],
-      automaton: {
-        state: mapStates(automatariumProject.states, automatariumProject.initialState, automatariumProject.config.statePrefix),
-        transition: mapTransitions(automatariumProject.transitions, automatariumProject.projectType),
-        note: mapComments(automatariumProject.comments)
+// Convert Automatarium JSON to JFLAP jff format
+export const convertAutomatariumToJFLAP = (automatariumProject: any): string => {
+  console.log('projectType received:', automatariumProject.projectType)
+  console.log('=== GRAMMAR?', automatariumProject.projectType === 'GRAMMAR')  
+  // Handle GRAMMAR projects separately — different XML structure
+  if (automatariumProject.projectType === 'GRAMMAR') {
+    const grammarProject = automatariumProject as GrammarProjectGraph
+
+    const productions = grammarProject.productions.flatMap((rule) =>
+      rule.right.map((rhs) => ({
+        left: { _text: rule.left },
+        right: { _text: rhs }
+      }))
+    )
+
+    const jsonToXml = {
+      _declaration: {
+        _attributes: { version: '1.0', encoding: 'UTF-8', standalone: 'no' }
+      },
+      _comment: 'Created with love from Automatarium for JFLAP',
+      structure: {
+        type: 'grammar',
+        _comment: 'The list of productions.',
+        production: productions
       }
     }
+
+    return json2xml(JSON.stringify(jsonToXml), { compact: true, spaces: 4 })
   }
-  return json2xml(JSON.stringify(jsonToXml), { compact: true, spaces: 4 })
+  const jsonToXml = {
+  _declaration: {
+    _attributes: { version: '1.0', encoding: 'UTF-8', standalone: 'no' }
+  },
+  _comment: 'Created with love from Automatarium for JFLAP',
+  structure: {
+    type: PROJECT_TYPE_MAP[automatariumProject.projectType],
+    automaton: {
+      state: mapStates(automatariumProject.states, automatariumProject.initialState, automatariumProject.config.statePrefix),
+      transition: mapTransitions(automatariumProject.transitions, automatariumProject.projectType),
+      note: mapComments(automatariumProject.comments)
+    }
+  }
+}
+return json2xml(JSON.stringify(jsonToXml), { compact: true, spaces: 4 })
+
 }
