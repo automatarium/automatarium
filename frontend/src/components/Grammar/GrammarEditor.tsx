@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { GrammarProjectGraph } from '../../types/ProjectTypes'
 import { testString, detectType, convertToAutomata } from '../../util/grammar'
 import { useNavigate } from 'react-router-dom'
@@ -18,23 +18,6 @@ export default function GrammarEditor({ project }: Props) {
   const [fsaRedirect, setFsaRedirect] = useState(false)
   const navigate = useNavigate()
 
-
-  // TODO: Remove this when grammar menu is implemented
-  useEffect(() => {
-    // Hide File, Edit, View, Tools, Help buttons
-    const menuButtons = document.querySelectorAll('.go4171875633 button');
-    menuButtons.forEach((button) => {
-      (button as HTMLElement).style.display = 'none';
-    });
-
-    return () => {
-      // Restore when leaving page
-      const menuButtons = document.querySelectorAll('.go4171875633 button');
-      menuButtons.forEach((button) => {
-        (button as HTMLElement).style.display = '';
-      });
-    };
-  }, []);
 
   // add a new production rule
   const addProduction = () => {

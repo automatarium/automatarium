@@ -20,7 +20,7 @@ import {
   NameInput
 } from './menubarStyle'
 
-import menus from './menus'
+import menus, { grammarMenus } from './menus'
 import { ContextItem } from '/src/components/ContextMenus/contextItem'
 import { useTranslation } from 'react-i18next'
 
@@ -71,6 +71,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const [titleValue, setTitleValue] = useState('')
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
+  const projectType = useProjectStore(s => s.project?.config?.type)
   const setProjectName = useProjectStore(s => s.setName)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
@@ -162,7 +163,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             </NameRow>
 
             <DropdownMenus>
-              {menus(t).map((item: ContextItem) => (
+              {(projectType === 'GRAMMAR' ? grammarMenus(t) : menus(t)).map((item: ContextItem) => (
                 <DropdownButton
                   key={item.label}
                   item={item}
