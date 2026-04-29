@@ -192,6 +192,15 @@ const useActions = (registerHotkeys = false) => {
         a.click()
       }
     },
+    EXPORT_GRAMMAR_JSON: {
+      handler: () => dispatchCustomEvent('exportGrammarJson', null)
+    },
+    EXPORT_GRAMMAR_JFLAP: {
+      handler: () => dispatchCustomEvent('exportGrammarJFLAP', null)
+    },
+    EXPORT_FSA_JFLAP: {
+      handler: () => dispatchCustomEvent('exportFSAJFLAP', null)
+    },
     OPEN_PREFERENCES: {
       hotkeys: [{ key: ',', meta: true }],
       handler: () => dispatchCustomEvent('modal:preferences', null)
