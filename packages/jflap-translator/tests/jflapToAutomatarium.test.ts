@@ -1,9 +1,18 @@
 import { convertJFLAPXML } from '../src'
 import { readFileSync } from 'fs'
-import { Project } from 'frontend/src/types/ProjectTypes'
+import {
+  Project,
+  FSAProjectGraph,
+  PDAProjectGraph,
+  TMProjectGraph
+} from 'frontend/src/types/ProjectTypes'
 
-const readProject = (name: string): Project => {
-  return convertJFLAPXML(readFileSync('tests/sample-jflap-data/' + name + '.jff').toString())
+type AutomataProject = Project & (FSAProjectGraph | PDAProjectGraph | TMProjectGraph)
+
+const readProject = (name: string): AutomataProject => {
+  return convertJFLAPXML(
+    readFileSync('tests/sample-jflap-data/' + name + '.jff').toString()
+  ) as AutomataProject
 }
 
 describe('Importing single attribute', () => {
@@ -29,6 +38,7 @@ describe('Importing single attribute', () => {
         isFinal: true
       }
     ])
+
     expect(machine.initialState).toBe(0)
   })
 
@@ -83,6 +93,7 @@ describe('Import single attribute multiple states', () => {
         isFinal: false
       }
     ])
+
     expect(machine.initialState).toBe(0)
   })
 
