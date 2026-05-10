@@ -20,6 +20,7 @@ export default function GrammarEditor({ project }: Props) {
   const [grammarType, setGrammarType] = useState<string | null>(null)
   const [fsaRedirect, setFsaRedirect] = useState(false)
   const navigate = useNavigate()
+  const [derivationSteps, setDerivationSteps] = useState<string[]>([])
 
 
   // add a new production rule
@@ -206,6 +207,28 @@ const handleExportFSAJFLAP = () => {
   URL.revokeObjectURL(link.href)
 }
 
+// Derivation steps
+const showDerivation = () => {
+    // This is a simplified derivation - in a real implementation you'd track the actual derivation tree
+    const steps: string[] = []
+    const currentGrammar: GrammarProjectGraph = {
+      projectType: 'GRAMMAR',
+      startSymbol,
+      productions
+    }
+
+    if (testString(currentGrammar, input)) {
+      steps.push(`${startSymbol}`)
+      steps.push(`...derives...`)
+      steps.push(`${input} ✓`)
+    } else {
+      steps.push(`${startSymbol}`)
+      steps.push(`Cannot derive: ${input} ✗`)
+    }
+    
+    setDerivationSteps(steps)
+  }
+
   useEvent('exportGrammarJson', () => handleExportGrammar(), [startSymbol, productions])
   useEvent('exportGrammarJFLAP', () => handleExportGrammarJFLAP(), [startSymbol, productions])
   useEvent('exportFSAJFLAP', () => handleExportFSAJFLAP(), [startSymbol, productions])
@@ -305,6 +328,19 @@ const handleExportFSAJFLAP = () => {
                 {result}
               </div>
             )}
+            {/* Derivation Steps */}
+            <div>
+              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded" onClick={showDerivation}>
+                Show Derivation
+              </button>
+              {derivationSteps.length > 0 && (
+                <div className="mt-2 p-2 bg-gray-800 rounded text-sm">
+                  {derivationSteps.map((step, i) => (
+                    <div key={i}>{step}</div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
       </div>
