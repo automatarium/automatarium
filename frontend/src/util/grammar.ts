@@ -24,6 +24,45 @@ function derives(grammar: GrammarProjectGraph, current: string, input: string): 
   return false;
 }
 
+// Function based on derives() but returns the actual derivation steps
+export function showDerivations(grammar: GrammarProjectGraph, current: string, input: string): [string, string][] {
+  // Base case: if current equals input, we've successfully derived it
+  if (current === input) {
+    return [];
+  }
+
+  // Prevent infinite loops - if current is longer than input, stop
+  if (current.length > input.length) {
+    return [];
+  }
+
+  // Try all production rules
+  for (const prod of grammar.productions) {
+    const left = prod.left;
+    for (const right of prod.right) {
+      // Find all occurrences of 'left' inside 'current'
+      let index = current.indexOf(left);
+      while (index !== -1) {
+        // Replace that occurrence and form a new string
+        const next =
+          current.slice(0, index) + right + current.slice(index + left.length);
+        
+        // Recursively find the rest of the derivation
+        const restDerivations = showDerivations(grammar, next, input);
+        if (restDerivations.length > 0 || next === input) {
+          // Found a complete derivation - return this step plus the rest
+          return [[current, next], ...restDerivations];
+        }
+        
+        // Check for another occurrence later in the string
+        index = current.indexOf(left, index + 1);
+      }
+    }
+  }
+
+  return [];
+}
+
 export function testString(grammar: GrammarProjectGraph, str: string): boolean {
   return derives(grammar, grammar.startSymbol, str);
 }

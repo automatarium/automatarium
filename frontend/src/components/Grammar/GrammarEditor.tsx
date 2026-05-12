@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { GrammarProjectGraph, Project } from '../../types/ProjectTypes'
-import { testString, detectType, convertToAutomata } from '../../util/grammar'
+import { testString, showDerivations, detectType, convertToAutomata } from '../../util/grammar'
 import { useNavigate } from 'react-router-dom'
 import { useEvent } from '/src/hooks'
 import { convertAutomatariumToJFLAP } from '@automatarium/jflap-translator'
@@ -208,25 +208,30 @@ const handleExportFSAJFLAP = () => {
 }
 
 // Derivation steps
-const showDerivation = () => {
-    // This is a simplified derivation - in a real implementation you'd track the actual derivation tree
-    const steps: string[] = []
+const handleShowDerivation = () => {
     const currentGrammar: GrammarProjectGraph = {
       projectType: 'GRAMMAR',
       startSymbol,
       productions
     }
 
-    if (testString(currentGrammar, input)) {
-      steps.push(`${startSymbol}`)
-      steps.push(`...derives...`)
-      steps.push(`${input} ✓`)
-    } else {
-      steps.push(`${startSymbol}`)
-      steps.push(`Cannot derive: ${input} ✗`)
-    }
+    // Get all derivation steps from the grammar utility
+    const derivationTuples = showDerivations(currentGrammar, startSymbol, input)
     
-    setDerivationSteps(steps)
+    if (derivationTuples.length > 0) {
+      // Format the derivation chain for display
+      const steps = [startSymbol]
+      derivationTuples.forEach(([from, to]) => {
+        if (to !== startSymbol) {
+          steps.push(`⇒ ${to}`)
+        }
+      })
+      steps.push(`✓ Successfully derived`)
+      setDerivationSteps(steps)
+    } else {
+      // No derivation found
+      setDerivationSteps([startSymbol, `✗ Cannot derive: ${input}`])
+    }
   }
 
   useEvent('exportGrammarJson', () => handleExportGrammar(), [startSymbol, productions])
@@ -330,7 +335,7 @@ const showDerivation = () => {
             )}
             {/* Derivation Steps */}
             <div>
-              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded" onClick={showDerivation}>
+              <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded" onClick={handleShowDerivation}>
                 Show Derivation
               </button>
               {derivationSteps.length > 0 && (
