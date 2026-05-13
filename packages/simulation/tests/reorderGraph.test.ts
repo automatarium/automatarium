@@ -145,27 +145,32 @@ describe('Reordering graph', () => {
     expect(testVer.states[3].id).toBe(6)
   })
 
-  test('Disconnected components are sorted also', () => {
-    const graph = reorderStates({
-      projectType: 'FSA',
-      states: [
-        {
-          isFinal: true,
-          id: 0
-        },
-        {
-          isFinal: false,
-          id: 1
-        }
-      ],
-      transitions: [],
-      initialState: 1
-    } as FSAProjectGraph)
+test('Disconnected components are sorted also', () => {
+  const graph = reorderStates({
+    projectType: 'FSA',
+    states: [
+      {
+        id: 0,
+        isFinal: true,
+        name: 'q0',
+        x: 0,
+        y: 0
+      },
+      {
+        id: 1,
+        isFinal: false,
+        name: 'q1',
+        x: 0,
+        y: 0
+      }
+    ],
+    transitions: [],
+    initialState: 1
+  } as FSAProjectGraph)
 
-    expect(graph.states[0].id).toBe(1)
-    expect(graph.states[1].id).toBe(0)
-  })
-
+  expect(graph.states[0].id).toBe(1)
+  expect(graph.states[1].id).toBe(0)
+})
   test("Mildly complex graph doesn't lose states", () => {
     const graph = reorderStates(spiggy as FSAProjectGraph)
 
