@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom'
 import { useEvent } from '/src/hooks'
 import { convertAutomatariumToJFLAP } from '@automatarium/jflap-translator'
 import { showWarning } from '/src/components/Warning/Warning'
+import useProjectStore from '/src/stores/useProjectStore'
 
 
 type Props = {
@@ -13,8 +14,17 @@ type Props = {
 
 export default function GrammarEditor({ project }: Props) {
   // local state for grammar
-  const [startSymbol, setStartSymbol] = useState(project.startSymbol || "")
-  const [productions, setProductions] = useState(project.productions || [])
+  const { startSymbol, productions, setStartSymbol, setProductions, updateProduction } = useProjectStore(
+    state => ({
+      startSymbol: (state.project as any).startSymbol,
+      productions: (state.project as any).productions,
+      setStartSymbol: state.setStartSymbol,
+      setProductions: state.setProductions,
+      updateProduction: state.updateProduction
+    })
+  )
+  
+
   const [input, setInput] = useState("")
   const [result, setResult] = useState<string | null>(null)
   const [grammarType, setGrammarType] = useState<string | null>(null)
@@ -108,59 +118,6 @@ export default function GrammarEditor({ project }: Props) {
     URL.revokeObjectURL(link.href)
   }
 
-  // Export grammar as JSON file
-  const handleExportGrammar = () => {
-    const grammarData = {
-      projectType: 'GRAMMAR',
-      startSymbol,
-      productions,
-      _id: crypto.randomUUID(),
-      comments: [],
-      simResult: [],
-      tests: { single: "", batch: [""] },
-      meta: {
-        name: startSymbol ? `${startSymbol}-grammar` : "grammar-project",
-        dateCreated: Date.now(),
-        dateEdited: Date.now(),
-        version: "1.0.0",
-        automatariumVersion: "1.0.0"
-      },
-      config: {
-        type: "GRAMMAR",
-        statePrefix: "",
-        orOperator: "|",
-        acceptanceCriteria: "",
-        color: "green"
-      }
-    }
-
-    const blob = new Blob([JSON.stringify(grammarData, null, 2)], {
-      type: "application/json"
-    })
-    const link = document.createElement("a")
-    link.href = URL.createObjectURL(blob)
-    link.download = `${grammarData.meta.name.replace(/[#%&{}\\<>*?/$!'":@+\`|=]/g, '')}.json`
-    link.click()
-    URL.revokeObjectURL(link.href)
-  }
-
-  // Export grammar as JFLAP grammar file (.jff)
-const handleExportGrammarJFLAP = () => {
-  const currentGrammar: GrammarProjectGraph = {
-    projectType: 'GRAMMAR',
-    startSymbol,
-    productions
-  }
-
-  const jflapXml = convertAutomatariumToJFLAP(currentGrammar)
-  const blob = new Blob([jflapXml], { type: "application/xml" })
-  const link = document.createElement("a")
-  link.href = URL.createObjectURL(blob)
-  link.download = `${(startSymbol ? `${startSymbol}-grammar` : "grammar-project").replace(/[#%&{}\\<>*?/$!'":@+`|=]/g, '')}.jff`
-  link.click()
-  URL.revokeObjectURL(link.href)
-}
-
 // Export regular grammar converted to FSA as JFLAP file (.jff)
 const handleExportFSAJFLAP = () => {
   const currentGrammar: GrammarProjectGraph = {
@@ -234,8 +191,6 @@ const handleShowDerivation = () => {
     }
   }
 
-  useEvent('exportGrammarJson', () => handleExportGrammar(), [startSymbol, productions])
-  useEvent('exportGrammarJFLAP', () => handleExportGrammarJFLAP(), [startSymbol, productions])
   useEvent('exportFSAJFLAP', () => handleExportFSAJFLAP(), [startSymbol, productions])
 
   return (

@@ -233,17 +233,31 @@ export const grammarMenus: TranslatableContextItems = (t: TFunction) => [
         action: 'NEW_FILE'
       },
       'hr',
+       {
+        label: t('import', { ns: 'common' }),
+        items: [
+          {
+            label: t('menus.import_automatarium', { ns: 'common' }),
+            action: 'IMPORT_AUTOMATARIUM_PROJECT'
+          },
+          {
+            label: t('menus.import_jflap', { ns: 'common' }),
+            action: 'IMPORT_JFLAP_PROJECT'
+          },
+        ]
+      },
+      'hr',
       {
         label: t('export', { ns: 'common' }),
         items: [
           {
             label: 'Grammar (.json)',
-            action: 'EXPORT_GRAMMAR_JSON'
+            action: 'SAVE_FILE_AS'
           },
           'hr',
           {
             label: 'As JFLAP (.jff)',
-            action: 'EXPORT_GRAMMAR_JFLAP'
+            action: 'EXPORT_AS_JFLAP'
           }
         ]
       },

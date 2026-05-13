@@ -14,7 +14,9 @@ import {
   Template,
   CopyData,
   ProjectType,
-  ProjectGraph
+  ProjectGraph,
+  GrammarProduction,
+  GrammarProjectGraph
 } from '../types/ProjectTypes'
 
 import {
@@ -43,33 +45,46 @@ type InsertGroupResponse = {
   body: Template | CopyData
 }
 
-export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): Project => ({
-  projectType,
-  _id: crypto.randomUUID(),
-  states: [],
-  transitions: [],
-  comments: [],
-  simResult: [],
-  tests: {
-    single: '',
-    batch: ['']
-  },
-  initialState: null,
-  meta: {
-    name: randomProjectName(),
-    dateCreated: new Date().getTime(),
-    dateEdited: new Date().getTime(),
-    version: SCHEMA_VERSION,
-    automatariumVersion: APP_VERSION
-  },
-  config: {
-    type: projectType,
-    statePrefix: DEFAULT_STATE_PREFIX,
-    orOperator: DEFAULT_OR_OPERATOR,
-    acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
-    color: DEFAULT_PROJECT_COLOR[projectType]
+export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): Project => {
+  const baseProject: Project = {
+    projectType,
+    _id: crypto.randomUUID(),
+    states: [],
+    transitions: [],
+    comments: [],
+    simResult: [],
+    tests: {
+      single: '',
+      batch: ['']
+    },
+    initialState: null,
+    meta: {
+      name: randomProjectName(),
+      dateCreated: new Date().getTime(),
+      dateEdited: new Date().getTime(),
+      version: SCHEMA_VERSION,
+      automatariumVersion: APP_VERSION
+    },
+    config: {
+      type: projectType,
+      statePrefix: DEFAULT_STATE_PREFIX,
+      orOperator: DEFAULT_OR_OPERATOR,
+      acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA,
+      color: DEFAULT_PROJECT_COLOR[projectType]
+    }
   }
-})
+
+  // Add grammar-specific fields for GRAMMAR projects
+  if (projectType === 'GRAMMAR') {
+    return {
+      ...baseProject,
+      startSymbol: '',
+      productions: []
+    } as Project & GrammarProjectGraph
+  }
+
+  return baseProject
+}
 
 /**
  * Returns the next ID for a list of items. This doesn't get the next available ID
@@ -131,6 +146,10 @@ interface ProjectStore {
    * Updates the current project graph with the graph passed
    */
   updateGraph: (graph: ProjectGraph) => void,
+  // Grammar-specific actions
+  setStartSymbol: (symbol: string) => void,
+  setProductions: (productions: GrammarProduction[]) => void,
+  updateProduction: (index: number, production: Partial<GrammarProduction>) => void,
   reset: () => void
 }
 
@@ -430,6 +449,15 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
 
   getGraph: () => {
     const project = get().project
+    
+    if (project.projectType === 'GRAMMAR') {
+      return {
+        projectType: 'GRAMMAR',
+        startSymbol: (project as any).startSymbol,
+        productions: (project as any).productions
+      } as ProjectGraph
+    }
+    
     return {
       initialState: project.initialState,
       projectType: project.projectType,
@@ -439,9 +467,42 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   },
 
   updateGraph: graph => set(produce(({ project }: { project: Project}) => {
-    project.transitions = graph.transitions
-    project.states = graph.states
-    project.initialState = graph.initialState
+    if (graph.projectType === 'GRAMMAR') {
+      const grammarGraph = graph as GrammarProjectGraph
+      (project as any).startSymbol = grammarGraph.startSymbol
+      (project as any).productions = grammarGraph.productions
+    } else {
+      project.transitions = graph.transitions
+      project.states = graph.states
+      project.initialState = graph.initialState
+    }
+  })),
+
+  /* Set the start symbol for a grammar project */
+  setStartSymbol: (symbol: string) => set(produce((state: ProjectStore) => {
+    if (state.project.projectType === 'GRAMMAR') {
+      (state.project as any).startSymbol = symbol
+      state.lastChangeDate = new Date().getTime()
+    }
+  })),
+
+  /* Set all productions for a grammar project */
+  setProductions: (productions: GrammarProduction[]) => set(produce((state: ProjectStore) => {
+    if (state.project.projectType === 'GRAMMAR') {
+      (state.project as any).productions = productions
+      state.lastChangeDate = new Date().getTime()
+    }
+  })),
+
+  /* Update a single production rule by index */
+  updateProduction: (index: number, production: Partial<GrammarProduction>) => set(produce((state: ProjectStore) => {
+    if (state.project.projectType === 'GRAMMAR') {
+      const productions = (state.project as any).productions
+      if (index >= 0 && index < productions.length) {
+        productions[index] = { ...productions[index], ...production }
+        state.lastChangeDate = new Date().getTime()
+      }
+    }
   })),
 
   reset: () => set({ project: createNewProject(), history: [], historyPointer: 0, lastChangeDate: -1, lastSaveDate: -1 })
