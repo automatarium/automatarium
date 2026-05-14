@@ -11,7 +11,8 @@ import {
 const PROJECT_TYPE_MAP: Record<string, ProjectType> = {
   fa: 'FSA',
   pda: 'PDA',
-  turing: 'TM'
+  turing: 'TM',
+  grammar: 'GRAMMAR'
 }
 
 // Convert JFLAP XML to Automatarium format
@@ -22,12 +23,8 @@ export const convertJFLAPXML = (xml: string): Project => {
 
 // Convert JFLAP JSON to Automatarium format
 export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
-  // Pull out necessary values from jflap project
-  let {
-    structure: {
-      type,
-      automaton: { state: states, transition: transitions, note: notes }
-    }
+  const {
+    structure: { type }
   } = jflapProject
   const projectType = PROJECT_TYPE_MAP[type._text]
 
@@ -38,6 +35,62 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
 
   // Convert attributes to arrays if they are not already
   const toArray = <T>(x: T[]): T[] => x === undefined ? [] : (Array.isArray(x) ? x : [x])
+
+  if (projectType === 'GRAMMAR') {
+    const productionsArray = toArray((jflapProject.structure as any).production as any[]).map((production: any) => ({
+      left: production.left._text,
+      right: production.right._text ?? ''
+    }))
+
+    const productionMap = productionsArray.reduce((map, { left, right }) => {
+      if (!map.has(left)) {
+        map.set(left, [])
+      }
+      // Only add non-empty right sides; empty strings are skipped (not duplicate entries)
+      if (right) {
+        map.get(left)!.push(right)
+      }
+      return map
+    }, new Map<string, string[]>())
+
+    const grammarProductions = Array.from(productionMap.entries())
+      .map(([left, right]) => ({
+        left,
+        right: right.length > 0 ? right : [''] // Empty array becomes [''] only if no productions exist
+      }))
+
+    const startSymbol = grammarProductions.length > 0 ? grammarProductions[0].left : ''
+
+    return {
+      _id: crypto.randomUUID(),
+      config: {
+        type: projectType,
+        statePrefix: DEFAULT_STATE_PREFIX,
+        color: DEFAULT_PROJECT_COLOR[projectType],
+        orOperator: DEFAULT_OR_OPERATOR,
+        acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+      },
+      meta: {
+        name: '',
+        dateCreated: Date.now(),
+        dateEdited: Date.now(),
+        version: SCHEMA_VERSION,
+        automatariumVersion: APP_VERSION
+      },
+      projectType: 'GRAMMAR',
+      simResult: [],
+      tests: { batch: [''], single: '' },
+      comments: [],
+      startSymbol,
+      productions: grammarProductions
+    }
+  }
+
+  let {
+    structure: {
+      automaton: { state: states, transition: transitions, note: notes }
+    }
+  } = jflapProject
   states = toArray(states)
   transitions = toArray(transitions)
   notes = toArray(notes)
