@@ -184,6 +184,48 @@ const handleExportFSAJFLAP = () => {
     )
   }
 
+  // Export converted context-free grammar to PDA as JSON file
+  const handleExportToPDA = () => {
+    const currentGrammar: GrammarProjectGraph = {
+      projectType: 'GRAMMAR',
+      startSymbol,
+      productions
+    }
+
+    const pdaGraph = convertToAutomata(currentGrammar, 'context-free')
+
+    const pdaData = {
+      ...pdaGraph,
+      _id: crypto.randomUUID(),
+      comments: [],
+      simResult: [],
+      tests: { single: "", batch: [""] },
+      meta: {
+        name: "Converted Grammar",
+        dateCreated: Date.now(),
+        dateEdited: Date.now(),
+        version: "1.0.0",
+        automatariumVersion: "1.0.0"
+      },
+      config: {
+        type: "PDA",
+        statePrefix: "q",
+        orOperator: "|",
+        acceptanceCriteria: "both",
+        color: "orange"
+      }
+    }
+
+    const blob = new Blob([JSON.stringify(pdaData, null, 2)], {
+      type: "application/json"
+    })
+    const link = document.createElement("a")
+    link.href = URL.createObjectURL(blob)
+    link.download = "converted_pda.json"
+    link.click()
+    URL.revokeObjectURL(link.href)
+  }
+
   // Derivation steps
   const handleShowDerivation = () => {
     const currentGrammar: GrammarProjectGraph = {
@@ -266,16 +308,22 @@ const handleExportFSAJFLAP = () => {
               Detect Grammar Type
             </button>
 
-            {grammarType && (
-              <div className="grammar-type">
-                Type: {grammarType}
-                {(grammarType === "regular (left-linear)" || grammarType === "regular (right-linear)") && (
-                  <button className="convert-button" onClick={handleExportToFSA}>
-                    Export as FSA
-                  </button>
-                )}
-              </div>
-            )}
+          {grammarType && (
+            <div className="grammar-type">
+              Type: {grammarType}
+
+              {(grammarType === "regular (left-linear)" ||
+                grammarType === "regular (right-linear)") ? (
+                <button className="convert-button" onClick={handleExportToFSA}>
+                  Export as FSA
+                </button>
+              ) : grammarType === "context-free" ? (
+                <button className="convert-button" onClick={handleExportToPDA}>
+                  Export as PDA
+                </button>
+              ) : null}
+            </div>
+          )}
           </div>
 
           {/* String Tester Panel */}
