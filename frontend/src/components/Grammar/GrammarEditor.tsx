@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { GrammarProjectGraph, Project } from '../../types/ProjectTypes'
 import { testString, showDerivations, detectType, convertToAutomata } from '../../util/grammar'
+import type { DerivationStep } from '../../util/grammar'
 import { useNavigate } from 'react-router-dom'
 import { useEvent } from '/src/hooks'
 import { convertAutomatariumToJFLAP } from '@automatarium/jflap-translator'
@@ -30,7 +31,8 @@ export default function GrammarEditor({ project }: Props) {
   const [grammarType, setGrammarType] = useState<string | null>(null)
   const [fsaRedirect, setFsaRedirect] = useState(false)
   const navigate = useNavigate()
-  const [derivationSteps, setDerivationSteps] = useState<string[]>([])
+  const [derivationSteps, setDerivationSteps] = useState<DerivationStep[]>([])
+  const [derivationMessage, setDerivationMessage] = useState<string | null>(null)
 
 
   // add a new production rule
@@ -40,16 +42,17 @@ export default function GrammarEditor({ project }: Props) {
 
   // update LHS of a production
   const updateLeft = (index: number, value: string) => {
-    const updated = [...productions]
-    updated[index].left = value
-    setProductions(updated)
+    setProductions(productions.map((production, i) =>
+      i === index ? { ...production, left: value } : production
+    ))
   }
 
   // update RHS (pipe-separated, e.g. "aB | b")
   const updateRight = (index: number, value: string) => {
-    const updated = [...productions]
-    updated[index].right = value.split("|").map(s => s.trim())
-    setProductions(updated)
+    const right = value.split("|").map(s => s.trim())
+    setProductions(productions.map((production, i) =>
+      i === index ? { ...production, right } : production
+    ))
   }
 
   // delete a production
@@ -164,8 +167,25 @@ const handleExportFSAJFLAP = () => {
   URL.revokeObjectURL(link.href)
 }
 
-// Derivation steps
-const handleShowDerivation = () => {
+  const renderDerivedString = (step: DerivationStep) => {
+    const changedEnd = step.replacementIndex + step.insertedLength
+    const beforeChanged = step.to.slice(0, step.replacementIndex)
+    const changed = step.to.slice(step.replacementIndex, changedEnd)
+    const afterChanged = step.to.slice(changedEnd)
+
+    return (
+      <>
+        {beforeChanged}
+        <span style={{ color: "#86efac", fontWeight: 700 }}>
+          {changed || "ε"}
+        </span>
+        {afterChanged}
+      </>
+    )
+  }
+
+  // Derivation steps
+  const handleShowDerivation = () => {
     const currentGrammar: GrammarProjectGraph = {
       projectType: 'GRAMMAR',
       startSymbol,
@@ -173,21 +193,15 @@ const handleShowDerivation = () => {
     }
 
     // Get all derivation steps from the grammar utility
-    const derivationTuples = showDerivations(currentGrammar, startSymbol, input)
+    const steps = showDerivations(currentGrammar, startSymbol, input)
     
-    if (derivationTuples.length > 0) {
-      // Format the derivation chain for display
-      const steps = [startSymbol]
-      derivationTuples.forEach(([from, to]) => {
-        if (to !== startSymbol) {
-          steps.push(`⇒ ${to}`)
-        }
-      })
-      steps.push(`✓ Successfully derived`)
+    if (steps.length > 0 || startSymbol === input) {
       setDerivationSteps(steps)
+      setDerivationMessage(`✓ Successfully derived`)
     } else {
       // No derivation found
-      setDerivationSteps([startSymbol, `✗ Cannot derive: ${input}`])
+      setDerivationSteps([])
+      setDerivationMessage(`✗ Cannot derive: ${input}`)
     }
   }
 
@@ -295,9 +309,22 @@ const handleShowDerivation = () => {
               </button>
               {derivationSteps.length > 0 && (
                 <div className="mt-2 p-2 bg-gray-800 rounded text-sm">
+                  <div>{startSymbol}</div>
                   {derivationSteps.map((step, i) => (
-                    <div key={i}>{step}</div>
+                    <div key={i}>
+                      ⇒ {renderDerivedString(step)}
+                      <span style={{ color: "#a3a3a3", marginLeft: "0.5rem" }}>
+                        (used {step.ruleLeft} → {step.ruleRight || "ε"})
+                      </span>
+                    </div>
                   ))}
+                  {derivationMessage && <div>{derivationMessage}</div>}
+                </div>
+              )}
+              {derivationSteps.length === 0 && derivationMessage && (
+                <div className="mt-2 p-2 bg-gray-800 rounded text-sm">
+                  <div>{startSymbol}</div>
+                  <div>{derivationMessage}</div>
                 </div>
               )}
             </div>

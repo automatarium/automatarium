@@ -1,5 +1,15 @@
 import { GrammarProjectGraph, FSAProjectGraph, AutomataState, FSAAutomataTransition } from '../types/ProjectTypes'
 
+export type DerivationStep = {
+  from: string
+  to: string
+  ruleLeft: string
+  ruleRight: string
+  replacementIndex: number
+  replacementLength: number
+  insertedLength: number
+}
+
 function derives(grammar: GrammarProjectGraph, current: string, input: string): boolean {
   if (current === input) return true;
   if (current.length > input.length) return false;
@@ -25,7 +35,12 @@ function derives(grammar: GrammarProjectGraph, current: string, input: string): 
 }
 
 // Function based on derives() but returns the actual derivation steps
-export function showDerivations(grammar: GrammarProjectGraph, current: string, input: string): [string, string][] {
+export function showDerivations(
+  grammar: GrammarProjectGraph,
+  current: string,
+  input: string,
+  visited = new Set<string>()
+): DerivationStep[] {
   // Base case: if current equals input, we've successfully derived it
   if (current === input) {
     return [];
@@ -35,6 +50,13 @@ export function showDerivations(grammar: GrammarProjectGraph, current: string, i
   if (current.length > input.length) {
     return [];
   }
+
+  if (visited.has(current)) {
+    return [];
+  }
+
+  const nextVisited = new Set(visited)
+  nextVisited.add(current)
 
   // Try all production rules
   for (const prod of grammar.productions) {
@@ -48,10 +70,18 @@ export function showDerivations(grammar: GrammarProjectGraph, current: string, i
           current.slice(0, index) + right + current.slice(index + left.length);
         
         // Recursively find the rest of the derivation
-        const restDerivations = showDerivations(grammar, next, input);
+        const restDerivations = showDerivations(grammar, next, input, nextVisited);
         if (restDerivations.length > 0 || next === input) {
           // Found a complete derivation - return this step plus the rest
-          return [[current, next], ...restDerivations];
+          return [{
+            from: current,
+            to: next,
+            ruleLeft: left,
+            ruleRight: right,
+            replacementIndex: index,
+            replacementLength: left.length,
+            insertedLength: right.length
+          }, ...restDerivations];
         }
         
         // Check for another occurrence later in the string
