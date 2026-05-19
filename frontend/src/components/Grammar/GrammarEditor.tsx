@@ -30,9 +30,19 @@ export default function GrammarEditor({ project }: Props) {
   const [result, setResult] = useState<string | null>(null)
   const [grammarType, setGrammarType] = useState<string | null>(null)
   const [fsaRedirect, setFsaRedirect] = useState(false)
+  const [editingRight, setEditingRight] = useState<Record<number, string>>({})
   const navigate = useNavigate()
   const [derivationSteps, setDerivationSteps] = useState<DerivationStep[]>([])
   const [derivationMessage, setDerivationMessage] = useState<string | null>(null)
+
+  const formatRightValue = (right: string[]) =>
+    right.map(rule => (rule === "" ? "ε" : rule)).join(" | ")
+
+  const parseRightValue = (value: string) =>
+    value.split("|").map(s => {
+      const trimmed = s.trim()
+      return trimmed === "" || trimmed === "ε" ? "" : trimmed
+    })
 
 
   // add a new production rule
@@ -49,10 +59,23 @@ export default function GrammarEditor({ project }: Props) {
 
   // update RHS (pipe-separated, e.g. "aB | b")
   const updateRight = (index: number, value: string) => {
-    const right = value.split("|").map(s => s.trim())
+    setEditingRight({ ...editingRight, [index]: value })
+  }
+
+  const commitRight = (index: number, value: string) => {
+    const right = parseRightValue(value)
     setProductions(productions.map((production, i) =>
       i === index ? { ...production, right } : production
     ))
+    const nextEditing = { ...editingRight }
+    delete nextEditing[index]
+    setEditingRight(nextEditing)
+  }
+
+  const clearRightEdit = (index: number) => {
+    const nextEditing = { ...editingRight }
+    delete nextEditing[index]
+    setEditingRight(nextEditing)
   }
 
   // delete a production
@@ -287,9 +310,17 @@ const handleExportFSAJFLAP = () => {
                   <input
                     className="input-box-right"
                     type="text"
-                    value={p.right.join(" | ")}
+                    value={editingRight[i] ?? formatRightValue(p.right)}
                     onChange={e => updateRight(i, e.target.value)}
-                    placeholder="rhs1 | rhs2"
+                    onFocus={e => {
+                      if (formatRightValue(p.right) === "ε") {
+                        setEditingRight({ ...editingRight, [i]: "" })
+                      }
+                    }}
+                    onBlur={e => {
+                      commitRight(i, e.target.value)
+                    }}
+                    placeholder="ε"
                   />
                   <button
                     className="text-red-400 hover:text-red-600"

@@ -12,7 +12,7 @@ export type DerivationStep = {
 
 function derives(grammar: GrammarProjectGraph, current: string, input: string): boolean {
   if (current === input) return true;
-  if (current.length > input.length) return false;
+  // Do not stop when current is longer than input, because empty productions can shrink the string.
 
   // For every production rule
   for (const prod of grammar.productions) {
@@ -46,10 +46,7 @@ export function showDerivations(
     return [];
   }
 
-  // Prevent infinite loops - if current is longer than input, stop
-  if (current.length > input.length) {
-    return [];
-  }
+  // Do not stop when current is longer than input, because empty productions can shrink the string.
 
   if (visited.has(current)) {
     return [];
@@ -77,7 +74,7 @@ export function showDerivations(
             from: current,
             to: next,
             ruleLeft: left,
-            ruleRight: right,
+            ruleRight: right === "" ? "ε" : right,
             replacementIndex: index,
             replacementLength: left.length,
             insertedLength: right.length
