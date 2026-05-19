@@ -75,7 +75,7 @@ function Editor() {
             // Automata / PDA / TM layout
             <Content>
               <Toolbar />
-              {showModuleWindow && currentModule && (
+              {showModuleWindow && module && (
                 <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
               )}
               <EditorContent>
