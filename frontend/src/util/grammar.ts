@@ -10,84 +10,191 @@ export type DerivationStep = {
   insertedLength: number
 }
 
-function derives(grammar: GrammarProjectGraph, current: string, input: string): boolean {
+/** Breadth First Search for determining if a string can be derived from a grammar
+ * Prevents infinite loops by keeping track of visited strings. Does not limit the number of derivation steps, 
+ * but will return false if it encounters a string it has already seen (indicating a loop).
+ */
+function derives(
+  grammar: GrammarProjectGraph,
+  current: string,
+  input: string,
+  maxSteps: number = 1000
+): boolean {
+  // Base case
   if (current === input) return true;
-  // Do not stop when current is longer than input, because empty productions can shrink the string.
+ 
+  const visited = new Set<string>();
+  const queue: Array<[string, number]> = [[current, 0]];
+  visited.add(current);
+ 
+  while (queue.length > 0) {
+    const [currState, stepCount] = queue.shift()!;
+ 
+    // Stop if we've taken too many steps
+    if (stepCount >= maxSteps) {
+      continue;
+    }
+ 
+    // For every production rule
+    for (const prod of grammar.productions) {
+      const left = prod.left;
+      for (const right of prod.right) {
+        // Find all occurrences of 'left' inside 'currState'
+        let index = currState.indexOf(left);
+        while (index !== -1) {
+          // Replace that occurrence and form a new string
+          const next =
+            currState.slice(0, index) +
+            right +
+            currState.slice(index + left.length);
+ 
+          // Found the target
+          if (next === input) return true;
+ 
+          // Decide whether to explore this branch
+          let shouldExplore = false;
 
-  // For every production rule
-  for (const prod of grammar.productions) {
-    const left = prod.left;
-    for (const right of prod.right) {
-      // Find all occurrences of 'left' inside 'current'
-      let index = current.indexOf(left);
-      while (index !== -1) {
-        // Replace that occurrence and form a new string
-        const next =
-          current.slice(0, index) + right + current.slice(index + left.length);
-        if (derives(grammar, next, input)) return true;
-        // Check for another occurrence later in the string
-        index = current.indexOf(left, index + 1);
+          if (!visited.has(next)) {
+            // RULE 1: Always allow empty productions (shrinking)
+            if (right.length < left.length) {
+              // This is a shrinking rule - always explore
+              shouldExplore = true;
+            }
+            // RULE 2: Only allow growth if result is at or below target length
+            else if (next.length <= input.length) {
+              // This is growth or neutral - only explore if not exceeding target
+              shouldExplore = true;
+            }
+            // RULE 3: Reject if this would grow beyond target
+            // (unless it's a shrinking rule covered by RULE 1)
+            if (shouldExplore) {
+              visited.add(next);
+              queue.push([next, stepCount + 1]);
+            }
+          }
+ 
+          // Check for another occurrence later in the string
+          index = currState.indexOf(left, index + 1);
+        }
       }
     }
   }
-
+ 
   return false;
 }
-
-// Function based on derives() but returns the actual derivation steps
+ 
+/**
+ * Function based on derives() but returns the actual derivation steps.
+ * Uses length-aware pruning to prevent queue explosion.
+ */
 export function showDerivations(
   grammar: GrammarProjectGraph,
   current: string,
   input: string,
-  visited = new Set<string>()
+  maxSteps: number = 1000
 ): DerivationStep[] {
   // Base case: if current equals input, we've successfully derived it
   if (current === input) {
     return [];
   }
-
-  // Do not stop when current is longer than input, because empty productions can shrink the string.
-
-  if (visited.has(current)) {
-    return [];
-  }
-
-  const nextVisited = new Set(visited)
-  nextVisited.add(current)
-
-  // Try all production rules
-  for (const prod of grammar.productions) {
-    const left = prod.left;
-    for (const right of prod.right) {
-      // Find all occurrences of 'left' inside 'current'
-      let index = current.indexOf(left);
-      while (index !== -1) {
-        // Replace that occurrence and form a new string
-        const next =
-          current.slice(0, index) + right + current.slice(index + left.length);
-        
-        // Recursively find the rest of the derivation
-        const restDerivations = showDerivations(grammar, next, input, nextVisited);
-        if (restDerivations.length > 0 || next === input) {
-          // Found a complete derivation - return this step plus the rest
-          return [{
-            from: current,
+ 
+  // Track visited forms to avoid processing the same state twice
+  // Also track the path (parent and transition) for reconstruction
+  const visited = new Map<string, { from: string; step: DerivationStep } | null>();
+  visited.set(current, null); // Current has no parent
+ 
+  const queue: Array<[string, number]> = [[current, 0]];
+ 
+  while (queue.length > 0) {
+    const [currState, stepCount] = queue.shift()!;
+ 
+    // Stop if we've taken too many steps
+    if (stepCount >= maxSteps) {
+      continue;
+    }
+ 
+    // Try all production rules
+    for (const prod of grammar.productions) {
+      const left = prod.left;
+      for (const right of prod.right) {
+        // Find all occurrences of 'left' inside 'currState'
+        let index = currState.indexOf(left);
+        while (index !== -1) {
+          // Replace that occurrence and form a new string
+          const next =
+            currState.slice(0, index) +
+            right +
+            currState.slice(index + left.length);
+ 
+          // Create the derivation step for this transition
+          const step: DerivationStep = {
+            from: currState,
             to: next,
             ruleLeft: left,
             ruleRight: right === "" ? "ε" : right,
             replacementIndex: index,
             replacementLength: left.length,
             insertedLength: right.length
-          }, ...restDerivations];
+          };
+ 
+          // Found the target - reconstruct the full derivation path
+          if (next === input) {
+            return reconstructPath(visited, currState, step);
+          }
+ 
+          // Decide whether to explore this branch (same logic as derives())
+          let shouldExplore = false;
+ 
+          if (!visited.has(next)) {
+            // RULE 1: Always allow shrinking rules (empty productions)
+            if (right.length < left.length) {
+              shouldExplore = true;
+            }
+            // RULE 2: Only allow growth if result is at or below target length
+            else if (next.length <= input.length) {
+              shouldExplore = true;
+            }
+ 
+            if (shouldExplore) {
+              visited.set(next, { from: currState, step });
+              queue.push([next, stepCount + 1]);
+            }
+          } 
+          // Check for another occurrence later in the string
+          index = currState.indexOf(left, index + 1);
         }
-        
-        // Check for another occurrence later in the string
-        index = current.indexOf(left, index + 1);
       }
     }
   }
-
+ 
   return [];
+}
+ 
+/**
+ * Reconstruct derivation path from visited map by backtracking
+ */
+function reconstructPath(
+  visited: Map<string, { from: string; step: DerivationStep } | null>,
+  lastForm: string,
+  finalStep: DerivationStep
+): DerivationStep[] {
+  const path: DerivationStep[] = [];
+  let current = lastForm;
+ 
+  // Backtrack from current form to the start
+  while (visited.has(current)) {
+    const entry = visited.get(current);
+    if (!entry) {
+      // Reached the start (entry is null)
+      break;
+    }
+    path.unshift(entry.step);
+    current = entry.from;
+  }
+ 
+  // Add the final step
+  path.push(finalStep);
+  return path;
 }
 
 export function testString(grammar: GrammarProjectGraph, str: string): boolean {
