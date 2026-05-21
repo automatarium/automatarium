@@ -14,12 +14,13 @@
       "@/*": ["./src/*"],
       "/src/*": ["./src/*"]
     },
-    "types": ["@types/lodash"],
+    "types": ["@types/lodash", "jest"],
     "lib": ["DOM", "ES2021", "dom.iterable"],
     "outDir": "dist/"
   },
   "include": [
     "src/**/*",
+    "tests/**/*",
     "global.d.ts"
   ],
 }

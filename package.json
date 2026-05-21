@@ -26,7 +26,7 @@
     "build:frontend": "yarn workspace frontend build",
     "lint": "eslint --fix",
     "check:types": "yarn workspaces foreach -A run check:types",
-    "test": "yarn workspace @automatarium/simulation test && yarn workspace @automatarium/jflap-translator test",
+    "test": "yarn workspace @automatarium/simulation test && yarn workspace @automatarium/jflap-translator test && yarn workspace frontend test",    
     "dev": "yarn dev:frontend",
     "build": "yarn build:packages && yarn build:frontend"
   },
