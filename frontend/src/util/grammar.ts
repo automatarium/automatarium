@@ -308,287 +308,228 @@ let stateCounter = 0
 const genId = () => stateCounter++
 
 export function convertToAutomata(grammar: GrammarProjectGraph, type: string) {
-  // if (type !== "regular" || "context-free") {
-  //     console.warn("Only regular grammars can be converted so far.")
-  //     return null
-  // }
-  //   stateCounter = 0
-  //   const stateMap = new Map<string, number>()
-  //   const states: AutomataState[] = []
-  //   const transitions: FSAAutomataTransition[] = []
-  //   for (const prod of grammar.productions) {
-  //     if (!stateMap.has(prod.left)) {
-  //       const id = genId()
-  //       stateMap.set(prod.left, id)
-  //       states.push({
-  //         id,
-  //         x: Math.random() * 400 + 100,
-  //         y: Math.random() * 300 + 100,
-  //         isFinal: false,
-  //         name: prod.left
-  //       })
-  //     }
-  //   }
-
-  //   const finalStateId = genId()
-  //   states.push({
-  //     id: finalStateId,
-  //     x: 500,
-  //     y: 250,
-  //     isFinal: true,
-  //     name: 'F'
-  //   })
-
-  //   for (const prod of grammar.productions) {
-  //     const fromId = stateMap.get(prod.left)!
-  //     for (const rule of prod.right) {
-  //       if (rule === "") {
-  //         const state = states.find(s => s.id === fromId)
-  //         if (state) state.isFinal = true
-  //       } 
-  //       else if (rule.length === 1 && rule >= "a" && rule <= "z") {
-  //         transitions.push({
-  //           id: genId(),
-  //           from: fromId,
-  //           read: rule,
-  //           to: finalStateId
-  //         })
-  //       } 
-  //       else if (rule.length === 2) {
-  //         const [a, B] = rule
-  //         if (a >= "a" && a <= "z" && B >= "A" && B <= "Z") {
-  //           const toId = stateMap.get(B)
-  //           if (toId !== undefined) {
-  //             transitions.push({
-  //               id: genId(),
-  //               from: fromId,
-  //               read: a,
-  //               to: toId
-  //             })
-  //           }
-  //         } else if (a >= "A" && a <= "Z" && B >= "a" && B <= "z") {
-  //           const toId = stateMap.get(a)
-  //           if (toId !== undefined) {
-  //             transitions.push({
-  //               id: genId(),
-  //               from: toId,
-  //               read: B,
-  //               to: fromId
-  //             })
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-
-
-  //   const automaton: FSAProjectGraph = {
-  //     projectType: 'FSA',
-  //     states,
-  //     transitions,
-  //     initialState: stateMap.get(grammar.startSymbol) ?? null
-  //   }
-
-  //   return automaton
-
-
-  // }
-  // if (type !== "regular" || "context-free")
-  if (type !== "context-free") {
-    console.warn("Only regular grammars can be converted so far.")
-    return null
+if (type !== "regular" && type !== "context-free") {
+  console.warn("Only regular grammars can be converted so far.")
+  return null
   }
-  // if (type == "regular") {
-  //   stateCounter = 0
-  //   const stateMap = new Map<string, number>()
-  //   const states: AutomataState[] = []
-  //   const transitions: FSAAutomataTransition[] = []
-  //   for (const prod of grammar.productions) {
-  //     if (!stateMap.has(prod.left)) {
-  //       const id = genId()
-  //       stateMap.set(prod.left, id)
-  //       states.push({
-  //         id,
-  //         x: Math.random() * 400 + 100,
-  //         y: Math.random() * 300 + 100,
-  //         isFinal: false,
-  //         name: prod.left
-  //       })
-  //     }
-  //   }
-
-  //   const finalStateId = genId()
-  //   states.push({
-  //     id: finalStateId,
-  //     x: 500,
-  //     y: 250,
-  //     isFinal: true,
-  //     name: 'F'
-  //   })
-
-  //   for (const prod of grammar.productions) {
-  //     const fromId = stateMap.get(prod.left)!
-  //     for (const rule of prod.right) {
-  //       if (rule === "") {
-  //         const state = states.find(s => s.id === fromId)
-  //         if (state) state.isFinal = true
-  //       }
-  //       else if (rule.length === 1 && rule >= "a" && rule <= "z") {
-  //         transitions.push({
-  //           id: genId(),
-  //           from: fromId,
-  //           read: rule,
-  //           to: finalStateId
-  //         })
-  //       }
-  //       else if (rule.length === 2) {
-  //         const [a, B] = rule
-  //         if (a >= "a" && a <= "z" && B >= "A" && B <= "Z") {
-  //           const toId = stateMap.get(B)
-  //           if (toId !== undefined) {
-  //             transitions.push({
-  //               id: genId(),
-  //               from: fromId,
-  //               read: a,
-  //               to: toId
-  //             })
-  //           }
-  //         } else if (a >= "A" && a <= "Z" && B >= "a" && B <= "z") {
-  //           const toId = stateMap.get(a)
-  //           if (toId !== undefined) {
-  //             transitions.push({
-  //               id: genId(),
-  //               from: toId,
-  //               read: B,
-  //               to: fromId
-  //             })
-  //           }
-  //         }
-  //       }
-  //     }
-  //   }
-
-
-  //   const automaton: FSAProjectGraph = {
-  //     projectType: 'FSA',
-  //     states,
-  //     transitions,
-  //     initialState: stateMap.get(grammar.startSymbol) ?? null
-  //   }
-
-  //   return automaton
-  // }
-
-  if (type == "context-free") {
-
+  if (type == "regular") {
     stateCounter = 0
-
+    const stateMap = new Map<string, number>()
     const states: AutomataState[] = []
-    const transitions: PDAAutomataTransition[] = []
-
-    const qStart = genId()
-    const qLoop = genId()
-    const qAccept = genId()
-
-    states.push(
-      {
-        id: qStart,
-        x: 100,
-        y: 200,
-        isFinal: false,
-        name: "q_start"
-      },
-      {
-        id: qLoop,
-        x: 350,
-        y: 200,
-        isFinal: false,
-        name: "q_loop"
-      },
-      {
-        id: qAccept,
-        x: 600,
-        y: 200,
-        isFinal: true,
-        name: "q_accept"
-      }
-    )
-
-    transitions.push({
-      id: genId(),
-      from: qStart,
-      to: qLoop,
-      read: "",
-      pop: "",
-      push: grammar.startSymbol
-    })
-
+    const transitions: FSAAutomataTransition[] = []
     for (const prod of grammar.productions) {
-
-      for (const rule of prod.right) {
-
-        let pushString = ""
-
-        if (rule === "") {
-          pushString = ""
-        } else {
-          pushString = rule.split("").reverse().join("")
-        }
-
-        transitions.push({
-          id: genId(),
-          from: qLoop,
-          to: qLoop,
-          read: "",
-          pop: prod.left,
-          push: pushString
+      if (!stateMap.has(prod.left)) {
+        const id = genId()
+        stateMap.set(prod.left, id)
+        states.push({
+          id,
+          x: Math.random() * 400 + 100,
+          y: Math.random() * 300 + 100,
+          isFinal: false,
+          name: prod.left
         })
       }
     }
 
-
-    const terminals = new Set<string>()
+    const finalStateId = genId()
+    states.push({
+      id: finalStateId,
+      x: 500,
+      y: 250,
+      isFinal: true,
+      name: 'F'
+    })
 
     for (const prod of grammar.productions) {
+      const fromId = stateMap.get(prod.left)!
       for (const rule of prod.right) {
-
-        for (const ch of rule) {
-
-          if (ch >= "a" && ch <= "z") {
-            terminals.add(ch)
+        if (rule === "") {
+          const state = states.find(s => s.id === fromId)
+          if (state) state.isFinal = true
+        }
+        else if (rule.length === 1 && rule >= "a" && rule <= "z") {
+          transitions.push({
+            id: genId(),
+            from: fromId,
+            read: rule,
+            to: finalStateId
+          })
+        }
+        else if (rule.length === 2) {
+          const [a, B] = rule
+          if (a >= "a" && a <= "z" && B >= "A" && B <= "Z") {
+            const toId = stateMap.get(B)
+            if (toId !== undefined) {
+              transitions.push({
+                id: genId(),
+                from: fromId,
+                read: a,
+                to: toId
+              })
+            }
+          } else if (a >= "A" && a <= "Z" && B >= "a" && B <= "z") {
+            const toId = stateMap.get(a)
+            if (toId !== undefined) {
+              transitions.push({
+                id: genId(),
+                from: toId,
+                read: B,
+                to: fromId
+              })
+            }
           }
         }
       }
     }
 
-    for (const terminal of terminals) {
+
+    const automaton: FSAProjectGraph = {
+      projectType: 'FSA',
+      states,
+      transitions,
+      initialState: stateMap.get(grammar.startSymbol) ?? null
+    }
+
+    return automaton
+  } 
+  
+  else if (type == "context-free") {
+
+  stateCounter = 0
+
+  const states: AutomataState[] = []
+  const transitions: PDAAutomataTransition[] = []
+
+  // States
+  const q0 = genId()
+  const q1 = genId()
+  const qLoop = genId()
+  const qF = genId()
+
+  states.push(
+    {
+      id: q0,
+      x: 100,
+      y: 200,
+      isFinal: false,
+      name: "q0"
+    },
+    {
+      id: q1,
+      x: 250,
+      y: 200,
+      isFinal: false,
+      name: "q1"
+    },
+    {
+      id: qLoop,
+      x: 450,
+      y: 200,
+      isFinal: false,
+      name: "qloop"
+    },
+    {
+      id: qF,
+      x: 700,
+      y: 200,
+      isFinal: true,
+      name: "qF"
+    }
+  )
+
+  // Step 1:
+  // Push bottom stack marker $
+  transitions.push({
+    id: genId(),
+    from: q0,
+    to: q1,
+    read: "",
+    pop: "",
+    push: "$"
+  })
+
+  // Step 2:
+  // Push start symbol
+  transitions.push({
+    id: genId(),
+    from: q1,
+    to: qLoop,
+    read: "",
+    pop: "",
+    push: grammar.startSymbol
+  })
+
+  // Production transitions
+  for (const prod of grammar.productions) {
+
+    for (const rule of prod.right) {
+
+      let pushString = ""
+
+      // ε production
+      if (rule === "") {
+        pushString = ""
+      } else {
+        // Reverse RHS for stack order
+        pushString = rule.split("").reverse().join("")
+      }
 
       transitions.push({
         id: genId(),
         from: qLoop,
         to: qLoop,
-        read: terminal,
-        pop: terminal,
-        push: ""
+        read: "",
+        pop: prod.left,
+        push: pushString
       })
     }
+  }
+
+  // Terminal matching transitions
+  const terminals = new Set<string>()
+
+  for (const prod of grammar.productions) {
+    for (const rule of prod.right) {
+
+      for (const ch of rule) {
+
+        if (ch >= "a" && ch <= "z") {
+          terminals.add(ch)
+        }
+      }
+    }
+  }
+
+  for (const terminal of terminals) {
 
     transitions.push({
       id: genId(),
       from: qLoop,
-      to: qAccept,
-      read: "",
-      pop: "",
+      to: qLoop,
+      read: terminal,
+      pop: terminal,
       push: ""
     })
-
-    const automaton: PDAProjectGraph = {
-      projectType: 'PDA',
-      states,
-      transitions,
-      initialState: qStart
-    }
-
-    return automaton
   }
+
+  // Final transition:
+  // Pop bottom marker $
+  transitions.push({
+    id: genId(),
+    from: qLoop,
+    to: qF,
+    read: "",
+    pop: "$",
+    push: ""
+  })
+
+  const automaton: PDAProjectGraph = {
+    projectType: 'PDA',
+    states,
+    transitions,
+    initialState: q0
+  }
+
+  return automaton
+}
 }
