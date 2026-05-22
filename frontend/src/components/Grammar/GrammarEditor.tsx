@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { GrammarProjectGraph, Project } from '../../types/ProjectTypes'
-import { testString, showDerivations, detectType, convertToAutomata } from '../../util/grammar'
+import { testString, showDerivations, showFailedDerivation, detectType, convertToAutomata } from '../../util/grammar'
 import type { DerivationStep } from '../../util/grammar'
 import { useNavigate } from 'react-router-dom'
 import { useEvent } from '/src/hooks'
@@ -34,6 +34,8 @@ export default function GrammarEditor({ project }: Props) {
   const navigate = useNavigate()
   const [derivationSteps, setDerivationSteps] = useState<DerivationStep[]>([])
   const [derivationMessage, setDerivationMessage] = useState<string | null>(null)
+  const [derivationFailed, setDerivationFailed] = useState(false)
+  const [derivationFailureReason, setDerivationFailureReason] = useState<string | null>(null)
 
   const formatRightValue = (right: string[]) =>
     right.map(rule => (rule === "" ? "ε" : rule)).join(" | ")
@@ -257,17 +259,21 @@ const handleExportFSAJFLAP = () => {
       productions
     }
 
-    // Get all derivation steps from the grammar utility
     const steps = showDerivations(currentGrammar, startSymbol, input)
-    
+
     if (steps.length > 0 || startSymbol === input) {
       setDerivationSteps(steps)
-      setDerivationMessage(`✓ Successfully derived`)
-    } else {
-      // No derivation found
-      setDerivationSteps([])
-      setDerivationMessage(`✗ Cannot derive: ${input}`)
+      setDerivationFailed(false)
+      setDerivationFailureReason(null)
+      setDerivationMessage('✓ Successfully derived')
+      return
     }
+
+    const failed = showFailedDerivation(currentGrammar, startSymbol, input)
+    setDerivationSteps(failed.steps)
+    setDerivationFailed(true)
+    setDerivationFailureReason(failed.failureReason)
+    setDerivationMessage(null)
   }
 
   useEvent('exportFSAJFLAP', () => handleExportFSAJFLAP(), [startSymbol, productions])
@@ -386,7 +392,7 @@ const handleExportFSAJFLAP = () => {
               <button className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded" onClick={handleShowDerivation}>
                 Show Derivation
               </button>
-              {derivationSteps.length > 0 && (
+              {(derivationSteps.length > 0 || derivationFailed || derivationMessage) && (
                 <div className="mt-2 p-2 bg-gray-800 rounded text-sm">
                   <div>{startSymbol}</div>
                   {derivationSteps.map((step, i) => (
@@ -397,13 +403,17 @@ const handleExportFSAJFLAP = () => {
                       </span>
                     </div>
                   ))}
-                  {derivationMessage && <div>{derivationMessage}</div>}
-                </div>
-              )}
-              {derivationSteps.length === 0 && derivationMessage && (
-                <div className="mt-2 p-2 bg-gray-800 rounded text-sm">
-                  <div>{startSymbol}</div>
-                  <div>{derivationMessage}</div>
+                  {derivationFailed && (
+                    <div style={{ color: "#fca5a5", fontWeight: 700, marginTop: "0.25rem" }}>
+                      ✗ Failed here
+                    </div>
+                  )}
+                  {derivationFailed && derivationFailureReason && (
+                    <div style={{ marginTop: "0.25rem" }}>
+                      Why not accepted: {derivationFailureReason}
+                    </div>
+                  )}
+                  {!derivationFailed && derivationMessage && <div>{derivationMessage}</div>}
                 </div>
               )}
             </div>

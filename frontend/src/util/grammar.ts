@@ -90,6 +90,154 @@ export function showDerivations(
   return [];
 }
 
+export type FailedDerivationResult = {
+  steps: DerivationStep[]
+  finalString: string
+  failureReason: string
+}
+
+function partialDerivationScore(current: string, target: string): number {
+  let prefix = 0
+  while (
+    prefix < current.length &&
+    prefix < target.length &&
+    current[prefix] === target[prefix]
+  ) {
+    prefix++
+  }
+  return prefix * 1000 + current.length
+}
+
+function makeDerivationStep(
+  current: string,
+  next: string,
+  left: string,
+  right: string,
+  index: number
+): DerivationStep {
+  return {
+    from: current,
+    to: next,
+    ruleLeft: left,
+    ruleRight: right === "" ? "ε" : right,
+    replacementIndex: index,
+    replacementLength: left.length,
+    insertedLength: right.length,
+  }
+}
+
+function explainDerivationFailure(
+  current: string,
+  input: string,
+  grammar: GrammarProjectGraph
+): string {
+  if (current === input) {
+    return `The derived string matches "${input}", but no complete derivation was found.`
+  }
+
+  let canApplyRule = false
+  for (const prod of grammar.productions) {
+    if (!prod.left) continue
+    if (current.includes(prod.left)) {
+      canApplyRule = true
+      break
+    }
+  }
+
+  let prefix = 0
+  while (
+    prefix < current.length &&
+    prefix < input.length &&
+    current[prefix] === input[prefix]
+  ) {
+    prefix++
+  }
+
+  if (prefix === input.length && current.length > input.length) {
+    const extra = current.slice(input.length)
+    return `Derived "${current}" but the test string is "${input}" — cannot remove extra "${extra}".`
+  }
+
+  if (prefix === current.length && current.length < input.length) {
+    const missing = input.slice(current.length)
+    return `Derived "${current}" but the test string is "${input}" — cannot produce missing "${missing}".`
+  }
+
+  if (prefix > 0 && prefix < current.length && prefix < input.length) {
+    return `Derived "${current}" but the test string is "${input}" — differs at position ${prefix + 1} ("${current[prefix]}" vs "${input[prefix]}").`
+  }
+
+  if (!canApplyRule) {
+    return `Derived "${current}" but the test string is "${input}". No production rule can be applied.`
+  }
+
+  return `Derived "${current}" but the test string is "${input}". No complete derivation exists from this string.`
+}
+
+/** Longest partial derivation toward input when the string cannot be derived. */
+export function showFailedDerivation(
+  grammar: GrammarProjectGraph,
+  start: string,
+  input: string
+): FailedDerivationResult {
+  let bestSteps: DerivationStep[] = []
+  let bestFinal = start
+  let bestScore = partialDerivationScore(start, input)
+
+  const considerPath = (path: DerivationStep[], final: string) => {
+    const score = partialDerivationScore(final, input)
+    if (
+      path.length > bestSteps.length ||
+      (path.length === bestSteps.length && score > bestScore)
+    ) {
+      bestSteps = path
+      bestFinal = final
+      bestScore = score
+    }
+  }
+
+  const search = (current: string, path: DerivationStep[], visited: Set<string>) => {
+    if (current === input) return
+
+    if (visited.has(current)) {
+      considerPath(path, current)
+      return
+    }
+
+    const nextVisited = new Set(visited)
+    nextVisited.add(current)
+
+    let expanded = false
+    for (const prod of grammar.productions) {
+      const left = prod.left
+      if (!left) continue
+      for (const right of prod.right) {
+        let index = current.indexOf(left)
+        while (index !== -1) {
+          expanded = true
+          const next =
+            current.slice(0, index) + right + current.slice(index + left.length)
+          const step = makeDerivationStep(current, next, left, right, index)
+          search(next, [...path, step], nextVisited)
+          index = current.indexOf(left, index + 1)
+        }
+      }
+    }
+
+    if (!expanded) {
+      considerPath(path, current)
+    }
+  }
+
+  search(start, [], new Set())
+
+  return {
+    steps: bestSteps,
+    finalString: bestFinal,
+    failureReason: explainDerivationFailure(bestFinal, input, grammar),
+  }
+}
+
 export function testString(grammar: GrammarProjectGraph, str: string): boolean {
   return derives(grammar, grammar.startSymbol, str);
 }
