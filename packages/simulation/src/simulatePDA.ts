@@ -55,7 +55,9 @@ export const generateStack = (trace: PDAExecutionTrace[]) => {
     }
     // Handle push symbol if it exists
     if (trace[i].push !== '') {
-      tempStack.push(trace[i].push)
+      for (let j = 0; j < trace[i].push.length; j++) {
+      tempStack.push(trace[i].push[j])
+      }
     }
     trace[i].currentStack = JSON.parse(JSON.stringify(tempStack))
   }
