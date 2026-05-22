@@ -80,7 +80,9 @@ export class PDAGraph extends Graph<PDAState, PDAAutomataTransition> {
       }
       // Handle push symbol if it exists
       if (push !== '') {
-        nodeStack.push(push)
+        for (let i = 0; i < push.length; i++) {
+          nodeStack.push(push[i])
+        }
       }
       // If stack operations were valid, add the successor
       if (!invalidPop) {

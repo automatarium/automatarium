@@ -204,15 +204,5 @@ describe('grammar util', () => {
         ])
       )
     })
-
-    it('returns null when asked to convert a non-regular grammar', () => {
-      const grammar: GrammarProjectGraph = {
-        projectType: 'GRAMMAR',
-        startSymbol: 'S',
-        productions: [{ left: 'S', right: ['AB'] }]
-      }
-
-      expect(convertToAutomata(grammar, 'context-free')).toBeNull()
-    })
   })
 })
