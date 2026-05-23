@@ -33,7 +33,7 @@ import { Graph, Node, State } from '@automatarium/simulation/src/interfaces/grap
 import { FSAState } from '@automatarium/simulation/src/FSASearch'
 import { PDAState } from '@automatarium/simulation/src/PDASearch'
 import { TMState } from '@automatarium/simulation/src/TMSearch'
-import { buildProblem } from '@automatarium/simulation/src/utils'
+import { buildProblem, expandTransitions } from '@automatarium/simulation/src/utils'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
 import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
@@ -58,7 +58,16 @@ const TestingLab = () => {
   const { t } = useTranslation('common')
 
   // Graph state
-  const graph = useProjectStore(s => s.getGraph())
+  const states = useProjectStore(s => s.project.states)
+  const transitions = useProjectStore(s => s.project.transitions)
+  const initialState = useProjectStore(s => s.project.initialState)
+  const projectType  = useProjectStore(s => s.project.config.type)
+  const graph = useMemo(() => ({
+    states,
+    transitions: expandTransitions(transitions),
+    initialState,
+    projectType
+  }), [states, transitions, initialState, projectType])
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
   const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
@@ -69,7 +78,6 @@ const TestingLab = () => {
   const updateMultiTraceInput = useProjectStore(s => s.updateBatchTest)
   const removeMultiTraceInput = useProjectStore(s => s.removeBatchTest)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
-  const projectType = useProjectStore(s => s.project.config.type)
   const setPDAVisualiser = usePDAVisualiserStore(state => state.setStack)
 
   // Preference option to pause/unpause TM at Final State
