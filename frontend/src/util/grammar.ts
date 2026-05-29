@@ -10,94 +10,88 @@ export type DerivationStep = {
   insertedLength: number
 }
 
-function derives(grammar: GrammarProjectGraph, current: string, input: string): boolean {
-  if (current === input) return true;
-  // Do not stop when current is longer than input, because empty productions can shrink the string.
-
-  // For every production rule
-  for (const prod of grammar.productions) {
-    const left = prod.left;
-    for (const right of prod.right) {
-      // Find all occurrences of 'left' inside 'current'
-      let index = current.indexOf(left);
-      while (index !== -1) {
-        // Replace that occurrence and form a new string
-        const next =
-          current.slice(0, index) + right + current.slice(index + left.length);
-        if (derives(grammar, next, input)) return true;
-        // Check for another occurrence later in the string
-        index = current.indexOf(left, index + 1);
-      }
-    }
-  }
-
-  return false;
-}
-
-// Function based on derives() but returns the actual derivation steps
-export function showDerivations(
-  grammar: GrammarProjectGraph,
-  current: string,
-  input: string,
-  visited = new Set<string>()
-): DerivationStep[] {
-  // Base case: if current equals input, we've successfully derived it
-  if (current === input) {
-    return [];
-  }
-
-  // Do not stop when current is longer than input, because empty productions can shrink the string.
-
-  if (visited.has(current)) {
-    return [];
-  }
-
-  const nextVisited = new Set(visited)
-  nextVisited.add(current)
-
-  // Try all production rules
-  for (const prod of grammar.productions) {
-    const left = prod.left;
-    for (const right of prod.right) {
-      // Find all occurrences of 'left' inside 'current'
-      let index = current.indexOf(left);
-      while (index !== -1) {
-        // Replace that occurrence and form a new string
-        const next =
-          current.slice(0, index) + right + current.slice(index + left.length);
-
-        // Recursively find the rest of the derivation
-        const restDerivations = showDerivations(grammar, next, input, nextVisited);
-        if (restDerivations.length > 0 || next === input) {
-          // Found a complete derivation - return this step plus the rest
-          return [{
-            from: current,
-            to: next,
-            ruleLeft: left,
-            ruleRight: right === "" ? "ε" : right,
-            replacementIndex: index,
-            replacementLength: left.length,
-            insertedLength: right.length
-          }, ...restDerivations];
-        }
-
-        // Check for another occurrence later in the string
-        index = current.indexOf(left, index + 1);
-      }
-    }
-  }
-
-  return [];
-}
-
 export type FailedDerivationResult = {
   steps: DerivationStep[]
   finalString: string
   failureReason: string
 }
 
+export type DerivationPathResult = {
+  accepted: boolean
+  steps: DerivationStep[]
+  finalString: string
+  failureReason?: string
+}
+
+function derives(grammar: GrammarProjectGraph, current: string, input: string): boolean {
+  if (current === input) return true
+
+  for (const prod of grammar.productions) {
+    const left = prod.left
+    for (const right of prod.right) {
+      let index = current.indexOf(left)
+
+      while (index !== -1) {
+        const next =
+          current.slice(0, index) + right + current.slice(index + left.length)
+
+        if (derives(grammar, next, input)) return true
+
+        index = current.indexOf(left, index + 1)
+      }
+    }
+  }
+
+  return false
+}
+
+export function showDerivations(
+  grammar: GrammarProjectGraph,
+  current: string,
+  input: string,
+  visited = new Set<string>()
+): DerivationStep[] {
+  if (current === input) {
+    return []
+  }
+
+  if (visited.has(current)) {
+    return []
+  }
+
+  const nextVisited = new Set(visited)
+  nextVisited.add(current)
+
+  for (const prod of grammar.productions) {
+    const left = prod.left
+
+    for (const right of prod.right) {
+      let index = current.indexOf(left)
+
+      while (index !== -1) {
+        const next =
+          current.slice(0, index) + right + current.slice(index + left.length)
+
+        const restDerivations = showDerivations(grammar, next, input, nextVisited)
+
+        if (restDerivations.length > 0 || next === input) {
+          return [
+            makeDerivationStep(current, next, left, right, index),
+            ...restDerivations
+          ]
+        }
+
+        index = current.indexOf(left, index + 1)
+      }
+    }
+  }
+
+  return []
+}
+
 function partialDerivationScore(current: string, target: string): number {
   let prefix = 0
+
   while (
     prefix < current.length &&
     prefix < target.length &&
@@ -105,6 +99,7 @@ function partialDerivationScore(current: string, target: string): number {
   ) {
     prefix++
   }
+
   return prefix * 1000 + current.length
 }
 
@@ -119,10 +114,10 @@ function makeDerivationStep(
     from: current,
     to: next,
     ruleLeft: left,
-    ruleRight: right === "" ? "ε" : right,
+    ruleRight: right === '' ? 'ε' : right,
     replacementIndex: index,
     replacementLength: left.length,
-    insertedLength: right.length,
+    insertedLength: right.length
   }
 }
 
@@ -136,8 +131,10 @@ function explainDerivationFailure(
   }
 
   let canApplyRule = false
+
   for (const prod of grammar.productions) {
     if (!prod.left) continue
+
     if (current.includes(prod.left)) {
       canApplyRule = true
       break
@@ -145,6 +142,7 @@ function explainDerivationFailure(
   }
 
   let prefix = 0
+
   while (
     prefix < current.length &&
     prefix < input.length &&
@@ -174,7 +172,6 @@ function explainDerivationFailure(
   return `Derived "${current}" but the test string is "${input}". No complete derivation exists from this string.`
 }
 
-/** Longest partial derivation toward input when the string cannot be derived. */
 export function showFailedDerivation(
   grammar: GrammarProjectGraph,
   start: string,
@@ -186,6 +183,7 @@ export function showFailedDerivation(
 
   const considerPath = (path: DerivationStep[], final: string) => {
     const score = partialDerivationScore(final, input)
+
     if (
       path.length > bestSteps.length ||
       (path.length === bestSteps.length && score > bestScore)
@@ -196,7 +194,11 @@ export function showFailedDerivation(
     }
   }
 
-  const search = (current: string, path: DerivationStep[], visited: Set<string>) => {
+  const search = (
+    current: string,
+    path: DerivationStep[],
+    visited: Set<string>
+  ) => {
     if (current === input) return
 
     if (visited.has(current)) {
@@ -208,17 +210,24 @@ export function showFailedDerivation(
     nextVisited.add(current)
 
     let expanded = false
+
     for (const prod of grammar.productions) {
       const left = prod.left
       if (!left) continue
+
       for (const right of prod.right) {
         let index = current.indexOf(left)
+
         while (index !== -1) {
           expanded = true
+
           const next =
             current.slice(0, index) + right + current.slice(index + left.length)
+
           const step = makeDerivationStep(current, next, left, right, index)
+
           search(next, [...path, step], nextVisited)
+
           index = current.indexOf(left, index + 1)
         }
       }
@@ -234,89 +243,165 @@ export function showFailedDerivation(
   return {
     steps: bestSteps,
     finalString: bestFinal,
-    failureReason: explainDerivationFailure(bestFinal, input, grammar),
+    failureReason: explainDerivationFailure(bestFinal, input, grammar)
   }
+}
+
+export function showMultipleDerivations(
+  grammar: GrammarProjectGraph,
+  start: string,
+  input: string,
+  maxResults = 5
+): DerivationPathResult[] {
+  const results: DerivationPathResult[] = []
+
+  const search = (
+    current: string,
+    path: DerivationStep[],
+    visited: Set<string>
+  ) => {
+    if (results.length >= maxResults) return
+
+    if (current === input) {
+      results.push({
+        accepted: true,
+        steps: path,
+        finalString: current
+      })
+      return
+    }
+
+    if (visited.has(current)) {
+      results.push({
+        accepted: false,
+        steps: path,
+        finalString: current,
+        failureReason: explainDerivationFailure(current, input, grammar)
+      })
+      return
+    }
+
+    const nextVisited = new Set(visited)
+    nextVisited.add(current)
+
+    let expanded = false
+
+    for (const prod of grammar.productions) {
+      const left = prod.left
+      if (!left) continue
+
+      for (const right of prod.right) {
+        let index = current.indexOf(left)
+
+        while (index !== -1) {
+          expanded = true
+
+          const next =
+            current.slice(0, index) + right + current.slice(index + left.length)
+
+          const step = makeDerivationStep(current, next, left, right, index)
+
+          search(next, [...path, step], nextVisited)
+
+          index = current.indexOf(left, index + 1)
+        }
+      }
+    }
+
+    if (!expanded) {
+      results.push({
+        accepted: false,
+        steps: path,
+        finalString: current,
+        failureReason: explainDerivationFailure(current, input, grammar)
+      })
+    }
+  }
+
+  search(start, [], new Set())
+
+  return results
 }
 
 export function testString(grammar: GrammarProjectGraph, str: string): boolean {
-  return derives(grammar, grammar.startSymbol, str);
+  return derives(grammar, grammar.startSymbol, str)
 }
 
-export function detectType(grammar: GrammarProjectGraph): "regular (right-linear)" | "regular (left-linear)" | "context-free" | "context-sensitive" | "unrestricted" | "none" {
-  if (grammar.productions.length == 0) {
-    return "none"
+export function detectType(grammar: GrammarProjectGraph): 'regular (right-linear)' | 'regular (left-linear)' | 'context-free' | 'context-sensitive' | 'unrestricted' | 'none' {
+  if (grammar.productions.length === 0) {
+    return 'none'
   }
-  //assume the grammar is valid for all types until proven otherwise
+
   let isRegular = true
   let isContextFree = true
   let isContextSensitive = true
   let rightLinear = null
 
-  for (const prod of grammar.productions) { //iterate through each production rule
+  for (const prod of grammar.productions) {
     const left = prod.left
+
     for (const rule of prod.right) {
-      //regular grammar check (only one non-terminal on LHS, and RHS is either a single terminal or a terminal + non-terminal)
-      if (!(left.length === 1 && left >= "A" && left <= "Z")) {
+      if (!(left.length === 1 && left >= 'A' && left <= 'Z')) {
         isRegular = false
       } else {
-        if (rule !== "") {
-          const isSingleTerminal = rule.length === 1 && rule[0] >= "a" && rule[0] <= "z";
-          const isRightLinearForm = rule.length === 2 && rule[0] >= "a" && rule[0] <= "z" && rule[1] >= "A" && rule[1] <= "Z";
-          const isLeftLinearForm = rule.length === 2 && rule[0] >= "A" && rule[0] <= "Z" && rule[1] >= "a" && rule[1] <= "z";
+        if (rule !== '') {
+          const isSingleTerminal = rule.length === 1 && rule[0] >= 'a' && rule[0] <= 'z'
+          const isRightLinearForm = rule.length === 2 && rule[0] >= 'a' && rule[0] <= 'z' && rule[1] >= 'A' && rule[1] <= 'Z'
+          const isLeftLinearForm = rule.length === 2 && rule[0] >= 'A' && rule[0] <= 'Z' && rule[1] >= 'a' && rule[1] <= 'z'
+
           if (!(isSingleTerminal || isRightLinearForm || isLeftLinearForm)) {
-            isRegular = false;
+            isRegular = false
           } else {
-            //determin left or right linear format
             if (isRightLinearForm) {
               if (rightLinear === false) {
-                isRegular = false; //mixed linearity can't be regular
+                isRegular = false
               } else {
-                rightLinear = true;
+                rightLinear = true
               }
             } else if (isLeftLinearForm) {
               if (rightLinear === true) {
-                isRegular = false; //mixed linearity can't be regular
+                isRegular = false
               } else {
-                rightLinear = false;
+                rightLinear = false
               }
             }
           }
         }
       }
 
-      //context-free grammar check (only one non-terminal on LHS)
-      if (!(left.length === 1 && left >= "A" && left <= "Z")) {
+      if (!(left.length === 1 && left >= 'A' && left <= 'Z')) {
         isContextFree = false
       }
 
-      //context-sensitive grammar check (length of RHS must be >= length of LHS, except for the case of start symbol producing empty string)
-      if (rule.length < left.length && !(left === grammar.startSymbol && rule === "")) {
+      if (rule.length < left.length && !(left === grammar.startSymbol && rule === '')) {
         isContextSensitive = false
       }
     }
   }
 
-  if (isRegular) return `regular (${rightLinear ? "right-linear" : "left-linear"})`;
-  if (isContextFree) return "context-free"
-  if (isContextSensitive) return "context-sensitive"
-  return "unrestricted"
+  if (isRegular) return `regular (${rightLinear ? 'right-linear' : 'left-linear'})`
+  if (isContextFree) return 'context-free'
+  if (isContextSensitive) return 'context-sensitive'
+
+  return 'unrestricted'
 }
-
-
 
 let stateCounter = 0
 const genId = () => stateCounter++
 
 export function convertToAutomata(grammar: GrammarProjectGraph, type: string) {
-if (type !== "regular" && type !== "context-free") {
-  console.warn("Only regular grammars can be converted so far.")
-  return null
+  if (type !== 'regular' && type !== 'context-free') {
+    console.warn('Only regular grammars can be converted so far.')
+    return null
   }
-  if (type == "regular") {
+
+  if (type === 'regular') {
     stateCounter = 0
+
     const stateMap = new Map<string, number>()
     const states: AutomataState[] = []
     const transitions: FSAAutomataTransition[] = []
+
     for (const prod of grammar.productions) {
       if (!stateMap.has(prod.left)) {
         const id = genId()
@@ -332,6 +417,7 @@ if (type !== "regular" && type !== "context-free") {
     }
 
     const finalStateId = genId()
+
     states.push({
       id: finalStateId,
       x: 500,
@@ -342,23 +428,24 @@ if (type !== "regular" && type !== "context-free") {
 
     for (const prod of grammar.productions) {
       const fromId = stateMap.get(prod.left)!
+
       for (const rule of prod.right) {
-        if (rule === "") {
+        if (rule === '') {
           const state = states.find(s => s.id === fromId)
           if (state) state.isFinal = true
-        }
-        else if (rule.length === 1 && rule >= "a" && rule <= "z") {
+        } else if (rule.length === 1 && rule >= 'a' && rule <= 'z') {
           transitions.push({
             id: genId(),
             from: fromId,
             read: rule,
             to: finalStateId
           })
-        }
-        else if (rule.length === 2) {
+        } else if (rule.length === 2) {
           const [a, B] = rule
-          if (a >= "a" && a <= "z" && B >= "A" && B <= "Z") {
+
+          if (a >= 'a' && a <= 'z' && B >= 'A' && B <= 'Z') {
             const toId = stateMap.get(B)
+
             if (toId !== undefined) {
               transitions.push({
                 id: genId(),
@@ -367,8 +454,9 @@ if (type !== "regular" && type !== "context-free") {
                 to: toId
               })
             }
-          } else if (a >= "A" && a <= "Z" && B >= "a" && B <= "z") {
+          } else if (a >= 'A' && a <= 'Z' && B >= 'a' && B <= 'z') {
             const toId = stateMap.get(a)
+
             if (toId !== undefined) {
               transitions.push({
                 id: genId(),
@@ -382,7 +470,6 @@ if (type !== "regular" && type !== "context-free") {
       }
     }
 
-
     const automaton: FSAProjectGraph = {
       projectType: 'FSA',
       states,
@@ -391,145 +478,130 @@ if (type !== "regular" && type !== "context-free") {
     }
 
     return automaton
-  } 
-  
-  else if (type == "context-free") {
+  }
 
-  stateCounter = 0
+  if (type === 'context-free') {
+    stateCounter = 0
 
-  const states: AutomataState[] = []
-  const transitions: PDAAutomataTransition[] = []
+    const states: AutomataState[] = []
+    const transitions: PDAAutomataTransition[] = []
 
-  // States
-  const q0 = genId()
-  const q1 = genId()
-  const qLoop = genId()
-  const qF = genId()
+    const q0 = genId()
+    const q1 = genId()
+    const qLoop = genId()
+    const qF = genId()
 
-  states.push(
-    {
-      id: q0,
-      x: 100,
-      y: 200,
-      isFinal: false,
-      name: "q0"
-    },
-    {
-      id: q1,
-      x: 250,
-      y: 200,
-      isFinal: false,
-      name: "q1"
-    },
-    {
-      id: qLoop,
-      x: 450,
-      y: 200,
-      isFinal: false,
-      name: "qloop"
-    },
-    {
-      id: qF,
-      x: 700,
-      y: 200,
-      isFinal: true,
-      name: "qF"
-    }
-  )
-
-  // Step 1:
-  // Push bottom stack marker $
-  transitions.push({
-    id: genId(),
-    from: q0,
-    to: q1,
-    read: "",
-    pop: "",
-    push: "$"
-  })
-
-  // Step 2:
-  // Push start symbol
-  transitions.push({
-    id: genId(),
-    from: q1,
-    to: qLoop,
-    read: "",
-    pop: "",
-    push: grammar.startSymbol
-  })
-
-  // Production transitions
-  for (const prod of grammar.productions) {
-
-    for (const rule of prod.right) {
-
-      let pushString = ""
-
-      // ε production
-      if (rule === "") {
-        pushString = ""
-      } else {
-        // Reverse RHS for stack order
-        pushString = rule.split("").reverse().join("")
+    states.push(
+      {
+        id: q0,
+        x: 100,
+        y: 200,
+        isFinal: false,
+        name: 'q0'
+      },
+      {
+        id: q1,
+        x: 250,
+        y: 200,
+        isFinal: false,
+        name: 'q1'
+      },
+      {
+        id: qLoop,
+        x: 450,
+        y: 200,
+        isFinal: false,
+        name: 'qloop'
+      },
+      {
+        id: qF,
+        x: 700,
+        y: 200,
+        isFinal: true,
+        name: 'qF'
       }
+    )
 
+    transitions.push({
+      id: genId(),
+      from: q0,
+      to: q1,
+      read: '',
+      pop: '',
+      push: '$'
+    })
+
+    transitions.push({
+      id: genId(),
+      from: q1,
+      to: qLoop,
+      read: '',
+      pop: '',
+      push: grammar.startSymbol
+    })
+
+    for (const prod of grammar.productions) {
+      for (const rule of prod.right) {
+        let pushString = ''
+
+        if (rule === '') {
+          pushString = ''
+        } else {
+          pushString = rule.split('').reverse().join('')
+        }
+
+        transitions.push({
+          id: genId(),
+          from: qLoop,
+          to: qLoop,
+          read: '',
+          pop: prod.left,
+          push: pushString
+        })
+      }
+    }
+
+    const terminals = new Set<string>()
+
+    for (const prod of grammar.productions) {
+      for (const rule of prod.right) {
+        for (const ch of rule) {
+          if (ch >= 'a' && ch <= 'z') {
+            terminals.add(ch)
+          }
+        }
+      }
+    }
+
+    for (const terminal of terminals) {
       transitions.push({
         id: genId(),
         from: qLoop,
         to: qLoop,
-        read: "",
-        pop: prod.left,
-        push: pushString
+        read: terminal,
+        pop: terminal,
+        push: ''
       })
     }
-  }
-
-  // Terminal matching transitions
-  const terminals = new Set<string>()
-
-  for (const prod of grammar.productions) {
-    for (const rule of prod.right) {
-
-      for (const ch of rule) {
-
-        if (ch >= "a" && ch <= "z") {
-          terminals.add(ch)
-        }
-      }
-    }
-  }
-
-  for (const terminal of terminals) {
 
     transitions.push({
       id: genId(),
       from: qLoop,
-      to: qLoop,
-      read: terminal,
-      pop: terminal,
-      push: ""
+      to: qF,
+      read: '',
+      pop: '$',
+      push: ''
     })
+
+    const automaton: PDAProjectGraph = {
+      projectType: 'PDA',
+      states,
+      transitions,
+      initialState: q0
+    }
+
+    return automaton
   }
 
-  // Final transition:
-  // Pop bottom marker $
-  transitions.push({
-    id: genId(),
-    from: qLoop,
-    to: qF,
-    read: "",
-    pop: "$",
-    push: ""
-  })
-
-  const automaton: PDAProjectGraph = {
-    projectType: 'PDA',
-    states,
-    transitions,
-    initialState: q0
-  }
-
-  return automaton
-}
+  return null
 }
