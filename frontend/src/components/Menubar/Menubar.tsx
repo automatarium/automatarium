@@ -23,6 +23,14 @@ import {
 import menus, { grammarMenus } from './menus'
 import { ContextItem } from '/src/components/ContextMenus/contextItem'
 import { useTranslation } from 'react-i18next'
+import type { Project } from '/src/types/ProjectTypes'
+
+function projectItemCount(project: Project): number {
+  if (project.projectType === 'GRAMMAR') {
+    return project.comments.length + project.productions.length
+  }
+  return project.comments.length + project.states.length + project.transitions.length
+}
 
 // Extend dayjs
 dayjs.extend(relativeTime)
@@ -127,7 +135,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
           <a href="/new" onClick={e => {
             e.preventDefault()
             const project = useProjectStore.getState().project
-            const totalItems = project.comments.length + project.states.length + project.transitions.length
+            const totalItems = projectItemCount(project)
             if (totalItems > 0) {
               if (currentModule != null) {
                 saveLabProject()

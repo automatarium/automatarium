@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { GrammarProjectGraph, Project } from '../../types/ProjectTypes'
 import {
   testString,
-  showDerivations,
   showFailedDerivation,
   showMultipleDerivations,
   detectType,
@@ -277,200 +276,245 @@ export default function GrammarEditor({ project }: Props) {
     return (
       <>
         {beforeChanged}
-        <span style={{ color: '#86efac', fontWeight: 700 }}>
-          {changed || 'ε'}
-        </span>
+        <span className="grammar-derivation-highlight">{changed || 'ε'}</span>
         {afterChanged}
       </>
     )
   }
 
+  const renderDerivationSteps = (steps: DerivationStep[]) => (
+    <>
+      <div className="grammar-derivation-step">{startSymbol || '—'}</div>
+      {steps.map((step, i) => (
+        <div key={i} className="grammar-derivation-step">
+          ⇒ {renderDerivedString(step)}
+          <span className="grammar-rule-used">
+            (used {step.ruleLeft} → {step.ruleRight || 'ε'})
+          </span>
+        </div>
+      ))}
+    </>
+  )
+
+  const showMultiPathPanel = derivationPaths.length > 1
+  const showSingleDerivationPanel =
+    !showMultiPathPanel &&
+    (derivationSteps.length > 0 || derivationFailed || derivationMessage)
+
+  const isAccepted = result?.includes('Accepted')
+
   useEvent('exportFSAJFLAP', () => handleExportFSAJFLAP(), [startSymbol, productions])
 
   return (
-    <div className="grammar-editor-page h-full w-full flex bg-gray-800 text-gray-100">
-      <div className="h-full w-full flex bg-gray-800 text-gray-100">
-        <div className="w-14 bg-gray-900 border-r border-gray-700" />
+    <div className="grammar-editor-page h-full w-full text-gray-100">
+      <div className="grammar-editor-layout">
+        <section className="grammar-panel">
+          <h2 className="grammar-header">Grammar</h2>
 
-        <div className="flex-1 pt-1 px-6 pb-6 grid grid-cols-2 gap-6">
-          <div className="bg-gray-900 rounded-lg p-2 shadow">
-            <h2 className="grammar-header">Grammar Editor</h2>
+          <label className="grammar-section-label" htmlFor="grammar-start-symbol">
+            Start symbol
+          </label>
+          <input
+            id="grammar-start-symbol"
+            className="input-box grammar-start-input"
+            type="text"
+            value={startSymbol}
+            onChange={e => setStartSymbol(e.target.value)}
+            maxLength={4}
+          />
 
-            <label className="font-semibold">Start Symbol</label>
+          <h3 className="grammar-section-label grammar-section-label--spaced">
+            Productions
+          </h3>
+
+          <div className="grammar-productions-list">
+            {productions.map((p, i) => (
+              <div key={i} className="grammar-production-row">
+                <input
+                  className="input-box"
+                  type="text"
+                  value={p.left}
+                  onChange={e => updateLeft(i, e.target.value)}
+                  placeholder="S"
+                  aria-label={`Production ${i + 1} left`}
+                />
+                <span className="grammar-production-arrow" aria-hidden>
+                  →
+                </span>
+                <input
+                  className="input-box-right"
+                  type="text"
+                  value={editingRight[i] ?? formatRightValue(p.right)}
+                  onChange={e => updateRight(i, e.target.value)}
+                  onFocus={() => {
+                    if (formatRightValue(p.right) === 'ε') {
+                      setEditingRight({ ...editingRight, [i]: '' })
+                    }
+                  }}
+                  onBlur={e => commitRight(i, e.target.value)}
+                  placeholder="ε or aB | c"
+                  aria-label={`Production ${i + 1} right`}
+                />
+                <button
+                  type="button"
+                  className="grammar-production-delete"
+                  onClick={() => deleteProduction(i)}
+                  aria-label={`Delete production ${i + 1}`}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+
+          <div className="grammar-actions">
+            <button type="button" className="grammar-button" onClick={addProduction}>
+              + Add production
+            </button>
+            <button type="button" className="grammar-button" onClick={handleDetectType}>
+              Detect type
+            </button>
+          </div>
+
+          {grammarType && (
+            <div className="grammar-type">
+              <span className="grammar-type-badge">{grammarType}</span>
+              {(grammarType === 'regular (left-linear)' ||
+                grammarType === 'regular (right-linear)') ? (
+                <button type="button" className="convert-button" onClick={handleExportToFSA}>
+                  Export as FSA
+                </button>
+              ) : grammarType === 'context-free' ? (
+                <button type="button" className="convert-button" onClick={handleExportToPDA}>
+                  Export as PDA
+                </button>
+              ) : null}
+            </div>
+          )}
+        </section>
+
+        <section className="grammar-panel">
+          <h2 className="grammar-panel-title">Test &amp; derivation</h2>
+
+          <label className="grammar-section-label" htmlFor="grammar-test-input">
+            Test string
+          </label>
+          <div className="grammar-test-row">
             <input
+              id="grammar-test-input"
               className="input-box"
               type="text"
-              value={startSymbol}
-              onChange={e => setStartSymbol(e.target.value)}
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              placeholder="e.g. aabc"
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleTest()
+              }}
             />
+            <button type="button" className="grammar-button" onClick={handleTest}>
+              Test
+            </button>
+          </div>
 
-            <h3 className="mt-4 mb-2 font-semibold">Productions</h3>
+          {result && (
+            <div
+              className={`grammar-status ${
+                isAccepted ? 'grammar-status--accepted' : 'grammar-status--rejected'
+              }`}
+              role="status"
+            >
+              {isAccepted ? '✓ Accepted' : '✗ Rejected'}
+            </div>
+          )}
 
-            <div className="space-y-2">
-              {productions.map((p, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <input
-                    className="input-box"
-                    type="text"
-                    value={p.left}
-                    onChange={e => updateLeft(i, e.target.value)}
-                    placeholder="LHS"
-                  />
-                  →
-                  <input
-                    className="input-box-right"
-                    type="text"
-                    value={editingRight[i] ?? formatRightValue(p.right)}
-                    onChange={e => updateRight(i, e.target.value)}
-                    onFocus={() => {
-                      if (formatRightValue(p.right) === 'ε') {
-                        setEditingRight({ ...editingRight, [i]: '' })
-                      }
-                    }}
-                    onBlur={e => commitRight(i, e.target.value)}
-                    placeholder="ε"
-                  />
-                  <button
-                    className="text-red-400 hover:text-red-600"
-                    onClick={() => deleteProduction(i)}
-                  >
-                    ✖
-                  </button>
+          <button
+            type="button"
+            className="grammar-button-primary"
+            onClick={handleShowDerivation}
+            disabled={!input.trim() && !startSymbol}
+          >
+            Show derivation
+          </button>
+
+          {showSingleDerivationPanel && (
+            <div className="grammar-derivation-block">
+              {renderDerivationSteps(derivationSteps)}
+
+              {derivationFailed && (
+                <div className="grammar-derivation-failed">✗ Failed here</div>
+              )}
+
+              {derivationFailed && derivationFailureReason && (
+                <div className="grammar-derivation-reason">
+                  <strong>Why not accepted:</strong> {derivationFailureReason}
+                </div>
+              )}
+
+              {derivationMessage && (
+                <div
+                  className={`grammar-derivation-message ${
+                    !derivationFailed ? 'grammar-derivation-message--success' : ''
+                  }`}
+                >
+                  {derivationMessage}
+                </div>
+              )}
+            </div>
+          )}
+
+          {showMultiPathPanel && (
+            <>
+              {derivationMessage && (
+                <div
+                  className={`grammar-derivation-message ${
+                    !derivationFailed ? 'grammar-derivation-message--success' : ''
+                  }`}
+                  style={{ marginTop: '1rem' }}
+                >
+                  {derivationMessage}
+                </div>
+              )}
+
+              <div className="grammar-paths-header">
+                {derivationPaths.length} derivation paths
+              </div>
+
+              {derivationPaths.map((path, pathIndex) => (
+                <div
+                  key={pathIndex}
+                  className={`grammar-path-card ${
+                    path.accepted
+                      ? 'grammar-path-card--accepted'
+                      : 'grammar-path-card--failed'
+                  }`}
+                >
+                  <div className="grammar-path-card-title">
+                    <span>Path {pathIndex + 1}</span>
+                    <span
+                      className={`grammar-path-badge ${
+                        path.accepted
+                          ? 'grammar-path-badge--accepted'
+                          : 'grammar-path-badge--failed'
+                      }`}
+                    >
+                      {path.accepted ? 'Accepted' : 'Failed'}
+                    </span>
+                  </div>
+
+                  <div className="grammar-derivation-block" style={{ marginTop: 0, maxHeight: 220 }}>
+                    {renderDerivationSteps(path.steps)}
+                  </div>
+
+                  {!path.accepted && path.failureReason && (
+                    <div className="grammar-derivation-reason" style={{ marginTop: '0.5rem' }}>
+                      {path.failureReason}
+                    </div>
+                  )}
                 </div>
               ))}
-            </div>
-
-            <button className="grammar-button" onClick={addProduction}>
-              + Add Production
-            </button>
-
-            <button className="grammar-button" onClick={handleDetectType}>
-              Detect Grammar Type
-            </button>
-
-            {grammarType && (
-              <div className="grammar-type">
-                Type: {grammarType}
-
-                {(grammarType === 'regular (left-linear)' ||
-                  grammarType === 'regular (right-linear)') ? (
-                  <button className="convert-button" onClick={handleExportToFSA}>
-                    Export as FSA
-                  </button>
-                ) : grammarType === 'context-free' ? (
-                  <button className="convert-button" onClick={handleExportToPDA}>
-                    Export as PDA
-                  </button>
-                ) : null}
-              </div>
-            )}
-          </div>
-
-          <div className="bg-gray-900 rounded-lg p-4 shadow">
-            <h2 className="text-xl font-bold mb-4">Test String</h2>
-
-            <div className="flex items-center">
-              <input
-                className="input-box"
-                type="text"
-                value={input}
-                onChange={e => setInput(e.target.value)}
-                placeholder="Enter string"
-              />
-
-              <button className="grammar-button" onClick={handleTest}>
-                Test
-              </button>
-            </div>
-
-            {result && (
-              <div
-                className={`mt-4 px-3 py-2 rounded font-semibold ${
-                  result.includes('Accepted') ? 'bg-green-700' : 'bg-red-700'
-                }`}
-              >
-                {result}
-              </div>
-            )}
-
-            <div>
-              <button
-                className="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 px-4 rounded"
-                onClick={handleShowDerivation}
-              >
-                Show Derivation
-              </button>
-
-              {(derivationSteps.length > 0 || derivationFailed || derivationMessage) && (
-                <div className="mt-2 p-2 bg-gray-800 rounded text-sm">
-                  <div>{startSymbol}</div>
-
-                  {derivationSteps.map((step, i) => (
-                    <div key={i}>
-                      ⇒ {renderDerivedString(step)}
-                      <span style={{ color: '#a3a3a3', marginLeft: '0.5rem' }}>
-                        (used {step.ruleLeft} → {step.ruleRight || 'ε'})
-                      </span>
-                    </div>
-                  ))}
-
-                  {derivationFailed && (
-                    <div style={{ color: '#fca5a5', fontWeight: 700, marginTop: '0.25rem' }}>
-                      ✗ Failed here
-                    </div>
-                  )}
-
-                  {derivationFailed && derivationFailureReason && (
-                    <div style={{ marginTop: '0.25rem' }}>
-                      Why not accepted: {derivationFailureReason}
-                    </div>
-                  )}
-
-                  {derivationMessage && <div>{derivationMessage}</div>}
-                </div>
-              )}
-
-              {derivationPaths.length > 1 && (
-                <div className="mt-3 p-2 bg-gray-800 rounded text-sm">
-                  <strong>Possible derivations: {derivationPaths.length}</strong>
-
-                  {derivationPaths.map((path, pathIndex) => (
-                    <div
-                      key={pathIndex}
-                      style={{
-                        marginTop: '0.5rem',
-                        padding: '0.5rem',
-                        background: '#111827',
-                        borderRadius: '0.375rem'
-                      }}
-                    >
-                      <div style={{ fontWeight: 700 }}>
-                        Derivation {pathIndex + 1}: {path.accepted ? 'Accepted' : 'Failed'}
-                      </div>
-
-                      <div>{startSymbol}</div>
-
-                      {path.steps.map((step, stepIndex) => (
-                        <div key={stepIndex}>
-                          ⇒ {step.to}
-                          <span style={{ color: '#a3a3a3', marginLeft: '0.5rem' }}>
-                            (used {step.ruleLeft} → {step.ruleRight || 'ε'})
-                          </span>
-                        </div>
-                      ))}
-
-                      {!path.accepted && path.failureReason && (
-                        <div style={{ color: '#fca5a5', marginTop: '0.25rem' }}>
-                          ✗ {path.failureReason}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
+            </>
+          )}
+        </section>
       </div>
     </div>
   )

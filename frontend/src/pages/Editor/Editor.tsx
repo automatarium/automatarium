@@ -54,21 +54,10 @@ function Editor() {
       <Menubar isSaving={isSaving} />
 
       {projectType === "GRAMMAR" ? (
-        // Only use top menu bar for grammar projects
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-          <div
-            style={{
-              maxWidth: "1200px", 
-              width: "100%",
-              padding: "1rem",
-              fontSize: "1.5rem", 
-              lineHeight: "1.6",
-            }}
-          >
-            <GrammarEditor
-              project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
-            />
-          </div>
+        <div className="grammar-editor-shell">
+          <GrammarEditor
+            project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
+          />
         </div>
 
           ) : (
