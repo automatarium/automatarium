@@ -6,7 +6,7 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
-import { TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
+import { AutomataProjectGraph, TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
 import { useTranslation } from 'react-i18next'
 
 const Info = () => {
@@ -17,33 +17,37 @@ const Info = () => {
   const projectType = useProjectStore(s => s.project.config.type)
   const { t } = useTranslation('common')
 
+  const automataGraph = graph.projectType === 'GRAMMAR' ? null : graph as AutomataProjectGraph
+
   // Function to get name of state from an id
   const getStateName = useCallback((id: number) =>
-    graph.states.find(s => s.id === id)?.name || `${statePrefix ?? 'q'}${id}`,
+    graph.states?.find(s => s.id === id)?.name || `${statePrefix ?? 'q'}${id}`,
   [graph.states, statePrefix]
   )
 
   // Determine alphabet
   const alphabet = useMemo(() => {
-    return Array.from(
-      new Set(
-      (graph.transitions as TMAutomataTransition[])
-        .reduce((acc, tr) => {
-          // Type assertion here
-          return tr.read.startsWith('!')
-            ? [...acc, tr.read]
-            : [...acc, ...tr.read.split('')]
-        }, [] as string[])
-        .sort() as string[]
-      )
-    )
-  }, [transitions])
+    if (!automataGraph) { return [] }
+
+    const symbolSet = new Set<string>()
+    for (const transition of automataGraph.transitions) {
+      if (transition.read.startsWith('!')) {
+        symbolSet.add(transition.read)
+      } else {
+        for (const symbol of transition.read.split('')) {
+          symbolSet.add(symbol)
+        }
+      }
+    }
+
+    return Array.from(symbolSet).sort()
+  }, [automataGraph])
 
   // Determine stack alphabet
   const stackAlphabet = useMemo(() => {
-    if (projectType !== 'PDA') return []
+    if (projectType !== 'PDA' || !automataGraph) return []
 
-    const pdaGraph = graph as PDAProjectGraph
+    const pdaGraph = automataGraph as PDAProjectGraph
     const stackAlphabetSet = new Set<string>()
 
     pdaGraph.transitions.forEach((transition) => {
@@ -51,21 +55,19 @@ const Info = () => {
       if (transition.push) stackAlphabetSet.add(transition.push)
     })
     return Array.from(stackAlphabetSet).sort()
-  }, [graph.transitions])
+  }, [automataGraph, projectType])
 
   const transitionMap = useMemo(() => {
     const map = new Map<[StateID, string], StateID[]>() // (ID, Symbol) -> ID[]
+    if (!automataGraph) { return map }
     for (const state of states ?? []) {
       for (const symbol of alphabet) {
-        // Important it is set to variable, since the key needs to share the address
         const key: [number, string] = [state.id, symbol]
-        const transitions = validTransitions(graph, state.id, symbol)
+        const transitions = validTransitions(automataGraph, state.id, symbol)
         for (const { transition } of transitions) {
-          // Record accessibility after transition
           map.set(key, Array.from(new Set([...map.get(key) ?? [], transition.to])))
-          // Record accessibility of states indirectly accessible after transition via lambdas
           if (transition.read.length > 0) {
-            const lambdaClosure = closureWithPredicate(graph, transition.to, tr => tr.read.length === 0)
+            const lambdaClosure = closureWithPredicate(automataGraph, transition.to, tr => tr.read.length === 0)
             for (const { state } of lambdaClosure) {
               map.set(key, Array.from(new Set([...map.get(key) ?? [], state])))
             }
@@ -74,7 +76,7 @@ const Info = () => {
       }
     }
     return map
-  }, [states, alphabet, graph])
+  }, [states, alphabet, automataGraph])
 
   return <>
     <SectionLabel>{t('info.alphabet')}</SectionLabel>

@@ -145,6 +145,9 @@ export type GrammarProjectGraph = {
     projectType: 'GRAMMAR'
     startSymbol: string
     productions: GrammarProduction[]
+    states?: undefined
+    transitions?: undefined
+    initialState?: undefined
 }
 
 /**
@@ -160,18 +163,36 @@ export type AutomataProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProject
 export type ProjectGraph = AutomataProjectGraph | GrammarProjectGraph
 
 /**
- * What a project for the frontend looks like.
- * This contains everything that is needed to display a graph
+ * Automata project with state/transition graph fields.
  */
-export type Project = ProjectGraph & {
+export type AutomataProject = AutomataProjectGraph & {
     _id: string,
     comments: ProjectComment[],
     config: ProjectConfig,
     meta: ProjectMetaData,
-    projectType: string,
+    projectType: 'FSA' | 'PDA' | 'TM',
     simResult: string[],
     tests: AutomataTests,
 }
+
+/**
+ * Grammar project with grammar-specific fields.
+ */
+export type GrammarProject = GrammarProjectGraph & {
+    _id: string,
+    comments: ProjectComment[],
+    config: ProjectConfig,
+    meta: ProjectMetaData,
+    projectType: 'GRAMMAR',
+    simResult: string[],
+    tests: AutomataTests,
+}
+
+/**
+ * What a project for the frontend looks like.
+ * This contains everything that is needed to display a graph
+ */
+export type Project = AutomataProject | GrammarProject
 
 // This is for copy/paste function which isn't TS converted yet
 // Leaving it here so its ready for when its converted, so as not to clutter useActions

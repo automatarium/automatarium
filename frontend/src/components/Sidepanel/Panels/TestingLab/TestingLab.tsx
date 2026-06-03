@@ -35,7 +35,7 @@ import { PDAState } from '@automatarium/simulation/src/PDASearch'
 import { TMState } from '@automatarium/simulation/src/TMSearch'
 import { buildProblem } from '@automatarium/simulation/src/utils'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
-import { FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
+import { AutomataProjectGraph, FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
 import { useTranslation } from 'react-i18next'
@@ -59,6 +59,7 @@ const TestingLab = () => {
 
   // Graph state
   const graph = useProjectStore(s => s.getGraph())
+  const automataGraph = graph.projectType === 'GRAMMAR' ? null : graph as AutomataProjectGraph
   const statePrefix = useProjectStore(s => s.project.config?.statePrefix)
   const setProjectSimResults = useTMSimResultStore(s => s.setSimResults)
   const setProjectSimTraceIDx = useTMSimResultStore(s => s.setTraceIDx)
@@ -74,7 +75,7 @@ const TestingLab = () => {
 
   // Preference option to pause/unpause TM at Final State
   const preferences = usePreferencesStore(state => state.preferences)
-  const simulateAutomata = (graph, input: string, node: Node<FSAState|PDAState|TMState> | null = null) => {
+  const simulateAutomata = (graph: AutomataProjectGraph, input: string, node: Node<FSAState|PDAState|TMState> | null = null) => {
     let result
     switch (graph.projectType) {
       case ('PDA'):
@@ -124,10 +125,11 @@ const TestingLab = () => {
 
   // Add Stepper from (old) SteppingLab
   const stepper = useMemo(() => {
+    if (!automataGraph) { return null }
     // Graph stepper for PDA currently requires changes to BFS stack logic
     // to handle non-determinism so branching stops on the first rejected transition.
-    return graphStepper(graph as FSAProjectGraph | PDAProjectGraph | TMProjectGraph, traceInput)
-  }, [graph, traceInput])
+    return graphStepper(automataGraph, traceInput)
+  }, [automataGraph, traceInput])
   const setSteppedStates = useSteppingStore(s => s.setSteppedStates)
 
   const handleStep = (stepType: StepType) => {
@@ -174,8 +176,8 @@ const TestingLab = () => {
       if (enableManualStepping) {
         let _problem = problem
         // chance problem hasn't been created yet & node hasn't been, set to defaults if not found
-        if (!_problem) {
-          _problem = buildProblem(graph, input ?? '')
+        if (!_problem && automataGraph) {
+          _problem = buildProblem(automataGraph, input ?? '')
         }
         node = currentManualNode ?? _problem.initial
         // Sets node for simulation to be next one so ui doesn't say problem in progress is rejected
@@ -183,7 +185,10 @@ const TestingLab = () => {
           node = _problem.getSuccessors(node)[0]
         }
       }
-      const result = simulateAutomata(graph, input ?? '', node)
+      if (!automataGraph) {
+        throw new Error(`${projectType} is not supported`)
+      }
+      const result = simulateAutomata(automataGraph, input ?? '', node)
       // Formats a symbol. Makes an empty symbol become a lambda
       const formatSymbol = (char?: string): string =>
         char === null || char === '' ? 'λ' : char
@@ -243,7 +248,7 @@ const TestingLab = () => {
   // Determine last position allowed
   const lastTraceIdx = simulationResult?.transitionCount
 
-  const getStateName = useCallback((id: number) => graph.states.find(s => s.id === id)?.name, [graph.states])
+  const getStateName = useCallback((id: number) => automataGraph?.states.find(s => s.id === id)?.name, [automataGraph])
 
   // Returns a string representing the transition from parent to current node, or empty string if no parent
   function nodeTransitionString (node: Node<State>): string {
@@ -320,8 +325,8 @@ const TestingLab = () => {
 
   // Creates problem and sets it, should run every time trace/graph changes while enableManualStepping is enabled
   useEffect(() => {
-    if (enableManualStepping) {
-      const _problem = buildProblem(graph, traceInput)
+    if (enableManualStepping && automataGraph) {
+      const _problem = buildProblem(automataGraph, traceInput)
       if (_problem != null) {
         setProblem(_problem)
         setCurrentManualNode(_problem.initial)
@@ -330,7 +335,7 @@ const TestingLab = () => {
     } else {
       setTraceIdx(0)
     }
-  }, [enableManualStepping, traceInput, lastChangeDate])
+  }, [enableManualStepping, traceInput, lastChangeDate, automataGraph])
 
   // To move execution path back when backtracking while enableManualStepping is enabled
   useEffect(() => {
@@ -386,16 +391,16 @@ const TestingLab = () => {
   }, [traceIdx])
 
   // Update warnings
-  const noInitialState = [null, undefined].includes(graph?.initialState) || !graph?.states.find(s => s.id === graph?.initialState)
-  const noFinalState = !graph?.states.find(s => s.isFinal)
+  const noInitialState = !automataGraph || [null, undefined].includes(automataGraph.initialState) || !automataGraph.states.find(s => s.id === automataGraph.initialState)
+  const noFinalState = !automataGraph || !automataGraph.states.find(s => s.isFinal)
   const warnings = []
 
   // Update disconnected warning
   const pathToFinal = useMemo(() => {
-    // Solution to #359 - Concat the intial state to solve the problem that a legal 1 state (both initial and final) 0 transition machine can accept λ
-    const closure = closureWithPredicate(graph, graph.initialState, () => true)
-    return Array.from(closure).concat({ state: graph.initialState, transitions: [] }).some(({ state }) => graph.states.find(s => s.id === state)?.isFinal)
-  }, [graph])
+    if (!automataGraph) { return false }
+    const closure = closureWithPredicate(automataGraph, automataGraph.initialState, () => true)
+    return Array.from(closure).concat({ state: automataGraph.initialState, transitions: [] }).some(({ state }) => automataGraph.states.find(s => s.id === state)?.isFinal)
+  }, [automataGraph])
   // Also part of #359 - No need to flag that there is a disconnection if # states <= 1
   if (noInitialState) { warnings.push(t('testing_lab.no_initial')) }
   if (noFinalState) { warnings.push(t('testing_lab.no_final')) } else if (!pathToFinal) { warnings.push(t('testing_lab.no_path')) }

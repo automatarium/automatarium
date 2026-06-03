@@ -15,8 +15,11 @@ import {
   CopyData,
   ProjectType,
   ProjectGraph,
+  AutomataProjectGraph,
   GrammarProduction,
-  GrammarProjectGraph
+  GrammarProjectGraph,
+  AutomataProject,
+  GrammarProject
 } from '../types/ProjectTypes'
 
 import {
@@ -46,11 +49,9 @@ type InsertGroupResponse = {
 }
 
 export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE): Project => {
-  const baseProject: Project = {
+  const baseProject = {
     projectType,
     _id: crypto.randomUUID(),
-    states: [],
-    transitions: [],
     comments: [],
     simResult: [],
     tests: {
@@ -74,16 +75,22 @@ export const createNewProject = (projectType: ProjectType = DEFAULT_PROJECT_TYPE
     }
   }
 
-  // Add grammar-specific fields for GRAMMAR projects
   if (projectType === 'GRAMMAR') {
     return {
       ...baseProject,
+      projectType: 'GRAMMAR',
       startSymbol: '',
       productions: []
-    } as Project & GrammarProjectGraph
+    } as GrammarProject
   }
 
-  return baseProject
+  return {
+    ...baseProject,
+    projectType,
+    states: [],
+    transitions: [],
+    initialState: null
+  } as AutomataProject
 }
 
 /**
@@ -399,7 +406,11 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   })),
 
   /* Set given state to be the initial state */
-  setStateInitial: (stateID: number) => set((s: ProjectStore) => ({ project: { ...s.project, initialState: stateID } })),
+  setStateInitial: (stateID: number) => set(produce((state: ProjectStore) => {
+    if (state.project.projectType !== 'GRAMMAR') {
+      state.project.initialState = stateID
+    }
+  })),
 
   /* Set all provided states as final */
   toggleStatesFinal: (stateIDs: number[]) => set(produce(({ project }: {project: Project}) => {
@@ -466,15 +477,16 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     } as ProjectGraph
   },
 
-  updateGraph: graph => set(produce(({ project }: { project: Project}) => {
-    if (graph.projectType === 'GRAMMAR') {
-      const grammarGraph = graph as GrammarProjectGraph
+  updateGraph: (graph: ProjectGraph) => set(produce(({ project }: { project: Project}) => {
+    if ((graph as any).projectType === 'GRAMMAR') {
+      const grammarGraph = graph as any
       (project as any).startSymbol = grammarGraph.startSymbol
       (project as any).productions = grammarGraph.productions
     } else {
-      project.transitions = graph.transitions
-      project.states = graph.states
-      project.initialState = graph.initialState
+      const automataGraph = graph as any
+      project.transitions = automataGraph.transitions
+      project.states = automataGraph.states
+      project.initialState = automataGraph.initialState
     }
   })),
 
