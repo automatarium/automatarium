@@ -24,7 +24,9 @@ const useAutosaveProject = () => {
   useEffect(() => {
     const timer = setInterval(() => {
       const currP = useProjectStore.getState().project
-      const totalItems = currP.comments.length + currP.states.length + currP.transitions.length
+      const totalItems = currP.projectType === 'GRAMMAR'
+        ? currP.comments.length + (currP as any).productions.length
+        : currP.comments.length + (currP as any).states.length + (currP as any).transitions.length
       // Only save if there has been a change and there is something in the project
       if ((!lastSaveDate || dayjs(lastChangeDate).isAfter(lastSaveDate)) && totalItems > 0) {
         setIsSaving(true)
