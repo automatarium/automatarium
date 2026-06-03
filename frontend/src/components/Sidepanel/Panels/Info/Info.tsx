@@ -6,13 +6,12 @@ import { Table, SectionLabel } from '/src/components'
 
 import { Wrapper, Symbol, SymbolList } from './infoStyle'
 import { StateID } from '@automatarium/simulation/src/graph'
-import { AutomataProjectGraph, TMAutomataTransition, PDAProjectGraph } from '/src/types/ProjectTypes'
+import { AutomataProjectGraph, PDAProjectGraph } from '/src/types/ProjectTypes'
 import { useTranslation } from 'react-i18next'
 
 const Info = () => {
   const statePrefix = useProjectStore(s => s.project?.config?.statePrefix)
   const states = useProjectStore(s => s.project?.states)
-  const transitions = useProjectStore(s => s.project?.transitions)
   const graph = useProjectStore(s => s.getGraph())
   const projectType = useProjectStore(s => s.project.config.type)
   const { t } = useTranslation('common')

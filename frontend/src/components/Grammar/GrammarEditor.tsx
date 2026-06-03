@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { GrammarProjectGraph, Project } from '../../types/ProjectTypes'
 import {
   testString,
@@ -8,24 +8,30 @@ import {
   convertToAutomata
 } from '../../util/grammar'
 import type { DerivationStep, DerivationPathResult } from '../../util/grammar'
-import { useNavigate } from 'react-router-dom'
 import { useEvent } from '/src/hooks'
 import { convertAutomatariumToJFLAP } from '@automatarium/jflap-translator'
 import { showWarning } from '/src/components/Warning/Warning'
 import useProjectStore from '/src/stores/useProjectStore'
 
-type Props = {
-  project: GrammarProjectGraph
-}
-
-export default function GrammarEditor({ project }: Props) {
+export default function GrammarEditor() {
   const { startSymbol, productions, setStartSymbol, setProductions } = useProjectStore(
-    state => ({
-      startSymbol: (state.project as any).startSymbol,
-      productions: (state.project as any).productions,
-      setStartSymbol: state.setStartSymbol,
-      setProductions: state.setProductions
-    })
+    state => {
+      const { project } = state
+      if (project.projectType !== 'GRAMMAR') {
+        return {
+          startSymbol: '',
+          productions: [],
+          setStartSymbol: state.setStartSymbol,
+          setProductions: state.setProductions
+        }
+      }
+      return {
+        startSymbol: project.startSymbol,
+        productions: project.productions,
+        setStartSymbol: state.setStartSymbol,
+        setProductions: state.setProductions
+      }
+    }
   )
 
   const [input, setInput] = useState('')
@@ -37,8 +43,6 @@ export default function GrammarEditor({ project }: Props) {
   const [derivationMessage, setDerivationMessage] = useState<string | null>(null)
   const [derivationFailed, setDerivationFailed] = useState(false)
   const [derivationFailureReason, setDerivationFailureReason] = useState<string | null>(null)
-
-  const navigate = useNavigate()
 
   const formatRightValue = (right: string[]) =>
     right.map(rule => (rule === '' ? 'ε' : rule)).join(' | ')

@@ -56,9 +56,7 @@ function Editor() {
 
       {projectType === "GRAMMAR" ? (
         <div className="grammar-editor-shell">
-          <GrammarEditor
-            project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
-          />
+          <GrammarEditor />
         </div>
 
           ) : (

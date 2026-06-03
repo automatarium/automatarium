@@ -5,7 +5,6 @@ import {
   FSAProjectGraph,
   PDAAutomataTransition,
   PDAProjectGraph,
-  ProjectGraph,
   TMAutomataTransition,
   TMProjectGraph
 } from 'frontend/src/types/ProjectTypes'
@@ -15,6 +14,7 @@ import { PDAGraph, PDAState } from './PDASearch'
 import { FSAGraph, FSAState } from './FSASearch'
 import { TMGraph, TMState } from './TMSearch'
 import { Tape } from './graph'
+import { Graph } from './interfaces/graph'
 import { GraphStepper } from './Step'
 
 type AutomataProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
@@ -94,5 +94,7 @@ export function buildProblem <M extends AutomataProjectGraph> (graph: M, input: 
 export const graphStepper = <P extends FSAProjectGraph | PDAProjectGraph | TMProjectGraph>(graph: P, input: string) => {
   const problem = buildProblem(graph, input)
   if (!problem) return null
-  return new GraphStepper<StateMapping<P>, TransitionMapping<P>>(problem as any)
+  return new GraphStepper<StateMapping<P>, TransitionMapping<P>>(
+    problem as Graph<StateMapping<P>, TransitionMapping<P>>
+  )
 }

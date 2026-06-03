@@ -34,12 +34,22 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
   }
 
   // Convert attributes to arrays if they are not already
-  const toArray = <T>(x: T[]): T[] => x === undefined ? [] : (Array.isArray(x) ? x : [x])
+  const toArray = <T>(x: T | T[] | undefined): T[] =>
+    x === undefined ? [] : (Array.isArray(x) ? x : [x])
 
   if (projectType === 'GRAMMAR') {
-    const productionsArray = toArray((jflapProject.structure as any).production as any[]).map((production: any) => ({
+    type JflapGrammarProduction = {
+      left: { _text: string }
+      right?: { _text: string }
+    }
+
+    const grammarStructure = jflapProject.structure as ElementCompact & {
+      production?: JflapGrammarProduction | JflapGrammarProduction[]
+    }
+
+    const productionsArray = toArray(grammarStructure.production).map((production) => ({
       left: production.left._text,
-      right: production.right._text ?? ''
+      right: production.right?._text ?? ''
     }))
 
     const productionMap = productionsArray.reduce((map, { left, right }) => {

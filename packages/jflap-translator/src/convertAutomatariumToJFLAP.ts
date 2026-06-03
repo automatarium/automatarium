@@ -106,7 +106,7 @@ const mapComments = (comments: ProjectComment[]): JFLAPComment[] => comments.map
 }))
 
 // Convert Automatarium JSON to JFLAP jff format
-export const convertAutomatariumToJFLAP = (automatariumProject: any): string => {
+export const convertAutomatariumToJFLAP = (automatariumProject: Project): string => {
   console.log('projectType received:', automatariumProject.projectType)
   console.log('=== GRAMMAR?', automatariumProject.projectType === 'GRAMMAR')  
   // Handle GRAMMAR projects separately — different XML structure

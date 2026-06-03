@@ -35,7 +35,7 @@ import { PDAState } from '@automatarium/simulation/src/PDASearch'
 import { TMState } from '@automatarium/simulation/src/TMSearch'
 import { buildProblem } from '@automatarium/simulation/src/utils'
 // import { ButtonGroup } from '/src/pages/NewFile/newFileStyle'
-import { AutomataProjectGraph, FSAProjectGraph, PDAProjectGraph, TMProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
+import { AutomataProjectGraph, BaseAutomataTransition, assertType } from '/src/types/ProjectTypes'
 
 import usePreferencesStore from 'frontend/src/stores/usePreferencesStore'
 import { useTranslation } from 'react-i18next'

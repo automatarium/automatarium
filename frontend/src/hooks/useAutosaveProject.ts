@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { useProjectsStore, useProjectStore, useModuleStore, useModulesStore } from '/src/stores'
+import type { AutomataProject, GrammarProject } from '/src/types/ProjectTypes'
 import dayjs from 'dayjs'
 
 const SAVE_INTERVAL = 5 * 1000
@@ -25,8 +26,8 @@ const useAutosaveProject = () => {
     const timer = setInterval(() => {
       const currP = useProjectStore.getState().project
       const totalItems = currP.projectType === 'GRAMMAR'
-        ? currP.comments.length + (currP as any).productions.length
-        : currP.comments.length + (currP as any).states.length + (currP as any).transitions.length
+        ? currP.comments.length + (currP as GrammarProject).productions.length
+        : currP.comments.length + (currP as AutomataProject).states.length + (currP as AutomataProject).transitions.length
       // Only save if there has been a change and there is something in the project
       if ((!lastSaveDate || dayjs(lastChangeDate).isAfter(lastSaveDate)) && totalItems > 0) {
         setIsSaving(true)

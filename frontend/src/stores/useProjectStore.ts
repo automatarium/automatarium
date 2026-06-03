@@ -16,8 +16,8 @@ import {
   ProjectType,
   ProjectGraph,
   AutomataProjectGraph,
-  GrammarProduction,
   GrammarProjectGraph,
+  GrammarProduction,
   AutomataProject,
   GrammarProject
 } from '../types/ProjectTypes'
@@ -462,11 +462,12 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     const project = get().project
     
     if (project.projectType === 'GRAMMAR') {
+      const grammarProject = project as GrammarProject
       return {
         projectType: 'GRAMMAR',
-        startSymbol: (project as any).startSymbol,
-        productions: (project as any).productions
-      } as ProjectGraph
+        startSymbol: grammarProject.startSymbol,
+        productions: grammarProject.productions
+      } satisfies GrammarProjectGraph
     }
     
     return {
@@ -477,23 +478,25 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
     } as ProjectGraph
   },
 
-  updateGraph: (graph: ProjectGraph) => set(produce(({ project }: { project: Project}) => {
-    if ((graph as any).projectType === 'GRAMMAR') {
-      const grammarGraph = graph as any
-      (project as any).startSymbol = grammarGraph.startSymbol
-      (project as any).productions = grammarGraph.productions
+  updateGraph: (graph: ProjectGraph) => set(produce(({ project }: { project: Project }) => {
+    if (graph.projectType === 'GRAMMAR') {
+      const grammarGraph = graph as GrammarProjectGraph
+      const grammarProject = project as GrammarProject
+      grammarProject.startSymbol = grammarGraph.startSymbol
+      grammarProject.productions = grammarGraph.productions
     } else {
-      const automataGraph = graph as any
-      project.transitions = automataGraph.transitions
-      project.states = automataGraph.states
-      project.initialState = automataGraph.initialState
+      const automataGraph = graph as AutomataProjectGraph
+      const automataProject = project as AutomataProject
+      automataProject.transitions = automataGraph.transitions
+      automataProject.states = automataGraph.states
+      automataProject.initialState = automataGraph.initialState
     }
   })),
 
   /* Set the start symbol for a grammar project */
   setStartSymbol: (symbol: string) => set(produce((state: ProjectStore) => {
     if (state.project.projectType === 'GRAMMAR') {
-      (state.project as any).startSymbol = symbol
+      (state.project as GrammarProject).startSymbol = symbol
       state.lastChangeDate = new Date().getTime()
     }
   })),
@@ -501,7 +504,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   /* Set all productions for a grammar project */
   setProductions: (productions: GrammarProduction[]) => set(produce((state: ProjectStore) => {
     if (state.project.projectType === 'GRAMMAR') {
-      (state.project as any).productions = productions
+      (state.project as GrammarProject).productions = productions
       state.lastChangeDate = new Date().getTime()
     }
   })),
@@ -509,7 +512,7 @@ const useProjectStore = create<ProjectStore>()(persist((set: SetState<ProjectSto
   /* Update a single production rule by index */
   updateProduction: (index: number, production: Partial<GrammarProduction>) => set(produce((state: ProjectStore) => {
     if (state.project.projectType === 'GRAMMAR') {
-      const productions = (state.project as any).productions
+      const productions = (state.project as GrammarProject).productions
       if (index >= 0 && index < productions.length) {
         productions[index] = { ...productions[index], ...production }
         state.lastChangeDate = new Date().getTime()
