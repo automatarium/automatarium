@@ -3668,13 +3668,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:^18.3.23":
-  version: 18.3.26
-  resolution: "@types/react@npm:18.3.26"
+"@types/react-dom@npm:^17.0.0":
+  version: 17.0.26
+  resolution: "@types/react-dom@npm:17.0.26"
+  peerDependencies:
+    "@types/react": ^17.0.0
+  checksum: 10c0/8363921f08afe3f2ef82fe293301a0809ec646975fe9f5bfeb2e823f7237b97e47d27e1c6c2ffff27d15c12ab3cad1de6c77a737e37499fcc52793b0fd674f3f
+  languageName: node
+  linkType: hard
+
+"@types/react@npm:^17.0.0":
+  version: 17.0.93
+  resolution: "@types/react@npm:17.0.93"
   dependencies:
     "@types/prop-types": "npm:*"
-    csstype: "npm:^3.0.2"
-  checksum: 10c0/7b62d91c33758f14637311921c92db6045b6328e2300666a35ef8130d06385e39acada005eaf317eee93228edc10ea5f0cd34a0385654d2014d24699a65bfeef
+    "@types/scheduler": "npm:^0.16"
+    csstype: "npm:^3.2.2"
+  checksum: 10c0/46c47d8ad8905482a22007c5702b6f02f2498933dabfbde3542d321bf027e30a5a16aea822eebb151962cf7b3f68daa1791ed7b4a31b6b83aa00f013f577fea1
   languageName: node
   linkType: hard
 
@@ -3682,6 +3692,13 @@ __metadata:
   version: 1.20.2
   resolution: "@types/resolve@npm:1.20.2"
   checksum: 10c0/c5b7e1770feb5ccfb6802f6ad82a7b0d50874c99331e0c9b259e415e55a38d7a86ad0901c57665d93f75938be2a6a0bc9aa06c9749192cadb2e4512800bbc6e6
+  languageName: node
+  linkType: hard
+
+"@types/scheduler@npm:^0.16":
+  version: 0.16.8
+  resolution: "@types/scheduler@npm:0.16.8"
+  checksum: 10c0/f86de504945b8fc41b1f391f847444d542e2e4067cf7e5d9bfeb5d2d2393d3203b1161bc0ef3b1e104d828dabfb60baf06e8d2c27e27ff7e8258e6e618d8c4ec
   languageName: node
   linkType: hard
 
@@ -4892,10 +4909,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"csstype@npm:^3.0.2, csstype@npm:^3.1.3":
+"csstype@npm:^3.1.3":
   version: 3.1.3
   resolution: "csstype@npm:3.1.3"
   checksum: 10c0/80c089d6f7e0c5b2bd83cf0539ab41474198579584fa10d86d0cafe0642202343cbc119e076a0b1aece191989477081415d66c9fefbf3c957fc2fc4b7009f248
+  languageName: node
+  linkType: hard
+
+"csstype@npm:^3.2.2":
+  version: 3.2.3
+  resolution: "csstype@npm:3.2.3"
+  checksum: 10c0/cd29c51e70fa822f1cecd8641a1445bed7063697469d35633b516e60fe8c1bde04b08f6c5b6022136bb669b64c63d4173af54864510fbb4ee23281801841a3ce
   languageName: node
   linkType: hard
 
@@ -5879,9 +5903,11 @@ __metadata:
     "@parcel/transformer-inline-string": "npm:^2.15.2"
     "@parcel/transformer-typescript-types": "npm:^2.15.2"
     "@parcel/transformer-webmanifest": "npm:2.16.0"
+    "@types/jest": "npm:^29.5.14"
     "@types/lodash.groupby": "npm:^4.6.9"
     "@types/node": "npm:^20.19.0"
-    "@types/react": "npm:^18.3.23"
+    "@types/react": "npm:^17.0.0"
+    "@types/react-dom": "npm:^17.0.0"
     assert: "npm:^2.1.0"
     axios: "npm:^0.30.0"
     browserify-zlib: "npm:^0.2.0"
@@ -5895,6 +5921,7 @@ __metadata:
     i18next: "npm:^23.16.8"
     i18next-http-backend: "npm:^3.0.2"
     immer: "npm:^9.0.21"
+    jest: "npm:^29.7.0"
     lodash.clonedeep: "npm:^4.5.0"
     lodash.groupby: "npm:^4.6.0"
     lucide-react: "npm:^0.515.0"
@@ -5912,6 +5939,7 @@ __metadata:
     react-router-dom: "npm:^6.30.1"
     serve: "npm:^14.2.4"
     stream-browserify: "npm:^3.0.0"
+    ts-jest: "npm:^29.4.0"
     tsx: "npm:^4.20.6"
     typescript: "npm:^4.9.5"
     util: "npm:^0.12.5"
