@@ -12,6 +12,15 @@
     "components": {
         "tutorial_video": "Tutorial Video"
     },
+    "grammar_tour": {
+        "step1": "Welcome to the Grammar Editor. Here you can define production rules and test whether strings belong to the language of your grammar.",
+        "step2": "Set the start symbol — the nonterminal where derivations begin (for example S). It should match the left-hand side of at least one production.",
+        "step3": "Add productions in the form left → right. Use | for alternatives on the right (e.g. aB | b). Leave the right side empty or use ε for an epsilon production.",
+        "step4": "Use Detect type to classify your grammar (regular, context-free, etc.). For some types you can export the grammar as an FSA or PDA from this panel.",
+        "step5": "Enter a test string and press Test to see if it is accepted. Accepted means the string can be derived from the start symbol using your rules.",
+        "step6": "Press Show derivation to see step-by-step how the string was built (or how far a rejected string got before failing). Multiple paths may appear when the grammar branches.",
+        "step7": "Use File to import or export your grammar (JSON or JFLAP). Click the logo in the top-left to return to the project menu. Help has documentation and this tour again."
+    },
     "editor_tour": {
         "step1": "This is the editor Page. You will get to build your Automatons here, here is a quick guide to the tools you will use.",
         "step2": "The Cursor tool allows you to select single or multiple states at once and move them around where you please.",

@@ -18,39 +18,39 @@ const TourContent = styled('div')<TourContentProps>`
     outline: 1px solid var(--input-border);
     box-shadow: 0 2px 5px rgba(0 0 0 / .5);
 
-    ${({ tourStep }) => (tourStep === 1) && `
+    ${({ $tourStep }) => ($tourStep === 1) && `
     position: absolute;
     top: 140px;
     right:20px;
     width: 200px;
     
    `}
-    ${({ tourStep }) => (tourStep === 2) && `
+    ${({ $tourStep }) => ($tourStep === 2) && `
     position: absolute;
     right:100px;
     width: 330px;
     
     `}
-    ${({ tourStep }) => (tourStep === 3) && `
+    ${({ $tourStep }) => ($tourStep === 3) && `
     position: absolute;
     left:400px;
     top:10px;
     width:300px;
 
     `}
-    ${({ tourStep }) => (tourStep === 4) && `
+    ${({ $tourStep }) => ($tourStep === 4) && `
     position: absolute;
     right:100px;
     width:200px;
 
     `}
-    ${({ tourStep }) => (tourStep === 5) && `
+    ${({ $tourStep }) => ($tourStep === 5) && `
     position: absolute;
     right:100px;
     width:200px;
 
     `}
-    ${({ tourStep }) => (tourStep === 6) && `
+    ${({ $tourStep }) => ($tourStep === 6) && `
     position: absolute;
     right:px;
     width:200px;
@@ -112,7 +112,7 @@ const NewPageTour: React.FC<TourProps> = ({ onClose, stepCallback }) => {
 
   return (
     <TourOverlay>
-        <TourContent tourStep={step} isBannerStep={steps[step].target === '.banner'}>
+        <TourContent $tourStep={step} $isBannerStep={steps[step].target === '.banner'}>
           <p>{steps[step].content}</p>
           <ButtonContainer>
               <Button secondary onClick={handleSkip}>{t('tour.skip', { ns: 'common' })}</Button>

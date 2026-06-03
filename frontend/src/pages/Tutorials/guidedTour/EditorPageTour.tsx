@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-import { styled } from 'goober'
 import { Animation } from '/src/components/Toolbar/toolbarStyle'
 
 import Lottie from 'react-lottie-player/dist/LottiePlayerLight'
@@ -14,21 +13,9 @@ import { MousePointer2, Hand, MessageSquare, Circle, ArrowUpRight, FlaskConical,
 
 import { Info } from '/src/components/Sidepanel/Panels'
 import { useTranslation } from 'react-i18next'
-import { ButtonContainer, TourOverlay } from './tourStyles'
+import { ButtonContainer, TourOverlay, TourContent } from './tourStyles'
 import { Button } from '/src/components'
-import { Step, TourContentProps } from './ProjectTour'
-
-const TourContent = styled('div')<TourContentProps>`
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 50%;
-    max-height: 80%;
-    overflow: auto;
-    background-color: var(--surface);
-    outline: 1px solid var(--input-border);
-    box-shadow: 0 2px 5px rgba(0 0 0 / .5);
-`
+import { Step } from './ProjectTour'
 
 interface TourProps {
   onClose: () => void;
@@ -124,7 +111,7 @@ const EditorPageTour: React.FC<TourProps> = ({ onClose }) => {
 
   return (
     <TourOverlay>
-      <TourContent tourStep={step} isBannerStep={steps[step].target === ".banner"}>
+      <TourContent>
         {/* Render the icon based on the step */}
         {icons[step - 1]}
 

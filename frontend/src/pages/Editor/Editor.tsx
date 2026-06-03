@@ -7,6 +7,7 @@ import ModuleWindow from "./components/ModuleWindow/ModuleWindow";
 import PDAStackVisualiser from "../../components/PDAStackVisualiser/stackVisualiser";
 import TemplateDelConfDialog from "./components/TemplateDelConfDialog/TemplateDelConfDialog";
 import EditorPageTour from "../Tutorials/guidedTour/EditorPageTour";
+import GrammarPageTour from "../Tutorials/guidedTour/GrammarPageTour";
 import { useEditorInit } from "../../hooks/useEditorInit";
 import { useEditorControls } from "../../hooks/useEditorControls";
 import { useModuleValidation } from "../../hooks/useModuleValidation";
@@ -90,7 +91,11 @@ function Editor() {
         setClose={() => setConfirmDialogOpen(false)}
       />
       <ImportDialog navigateFunction={useNavigate()} />
-      {showTour && <EditorPageTour onClose={() => setShowTour(false)} />}
+      {showTour && (
+        projectType === 'GRAMMAR'
+          ? <GrammarPageTour onClose={() => setShowTour(false)} />
+          : <EditorPageTour onClose={() => setShowTour(false)} />
+      )}
       <CreateModule />
     </>
   );
