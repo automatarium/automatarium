@@ -108,11 +108,11 @@ Added Progressive Web App functionality, updated tutorial videos, changed deploy
 <summary>Group 9 - 2026 Semester 1</summary>
 Implemented the full grammar feature: context free grammar conversion to PDA, a task bar addition, importing of grammrs and autofilling of productions, new UI, grammar derivation for test strings, updated test cases for the existing incorrect type errors.
   
-- [Rylemarc Jade Aguinaldo](https://github.com/)
-- [Isaac Kaithayil](https://github.com/)
-- [Kiet Le Tuan](https://github.com/)
-- [Matthew Raagas](https://github.com/)
-- [Andrew Sibuea](https://github.com/)
+- [Rylemarc Jade Aguinaldo](https://github.com/RylemarcAguinaldo)
+- [Isaac Kaithayil](https://github.com/s4008320)
+- [Kiet Le Tuan](https://github.com/tuankietle164)
+- [Matthew Raagas](https://github.com/s3948206)
+- [Andrew Sibuea](https://github.com/Andrew191103)
 </details>
 
 For a full list of contributors see: https://github.com/automatarium/automatarium/graphs/contributors
