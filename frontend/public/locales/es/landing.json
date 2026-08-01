@@ -1,0 +1,60 @@
+{
+    "section1": {
+        "description": {
+            "paragraph1": "Automatarium es una plataforma creada por estudiantes para la teoría de autómatas y lenguajes formales.",
+            "paragraph2": "Trabaja con comodidad gracias a un diseño simple e intuitivo, pensado para la facilidad de uso y la accesibilidad.",
+            "paragraph3": "Es de uso gratuito y, cuando termines, puedes compartir tu proyecto con el mundo mediante un enlace.",
+            "paragraph4": "¿Es tu primera vez aquí? ¡Echa un vistazo a nuestros tutoriales!"
+        },
+        "button": {
+            "start_building": "¡Empieza a construir!",
+            "tutorials": "Tutoriales"
+        }
+    },
+    "banner1": {
+        "description": {
+            "heading": "Automatarium es de código abierto y gratuito",
+            "paragraph1": "Con licencia MIT y alojado por RMIT University para que todos puedan usarlo"
+        },
+        "button": {
+            "visit_github": "Visitar Github"
+        }
+    },
+    "section2": {
+        "description": {
+            "heading": "Laboratorio de pruebas completo",
+            "paragraph1": "Automatarium ofrece un laboratorio de pruebas simple pero potente. Avanza paso a paso por las entradas y observa una traza en vivo de lo que sucede. Prueba a cambiar la entrada del ejemplo y mira qué ocurre.",
+            "paragraph2": "También incluye la función de ejecución múltiple: corre muchas pruebas a la vez y observa cuáles son aceptadas y cuáles rechazadas."
+        }
+    },
+    "section3": {
+        "description": {
+            "heading": "Explora tus autómatas",
+            "paragraph1": "Automatarium ofrece herramientas para inspeccionar tu autómata y entender cómo reacciona ante distintas entradas."
+        }
+    },
+    "section4": {
+        "project_name": "Mi proyecto",
+        "date": "hace 2 días",
+        "description": {
+            "heading": "Comparte con tus colegas",
+            "paragraph1": "Comparte tus proyectos fácilmente con tus compañeros mediante un enlace que permite a cualquiera hacer una copia y seguir trabajando."
+        }
+    },
+    "banner2": {
+        "description": {
+            "heading": "¿Qué esperas?",
+            "paragraph1": "¡Empieza a construir y probar tus autómatas ahora!"
+        },
+        "button": {
+            "start_building": "¡Empieza a construir!"
+        }
+    },
+    "component": {
+        "testing_lab": {
+            "accepted": "ACEPTADA",
+            "rejected": "RECHAZADA",
+            "input_placeholder": "Escribe un valor para probar"
+        }
+    }
+}

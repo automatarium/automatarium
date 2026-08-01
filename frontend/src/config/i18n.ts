@@ -5,7 +5,8 @@ import Backend from 'i18next-http-backend'
 // Contains the different locale codes as the key and locale names as the value
 export const locales = {
   en: 'English',
-  bg: 'Български'
+  bg: 'Български',
+  es: 'Español'
 }
 
 // Contains the locale namespaces that are files

@@ -1,0 +1,7 @@
+{
+	"heading": "Acerca de",
+	"paragraph1": "Automatarium es un proyecto dirigido por estudiantes que ofrece una interfaz moderna e intuitiva para crear y probar autómatas.",
+	"paragraph2": "Inspirado en <linkjflap>JFLAP</linkjflap>, Automatarium te permite dibujar un grafo, definir transiciones y usar el Laboratorio de pruebas para probar entradas. Facilita la creación de autómatas finitos, autómatas de pila y máquinas de Turing.",
+	"paragraph3": "Automatarium es de código abierto, cuenta con licencia MIT y está <linksource>alojado en Github</linksource>. Si encuentras algún error o quieres proponer una funcionalidad, puedes <createissue>crear un issue</createissue>.",
+	"note": ""
+}

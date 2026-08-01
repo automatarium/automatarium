@@ -1,0 +1,13 @@
+{
+    "component": {
+        "module": {
+            "title": "Pregunta {{qNumber}}",
+            "loading": "Cargando las instrucciones del módulo...",
+            "button": {
+                "save": "Guardar",
+                "edit": "Editar"
+            },
+            "edit_placeholder": "Edita aquí las instrucciones del módulo"
+        }
+    }
+}

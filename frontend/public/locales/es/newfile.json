@@ -1,0 +1,49 @@
+{
+    "header": {
+        "button": {
+            "title": "Preferencias"
+        }
+    },
+    "new_project": {
+        "title": "Proyecto nuevo",
+        "button": {
+            "import": "Importar..."
+        },
+        "fsa_desc": "Crea un autómata determinista o no determinista con estados finitos. Capaz de representar gramáticas regulares.",
+        "pda_desc": "Crea un autómata con una pila capaz de representar gramáticas libres de contexto.",
+        "tm_desc": "Crea una máquina de Turing capaz de representar gramáticas recursivamente enumerables."
+    },
+    "examples": {
+        "title": "Ejemplos de autómatas",
+        "fsa_desc": "Sigue un recorrido guiado sobre cómo construir un autómata finito.",
+        "pda_desc": "Sigue un recorrido guiado sobre cómo construir un autómata de pila.",
+        "tm_desc": "Sigue un recorrido guiado sobre cómo construir una máquina de Turing."
+    },
+    "projects": {
+        "title": "Tus proyectos",
+        "nothing": "Aún no hay proyectos"
+    },
+    "new_module": {
+        "title": "Módulo nuevo",
+        "button": {
+            "import": "Importar..."
+        },
+        "create": {
+            "title": "Crear módulo nuevo",
+            "description": "Los módulos son preguntas interactivas que te ayudarán a evaluar tu comprensión de los autómatas."
+        }
+    },
+    "latest_module": {
+        "title": "Módulo en curso"
+    },
+    "modules": {
+        "title": "Tus módulos",
+        "nothing": "Aún no hay módulos"
+    },
+    "component": {
+        "delete_dialog": {
+            "title": "¿Eliminar proyecto?",
+            "description": "Esto eliminará tu proyecto {{projectName}} de tu computadora de forma permanente."
+        }
+    }
+}

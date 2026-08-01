@@ -1,0 +1,71 @@
+{
+    "header": {
+        "button": {
+            "back": "Volver",
+            "home": "Regresar al inicio"
+        }
+    },
+    "banner": {
+        "paragraph": "¿Listo para empezar a construir?",
+        "button": "Comencemos"
+    },
+    "components": {
+        "tutorial_video": "Video tutorial"
+    },
+    "editor_tour": {
+        "step1": "Esta es la página del editor. Aquí construirás tus autómatas; esta es una guía rápida de las herramientas que usarás.",
+        "step2": "La herramienta de selección te permite seleccionar uno o varios estados a la vez y moverlos donde quieras.",
+        "step3": "La herramienta de mano te permite desplazarte por la pantalla.",
+        "step4": "La herramienta de estado te permite crear estados, tantas veces como necesites.",
+        "step5": "La herramienta de transición te permite crear transiciones entre estados. ",
+        "step6": "También puedes añadir tus propios comentarios con la herramienta de comentario.",
+        "step7": "El laboratorio de pruebas te permite probar tu autómata con distintas entradas.",
+        "step8": "La función \"Acerca de tu autómata\" muestra información detallada sobre tu autómata. ",
+        "step9": "Las opciones del archivo te permiten cambiar las preferencias de identificadores de estado, operadores y temas del proyecto.",
+        "step10": "La opción de plantillas te permite guardar una plantilla de estados para usarla más adelante. Aquí también puedes acceder a tus plantillas guardadas.",
+        "step11": "La opción de crear módulo te permite crear un módulo nuevo, agregar preguntas personalizadas y ver el módulo terminado."
+    },
+    "fsa_tour": {
+        "step1": "Bienvenido al ejemplo de autómata finito. En este ejemplo recorreremos los pasos para construir un autómata finito que reconozca el conjunto de todas las cadenas que empiezan con A y terminan con B",
+        "step2": "Para empezar, presiona la herramienta de estado y haz clic en el lienzo de Automatarium para colocar 3 estados.",
+        "step3": "Al hacer clic derecho sobre un estado se abrirá el menú de estado. Define q0 como estado inicial y q1 como estado final. Con eso nuestros estados quedan configurados correctamente.",
+        "step4": "Ahora podemos crear transiciones para nuestro autómata. Haz clic en la herramienta de transición y arrastra desde q0 hasta q1 para crear una transición entre ambos. Aparecerá un cuadro para etiquetar la transición entre q1 y q0. Como nuestro autómata finito acepta lenguajes que empiezan con A, escribe a.",
+        "step5": "Con la herramienta de selección, haz clic en q1 para crear un bucle de transición. Luego etiquetaremos la transición con el rango [a-z], ya que podemos aceptar cualquier carácter siempre que la cadena termine con B. ",
+        "step6": "Ahora crea una transición entre q1 y q2, etiquetándola con b, para asegurar que nuestro autómata acepte cadenas que terminen con B.",
+        "step7": "Ya creamos correctamente nuestro autómata finito. Podemos probarlo haciendo clic en el icono del matraz, introduciendo una cadena y usando los botones de dirección para ver el resultado."
+    },
+    "landing_tour": {
+        "step1": "¡Bienvenido a la página de inicio!",
+        "step2": "Automatarium es una herramienta que te permite visualizar conceptos de lenguajes formales y teoría de autómatas. Para comenzar, puedes presionar el botón de empezar a construir. ",
+        "step3": "Si quieres guías más detalladas de las herramientas, puedes ir a la página de tutoriales usando el botón de tutoriales.",
+        "step4": "Aquí tenemos una tabla de pruebas",
+        "step5": "Puedes ver un adelanto de cómo funcionan algunas de las herramientas de Automatarium. Prueba los botones de PASO: te mostrarán cómo se ejecuta el AFD de arriba con la entrada dada.",
+        "step6": "Siempre puedes presionar el botón de omitir para ver el resultado final  ",
+        "step7": "Aquí puedes acceder a tus proyectos recientes, una vez que hayas empezado a construir tus propios autómatas"
+    },
+    "new_tour": {
+        "step1": "Aquí eliges qué tipo de proyecto quieres crear.",
+        "step2": "Puedes escoger entre tres tipos de autómatas: autómata finito, autómata de pila o máquina de Turing.",
+        "step3": "Aquí puedes seleccionar tus proyectos guardados anteriormente.",
+        "step4": "También puedes importar un proyecto desde tu disco local, mediante una URL o simplemente con los datos sin procesar de un archivo Json (ten en cuenta que el archivo a importar se genera desde la sección de exportación al crear tu autómata)."
+    },
+    "pda_tour": {
+        "step1": "En este tutorial guiado recorreremos los pasos para construir un autómata de pila, capaz de representar gramáticas libres de contexto. En este recorrido construiremos un AP que reconozca palíndromos sobre el alfabeto {a, b, c}",
+        "step2": "Para empezar, presiona la herramienta de estado y haz clic en el lienzo de Automatarium para colocar dos estados. Haz clic derecho en ambos para definir uno como estado inicial y el otro como final.",
+        "step3": "Ahora crearemos tres transiciones de bucle en q0 para nuestro lenguaje de palíndromos {a, b, c}. Haz clic en el estado usando la herramienta de transición. Definiremos el bucle de transición: verás aparecer el cuadro de diálogo de transición. \"λ (leer)\" es la entrada que se consume, \"λ (desapilar)\" sirve para sacar de la pila y \"λ (apilar)\" para meter en la pila. Para nuestro lenguaje de palíndromos {a, b, c}, defínelos como entrada y apílalos como se muestra abajo.",
+        "step4": "Con la herramienta de transición, crea 4 transiciones entre q0 y q1: 3 transiciones para desapilar cada letra del palíndromo y una transición vacía que indique el punto medio del palíndromo.",
+        "step5": "Ahora crearemos tres transiciones de bucle en q1 para nuestro lenguaje de palíndromos {a, b, c}. Haz clic en el estado usando la herramienta de transición. En el cuadro de diálogo de transición, para cada cadena del lenguaje {a, b, c}, define un desapilado de sus versiones en mayúscula {A, B, C}.",
+        "step6": "Ya podemos probar nuestro autómata de pila. Presiona el matraz de pruebas e introduce un palíndromo que use el lenguaje {a, b, c}. Por ejemplo, toma la cadena \"abcba\" y verás que nuestro autómata de pila la acepta como palíndromo al presionar las teclas de dirección. También podemos visualizar la pila en la esquina inferior derecha de la pantalla."
+    },
+    "tm_tour": {
+        "step1": "En este tutorial guiado recorreremos los pasos para construir una máquina de Turing, capaz de representar lenguajes recursivamente enumerables. En este ejemplo crearemos una máquina de Turing que incrementa un número binario dado.",
+        "step2": "Para empezar, presiona la herramienta de estado y haz clic en el lienzo de Automatarium para colocar tres estados. Haz clic derecho en q0 y q2 para designarlos como estado inicial y final.",
+        "step3": "Ahora crearemos dos bucles usando la herramienta de transición. Verás aparecer un cuadro de diálogo. La herramienta de transición admite 3 valores: \"λ leer\", que lee el cabezal de la cinta; \"λ escribir\", que es el carácter con el que podemos reemplazar la cinta; y \"R, L, S\", que indica si el cabezal se mueve una posición a la derecha o a la izquierda; s significa que permanece estacionario.",
+        "step4": "Como estamos creando una máquina de Turing que incrementa un número binario, usa la herramienta de transición y haz clic en q0 para crear dos bucles. Queremos seguir iterando hasta terminar la entrada. Por eso leeremos 0, escribiremos 0 y moveremos la cinta a la derecha (R). También leeremos 1, escribiremos 1 y moveremos la cinta a la derecha (R).",
+        "step5": "Cuando lleguemos al final de la entrada, queremos dejar de movernos a la derecha. Con la herramienta de transición, crea una transición de q0 a q1. Dejaremos leer y escribir como λ, que representa la cadena vacía en Automatarium. Pondremos izquierda (L) como dirección de movimiento.",
+        "step6": "Ahora queremos reemplazar todos los 1 finales por 0. Para hacerlo, recuerda que estamos posicionados al final de la cinta. Así que, con la herramienta de transición, haz clic en q1 para crear un bucle que lea 1, escriba 0 y se mueva a la izquierda.",
+        "step7": "Una vez reemplazados por 0 todos los 1 finales, necesitamos reemplazar por 1 el siguiente 0 o espacio en blanco que encontremos. Para ello, usa la herramienta de transición y agrega dos transiciones entre q1 y q2. La primera debe leer blanco, escribir 1 y moverse a la derecha (R); la segunda debe leer 0, escribir 1 y moverse a la derecha (R).",
+        "step8": "Nuestra máquina de Turing para incrementar un número binario está lista. Podemos hacer clic en el matraz de pruebas e introducir nuestro número binario en la traza para incrementarlo en 1. Haz clic en las teclas de dirección para avanzar por cada paso. Verás la máquina de Turing en la parte inferior de la pantalla. El ejemplo que se muestra abajo usa 101 en la traza, que se incrementa a 110.",
+        "step9": "Automatarium también ofrece una función que te permite inspeccionar un resumen de tu máquina de Turing. Así puedes revisar el alfabeto, la tabla de transición de estados y la función de transición. Puedes verlo presionando el icono del botón de información, a la derecha y debajo del botón del matraz. "
+    }
+}
