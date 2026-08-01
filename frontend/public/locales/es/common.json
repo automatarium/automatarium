@@ -1,0 +1,330 @@
+{
+    "privacy_policy": "Política de privacidad",
+    "about": "Acerca de",
+    "source_code": "Código fuente",
+    "licensed_mit": "Licencia MIT",
+    "language": "Idioma:",
+
+    "turing_machine_tape": "Cinta de la máquina de Turing",
+    "stack": "Pila",
+
+    "create": "Crear",
+    "cancel": "Cancelar",
+    "confirm": "Confirmar",
+    "export": "Exportar",
+    "import": "Importar",
+    "close": "Cerrar",
+    "copy": "Copiar",
+    "paste": "Pegar",
+    "delete": "Eliminar",
+    "load": "Cargar",
+    "done": "Listo",
+    "rename": "Renombrar",
+    "share": "Compartir",
+
+    "warning": "Advertencia",
+    "ok": "Aceptar",
+
+    "fsa": "Autómata finito",
+    "fsa_short": "AF",
+    "pda": "Autómata de pila",
+    "pda_short": "AP",
+    "tm": "Máquina de Turing",
+    "tm_short": "MT",
+
+    "colours": {
+        "red": "Rojo",
+        "orange": "Naranja",
+        "green": "Verde",
+        "teal": "Verde azulado",
+        "blue": "Azul",
+        "purple": "Morado",
+        "pink": "Rosa"
+    },
+
+    "context_menu": {
+      "add_comment": "Agregar comentario",
+      "create_state": "Crear estado aquí",
+      "select_all": "Seleccionar todo",
+      "set_initial": "Marcar como inicial",
+      "toggle_final": "Alternar como final",
+      "align_horizontally": "Alinear horizontalmente",
+      "align_vertically": "Alinear verticalmente",
+      "set_label": "Asignar etiqueta",
+      "change_name": "Cambiar nombre",
+      "edit_transitions_group": "Editar grupo de transiciones",
+      "flip_edge": "Invertir arista",
+      "edit_first_transition": "Editar primera transición",
+      "delete_edge": "Eliminar arista",
+      "edit_transition": "Editar transición",
+      "flip_selected_transitions": "Invertir transiciones seleccionadas",
+      "edit_comment": "Editar comentario"
+    },
+
+    "create_module": {
+        "untitled": "Módulo sin título",
+        "create_new": "Crear módulo nuevo",
+        "select_type": "Selecciona el tipo de autómata para tu primera pregunta:",
+        "name": "Nombre del módulo:",
+        "name_placeholder": "Escribe el nombre del proyecto",
+        "description": "Descripción:",
+        "description_placeholder": "Escribe la descripción del proyecto"
+    },
+
+    "export_image": {
+        "title": "Exportar imagen",
+        "description": "Descarga una imagen de tu proyecto",
+        "copy": "Copiar al portapapeles",
+        "file_name": "Nombre del archivo",
+        "file_type": "Tipo de archivo",
+        "svg_note": "Nota: la exportación a SVG está en fase beta y puede no funcionar como se espera",
+        "margin": "Margen",
+        "accent_colour": "Color de acento",
+        "background": "Fondo",
+        "solid": "Sólido",
+        "transparent": "Transparente",
+        "dark_mode": "Modo oscuro"
+    },
+
+    "final_state_popup": {
+        "title": "IMPORTANTE",
+        "description": "El comportamiento predeterminado de la máquina de Turing es detenerse al llegar a un estado final. Modifícalo aquí o en el menú de preferencias.",
+        "close_nosave": "Cerrar sin guardar",
+        "close_save": "Guardar y no volver a mostrar"
+    },
+
+    "preferences": {
+        "behaviour": "Comportamiento",
+        "tm_halt": "Detener MT en estado final",
+        "tm_halt_description": "Activa o desactiva la detención en el paso de traza para la MT"
+    },
+
+    "import_project": {
+        "title": "Importar proyecto",
+        "description": "¿Ya tienes un proyecto?",
+        "from_computer": "Desde tu computadora",
+        "invalid_file": "El formato de archivo proporcionado no es válido. Abre únicamente archivos .json de Automatarium o .jff de JFLAP.",
+        "browse": "Examinar...",
+        "from_url": "Desde una URL (raw/texto plano)",
+        "failed_url": "Automatarium no pudo cargar un proyecto desde la URL proporcionada.",
+        "no_url": "¡No se especificó ninguna URL!",
+        "from_data": "Desde datos sin procesar (de la exportación o de tu archivo de proyecto)",
+        "enter_data": "Pega aquí los datos sin procesar",
+        "cant_load": "¡No se puede cargar contenido vacío!"
+    },
+
+    "import_module": {
+        "title": "Importar módulo",
+        "description": "¿Ya tienes un módulo?",
+        "invalid_file": "El formato de archivo proporcionado no es válido. Abre únicamente archivos .json de Automatarium",
+        "from_url": "Desde una URL (módulo/texto plano)",
+        "failed_url": "Automatarium no pudo cargar un módulo desde la URL proporcionada.",
+        "from_data": "Desde datos sin procesar (de la exportación o de tu archivo de módulo)"
+    },
+
+    "input_dialog": {
+        "push": "λ\t(apilar)",
+        "pop": "λ\t(desapilar)",
+        "read": "λ\t(leer)",
+        "write": "λ\t(escribir)",
+        "comment_text": "Texto del comentario...",
+        "state_label": "Etiqueta del estado...",
+        "new_transition": "λ (Nueva transición)",
+        "add_new_transition": "¿Agregar una nueva transición?",
+        "edge_editor": "Editor de aristas de transición",
+        "editing_transition": "Editando la transición de {{state1}} a {{state2}}."
+    },
+
+    "menubar": {
+        "not_saved": "Tu proyecto aún no se ha guardado. ¿Seguro que quieres salir?",
+        "edit_title": "Editar título",
+        "untitled": "Proyecto sin título",
+        "saving": "Guardando..."
+    },
+
+    "menus": {
+        "file": "Archivo",
+        "file_new": "Nuevo...",
+        "import_automatarium": "Importar archivo de Automatarium",
+        "import_jflap": "Importar archivo de JFLAP",
+        "import_other": "Importar otro...",
+        "export_image": "Exportar imagen...",
+        "export_png": "Exportación rápida como PNG",
+        "export_svg": "Exportación rápida como SVG",
+        "export_clipboard": "Copia rápida al portapapeles",
+        "export_automatarium": "Exportar como archivo de Automatarium",
+        "export_jflap": "Exportar como archivo de JFLAP",
+        "export_url_data": "Exportar como URL/datos sin procesar...",
+        "preferences": "Preferencias",
+
+        "edit": "Editar",
+        "undo": "Deshacer",
+        "redo": "Rehacer",
+        "select_all": "Seleccionar todo",
+        "clear_selection": "Limpiar selección",
+
+        "view": "Ver",
+        "zoom_in": "Acercar",
+        "zoom_out": "Alejar",
+        "zoom_100": "Zoom al 100 %",
+        "zoom_fit": "Ajustar a la ventana",
+        "fullscreen": "Pantalla completa",
+        "testing_lab": "Laboratorio de pruebas",
+        "file_info": "Información del archivo",
+        "file_options": "Opciones del archivo",
+        "templates": "Plantillas",
+        "modules": "Módulos",
+
+        "tools": "Herramientas",
+        "convert_dfa": "Convertir a AFD",
+        "auto_layout": "Distribución automática",
+        "reorder_graph": "Reordenar grafo",
+
+        "help": "Ayuda",
+        "start_tour": "Iniciar recorrido",
+        "view_documentation": "Ver documentación",
+        "tutorial_videos": "Videos tutoriales",
+        "keyboard_shortcuts": "Atajos de teclado",
+        "about_automatarium": "Acerca de Automatarium",
+        "version": "Versión {{version}}"
+    },
+
+    "share_url": {
+        "title": "Exportar máquina como URL",
+        "copy_data": "Puedes copiar y pegar los datos sin procesar",
+        "copied": "¡Copiado al portapapeles!",
+        "module_title": "Exportar módulo como URL"
+    },
+
+    "tools": {
+        "cursor": "Herramienta de selección",
+        "cursor_desc": "Selecciona y mueve elementos",
+        "hand": "Herramienta de mano",
+        "hand_desc": "Arrastra para desplazarte por tu autómata",
+        "state": "Herramienta de estado",
+        "state_desc": "Crea estados haciendo clic",
+        "transition": "Herramienta de transición",
+        "transition_desc": "Arrastra entre estados para crear transiciones",
+        "comment": "Herramienta de comentario",
+        "comment_desc": "Agrega comentarios a tu autómata"
+    },
+
+    "shortcuts": {
+        "title": "Atajos de teclado",
+        "description": "Conviértete en un experto de Automatarium",
+
+        "application": "Aplicación",
+
+        "import_automatarium": "Importar proyecto de Automatarium",
+        "import_jflap": "Importar proyecto de JFLAP",
+        "save_file": "Guardar archivo",
+        "export_automatarium": "Exportar como proyecto de Automatarium",
+        "export_image": "Exportar imagen",
+        "select_multiple": "Selección múltiple",
+
+        "move_view": "Mover la vista",
+        "no_snapping": "Arrastrar sin ajuste a la cuadrícula",
+
+        "move_cells": "Moverse entre celdas de ejecución múltiple",
+        "create_cell": "Crear celda de ejecución múltiple",
+        "delete_cell": "Eliminar celda de ejecución múltiple",
+        "execute_multirun": "Ejecutar ejecución múltiple"
+    },
+
+    "testing_lab": {
+        "warnings": "Advertencias",
+        "no_initial": "No hay estado inicial",
+        "no_final": "No hay estados finales",
+        "no_path": "No existe un camino hacia un estado final",
+        "accepted": "ACEPTADA",
+        "rejected": "RECHAZADA",
+        "trace": "Traza",
+        "trace_buddy": "Asistente de traza",
+        "trace_tape": "Cinta de traza",
+        "manual": "Paso manual",
+        "transitions": "Transiciones",
+        "multirun": "Ejecución múltiple",
+        "run": "Ejecutar"
+    },
+
+    "panels": {
+        "testing_lab": "Laboratorio de pruebas",
+        "about": "Acerca de tu autómata",
+        "options": "Opciones del archivo"
+    },
+
+    "info": {
+        "alphabet": "Alfabeto",
+        "stack_alphabet": "Alfabeto de la pila",
+        "state_transition_table": "Tabla de transición de estados",
+        "transition_function": "Función de transición"
+    },
+
+    "module_panel": {
+        "current": "Evaluación actual",
+        "not_working": "No estás trabajando en ningún módulo en este momento.",
+        "settings": "Configuración del módulo",
+        "modularise": "Convertir este proyecto en módulo",
+        "placeholder_title": "Título del módulo",
+        "placeholder_desc": "Descripción",
+        "open_questions": "Abre las preguntas a la izquierda",
+        "questions": "Preguntas",
+        "question": "Pregunta",
+        "actions": "Acciones",
+        "remove": "Quitar",
+        "add_question": "Agregar pregunta",
+        "add_question_title": "Selecciona el tipo de pregunta",
+        "add_question_desc": "Elige el tipo de pregunta que deseas agregar.",
+        "question_type": "Tipo de pregunta",
+        "select_type": "Seleccionar tipo",
+        "delete_question_title": "Eliminar pregunta",
+        "delete_question_desc": "¿Seguro que deseas eliminar esta pregunta? Esta acción no se puede deshacer.",
+        "export_automatarium": "Exportar como archivo de módulo de Automatarium",
+        "export_url": "Exportar como URL",
+        "question_id": "Pregunta {{id}}"
+    },
+
+    "options": {
+        "states": "Estados",
+        "identifier": "Identificador de estado",
+        "identifier_desc": "Se usa para denotar un estado",
+        "operators": "Operadores",
+        "or_operator": "Operador OR",
+        "or_desc": "Se usa para separar caracteres de entrada",
+        "none": "Ninguno",
+        "theme": "Tema",
+        "colour": "Color del proyecto",
+        "colour_desc": "Define el tema de este autómata"
+    },
+    "OR": "OR",
+
+    "templates": {
+        "create": "Crear una plantilla",
+        "name": "Nombra tu plantilla",
+        "add": "Agregar",
+        "description": "La plantilla se crea a partir de los estados y transiciones seleccionados",
+        "insert": "Insertar plantillas",
+        "delete": "¿Eliminar plantilla?",
+        "delete_desc": "Esto eliminará {{name}} de tu computadora de forma permanente.",
+        "error_no_state": "Selecciona al menos un estado antes de hacer clic en \"Agregar\".",
+        "error_transition": "Las transiciones deben incluir los estados que conectan.",
+        "error_no_name": "El nombre de la plantilla no puede estar vacío.",
+        "error_dupe_name": "Ya existe una plantilla llamada {{name}}. Elige otro nombre."
+    },
+
+    "use_actions": {
+        "import_warning": "Al importar se sobrescribirá tu proyecto actual. ¿Deseas continuar?",
+        "failed_automatarium": "No se pudo abrir el proyecto de Automatarium.",
+        "failed_jflap": "No se pudo abrir el proyecto de JFLAP.",
+        "delete_template_warning": "¿Seguro que deseas eliminar tu plantilla {{name}}?",
+        "failed_parse": "No se pudo procesar el archivo",
+        "failed_url": "No se pudo obtener el archivo desde esta URL."
+    },
+
+    "tour": {
+        "previous": "Anterior",
+        "finish": "Finalizar",
+        "next": "Siguiente",
+        "skip": "Omitir recorrido"
+    }
+}

@@ -1,0 +1,52 @@
+{
+    "title": "Preferencias",
+    "description": "Tus preferencias de Automatarium se guardan en tu navegador",
+    "button": {
+        "without_save": "Cerrar sin guardar",
+        "save": "Guardar cambios"
+    },
+    "appearance": {
+        "label": "Apariencia",
+        "theme": {
+            "label": "Tema",
+            "description": "¿Trasnochando? Cambia al modo oscuro",
+            "system": "Igual que el sistema",
+            "light": "Claro",
+            "dark": "Oscuro"
+        },
+        "colour_accent": {
+            "label": "Color de acento",
+            "description": "Las rosas son rojas, Automatarium es azul",
+            "match": "Igual que el tema del archivo",
+            "red": "Rojo",
+            "orange": "Naranja",
+            "green": "Verde",
+            "teal": "Verde azulado",
+            "blue": "Azul",
+            "purple": "Morado",
+            "pink": "Rosa"
+        }
+    },
+    "behaviour": {
+        "label": "Comportamiento",
+        "enable_grid": {
+            "label": "Activar cuadrícula",
+            "description": "Esto también activa el ajuste a la cuadrícula"
+        },
+        "zoom_control": {
+            "label": "Hacer zoom con la tecla Control",
+            "description": "Permite desplazarse usando el trackpad"
+        },
+        "tm_halt": {
+            "label": "Detener MT en estado final",
+            "description": "Activa o desactiva la detención en el paso de traza para la MT"
+        }
+    },
+    "language": {
+        "label": "Idioma",
+        "language": {
+            "label": "Idioma actual",
+            "description": "Cambia el idioma"
+        }
+    }
+}
