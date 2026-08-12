@@ -224,4 +224,84 @@ const menus: TranslatableContextItems = (t: TFunction) => [
   }
 ]
 
+export const grammarMenus: TranslatableContextItems = (t: TFunction) => [
+  {
+    label: t('menus.file', { ns: 'common' }),
+    items: [
+      {
+        label: t('menus.file_new', { ns: 'common' }),
+        action: 'NEW_FILE'
+      },
+      'hr',
+       {
+        label: t('import', { ns: 'common' }),
+        items: [
+          {
+            label: t('menus.import_automatarium', { ns: 'common' }),
+            action: 'IMPORT_AUTOMATARIUM_PROJECT'
+          },
+          {
+            label: t('menus.import_jflap', { ns: 'common' }),
+            action: 'IMPORT_JFLAP_PROJECT'
+          },
+        ]
+      },
+      'hr',
+      {
+        label: t('export', { ns: 'common' }),
+        items: [
+          {
+            label: 'Grammar (.json)',
+            action: 'SAVE_FILE_AS'
+          },
+          'hr',
+          {
+            label: 'As JFLAP (.jff)',
+            action: 'EXPORT_AS_JFLAP'
+          }
+        ]
+      },
+      'hr',
+      {
+        label: t('menus.preferences', { ns: 'common' }),
+        action: 'OPEN_PREFERENCES'
+      }
+    ]
+  },
+  {
+    label: t('menus.help', { ns: 'common' }),
+    items: [
+      {
+        label: t('menus.start_tour', { ns: 'common' }),
+        action: 'START_TOUR'
+      },
+      {
+        label: t('menus.view_documentation', { ns: 'common' }),
+        action: 'OPEN_DOCS'
+      },
+      {
+        label: t('menus.tutorial_videos', { ns: 'common' }),
+        action: 'TUTORIAL_VIDEOS'
+      },
+      {
+        label: t('menus.keyboard_shortcuts', { ns: 'common' }),
+        action: 'KEYBOARD_SHORTCUTS'
+      },
+      'hr',
+      {
+        label: t('privacy_policy', { ns: 'common' }),
+        action: 'PRIVACY_POLICY'
+      },
+      {
+        label: t('menus.about_automatarium', { ns: 'common' }),
+        action: 'OPEN_ABOUT'
+      },
+      'hr',
+      {
+        label: t('menus.version', { ns: 'common', version: APP_VERSION })
+      }
+    ]
+  }
+]
+
 export default menus

@@ -20,9 +20,17 @@ import {
   NameInput
 } from './menubarStyle'
 
-import menus from './menus'
+import menus, { grammarMenus } from './menus'
 import { ContextItem } from '/src/components/ContextMenus/contextItem'
 import { useTranslation } from 'react-i18next'
+import type { Project } from '/src/types/ProjectTypes'
+
+function projectItemCount(project: Project): number {
+  if (project.projectType === 'GRAMMAR') {
+    return project.comments.length + project.productions.length
+  }
+  return project.comments.length + project.states.length + project.transitions.length
+}
 
 // Extend dayjs
 dayjs.extend(relativeTime)
@@ -71,6 +79,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
   const [titleValue, setTitleValue] = useState('')
 
   const projectName = useProjectStore(s => s.project?.meta?.name)
+  const projectType = useProjectStore(s => s.project?.config?.type)
   const setProjectName = useProjectStore(s => s.setName)
   const lastChangeDate = useProjectStore(s => s.lastChangeDate)
   const lastSaveDate = useProjectStore(s => s.lastSaveDate)
@@ -126,7 +135,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
           <a href="/new" onClick={e => {
             e.preventDefault()
             const project = useProjectStore.getState().project
-            const totalItems = project.comments.length + project.states.length + project.transitions.length
+            const totalItems = projectItemCount(project)
             if (totalItems > 0) {
               if (currentModule != null) {
                 saveLabProject()
@@ -162,7 +171,7 @@ const Menubar = ({ isSaving }: { isSaving: boolean }) => {
             </NameRow>
 
             <DropdownMenus>
-              {menus(t).map((item: ContextItem) => (
+              {(projectType === 'GRAMMAR' ? grammarMenus(t) : menus(t)).map((item: ContextItem) => (
                 <DropdownButton
                   key={item.label}
                   item={item}

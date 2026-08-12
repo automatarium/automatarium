@@ -12,7 +12,7 @@ import { showWarning } from '/src/components/Warning/Warning'
 import { COPY_DATA_KEY, SCROLL_MAX, SCROLL_MIN, VIEW_MOVE_STEP } from '/src/config/interactions'
 import { useContextStore, usePopupsStore, useProjectStore, useProjectsStore, useSelectionStore, useTemplateStore, useTemplatesStore, useToolStore, useViewStore } from '/src/stores'
 import { InsertGroupResponseType, createNewProject } from '/src/stores/useProjectStore'
-import { CopyData, FSAProjectGraph, Project } from '/src/types/ProjectTypes'
+import { AutomataProjectGraph, CopyData, FSAProjectGraph, Project } from '/src/types/ProjectTypes'
 import { haveInputFocused } from '/src/util/actions'
 import { dispatchCustomEvent } from '/src/util/events'
 
@@ -192,6 +192,15 @@ const useActions = (registerHotkeys = false) => {
         a.click()
       }
     },
+    EXPORT_GRAMMAR_JSON: {
+      handler: () => dispatchCustomEvent('exportGrammarJson', null)
+    },
+    EXPORT_GRAMMAR_JFLAP: {
+      handler: () => dispatchCustomEvent('exportGrammarJFLAP', null)
+    },
+    EXPORT_FSA_JFLAP: {
+      handler: () => dispatchCustomEvent('exportFSAJFLAP', null)
+    },
     OPEN_PREFERENCES: {
       hotkeys: [{ key: ',', meta: true }],
       handler: () => dispatchCustomEvent('modal:preferences', null)
@@ -332,7 +341,8 @@ const useActions = (registerHotkeys = false) => {
     AUTO_LAYOUT: {
       disabled: () => true,
       handler: () => {
-        updateGraph(autoLayout(project))
+        if (project.projectType === 'GRAMMAR') { return }
+        updateGraph(autoLayout(project as AutomataProjectGraph))
         commit()
       }
     },
@@ -532,7 +542,8 @@ const useActions = (registerHotkeys = false) => {
     REORDER_GRAPH: {
       disabled: () => project.initialState === null,
       handler: () => {
-        updateGraph(reorderStates(project))
+        if (project.projectType === 'GRAMMAR') { return }
+        updateGraph(reorderStates(project as AutomataProjectGraph))
         commit()
       }
     },

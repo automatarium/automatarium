@@ -5,19 +5,19 @@ import { ColourName } from '../config'
  * - FSA: Finite state automata
  * - PDA: Push down automata
  * - TM: Turing machine
- * - GRAMMAR: Grammar
+ * - GRAMMAR: Formal grammar
  */
 export type ProjectType = 'FSA' | 'PDA' | 'TM' | 'GRAMMAR'
 
 /**
  * 2D x, y coordinate pair
  */
-export type Coordinate = {x: number, y: number}
+export type Coordinate = { x: number, y: number }
 
 /**
  * Stores width/height of a 2D object
  */
-export type Size = {width: number, height: number}
+export type Size = { width: number, height: number }
 
 /**
  * Different UI themes available. System just matches the users light/dark mode
@@ -89,7 +89,7 @@ export type FSAAutomataTransition = BaseAutomataTransition
 /**
  * Transition used by PDA projects
  */
-export interface PDAAutomataTransition extends BaseAutomataTransition{
+export interface PDAAutomataTransition extends BaseAutomataTransition {
     push: string
     pop: string
 }
@@ -145,27 +145,54 @@ export type GrammarProjectGraph = {
     projectType: 'GRAMMAR'
     startSymbol: string
     productions: GrammarProduction[]
+    states?: undefined
+    transitions?: undefined
+    initialState?: undefined
 }
+
+/**
+ * Union of automata-based project graphs (those with states, transitions, and initialState).
+ * Use this when you need access to automata-specific properties.
+ */
+export type AutomataProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
 
 /**
  * All the different types a project can be.
  * This allows for the transitions types to be different
  */
-export type ProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph | GrammarProjectGraph
+export type ProjectGraph = AutomataProjectGraph | GrammarProjectGraph
+
+/**
+ * Automata project with state/transition graph fields.
+ */
+export type AutomataProject = AutomataProjectGraph & {
+    _id: string,
+    comments: ProjectComment[],
+    config: ProjectConfig,
+    meta: ProjectMetaData,
+    projectType: 'FSA' | 'PDA' | 'TM',
+    simResult: string[],
+    tests: AutomataTests,
+}
+
+/**
+ * Grammar project with grammar-specific fields.
+ */
+export type GrammarProject = GrammarProjectGraph & {
+    _id: string,
+    comments: ProjectComment[],
+    config: ProjectConfig,
+    meta: ProjectMetaData,
+    projectType: 'GRAMMAR',
+    simResult: string[],
+    tests: AutomataTests,
+}
 
 /**
  * What a project for the frontend looks like.
  * This contains everything that is needed to display a graph
  */
-export type Project = ProjectGraph & {
-    _id: string,
-    comments: ProjectComment[],
-    config: ProjectConfig,
-    meta: ProjectMetaData,
-    projectType: string,
-    simResult: string[],
-    tests: AutomataTests,
-}
+export type Project = AutomataProject | GrammarProject
 
 // This is for copy/paste function which isn't TS converted yet
 // Leaving it here so its ready for when its converted, so as not to clutter useActions
@@ -187,7 +214,7 @@ export type Template = CopyData & {
  * Small helper function to change the value of a type at block level.
  * Use this with care since it does override the type system.
  */
- 
-export function assertType<T> (value: unknown): asserts value is T {
+
+export function assertType<T>(value: unknown): asserts value is T {
 
 }

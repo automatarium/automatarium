@@ -1,4 +1,8 @@
-import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import {
+  FSAProjectGraph,
+  PDAProjectGraph,
+  TMProjectGraph
+} from 'frontend/src/types/ProjectTypes'
 import { convertToDAG } from '../src/layouts/utils/convertToDAG'
 
 import ignoreReflex from './graphs/convertToDAGIgnoreReflex.json'
@@ -14,62 +18,63 @@ import twoCyclesSolution from './graphs/convertToDAGTwoCyclesSolution.json'
 import triangleSolution from './graphs/convertToDAGTriangleSolution.json'
 import simpleFutureSolution from './graphs/convertToDAGFutureCycleSolution.json'
 
-/** Same reason as NFA to DFA tests */
-type Graph = Omit<ProjectGraph, 'projectType'> & {projectType: string}
-const convert = (g: Graph) => convertToDAG(g as ProjectGraph)[0]
+type AutomataProjectGraph = FSAProjectGraph | PDAProjectGraph | TMProjectGraph
+type Graph = Omit<AutomataProjectGraph, 'projectType'> & { projectType: string }
 
-/** I suspect some nodes may become unreachable but this doesn't check for that.
- *  It will cost a lot to check for cycles within enclaves etc.
- */
-const hasCycles = (graph: ProjectGraph) : boolean => {
-  const getInitial = (graph: ProjectGraph) : number => {
-    if (graph.initialState) return graph.initialState
-    // let's start from zero!
-    let sStartFromZero = 0
-    while (!graph.transitions.some(t => t.id === sStartFromZero)) {
-      sStartFromZero += 1
+const convert = (g: Graph) => convertToDAG(g as AutomataProjectGraph)[0]
+
+const hasCycles = (graph: AutomataProjectGraph): boolean => {
+  const adjList = new Map<number, number[]>()
+
+  graph.transitions.forEach(t => {
+    if (!adjList.has(t.from)) {
+      adjList.set(t.from, [])
     }
-    return sStartFromZero
-  }
 
-  const buildAdjacencyList = (graph: ProjectGraph) : Map<number, number[]> => {
-    const adjList = new Map<number, number[]>()
-    graph.transitions.forEach(t => {
-      if (adjList.has(t.from)) {
-        adjList.get(t.from).push(t.to)
-      } else {
-        adjList.set(t.from, [t.to])
-      }
-    })
-    return adjList
-  }
+    adjList.get(t.from)?.push(t.to)
+  })
 
-  const adjList = buildAdjacencyList(graph)
+  const visited = new Set<number>()
+  const recursionStack = new Set<number>()
 
-  const initialState = getInitial(graph)
-  const visited = []
-  const frontier = []
-  frontier.push(initialState)
+  const visit = (stateId: number): boolean => {
+    if (recursionStack.has(stateId)) {
+      return true
+    }
 
-  while (frontier.length > 0) {
-    const current = frontier.pop()
-    const successors = adjList.get(current) ?? []
-    successors.forEach(s => {
-      if (visited.includes(s)) {
+    if (visited.has(stateId)) {
+      return false
+    }
+
+    visited.add(stateId)
+    recursionStack.add(stateId)
+
+    const successors = adjList.get(stateId) ?? []
+
+    for (const successor of successors) {
+      if (visit(successor)) {
         return true
       }
-      if (!frontier.includes(s)) {
-        frontier.push(s)
-      }
-    })
-    visited.push(current)
+    }
+
+    recursionStack.delete(stateId)
+
+    return false
   }
+
+  for (const state of graph.states) {
+    if (visit(state.id)) {
+      return true
+    }
+  }
+
   return false
 }
 
 describe('Test that DAG conversion is correct', () => {
   const expectDAG = (initial: Graph, result: Graph) => {
     const graph = convert(initial)
+
     expect(hasCycles(graph)).toBeFalse()
     expect(graph.initialState).toEqual(result.initialState)
     expect(graph.states).toEqual(result.states)
@@ -77,21 +82,26 @@ describe('Test that DAG conversion is correct', () => {
   }
 
   test('Reflexive transition is ignored', () => {
-    expectDAG(ignoreReflex, simpleSolution)
+    expectDAG(ignoreReflex as Graph, simpleSolution as Graph)
   })
+
   test('Test edges are merged to single transition', () => {
-    expectDAG(mergeEdge, simpleSolution)
+    expectDAG(mergeEdge as Graph, simpleSolution as Graph)
   })
+
   test('Test that a single cycle is resolved', () => {
-    expectDAG(simpleCycleResolution, simpleCycleSolution)
+    expectDAG(simpleCycleResolution as Graph, simpleCycleSolution as Graph)
   })
+
   test('Test two simple cycles are resolved correctly', () => {
-    expectDAG(twoCycles, twoCyclesSolution)
+    expectDAG(twoCycles as Graph, twoCyclesSolution as Graph)
   })
+
   test('Test more complex cycle resolution', () => {
-    expectDAG(triangle, triangleSolution)
+    expectDAG(triangle as Graph, triangleSolution as Graph)
   })
+
   test('Test cycle resolution on long cycle', () => {
-    expectDAG(simpleFuture, simpleFutureSolution)
+    expectDAG(simpleFuture as Graph, simpleFutureSolution as Graph)
   })
 })

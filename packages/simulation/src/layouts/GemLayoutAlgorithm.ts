@@ -7,9 +7,9 @@
  */
 
 import { Point, Record, Records } from './types'
-import { ProjectGraph } from 'frontend/src/types/ProjectTypes'
+import { AutomataProjectGraph } from 'frontend/src/types/ProjectTypes'
 
-const GemLayoutAlgorithm = (graph: ProjectGraph) => {
+const GemLayoutAlgorithm = (graph: AutomataProjectGraph) => {
   const graphClone = structuredClone(graph)
   const cloneStates = graphClone.states
   // Remove the initial state from the vertices to move so we build around it

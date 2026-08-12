@@ -9,9 +9,10 @@ interface TourProps {
     steps: Step[]
 }
 
+/** Goober transient props ($prefix) are not forwarded to the DOM. */
 export interface TourContentProps {
-  isBannerStep: boolean
-  tourStep: number
+  $isBannerStep?: boolean
+  $tourStep?: number
 }
 
 export interface Step {
@@ -51,7 +52,7 @@ const ProjectTour: React.FC<TourProps> = ({ steps, onClose }) => {
 
   return (
     <TourOverlay>
-      <TourContent tourStep={step} isBannerStep={steps[step].target === ".banner"}>
+      <TourContent $tourStep={step} $isBannerStep={steps[step].target === '.banner'}>
         <p>{steps[step].content}</p>
         <ExampleContainer>
           <img src={steps[step].gifUrl} />

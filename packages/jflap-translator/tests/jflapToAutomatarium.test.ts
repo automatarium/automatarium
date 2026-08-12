@@ -1,9 +1,26 @@
 import { convertJFLAPXML } from '../src'
 import { readFileSync } from 'fs'
-import { Project } from 'frontend/src/types/ProjectTypes'
+import {
+  Project,
+  FSAProjectGraph,
+  PDAProjectGraph,
+  TMProjectGraph,
+  GrammarProjectGraph
+} from 'frontend/src/types/ProjectTypes'
 
-const readProject = (name: string): Project => {
-  return convertJFLAPXML(readFileSync('tests/sample-jflap-data/' + name + '.jff').toString())
+type AutomataProject = Project & (FSAProjectGraph | PDAProjectGraph | TMProjectGraph)
+type GrammarProject = Project & GrammarProjectGraph
+
+const readProject = (name: string): AutomataProject => {
+  return convertJFLAPXML(
+    readFileSync('tests/sample-jflap-data/' + name + '.jff').toString()
+  ) as AutomataProject
+}
+
+const readGrammarProject = (name: string): GrammarProject => {
+  return convertJFLAPXML(
+    readFileSync('tests/sample-jflap-data/' + name + '.jff').toString()
+  ) as GrammarProject
 }
 
 describe('Importing single attribute', () => {
@@ -29,6 +46,7 @@ describe('Importing single attribute', () => {
         isFinal: true
       }
     ])
+
     expect(machine.initialState).toBe(0)
   })
 
@@ -83,6 +101,7 @@ describe('Import single attribute multiple states', () => {
         isFinal: false
       }
     ])
+
     expect(machine.initialState).toBe(0)
   })
 
@@ -179,5 +198,32 @@ describe('Import a TM', () => {
         direction: 'L'
       }
     ])
+  })
+
+  // New Grammar tests
+  describe('Import a Grammar', () => {
+    const grammar = readGrammarProject('simple-grammar')
+ 
+    test('Config is correct', () => {
+      expect(grammar.config).toMatchObject({
+        type: 'GRAMMAR',
+        orOperator: '|',
+        color: 'green'
+      })
+    })
+  
+    test('Grammar data is imported', () => {
+      expect(grammar.startSymbol).toBe('S')
+      expect(grammar.productions).toMatchObject([
+        {
+          left: 'S',
+          right: ['aA', 'b']
+        },
+        {
+          left: 'A',
+          right: ['a']
+        }
+      ])
+    })
   })
 })

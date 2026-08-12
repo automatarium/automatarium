@@ -11,7 +11,8 @@ import {
 const PROJECT_TYPE_MAP: Record<string, ProjectType> = {
   fa: 'FSA',
   pda: 'PDA',
-  turing: 'TM'
+  turing: 'TM',
+  grammar: 'GRAMMAR'
 }
 
 // Convert JFLAP XML to Automatarium format
@@ -22,12 +23,8 @@ export const convertJFLAPXML = (xml: string): Project => {
 
 // Convert JFLAP JSON to Automatarium format
 export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
-  // Pull out necessary values from jflap project
-  let {
-    structure: {
-      type,
-      automaton: { state: states, transition: transitions, note: notes }
-    }
+  const {
+    structure: { type }
   } = jflapProject
   const projectType = PROJECT_TYPE_MAP[type._text]
 
@@ -37,7 +34,73 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
   }
 
   // Convert attributes to arrays if they are not already
-  const toArray = <T>(x: T[]): T[] => x === undefined ? [] : (Array.isArray(x) ? x : [x])
+  const toArray = <T>(x: T | T[] | undefined): T[] =>
+    x === undefined ? [] : (Array.isArray(x) ? x : [x])
+
+  if (projectType === 'GRAMMAR') {
+    type JflapGrammarProduction = {
+      left: { _text: string }
+      right?: { _text: string }
+    }
+
+    const grammarStructure = jflapProject.structure as ElementCompact & {
+      production?: JflapGrammarProduction | JflapGrammarProduction[]
+    }
+
+    const productionsArray = toArray(grammarStructure.production).map((production) => ({
+      left: production.left._text,
+      right: production.right?._text ?? ''
+    }))
+
+    const productionMap = productionsArray.reduce((map, { left, right }) => {
+      if (!map.has(left)) {
+        map.set(left, [])
+      }
+      // Only add non-empty right sides; empty strings are skipped (not duplicate entries)
+      if (right) {
+        map.get(left)!.push(right)
+      }
+      return map
+    }, new Map<string, string[]>())
+
+    const grammarProductions = Array.from(productionMap.entries())
+      .map(([left, right]) => ({
+        left,
+        right: right.length > 0 ? right : [''] // Empty array becomes [''] only if no productions exist
+      }))
+
+    const startSymbol = grammarProductions.length > 0 ? grammarProductions[0].left : ''
+
+    return {
+      _id: crypto.randomUUID(),
+      config: {
+        type: projectType,
+        statePrefix: DEFAULT_STATE_PREFIX,
+        color: DEFAULT_PROJECT_COLOR[projectType],
+        orOperator: DEFAULT_OR_OPERATOR,
+        acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+      },
+      meta: {
+        name: '',
+        dateCreated: Date.now(),
+        dateEdited: Date.now(),
+        version: SCHEMA_VERSION,
+        automatariumVersion: APP_VERSION
+      },
+      projectType: 'GRAMMAR',
+      simResult: [],
+      tests: { batch: [''], single: '' },
+      comments: [],
+      startSymbol,
+      productions: grammarProductions
+    }
+  }
+
+  let {
+    structure: {
+      automaton: { state: states, transition: transitions, note: notes }
+    }
+  } = jflapProject
   states = toArray(states)
   transitions = toArray(transitions)
   notes = toArray(notes)
@@ -90,31 +153,83 @@ export const convertJFLAPProject = (jflapProject: ElementCompact): Project => {
     y: Number(note.y._text)
   }))
 
-  return {
-    _id: crypto.randomUUID(),
-    config: {
-      type: projectType,
-      statePrefix: DEFAULT_STATE_PREFIX,
-      color: DEFAULT_PROJECT_COLOR[projectType],
-      orOperator: DEFAULT_OR_OPERATOR,
-      acceptanceCriteria: projectType === 'PDA' ? DEFAULT_ACCEPTANCE_CRITERIA : undefined
-    },
-    meta: {
-      name: '', // Name will be changed to filename by frontend
-      dateCreated: new Date().getTime(),
-      dateEdited: new Date().getTime(),
-      version: SCHEMA_VERSION,
-      automatariumVersion: APP_VERSION
-    },
-    projectType,
-    simResult: [],
-    tests: {
-      batch: [''],
-      single: ''
-    },
-    initialState: initialStateID,
-    states: automatariumStates,
-    transitions: automatariumTransitions,
-    comments: automatariumComments
+  switch (projectType) {
+    case 'FSA':
+      return {
+        _id: crypto.randomUUID(),
+        config: {
+          type: projectType,
+          statePrefix: DEFAULT_STATE_PREFIX,
+          color: DEFAULT_PROJECT_COLOR[projectType],
+          orOperator: DEFAULT_OR_OPERATOR,
+          acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+        },
+        meta: {
+          name: '',
+          dateCreated: Date.now(),
+          dateEdited: Date.now(),
+          version: SCHEMA_VERSION,
+          automatariumVersion: APP_VERSION
+        },
+        projectType: 'FSA', // ✅ literal, not generic
+        simResult: [],
+        tests: { batch: [''], single: '' },
+        initialState: initialStateID,
+        states: automatariumStates,
+        transitions: automatariumTransitions,
+        comments: automatariumComments
+      }
+
+    case 'PDA':
+      return {
+        _id: crypto.randomUUID(),
+        config: {
+          type: projectType,
+          statePrefix: DEFAULT_STATE_PREFIX,
+          color: DEFAULT_PROJECT_COLOR[projectType],
+          orOperator: DEFAULT_OR_OPERATOR,
+          acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+        },
+        meta: {
+          name: '',
+          dateCreated: Date.now(),
+          dateEdited: Date.now(),
+          version: SCHEMA_VERSION,
+          automatariumVersion: APP_VERSION
+        },
+        projectType: 'PDA',
+        simResult: [],
+        tests: { batch: [''], single: '' },
+        initialState: initialStateID,
+        states: automatariumStates,
+        transitions: automatariumTransitions,
+        comments: automatariumComments
+      }
+
+    case 'TM':
+      return {
+        _id: crypto.randomUUID(),
+        config: {
+          type: projectType,
+          statePrefix: DEFAULT_STATE_PREFIX,
+          color: DEFAULT_PROJECT_COLOR[projectType],
+          orOperator: DEFAULT_OR_OPERATOR,
+          acceptanceCriteria: DEFAULT_ACCEPTANCE_CRITERIA
+        },
+        meta: {
+          name: '',
+          dateCreated: Date.now(),
+          dateEdited: Date.now(),
+          version: SCHEMA_VERSION,
+          automatariumVersion: APP_VERSION
+        },
+        projectType: 'TM',
+        simResult: [],
+        tests: { batch: [''], single: '' },
+        initialState: initialStateID,
+        states: automatariumStates,
+        transitions: automatariumTransitions,
+        comments: automatariumComments
+      }
   }
 }

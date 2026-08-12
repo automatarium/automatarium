@@ -7,12 +7,13 @@ import ModuleWindow from "./components/ModuleWindow/ModuleWindow";
 import PDAStackVisualiser from "../../components/PDAStackVisualiser/stackVisualiser";
 import TemplateDelConfDialog from "./components/TemplateDelConfDialog/TemplateDelConfDialog";
 import EditorPageTour from "../Tutorials/guidedTour/EditorPageTour";
+import GrammarPageTour from "../Tutorials/guidedTour/GrammarPageTour";
 import { useEditorInit } from "../../hooks/useEditorInit";
 import { useEditorControls } from "../../hooks/useEditorControls";
 import { useModuleValidation } from "../../hooks/useModuleValidation";
 import { EditorUIProvider, useEditorUI } from "../../providers/EditorUIProvider";
 import { usePanelWidth } from "@/hooks/usePanelWidth";
-import { useEvent } from "/src/hooks"
+import { useActions, useEvent } from "/src/hooks"
 
 
 import GrammarEditor from '../../components/Grammar/GrammarEditor'
@@ -39,6 +40,7 @@ function Editor() {
   useEditorInit();
   useEditorControls();
   useModuleValidation();
+  useActions(true);
 
   // Listen to the custom event 'tour:start' to show the tour
   useEvent('tour:start', () => {
@@ -53,28 +55,15 @@ function Editor() {
       <Menubar isSaving={isSaving} />
 
       {projectType === "GRAMMAR" ? (
-        // Only use top menu bar for grammar projects
-        <div style={{ display: "flex", justifyContent: "center", marginTop: "2rem" }}>
-          <div
-            style={{
-              maxWidth: "1200px", 
-              width: "100%",
-              padding: "1rem",
-              fontSize: "1.5rem", 
-              lineHeight: "1.6",
-            }}
-          >
-            <GrammarEditor
-              project={{ projectType: "GRAMMAR", startSymbol: "", productions: [] }}
-            />
-          </div>
+        <div className="grammar-editor-shell">
+          <GrammarEditor />
         </div>
 
           ) : (
             // Automata / PDA / TM layout
             <Content>
               <Toolbar />
-              {showModuleWindow && currentModule && (
+              {showModuleWindow && module && (
                 <ModuleWindow onPanelWidthChange={handlePanelWidthChange} />
               )}
               <EditorContent>
@@ -100,7 +89,11 @@ function Editor() {
         setClose={() => setConfirmDialogOpen(false)}
       />
       <ImportDialog navigateFunction={useNavigate()} />
-      {showTour && <EditorPageTour onClose={() => setShowTour(false)} />}
+      {showTour && (
+        projectType === 'GRAMMAR'
+          ? <GrammarPageTour onClose={() => setShowTour(false)} />
+          : <EditorPageTour onClose={() => setShowTour(false)} />
+      )}
       <CreateModule />
     </>
   );
